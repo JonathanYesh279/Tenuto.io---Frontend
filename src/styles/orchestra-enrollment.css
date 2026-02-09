@@ -1,0 +1,343 @@
+/* Orchestra Enrollment Manager Styles */
+
+/* Base card styles */
+.orchestra-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.orchestra-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Enrolled orchestra cards */
+.orchestra-card.enrolled {
+  border-color: #3B82F6;
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+}
+
+.orchestra-card.enrolled:hover {
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+}
+
+/* Available orchestra cards */
+.orchestra-card.available {
+  border-color: #E5E7EB;
+}
+
+.orchestra-card.available:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: #D1D5DB;
+}
+
+/* Conflict warning styles */
+.conflict-warning {
+  position: relative;
+}
+
+.conflict-tooltip {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+  width: 256px;
+  padding: 8px;
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 12px;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.15);
+}
+
+.conflict-warning:hover .conflict-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Action buttons */
+.btn-enroll {
+  background: #10B981;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-enroll:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-enroll:disabled {
+  background: #E5E7EB;
+  color: #9CA3AF;
+  cursor: not-allowed;
+}
+
+.btn-remove {
+  color: #EF4444;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-remove:hover {
+  background: #FEF2F2;
+  color: #DC2626;
+  transform: scale(1.05);
+}
+
+/* Filter buttons */
+.filter-container {
+  background: #F3F4F6;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.filter-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  background: transparent;
+  color: #6B7280;
+}
+
+.filter-button:hover {
+  color: #374151;
+}
+
+.filter-button.active {
+  background: white;
+  color: #111827;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Confirmation Dialog */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.dialog-content {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(16px) scale(0.95);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Status indicators */
+.status-enrolled {
+  color: #059669;
+  background: #ECFDF5;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-full {
+  color: #DC2626;
+  background: #FEF2F2;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-available {
+  color: #059669;
+  background: #ECFDF5;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Stack filter buttons vertically on mobile */
+  .filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .filter-button {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+  }
+  
+  /* Full width cards on mobile */
+  .orchestra-card {
+    margin: 0 -4px;
+  }
+  
+  /* Larger touch targets */
+  .btn-enroll {
+    padding: 14px 20px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .btn-remove {
+    padding: 12px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  /* Stack dialog buttons on small screens */
+  .dialog-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+  
+  .dialog-actions button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Compact mobile layout */
+  .orchestra-card {
+    padding: 16px;
+  }
+  
+  .orchestra-card h3 {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  
+  .orchestra-card .text-sm {
+    font-size: 13px;
+  }
+  
+  /* Simplified conflict tooltip for mobile */
+  .conflict-tooltip {
+    width: 200px;
+    font-size: 11px;
+    padding: 6px;
+  }
+  
+  /* Compact dialog on mobile */
+  .dialog-content {
+    margin: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .orchestra-card.enrolled {
+    background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%);
+    border-color: #3B82F6;
+    color: white;
+  }
+  
+  .orchestra-card.available {
+    background: #1F2937;
+    border-color: #374151;
+    color: #F3F4F6;
+  }
+  
+  .filter-container {
+    background: #374151;
+  }
+  
+  .filter-button {
+    color: #D1D5DB;
+  }
+  
+  .filter-button.active {
+    background: #4B5563;
+    color: white;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .orchestra-card,
+  .btn-enroll,
+  .btn-remove,
+  .filter-button,
+  .dialog-overlay,
+  .dialog-content {
+    transition: none;
+    animation: none;
+  }
+  
+  .orchestra-card:hover {
+    transform: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.orchestra-card:focus-within,
+.btn-enroll:focus,
+.btn-remove:focus,
+.filter-button:focus {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .btn-remove,
+  .btn-enroll,
+  .filter-container {
+    display: none;
+  }
+  
+  .orchestra-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+}

@@ -1,0 +1,154 @@
+/* Simple Weekly Grid Styles */
+
+.simple-weekly-grid {
+  direction: rtl;
+  text-align: right;
+  width: 100%;
+}
+
+/* Day Column Styling */
+.day-column {
+  min-height: 200px;
+  transition: all 0.2s ease-in-out;
+}
+
+.day-column:hover {
+  transform: translateY(-2px);
+}
+
+.day-header {
+  border: 1px solid #e5e7eb;
+  border-bottom: none;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.day-content {
+  border: 1px solid #e5e7eb;
+  min-height: 120px;
+}
+
+/* Lesson Card Animations */
+.lesson-card {
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.lesson-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  pointer-events: none;
+}
+
+.lesson-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Typography enhancements */
+.lesson-card h5 {
+  font-family: 'Reisinger Yonatan', 'Arial Hebrew', system-ui, sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon styling */
+.lesson-card .w-4 {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+/* Legend styling */
+.legend {
+  border: 1px solid #e5e7eb;
+}
+
+.legend h4 {
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+}
+
+/* Empty state styling */
+.day-content .text-gray-300 {
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.day-column:hover .day-content .text-gray-300 {
+  opacity: 1;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .simple-weekly-grid {
+    padding: 0;
+  }
+  
+  .day-column {
+    margin-bottom: 1rem;
+  }
+  
+  .lesson-card {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .lesson-card h5 {
+    font-size: 1rem;
+  }
+  
+  .legend {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .day-header {
+    padding: 0.75rem;
+  }
+  
+  .day-content {
+    padding: 0.5rem;
+  }
+  
+  .lesson-card {
+    padding: 0.75rem;
+  }
+  
+  .legend .grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+/* Accessibility improvements */
+.lesson-card:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.day-column:focus-within {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Print styles */
+@media print {
+  .simple-weekly-grid {
+    break-inside: avoid;
+  }
+  
+  .day-column {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+  
+  .lesson-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+}

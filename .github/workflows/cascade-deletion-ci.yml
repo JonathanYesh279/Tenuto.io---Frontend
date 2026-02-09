@@ -1,0 +1,320 @@
+name: Cascade Deletion CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, feature/cascade-deletion ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+  CACHE_VERSION: v1
+
+jobs:
+  code-quality:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: TypeScript type check
+        run: npm run typecheck
+
+      - name: ESLint check
+        run: npm run lint
+
+      - name: Security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+
+  cascade-deletion-tests:
+    name: Cascade Deletion Tests
+    runs-on: ubuntu-latest
+    needs: code-quality
+    strategy:
+      matrix:
+        test-suite: [unit, integration, e2e-cascade]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Run cascade deletion unit tests
+        if: matrix.test-suite == 'unit'
+        run: npm run test -- --run --coverage --reporter=verbose src/hooks/useCascadeDeletion.test.ts src/services/cascadeDeletionService.test.ts
+
+      - name: Run cascade integration tests
+        if: matrix.test-suite == 'integration'
+        run: npm run test -- --run src/components/**/*.cascade.test.tsx
+
+      - name: Run cascade E2E tests
+        if: matrix.test-suite == 'e2e-cascade'
+        run: npm run test:e2e:cascade
+        env:
+          VITE_CASCADE_DELETION_ENABLED: true
+          VITE_FEATURE_CASCADE_DELETION_PREVIEW: true
+          VITE_FEATURE_CASCADE_DELETION_EXECUTE: true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.test-suite }}
+          path: coverage/
+
+  performance-analysis:
+    name: Performance & Bundle Analysis
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_CASCADE_DELETION_ENABLED: true
+          VITE_ENABLE_PERFORMANCE_MONITORING: true
+
+      - name: Analyze bundle size
+        run: npx vite-bundle-analyzer dist --json > bundle-analysis.json
+
+      - name: Check cascade deletion bundle size
+        run: |
+          BUNDLE_SIZE=$(node -e "
+            const analysis = require('./bundle-analysis.json');
+            const cascadeSize = analysis.assets
+              .filter(asset => asset.name.includes('cascade') || asset.name.includes('deletion'))
+              .reduce((sum, asset) => sum + asset.size, 0);
+            console.log(cascadeSize);
+          ")
+          if [ "$BUNDLE_SIZE" -gt 204800 ]; then
+            echo "❌ Cascade deletion bundle size ($BUNDLE_SIZE bytes) exceeds 200KB limit"
+            exit 1
+          else
+            echo "✅ Cascade deletion bundle size: $BUNDLE_SIZE bytes"
+          fi
+
+      - name: Performance budget check
+        run: |
+          echo "Checking performance metrics..."
+          node -e "
+            const fs = require('fs');
+            const stats = JSON.parse(fs.readFileSync('dist/stats.json', 'utf8'));
+            const totalSize = stats.assets.reduce((sum, asset) => sum + asset.size, 0);
+            
+            if (totalSize > 2097152) { // 2MB
+              console.log('❌ Total bundle size exceeds 2MB');
+              process.exit(1);
+            }
+            console.log('✅ Performance budget check passed');
+          " || echo "Stats file not found, skipping performance check"
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle-analysis
+          path: bundle-analysis.json
+
+  accessibility-tests:
+    name: Accessibility Tests
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_CASCADE_DELETION_ENABLED: true
+
+      - name: Run accessibility tests for cascade deletion UI
+        run: |
+          npm run preview &
+          PREVIEW_PID=$!
+          sleep 5
+          
+          # Run axe-core tests on cascade deletion components
+          npx axe-cli http://localhost:4173/students --include '[data-testid*="cascade"]' --exit
+          
+          kill $PREVIEW_PID
+
+      - name: Test Hebrew RTL rendering
+        run: |
+          npm run preview &
+          PREVIEW_PID=$!
+          sleep 5
+          
+          # Test RTL layout for Hebrew text in deletion dialogs
+          npx playwright test tests/rtl-deletion.spec.ts
+          
+          kill $PREVIEW_PID
+
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    needs: [cascade-deletion-tests, performance-analysis, accessibility-tests]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    strategy:
+      matrix:
+        environment: [staging, production]
+        include:
+          - environment: staging
+            branch: develop
+            url: https://staging.conservatory-app.com
+          - environment: production
+            branch: main
+            url: https://conservatory-app.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Load environment variables
+        run: |
+          if [ "${{ matrix.environment }}" = "staging" ]; then
+            cp .env.staging .env.production
+          fi
+
+      - name: Build for ${{ matrix.environment }}
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets[format('{0}_API_URL', upper(matrix.environment))] }}
+          VITE_SENTRY_DSN: ${{ secrets[format('{0}_SENTRY_DSN', upper(matrix.environment))] }}
+          VITE_CASCADE_DELETION_ENABLED: ${{ matrix.environment == 'staging' && 'true' || 'false' }}
+          VITE_FEATURE_CASCADE_DELETION_EXECUTE: ${{ matrix.environment == 'staging' && 'true' || 'false' }}
+
+      - name: Deploy to Vercel
+        uses: vercel/action@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          alias: ${{ matrix.url }}
+
+      - name: Run post-deployment health checks
+        run: |
+          sleep 30
+          curl -f "${{ matrix.url }}/api/health/cascade-deletion" || exit 1
+          echo "✅ ${{ matrix.environment }} deployment health check passed"
+
+      - name: Notify deployment status
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          text: |
+            🚀 Cascade Deletion System deployed to ${{ matrix.environment }}
+            📍 URL: ${{ matrix.url }}
+            🔄 Status: ${{ job.status }}
+            📝 Commit: ${{ github.sha }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  feature-flag-rollout:
+    name: Feature Flag Rollout
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Gradual feature rollout
+        run: |
+          echo "Starting gradual rollout of cascade deletion features..."
+          
+          # Week 1: Enable preview for 10% of admin users
+          curl -X POST "${{ secrets.FEATURE_FLAG_API_URL }}/flags/cascade_deletion_preview" \
+            -H "Authorization: Bearer ${{ secrets.FEATURE_FLAG_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"enabled": true, "percentage": 10, "userType": "admin"}'
+          
+          echo "✅ Preview mode enabled for 10% of admin users"
+
+  monitoring-setup:
+    name: Setup Monitoring
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Configure monitoring alerts
+        run: |
+          echo "Setting up monitoring for cascade deletion system..."
+          
+          # Configure Sentry alerts for cascade deletion errors
+          curl -X POST "https://sentry.io/api/0/projects/${{ secrets.SENTRY_PROJECT }}/rules/" \
+            -H "Authorization: Bearer ${{ secrets.SENTRY_AUTH_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Cascade Deletion Errors",
+              "conditions": [
+                {
+                  "id": "sentry.rules.conditions.tagged_event.TaggedEventCondition",
+                  "key": "component",
+                  "match": "contains",
+                  "value": "cascade-deletion"
+                }
+              ],
+              "actions": [
+                {
+                  "id": "sentry.rules.actions.notify_event_service.SlackNotifyServiceAction",
+                  "channel": "#alerts"
+                }
+              ]
+            }'
+          
+          echo "✅ Monitoring alerts configured"

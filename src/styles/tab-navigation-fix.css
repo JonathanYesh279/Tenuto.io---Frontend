@@ -1,0 +1,149 @@
+/* Fix for Student Tab Navigation Overflow Issues */
+
+/* Main container width constraints */
+.student-details-container {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: white !important;
+  min-height: 100vh;
+}
+
+/* Ensure body and html don't show gray background */
+body {
+  background: white !important;
+}
+
+html {
+  background: white !important;
+}
+
+/* Tab navigation container fixes */
+.student-tab-navigation {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Desktop tab navigation fixes */
+.desktop-tab-nav {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.desktop-tab-nav::-webkit-scrollbar {
+  height: 2px;
+}
+
+.desktop-tab-nav::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.desktop-tab-nav::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 1px;
+}
+
+.desktop-tab-nav nav {
+  min-width: fit-content;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Mobile tab navigation fixes */
+.mobile-tab-nav {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.mobile-tab-nav .scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+.mobile-tab-nav .scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-tab-nav nav {
+  width: max-content;
+  min-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Tab button width constraints */
+.tab-button {
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+/* Prevent horizontal page expansion */
+body, html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+#root {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Layout component fixes */
+.layout-main {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Student details page content area */
+.student-content-area {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.student-content-area * {
+  box-sizing: border-box;
+}
+
+/* Fix calendar container overflow specifically */
+.calendar-container-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .desktop-tab-nav {
+    display: none !important;
+  }
+  
+  .mobile-tab-nav {
+    display: block !important;
+  }
+  
+  .student-tab-navigation {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-tab-nav {
+    display: flex !important;
+  }
+  
+  .mobile-tab-nav {
+    display: none !important;
+  }
+}

@@ -1,0 +1,229 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Import component styles */
+@import './styles/components.css';
+
+/* Import tab navigation fix styles */
+@import './styles/tab-navigation-fix.css';
+
+/* Import teacher modal fix styles */
+@import './styles/teacher-modal-fixes.css';
+
+/* Import simple weekly grid styles */
+@import './styles/simple-weekly-grid.css';
+
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Reisinger Hebrew Font Family - Custom Fonts */
+@font-face {
+  font-family: 'Reisinger Yonatan';
+  src: url('/fonts/Reisinger-Yonatan-web/Reisinger-Yonatan-Regular.woff2') format('woff2'),
+       url('/fonts/Reisinger-Yonatan-web/Reisinger-Yonatan-Regular.woff') format('woff'),
+       url('/fonts/Reisinger-Yonatan-web/Reisinger-Yonatan-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* CSS Reset and Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-family: 'Reisinger Yonatan', 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  direction: rtl;
+  /* Custom scrollbar for html element */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(209 213 219) transparent;
+}
+
+/* Webkit scrollbar for html */
+html::-webkit-scrollbar {
+  width: 6px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: rgb(209 213 219);
+  border-radius: 3px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(156 163 175);
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 500;
+  background-color: rgb(249 250 251);
+  color: rgb(17 24 39);
+  /* Custom scrollbar for entire page */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(209 213 219) transparent;
+}
+
+/* Webkit scrollbar for body */
+body::-webkit-scrollbar {
+  width: 6px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(209 213 219);
+  border-radius: 3px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(156 163 175);
+}
+
+/* Base component classes - vanilla CSS to avoid PostCSS conflicts */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn:focus {
+  ring-width: 2px;
+  ring-offset-width: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgb(209 213 219);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.input:focus {
+  border-color: rgb(59 130 246);
+  box-shadow: 0 0 0 1px rgb(59 130 246);
+}
+
+.input:disabled {
+  background-color: rgb(249 250 251);
+  color: rgb(107 114 128);
+  cursor: not-allowed;
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  padding: 1.5rem;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Custom Thin Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;  /* Firefox */
+  scrollbar-color: rgb(209 213 219) transparent;  /* Firefox - thumb and track */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;  /* Chrome, Safari, Opera */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;  /* Track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(209 213 219);  /* Light gray - Tailwind gray-300 */
+  border-radius: 3px;  /* Rounded edges */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(156 163 175);  /* Darker gray on hover - Tailwind gray-400 */
+}
+
+/* Toast Animation */
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+/* Modal Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-zoom-in {
+  animation: zoom-in 0.2s ease-out;
+}

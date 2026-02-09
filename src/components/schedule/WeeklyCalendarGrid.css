@@ -1,0 +1,533 @@
+/* Weekly Calendar Grid Styles */
+.weekly-calendar-grid {
+  direction: rtl;
+  text-align: right;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.calendar-container {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Override react-big-calendar styles for RTL and Hebrew */
+.rbc-calendar {
+  direction: rtl !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: white !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Header styles */
+.rbc-header {
+  background-color: #f8fafc !important;
+  border-bottom: 2px solid #e5e7eb !important;
+  padding: 12px 8px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  text-align: center !important;
+  border-right: 1px solid #e5e7eb !important;
+}
+
+.rbc-header:first-child {
+  border-right: none !important;
+}
+
+/* Time gutter (hours column) */
+.rbc-time-gutter {
+  background-color: #f9fafb !important;
+  border-left: 2px solid #e5e7eb !important;
+  border-right: none !important;
+}
+
+.rbc-timeslot-group {
+  border-bottom: 1px solid #f3f4f6 !important;
+  min-height: 60px !important; /* Larger time slots */
+}
+
+.rbc-time-slot {
+  border-top: 1px solid #f3f4f6 !important;
+  min-height: 60px !important; /* Larger time slots */
+}
+
+.rbc-time-slot.rbc-time-slot-hour {
+  border-top: 1px solid #d1d5db !important;
+  min-height: 60px !important; /* Larger time slots */
+}
+
+/* Time labels */
+.rbc-time-gutter .rbc-timeslot-group {
+  border-right: none !important;
+}
+
+.rbc-time-content {
+  border-right: none !important;
+  border-left: 2px solid #e5e7eb !important;
+  background: white !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.rbc-time-header {
+  border-bottom: 2px solid #e5e7eb !important;
+  background-color: #f8fafc !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.rbc-time-header-gutter {
+  background-color: #f8fafc !important;
+  border-left: 2px solid #e5e7eb !important;
+  border-right: none !important;
+  overflow: hidden !important;
+}
+
+/* Day columns */
+.rbc-day-slot {
+  border-right: 1px solid #e5e7eb !important;
+  border-left: none !important;
+  min-height: 60px !important; /* Match time slot height */
+}
+
+.rbc-day-slot:first-child {
+  border-right: none !important;
+}
+
+/* Ensure day slots align with time slots */
+.rbc-day-slot .rbc-time-slot {
+  min-height: 60px !important;
+}
+
+/* Events */
+.rbc-event {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  padding: 10px !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+  cursor: default !important;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: visible !important;
+  min-height: 120px !important; /* Compact but detailed */
+  max-height: none !important; /* Allow natural height based on content */
+}
+
+.rbc-event:hover {
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3) !important;
+  transform: translateY(-2px) scale(1.02);
+  transition: all 0.3s ease;
+}
+
+/* Main Event Content Container */
+.calendar-event-content {
+  text-align: right;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100%;
+  gap: 4px;
+  padding: 0;
+}
+
+/* Event Header */
+.event-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.event-title {
+  font-weight: 800;
+  font-size: 15px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.3px;
+}
+
+.event-type {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+/* Time Section - Compact Inline */
+.event-time-section {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 6px;
+}
+
+.event-time-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+}
+
+.time-icon {
+  font-size: 12px;
+}
+
+.time-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.event-duration {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+/* Combined Details Row */
+.event-details-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+/* Teacher Section */
+.event-teacher-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.teacher-icon {
+  font-size: 11px;
+}
+
+.event-teacher {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Location Section */
+.event-location-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.location-icon {
+  font-size: 11px;
+}
+
+.event-location {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Event Footer */
+.event-footer {
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.event-status {
+  font-size: 8px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1px 4px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Event time display enhancement */
+.rbc-event .rbc-event-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+/* Current time indicator */
+.current-time-indicator {
+  position: absolute;
+  right: 0;
+  left: 60px;
+  height: 2px;
+  background-color: #ef4444;
+  z-index: 3;
+  pointer-events: none;
+  display: none; /* Show with JS when within hours */
+}
+
+.current-time-indicator::before {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  background-color: #ef4444;
+  border-radius: 50%;
+}
+
+/* Legend */
+.calendar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.legend-color.individual {
+  background-color: #6366f1;
+}
+
+.legend-color.group {
+  background-color: #10b981;
+}
+
+.legend-color.orchestra {
+  background-color: #8b5cf6;
+}
+
+.legend-color.theory {
+  background-color: #f59e0b;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .weekly-calendar-grid {
+    font-size: 12px;
+  }
+  
+  .calendar-container {
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+  
+  .rbc-calendar {
+    min-width: 600px;
+  }
+  
+  .calendar-legend {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .legend-item {
+    font-size: 11px;
+  }
+  
+  /* Adjust event sizing for tablet */
+  .rbc-event {
+    min-height: 100px !important;
+    padding: 10px !important;
+  }
+  
+  .event-title {
+    font-size: 14px;
+  }
+  
+  .time-text {
+    font-size: 11px;
+  }
+  
+  .event-teacher {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-legend {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  /* Compact mobile event layout */
+  .rbc-event {
+    font-size: 10px !important;
+    padding: 8px !important;
+    min-height: 80px !important;
+  }
+  
+  .event-title {
+    font-size: 12px;
+  }
+  
+  .event-type {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+  
+  .time-text {
+    font-size: 10px;
+  }
+  
+  .time-icon, .teacher-icon, .location-icon {
+    font-size: 10px;
+  }
+  
+  .event-teacher {
+    font-size: 9px;
+  }
+  
+  .event-location {
+    font-size: 8px;
+  }
+  
+  .event-duration {
+    font-size: 8px;
+  }
+  
+  .event-status {
+    font-size: 7px;
+    padding: 1px 3px;
+  }
+}
+
+/* Remove Saturday column for Sunday-Friday view */
+.rbc-time-view .rbc-time-content .rbc-day-slot:nth-child(7) {
+  display: none;
+}
+
+.rbc-time-view .rbc-time-header .rbc-header:nth-child(7) {
+  display: none;
+}
+
+/* Ensure 6 equal width columns for Sunday-Friday */
+.rbc-time-view .rbc-time-content .rbc-day-slot {
+  width: 16.666%;
+  max-width: 16.666%;
+  overflow: hidden;
+}
+
+.rbc-time-view .rbc-time-header .rbc-header {
+  width: 16.666%;
+  max-width: 16.666%;
+  overflow: hidden;
+}
+
+/* Prevent any container overflow */
+.weekly-calendar-grid,
+.weekly-calendar-grid * {
+  box-sizing: border-box;
+}
+
+/* Fix any potential negative margins */
+.rbc-calendar,
+.rbc-time-view,
+.rbc-time-content,
+.rbc-time-header {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Fix Hebrew RTL alignment */
+.rbc-event-content {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Today highlight */
+.rbc-today {
+  background-color: #fef3c7 !important;
+}
+
+/* Grid styling improvements */
+.rbc-time-view {
+  border: 1px solid #e5e7eb !important;
+}
+
+.rbc-allday-cell {
+  display: none !important; /* Hide all-day row */
+}
+
+/* Hour markers */
+.rbc-label {
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  color: #6b7280 !important;
+  text-align: center !important;
+  font-weight: 500 !important;
+}
+
+/* Clean borders */
+.rbc-time-content > * + * > * {
+  border-right: 1px solid #e5e7eb !important;
+  border-left: none !important;
+}
+
+.rbc-day-slot .rbc-time-slot {
+  border-top: 1px solid #f3f4f6 !important;
+}
+
+.rbc-day-slot .rbc-time-slot:hover {
+  background-color: #f8fafc;
+}
+
+/* Ensure proper time slot sizing for detailed events */
+.rbc-time-view {
+  min-height: 800px !important;
+  background: white !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Increase row height for each half hour */
+.rbc-time-view .rbc-time-content .rbc-timeslot-group {
+  min-height: 60px !important;
+}

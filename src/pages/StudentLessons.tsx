@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Calendar, Clock, User, Music, Plus, X, Check, AlertCircle } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import { StatusBadge } from '../components/ui/Table'
 import apiService from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'

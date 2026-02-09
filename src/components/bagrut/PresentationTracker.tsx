@@ -13,7 +13,7 @@ import {
   Plus,
   Trash2
 } from 'lucide-react'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import { StatusBadge } from '../ui/Table'
 
 const PRESENTATION_NAMES = [

@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import { DeletionOperation } from './types'
 import { ProgressBar, StepProgress } from '../feedback/ProgressIndicators'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 
 interface DeletionProgressTrackerProps {
   operation: DeletionOperation

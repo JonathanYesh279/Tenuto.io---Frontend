@@ -12,7 +12,7 @@ import {
   Calendar,
   Clock
 } from 'lucide-react'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import EnhancedAccompanistForm from '../EnhancedAccompanistForm'
 
 interface Accompanist {

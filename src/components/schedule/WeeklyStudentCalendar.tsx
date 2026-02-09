@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { Clock, MapPin, User, Music, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 
 interface StudentLesson {
   id: string

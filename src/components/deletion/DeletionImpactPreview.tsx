@@ -22,7 +22,7 @@ import {
   XCircle
 } from 'lucide-react'
 import { DeletionImpact, RelatedRecord } from './types'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 
 interface DeletionImpactPreviewProps {
   impact: DeletionImpact

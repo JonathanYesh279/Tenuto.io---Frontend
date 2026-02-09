@@ -13,7 +13,7 @@ import {
   Star,
   PlayCircle
 } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import { StatusBadge } from '../components/ui/Table'
 import PresentationTracker from '../components/bagrut/PresentationTracker'
 import ProgramBuilder from '../components/bagrut/ProgramBuilder'

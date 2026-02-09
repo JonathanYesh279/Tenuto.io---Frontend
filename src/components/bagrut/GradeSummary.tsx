@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, Trophy, Award, Star, AlertTriangle } from 'lucide-react';
 import { Bagrut, DirectorEvaluation } from '@/types/bagrut.types';

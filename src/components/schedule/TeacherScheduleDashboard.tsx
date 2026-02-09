@@ -3,7 +3,7 @@ import {
   Clock, Calendar, Users, TrendingUp, Phone, Mail, 
   MapPin, CheckCircle, XCircle, AlertTriangle, BarChart3
 } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import TeacherScheduleCalendar from './TeacherScheduleCalendar';
 import { analyzeTeacherEfficiency, EfficiencyAnalysis } from '../../utils/scheduleConflicts';
 import apiService from '../../services/apiService';

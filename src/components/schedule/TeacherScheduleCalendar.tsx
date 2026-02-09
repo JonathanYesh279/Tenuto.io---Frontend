@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Settings, Users, Calendar as CalendarIcon } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import ScheduleTimeSlot from './ScheduleTimeSlot';
 import StudyDayTemplateManager from './StudyDayTemplateManager';
 import apiService from '../../services/apiService';

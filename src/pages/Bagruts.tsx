@@ -5,7 +5,7 @@ import {
   Grid, List, Download, CheckCircle, Clock, Award,
   FileText, Calendar, User, Music, AlertCircle, XCircle
 } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import Table, { StatusBadge } from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
 import BagrutCard from '../components/BagrutCard'

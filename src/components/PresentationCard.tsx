@@ -17,7 +17,7 @@ import {
   Plus,
   Trash2
 } from 'lucide-react';
-import { Card } from './ui/card';
+import { Card } from './ui/Card';
 import type { PresentationDisplay, ProgramPiece } from '../types/bagrut.types';
 import { getPresentationStatusColor, getPresentationStatusIcon } from '../services/presentationService';
 import DetailedMagenBagrutEditor from './DetailedMagenBagrutEditor';

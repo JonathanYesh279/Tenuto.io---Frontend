@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Plus, Filter, Loader, Grid, List, Eye } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import Table, { StatusBadge } from '../components/ui/Table'
 import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/StudentForm'

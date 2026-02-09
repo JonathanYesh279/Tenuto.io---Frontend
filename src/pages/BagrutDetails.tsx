@@ -6,7 +6,7 @@ import {
   CheckCircle, XCircle, AlertCircle, Star, BookOpen,
   Users, File, Loader, ChevronRight, Save, X
 } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
 import ConfirmationModal from '../components/ui/ConfirmationModal'

@@ -10,7 +10,7 @@ import {
   AlertCircle,
   Calendar
 } from 'lucide-react'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import { getDisplayName } from '../../utils/nameUtils'
 
 interface BagrutData {

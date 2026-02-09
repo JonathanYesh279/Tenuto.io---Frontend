@@ -3,7 +3,7 @@ import {
   Calendar, Users, Plus, Settings, ChevronLeft, ChevronRight,
   Clock, MapPin, User, Phone, Mail
 } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import apiService from '../../services/apiService';
 import { getDisplayName } from '@/utils/nameUtils';
 

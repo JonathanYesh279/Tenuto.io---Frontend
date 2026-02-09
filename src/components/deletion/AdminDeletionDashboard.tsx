@@ -38,7 +38,7 @@ import AuditLogViewer from './AuditLogViewer'
 import OrphanedReferenceCleanup from './OrphanedReferenceCleanup'
 import DeletionProgressTracker from './DeletionProgressTracker'
 import CascadeDeletionWorkflow from './CascadeDeletionWorkflow'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import { CircularProgress } from '../feedback/ProgressIndicators'
 
 interface AdminDeletionDashboardProps {

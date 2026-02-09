@@ -18,7 +18,7 @@ import {
   Grid,
   List
 } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import Modal from '../components/ui/Modal'

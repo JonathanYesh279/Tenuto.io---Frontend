@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, Search, Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
 import OrchestraForm from '../components/OrchestraForm'

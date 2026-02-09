@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Clock, Calendar as CalendarIcon, Users, TrendingUp } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import TimeBlockCard from './TimeBlockCard';
 import TimeBlockForm from './TimeBlockForm';
 import apiService from '../../services/apiService';

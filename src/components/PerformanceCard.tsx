@@ -13,7 +13,7 @@ import {
   AlertCircle,
   XCircle
 } from 'lucide-react';
-import { Card } from './ui/card';
+import { Card } from './ui/Card';
 import type { Performance } from '../types/bagrut.types';
 
 interface PerformanceCardProps {

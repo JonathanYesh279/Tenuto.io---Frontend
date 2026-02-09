@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Clock, MapPin, Calendar, Save } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import apiService from '../../services/apiService';
 import { VALID_LOCATIONS } from '../../constants/locations';
 import { handleServerValidationError } from '../../utils/validationUtils';

@@ -26,7 +26,7 @@ import {
 } from 'lucide-react'
 import { DataIntegrityStatus, IntegrityIssue, BatchOperation } from './types'
 import { CircularProgress, ProgressBar } from '../feedback/ProgressIndicators'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 
 interface DataIntegrityDashboardProps {
   status: DataIntegrityStatus

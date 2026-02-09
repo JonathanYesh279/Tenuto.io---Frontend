@@ -13,7 +13,7 @@ import {
   Edit3,
   Save
 } from 'lucide-react';
-import { Card } from './ui/card';
+import { Card } from './ui/Card';
 import type { Performance, ProgramPiece } from '../types/bagrut.types';
 
 interface PerformanceDetailsModalProps {

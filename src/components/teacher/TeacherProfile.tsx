@@ -3,7 +3,7 @@ import {
   User, Phone, Mail, MapPin, Clock, Users, 
   Calendar as CalendarIcon, Settings, ArrowLeft 
 } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import TeacherTimeBlocks from './TeacherTimeBlocks';
 import apiService from '../../services/apiService';
 import { getDisplayName, getInitials as getNameInitials } from '../../utils/nameUtils';

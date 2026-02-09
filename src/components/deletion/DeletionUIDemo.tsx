@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Trash2, Eye, Settings, Timeline, BarChart3 } from 'lucide-react'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import StudentDeletionModal from './StudentDeletionModal'
 import DataIntegrityDashboard from './DataIntegrityDashboard'
 import EnhancedProgressTracker from './EnhancedProgressTracker'

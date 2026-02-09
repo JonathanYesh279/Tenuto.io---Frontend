@@ -20,7 +20,7 @@ import {
   FileText,
   CheckCircle
 } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
 import TheoryLessonForm from '../components/TheoryLessonForm'

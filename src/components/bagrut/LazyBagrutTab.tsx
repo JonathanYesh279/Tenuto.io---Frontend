@@ -6,7 +6,7 @@
  */
 
 import React, { lazy, Suspense, useState, useEffect, memo } from 'react'
-import { Card } from '@/components/ui/card'
+import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'

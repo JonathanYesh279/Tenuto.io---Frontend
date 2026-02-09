@@ -19,7 +19,7 @@ import {
   XCircle
 } from 'lucide-react'
 import Modal from '../ui/Modal'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import { DeletionImpact, DeletionFormData } from './types'
 import DeletionImpactPreview from './DeletionImpactPreview'
 import DeletionProgressTracker from './DeletionProgressTracker'

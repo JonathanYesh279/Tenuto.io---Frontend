@@ -6,7 +6,7 @@
 
 import React, { useState } from 'react'
 import { Save, RotateCcw } from 'lucide-react'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import {
   PhoneInput,
   TimeInput,

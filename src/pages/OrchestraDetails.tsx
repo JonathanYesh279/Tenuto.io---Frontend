@@ -16,7 +16,7 @@ import {
   UserMinus,
   Eye
 } from 'lucide-react'
-import { Card } from '../components/ui/card'
+import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
 import OrchestraForm from '../components/OrchestraForm'

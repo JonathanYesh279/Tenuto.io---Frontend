@@ -26,7 +26,7 @@ import {
   ArrowDown
 } from 'lucide-react'
 import { AuditLogEntry, DeletionOperation } from './types'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 
 interface DeletionTimelineProps {
   entries: AuditLogEntry[]

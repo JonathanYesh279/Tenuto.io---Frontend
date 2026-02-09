@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 import { OrphanedReference, BatchOperation } from './types'
 import { ProgressBar } from '../feedback/ProgressIndicators'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import Modal from '../ui/Modal'
 
 interface OrphanedReferenceCleanupProps {

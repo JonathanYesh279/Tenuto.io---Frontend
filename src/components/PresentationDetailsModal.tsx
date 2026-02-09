@@ -14,7 +14,7 @@ import {
   Award,
   AlertCircle
 } from 'lucide-react';
-import { Card } from './ui/card';
+import { Card } from './ui/Card';
 import { InputModal } from './ui/InputModal';
 import type { PresentationDisplay, DetailedGrading, ProgramPiece } from '../types/bagrut.types';
 import { calculateDetailedGradingTotal, getGradeLevelFromScore } from '../services/presentationService';

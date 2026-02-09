@@ -26,7 +26,7 @@ import {
   FileText
 } from 'lucide-react'
 import { AuditLogEntry } from './types'
-import { Card } from '../ui/card'
+import { Card } from '../ui/Card'
 import Modal from '../ui/Modal'
 
 interface AuditLogViewerProps {

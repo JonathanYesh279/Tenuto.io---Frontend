@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Save, Copy, Clock, MapPin, Calendar } from 'lucide-react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/Card';
 import apiService from '../../services/apiService';
 
 const HEBREW_DAYS = [

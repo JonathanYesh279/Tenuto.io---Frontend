@@ -8,6 +8,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { BookOpen, Music, Trophy, Clock, FileText, CheckCircle, XCircle, Star, Edit, Save, X, AlertTriangle, User } from 'lucide-react'
 import apiService from '../../../../../services/apiService'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 
 interface AcademicInfoTabProps {
   student: any
@@ -70,17 +71,19 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
       // Otherwise, look up the teacher name from teachersData using teacherId
       if (activeAssignment?.teacherId && teachersData.length > 0) {
         const teacher = teachersData.find((t: any) => t._id === activeAssignment.teacherId)
-        if (teacher?.personalInfo?.fullName) {
-          console.log('✅ Found teacher name from teachersData:', teacher.personalInfo.fullName)
-          return teacher.personalInfo.fullName
+        const teacherName = getDisplayName(teacher?.personalInfo)
+        if (teacherName) {
+          console.log('✅ Found teacher name from teachersData:', teacherName)
+          return teacherName
         }
       }
     }
 
     // Fallback: if we have teachersData but no assignments, show the first teacher
-    if (teachersData.length > 0 && teachersData[0]?.personalInfo?.fullName) {
-      console.log('✅ Using first teacher from teachersData:', teachersData[0].personalInfo.fullName)
-      return teachersData[0].personalInfo.fullName
+    const firstTeacherName = getDisplayName(teachersData[0]?.personalInfo)
+    if (teachersData.length > 0 && firstTeacherName) {
+      console.log('✅ Using first teacher from teachersData:', firstTeacherName)
+      return firstTeacherName
     }
 
     console.log('⚠️ No teacher name found')
@@ -380,7 +383,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
               <AlertTriangle className="w-4 h-4" />
               <span className="font-medium">מורים ללא שיעור:</span>
               {teachersWithoutLessons.map((t, i) => (
-                <span key={t._id || i}>{t.personalInfo?.fullName || 'מורה'}{i < teachersWithoutLessons.length - 1 ? ', ' : ''}</span>
+                <span key={t._id || i}>{getDisplayName(t.personalInfo) || 'מורה'}{i < teachersWithoutLessons.length - 1 ? ', ' : ''}</span>
               ))}
             </div>
           </div>

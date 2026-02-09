@@ -24,6 +24,7 @@ import {
   School
 } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '../../utils/nameUtils'
 import type { Bagrut } from '../../types/bagrut.types'
 import BagrutDashboard from './BagrutDashboard'
 import BagrutStudentManager from './BagrutStudentManager'
@@ -169,7 +170,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
 
           return {
             studentId,
-            studentName: student?.personalInfo?.fullName || 'תלמיד לא ידוע',
+            studentName: getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע',
             instrument: memberInfo?.instrument || student?.academicInfo?.primaryInstrument || 'לא צוין',
             section: memberInfo?.section || 'לא צוין',
             bagrutStatus: bagrut ? (bagrut.isCompleted && bagrut.finalGrade && bagrut.finalGrade >= 55 ? 'completed' : 'active') : 'none',
@@ -240,9 +241,9 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
       return {
         bagrutId: bagrut._id || '',
         studentId: bagrut.studentId,
-        studentName: student?.personalInfo?.fullName || 'תלמיד לא ידוע',
+        studentName: getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע',
         instrument: student?.academicInfo?.primaryInstrument || 'לא צוין',
-        teacherName: teacher?.personalInfo?.fullName || 'מורה לא ידוע',
+        teacherName: getDisplayName(teacher?.personalInfo) || 'מורה לא ידוע',
         stage: completedPresentations + 1,
         progress,
         status,

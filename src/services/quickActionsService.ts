@@ -6,6 +6,7 @@
  */
 
 import { StudentDetails } from '../features/students/details/types'
+import { getDisplayName } from '../utils/nameUtils'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
@@ -71,7 +72,7 @@ class QuickActionsService {
     doc.setFontSize(10)
     
     const personalData = [
-      ['שם מלא', student.personalInfo.fullName || ''],
+      ['שם מלא', getDisplayName(student.personalInfo)],
       ['תעודת זהות', student.personalInfo.nationalId || ''],
       ['גיל', student.personalInfo.age?.toString() || ''],
       ['טלפון', student.personalInfo.phone || ''],
@@ -202,7 +203,7 @@ class QuickActionsService {
     // Personal information sheet
     if (options.includePersonal !== false) {
       const personalData = [
-        ['שם מלא', student.personalInfo.fullName || ''],
+        ['שם מלא', getDisplayName(student.personalInfo)],
         ['תעודת זהות', student.personalInfo.nationalId || ''],
         ['תאריך לידה', student.personalInfo.birthDate || ''],
         ['גיל', student.personalInfo.age || ''],
@@ -299,7 +300,7 @@ class QuickActionsService {
     
     // Personal info
     if (options.includePersonal !== false) {
-      data.push(['פרטים אישיים', 'שם מלא', student.personalInfo.fullName || ''])
+      data.push(['פרטים אישיים', 'שם מלא', getDisplayName(student.personalInfo)])
       data.push(['פרטים אישיים', 'תעודת זהות', student.personalInfo.nationalId || ''])
       data.push(['פרטים אישיים', 'טלפון', student.personalInfo.phone || ''])
       data.push(['פרטים אישיים', 'כתובת', student.personalInfo.address || ''])
@@ -361,19 +362,19 @@ class QuickActionsService {
       switch (options.format) {
         case 'pdf':
           blob = await this.generatePDF(student, { type: 'detailed' })
-          filename = `${student.personalInfo.fullName || 'תלמיד'}_דוח.pdf`
+          filename = `${getDisplayName(student.personalInfo) || 'תלמיד'}_דוח.pdf`
           break
         case 'excel':
           blob = await this.generateExcel(student, options)
-          filename = `${student.personalInfo.fullName || 'תלמיד'}_נתונים.xlsx`
+          filename = `${getDisplayName(student.personalInfo) || 'תלמיד'}_נתונים.xlsx`
           break
         case 'csv':
           blob = await this.generateCSV(student, options)
-          filename = `${student.personalInfo.fullName || 'תלמיד'}_נתונים.csv`
+          filename = `${getDisplayName(student.personalInfo) || 'תלמיד'}_נתונים.csv`
           break
         case 'json':
           blob = new Blob([JSON.stringify(student, null, 2)], { type: 'application/json' })
-          filename = `${student.personalInfo.fullName || 'תלמיד'}_נתונים.json`
+          filename = `${getDisplayName(student.personalInfo) || 'תלמיד'}_נתונים.json`
           break
         default:
           throw new Error('פורמט לא נתמך')
@@ -417,7 +418,7 @@ class QuickActionsService {
           }
           
           attachments.push({
-            filename: `${student.personalInfo.fullName || 'תלמיד'}_${attachment.type}.${attachment.format}`,
+            filename: `${getDisplayName(student.personalInfo) || 'תלמיד'}_${attachment.type}.${attachment.format}`,
             blob
           })
         }
@@ -458,7 +459,7 @@ class QuickActionsService {
     doc.text('מוענקת בזאת לתלמיד/ה:', doc.internal.pageSize.width / 2, 80, { align: 'center' })
     
     doc.setFontSize(22)
-    doc.text(student.personalInfo.fullName || '', doc.internal.pageSize.width / 2, 110, { align: 'center' })
+    doc.text(getDisplayName(student.personalInfo), doc.internal.pageSize.width / 2, 110, { align: 'center' })
     
     doc.setFontSize(14)
     doc.text(achievement.title, doc.internal.pageSize.width / 2, 140, { align: 'center' })

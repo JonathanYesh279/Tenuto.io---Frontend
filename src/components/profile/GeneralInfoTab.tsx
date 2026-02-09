@@ -3,6 +3,7 @@ import { useAuth } from '../../services/authContext.jsx'
 import { Edit2, Save, X, Mail, Phone, MapPin, Calendar, AlertCircle, CheckCircle } from 'lucide-react'
 import { teacherService } from '../../services/apiService.js'
 import type { TeacherProfile, TeacherProfileUpdateData } from '../../types/teacher.types'
+import { getDisplayName } from '../../utils/nameUtils'
 
 export default function GeneralInfoTab() {
   const { user, checkAuthStatus } = useAuth()
@@ -11,9 +12,10 @@ export default function GeneralInfoTab() {
   const [saveStatus, setSaveStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' })
   const [profileData, setProfileData] = useState<TeacherProfile | null>(null)
   
-  // State for edited fields - store as single fullName
+  // State for edited fields - store as firstName + lastName
   const [editedUser, setEditedUser] = useState<TeacherProfileUpdateData>({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     address: '',
@@ -32,8 +34,10 @@ export default function GeneralInfoTab() {
       setProfileData(profile)
       
       // Initialize edited user state with fetched data
+      const displayName = getDisplayName(profile?.personalInfo)
       setEditedUser({
-        fullName: profile?.personalInfo?.fullName || '',
+        firstName: profile?.personalInfo?.firstName || displayName.split(' ')[0] || '',
+        lastName: profile?.personalInfo?.lastName || displayName.split(' ').slice(1).join(' ') || '',
         email: profile?.personalInfo?.email || '',
         phone: profile?.personalInfo?.phone || '',
         address: profile?.personalInfo?.address || '',
@@ -45,8 +49,10 @@ export default function GeneralInfoTab() {
       
       // Fall back to auth context user data if available
       if (user) {
+        const fallbackName = getDisplayName(user?.personalInfo)
         setEditedUser({
-          fullName: user?.personalInfo?.fullName || '',
+          firstName: user?.personalInfo?.firstName || fallbackName.split(' ')[0] || '',
+          lastName: user?.personalInfo?.lastName || fallbackName.split(' ').slice(1).join(' ') || '',
           email: user?.personalInfo?.email || user?.email || '',
           phone: user?.personalInfo?.phone || user?.phone || '',
           address: user?.personalInfo?.address || user?.address || '',
@@ -92,8 +98,10 @@ export default function GeneralInfoTab() {
   const handleCancel = () => {
     // Reset to original values from profile data
     const currentData = profileData || user
+    const cancelName = getDisplayName(currentData?.personalInfo)
     setEditedUser({
-      fullName: currentData?.personalInfo?.fullName || '',
+      firstName: currentData?.personalInfo?.firstName || cancelName.split(' ')[0] || '',
+      lastName: currentData?.personalInfo?.lastName || cancelName.split(' ').slice(1).join(' ') || '',
       email: currentData?.personalInfo?.email || currentData?.email || '',
       phone: currentData?.personalInfo?.phone || currentData?.phone || '',
       address: currentData?.personalInfo?.address || currentData?.address || '',
@@ -182,23 +190,44 @@ export default function GeneralInfoTab() {
 
       {/* Profile Information */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Full Name */}
-        <div className="space-y-2 md:col-span-2">
+        {/* First Name */}
+        <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
-            שם מלא
+            שם פרטי
           </label>
           {isEditing ? (
             <input
               type="text"
-              value={editedUser.fullName}
-              onChange={(e) => setEditedUser(prev => ({ ...prev, fullName: e.target.value }))}
+              value={editedUser.firstName}
+              onChange={(e) => setEditedUser(prev => ({ ...prev, firstName: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               dir="rtl"
-              placeholder="הזן שם מלא"
+              placeholder="הזן שם פרטי"
             />
           ) : (
             <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <span className="font-reisinger-yonatan">{editedUser.fullName || 'לא צוין'}</span>
+              <span className="font-reisinger-yonatan">{editedUser.firstName || 'לא צוין'}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Last Name */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
+            שם משפחה
+          </label>
+          {isEditing ? (
+            <input
+              type="text"
+              value={editedUser.lastName}
+              onChange={(e) => setEditedUser(prev => ({ ...prev, lastName: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              dir="rtl"
+              placeholder="הזן שם משפחה"
+            />
+          ) : (
+            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+              <span className="font-reisinger-yonatan">{editedUser.lastName || 'לא צוין'}</span>
             </div>
           )}
         </div>

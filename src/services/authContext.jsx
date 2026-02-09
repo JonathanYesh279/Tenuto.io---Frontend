@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
             console.log('🔐 AUTH CONTEXT - Full teacher data fetched:', {
               hasPersonalInfo: !!fullTeacherData?.personalInfo,
               hasRoles: !!fullTeacherData?.roles,
-              fullName: fullTeacherData?.personalInfo?.fullName
+              name: fullTeacherData?.personalInfo?.firstName || fullTeacherData?.personalInfo?.fullName
             })
           } catch (fetchError) {
             console.warn('🔐 AUTH CONTEXT - Could not fetch full teacher data:', fetchError)
@@ -113,7 +113,9 @@ export const AuthProvider = ({ children }) => {
           ...userData,
           teacherId: userData?.teacherId || userData?._id,
           personalInfo: userData?.personalInfo || {
-            fullName: userData?.fullName || basicUserData?.fullName || '',
+            firstName: userData?.firstName || basicUserData?.firstName || '',
+            lastName: userData?.lastName || basicUserData?.lastName || '',
+            fullName: userData?.fullName || basicUserData?.fullName || '', // backward compat
             email: userData?.email || basicUserData?.email || '',
             phone: userData?.phone || '',
             address: userData?.address || ''
@@ -121,14 +123,14 @@ export const AuthProvider = ({ children }) => {
           roles: userData?.roles || basicUserData?.roles || [],
           role: userData?.role || userData?.roles?.[0] || basicUserData?.roles?.[0] || ''
         }
-        
+
         console.log('🔐 AUTH CONTEXT - User data normalized:', {
           hasUserData: !!normalizedUser,
           userRole: normalizedUser?.role || normalizedUser?.roles,
           userId: normalizedUser?.teacherId || normalizedUser?._id,
-          fullName: normalizedUser?.personalInfo?.fullName
+          name: normalizedUser?.personalInfo?.firstName || normalizedUser?.personalInfo?.fullName
         })
-        
+
         setIsAuthenticated(true)
         setUser(normalizedUser)
         setLastValidation(now)
@@ -198,7 +200,7 @@ export const AuthProvider = ({ children }) => {
           console.log('🔐 AUTH CONTEXT - Full teacher data fetched after login:', {
             hasPersonalInfo: !!fullTeacherData?.personalInfo,
             hasRoles: !!fullTeacherData?.roles,
-            fullName: fullTeacherData?.personalInfo?.fullName
+            name: fullTeacherData?.personalInfo?.firstName || fullTeacherData?.personalInfo?.fullName
           })
         } catch (fetchError) {
           console.warn('🔐 AUTH CONTEXT - Could not fetch full teacher data after login:', fetchError)
@@ -215,7 +217,9 @@ export const AuthProvider = ({ children }) => {
         ...userData,
         teacherId: userData?.teacherId || userData?._id,
         personalInfo: userData?.personalInfo || {
-          fullName: userData?.fullName || basicUserData?.personalInfo?.fullName || basicUserData?.fullName || '',
+          firstName: userData?.firstName || basicUserData?.personalInfo?.firstName || basicUserData?.firstName || '',
+          lastName: userData?.lastName || basicUserData?.personalInfo?.lastName || basicUserData?.lastName || '',
+          fullName: userData?.fullName || basicUserData?.personalInfo?.fullName || basicUserData?.fullName || '', // backward compat
           email: userData?.email || basicUserData?.credentials?.email || basicUserData?.personalInfo?.email || basicUserData?.email || email,
           phone: userData?.phone || basicUserData?.personalInfo?.phone || '',
           address: userData?.address || basicUserData?.personalInfo?.address || ''
@@ -223,12 +227,12 @@ export const AuthProvider = ({ children }) => {
         roles: userData?.roles || basicUserData?.roles || [],
         role: userData?.role || userData?.roles?.[0] || basicUserData?.roles?.[0] || ''
       }
-      
+
       console.log('🔐 AUTH CONTEXT - User data normalized after login:', {
         hasUserData: !!normalizedUser,
         userRole: normalizedUser?.role || normalizedUser?.roles,
         userId: normalizedUser?.teacherId || normalizedUser?._id,
-        fullName: normalizedUser?.personalInfo?.fullName
+        name: normalizedUser?.personalInfo?.firstName || normalizedUser?.personalInfo?.fullName
       })
       
       setIsAuthenticated(true)

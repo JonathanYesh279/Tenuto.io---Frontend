@@ -2,12 +2,13 @@
  * Personal Info Tab Component (Simplified)
  * 
  * Displays ONLY actual backend fields - aligned with schema
- * Fields: fullName, phone, age, address, parentName, parentPhone, parentEmail, studentEmail
+ * Fields: firstName, lastName, phone, age, address, parentName, parentPhone, parentEmail, studentEmail
  */
 
 import { useState, useEffect } from 'react'
 import { User, Phone, Mail, MapPin, Edit, Save, X } from 'lucide-react'
 import apiService from '../../../../../services/apiService'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 
 interface PersonalInfoTabProps {
   student: any
@@ -21,7 +22,8 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [editedData, setEditedData] = useState({
-    fullName: personalInfo.fullName || '',
+    firstName: personalInfo.firstName || '',
+    lastName: personalInfo.lastName || '',
     phone: personalInfo.phone || '',
     age: personalInfo.age || '',
     address: personalInfo.address || '',
@@ -34,7 +36,8 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
   // Update editedData when student data changes
   useEffect(() => {
     setEditedData({
-      fullName: personalInfo.fullName || '',
+      firstName: personalInfo.firstName || '',
+      lastName: personalInfo.lastName || '',
       phone: personalInfo.phone || '',
       age: personalInfo.age || '',
       address: personalInfo.address || '',
@@ -82,7 +85,8 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
 
   const handleCancel = () => {
     setEditedData({
-      fullName: personalInfo.fullName || '',
+      firstName: personalInfo.firstName || '',
+      lastName: personalInfo.lastName || '',
       phone: personalInfo.phone || '',
       age: personalInfo.age || '',
       address: personalInfo.address || '',
@@ -148,17 +152,32 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
         <h3 className="text-lg font-medium text-gray-700 mb-4">פרטי תלמיד</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">שם מלא</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">שם פרטי</label>
             {isEditing ? (
               <input
                 type="text"
-                value={editedData.fullName}
-                onChange={(e) => setEditedData({ ...editedData, fullName: e.target.value })}
+                value={editedData.firstName}
+                onChange={(e) => setEditedData({ ...editedData, firstName: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="הכנס שם מלא"
+                placeholder="הכנס שם פרטי"
               />
             ) : (
-              <div className="text-gray-900 text-lg font-medium">{personalInfo.fullName || 'לא צוין'}</div>
+              <div className="text-gray-900 text-lg font-medium">{personalInfo.firstName || 'לא צוין'}</div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">שם משפחה</label>
+            {isEditing ? (
+              <input
+                type="text"
+                value={editedData.lastName}
+                onChange={(e) => setEditedData({ ...editedData, lastName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="הכנס שם משפחה"
+              />
+            ) : (
+              <div className="text-gray-900 text-lg font-medium">{personalInfo.lastName || 'לא צוין'}</div>
             )}
           </div>
           

@@ -84,7 +84,8 @@ interface TeacherAssignment {
 
 interface StudentFormData {
   personalInfo: {
-    fullName: string
+    firstName: string
+    lastName: string
     phone: string
     age: number | null
     address: string
@@ -129,7 +130,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
 }) => {
   const [formData, setFormData] = useState<StudentFormData>({
     personalInfo: {
-      fullName: '',
+      firstName: '',
+      lastName: '',
       phone: '',
       age: null,
       address: '',
@@ -289,9 +291,9 @@ const StudentForm: React.FC<StudentFormProps> = ({
   const filteredTeachers = teachers.filter(teacher => {
     if (!teacherSearchQuery) return true
     const searchLower = teacherSearchQuery.toLowerCase()
-    const fullName = teacher.personalInfo?.fullName?.toLowerCase() || ''
+    const teacherName = ((teacher.personalInfo?.firstName || '') + ' ' + (teacher.personalInfo?.lastName || '')).toLowerCase()
     const instrument = teacher.professionalInfo?.instrument?.toLowerCase() || ''
-    return fullName.includes(searchLower) || instrument.includes(searchLower)
+    return teacherName.includes(searchLower) || instrument.includes(searchLower)
   })
 
   // Get selected teacher name for display
@@ -299,7 +301,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
     if (!selectedTeacherId) return 'בחר מורה לראות זמנים פנויים'
     const teacher = teachers.find(t => t._id === selectedTeacherId)
     if (!teacher) return 'בחר מורה לראות זמנים פנויים'
-    return `${teacher.personalInfo?.fullName || ''} - ${teacher.professionalInfo?.instrument || 'ללא כלי'}`
+    return `${teacher.personalInfo?.firstName || ''} ${teacher.personalInfo?.lastName || ''} - ${teacher.professionalInfo?.instrument || 'ללא כלי'}`
   }
 
   // Helper function to calculate end time from start time and duration
@@ -450,7 +452,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                 duration: duration,
                 isAvailable: true,
                 location: block.location,
-                teacherName: teacher.personalInfo?.fullName,
+                teacherName: (teacher.personalInfo?.firstName || '') + ' ' + (teacher.personalInfo?.lastName || ''),
                 teacherId: teacher._id,
                 instrument: teacher.professionalInfo?.instrument
               })
@@ -573,7 +575,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
         const assignmentEndTime = calculateEndTime(assignment.time, assignment.duration)
 
         if (timeRangesOverlap(slot.startTime, slotEndTime, assignment.time, assignmentEndTime)) {
-          const teacherName = teachers.find(t => t._id === assignment.teacherId)?.personalInfo?.fullName || 'מורה'
+          const conflictTeacher = teachers.find(t => t._id === assignment.teacherId)
+          const teacherName = conflictTeacher ? (conflictTeacher.personalInfo?.firstName || '') + ' ' + (conflictTeacher.personalInfo?.lastName || '') : 'מורה'
           return `התזמון מתנגש עם שיעור קיים:\n${assignment.day} ${assignment.time}-${assignmentEndTime} עם ${teacherName}`
         }
       }
@@ -699,8 +702,11 @@ const StudentForm: React.FC<StudentFormProps> = ({
     const newErrors: Record<string, string> = {}
 
     // Personal info validation
-    if (!formData.personalInfo.fullName.trim()) {
-      newErrors['personalInfo.fullName'] = 'שם מלא הוא שדה חובה'
+    if (!formData.personalInfo.firstName.trim()) {
+      newErrors['personalInfo.firstName'] = 'שם פרטי הוא שדה חובה'
+    }
+    if (!formData.personalInfo.lastName.trim()) {
+      newErrors['personalInfo.lastName'] = 'שם משפחה הוא שדה חובה'
     }
 
     if (formData.personalInfo.phone && !/^05\d{8}$/.test(formData.personalInfo.phone)) {
@@ -810,22 +816,41 @@ const StudentForm: React.FC<StudentFormProps> = ({
         {expandedSections.personal && (
           <div className="p-6 border-t border-gray-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Student Name */}
+              {/* First Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  שם מלא <span className="text-red-500">*</span>
+                  שם פרטי <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  value={formData.personalInfo.fullName}
-                  onChange={(e) => handleInputChange('personalInfo', 'fullName', e.target.value)}
+                  value={formData.personalInfo.firstName}
+                  onChange={(e) => handleInputChange('personalInfo', 'firstName', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['personalInfo.fullName'] ? 'border-red-500' : 'border-gray-300'
+                    errors['personalInfo.firstName'] ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="הכנס שם משפחה ואז שם פרטי (לדוגמה: כהן יוסי)"
+                  placeholder="הכנס שם פרטי"
                 />
-                {errors['personalInfo.fullName'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.fullName']}</p>
+                {errors['personalInfo.firstName'] && (
+                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.firstName']}</p>
+                )}
+              </div>
+
+              {/* Last Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  שם משפחה <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.personalInfo.lastName}
+                  onChange={(e) => handleInputChange('personalInfo', 'lastName', e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                    errors['personalInfo.lastName'] ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="הכנס שם משפחה"
+                />
+                {errors['personalInfo.lastName'] && (
+                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.lastName']}</p>
                 )}
               </div>
 
@@ -1267,7 +1292,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                           }`}
                         >
                           <span>
-                            {teacher.personalInfo?.fullName} - {teacher.professionalInfo?.instrument || 'ללא כלי'}
+                            {teacher.personalInfo?.firstName} {teacher.personalInfo?.lastName} - {teacher.professionalInfo?.instrument || 'ללא כלי'}
                           </span>
                           {selectedTeacherId === teacher._id && (
                             <CheckCircle className="w-4 h-4 text-primary-600" />
@@ -1288,7 +1313,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             {selectedTeacherId && (
               <div className="mt-4">
                 <h4 className="text-sm font-medium text-gray-700 mb-3">
-                  זמנים פנויים - {teachers.find(t => t._id === selectedTeacherId)?.personalInfo?.fullName || 'מורה'}
+                  זמנים פנויים - {(() => { const t = teachers.find(t => t._id === selectedTeacherId); return t ? (t.personalInfo?.firstName || '') + ' ' + (t.personalInfo?.lastName || '') : 'מורה' })()}
                 </h4>
                 
                 {/* Add Additional Lesson Button - shows when menu is closed and there are available slots */}
@@ -1692,7 +1717,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                     return (
                       <option key={lesson._id} value={lesson._id}>
                         {lesson.name || lesson.title || lesson.category} {dayTimeLocation ? `| ${dayTimeLocation}` : ''}
-                        {lesson.teacher?.personalInfo?.fullName && ` | מורה: ${lesson.teacher.personalInfo.fullName}`}
+                        {lesson.teacher?.personalInfo?.firstName && ` | מורה: ${lesson.teacher.personalInfo.firstName} ${lesson.teacher.personalInfo.lastName || ''}`}
                       </option>
                     );
                   })}
@@ -1709,8 +1734,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
                           <h4 className="font-medium text-blue-900">{selectedLesson.name}</h4>
                           <div className="text-sm text-blue-700 space-y-1">
                             <div><strong>רמה:</strong> {selectedLesson.level}</div>
-                            {selectedLesson.teacher?.personalInfo?.fullName && (
-                              <div><strong>מורה:</strong> {selectedLesson.teacher.personalInfo.fullName}</div>
+                            {selectedLesson.teacher?.personalInfo?.firstName && (
+                              <div><strong>מורה:</strong> {selectedLesson.teacher.personalInfo.firstName} {selectedLesson.teacher.personalInfo.lastName || ''}</div>
                             )}
                             {selectedLesson.description && (
                               <div><strong>תיאור:</strong> {selectedLesson.description}</div>

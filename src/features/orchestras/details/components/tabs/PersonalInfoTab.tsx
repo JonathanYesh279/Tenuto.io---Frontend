@@ -4,6 +4,7 @@ import { OrchestraTabProps } from '../../types'
 import apiService from '../../../../../services/apiService'
 import { useAuth } from '../../../../../services/authContext'
 import { VALID_LOCATIONS } from '../../../../../constants/locations'
+import { getDisplayName } from '@/utils/nameUtils'
 
 const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
   orchestraId,
@@ -261,7 +262,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
                   .filter(teacher => teacher.roles?.includes('מנצח') || teacher.roles?.includes('מדריך הרכב'))
                   .map(teacher => (
                     <option key={teacher._id} value={teacher._id}>
-                      {teacher.personalInfo?.fullName}
+                      {getDisplayName(teacher.personalInfo)}
                     </option>
                   ))}
               </select>
@@ -271,7 +272,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
                 <div>
                   {conductor ? (
                     <div>
-                      <span className="text-gray-900">{conductor.personalInfo?.fullName}</span>
+                      <span className="text-gray-900">{getDisplayName(conductor.personalInfo)}</span>
                       {conductor.personalInfo?.email && (
                         <div className="text-sm text-gray-500">{conductor.personalInfo.email}</div>
                       )}

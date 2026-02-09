@@ -1,9 +1,11 @@
 /**
  * Rehearsal Management Utility Functions
- * 
+ *
  * Helper functions for formatting and handling rehearsal data
  * according to the specified backend data structure and Hebrew display requirements.
  */
+
+import { getDisplayName } from './nameUtils';
 
 // Valid days of week from backend schema
 export const VALID_DAYS_OF_WEEK = {
@@ -54,13 +56,17 @@ export interface Rehearsal {
     conductor?: {
       _id: string;
       personalInfo: {
-        fullName: string;
+        firstName?: string;
+        lastName?: string;
+        fullName?: string;
       };
     };
     members?: Array<{
       _id: string;
       personalInfo: {
-        fullName: string;
+        firstName?: string;
+        lastName?: string;
+        fullName?: string;
       };
     }>;
   };
@@ -664,7 +670,7 @@ export const getRehearsalColor = (rehearsal: Rehearsal): string => {
  */
 export const formatAttendanceList = (
   attendance: { present: string[]; absent: string[] },
-  members?: Array<{ _id: string; personalInfo: { fullName: string } }>
+  members?: Array<{ _id: string; personalInfo: { firstName?: string; lastName?: string; fullName?: string } }>
 ): {
   presentMembers: Array<{ id: string; name: string }>;
   absentMembers: Array<{ id: string; name: string }>;
@@ -684,7 +690,7 @@ export const formatAttendanceList = (
   members.forEach(member => {
     const memberInfo = {
       id: member._id,
-      name: member.personalInfo?.fullName || 'שם לא ידוע'
+      name: getDisplayName(member.personalInfo) || 'שם לא ידוע'
     };
     
     if (presentSet.has(member._id)) {

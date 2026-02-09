@@ -12,13 +12,14 @@ import {
   UserRole,
   PermissionContext 
 } from '@/services/permissionsService'
-import { 
-  auditTrailService, 
-  AuditAction, 
+import {
+  auditTrailService,
+  AuditAction,
   AuditResourceType,
-  AuditEntry 
+  AuditEntry
 } from '@/services/auditTrailService'
 import { StudentDetails } from '../types'
+import { getDisplayName } from '@/utils/nameUtils'
 
 export interface PermissionCheck {
   allowed: boolean
@@ -149,7 +150,7 @@ export const usePermissionsAndAudit = (studentId?: string, student?: StudentDeta
         currentUser.name,
         resourceType,
         resourceId,
-        student?.personalInfo?.fullName,
+        getDisplayName(student?.personalInfo),
         oldValues,
         newValues,
         changedFields
@@ -164,7 +165,7 @@ export const usePermissionsAndAudit = (studentId?: string, student?: StudentDeta
         currentUser.name,
         resourceType,
         resourceId,
-        student?.personalInfo?.fullName,
+        getDisplayName(student?.personalInfo),
         data
       )
       await refreshRecentActivity()
@@ -177,7 +178,7 @@ export const usePermissionsAndAudit = (studentId?: string, student?: StudentDeta
         currentUser.name,
         resourceType,
         resourceId,
-        student?.personalInfo?.fullName,
+        getDisplayName(student?.personalInfo),
         reason
       )
       await refreshRecentActivity()

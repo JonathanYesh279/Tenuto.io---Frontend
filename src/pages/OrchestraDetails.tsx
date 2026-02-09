@@ -21,7 +21,7 @@ import Table from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
 import OrchestraForm from '../components/OrchestraForm'
 import { orchestraService, studentService, teacherService, rehearsalService } from '../services/apiService'
-import { 
+import {
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
@@ -30,6 +30,7 @@ import {
   getMemberInstrumentsSummary,
   type Orchestra
 } from '../utils/orchestraUtils'
+import { getDisplayName } from '../utils/nameUtils'
 
 export default function OrchestraDetails() {
   const { orchestraId } = useParams<{ orchestraId: string }>()
@@ -174,7 +175,7 @@ export default function OrchestraDetails() {
     !orchestra.memberIds.includes(student._id) &&
     student.isActive &&
     (!searchQuery || 
-      student.personalInfo?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      getDisplayName(student.personalInfo)?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       student.academicInfo?.class?.includes(searchQuery))
   )
 
@@ -194,7 +195,7 @@ export default function OrchestraDetails() {
       render: (student: any) => (
         <div className="flex items-center">
           <div>
-            <div className="font-medium text-gray-900">{student.personalInfo?.fullName}</div>
+            <div className="font-medium text-gray-900">{getDisplayName(student.personalInfo)}</div>
             <div className="text-sm text-gray-500">כיתה {student.academicInfo?.class}</div>
           </div>
         </div>
@@ -236,7 +237,7 @@ export default function OrchestraDetails() {
       label: 'שם',
       render: (student: any) => (
         <div>
-          <div className="font-medium text-gray-900">{student.personalInfo?.fullName}</div>
+          <div className="font-medium text-gray-900">{getDisplayName(student.personalInfo)}</div>
           <div className="text-sm text-gray-500">כיתה {student.academicInfo?.class}</div>
         </div>
       )
@@ -372,7 +373,7 @@ export default function OrchestraDetails() {
                         onClick={() => handleViewTeacherProfile(conductor._id)}
                         className="text-primary-600 hover:text-primary-700 hover:underline"
                       >
-                        {conductor.personalInfo?.fullName}
+                        {getDisplayName(conductor.personalInfo)}
                       </button>
                       {conductor.personalInfo?.email && (
                         <div className="text-xs text-gray-500">{conductor.personalInfo.email}</div>

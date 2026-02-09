@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import apiService from '../services/apiService';
+import { getDisplayName } from '../utils/nameUtils';
 
 interface TeacherData {
   _id: string;
@@ -61,11 +62,7 @@ export const useTeacherData = (teacherId: string | undefined): UseTeacherDataRes
   }, [teacherId]);
 
   // Format teacher name with fallback
-  const teacherName = teacher?.personalInfo?.fullName ||
-                      (teacher?.personalInfo?.firstName && teacher?.personalInfo?.lastName
-                        ? `${teacher.personalInfo.firstName} ${teacher.personalInfo.lastName}`
-                        : '') ||
-                      'מורה לא ידוע';
+  const teacherName = getDisplayName(teacher?.personalInfo) || 'מורה לא ידוע';
 
   return {
     teacher,
@@ -88,9 +85,7 @@ export const getTeacherNameFromLesson = (lesson: any): string => {
   // If teacher object is populated with personalInfo
   if (typeof lesson.teacherId === 'object' && lesson.teacherId?.personalInfo) {
     const teacher = lesson.teacherId;
-    return teacher.personalInfo.fullName ||
-           `${teacher.personalInfo.firstName || ''} ${teacher.personalInfo.lastName || ''}`.trim() ||
-           'מורה לא ידוע';
+    return getDisplayName(teacher.personalInfo) || 'מורה לא ידוע';
   }
 
   // If only teacherId is available (as a string), return placeholder

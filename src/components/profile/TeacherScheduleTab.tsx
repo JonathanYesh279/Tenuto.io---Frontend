@@ -6,6 +6,7 @@ import {
   MapPin, Users, BookOpen, AlertCircle, Check, Search
 } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '../../utils/nameUtils'
 import { VALID_LOCATIONS } from '../../constants/locations'
 
 interface LessonDay {
@@ -149,7 +150,7 @@ export default function TeacherScheduleTab() {
 
       // Check each student's assignments and create lesson blocks
       students.forEach(student => {
-        console.log('Processing student:', student.personalInfo?.fullName)
+        console.log('Processing student:', getDisplayName(student.personalInfo))
         console.log('Student assignments:', student.teacherAssignments)
 
         if (student.teacherAssignments) {
@@ -183,14 +184,14 @@ export default function TeacherScheduleTab() {
                 endTime: endTime,
                 totalDuration: duration,
                 studentId: student._id,
-                studentName: student.personalInfo?.fullName,
+                studentName: getDisplayName(student.personalInfo),
                 teacherId: teacherId,
                 instrument: student.academicInfo?.instrumentProgress?.find(p => p.isPrimary)?.instrumentName,
                 location: assignment.location || defaultLocation,
                 type: 'lesson' // Mark as actual lesson, not availability
               }
 
-              console.log(`Creating lesson: Student="${student.personalInfo?.fullName}", Day="${assignment.day}", Time="${startTime}-${endTime}"`)
+              console.log(`Creating lesson: Student="${getDisplayName(student.personalInfo)}", Day="${assignment.day}", Time="${startTime}-${endTime}"`)
               convertedLessons.push(lessonBlock)
             }
           })
@@ -224,7 +225,7 @@ export default function TeacherScheduleTab() {
           day: block.day,
           startTime: block.startTime,
           endTime: block.endTime,
-          studentName: student ? student.personalInfo?.fullName : block.studentName,
+          studentName: student ? getDisplayName(student.personalInfo) : block.studentName,
           studentId: student?._id || block.studentId,
           instrument: primaryInstrument?.instrumentName || block.instrument,
           location: block.location || defaultBlockLocation,
@@ -1436,8 +1437,8 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
 
         return {
           id: student._id,
-          firstName: student.personalInfo?.firstName || student.personalInfo?.fullName?.split(' ')[0] || '',
-          lastName: student.personalInfo?.lastName || student.personalInfo?.fullName?.split(' ').slice(1).join(' ') || '',
+          firstName: student.personalInfo?.firstName || getDisplayName(student.personalInfo).split(' ')[0] || '',
+          lastName: student.personalInfo?.lastName || getDisplayName(student.personalInfo).split(' ').slice(1).join(' ') || '',
           instrument: primaryInstrument?.instrumentName || '',
           class: student.personalInfo?.class || student.academicInfo?.class,
           stage: primaryInstrument?.currentStage

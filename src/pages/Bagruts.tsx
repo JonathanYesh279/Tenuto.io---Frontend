@@ -15,6 +15,7 @@ import { useBagrut } from '../hooks/useBagrut'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
 import apiService from '../services/apiService'
+import { getDisplayName } from '../utils/nameUtils'
 
 export default function Bagruts() {
   const navigate = useNavigate()
@@ -108,7 +109,7 @@ export default function Bagruts() {
         const bagrutData = studentsWithBagruts.map(student => ({
           _id: `${student._id}-bagrut`,
           studentId: student._id,
-          studentName: student.personalInfo?.fullName || 'לא צוין',
+          studentName: getDisplayName(student.personalInfo) || 'לא צוין',
           bagrutTracking: student.academicInfo?.bagrutTracking || {},
           class: student.personalInfo?.class || student.academicInfo?.class,
           // Check if student has any active bagrut process
@@ -151,13 +152,13 @@ export default function Bagruts() {
   // Get student and teacher names for display
   const getStudentName = (studentId: string) => {
     const student = students.find(s => s._id === studentId)
-    console.log('🔍 Looking for student:', studentId, 'Found:', student?.personalInfo?.fullName || 'NOT FOUND')
-    return student?.personalInfo?.fullName || 'תלמיד לא ידוע'
+    console.log('🔍 Looking for student:', studentId, 'Found:', getDisplayName(student?.personalInfo) || 'NOT FOUND')
+    return getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע'
   }
 
   const getTeacherName = (teacherId: string) => {
     const teacher = teachers.find(t => t._id === teacherId)
-    return teacher?.personalInfo?.fullName || 'מורה לא ידוע'
+    return getDisplayName(teacher?.personalInfo) || 'מורה לא ידוע'
   }
 
   // Handle actions
@@ -544,7 +545,7 @@ export default function Bagruts() {
               <option value="">כל המורים</option>
               {teachers.map(teacher => (
                 <option key={teacher._id} value={teacher._id}>
-                  {teacher.personalInfo?.fullName}
+                  {getDisplayName(teacher.personalInfo)}
                 </option>
               ))}
             </select>

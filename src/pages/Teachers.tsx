@@ -9,6 +9,7 @@ import ConfirmationModal from '../components/ui/ConfirmationModal'
 import apiService from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
+import { getDisplayName } from '../utils/nameUtils'
 
 interface Teacher {
   id: string
@@ -167,7 +168,7 @@ export default function Teachers() {
       const filteredTeachers = teachersData.filter(teacher => teacher._id !== user?._id)
       const transformedTeachers = filteredTeachers.map(teacher => ({
         id: teacher._id,
-        name: teacher.personalInfo?.fullName || 'לא צוין',
+        name: getDisplayName(teacher.personalInfo) || 'לא צוין',
         specialization: teacher.professionalInfo?.instrument || 'לא צוין',
         // Use roles array from database
         roles: teacher.allRoles || teacher.roles || [],
@@ -789,7 +790,8 @@ export default function Teachers() {
             const teacherForCard = {
               _id: teacher.id,
               personalInfo: {
-                fullName: teacher.name,
+                firstName: teacher.rawData?.personalInfo?.firstName || teacher.name,
+                lastName: teacher.rawData?.personalInfo?.lastName || '',
                 phone: teacher.phone,
                 email: teacher.email
               },

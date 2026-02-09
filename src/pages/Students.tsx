@@ -12,6 +12,7 @@ import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
 import { useCascadeDeletion } from '../hooks/useCascadeDeletion'
 import { cascadeDeletionService } from '../services/cascadeDeletionService'
+import { getDisplayName } from '../utils/nameUtils'
 import SafeDeleteModal from '../components/SafeDeleteModal'
 import DeletionImpactModal from '../components/DeletionImpactModal'
 import BatchDeletionModal from '../components/BatchDeletionModal'
@@ -72,8 +73,7 @@ export default function Students() {
         const teachers = await apiService.teachers.getTeachers()
         const map = new Map<string, string>()
         teachers.forEach((teacher: any) => {
-          const name = teacher.personalInfo?.fullName ||
-                      teacher.fullName ||
+          const name = getDisplayName(teacher.personalInfo) ||
                       teacher.name ||
                       'לא מוגדר'
           map.set(teacher._id, name)
@@ -192,7 +192,7 @@ export default function Students() {
       setError(null)
 
       const userRole = getUserRole()
-      console.log('Loading students for user role:', userRole, 'User:', user?.personalInfo?.fullName, 'Page:', page)
+      console.log('Loading students for user role:', userRole, 'User:', getDisplayName(user?.personalInfo), 'Page:', page)
 
       let studentsResponse = []
 
@@ -276,12 +276,12 @@ export default function Students() {
       // Map response data using CORRECT database field names
       const students = response.map(student => ({
         id: student._id,
-        fullName: student.personalInfo.fullName,
+        displayName: getDisplayName(student.personalInfo),
         phone: student.personalInfo.phone,
         age: student.personalInfo.age,
         class: student.academicInfo.class,
         primaryInstrument: student.academicInfo.instrumentProgress
-          .find(inst => inst.isPrimary)?.instrumentName || 
+          .find(inst => inst.isPrimary)?.instrumentName ||
           student.academicInfo.instrumentProgress[0]?.instrumentName || 'ללא כלי',
         currentStage: student.academicInfo.instrumentProgress
           .find(inst => inst.isPrimary)?.currentStage || 1,
@@ -291,11 +291,11 @@ export default function Students() {
         orchestraIds: student.enrollments.orchestraIds,
         isActive: student.isActive
       }))
-      
+
       // Transform for table display
       const transformedStudents = students.map(student => ({
         id: student.id,
-        name: student.fullName,
+        name: student.displayName,
         instrument: student.primaryInstrument,
         stageLevel: student.currentStage,
         orchestra: student.orchestraIds?.length > 0 ? 'תזמורת' : 'ללא תזמורת',

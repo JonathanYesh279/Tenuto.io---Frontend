@@ -4,11 +4,14 @@ import { Card } from '../components/ui/card'
 import { StatusBadge } from '../components/ui/Table'
 import apiService from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
+import { getDisplayName } from '../utils/nameUtils'
 
 interface Teacher {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
   }
 }
@@ -92,7 +95,7 @@ export default function StudentLessons() {
       // Mock student data with teacher assignments
       const mockStudent = {
         _id: currentStudentId,
-        personalInfo: { fullName: "תלמיד דוגמה" },
+        personalInfo: { firstName: "תלמיד", lastName: "דוגמה" },
         teacherAssignments: [
           {
             teacherId: "teacher1",
@@ -225,7 +228,7 @@ export default function StudentLessons() {
         const teacher = teachers.find(t => t._id === assignment.teacherId)
         return {
           ...assignment,
-          teacherName: teacher?.personalInfo?.fullName || 'מורה לא ידוע'
+          teacherName: getDisplayName(teacher?.personalInfo) || 'מורה לא ידוע'
         }
       })
   }

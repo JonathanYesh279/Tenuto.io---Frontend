@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
+import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
 
 export default function Header() {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
@@ -83,17 +84,12 @@ export default function Header() {
   }
 
   const getInitials = () => {
-    const fullName = user?.personalInfo?.fullName || user?.fullName || user?.name || ''
-    if (!fullName) return 'מ'
-    const words = fullName.trim().split(' ')
-    if (words.length >= 2) {
-      return words[0][0] + words[1][0]
-    }
-    return words[0][0] || 'מ'
+    const initials = getNameInitials(user?.personalInfo)
+    return initials || 'מ'
   }
-  
+
   const getUserFullName = () => {
-    return user?.personalInfo?.fullName || user?.fullName || user?.name || 'משתמש'
+    return getDisplayName(user?.personalInfo) || user?.fullName || user?.name || 'משתמש'
   }
   
   const getUserRole = () => {

@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { CheckCircle2, XCircle, Calendar, Users, Clock, TrendingUp, Loader2 } from 'lucide-react'
 import { useAuth } from '../../services/authContext'
 import apiService from '../../services/apiService'
+import { getDisplayName, getInitials as getNameInitials } from '../../utils/nameUtils'
 import { toast } from 'react-hot-toast'
 
 interface Student {
   _id: string
   id?: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     idNumber?: string
   }
   academicInfo?: {
@@ -164,7 +167,8 @@ export default function TeacherAttendanceTab() {
       })
 
       // Show success toast
-      const studentName = students.find(s => (s._id || s.id) === studentId)?.personalInfo?.fullName || 'התלמיד'
+      const studentRecord = students.find(s => (s._id || s.id) === studentId)
+      const studentName = getDisplayName(studentRecord?.personalInfo) || 'התלמיד'
       toast.success(
         status === 'present'
           ? `${studentName} סומן כנוכח ✓`
@@ -375,15 +379,12 @@ export default function TeacherAttendanceTab() {
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
                         <span className="text-indigo-600 font-semibold">
-                          {student.personalInfo.fullName
-                            .split(' ')
-                            .map(n => n[0])
-                            .join('')}
+                          {getNameInitials(student.personalInfo)}
                         </span>
                       </div>
                       <div className="min-w-0">
                         <h4 className="font-medium text-gray-900 truncate">
-                          {student.personalInfo.fullName}
+                          {getDisplayName(student.personalInfo)}
                         </h4>
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           {student.instrument && (

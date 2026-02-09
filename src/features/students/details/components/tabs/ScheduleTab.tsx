@@ -10,6 +10,7 @@ import { Calendar, Clock, MapPin, Music, Users } from 'lucide-react'
 import WeeklyCalendarGrid from '../../../../../components/schedule/WeeklyCalendarGrid'
 import SimpleWeeklyGrid from '../../../../../components/schedule/SimpleWeeklyGrid'
 import apiService from '../../../../../services/apiService'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 
 interface ScheduleTabProps {
   student: any
@@ -33,7 +34,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           try {
             const teacher = await apiService.teachers.getTeacherById(teacherId)
             teachers[teacherId] = teacher
-            console.log(`Fetched teacher ${teacherId}:`, teacher.personalInfo?.fullName)
+            console.log(`Fetched teacher ${teacherId}:`, getDisplayName(teacher.personalInfo))
           } catch (error) {
             console.error(`Failed to fetch teacher ${teacherId}:`, error)
           }
@@ -115,9 +116,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
         
         // Get teacher name from fetched data or use data from assignment
         const teacher = teacherData[assignment.teacherId]
-        const teacherName = teacher?.personalInfo?.fullName || 
-                           assignment.scheduleInfo?.teacherName || 
-                           assignment.teacherName || 
+        const teacherName = getDisplayName(teacher?.personalInfo) ||
+                           assignment.scheduleInfo?.teacherName ||
+                           assignment.teacherName ||
                            'מורה' // Generic "Teacher" instead of a specific mock name
         
         // Get instrument from teacher data or student's academic info
@@ -148,9 +149,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
         
         // Try to get teacher data if we have a teacherId
         const teacher = lesson.teacherId ? teacherData[lesson.teacherId] : null
-        const teacherName = teacher?.personalInfo?.fullName ||
-                           lesson.teacherName || 
-                           lesson.teacher?.personalInfo?.fullName || 
+        const teacherName = getDisplayName(teacher?.personalInfo) ||
+                           lesson.teacherName ||
+                           getDisplayName(lesson.teacher?.personalInfo) ||
                            'מורה'
         
         calendarLessons.push({
@@ -179,13 +180,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           if (typeof conductor === 'string') return conductor
 
           // Try different ways to get conductor name
-          if (conductor.personalInfo?.fullName) return conductor.personalInfo.fullName
+          if (getDisplayName(conductor.personalInfo)) return getDisplayName(conductor.personalInfo)
           if (conductor.personalInfo?.firstName && conductor.personalInfo?.lastName) {
             return `${conductor.personalInfo.firstName} ${conductor.personalInfo.lastName}`
           }
           if (conductor.personalInfo?.name) return conductor.personalInfo.name
           if (conductor.personalInfo?.hebrewName) return conductor.personalInfo.hebrewName
-          if (conductor.fullName) return conductor.fullName
+          if (conductor.fullName) return conductor.fullName  // legacy fallback
           if (conductor.name) return conductor.name
           if (conductor.displayName) return conductor.displayName
 
@@ -403,13 +404,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                             if (typeof conductor === 'string') return conductor
 
                             // Try different ways to get conductor name
-                            if (conductor.personalInfo?.fullName) return conductor.personalInfo.fullName
+                            if (getDisplayName(conductor.personalInfo)) return getDisplayName(conductor.personalInfo)
                             if (conductor.personalInfo?.firstName && conductor.personalInfo?.lastName) {
                               return `${conductor.personalInfo.firstName} ${conductor.personalInfo.lastName}`
                             }
                             if (conductor.personalInfo?.name) return conductor.personalInfo.name
                             if (conductor.personalInfo?.hebrewName) return conductor.personalInfo.hebrewName
-                            if (conductor.fullName) return conductor.fullName
+                            if (conductor.fullName) return conductor.fullName  // legacy fallback
                             if (conductor.name) return conductor.name
                             if (conductor.displayName) return conductor.displayName
 
@@ -506,13 +507,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                         if (typeof conductor === 'string') return conductor
 
                         // Try different ways to get conductor name
-                        if (conductor.personalInfo?.fullName) return conductor.personalInfo.fullName
+                        if (getDisplayName(conductor.personalInfo)) return getDisplayName(conductor.personalInfo)
                         if (conductor.personalInfo?.firstName && conductor.personalInfo?.lastName) {
                           return `${conductor.personalInfo.firstName} ${conductor.personalInfo.lastName}`
                         }
                         if (conductor.personalInfo?.name) return conductor.personalInfo.name
                         if (conductor.personalInfo?.hebrewName) return conductor.personalInfo.hebrewName
-                        if (conductor.fullName) return conductor.fullName
+                        if (conductor.fullName) return conductor.fullName  // legacy fallback
                         if (conductor.name) return conductor.name
                         if (conductor.displayName) return conductor.displayName
 

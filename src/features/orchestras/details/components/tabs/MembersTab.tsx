@@ -4,6 +4,7 @@ import { OrchestraTabProps, OrchestraMember } from '../../types'
 import apiService from '../../../../../services/apiService'
 import ConfirmationModal from '../../../../../components/ui/ConfirmationModal'
 import { useAuth } from '../../../../../services/authContext'
+import { getDisplayName } from '@/utils/nameUtils'
 
 const MembersTab: React.FC<OrchestraTabProps> = ({
   orchestraId,
@@ -263,8 +264,8 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
 
   // Filter available students based on search
   const filteredAvailableStudents = availableStudents.filter(student =>
-    !searchQuery || 
-    student.personalInfo?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    !searchQuery ||
+    getDisplayName(student.personalInfo).toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.academicInfo?.class?.includes(searchQuery) ||
     student.primaryInstrument?.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -419,7 +420,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                         />
                         <div className="flex-1">
                           <div className="font-medium text-gray-900">
-                            {student.personalInfo?.fullName}
+                            {getDisplayName(student.personalInfo)}
                           </div>
                           <div className="text-sm text-gray-500">
                             כיתה {student.academicInfo?.class} | {student.primaryInstrument || 'לא צוין כלי'}
@@ -459,12 +460,12 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
               <div className="flex items-center flex-1">
                 <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center ml-3">
                   <span className="text-sm text-primary-600">
-                    {member.personalInfo?.fullName?.charAt(0) || '?'}
+                    {getDisplayName(member.personalInfo).charAt(0) || '?'}
                   </span>
                 </div>
                 <div className="flex-1">
                   <div className="font-medium text-gray-900">
-                    {member.personalInfo?.fullName}
+                    {getDisplayName(member.personalInfo)}
                   </div>
                   <div className="text-sm text-gray-500">
                     כיתה {member.academicInfo?.class} | {member.primaryInstrument || 'לא צוין כלי'}
@@ -487,7 +488,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                 </button>
                 {canEdit() && (
                   <button
-                    onClick={() => handleRemoveMember(member._id, member.personalInfo?.fullName)}
+                    onClick={() => handleRemoveMember(member._id, getDisplayName(member.personalInfo))}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="הסר מהתזמורת"
                   >

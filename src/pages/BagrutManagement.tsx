@@ -21,6 +21,7 @@ import AccompanistManager from '../components/bagrut/AccompanistManager'
 import DocumentManager from '../components/bagrut/DocumentManager'
 import apiService from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
+import { getDisplayName } from '../utils/nameUtils'
 
 // Grade Level Mappings
 const GRADE_LEVELS = {
@@ -489,7 +490,7 @@ export default function BagrutManagement() {
               <option value="">בחר תלמיד</option>
               {students.map(student => (
                 <option key={student._id} value={student._id}>
-                  {student.personalInfo?.fullName}
+                  {getDisplayName(student.personalInfo)}
                 </option>
               ))}
             </select>

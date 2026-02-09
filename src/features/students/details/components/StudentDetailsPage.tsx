@@ -12,6 +12,7 @@ import { TabType } from '../types'
 import StudentTabNavigation from './StudentTabNavigation'
 import StudentTabContent from './StudentTabContent'
 import apiService from '../../../../services/apiService'
+import { getDisplayName } from '../../../../utils/nameUtils'
 import { useWebSocketStatus } from '../../../../services/websocketService'
 import { usePerformanceOptimizations } from '../../../../services/performanceOptimizations'
 import { 
@@ -79,7 +80,7 @@ const StudentDetailsPage: React.FC = () => {
       const studentData = await apiService.students.getStudentById(studentId)
       setStudent(studentData)
       
-      console.log('✅ Student data loaded successfully:', studentData.personalInfo?.fullName)
+      console.log('✅ Student data loaded successfully:', getDisplayName(studentData.personalInfo))
     } catch (err) {
       console.error('❌ Error fetching student:', err)
       setError({
@@ -100,7 +101,7 @@ const StudentDetailsPage: React.FC = () => {
   // Handle student data updates
   const handleStudentUpdate = useCallback((updatedStudent: any) => {
     setStudent(updatedStudent)
-    console.log('🔄 Student data updated:', updatedStudent.personalInfo?.fullName)
+    console.log('🔄 Student data updated:', getDisplayName(updatedStudent.personalInfo))
   }, [])
 
   // Handle student deletion
@@ -129,7 +130,7 @@ const StudentDetailsPage: React.FC = () => {
 
   // New cascade deletion handlers
   const handleSafeDeleteClick = async () => {
-    if (!studentId || !student?.personalInfo?.fullName) return
+    if (!studentId || !getDisplayName(student?.personalInfo)) return
     setShowSafeDeleteModal(true)
   }
 
@@ -326,7 +327,7 @@ const StudentDetailsPage: React.FC = () => {
           </button>
           <span>{'>'}</span>
           <span className="text-gray-900">
-            {student?.personalInfo?.fullName || 'פרטי תלמיד'}
+            {getDisplayName(student?.personalInfo) || 'פרטי תלמיד'}
           </span>
         </nav>
 
@@ -339,7 +340,7 @@ const StudentDetailsPage: React.FC = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  {student?.personalInfo?.fullName || 'טוען...'}
+                  {getDisplayName(student?.personalInfo) || 'טוען...'}
                 </h1>
                 <p className="text-gray-600">
                   כיתה {student?.academicInfo?.class || '-'} | {student?.primaryInstrument || 'ללא כלי'}
@@ -390,7 +391,7 @@ const StudentDetailsPage: React.FC = () => {
         {/* Deletion Impact Summary */}
         <DeletionImpactSummary
           studentId={studentId}
-          studentName={student?.personalInfo?.fullName || 'תלמיד'}
+          studentName={getDisplayName(student?.personalInfo) || 'תלמיד'}
           isVisible={showImpactSummary}
           onClose={() => setShowImpactSummary(false)}
         />
@@ -434,7 +435,7 @@ const StudentDetailsPage: React.FC = () => {
       <ConfirmationModal
         isOpen={showDeleteModal}
         title="מחיקת תלמיד"
-        message={`האם אתה בטוח שברצונך למחוק את התלמיד ${student?.personalInfo?.fullName}? פעולה זו לא ניתנת לביטול.`}
+        message={`האם אתה בטוח שברצונך למחוק את התלמיד ${getDisplayName(student?.personalInfo)}? פעולה זו לא ניתנת לביטול.`}
         confirmText="מחק"
         cancelText="ביטול"
         onConfirm={handleConfirmDelete}
@@ -446,7 +447,7 @@ const StudentDetailsPage: React.FC = () => {
       <SafeDeleteModal
         isOpen={showSafeDeleteModal}
         studentId={studentId || ''}
-        studentName={student?.personalInfo?.fullName || ''}
+        studentName={getDisplayName(student?.personalInfo) || ''}
         onClose={() => setShowSafeDeleteModal(false)}
         onConfirm={handleSafeDelete}
       />

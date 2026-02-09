@@ -26,6 +26,7 @@ import {
   Plus
 } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '../../utils/nameUtils'
 
 interface TheoryGroup {
   id: string
@@ -54,7 +55,7 @@ interface GroupStudent {
   id: string
   firstName: string
   lastName: string
-  fullName: string
+  fullName?: string
   email?: string
   phone?: string
   grade?: string
@@ -158,7 +159,6 @@ export default function TheoryGroupManager() {
               id: studentId,
               firstName: `תלמיד${index + 1}`,
               lastName: 'דוגמה',
-              fullName: `תלמיד${index + 1} דוגמה`,
               email: `student${index + 1}@example.com`,
               grade: `${Math.floor(Math.random() * 6) + 7}`,
               instrument: ['פסנתר', 'כינור', 'גיטרה', 'חליל'][Math.floor(Math.random() * 4)],
@@ -208,7 +208,7 @@ export default function TheoryGroupManager() {
         id: student._id,
         firstName: student.personalInfo?.firstName || '',
         lastName: student.personalInfo?.lastName || '',
-        fullName: student.personalInfo?.fullName || `${student.personalInfo?.firstName} ${student.personalInfo?.lastName}`,
+        fullName: getDisplayName(student.personalInfo),
         email: student.personalInfo?.email,
         phone: student.personalInfo?.phone,
         grade: student.academicInfo?.gradeLevel,
@@ -377,7 +377,7 @@ export default function TheoryGroupManager() {
     const csv = [
       'שם,אימייל,כיתה,כלי,תאריך רישום,נוכחות',
       ...group.enrolledStudents.map(student =>
-        `${student.fullName},${student.email || ''},${student.grade || ''},${student.instrument || ''},${new Date(student.enrollmentDate).toLocaleDateString('he-IL')},${student.attendance?.rate || 0}%`
+        `${getDisplayName(student)},${student.email || ''},${student.grade || ''},${student.instrument || ''},${new Date(student.enrollmentDate).toLocaleDateString('he-IL')},${student.attendance?.rate || 0}%`
       )
     ].join('\n')
 
@@ -397,7 +397,7 @@ export default function TheoryGroupManager() {
   })
 
   const filteredStudents = selectedGroup?.enrolledStudents.filter(student => {
-    if (searchTerm && !student.fullName.toLowerCase().includes(searchTerm.toLowerCase())) return false
+    if (searchTerm && !getDisplayName(student).toLowerCase().includes(searchTerm.toLowerCase())) return false
     return true
   }) || []
 
@@ -666,7 +666,7 @@ export default function TheoryGroupManager() {
                                 <Users className="w-5 h-5 text-indigo-600" />
                               </div>
                               <div>
-                                <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{student.fullName}</h4>
+                                <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{getDisplayName(student)}</h4>
                                 <div className="text-sm text-gray-600 space-y-1">
                                   <div>כיתה {student.grade} • {student.instrument}</div>
                                   <div>רישום: {new Date(student.enrollmentDate).toLocaleDateString('he-IL')}</div>
@@ -718,7 +718,7 @@ export default function TheoryGroupManager() {
                                 <span className="text-orange-600 font-bold text-sm">#{index + 1}</span>
                               </div>
                               <div>
-                                <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{student.fullName}</h4>
+                                <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{getDisplayName(student)}</h4>
                                 <div className="text-sm text-gray-600">
                                   כיתה {student.grade} • {student.instrument}
                                 </div>
@@ -886,7 +886,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredStudents = availableStudents.filter(student =>
-    student.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    getDisplayName(student).toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.instrument?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -928,7 +928,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
               <div key={student.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <div>
                   <div className="font-medium text-gray-900 font-reisinger-yonatan">
-                    {student.fullName}
+                    {getDisplayName(student)}
                   </div>
                   <div className="text-sm text-gray-600 font-reisinger-yonatan">
                     {student.instrument && `${student.instrument} • `}

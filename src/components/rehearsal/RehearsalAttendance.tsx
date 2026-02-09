@@ -16,6 +16,7 @@ import {
   BarChart3
 } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '../../utils/nameUtils'
 
 interface AttendanceMember {
   id: string
@@ -107,7 +108,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
         const attendance = attendanceMap.get(member._id)
         return {
           id: member._id,
-          name: member.personalInfo?.fullName || `${member.personalInfo?.firstName} ${member.personalInfo?.lastName}`,
+          name: getDisplayName(member.personalInfo) || 'שם לא ידוע',
           instrument: member.academicInfo?.instrumentProgress?.find(p => p.isPrimary)?.instrumentName || '',
           section: member.section || 'כללי',
           status: attendance?.status || 'not_marked',

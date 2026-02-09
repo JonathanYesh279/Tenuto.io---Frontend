@@ -27,7 +27,7 @@ export default function Login() {
       console.log('📤 Sending login request to API service...')
       const result = await login(email, password)
       
-      console.log('✅ Login successful:', { user: result.user?.personalInfo?.fullName || 'Unknown' })
+      console.log('✅ Login successful:', { user: result.user?.personalInfo?.firstName || result.user?.personalInfo?.fullName || 'Unknown' })
       console.log('🔑 Authentication token stored successfully')
       console.log('🧭 Navigating to dashboard...')
       

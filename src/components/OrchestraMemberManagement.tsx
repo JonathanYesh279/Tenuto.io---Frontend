@@ -17,6 +17,7 @@ import {
 import { Card } from './ui/Card'
 import { orchestraService, studentService } from '../services/apiService'
 import { type Orchestra } from '../utils/orchestraUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface OrchestraMemberManagementProps {
   orchestraId: string
@@ -28,7 +29,9 @@ interface OrchestraMemberManagementProps {
 interface StudentWithDetails {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
     email?: string
     studentEmail?: string
@@ -136,7 +139,7 @@ export default function OrchestraMemberManagement({
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
-        if (!student.personalInfo.fullName.toLowerCase().includes(query)) {
+        if (!getDisplayName(student.personalInfo).toLowerCase().includes(query)) {
           return false
         }
       }
@@ -228,7 +231,7 @@ export default function OrchestraMemberManagement({
             </div>
             <div className="flex-1">
               <div className="font-medium text-gray-900 mb-1">
-                {student.personalInfo.fullName}
+                {getDisplayName(student.personalInfo)}
               </div>
               
               <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">

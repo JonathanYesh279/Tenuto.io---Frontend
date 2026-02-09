@@ -6,6 +6,7 @@ import Table, { StatusBadge } from '../components/ui/Table'
 import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/StudentForm'
 import apiService from '../services/apiService'
+import { getDisplayName } from '../utils/nameUtils'
 
 export default function StudentsGrid() {
   const navigate = useNavigate()
@@ -39,7 +40,7 @@ export default function StudentsGrid() {
         original: student,
         // Processed data for Table view (legacy compatibility)
         id: student._id,
-        name: student.personalInfo.fullName,
+        name: getDisplayName(student.personalInfo),
         instrument: student.academicInfo.instrumentProgress
           ?.find(inst => inst.isPrimary)?.instrumentName || 
           student.academicInfo.instrumentProgress?.[0]?.instrumentName || 'ללא כלי',

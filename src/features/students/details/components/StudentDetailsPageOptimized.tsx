@@ -12,6 +12,7 @@ import { TabType, TabConfig } from '../types'
 import StudentTabNavigation from './StudentTabNavigation'
 import StudentTabContent from './StudentTabContent'
 import { useStudent } from '../../../../services/apiCache'
+import { getDisplayName, getInitials } from '../../../../utils/nameUtils'
 import { 
   SmartLoadingState, 
   SkeletonComponents,
@@ -20,14 +21,14 @@ import {
 
 // Memoized header component to prevent unnecessary re-renders
 const StudentHeader = memo(({ student }: { student: any }) => {
-  const displayName = useMemo(() => 
-    student?.personalInfo?.fullName || 'שם לא זמין', 
-    [student?.personalInfo?.fullName]
+  const displayName = useMemo(() =>
+    getDisplayName(student?.personalInfo) || 'שם לא זמין',
+    [student?.personalInfo?.firstName, student?.personalInfo?.lastName, student?.personalInfo?.fullName]
   )
-  
-  const initials = useMemo(() => 
-    displayName.charAt(0) || '?', 
-    [displayName]
+
+  const initials = useMemo(() =>
+    getInitials(student?.personalInfo) || '?',
+    [student?.personalInfo?.firstName, student?.personalInfo?.lastName, student?.personalInfo?.fullName]
   )
   
   const statusBadge = useMemo(() => {

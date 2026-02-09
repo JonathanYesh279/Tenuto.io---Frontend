@@ -15,7 +15,7 @@ import {
 import { Card } from './ui/Card'
 import StatsCard from './ui/StatsCard'
 import { orchestraService, studentService, teacherService, rehearsalService } from '../services/apiService'
-import { 
+import {
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
@@ -23,12 +23,15 @@ import {
   getMemberInstrumentsSummary,
   type Orchestra
 } from '../utils/orchestraUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface OrchestraWithDetails extends Orchestra {
   memberDetails?: Array<{
     _id: string
     personalInfo: {
-      fullName: string
+      firstName?: string
+      lastName?: string
+      fullName?: string
     }
     academicInfo?: {
       class?: string
@@ -42,7 +45,9 @@ interface OrchestraWithDetails extends Orchestra {
   conductorDetails?: {
     _id: string
     personalInfo: {
-      fullName: string
+      firstName?: string
+      lastName?: string
+      fullName?: string
       email?: string
     }
     professionalInfo?: {
@@ -293,7 +298,7 @@ export default function OrchestraManagementDashboard({
                     {orchestra.conductorDetails ? (
                       <div>
                         <span className="font-medium text-gray-900">
-                          {orchestra.conductorDetails.personalInfo.fullName}
+                          {getDisplayName(orchestra.conductorDetails.personalInfo)}
                         </span>
                         {orchestra.conductorDetails.professionalInfo?.instrument && (
                           <span className="text-gray-500 text-xs block">

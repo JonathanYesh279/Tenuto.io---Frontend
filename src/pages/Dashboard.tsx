@@ -5,6 +5,7 @@ import { Card } from '../components/ui/Card'
 import apiService from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
+import { getDisplayName } from '../utils/nameUtils'
 import ConductorDashboard from '../components/dashboard/ConductorDashboard'
 import TeacherDashboard from '../components/dashboard/TeacherDashboard'
 import TheoryTeacherDashboard from '../components/dashboard/TheoryTeacherDashboard'
@@ -129,7 +130,7 @@ export default function Dashboard() {
         activities.push({
           type: 'student',
           title: 'רישום תלמיד חדש',
-          description: `${student.personalInfo?.fullName || 'תלמיד'} נרשם לקונסרבטוריון`,
+          description: `${getDisplayName(student.personalInfo) || 'תלמיד'} נרשם לקונסרבטוריון`,
           time: getRelativeTime(student.createdAt),
           color: 'primary'
         })

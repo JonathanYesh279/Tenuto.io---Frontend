@@ -4,6 +4,7 @@
  */
 
 import apiService from './apiService.js';
+import { getDisplayName } from '../utils/nameUtils';
 
 // Types for analytics data
 export interface AttendanceStats {
@@ -539,7 +540,7 @@ export const enhancedDashboardAnalytics = {
         if (teacher.isActive === false) continue;
 
         const teacherId = teacher._id;
-        const teacherName = teacher.personalInfo?.fullName || 'מורה';
+        const teacherName = getDisplayName(teacher.personalInfo) || 'מורה';
 
         if (!teacherMap.has(teacherId)) {
           teacherMap.set(teacherId, {
@@ -709,7 +710,7 @@ export const enhancedDashboardAnalytics = {
       // Create student lookup
       const studentLookup = new Map<string, string>();
       studentsData.forEach((s: any) => {
-        studentLookup.set(s._id, s.personalInfo?.fullName || 'תלמיד');
+        studentLookup.set(s._id, getDisplayName(s.personalInfo) || 'תלמיד');
       });
 
       const activeBagruts = bagrutsData.filter((b: any) => b.isActive !== false);
@@ -856,7 +857,7 @@ export const enhancedDashboardAnalytics = {
 
       return {
         studentId,
-        studentName: studentData.personalInfo?.fullName || 'תלמיד',
+        studentName: getDisplayName(studentData.personalInfo) || 'תלמיד',
         privateLessons: { present: 0, absent: 0, excused: 0, late: 0, total: 0, rate: 0 },
         theoryLessons: calculateAttendanceStats(studentTheoryLessons.flatMap((t: any) =>
           t.attendanceList?.filter((a: any) => a.studentId === studentId) || []

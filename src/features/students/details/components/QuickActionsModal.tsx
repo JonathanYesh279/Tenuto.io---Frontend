@@ -35,6 +35,7 @@ import {
   EmailOptions 
 } from '@/services/quickActionsService'
 import toast from 'react-hot-toast'
+import { getDisplayName } from '../../../../utils/nameUtils'
 import { cascadeDeletionService } from '../../../../services/cascadeDeletionService'
 import { useCascadeDeletion } from '../../../../hooks/useCascadeDeletion'
 
@@ -86,8 +87,8 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
   // Email options state
   const [emailOptions, setEmailOptions] = useState<EmailOptions>({
     recipients: [student.personalInfo.parentEmail || ''].filter(Boolean),
-    subject: `דוח תלמיד: ${student.personalInfo.fullName}`,
-    message: `שלום,\n\nמצורף דוח מפורט על התקדמות התלמיד/ה ${student.personalInfo.fullName}.\n\nבברכה,\nצוות הקונסרבטוריון`,
+    subject: `דוח תלמיד: ${getDisplayName(student.personalInfo)}`,
+    message: `שלום,\n\nמצורף דוח מפורט על התקדמות התלמיד/ה ${getDisplayName(student.personalInfo)}.\n\nבברכה,\nצוות הקונסרבטוריון`,
     attachments: [{ type: 'summary', format: 'pdf' }]
   })
   
@@ -154,7 +155,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = `תעודה_${student.personalInfo.fullName || 'תלמיד'}.pdf`
+      link.download = `תעודה_${getDisplayName(student.personalInfo) || 'תלמיד'}.pdf`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -603,7 +604,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                           <div className="mt-2 p-3 bg-white border border-blue-200 rounded text-center">
                             <div className="font-bold text-lg">תעודת הוקרה</div>
                             <div className="mt-2">מוענקת בזאת לתלמיד/ה:</div>
-                            <div className="font-bold text-xl text-blue-600">{student.personalInfo.fullName}</div>
+                            <div className="font-bold text-xl text-blue-600">{getDisplayName(student.personalInfo)}</div>
                             <div className="mt-2">{certificateData.title}</div>
                             <div className="text-sm text-gray-600">{certificateData.description}</div>
                             <div className="mt-2 text-sm">חתימה: {certificateData.signedBy}</div>
@@ -777,7 +778,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
         <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Check className="w-4 h-4 text-green-600" />
-            <span>תלמיד: {student.personalInfo.fullName}</span>
+            <span>תלמיד: {getDisplayName(student.personalInfo)}</span>
           </div>
           
           <div className="flex items-center gap-3">

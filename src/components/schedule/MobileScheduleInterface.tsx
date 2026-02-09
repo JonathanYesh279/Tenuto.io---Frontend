@@ -5,11 +5,14 @@ import {
 } from 'lucide-react';
 import { Card } from '../ui/card';
 import apiService from '../../services/apiService';
+import { getDisplayName } from '@/utils/nameUtils';
 
 interface Student {
   _id: string;
   personalInfo: {
-    fullName: string;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
   };
   teacherAssignments: Array<{
     teacherId: string;
@@ -208,7 +211,7 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
                 className="w-full p-4 text-right bg-white border border-gray-200 rounded-lg active:bg-gray-50 transition-colors"
               >
                 <div className="font-medium text-gray-900 mb-1">
-                  {student.personalInfo.fullName}
+                  {getDisplayName(student.personalInfo)}
                 </div>
                 <div className="text-sm text-gray-600">
                   {assignment?.instrument} • {assignment?.lessonDuration || 45} דק'

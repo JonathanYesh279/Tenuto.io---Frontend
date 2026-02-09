@@ -11,6 +11,7 @@ import {
   Calendar
 } from 'lucide-react'
 import { Card } from '../ui/card'
+import { getDisplayName } from '../../utils/nameUtils'
 
 interface BagrutData {
   _id?: string
@@ -60,7 +61,9 @@ interface BagrutData {
 interface Student {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone: string
     age: number
   }
@@ -69,7 +72,9 @@ interface Student {
 interface Teacher {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
   }
 }
 
@@ -121,7 +126,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
       // In real implementation, this would call the API to generate the document
       await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate export time
       
-      const filename = `bagrut_${type}_${student?.personalInfo.fullName || 'student'}_${new Date().toISOString().split('T')[0]}`
+      const filename = `bagrut_${type}_${getDisplayName(student?.personalInfo) || 'student'}_${new Date().toISOString().split('T')[0]}`
       
       // Mock download
       const link = document.createElement('a')
@@ -145,7 +150,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
       
       if (navigator.share) {
         await navigator.share({
-          title: `התקדמות בגרות - ${student?.personalInfo.fullName}`,
+          title: `התקדמות בגרות - ${getDisplayName(student?.personalInfo)}`,
           text: 'צפה בהתקדמות הבגרות',
           url: shareableLink
         })
@@ -335,9 +340,9 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
           <div>
             <h5 className="font-medium text-gray-900 mb-2">פרטי התלמיד</h5>
             <div className="text-sm text-gray-600 space-y-1">
-              <div>שם: {student?.personalInfo.fullName || 'לא זמין'}</div>
+              <div>שם: {getDisplayName(student?.personalInfo) || 'לא זמין'}</div>
               <div>גיל: {student?.personalInfo.age || 'לא זמין'}</div>
-              <div>מורה: {teacher?.personalInfo.fullName || 'לא זמין'}</div>
+              <div>מורה: {getDisplayName(teacher?.personalInfo) || 'לא זמין'}</div>
             </div>
           </div>
           
@@ -389,7 +394,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
             <Award className="w-16 h-16 mx-auto mb-4 text-yellow-600" />
             <h3 className="text-xl font-bold text-yellow-900 mb-2">תעודת בגרות במוזיקה</h3>
             <p className="text-yellow-800 mb-4">
-              מוענקת בזה ל{student?.personalInfo.fullName} 
+              מוענקת בזה ל{getDisplayName(student?.personalInfo)}
             </p>
             <div className="bg-white p-6 rounded-lg max-w-md mx-auto">
               <div className="text-3xl font-bold text-primary-600 mb-2">

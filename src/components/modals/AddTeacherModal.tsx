@@ -31,7 +31,8 @@ interface ScheduleSlot {
 
 interface TeacherFormData {
   personalInfo: {
-    fullName: string
+    firstName: string
+    lastName: string
     phone: string
     email: string
     address: string
@@ -106,7 +107,8 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
   const [activeTab, setActiveTab] = useState<'personal' | 'professional' | 'schedule' | 'conducting'>('personal')
   const [formData, setFormData] = useState<TeacherFormData>({
     personalInfo: {
-      fullName: '',
+      firstName: '',
+      lastName: '',
       phone: '',
       email: '',
       address: ''
@@ -171,7 +173,8 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
 
     setFormData({
       personalInfo: {
-        fullName: teacher.personalInfo?.fullName || '',
+        firstName: teacher.personalInfo?.firstName || '',
+        lastName: teacher.personalInfo?.lastName || '',
         phone: teacher.personalInfo?.phone || '',
         email: teacher.personalInfo?.email || '',
         address: teacher.personalInfo?.address || ''
@@ -195,8 +198,11 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
     const newErrors: Record<string, string> = {}
 
     // Personal Info validation
-    if (!formData.personalInfo.fullName.trim()) {
-      newErrors['personalInfo.fullName'] = 'שם מלא נדרש'
+    if (!formData.personalInfo.firstName.trim()) {
+      newErrors['personalInfo.firstName'] = 'שם פרטי נדרש'
+    }
+    if (!formData.personalInfo.lastName.trim()) {
+      newErrors['personalInfo.lastName'] = 'שם משפחה נדרש'
     }
     if (!formData.personalInfo.phone.match(/^05\d{8}$/)) {
       newErrors['personalInfo.phone'] = 'מספר טלפון חייב להיות בפורמט: 05XXXXXXXX'
@@ -420,7 +426,8 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
   const resetForm = () => {
     setFormData({
       personalInfo: {
-        fullName: '',
+        firstName: '',
+        lastName: '',
         phone: '',
         email: '',
         address: ''
@@ -502,21 +509,41 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      שם מלא *
+                      שם פרטי *
                     </label>
                     <input
                       type="text"
-                      value={formData.personalInfo.fullName}
-                      onChange={(e) => handleInputChange('personalInfo', 'fullName', e.target.value)}
+                      value={formData.personalInfo.firstName}
+                      onChange={(e) => handleInputChange('personalInfo', 'firstName', e.target.value)}
                       className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-500 bg-white ${
-                        errors['personalInfo.fullName']
+                        errors['personalInfo.firstName']
                           ? 'border-red-300 focus:ring-red-500'
                           : 'border-gray-300 focus:ring-primary-500'
                       }`}
-                      placeholder="הכנס שם מלא"
+                      placeholder="הכנס שם פרטי"
                     />
-                    {errors['personalInfo.fullName'] && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.fullName']}</p>
+                    {errors['personalInfo.firstName'] && (
+                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.firstName']}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      שם משפחה *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.personalInfo.lastName}
+                      onChange={(e) => handleInputChange('personalInfo', 'lastName', e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-500 bg-white ${
+                        errors['personalInfo.lastName']
+                          ? 'border-red-300 focus:ring-red-500'
+                          : 'border-gray-300 focus:ring-primary-500'
+                      }`}
+                      placeholder="הכנס שם משפחה"
+                    />
+                    {errors['personalInfo.lastName'] && (
+                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.lastName']}</p>
                     )}
                   </div>
 

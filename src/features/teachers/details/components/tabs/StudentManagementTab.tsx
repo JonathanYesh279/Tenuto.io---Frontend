@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Users, Plus, Trash2, Calendar, Clock, User, Search, X, ChevronDown, BookOpen } from 'lucide-react'
 import { Teacher } from '../../types'
 import apiService from '../../../../../services/apiService'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 
 interface StudentManagementTabProps {
   teacher: Teacher
@@ -17,7 +18,9 @@ interface StudentManagementTabProps {
 interface Student {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
   }
   academicInfo?: {
     class?: string
@@ -67,7 +70,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
         console.log('📚 StudentManagementTab - Fetching students for teacher:', {
           teacherId,
-          teacherName: teacher.personalInfo?.fullName,
+          teacherName: getDisplayName(teacher.personalInfo),
           studentIds: teacher.teaching?.studentIds
         })
 
@@ -118,7 +121,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
   // Handle student selection
   const handleStudentSelect = (student: Student) => {
     setSelectedStudentId(student._id)
-    setSearchTerm(student.personalInfo?.fullName || '')
+    setSearchTerm(getDisplayName(student.personalInfo))
     setShowDropdown(false)
     setHighlightedIndex(-1)
   }
@@ -196,8 +199,8 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
   const handleRemoveStudent = async (studentId: string) => {
     const student = students.find(s => s._id === studentId)
-    const studentName = student?.personalInfo?.fullName || 'התלמיד'
-    const teacherName = teacher.personalInfo?.fullName || 'המורה'
+    const studentName = getDisplayName(student?.personalInfo) || 'התלמיד'
+    const teacherName = getDisplayName(teacher.personalInfo) || 'המורה'
     
     if (!confirm(`האם אתה בטוח שברצונך להסיר את ${studentName} מרשימת התלמידים של ${teacherName}?\n\nפעולה זו תנתק את הקשר בין התלמיד למורה אך לא תמחק את פרטי התלמיד מהמערכת.`)) return
 
@@ -228,7 +231,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
     }
 
     try {
-      console.log('🔄 Creating lesson for student:', schedulingStudent.personalInfo?.fullName)
+      console.log('🔄 Creating lesson for student:', getDisplayName(schedulingStudent.personalInfo))
       
       // Calculate end time
       const calculateEndTime = (startTime: string, duration: number): string => {
@@ -241,7 +244,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
       // Get current student data
       const currentStudent = await apiService.students.getStudentById(schedulingStudent._id)
-      console.log('📋 Current student data loaded:', currentStudent.personalInfo?.fullName)
+      console.log('📋 Current student data loaded:', getDisplayName(currentStudent.personalInfo))
 
       // Get primary instrument
       const primaryInstrument = currentStudent.academicInfo?.instrumentProgress?.find(
@@ -332,11 +335,11 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
   // Filter students based on search term
   const filteredStudents = availableStudents.filter(student => {
-    const fullName = student.personalInfo?.fullName || ''
+    const displayName = getDisplayName(student.personalInfo)
     const className = student.academicInfo?.class || ''
     const searchQuery = searchTerm.toLowerCase()
     return (
-      fullName.toLowerCase().includes(searchQuery) ||
+      displayName.toLowerCase().includes(searchQuery) ||
       className.toLowerCase().includes(searchQuery)
     )
   })
@@ -452,7 +455,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                             >
                               <div className="flex justify-between items-center">
                                 <span className="font-medium">
-                                  {student.personalInfo?.fullName}
+                                  {getDisplayName(student.personalInfo)}
                                 </span>
                                 <span className="text-sm text-gray-500">
                                   כיתה {student.academicInfo?.class || 'לא צוין'}
@@ -506,7 +509,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
             <div className="bg-blue-50 p-4 rounded-lg mb-6">
               <h4 className="font-medium text-blue-900 mb-2">פרטי התלמיד</h4>
               <div className="text-sm text-blue-800">
-                <div><strong>שם:</strong> {schedulingStudent.personalInfo?.fullName}</div>
+                <div><strong>שם:</strong> {getDisplayName(schedulingStudent.personalInfo)}</div>
                 <div><strong>כיתה:</strong> {schedulingStudent.academicInfo?.class || 'לא צוין'}</div>
                 <div><strong>כלי נגינה:</strong> {schedulingStudent.primaryInstrument || 'לא צוין'}</div>
               </div>
@@ -620,7 +623,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                   
                   <div>
                     <h4 className="font-medium text-gray-900">
-                      {student.personalInfo?.fullName || 'ללא שם'}
+                      {getDisplayName(student.personalInfo) || 'ללא שם'}
                     </h4>
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <span>כיתה {student.academicInfo?.class || 'לא צוין'}</span>

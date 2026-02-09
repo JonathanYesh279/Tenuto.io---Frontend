@@ -12,6 +12,7 @@ import {
 import { Card } from '../components/ui/card'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import RehearsalForm from '../components/RehearsalForm'
+import { getDisplayName } from '@/utils/nameUtils'
 
 export default function RehearsalDetails() {
   const { rehearsalId } = useParams<{ rehearsalId: string }>()
@@ -626,7 +627,7 @@ export default function RehearsalDetails() {
                 </div>
               ) : rehearsal.orchestra.members
                 .filter(member =>
-                  member.personalInfo?.fullName?.toLowerCase().includes(attendanceSearchQuery.toLowerCase()) ||
+                  getDisplayName(member.personalInfo).toLowerCase().includes(attendanceSearchQuery.toLowerCase()) ||
                   member.academicInfo?.class?.includes(attendanceSearchQuery)
                 )
                 .map(member => {
@@ -634,7 +635,7 @@ export default function RehearsalDetails() {
                   return (
                     <div key={member._id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
                       <div className="flex-1">
-                        <div className="font-medium text-gray-900">{member.personalInfo?.fullName}</div>
+                        <div className="font-medium text-gray-900">{getDisplayName(member.personalInfo)}</div>
                         {member.academicInfo?.class && (
                           <div className="text-sm text-gray-500">{member.academicInfo.class}</div>
                         )}

@@ -31,6 +31,7 @@ import {
 import apiService from '../../services/apiService'
 import { TeacherDataTransformUtils } from '../../services/teacherDetailsApi'
 import type { Bagrut } from '../../types/bagrut.types'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface DashboardStats {
   totalStudents: number
@@ -219,7 +220,7 @@ export default function TeacherDashboard() {
 
       // Debug log to see what data we're getting
       console.log('Teacher profile loaded:', {
-        name: teacherProfile?.personalInfo?.fullName,
+        name: getDisplayName(teacherProfile?.personalInfo),
         studentIds: teacherProfile?.teaching?.studentIds,
         studentCount: teacherProfile?.teaching?.studentIds?.length || 0,
         timeBlocks: teacherProfile?.teaching?.timeBlocks?.length || 0
@@ -335,7 +336,7 @@ export default function TeacherDashboard() {
 
         return {
           studentId: bagrut.studentId,
-          studentName: student?.personalInfo?.fullName || 'תלמיד לא ידוע',
+          studentName: getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע',
           instrument: student?.academicInfo?.primaryInstrument || 'לא צוין',
           stage: completedPresentations + 1,
           progress,
@@ -429,7 +430,7 @@ export default function TeacherDashboard() {
             if (assignment.time && assignment.time >= currentTime) {
               upcomingLessonsData.push({
                 id: `${student._id}-${assignment.time}`,
-                studentName: student.personalInfo?.fullName || 'תלמיד',
+                studentName: getDisplayName(student.personalInfo) || 'תלמיד',
                 time: assignment.time,
                 instrument: student.academicInfo?.primaryInstrument || assignment.instrument || 'כלי מוזיקה',
                 duration: assignment.duration || 60,
@@ -616,7 +617,7 @@ export default function TeacherDashboard() {
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
             <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
-              לוח בקרה - {user?.personalInfo?.fullName || user?.fullName || 'מורה'}
+              לוח בקרה - {getDisplayName(user?.personalInfo) || user?.fullName || 'מורה'}
             </h1>
           </div>
           <p className="text-gray-600 mt-2">

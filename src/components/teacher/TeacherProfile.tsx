@@ -6,11 +6,14 @@ import {
 import { Card } from '../ui/card';
 import TeacherTimeBlocks from './TeacherTimeBlocks';
 import apiService from '../../services/apiService';
+import { getDisplayName, getInitials as getNameInitials } from '../../utils/nameUtils';
 
 interface Teacher {
   _id: string;
   personalInfo: {
-    fullName: string;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
     phone: string;
     email: string;
     address?: string;
@@ -84,7 +87,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
         {/* Avatar */}
         <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
           <span className="text-primary-600 font-semibold text-2xl">
-            {teacher.personalInfo.fullName.split(' ').map(n => n[0]).join('')}
+            {getNameInitials(teacher.personalInfo)}
           </span>
         </div>
         
@@ -92,7 +95,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
         <div className="flex-1">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-3xl font-bold text-gray-900">
-              {teacher.personalInfo.fullName}
+              {getDisplayName(teacher.personalInfo)}
             </h1>
             <div className="flex items-center space-x-2">
               {/* Active Status */}

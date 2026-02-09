@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 import { Card } from './ui/Card'
 import { orchestraService, studentService, teacherService, rehearsalService } from '../services/apiService'
-import { 
+import {
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
@@ -28,6 +28,7 @@ import {
   getMemberInstrumentsSummary,
   type Orchestra
 } from '../utils/orchestraUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface OrchestraDetailsModalProps {
   orchestraId: string
@@ -43,7 +44,9 @@ interface DetailedOrchestra extends Orchestra {
   memberDetails?: Array<{
     _id: string
     personalInfo: {
-      fullName: string
+      firstName?: string
+      lastName?: string
+      fullName?: string
       phone?: string
       email?: string
       studentEmail?: string
@@ -60,7 +63,9 @@ interface DetailedOrchestra extends Orchestra {
   conductorDetails?: {
     _id: string
     personalInfo: {
-      fullName: string
+      firstName?: string
+      lastName?: string
+      fullName?: string
       email?: string
       phone?: string
     }
@@ -327,7 +332,7 @@ export default function OrchestraDetailsModal({
                       </div>
                       <div>
                         <div className="font-medium text-gray-900">
-                          {orchestra.conductorDetails.personalInfo.fullName}
+                          {getDisplayName(orchestra.conductorDetails.personalInfo)}
                         </div>
                         {orchestra.conductorDetails.professionalInfo?.instrument && (
                           <div className="text-sm text-gray-600">
@@ -473,7 +478,7 @@ export default function OrchestraDetailsModal({
                             <User className="w-5 h-5 text-gray-600" />
                           </div>
                           <div className="flex-1">
-                            <div className="font-medium text-gray-900">{member.personalInfo.fullName}</div>
+                            <div className="font-medium text-gray-900">{getDisplayName(member.personalInfo)}</div>
                             <div className="text-sm text-gray-600">
                               {member.academicInfo?.class && `כיתה ${member.academicInfo.class}`}
                             </div>

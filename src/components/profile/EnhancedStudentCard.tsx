@@ -14,11 +14,14 @@ import {
   CheckSquare,
   FileText
 } from 'lucide-react'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface Student {
   id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
     age?: number
     class?: string
@@ -103,7 +106,7 @@ export default function EnhancedStudentCard({
             {/* Student Name with Status */}
             <div className="flex items-center gap-2 mb-1">
               <h4 className="font-semibold text-gray-900 font-reisinger-yonatan text-lg">
-                {student.personalInfo.fullName}
+                {getDisplayName(student.personalInfo)}
               </h4>
               <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
                 {React.createElement(statusIcon, { className: "w-3 h-3" })}

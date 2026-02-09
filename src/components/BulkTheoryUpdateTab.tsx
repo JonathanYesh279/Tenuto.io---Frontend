@@ -24,6 +24,7 @@ import ConfirmationModal from './ui/ConfirmationModal'
 import { theoryService, teacherService } from '../services/apiService'
 import { filterLessons, type TheoryLesson } from '../utils/theoryLessonUtils'
 import { VALID_LOCATIONS } from '../constants/locations'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface BulkTheoryUpdateTabProps {
   lessons: TheoryLesson[]
@@ -370,7 +371,7 @@ export default function BulkTheoryUpdateTab({
           'תאריך': new Date(lesson.date).toLocaleDateString('he-IL'),
           'יום בשבוע': ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'][new Date(lesson.date).getDay()],
           'קטגוריה': lesson.category,
-          'מורה': teacher?.personalInfo?.fullName || lesson.teacherId,
+          'מורה': getDisplayName(teacher?.personalInfo) || lesson.teacherId,
           'שעת התחלה': lesson.startTime,
           'שעת סיום': lesson.endTime,
           'משך (דקות)': calculateDuration(lesson.startTime, lesson.endTime),
@@ -547,7 +548,7 @@ export default function BulkTheoryUpdateTab({
                 <option value="">כל המורים</option>
                 {teachers.map(teacher => (
                   <option key={teacher._id} value={teacher._id}>
-                    {teacher.personalInfo?.fullName}
+                    {getDisplayName(teacher.personalInfo)}
                   </option>
                 ))}
               </select>
@@ -882,7 +883,7 @@ export default function BulkTheoryUpdateTab({
                       <option value="">ללא שינוי</option>
                       {teachers.map(teacher => (
                         <option key={teacher._id} value={teacher._id}>
-                          {teacher.personalInfo?.fullName}
+                          {getDisplayName(teacher.personalInfo)}
                         </option>
                       ))}
                     </select>
@@ -1035,7 +1036,7 @@ export default function BulkTheoryUpdateTab({
                         let displayValue = value
                         if (key === 'teacherId') {
                           const teacher = teachers.find(t => t._id === value)
-                          displayValue = teacher?.personalInfo?.fullName || value
+                          displayValue = getDisplayName(teacher?.personalInfo) || value
                         } else if (key === 'isActive') {
                           displayValue = value ? 'פעיל' : 'לא פעיל'
                         }

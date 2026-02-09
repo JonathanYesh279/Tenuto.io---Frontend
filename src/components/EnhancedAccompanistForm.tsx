@@ -4,13 +4,14 @@ import { Card } from './ui/Card'
 import type { Accompanist } from '../types/bagrut.types'
 import apiService from '../services/apiService'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface Teacher {
   _id: string
   personalInfo: {
-    fullName: string
     firstName?: string
     lastName?: string
+    fullName?: string
     phone?: string
     email?: string
   }
@@ -113,14 +114,10 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
     const query = searchQuery.toLowerCase().trim()
     return teachers
       .filter(teacher => {
-        const fullName = teacher.personalInfo?.fullName?.toLowerCase() || ''
-        const firstName = teacher.personalInfo?.firstName?.toLowerCase() || ''
-        const lastName = teacher.personalInfo?.lastName?.toLowerCase() || ''
+        const displayName = getDisplayName(teacher.personalInfo).toLowerCase()
         const instruments = teacher.professionalInfo?.instruments?.join(' ').toLowerCase() || ''
-        
-        return fullName.includes(query) || 
-               firstName.includes(query) || 
-               lastName.includes(query) ||
+
+        return displayName.includes(query) ||
                instruments.includes(query)
       })
       .slice(0, 20) // Limit results to prevent overwhelming UI
@@ -130,11 +127,11 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
     setSelectedTeacher(teacher)
     setFormData(prev => ({
       ...prev,
-      name: teacher.personalInfo?.fullName || '',
+      name: getDisplayName(teacher.personalInfo),
       phone: teacher.personalInfo?.phone || '',
       email: teacher.personalInfo?.email || ''
     }))
-    setSearchQuery(teacher.personalInfo?.fullName || '')
+    setSearchQuery(getDisplayName(teacher.personalInfo))
     setShowDropdown(false)
     setUseCustomEntry(false)
 
@@ -328,7 +325,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                           <User className="w-4 h-4 text-gray-400" />
                           <div className="flex-1">
                             <div className="font-medium text-gray-900">
-                              {teacher.personalInfo?.fullName || 'ללא שם'}
+                              {getDisplayName(teacher.personalInfo) || 'ללא שם'}
                             </div>
                             {teacher.professionalInfo?.instruments && teacher.professionalInfo.instruments.length > 0 && (
                               <div className="text-sm text-gray-600">
@@ -355,7 +352,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                     <User className="w-5 h-5 text-green-600" />
                     <div className="flex-1">
                       <div className="font-medium text-green-900">
-                        נבחר: {selectedTeacher.personalInfo?.fullName}
+                        נבחר: {getDisplayName(selectedTeacher.personalInfo)}
                       </div>
                       {selectedTeacher.personalInfo?.phone && (
                         <div className="text-sm text-green-700">

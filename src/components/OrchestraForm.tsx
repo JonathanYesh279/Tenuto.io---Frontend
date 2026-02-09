@@ -10,6 +10,7 @@ import {
   type LocationType
 } from '../utils/orchestraUtils'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface OrchestraFormProps {
   orchestra?: Orchestra | null
@@ -249,7 +250,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
               <option value="">בחר מנצח</option>
               {conductors.map(conductor => (
                 <option key={conductor._id} value={conductor._id}>
-                  {conductor.personalInfo?.fullName}
+                  {getDisplayName(conductor.personalInfo)}
                   {conductor.professionalInfo?.instrument && (
                     <span className="text-gray-500"> - {conductor.professionalInfo.instrument}</span>
                   )}

@@ -29,6 +29,7 @@ import {
   FileText
 } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface Student {
   id: string
@@ -36,7 +37,9 @@ interface Student {
   lastName?: string
   fullName?: string
   personalInfo?: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
     class?: string
   }
@@ -89,7 +92,7 @@ export default function IndividualLessonAttendance({
   const [showHistory, setShowHistory] = useState(false)
   const [loadingHistory, setLoadingHistory] = useState(false)
 
-  const studentName = student.personalInfo?.fullName || student.fullName || `${student.firstName} ${student.lastName}`.trim()
+  const studentName = getDisplayName(student.personalInfo) || student.fullName || `${student.firstName} ${student.lastName}`.trim()
   const primaryInstrument = student.academicInfo?.instrumentProgress?.find(i => i.isPrimary)?.instrumentName || 'לא צוין'
   const scheduleInfo = student.scheduleInfo
 

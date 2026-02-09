@@ -7,6 +7,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import type { BagrutFormData } from '../types/bagrut.types'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface SimplifiedBagrutFormProps {
   students: any[]
@@ -439,18 +440,18 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
   // Filter students based on search
   const filteredStudents = students.filter(student => {
     if (!studentSearch) return true
-    const fullName = student.personalInfo?.fullName || ''
+    const displayName = getDisplayName(student.personalInfo)
     const className = student.academicInfo?.class || ''
-    return fullName.toLowerCase().includes(studentSearch.toLowerCase()) ||
+    return displayName.toLowerCase().includes(studentSearch.toLowerCase()) ||
            className.toLowerCase().includes(studentSearch.toLowerCase())
   })
 
   // Filter teachers based on search
   const filteredTeachers = teachers.filter(teacher => {
     if (!teacherSearch) return true
-    const fullName = teacher.personalInfo?.fullName || ''
+    const displayName = getDisplayName(teacher.personalInfo)
     const email = teacher.personalInfo?.email || ''
-    return fullName.toLowerCase().includes(teacherSearch.toLowerCase()) ||
+    return displayName.toLowerCase().includes(teacherSearch.toLowerCase()) ||
            email.toLowerCase().includes(teacherSearch.toLowerCase())
   })
 
@@ -598,7 +599,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
-                    {selectedStudent.personalInfo?.fullName}
+                    {getDisplayName(selectedStudent.personalInfo)}
                   </h4>
                   <div className="text-sm text-gray-600 space-y-1">
                     <p>כיתה: {selectedStudent.academicInfo?.class}</p>
@@ -627,7 +628,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     }`}
                   >
                     <div className="font-medium text-gray-900">
-                      {student.personalInfo?.fullName}
+                      {getDisplayName(student.personalInfo)}
                     </div>
                     <div className="text-sm text-gray-600">
                       כיתה {student.academicInfo?.class}
@@ -676,7 +677,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
-                    {selectedTeacher.personalInfo?.fullName}
+                    {getDisplayName(selectedTeacher.personalInfo)}
                   </h4>
                   <div className="text-sm text-gray-600 space-y-1">
                     <p>אימייל: {selectedTeacher.personalInfo?.email}</p>
@@ -705,7 +706,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     }`}
                   >
                     <div className="font-medium text-gray-900">
-                      {teacher.personalInfo?.fullName}
+                      {getDisplayName(teacher.personalInfo)}
                     </div>
                     <div className="text-sm text-gray-600">
                       {teacher.personalInfo?.email}
@@ -984,7 +985,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             </h3>
             
             <div className="text-sm text-gray-600 mb-6 space-y-2">
-              <p>הבגרות עבור {selectedStudent?.personalInfo?.fullName} נוצרה.</p>
+              <p>הבגרות עבור {getDisplayName(selectedStudent?.personalInfo)} נוצרה.</p>
               <p className="text-success-700 font-medium">עכשיו תוכל להשלים פרטים נוספים</p>
             </div>
             

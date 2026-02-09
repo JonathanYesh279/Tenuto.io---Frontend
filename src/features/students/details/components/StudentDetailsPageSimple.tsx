@@ -11,6 +11,7 @@ import { TabType, TabConfig } from '../types'
 import StudentTabNavigation from './StudentTabNavigation'
 import StudentTabContent from './StudentTabContent'
 import apiService from '../../../../services/apiService'
+import { getDisplayName, getInitials } from '../../../../utils/nameUtils'
 
 const StudentDetailsPage: React.FC = () => {
   console.log('🔍 StudentDetailsPage component loading...')
@@ -136,12 +137,12 @@ const StudentDetailsPage: React.FC = () => {
         <div className="flex items-start gap-6">
           <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center">
             <span className="text-2xl font-bold text-primary-600">
-              {student.personalInfo?.fullName?.charAt(0) || '?'}
+              {getInitials(student.personalInfo) || '?'}
             </span>
           </div>
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              {student.personalInfo?.fullName || 'שם לא זמין'}
+              {getDisplayName(student.personalInfo) || 'שם לא זמין'}
             </h1>
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${

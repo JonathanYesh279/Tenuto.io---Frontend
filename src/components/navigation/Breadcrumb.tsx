@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ChevronLeft, Home } from 'lucide-react'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface BreadcrumbItem {
   label: string
@@ -55,9 +56,9 @@ const generateBreadcrumbItems = (pathname: string, contextData?: any): Breadcrum
       
       if (contextData) {
         if (segments[index - 1] === 'students' && contextData.student) {
-          label = `${contextData.student.personalInfo?.fullName || 'תלמיד'}`
+          label = getDisplayName(contextData.student.personalInfo) || 'תלמיד'
         } else if (segments[index - 1] === 'teachers' && contextData.teacher) {
-          label = `${contextData.teacher.personalInfo?.fullName || 'מורה'}`
+          label = getDisplayName(contextData.teacher.personalInfo) || 'מורה'
         } else if (segments[index - 1] === 'theory-lessons' && contextData.lesson) {
           label = `שיעור ${contextData.lesson.subject || 'תיאוריה'}`
         } else if (segments[index - 1] === 'orchestras' && contextData.orchestra) {
@@ -181,7 +182,7 @@ export const createStudentBreadcrumb = (student: any, action?: string): Breadcru
     items.push({ label: 'הוספת תלמיד חדש', isActive: true })
   } else if (student) {
     items.push({ 
-      label: `פרטי תלמיד > ${student.personalInfo?.fullName || 'תלמיד'}`, 
+      label: `פרטי תלמיד > ${getDisplayName(student.personalInfo) || 'תלמיד'}`,
       isActive: true 
     })
   }
@@ -199,7 +200,7 @@ export const createTeacherBreadcrumb = (teacher: any, action?: string): Breadcru
     items.push({ label: 'הוספת מורה חדש', isActive: true })
   } else if (teacher) {
     items.push({ 
-      label: `פרטי מורה > ${teacher.personalInfo?.fullName || 'מורה'}`, 
+      label: `פרטי מורה > ${getDisplayName(teacher.personalInfo) || 'מורה'}`,
       isActive: true 
     })
   }

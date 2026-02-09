@@ -7,11 +7,14 @@ import { Card } from '../ui/card';
 import TeacherScheduleCalendar from './TeacherScheduleCalendar';
 import { analyzeTeacherEfficiency, EfficiencyAnalysis } from '../../utils/scheduleConflicts';
 import apiService from '../../services/apiService';
+import { getDisplayName, getInitials as getNameInitials } from '@/utils/nameUtils';
 
 interface TeacherData {
   _id: string;
   personalInfo: {
-    fullName: string;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
     phone: string;
     email: string;
   };
@@ -178,12 +181,12 @@ const TeacherScheduleDashboard: React.FC<TeacherScheduleDashboardProps> = ({
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
               <span className="text-primary-600 font-semibold text-xl">
-                {teacher.personalInfo.fullName.split(' ').map(n => n[0]).join('')}
+                {getNameInitials(teacher.personalInfo)}
               </span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {teacher.personalInfo.fullName}
+                {getDisplayName(teacher.personalInfo)}
               </h1>
               <p className="text-gray-600 mb-2">{teacher.professionalInfo.instrument}</p>
               <div className="flex items-center space-x-4 text-sm text-gray-500">

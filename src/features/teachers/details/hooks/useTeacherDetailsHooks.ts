@@ -18,6 +18,7 @@ import {
   TeacherFilterOptions
 } from '../types'
 import toast from 'react-hot-toast'
+import { getDisplayName } from '../../../../utils/nameUtils'
 
 // Types
 interface QueryOptions {
@@ -134,7 +135,7 @@ export function useTeacherSchedule(teacherId: string, enabled: boolean = true) {
 
       return {
         teacherId,
-        teacherName: teacher.personalInfo?.fullName || 'Unknown',
+        teacherName: getDisplayName(teacher.personalInfo) || 'Unknown',
         timeBlocks,
         scheduledLessons: assignedLessons,
         weeklyCapacity: timeBlocks.reduce((total, block) => total + block.totalDuration, 0) / 60,

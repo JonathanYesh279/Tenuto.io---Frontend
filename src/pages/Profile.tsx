@@ -9,6 +9,7 @@ import TheoryTeacherLessonsTab from '../components/profile/TheoryTeacherLessonsT
 import TeacherAttendanceTab from '../components/profile/TeacherAttendanceTab'
 import GeneralInfoTab from '../components/profile/GeneralInfoTab'
 import apiService, { teacherService } from '../services/apiService'
+import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
 
 interface Tab {
   id: string
@@ -271,13 +272,15 @@ export default function Profile() {
   }
   
   const getUserFullName = () => {
-    return user?.personalInfo?.fullName || user?.fullName || user?.name || 'משתמש'
+    return getDisplayName(user?.personalInfo) || user?.name || 'משתמש'
   }
-  
+
   const getInitials = () => {
-    const fullName = getUserFullName()
-    if (!fullName || fullName === 'משתמש') return 'מ'
-    const words = fullName.trim().split(' ')
+    const initials = getNameInitials(user?.personalInfo)
+    if (initials) return initials
+    const name = getUserFullName()
+    if (!name || name === 'משתמש') return 'מ'
+    const words = name.trim().split(' ')
     if (words.length >= 2) {
       return words[0][0] + words[1][0]
     }

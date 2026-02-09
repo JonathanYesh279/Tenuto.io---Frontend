@@ -22,6 +22,7 @@ import {
 } from 'chart.js'
 import { useAuth } from '../../../../../services/authContext.jsx'
 import apiService from '../../../../../services/apiService'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 import StageAdvancementConfirmModal from '../modals/StageAdvancementConfirmModal'
 
 ChartJS.register(
@@ -1138,7 +1139,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-orange-900">
-                    {teacher.personalInfo?.fullName || 'מורה'}
+                    {getDisplayName(teacher.personalInfo) || 'מורה'}
                   </p>
                   <p className="text-sm text-orange-700 mt-1">
                     התלמיד/ה משוייך/ת למורה זה אך טרם נקבע שיעור. יש ליצור קשר עם המורה לתיאום שיעור.

@@ -26,6 +26,7 @@ import StatsCard from '../components/ui/StatsCard'
 import TheoryLessonForm from '../components/TheoryLessonForm'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import { theoryService, studentService, teacherService } from '../services/apiService'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface TheoryLesson {
   _id: string
@@ -52,7 +53,9 @@ interface TheoryLesson {
 interface Student {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
     studentEmail?: string
   }
@@ -70,7 +73,9 @@ interface Student {
 interface Teacher {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     email?: string
     phone?: string
   }
@@ -357,8 +362,8 @@ export default function TheoryLessonDetails() {
   const availableStudents = allStudents.filter(student => 
     !theoryLesson.studentIds.includes(student._id) &&
     student.isActive &&
-    (!searchQuery || 
-      student.personalInfo?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (!searchQuery ||
+      getDisplayName(student.personalInfo).toLowerCase().includes(searchQuery.toLowerCase()) ||
       student.academicInfo?.class?.includes(searchQuery))
   )
 
@@ -395,7 +400,7 @@ export default function TheoryLessonDetails() {
       render: (student: Student) => (
         <div className="flex items-center">
           <div>
-            <div className="font-medium text-gray-900">{student.personalInfo?.fullName}</div>
+            <div className="font-medium text-gray-900">{getDisplayName(student.personalInfo)}</div>
             <div className="text-sm text-gray-500">כיתה {student.academicInfo?.class}</div>
           </div>
         </div>
@@ -437,7 +442,7 @@ export default function TheoryLessonDetails() {
       label: 'שם',
       render: (student: Student) => (
         <div>
-          <div className="font-medium text-gray-900">{student.personalInfo?.fullName}</div>
+          <div className="font-medium text-gray-900">{getDisplayName(student.personalInfo)}</div>
           <div className="text-sm text-gray-500">כיתה {student.academicInfo?.class}</div>
         </div>
       )
@@ -579,7 +584,7 @@ export default function TheoryLessonDetails() {
                         onClick={() => handleViewTeacherProfile(teacher._id)}
                         className="text-primary-600 hover:text-primary-700 hover:underline"
                       >
-                        {teacher.personalInfo?.fullName}
+                        {getDisplayName(teacher.personalInfo)}
                       </button>
                       {teacher.personalInfo?.email && (
                         <div className="text-xs text-gray-500">{teacher.personalInfo.email}</div>
@@ -804,7 +809,7 @@ export default function TheoryLessonDetails() {
                   return (
                     <div key={student._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div>
-                        <div className="font-medium text-gray-900">{student.personalInfo?.fullName}</div>
+                        <div className="font-medium text-gray-900">{getDisplayName(student.personalInfo)}</div>
                         <div className="text-sm text-gray-500">כיתה {student.academicInfo?.class}</div>
                       </div>
                       <div className="flex gap-2">

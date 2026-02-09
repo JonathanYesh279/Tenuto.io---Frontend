@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
 import { Plus, Search, Edit, Trash2, Music, Users, UserPlus, UserMinus, Calendar, Clock, MapPin, Settings, Star, Filter, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '@/utils/nameUtils'
 import RehearsalScheduleModal from '../rehearsal/RehearsalScheduleModal'
 import ConfirmationModal from '../ui/ConfirmationModal'
 
@@ -33,9 +34,9 @@ interface Member {
 interface Student {
   _id: string
   personalInfo: {
-    firstName: string
-    lastName: string
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
   }
   academicInfo: {
     primaryInstrument?: string
@@ -162,11 +163,11 @@ export default function ConductorOrchestrasTab() {
 
       // Map backend data to frontend format
       const mappedMembers = members.map(member => {
-        // Parse fullName into firstName and lastName
-        const fullName = member.personalInfo?.fullName || ''
-        const nameParts = fullName.trim().split(/\s+/)
-        const firstName = nameParts[0] || ''
-        const lastName = nameParts.slice(1).join(' ') || ''
+        // Use getDisplayName for backward-compatible name resolution
+        const displayName = getDisplayName(member.personalInfo)
+        const nameParts = displayName.trim().split(/\s+/)
+        const firstName = member.personalInfo?.firstName || nameParts[0] || ''
+        const lastName = member.personalInfo?.lastName || nameParts.slice(1).join(' ') || ''
 
         // Get primary instrument and current stage
         const primaryInstrument = member.academicInfo?.instrumentProgress?.find(p => p.isPrimary)
@@ -175,7 +176,7 @@ export default function ConductorOrchestrasTab() {
 
         return {
           id: member._id,
-          fullName: fullName,
+          fullName: displayName,
           firstName: firstName,
           lastName: lastName,
           instrument: instrument,
@@ -827,7 +828,7 @@ export default function ConductorOrchestrasTab() {
                             }`} />
                             <div>
                               <div className="font-medium text-sm font-reisinger-yonatan">
-                                {member.fullName || `${member.firstName} ${member.lastName}`.trim()}
+                                {getDisplayName(member) || `${member.firstName} ${member.lastName}`.trim()}
                               </div>
                               <div className="text-xs text-gray-500 font-reisinger-yonatan">
                                 {member.instrument}{member.currentStage ? ` - שלב ${member.currentStage}` : ''}
@@ -892,7 +893,7 @@ export default function ConductorOrchestrasTab() {
                     <div>
                       {availableStudents.filter(student =>
                         enrollmentFilter === '' ||
-                        student.personalInfo?.fullName?.toLowerCase().includes(enrollmentFilter.toLowerCase()) ||
+                        getDisplayName(student.personalInfo).toLowerCase().includes(enrollmentFilter.toLowerCase()) ||
                         student.academicInfo?.primaryInstrument?.toLowerCase().includes(enrollmentFilter.toLowerCase())
                       ).length === 0 ? (
                         <div className="text-center py-8">
@@ -906,7 +907,7 @@ export default function ConductorOrchestrasTab() {
                           {availableStudents
                             .filter(student =>
                               enrollmentFilter === '' ||
-                              student.personalInfo?.fullName?.toLowerCase().includes(enrollmentFilter.toLowerCase()) ||
+                              getDisplayName(student.personalInfo).toLowerCase().includes(enrollmentFilter.toLowerCase()) ||
                               student.academicInfo?.primaryInstrument?.toLowerCase().includes(enrollmentFilter.toLowerCase())
                             )
                             .map((student) => {
@@ -918,7 +919,7 @@ export default function ConductorOrchestrasTab() {
                             <div key={student._id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200">
                               <div>
                                 <div className="font-medium text-sm font-reisinger-yonatan">
-                                  {student.personalInfo?.fullName}
+                                  {getDisplayName(student.personalInfo)}
                                 </div>
                                 <div className="text-xs text-gray-500 font-reisinger-yonatan">
                                   {instrumentName}{currentStage ? ` - שלב ${currentStage}` : ''}

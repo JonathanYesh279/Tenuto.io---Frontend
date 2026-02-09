@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { User, Phone, Mail, MapPin, Edit, Save, X, Calendar, Award, AlertCircle, CheckCircle } from 'lucide-react'
 import { Teacher } from '../../types'
 import { teacherDetailsApi } from '../../../../../services/teacherDetailsApi'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 
 interface PersonalInfoTabProps {
   teacher: Teacher
@@ -15,7 +16,8 @@ interface PersonalInfoTabProps {
 }
 
 interface FieldErrors {
-  fullName?: string
+  firstName?: string
+  lastName?: string
   phone?: string
   email?: string
   address?: string
@@ -28,7 +30,8 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [editedData, setEditedData] = useState({
-    fullName: teacher.personalInfo?.fullName || '',
+    firstName: teacher.personalInfo?.firstName || '',
+    lastName: teacher.personalInfo?.lastName || '',
     phone: teacher.personalInfo?.phone || '',
     email: teacher.personalInfo?.email || '',
     address: teacher.personalInfo?.address || '',
@@ -55,12 +58,16 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
     return undefined
   }
 
-  const validateFullName = (name: string): string | undefined => {
+  const validateFirstName = (name: string): string | undefined => {
     if (!name || name.trim().length === 0) {
-      return 'יש להזין שם מלא'
+      return 'יש להזין שם פרטי'
     }
-    if (name.trim().length < 2) {
-      return 'השם חייב להכיל לפחות 2 תווים'
+    return undefined
+  }
+
+  const validateLastName = (name: string): string | undefined => {
+    if (!name || name.trim().length === 0) {
+      return 'יש להזין שם משפחה'
     }
     return undefined
   }
@@ -74,7 +81,8 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
 
   const validateAllFields = (): boolean => {
     const errors: FieldErrors = {
-      fullName: validateFullName(editedData.fullName),
+      firstName: validateFirstName(editedData.firstName),
+      lastName: validateLastName(editedData.lastName),
       phone: validatePhone(editedData.phone),
       email: validateEmail(editedData.email),
       address: validateAddress(editedData.address),
@@ -112,7 +120,8 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
       await teacherDetailsApi.updateTeacherPersonalInfo(teacherId, dataToSave)
 
       // Update local teacher data
-      teacher.personalInfo.fullName = editedData.fullName
+      teacher.personalInfo.firstName = editedData.firstName
+      teacher.personalInfo.lastName = editedData.lastName
       teacher.personalInfo.phone = editedData.phone
       teacher.personalInfo.email = editedData.email
       teacher.personalInfo.address = editedData.address
@@ -132,7 +141,8 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
 
   const handleCancel = () => {
     setEditedData({
-      fullName: teacher.personalInfo?.fullName || '',
+      firstName: teacher.personalInfo?.firstName || '',
+      lastName: teacher.personalInfo?.lastName || '',
       phone: teacher.personalInfo?.phone || '',
       email: teacher.personalInfo?.email || '',
       address: teacher.personalInfo?.address || '',
@@ -207,39 +217,75 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
         <div className="space-y-4">
           <h3 className="text-md font-medium text-gray-700 border-b pb-2">פרטים בסיסיים</h3>
           
-          {/* Full Name */}
+          {/* First Name */}
           <div className="space-y-1">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
               <User className="w-4 h-4" />
-              שם מלא
+              שם פרטי
             </label>
             {isEditing ? (
               <>
                 <input
                   type="text"
-                  value={editedData.fullName}
+                  value={editedData.firstName}
                   onChange={(e) => {
-                    setEditedData({ ...editedData, fullName: e.target.value })
-                    if (fieldErrors.fullName) {
-                      setFieldErrors({ ...fieldErrors, fullName: validateFullName(e.target.value) })
+                    setEditedData({ ...editedData, firstName: e.target.value })
+                    if (fieldErrors.firstName) {
+                      setFieldErrors({ ...fieldErrors, firstName: validateFirstName(e.target.value) })
                     }
                   }}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                    fieldErrors.fullName
+                    fieldErrors.firstName
                       ? 'border-red-500 focus:ring-red-500'
                       : 'border-gray-300 focus:ring-primary-500'
                   }`}
-                  placeholder="הכנס שם מלא"
+                  placeholder="הכנס שם פרטי"
                 />
-                {fieldErrors.fullName && (
+                {fieldErrors.firstName && (
                   <p className="text-sm text-red-600 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
-                    {fieldErrors.fullName}
+                    {fieldErrors.firstName}
                   </p>
                 )}
               </>
             ) : (
-              <p className="text-gray-900">{teacher.personalInfo?.fullName || 'לא צוין'}</p>
+              <p className="text-gray-900">{teacher.personalInfo?.firstName || 'לא צוין'}</p>
+            )}
+          </div>
+
+          {/* Last Name */}
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+              <User className="w-4 h-4" />
+              שם משפחה
+            </label>
+            {isEditing ? (
+              <>
+                <input
+                  type="text"
+                  value={editedData.lastName}
+                  onChange={(e) => {
+                    setEditedData({ ...editedData, lastName: e.target.value })
+                    if (fieldErrors.lastName) {
+                      setFieldErrors({ ...fieldErrors, lastName: validateLastName(e.target.value) })
+                    }
+                  }}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                    fieldErrors.lastName
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-primary-500'
+                  }`}
+                  placeholder="הכנס שם משפחה"
+                />
+                {fieldErrors.lastName && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {fieldErrors.lastName}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className="text-gray-900">{teacher.personalInfo?.lastName || 'לא צוין'}</p>
             )}
           </div>
 

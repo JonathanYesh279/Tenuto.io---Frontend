@@ -16,6 +16,7 @@ import {
 import { Card } from './ui/Card';
 import type { Bagrut, ProgramPiece, DetailedGrading } from '../types/bagrut.types';
 import apiService from '../services/apiService';
+import { getDisplayName } from '@/utils/nameUtils';
 
 interface PieceGrading {
   pieceNumber: number;
@@ -112,13 +113,9 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
             try {
               const teacher = await apiService.teachers.getTeacher(part);
               console.log('📋 Teacher response for ID', part, ':', teacher);
-              const fullName = teacher?.personalInfo?.fullName 
-                || (teacher?.personalInfo?.firstName && teacher?.personalInfo?.lastName
-                  ? `${teacher.personalInfo.firstName} ${teacher.personalInfo.lastName}`
-                  : teacher?.personalInfo?.firstName || teacher?.personalInfo?.lastName)
-                || part;
-              console.log('✅ Resolved teacher name:', part, '->', fullName);
-              names.push(fullName);
+              const resolvedName = getDisplayName(teacher?.personalInfo) || part;
+              console.log('✅ Resolved teacher name:', part, '->', resolvedName);
+              names.push(resolvedName);
             } catch (error) {
               console.error('Error fetching teacher name:', error);
               names.push(part); // Fallback to ID if fetch fails

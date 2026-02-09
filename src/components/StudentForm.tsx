@@ -17,7 +17,8 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
   // Form data with exact backend schema structure
   const [formData, setFormData] = useState({
     personalInfo: {
-      fullName: '',
+      firstName: '',
+      lastName: '',
       phone: '',
       age: '',
       address: '',
@@ -66,9 +67,12 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
   // Dropdown options - EXACT backend constants
   const VALID_CLASSES = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'אחר']
   const VALID_INSTRUMENTS = [
+    'כינור', 'ויולה', "צ'לו", 'קונטרבס',
     'חלילית', 'חליל צד', 'אבוב', 'בסון', 'סקסופון', 'קלרינט',
-    'חצוצרה', 'קרן יער', 'טרומבון', 'טובה/בריטון', 'שירה',
-    'כינור', 'ויולה', "צ'לו", 'קונטרבס', 'פסנתר', 'גיטרה', 'גיטרה בס', 'תופים'
+    'חצוצרה', 'קרן יער', 'טרומבון', 'טובה/בריטון',
+    'פסנתר', 'גיטרה', 'גיטרה בס', 'גיטרה פופ', 'נבל',
+    'תופים', 'כלי הקשה', 'שירה',
+    'עוד', 'כלים אתניים', 'מנדולינה', 'אקורדיון', 'רקורדר'
   ]
   const VALID_STAGES = [1, 2, 3, 4, 5, 6, 7, 8]
   const TEST_STATUSES = ['לא נבחן', 'עבר/ה', 'לא עבר/ה', 'עבר/ה בהצטיינות', 'עבר/ה בהצטיינות יתרה']
@@ -103,8 +107,11 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
     const newErrors: Record<string, string> = {}
 
     // Required fields
-    if (!formData.personalInfo.fullName.trim()) {
-      newErrors.fullName = 'שם מלא נדרש'
+    if (!formData.personalInfo.firstName?.trim()) {
+      newErrors.firstName = 'שם פרטי נדרש'
+    }
+    if (!formData.personalInfo.lastName?.trim()) {
+      newErrors.lastName = 'שם משפחה נדרש'
     }
 
     if (!formData.personalInfo.phone.trim()) {
@@ -361,21 +368,42 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    שם מלא *
+                    שם פרטי *
                   </label>
                   <input
                     type="text"
-                    value={formData.personalInfo.fullName}
-                    onChange={(e) => handlePersonalInfoChange('fullName', e.target.value)}
+                    value={formData.personalInfo.firstName}
+                    onChange={(e) => handlePersonalInfoChange('firstName', e.target.value)}
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
-                      errors.fullName ? 'border-red-300' : 'border-gray-300'
+                      errors.firstName ? 'border-red-300' : 'border-gray-300'
                     }`}
-                    placeholder="הכנס שם מלא"
+                    placeholder="הכנס שם פרטי"
                   />
-                  {errors.fullName && (
+                  {errors.firstName && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
-                      {errors.fullName}
+                      {errors.firstName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    שם משפחה *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.personalInfo.lastName}
+                    onChange={(e) => handlePersonalInfoChange('lastName', e.target.value)}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                      errors.lastName ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                    placeholder="הכנס שם משפחה"
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.lastName}
                     </p>
                   )}
                 </div>

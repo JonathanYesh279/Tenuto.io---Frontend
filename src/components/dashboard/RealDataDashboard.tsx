@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, GraduationCap, Music, Calendar, TrendingUp, Clock, Award } from 'lucide-react';
 import apiService from '../../services/apiService';
+import { getDisplayName } from '@/utils/nameUtils';
 
 // Utility functions
 const isThisWeek = (date: Date) => {
@@ -177,7 +178,7 @@ const RecentActivities: React.FC = () => {
           .slice(0, 3)
           .map((s: any) => ({
             type: 'student_registration',
-            message: `תלמיד/ה חדש/ה: ${s.personalInfo.fullName}`,
+            message: `תלמיד/ה חדש/ה: ${getDisplayName(s.personalInfo)}`,
             date: s.createdAt,
             icon: '👤',
             time: new Date(s.createdAt).toLocaleDateString('he-IL')

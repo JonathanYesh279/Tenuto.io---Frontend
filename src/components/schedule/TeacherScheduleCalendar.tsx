@@ -4,6 +4,7 @@ import { Card } from '../ui/card';
 import ScheduleTimeSlot from './ScheduleTimeSlot';
 import StudyDayTemplateManager from './StudyDayTemplateManager';
 import apiService from '../../services/apiService';
+import { getDisplayName } from '@/utils/nameUtils';
 
 const HEBREW_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'];
 const HEBREW_MONTHS = [
@@ -14,7 +15,9 @@ const HEBREW_MONTHS = [
 interface Student {
   _id: string;
   personalInfo: {
-    fullName: string;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
   };
   teacherAssignments: Array<{
     teacherId: string;
@@ -171,7 +174,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
 
   const handleStudentDragStart = (e: React.DragEvent, student: Student) => {
     e.dataTransfer.setData('application/student-id', student._id);
-    e.dataTransfer.setData('application/student-name', student.personalInfo.fullName);
+    e.dataTransfer.setData('application/student-name', getDisplayName(student.personalInfo));
     setDraggedStudent(student);
   };
 
@@ -341,7 +344,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
                   `}
                 >
                   <div className="text-sm font-medium text-gray-900 mb-1">
-                    {student.personalInfo.fullName}
+                    {getDisplayName(student.personalInfo)}
                   </div>
                   <div className="text-xs text-gray-600">
                     {assignment?.instrument} • {assignment?.lessonDuration || 45} דק'

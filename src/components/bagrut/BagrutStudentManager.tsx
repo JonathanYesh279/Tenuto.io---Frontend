@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { useBagrutContext } from '../../contexts/BagrutContext'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '../../utils/nameUtils'
 import type { Bagrut, BagrutFormData, ProgramPiece, Presentation } from '../../types/bagrut.types'
 
 interface BagrutStudentManagerProps {
@@ -159,9 +160,9 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
         return {
           bagrutId: bagrut._id || '',
           studentId: bagrut.studentId,
-          studentName: student?.personalInfo?.fullName || 'תלמיד לא ידוע',
+          studentName: getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע',
           instrument: student?.academicInfo?.primaryInstrument || 'לא צוין',
-          teacherName: teacher?.personalInfo?.fullName || 'מורה לא ידוע',
+          teacherName: getDisplayName(teacher?.personalInfo) || 'מורה לא ידוע',
           stage: completedPresentations + 1,
           progress,
           status,

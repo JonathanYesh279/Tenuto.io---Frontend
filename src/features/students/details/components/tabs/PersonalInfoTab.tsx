@@ -149,8 +149,12 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
     const currentPersonalInfo = { ...personalInfo, ...draftData.personalInfo }
     
     // Required fields validation
-    if (!currentPersonalInfo.fullName?.trim()) {
-      errors.fullName = 'שם מלא הוא שדה חובה'
+    if (!currentPersonalInfo.firstName?.trim()) {
+      errors.firstName = 'שם פרטי הוא שדה חובה'
+    }
+
+    if (!currentPersonalInfo.lastName?.trim()) {
+      errors.lastName = 'שם משפחה הוא שדה חובה'
     }
     
     if (!currentPersonalInfo.idNumber?.trim()) {
@@ -399,7 +403,8 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
         <InfoSection title="מידע בסיסי" icon={User}>
           {!isEditing ? (
             <div className="space-y-1">
-              <InfoRow label="שם מלא" value={personalInfo.fullName} />
+              <InfoRow label="שם פרטי" value={personalInfo.firstName} />
+              <InfoRow label="שם משפחה" value={personalInfo.lastName} />
               <InfoRow label="תעודת זהות" value={personalInfo.idNumber} />
               <InfoRow label="תאריך לידה" value={formatDate(personalInfo.birthDate)} />
               <InfoRow label="גיל" value={age ? `${age} שנים` : 'לא צוין'} />
@@ -422,10 +427,17 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <ValidatedInput
                 section="personalInfo"
-                field="fullName"
-                label="שם מלא"
+                field="firstName"
+                label="שם פרטי"
                 required
-                placeholder="הכנס שם מלא"
+                placeholder="הכנס שם פרטי"
+              />
+              <ValidatedInput
+                section="personalInfo"
+                field="lastName"
+                label="שם משפחה"
+                required
+                placeholder="הכנס שם משפחה"
               />
               <ValidatedInput
                 section="personalInfo"

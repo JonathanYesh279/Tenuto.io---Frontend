@@ -3,6 +3,7 @@ import { X, Save, Clock, MapPin, Users, BookOpen, Calendar, Repeat } from 'lucid
 import { teacherService, schoolYearService } from '../services/apiService'
 import { VALID_LOCATIONS } from '../constants/locations'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface TheoryLessonFormProps {
   theoryLesson?: any
@@ -557,7 +558,7 @@ export default function TheoryLessonForm({
                 <option value="">{mode === 'bulk-edit' ? 'השאר ללא שינוי' : 'בחר מורה'}</option>
                 {teachers.map(teacher => (
                   <option key={teacher._id} value={teacher._id}>
-                    {teacher.personalInfo?.fullName}
+                    {getDisplayName(teacher.personalInfo)}
                   </option>
                 ))}
               </select>

@@ -12,6 +12,7 @@ import StatsCard from '../components/ui/StatsCard'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import { useBagrut } from '../hooks/useBagrut'
 import apiService from '../services/apiService'
+import { getDisplayName } from '../utils/nameUtils'
 import PerformanceCard from '../components/PerformanceCard'
 import PerformanceDetailsModal from '../components/PerformanceDetailsModal'
 import PresentationCard from '../components/PresentationCard'
@@ -670,7 +671,7 @@ export default function BagrutDetails() {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `bagrut-${student?.personalInfo?.fullName || bagrutId}.pdf`
+        a.download = `bagrut-${getDisplayName(student?.personalInfo) || bagrutId}.pdf`
         a.click()
         window.URL.revokeObjectURL(url)
       }
@@ -749,7 +750,7 @@ export default function BagrutDetails() {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-3xl font-bold text-gray-900">
-                בגרות - {student?.personalInfo?.fullName || 'טוען...'}
+                בגרות - {getDisplayName(student?.personalInfo) || 'טוען...'}
               </h1>
               {bagrut.isCompleted ? (
                 <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
@@ -764,7 +765,7 @@ export default function BagrutDetails() {
             <div className="flex items-center gap-4 text-sm text-gray-800">
               <span className="flex items-center gap-1">
                 <User className="w-4 h-4" />
-                מורה: {teacher?.personalInfo?.fullName || 'טוען...'}
+                מורה: {getDisplayName(teacher?.personalInfo) || 'טוען...'}
               </span>
               {bagrut.conservatoryName && (
                 <span className="flex items-center gap-1">
@@ -944,7 +945,7 @@ export default function BagrutDetails() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="force-black-text">שם:</span>
-                    <span className="font-medium text-gray-900">{student?.personalInfo?.fullName}</span>
+                    <span className="font-medium text-gray-900">{getDisplayName(student?.personalInfo)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="force-black-text">טלפון:</span>
@@ -971,7 +972,7 @@ export default function BagrutDetails() {
                     {isEditingOverview ? (
                       <span className="text-gray-500">לא ניתן לשנות</span>
                     ) : (
-                      <span className="font-medium text-gray-900">{teacher?.personalInfo?.fullName}</span>
+                      <span className="font-medium text-gray-900">{getDisplayName(teacher?.personalInfo)}</span>
                     )}
                   </div>
                   <div className="flex justify-between items-center">
@@ -1510,7 +1511,7 @@ export default function BagrutDetails() {
       <ConfirmationModal
         isOpen={showDeleteModal}
         title="מחיקת בגרות"
-        message={`האם אתה בטוח שברצונך למחוק את הבגרות של ${student?.personalInfo?.fullName}? פעולה זו לא ניתנת לביטול.`}
+        message={`האם אתה בטוח שברצונך למחוק את הבגרות של ${getDisplayName(student?.personalInfo)}? פעולה זו לא ניתנת לביטול.`}
         confirmText="מחק"
         cancelText="ביטול"
         onConfirm={handleDelete}

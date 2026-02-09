@@ -6,6 +6,7 @@
  */
 
 import { VALID_LOCATIONS, type Location } from '../constants/locations';
+import { getDisplayName } from './nameUtils';
 
 // Valid orchestra types from backend schema
 export const VALID_ORCHESTRA_TYPES = ['הרכב', 'תזמורת'] as const;
@@ -32,7 +33,9 @@ export interface Orchestra {
   conductor?: {
     _id: string;
     personalInfo: {
-      fullName: string;
+      firstName?: string;
+      lastName?: string;
+      fullName?: string;
       email?: string;
       phone?: string;
     };
@@ -43,7 +46,9 @@ export interface Orchestra {
   members?: Array<{
     _id: string;
     personalInfo: {
-      fullName: string;
+      firstName?: string;
+      lastName?: string;
+      fullName?: string;
     };
     academicInfo?: {
       class?: string;
@@ -315,8 +320,9 @@ export const formatRehearsalCount = (rehearsalCount: number): string => {
  */
 export const getConductorName = (orchestra: Orchestra): string => {
   // Check for populated conductor data first
-  if (orchestra.conductor?.personalInfo?.fullName) {
-    return orchestra.conductor.personalInfo.fullName;
+  const conductorName = getDisplayName(orchestra.conductor?.personalInfo);
+  if (conductorName) {
+    return conductorName;
   }
 
   // Check for conductorInfo (from detailed fetch)
@@ -325,8 +331,9 @@ export const getConductorName = (orchestra: Orchestra): string => {
   }
 
   // Check for conductorDetails (from management dashboard)
-  if ((orchestra as any).conductorDetails?.personalInfo?.fullName) {
-    return (orchestra as any).conductorDetails.personalInfo.fullName;
+  const conductorDetailsName = getDisplayName((orchestra as any).conductorDetails?.personalInfo);
+  if (conductorDetailsName) {
+    return conductorDetailsName;
   }
 
   // Check if conductorId exists but no populated data

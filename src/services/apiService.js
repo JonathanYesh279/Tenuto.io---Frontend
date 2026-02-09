@@ -427,7 +427,7 @@ export const authService = {
 
 /**
  * Student API Service
- * Uses exact backend schema: student.personalInfo.fullName, student.academicInfo.class, student.teacherAssignments
+ * Uses exact backend schema: student.personalInfo.firstName/lastName, student.academicInfo.class, student.teacherAssignments
  */
 export const studentService = {
   /**
@@ -496,7 +496,7 @@ export const studentService = {
     try {
       const student = await apiClient.get(`/student/${studentId}`);
       
-      console.log(`👤 Retrieved student: ${student.personalInfo?.fullName}`);
+      console.log(`👤 Retrieved student: ${student.personalInfo?.firstName || student.personalInfo?.fullName}`);
       
       return student;
     } catch (error) {
@@ -682,7 +682,8 @@ export const studentService = {
       // Transform frontend data to match database schema
       const formattedData = {
         personalInfo: {
-          fullName: studentData.personalInfo?.fullName || '',
+          firstName: studentData.personalInfo?.firstName || '',
+          lastName: studentData.personalInfo?.lastName || '',
           phone: studentData.personalInfo?.phone || '',
           age: studentData.personalInfo?.age || 0,
           address: studentData.personalInfo?.address || '',
@@ -730,7 +731,7 @@ export const studentService = {
       
       const student = await apiClient.post('/student', formattedData);
       
-      console.log(`➕ Created student: ${student.personalInfo?.fullName}`);
+      console.log(`➕ Created student: ${student.personalInfo?.firstName || student.personalInfo?.fullName}`);
       
       return student;
     } catch (error) {
@@ -754,7 +755,7 @@ export const studentService = {
       
       const student = await apiClient.put(`/student/${studentId}`, cleanedData);
       
-      console.log(`✏️ Updated student: ${student.personalInfo?.fullName}`);
+      console.log(`✏️ Updated student: ${student.personalInfo?.firstName || student.personalInfo?.fullName}`);
       
       return student;
     } catch (error) {
@@ -1083,7 +1084,7 @@ export const studentService = {
         }
       };
 
-      console.log(`👤 Retrieved and processed student by ID: ${processedStudent.personalInfo?.fullName}`);
+      console.log(`👤 Retrieved and processed student by ID: ${processedStudent.personalInfo?.firstName || processedStudent.personalInfo?.fullName}`);
 
       return processedStudent;
     } catch (error) {
@@ -1172,7 +1173,7 @@ export const studentService = {
 
 /**
  * Teacher API Service  
- * Uses exact backend schema: teacher.personalInfo.fullName, teacher.teaching.studentIds
+ * Uses exact backend schema: teacher.personalInfo.firstName/lastName, teacher.teaching.studentIds
  */
 export const teacherService = {
   /**
@@ -1188,7 +1189,7 @@ export const teacherService = {
       // Handle different response formats from backend
       const profile = response?.data || response;
       
-      console.log(`✅ Current teacher profile: ${profile?.personalInfo?.fullName}`);
+      console.log(`✅ Current teacher profile: ${profile?.personalInfo?.firstName || profile?.personalInfo?.fullName}`);
       
       return profile;
     } catch (error) {
@@ -1208,10 +1209,12 @@ export const teacherService = {
       const formattedData = {};
 
       // Only add personalInfo if explicitly provided
-      if (profileData.personalInfo || profileData.fullName || profileData.email ||
+      if (profileData.personalInfo || profileData.firstName || profileData.lastName ||
+          profileData.fullName || profileData.email ||
           profileData.phone || profileData.address || profileData.birthDate) {
         formattedData.personalInfo = {
-          fullName: profileData.fullName || profileData.personalInfo?.fullName || '',
+          firstName: profileData.firstName || profileData.personalInfo?.firstName || '',
+          lastName: profileData.lastName || profileData.personalInfo?.lastName || '',
           email: profileData.email || profileData.personalInfo?.email || '',
           phone: profileData.phone || profileData.personalInfo?.phone || '',
           address: profileData.address || profileData.personalInfo?.address || '',
@@ -1241,7 +1244,7 @@ export const teacherService = {
       // Handle different response formats
       const updatedProfile = response?.data || response;
       
-      console.log(`✅ Profile updated: ${updatedProfile?.personalInfo?.fullName}`);
+      console.log(`✅ Profile updated: ${updatedProfile?.personalInfo?.firstName || updatedProfile?.personalInfo?.fullName}`);
       
       return updatedProfile;
     } catch (error) {
@@ -1344,15 +1347,15 @@ export const teacherService = {
       
       console.log('📋 Teacher structure check:', {
         hasPersonalInfo: !!teacher.personalInfo,
-        fullName: teacher.personalInfo?.fullName,
+        name: teacher.personalInfo?.firstName || teacher.personalInfo?.fullName,
         hasRoles: !!teacher.roles,
         roles: teacher.roles,
         hasProfessionalInfo: !!teacher.professionalInfo,
         instrument: teacher.professionalInfo?.instrument,
         isActive: teacher.isActive
       });
-      
-      console.log(`👤 Retrieved teacher: ${teacher.personalInfo?.fullName}`);
+
+      console.log(`👤 Retrieved teacher: ${teacher.personalInfo?.firstName || teacher.personalInfo?.fullName}`);
       
       // Add the same computed fields for single teacher
       return {
@@ -1462,7 +1465,8 @@ export const teacherService = {
       // Ensure data matches exact backend schema
       const formattedData = {
         personalInfo: {
-          fullName: teacherData.personalInfo?.fullName || '',
+          firstName: teacherData.personalInfo?.firstName || '',
+          lastName: teacherData.personalInfo?.lastName || '',
           phone: teacherData.personalInfo?.phone || '',
           email: teacherData.personalInfo?.email || '',
           address: teacherData.personalInfo?.address || ''
@@ -1486,7 +1490,7 @@ export const teacherService = {
 
       const teacher = await apiClient.post('/teacher', formattedData);
       
-      console.log(`➕ Created teacher: ${teacher.personalInfo?.fullName}`);
+      console.log(`➕ Created teacher: ${teacher.personalInfo?.firstName || teacher.personalInfo?.fullName}`);
       
       return teacher;
     } catch (error) {
@@ -1514,7 +1518,7 @@ export const teacherService = {
     try {
       const teacher = await apiClient.put(`/teacher/${teacherId}`, teacherData);
       
-      console.log(`✏️ Updated teacher: ${teacher.personalInfo?.fullName}`);
+      console.log(`✏️ Updated teacher: ${teacher.personalInfo?.firstName || teacher.personalInfo?.fullName}`);
       
       return teacher;
     } catch (error) {
@@ -2378,7 +2382,7 @@ export const orchestraService = {
         conductor: conductor,
         conductorInfo: conductor ? {
           id: conductor._id,
-          name: conductor.personalInfo?.fullName,
+          name: conductor.personalInfo?.firstName ? `${conductor.personalInfo.firstName} ${conductor.personalInfo.lastName || ''}`.trim() : conductor.personalInfo?.fullName,
           instrument: conductor.professionalInfo?.instrument
         } : null,
         // Use the backend-populated members directly (full student data)
@@ -2918,7 +2922,7 @@ export const rehearsalService = {
         } : null,
         memberDetails: Array.isArray(allMembers) ? allMembers.map(member => ({
           id: member._id,
-          name: member.personalInfo?.fullName,
+          name: member.personalInfo?.firstName ? `${member.personalInfo.firstName} ${member.personalInfo.lastName || ''}`.trim() : member.personalInfo?.fullName,
           isPresent: rehearsal.attendance?.present?.includes(member._id),
           isAbsent: rehearsal.attendance?.absent?.includes(member._id)
         })) : [],
@@ -4188,7 +4192,7 @@ export const studentTeacherUtils = {
         const teacher = Array.isArray(teachers) ? teachers.find(t => t._id === assignment.teacherId) : null;
         return {
           teacherId: assignment.teacherId,
-          teacherName: teacher?.personalInfo?.fullName || 'לא ידוע',
+          teacherName: teacher?.personalInfo?.firstName ? `${teacher.personalInfo.firstName} ${teacher.personalInfo.lastName || ''}`.trim() : (teacher?.personalInfo?.fullName || 'לא ידוע'),
           day: assignment.day,
           time: assignment.time,
           duration: assignment.duration,
@@ -4448,7 +4452,7 @@ export const testTeacherAssignments = async () => {
     for (const student of studentsWithTeachers.slice(0, 3)) {
       try {
         const teachers = await studentTeacherUtils.getStudentTeachers(student);
-        console.log(`${student.personalInfo?.fullName}:`, {
+        console.log(`${student.personalInfo?.firstName || student.personalInfo?.fullName}:`, {
           assignmentCount: student.teacherAssignments.length,
           teachers: teachers.map(t => ({
             name: t.teacherName,
@@ -4459,7 +4463,7 @@ export const testTeacherAssignments = async () => {
           }))
         });
       } catch (error) {
-        console.log(`Error processing ${student.personalInfo?.fullName}:`, error.message);
+        console.log(`Error processing ${student.personalInfo?.firstName || student.personalInfo?.fullName}:`, error.message);
       }
     }
     console.log('================================');
@@ -4491,7 +4495,7 @@ export const testTeacherDataExtraction = async () => {
       const workload = teacherUtils.getWorkload(teacher);
       
       console.log(`Teacher ${index + 1}:`, {
-        name: teacher.personalInfo?.fullName,
+        name: teacher.personalInfo?.firstName || teacher.personalInfo?.fullName,
         instrument: teacher.professionalInfo?.instrument,
         roles: teacher.allRoles,
         primaryRole: teacher.primaryRole,
@@ -4531,7 +4535,7 @@ export const testStudentDataExtraction = async () => {
     students.slice(0, 5).forEach((student, index) => {
       const primaryInstrument = studentUtils.getPrimaryInstrument(student);
       console.log(`Student ${index + 1}:`, {
-        name: student.personalInfo?.fullName,
+        name: student.personalInfo?.firstName || student.personalInfo?.fullName,
         primaryInstrument: primaryInstrument.name || 'ללא כלי',
         stage: primaryInstrument.stage || 'לא הוגדר',
         hasInstrument: primaryInstrument.hasInstrument,

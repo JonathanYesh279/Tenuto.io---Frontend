@@ -24,7 +24,8 @@ interface TeacherFormProps {
 export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = false }: TeacherFormProps) {
   const [formData, setFormData] = useState({
     personalInfo: {
-      fullName: '',
+      firstName: '',
+      lastName: '',
       phone: '',
       email: '',
       address: ''
@@ -60,7 +61,8 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
     if (teacher) {
       setFormData({
         personalInfo: {
-          fullName: teacher.personalInfo?.fullName || '',
+          firstName: teacher.personalInfo?.firstName || '',
+          lastName: teacher.personalInfo?.lastName || '',
           phone: teacher.personalInfo?.phone || '',
           email: teacher.personalInfo?.email || '',
           address: teacher.personalInfo?.address || ''
@@ -93,12 +95,15 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
 
   const validateField = (name: string, value: any): string => {
     switch (name) {
-      case 'personalInfo.fullName':
+      case 'personalInfo.firstName':
         if (!value || value.trim().length === 0) {
-          return 'שם מלא נדרש';
+          return 'שם פרטי נדרש';
         }
-        if (value.trim().length < 2) {
-          return 'שם מלא חייב להיות לפחות 2 תווים';
+        return '';
+
+      case 'personalInfo.lastName':
+        if (!value || value.trim().length === 0) {
+          return 'שם משפחה נדרש';
         }
         return '';
 
@@ -266,21 +271,42 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                שם מלא *
+                שם פרטי *
               </label>
               <input
                 type="text"
-                value={formData.personalInfo.fullName}
-                onChange={(e) => handleInputChange('personalInfo.fullName', e.target.value)}
+                value={formData.personalInfo.firstName}
+                onChange={(e) => handleInputChange('personalInfo.firstName', e.target.value)}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                  getFieldError('personalInfo.fullName') ? 'border-red-500' : 'border-gray-300'
+                  getFieldError('personalInfo.firstName') ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="הזן שם מלא"
+                placeholder="הזן שם פרטי"
               />
-              {getFieldError('personalInfo.fullName') && (
+              {getFieldError('personalInfo.firstName') && (
                 <div className="flex items-center mt-1 text-red-600 text-sm">
                   <AlertCircle className="w-4 h-4 mr-1" />
-                  {getFieldError('personalInfo.fullName')}
+                  {getFieldError('personalInfo.firstName')}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                שם משפחה *
+              </label>
+              <input
+                type="text"
+                value={formData.personalInfo.lastName}
+                onChange={(e) => handleInputChange('personalInfo.lastName', e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                  getFieldError('personalInfo.lastName') ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="הזן שם משפחה"
+              />
+              {getFieldError('personalInfo.lastName') && (
+                <div className="flex items-center mt-1 text-red-600 text-sm">
+                  <AlertCircle className="w-4 h-4 mr-1" />
+                  {getFieldError('personalInfo.lastName')}
                 </div>
               )}
             </div>

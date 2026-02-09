@@ -22,6 +22,7 @@ import type { PresentationDisplay, ProgramPiece } from '../types/bagrut.types';
 import { getPresentationStatusColor, getPresentationStatusIcon } from '../services/presentationService';
 import DetailedMagenBagrutEditor from './DetailedMagenBagrutEditor';
 import apiService from '../services/apiService';
+import { getDisplayName } from '@/utils/nameUtils';
 
 interface PresentationCardProps {
   presentation: PresentationDisplay;
@@ -86,13 +87,9 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
               console.log('🔍 Fetching teacher for ObjectId:', part);
               const teacher = await apiService.teachers.getTeacher(part);
               console.log('📋 Teacher response for ID', part, ':', teacher);
-              const fullName = teacher?.personalInfo?.fullName 
-                || (teacher?.personalInfo?.firstName && teacher?.personalInfo?.lastName
-                  ? `${teacher.personalInfo.firstName} ${teacher.personalInfo.lastName}`
-                  : teacher?.personalInfo?.firstName || teacher?.personalInfo?.lastName)
-                || part;
-              console.log('✅ Resolved teacher name:', part, '->', fullName);
-              names.push(fullName);
+              const resolvedName = getDisplayName(teacher?.personalInfo) || part;
+              console.log('✅ Resolved teacher name:', part, '->', resolvedName);
+              names.push(resolvedName);
             } catch (error) {
               console.error('❌ Error fetching teacher name for', part, ':', error);
               names.push(part); // Fallback to ID if fetch fails

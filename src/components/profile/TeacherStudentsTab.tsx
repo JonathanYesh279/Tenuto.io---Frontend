@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
 import { Plus, Search, Edit, Trash2, UserPlus, BookOpen, Eye, Calendar, AlertTriangle, Filter, X, CheckSquare, Clock, Music, Star, Phone, Mail, Award, MapPin } from 'lucide-react'
 import apiService from '../../services/apiService.js'
+import { getDisplayName } from '../../utils/nameUtils'
 import EnhancedStudentCard from './EnhancedStudentCard'
 import { VALID_LOCATIONS } from '../../constants/locations'
 import IndividualLessonAttendance from '../attendance/IndividualLessonAttendance'
@@ -36,7 +37,9 @@ interface Student {
   joinDate?: string
   // Enhanced data from backend
   personalInfo?: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
     age?: number
     class?: string
@@ -170,15 +173,14 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
 
       // Map backend data to enhanced frontend format
       const mappedStudents = filteredStudents.map(student => {
-        // Handle fullName split or use firstName/lastName if available
-        const fullName = student.personalInfo?.fullName || ''
-        const nameParts = fullName.split(' ')
+        // Use getDisplayName for backward-compatible name resolution
+        const displayName = getDisplayName(student.personalInfo)
+        const nameParts = displayName.split(' ')
 
         return {
           id: student._id,
           firstName: student.personalInfo?.firstName || nameParts[0] || '',
           lastName: student.personalInfo?.lastName || nameParts.slice(1).join(' ') || '',
-          fullName: fullName,
           email: student.personalInfo?.email || student.contactInfo?.email || '',
           phone: student.personalInfo?.phone || student.contactInfo?.phone || '',
           instrument: student.academicInfo?.primaryInstrument || student.primaryInstrument || '',
@@ -187,7 +189,9 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
           joinDate: student.createdAt,
           // Enhanced backend data for new card
           personalInfo: {
-            fullName: fullName,
+            firstName: student.personalInfo?.firstName,
+            lastName: student.personalInfo?.lastName,
+            fullName: student.personalInfo?.fullName,
             phone: student.personalInfo?.phone || student.contactInfo?.phone,
             age: student.personalInfo?.age,
             class: student.personalInfo?.class || student.academicInfo?.class
@@ -275,7 +279,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
 
   const handleDeleteStudent = async (studentId: string) => {
     const student = students.find(s => s.id === studentId)
-    const studentName = student?.personalInfo?.fullName || student?.fullName || 'התלמיד'
+    const studentName = getDisplayName(student?.personalInfo) || 'התלמיד'
     
     if (!window.confirm(`האם אתה בטוח שברצונך למחוק את ${studentName}?\n\nפעולה זו תמחק את כל הנתונים הקשורים לתלמיד ולא ניתנת לביטול.`)) return
 
@@ -330,10 +334,10 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
   const handleAddNote = (studentId: string) => {
     const student = students.find(s => s.id === studentId)
     if (student) {
-      const note = prompt(`הוסף הערה עבור ${student.personalInfo?.fullName}:`)
+      const note = prompt(`הוסף הערה עבור ${getDisplayName(student.personalInfo)}:`)
       if (note && note.trim()) {
         // In a real app, this would save to the backend
-        showNotification(`הערה נוספה עבור ${student.personalInfo?.fullName}`, 'success')
+        showNotification(`הערה נוספה עבור ${getDisplayName(student.personalInfo)}`, 'success')
       }
     }
   }
@@ -453,7 +457,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       await loadTeacherStudents()
 
       // Show success message
-      showNotification(`${selectedStudent.personalInfo?.fullName} הוקצה בהצלחה`, 'success')
+      showNotification(`${getDisplayName(selectedStudent.personalInfo)} הוקצה בהצלחה`, 'success')
 
       setShowAssignmentModal(false)
     } catch (error) {
@@ -730,7 +734,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
     // If no search query, show all students
     if (!searchLower) return true
 
-    const fullName = student.personalInfo?.fullName || `${student.personalInfo?.firstName || ''} ${student.personalInfo?.lastName || ''}`.trim()
+    const displayName = getDisplayName(student.personalInfo)
     const studentClass = student.personalInfo?.class || student.academicInfo?.class || ''
     const instruments = [
       student.academicInfo?.primaryInstrument,
@@ -738,7 +742,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
     ].filter(Boolean).join(' ')
 
     // Combine all searchable text
-    const searchableText = `${fullName} ${studentClass} ${instruments}`.toLowerCase()
+    const searchableText = `${displayName} ${studentClass} ${instruments}`.toLowerCase()
 
     // Split search query into words and check if ALL words are present
     // This allows searching "בנימין לזר" or "לזר בנימין" to find "לזר בנימין"
@@ -823,7 +827,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                 duration: duration,
                 isAvailable: true,
                 location: block.location,
-                teacherName: teacher.personalInfo?.fullName,
+                teacherName: getDisplayName(teacher.personalInfo),
                 teacherId: teacher._id,
                 instrument: teacher.professionalInfo?.instrument || teacher.teaching?.instrument
               })
@@ -917,7 +921,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
               ) : (
                 <div className="divide-y divide-gray-200">
                   {filteredStudents.map(student => {
-                    const fullName = student.personalInfo?.fullName || `${student.personalInfo?.firstName || ''} ${student.personalInfo?.lastName || ''}`.trim()
+                    const displayName = getDisplayName(student.personalInfo)
                     const studentClass = student.personalInfo?.class || student.academicInfo?.class || ''
                     const primaryInstrument = student.academicInfo?.primaryInstrument || ''
                     const isSelected = selectedStudent?._id === student._id
@@ -934,7 +938,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className="font-medium text-gray-900">{fullName}</div>
+                            <div className="font-medium text-gray-900">{displayName}</div>
                             <div className="text-sm text-gray-600 mt-1">
                               {studentClass && <span>כיתה {studentClass}</span>}
                               {primaryInstrument && (
@@ -963,7 +967,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
               <div className="space-y-4 border-t pt-4">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium text-gray-900 font-reisinger-yonatan">
-                    בחר זמן שיעור עבור {selectedStudent.personalInfo?.fullName}
+                    בחר זמן שיעור עבור {getDisplayName(selectedStudent.personalInfo)}
                   </h4>
                   {selectedSlot && (
                     <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-1 rounded-lg">
@@ -1166,7 +1170,7 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
         duration: formData.duration,
         notes: formData.notes,
         studentId: student.id,
-        studentName: student.personalInfo?.fullName || student.fullName,
+        studentName: getDisplayName(student.personalInfo) || student.firstName + ' ' + student.lastName,
         teacherId: teacherId,
         recurring: {
           isRecurring: true,
@@ -1189,7 +1193,7 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
         <h3 className="text-xl font-bold text-gray-900 mb-4 font-reisinger-yonatan">
-          תזמן שיעור קבוע - {student.personalInfo?.fullName || student.fullName}
+          תזמן שיעור קבוע - {getDisplayName(student.personalInfo) || `${student.firstName} ${student.lastName}`.trim()}
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -1417,7 +1421,7 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
         <h3 className="text-xl font-bold text-gray-900 mb-4 font-reisinger-yonatan">
-          עדכן שיעור קבוע - {student.personalInfo?.fullName || student.fullName}
+          עדכן שיעור קבוע - {getDisplayName(student.personalInfo) || `${student.firstName} ${student.lastName}`.trim()}
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">

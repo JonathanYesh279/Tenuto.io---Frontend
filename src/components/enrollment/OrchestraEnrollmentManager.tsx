@@ -20,6 +20,7 @@ import {
   TrendingUp
 } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '../../utils/nameUtils'
 
 interface EnrollmentStudent {
   id: string
@@ -111,7 +112,7 @@ export default function OrchestraEnrollmentManager() {
 
         return {
           id: student._id,
-          name: student.personalInfo?.fullName || `${student.personalInfo?.firstName} ${student.personalInfo?.lastName}`,
+          name: getDisplayName(student.personalInfo) || 'שם לא ידוע',
           instrument: primaryInstrument?.instrumentName || 'לא צוין',
           level: getStudentLevel(primaryInstrument?.currentStage || 1),
           currentOrchestras: studentOrchestras,

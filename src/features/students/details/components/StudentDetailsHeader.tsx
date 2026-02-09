@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import { User, Phone, Mail, Calendar, MapPin, Edit, Camera, Printer, Download } from 'lucide-react'
 import { StudentDetailsHeaderProps } from '../types'
+import { getDisplayName } from '@/utils/nameUtils'
 import { StatusBadge } from '@/components/ui/Table'
 import QuickActionsModal from './QuickActionsModal'
 
@@ -63,7 +64,7 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
             <div className="flex-1">
               {/* Name and basic info */}
               <h1 className="text-3xl font-bold mb-2">
-                {personalInfo.fullName}
+                {getDisplayName(personalInfo)}
               </h1>
               
               {/* Status Badges */}
@@ -122,7 +123,7 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
             {/* Student Photo */}
             <div className="relative group">
               <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg border-4 border-white/30 backdrop-blur-sm">
-                {personalInfo.fullName ? personalInfo.fullName.charAt(0).toUpperCase() : <User className="w-8 h-8" />}
+                {getDisplayName(personalInfo) ? getDisplayName(personalInfo).charAt(0) : <User className="w-8 h-8" />}
               </div>
               
               {/* Photo upload button */}

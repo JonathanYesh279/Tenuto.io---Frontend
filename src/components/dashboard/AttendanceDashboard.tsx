@@ -24,6 +24,7 @@ import {
   CalendarDays
 } from 'lucide-react'
 import apiService from '../../services/apiService'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface AttendanceStats {
   totalStudents: number
@@ -233,7 +234,7 @@ export default function AttendanceDashboard() {
 
         records.push({
           studentId: student._id,
-          studentName: student.personalInfo?.fullName || `${student.personalInfo?.firstName} ${student.personalInfo?.lastName}`,
+          studentName: getDisplayName(student.personalInfo) || 'תלמיד',
           lessonType,
           teacherName: lessonType === 'orchestra' ? 'מנצח התזמורת' : 'מורה פרטי',
           groupName: lessonType === 'theory' ? 'תיאוריה מתקדמת' : lessonType === 'orchestra' ? 'תזמורת הקונסרבטוריון' : undefined,

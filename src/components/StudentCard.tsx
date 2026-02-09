@@ -2,11 +2,14 @@ import React, { useState } from 'react'
 import { Phone, User, Calendar, Trash2 } from 'lucide-react'
 import { Card } from './ui/Card'
 import ConfirmationModal from './ui/ConfirmationModal'
+import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
 
 interface Student {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone: string
     parentName?: string
     parentPhone?: string
@@ -71,9 +74,9 @@ const StudentCard: React.FC<StudentCardProps> = ({
     return colors[stage as keyof typeof colors] || 'bg-gray-100 text-gray-800'
   }
 
-  // Generate avatar initials
-  const getInitials = (name: string): string => {
-    return name.split(' ').map(n => n[0]).join('').slice(0, 2)
+  // Generate avatar initials using nameUtils
+  const getInitials = () => {
+    return getNameInitials(student.personalInfo) || 'ת'
   }
 
   // Get avatar background color based on stage
@@ -140,14 +143,14 @@ const StudentCard: React.FC<StudentCardProps> = ({
           w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm
           ${primaryInstrument ? getAvatarColor(primaryInstrument.currentStage) : 'bg-gray-500'}
         `}>
-          {getInitials(student.personalInfo.fullName)}
+          {getInitials()}
         </div>
 
         <div className="flex-1 min-w-0">
           {/* Header with name and status */}
           <div className="flex items-center justify-between mb-2">
             <h3 className={`text-lg font-semibold truncate ${isSelected ? 'text-blue-900' : 'text-gray-900'} ${isSelectMode ? 'ml-6' : ''}`}>
-              {student.personalInfo.fullName}
+              {getDisplayName(student.personalInfo)}
             </h3>
             <div className="flex items-center space-x-2 space-x-reverse">
               {/* Delete button */}
@@ -255,7 +258,7 @@ const StudentCard: React.FC<StudentCardProps> = ({
       <ConfirmationModal
         isOpen={showDeleteModal}
         title="מחיקת תלמיד"
-        message={`האם אתה בטוח שברצונך למחוק את התלמיד ${student.personalInfo.fullName}? פעולה זו לא ניתנת לביטול.`}
+        message={`האם אתה בטוח שברצונך למחוק את התלמיד ${getDisplayName(student.personalInfo)}? פעולה זו לא ניתנת לביטול.`}
         confirmText="מחק"
         cancelText="ביטול"
         onConfirm={handleConfirmDelete}

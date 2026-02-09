@@ -28,7 +28,9 @@ export interface TeacherTabContentProps {
 export interface Teacher {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone: string
     email: string
     address: string

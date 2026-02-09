@@ -12,9 +12,9 @@ import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal'
 import { orchestraService, teacherService } from '../services/apiService'
 import { useAuth } from '../services/authContext'
 import { useSchoolYear } from '../services/schoolYearContext'
-import { 
-  filterOrchestras, 
-  sortOrchestras, 
+import {
+  filterOrchestras,
+  sortOrchestras,
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
@@ -27,6 +27,7 @@ import {
   type OrchestraType,
   type LocationType
 } from '../utils/orchestraUtils'
+import { getDisplayName } from '../utils/nameUtils'
 
 export default function Orchestras() {
   const navigate = useNavigate()
@@ -324,7 +325,7 @@ export default function Orchestras() {
                 <option value="">כל המנצחים</option>
                 {teachers.map((teacher: any) => (
                   <option key={teacher._id} value={teacher._id}>
-                    {teacher.personalInfo?.fullName}
+                    {getDisplayName(teacher.personalInfo)}
                   </option>
                 ))}
               </select>

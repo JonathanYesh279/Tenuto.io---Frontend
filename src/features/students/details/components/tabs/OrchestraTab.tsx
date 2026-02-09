@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react'
 import { Music, Users, Plus, Trash2, AlertCircle, Clock, MapPin, CheckCircle, X } from 'lucide-react'
 import apiService from '../../../../../services/apiService'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 
 interface RehearsalSchedule {
   dayOfWeek: number
@@ -374,14 +375,15 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                               return orchestra.conductor
                             }
 
-                            // Check for fullName in different places
+                            // Check for name using getDisplayName first
+                            const displayNameResult = getDisplayName(orchestra.conductor.personalInfo)
+                            if (displayNameResult) {
+                              console.log('🎭 Using getDisplayName:', displayNameResult)
+                              return displayNameResult
+                            }
                             if (orchestra.conductor.fullName) {
                               console.log('🎭 Using fullName:', orchestra.conductor.fullName)
                               return orchestra.conductor.fullName
-                            }
-                            if (orchestra.conductor.personalInfo?.fullName) {
-                              console.log('🎭 Using personalInfo.fullName:', orchestra.conductor.personalInfo.fullName)
-                              return orchestra.conductor.personalInfo.fullName
                             }
 
                             // Check for firstName + lastName
@@ -559,14 +561,15 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                                   return orchestra.conductor
                                 }
 
-                                // Check for fullName in different places
+                                // Check for name using getDisplayName first
+                                const availableDisplayName = getDisplayName(orchestra.conductor.personalInfo)
+                                if (availableDisplayName) {
+                                  console.log('🎪 Using getDisplayName:', availableDisplayName)
+                                  return availableDisplayName
+                                }
                                 if (orchestra.conductor.fullName) {
                                   console.log('🎪 Using fullName:', orchestra.conductor.fullName)
                                   return orchestra.conductor.fullName
-                                }
-                                if (orchestra.conductor.personalInfo?.fullName) {
-                                  console.log('🎪 Using personalInfo.fullName:', orchestra.conductor.personalInfo.fullName)
-                                  return orchestra.conductor.personalInfo.fullName
                                 }
 
                                 // Check for firstName + lastName

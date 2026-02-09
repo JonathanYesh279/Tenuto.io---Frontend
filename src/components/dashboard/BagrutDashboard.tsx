@@ -31,6 +31,7 @@ import {
 import { useBagrutContext } from '../../contexts/BagrutContext'
 import apiService from '../../services/apiService'
 import type { Bagrut } from '../../types/bagrut.types'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface BagrutStats {
   activeBagrutStudents: number
@@ -140,7 +141,7 @@ export default function BagrutDashboard() {
 
         return {
           studentId: bagrut.studentId,
-          studentName: student?.personalInfo?.fullName || 'תלמיד לא ידוע',
+          studentName: getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע',
           instrument: student?.academicInfo?.primaryInstrument || 'לא צוין',
           stage: completedPresentations + 1,
           progress,

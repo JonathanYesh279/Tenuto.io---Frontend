@@ -7,6 +7,7 @@ import {
 import { Card } from './ui/Card'
 import type { BagrutFormData } from '../types/bagrut.types'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface BagrutFormProps {
   students: any[]
@@ -229,18 +230,18 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
   // Filter students based on search
   const filteredStudents = students.filter(student => {
     if (!studentSearch) return true
-    const fullName = student.personalInfo?.fullName || ''
+    const displayName = getDisplayName(student.personalInfo)
     const className = student.academicInfo?.class || ''
-    return fullName.toLowerCase().includes(studentSearch.toLowerCase()) ||
+    return displayName.toLowerCase().includes(studentSearch.toLowerCase()) ||
            className.toLowerCase().includes(studentSearch.toLowerCase())
   })
 
   // Filter teachers based on search
   const filteredTeachers = teachers.filter(teacher => {
     if (!teacherSearch) return true
-    const fullName = teacher.personalInfo?.fullName || ''
+    const displayName = getDisplayName(teacher.personalInfo)
     const email = teacher.personalInfo?.email || ''
-    return fullName.toLowerCase().includes(teacherSearch.toLowerCase()) ||
+    return displayName.toLowerCase().includes(teacherSearch.toLowerCase()) ||
            email.toLowerCase().includes(teacherSearch.toLowerCase())
   })
 
@@ -322,7 +323,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
-                    {selectedStudent.personalInfo?.fullName}
+                    {getDisplayName(selectedStudent.personalInfo)}
                   </h4>
                   <div className="text-sm text-gray-600 space-y-1">
                     <p>כיתה: {selectedStudent.academicInfo?.class}</p>
@@ -352,7 +353,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     }`}
                   >
                   <div className="font-medium text-gray-900">
-                    {student.personalInfo?.fullName}
+                    {getDisplayName(student.personalInfo)}
                   </div>
                   <div className="text-sm text-gray-600">
                     כיתה {student.academicInfo?.class}
@@ -403,7 +404,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
-                    {selectedTeacher.personalInfo?.fullName}
+                    {getDisplayName(selectedTeacher.personalInfo)}
                   </h4>
                   <div className="text-sm text-gray-600 space-y-1">
                     <p>אימייל: {selectedTeacher.personalInfo?.email}</p>
@@ -433,7 +434,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                   }`}
                 >
                   <div className="font-medium text-gray-900">
-                    {teacher.personalInfo?.fullName}
+                    {getDisplayName(teacher.personalInfo)}
                   </div>
                   <div className="text-sm text-gray-600">
                     {teacher.personalInfo?.email}
@@ -751,10 +752,10 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                           >
                             <option value="">בחר מורה מהרשימה</option>
                             {teachers
-                              .filter(teacher => teacher.personalInfo?.fullName)
+                              .filter(teacher => getDisplayName(teacher.personalInfo))
                               .map(teacher => (
-                              <option key={teacher._id} value={teacher.personalInfo?.fullName || ''}>
-                                {teacher.personalInfo?.fullName} 
+                              <option key={teacher._id} value={getDisplayName(teacher.personalInfo)}>
+                                {getDisplayName(teacher.personalInfo)} 
                                 {teacher.professionalInfo?.instruments?.includes('פסنתר') ? ' (פסנתר)' : ''}
                               </option>
                               ))}
@@ -1245,13 +1246,13 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               <div>
                 <span className="text-gray-600">תלמיד:</span>
                 <span className="mr-2 font-medium">
-                  {selectedStudent?.personalInfo?.fullName || 'לא נבחר'}
+                  {getDisplayName(selectedStudent?.personalInfo) || 'לא נבחר'}
                 </span>
               </div>
               <div>
                 <span className="text-gray-600">מורה מנחה:</span>
                 <span className="mr-2 font-medium">
-                  {selectedTeacher?.personalInfo?.fullName || 'לא נבחר'}
+                  {getDisplayName(selectedTeacher?.personalInfo) || 'לא נבחר'}
                 </span>
               </div>
               <div>

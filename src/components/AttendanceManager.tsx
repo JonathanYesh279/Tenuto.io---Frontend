@@ -7,11 +7,14 @@ import {
   type Rehearsal,
   type AttendanceUpdate
 } from '../utils/rehearsalUtils'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface AttendanceMember {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
     email?: string
   }
@@ -54,7 +57,7 @@ export default function AttendanceManager({
   
   // Filter members based on search
   const filteredMembers = members.filter(member =>
-    member.personalInfo?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getDisplayName(member.personalInfo)?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.academicInfo?.class?.includes(searchQuery)
   )
 
@@ -313,7 +316,7 @@ export default function AttendanceManager({
                           {getStatusIcon(status)}
                         </div>
                         <div>
-                          <div className="font-medium">{member.personalInfo?.fullName}</div>
+                          <div className="font-medium">{getDisplayName(member.personalInfo)}</div>
                           <div className="text-sm opacity-75">
                             {member.academicInfo?.class && `כיתה ${member.academicInfo.class}`}
                             {primaryInstrument && ` • ${primaryInstrument.instrumentName}`}

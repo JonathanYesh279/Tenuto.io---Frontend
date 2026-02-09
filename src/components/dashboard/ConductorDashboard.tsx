@@ -30,6 +30,7 @@ import {
 } from 'lucide-react'
 import apiService from '../../services/apiService'
 import type { Bagrut } from '../../types/bagrut.types'
+import { getDisplayName } from '@/utils/nameUtils'
 
 interface ConductorDashboardStats {
   totalOrchestras: number
@@ -246,7 +247,7 @@ export default function ConductorDashboard() {
 
               return {
                 studentId,
-                studentName: student?.personalInfo?.fullName || 'תלמיד לא ידוע',
+                studentName: getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע',
                 instrument: memberInfo?.instrument || student?.academicInfo?.primaryInstrument || 'לא צוין',
                 section: memberInfo?.section || 'לא צוין',
                 bagrutStatus,

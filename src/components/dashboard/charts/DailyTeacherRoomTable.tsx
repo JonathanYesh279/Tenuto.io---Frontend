@@ -8,6 +8,7 @@ import { Card } from '../../ui/Card';
 import apiService from '../../../services/apiService';
 import { useSchoolYear } from '../../../services/schoolYearContext';
 import { Calendar, MapPin, User, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { getDisplayName } from '@/utils/nameUtils';
 
 interface TeacherRoomEntry {
   teacherId: string;
@@ -62,7 +63,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
     teachers.forEach(teacher => {
       if (!teacher.isActive) return;
 
-      const teacherName = teacher.personalInfo?.fullName || 'מורה';
+      const teacherName = getDisplayName(teacher.personalInfo) || 'מורה';
       const instrument = teacher.professionalInfo?.instrument || '';
 
       // Check time blocks

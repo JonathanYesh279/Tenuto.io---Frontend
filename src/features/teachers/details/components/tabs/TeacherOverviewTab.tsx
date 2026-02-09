@@ -20,6 +20,7 @@ import {
   BookOpen
 } from 'lucide-react'
 import { TeacherDetails } from '../../types'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 
 interface TeacherOverviewTabProps {
   teacher: TeacherDetails
@@ -56,7 +57,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
               <User className="w-4 h-4 text-gray-500" />
               <div>
                 <p className="text-sm text-black font-semibold" style={{color: '#000000'}}>שם מלא:</p>
-                <p className="font-medium text-gray-900">{teacher.personalInfo?.fullName || 'ללא מידע'}</p>
+                <p className="font-medium text-gray-900">{getDisplayName(teacher.personalInfo) || 'ללא מידע'}</p>
               </div>
             </div>
             

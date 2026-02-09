@@ -1,11 +1,14 @@
 import React from 'react'
 import { Users, Calendar, Phone, Mail } from 'lucide-react'
 import { Card } from './ui/Card'
+import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
 
 interface Teacher {
   _id: string
   personalInfo: {
-    fullName: string
+    firstName?: string
+    lastName?: string
+    fullName?: string
     phone?: string
     email?: string
   }
@@ -43,9 +46,9 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
   onClick,
   className = ''
 }) => {
-  // Generate avatar initials
-  const getInitials = (name: string): string => {
-    return name.split(' ').map(n => n[0]).join('').slice(0, 2)
+  // Generate avatar initials using nameUtils
+  const getInitials = () => {
+    return getNameInitials(teacher.personalInfo) || 'מ'
   }
 
   // Get role color
@@ -115,14 +118,14 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
           w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm
           ${getAvatarColor(primaryRole)}
         `}>
-          {getInitials(teacher.personalInfo.fullName)}
+          {getInitials()}
         </div>
 
         <div className="flex-1 min-w-0">
           {/* Header with name and status */}
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-semibold text-gray-900 truncate">
-              {teacher.personalInfo.fullName}
+              {getDisplayName(teacher.personalInfo)}
             </h3>
             <div className="flex items-center space-x-2 space-x-reverse">
               {/* Active status indicator */}

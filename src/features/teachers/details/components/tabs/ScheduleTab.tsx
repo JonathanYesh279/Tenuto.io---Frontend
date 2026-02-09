@@ -14,6 +14,7 @@ import { Teacher } from '../../types'
 import TeacherWeeklyCalendar from '../../../../../components/schedule/TeacherWeeklyCalendar'
 import { orchestraEnrollmentApi } from '../../../../../services/orchestraEnrollmentApi'
 import apiService from '../../../../../services/apiService'
+import { getDisplayName } from '../../../../../utils/nameUtils'
 import TimeBlockForm from '../../../../../components/teacher/TimeBlockForm'
 import toast from 'react-hot-toast'
 import { VALID_LOCATIONS } from '../../../../../constants/locations'
@@ -324,7 +325,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
 
       // First, get the current student data to find the teacher assignment
       const currentStudent = await apiService.students.getStudentById(updatedLesson.studentId)
-      console.log('📋 Current student data loaded:', currentStudent.personalInfo?.fullName)
+      console.log('📋 Current student data loaded:', getDisplayName(currentStudent.personalInfo))
 
       if (!currentStudent.teacherAssignments || currentStudent.teacherAssignments.length === 0) {
         throw new Error('No teacher assignments found for this student')
@@ -379,7 +380,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
         teacherAssignments: updatedAssignments
       })
 
-      console.log('✅ Student updated successfully:', result.personalInfo?.fullName)
+      console.log('✅ Student updated successfully:', getDisplayName(result.personalInfo))
 
       // Refresh teacher lessons to reflect the changes
       const lessonsData = await apiService.teachers.getTeacherLessons(teacherId)
@@ -409,7 +410,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
 
       // Get the current student data
       const currentStudent = await apiService.students.getStudentById(lessonToDelete.studentId)
-      console.log('📋 Current student data loaded:', currentStudent.personalInfo?.fullName)
+      console.log('📋 Current student data loaded:', getDisplayName(currentStudent.personalInfo))
 
       if (!currentStudent.teacherAssignments || currentStudent.teacherAssignments.length === 0) {
         throw new Error('No teacher assignments found for this student')
@@ -443,7 +444,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
         teacherAssignments: updatedAssignments
       })
 
-      console.log('✅ Student assignment deactivated successfully:', result.personalInfo?.fullName)
+      console.log('✅ Student assignment deactivated successfully:', getDisplayName(result.personalInfo))
 
       // Deactivate timeBlock lessons for this student on the teacher record
       const teachingUpdates: any = { ...teacherData.teaching }

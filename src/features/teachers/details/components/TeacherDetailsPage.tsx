@@ -12,6 +12,7 @@ import { TeacherTabType } from '../types'
 import TeacherTabNavigation from './TeacherTabNavigation'
 import TeacherTabContent from './TeacherTabContent'
 import apiService from '../../../../services/apiService'
+import { getDisplayName } from '../../../../utils/nameUtils'
 
 const TeacherDetailsPage: React.FC = () => {
   const { teacherId } = useParams<{ teacherId: string }>()
@@ -36,7 +37,7 @@ const TeacherDetailsPage: React.FC = () => {
       console.log('🔄 Fetching teacher data for ID:', teacherId)
       
       const teacherData = await apiService.teachers.getTeacherById(teacherId)
-      console.log('✅ Teacher data loaded:', teacherData?.personalInfo?.fullName)
+      console.log('✅ Teacher data loaded:', getDisplayName(teacherData?.personalInfo))
       
       setTeacher(teacherData)
     } catch (err) {
@@ -157,7 +158,7 @@ const TeacherDetailsPage: React.FC = () => {
         </button>
         <span>{'>'}</span>
         <span className="text-gray-900">
-          {teacher?.personalInfo?.fullName || 'פרטי מורה'}
+          {getDisplayName(teacher?.personalInfo) || 'פרטי מורה'}
         </span>
       </nav>
 
@@ -169,7 +170,7 @@ const TeacherDetailsPage: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {teacher?.personalInfo?.fullName || 'טוען...'}
+              {getDisplayName(teacher?.personalInfo) || 'טוען...'}
             </h1>
             <p className="text-gray-600">
               {teacher?.professionalInfo?.instrument || 'ללא כלי'} | {teacher?.roles?.join(', ') || 'מורה'}

@@ -51,6 +51,8 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
         }
       ],
       class: 'א',
+      studyYears: null as number | null,
+      extraHour: null as number | null,
       tests: { bagrutId: null }
     },
     enrollments: {
@@ -227,6 +229,31 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
         return newErrors
       })
     }
+  }
+
+  const handleAcademicInfoChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      academicInfo: {
+        ...prev.academicInfo,
+        [field]: value
+      }
+    }))
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[field]
+        return newErrors
+      })
+    }
+  }
+
+  // Ministry stage level: stages 1-3 → א, 4-5 → ב, 6-8 → ג
+  const getMinistryStageLevel = (stage: number): string => {
+    if (stage >= 1 && stage <= 3) return 'א'
+    if (stage >= 4 && stage <= 5) return 'ב'
+    if (stage >= 6 && stage <= 8) return 'ג'
+    return ''
   }
 
   const handleClassChange = (value: string) => {
@@ -571,6 +598,39 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                 )}
               </div>
 
+              {/* Study Years & Extra Hour */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    שנות לימוד
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="20"
+                    value={formData.academicInfo.studyYears ?? ''}
+                    onChange={(e) => handleAcademicInfoChange('studyYears', e.target.value ? parseInt(e.target.value) : null)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="0-20"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    שעה נוספת
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.25"
+                    value={formData.academicInfo.extraHour ?? ''}
+                    onChange={(e) => handleAcademicInfoChange('extraHour', e.target.value ? parseFloat(e.target.value) : null)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="0-10"
+                  />
+                </div>
+              </div>
+
               {/* Instruments */}
               <div>
                 <div className="flex justify-between items-center mb-4">
@@ -618,17 +678,24 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             שלב נוכחי
                           </label>
-                          <select
-                            value={instrument.currentStage}
-                            onChange={(e) => updateInstrument(index, 'currentStage', parseInt(e.target.value))}
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
-                              errors[`stage_${index}`] ? 'border-red-300' : 'border-gray-300'
-                            }`}
-                          >
-                            {VALID_STAGES.map(stage => (
-                              <option key={stage} value={stage}>שלב {stage}</option>
-                            ))}
-                          </select>
+                          <div className="flex items-center gap-2">
+                            <select
+                              value={instrument.currentStage}
+                              onChange={(e) => updateInstrument(index, 'currentStage', parseInt(e.target.value))}
+                              className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                                errors[`stage_${index}`] ? 'border-red-300' : 'border-gray-300'
+                              }`}
+                            >
+                              {VALID_STAGES.map(stage => (
+                                <option key={stage} value={stage}>שלב {stage}</option>
+                              ))}
+                            </select>
+                            {getMinistryStageLevel(instrument.currentStage) && (
+                              <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded whitespace-nowrap" title="דרגת משרד החינוך">
+                                {getMinistryStageLevel(instrument.currentStage)}&apos;
+                              </span>
+                            )}
+                          </div>
                           {errors[`stage_${index}`] && (
                             <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
                               <AlertCircle className="w-3 h-3" />

@@ -11,6 +11,7 @@ import {
 } from '../utils/orchestraUtils'
 import { handleServerValidationError } from '../utils/validationUtils'
 import { getDisplayName } from '@/utils/nameUtils'
+import { ORCHESTRA_SUBTYPES, PERFORMANCE_LEVELS } from '../constants/enums'
 
 interface OrchestraFormProps {
   orchestra?: Orchestra | null
@@ -20,12 +21,19 @@ interface OrchestraFormProps {
 }
 
 export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel }: OrchestraFormProps) {
-  const [formData, setFormData] = useState<OrchestraFormData>({
+  const [formData, setFormData] = useState<OrchestraFormData & {
+    subType: string | null
+    performanceLevel: string | null
+    ministryData: { coordinationHours: number | null }
+  }>({
     name: '',
     type: 'תזמורת',
+    subType: null,
+    performanceLevel: null,
     conductorId: '',
     memberIds: [],
     location: 'חדר 1',
+    ministryData: { coordinationHours: null },
     isActive: true
   })
 
@@ -38,9 +46,14 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
       setFormData({
         name: orchestra.name || '',
         type: orchestra.type || 'תזמורת',
+        subType: (orchestra as any).subType || null,
+        performanceLevel: (orchestra as any).performanceLevel || null,
         conductorId: orchestra.conductorId || '',
         memberIds: orchestra.memberIds || [],
         location: orchestra.location || 'חדר 1',
+        ministryData: {
+          coordinationHours: (orchestra as any).ministryData?.coordinationHours ?? null
+        },
         isActive: orchestra.isActive !== undefined ? orchestra.isActive : true
       })
     }
@@ -230,6 +243,72 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
               {errors.location && (
                 <p className="text-red-500 text-xs mt-1">{errors.location}</p>
               )}
+            </div>
+          </div>
+
+          {/* Sub-Type, Performance Level, Coordination Hours */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Sub-Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                תת-סוג הרכב *
+              </label>
+              <select
+                value={formData.subType || ''}
+                onChange={(e) => handleInputChange('subType' as any, e.target.value || null)}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                  errors.subType ? 'border-red-300' : 'border-gray-300'
+                }`}
+              >
+                <option value="">בחר תת-סוג</option>
+                {ORCHESTRA_SUBTYPES.map(st => (
+                  <option key={st} value={st}>{st}</option>
+                ))}
+              </select>
+              {errors.subType && (
+                <p className="text-red-500 text-xs mt-1">{errors.subType}</p>
+              )}
+              <p className="text-xs text-gray-500 mt-1">נדרש לדוחות משרד החינוך</p>
+            </div>
+
+            {/* Performance Level */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                רמת ביצוע
+              </label>
+              <select
+                value={formData.performanceLevel || ''}
+                onChange={(e) => handleInputChange('performanceLevel' as any, e.target.value || null)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+              >
+                <option value="">בחר רמה</option>
+                {PERFORMANCE_LEVELS.map(pl => (
+                  <option key={pl} value={pl}>{pl}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Coordination Hours */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                שעות ריכוז (ש"ש)
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="50"
+                step="0.25"
+                value={formData.ministryData.coordinationHours ?? ''}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  ministryData: {
+                    ...prev.ministryData,
+                    coordinationHours: e.target.value ? parseFloat(e.target.value) : null
+                  }
+                }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                placeholder="0-50"
+              />
             </div>
           </div>
 

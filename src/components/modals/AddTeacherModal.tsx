@@ -7,11 +7,15 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { X, Plus, Trash2, Clock, MapPin, Save, AlertCircle, User, Briefcase, Calendar, Settings } from 'lucide-react'
+import { X, Plus, Trash2, Clock, MapPin, Save, AlertCircle, User, Briefcase, Calendar, Settings, Music2, BookOpen } from 'lucide-react'
 import apiService from '../../services/apiService'
 import { useSchoolYear } from '../../services/schoolYearContext'
 import { VALID_LOCATIONS } from '../../constants/locations'
-import { handleServerValidationError } from '../../utils/validationUtils'
+import { handleServerValidationError, VALID_INSTRUMENTS } from '../../utils/validationUtils'
+import {
+  CLASSIFICATIONS, DEGREES, MANAGEMENT_ROLES, TEACHING_SUBJECTS,
+  INSTRUMENT_DEPARTMENTS
+} from '../../constants/enums'
 
 interface AddTeacherModalProps {
   isOpen: boolean
@@ -36,11 +40,27 @@ interface TeacherFormData {
     phone: string
     email: string
     address: string
+    idNumber: string
+    birthYear: number | null
   }
   roles: string[]
   professionalInfo: {
-    instrument: string
+    instrument: string  // primary instrument (backward compat)
+    instruments: string[]  // multi-select
+    classification: string
+    degree: string
+    hasTeachingCertificate: boolean
+    teachingExperienceYears: number | null
+    isUnionMember: boolean
+    teachingSubjects: string[]
     isActive: boolean
+  }
+  managementInfo: {
+    role: string
+    managementHours: number | null
+    accompHours: number | null
+    ensembleCoordHours: number | null
+    travelTimeHours: number | null
   }
   teaching: {
     schedule: ScheduleSlot[]
@@ -53,15 +73,6 @@ interface TeacherFormData {
 
 const VALID_ROLES = ['מורה', 'מנצח', 'מדריך הרכב', 'מנהל', 'מורה תאוריה', 'מגמה']
 const VALID_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי']
-const INSTRUMENTS = [
-  'חלילית', 'חליל צד', 'אבוב', 'בסון', 'סקסופון', 'קלרינט',
-  'חצוצרה', 'קרן יער', 'טרומבון', 'טובה/בריטון', 'שירה',
-  'כינור', 'ויולה', "צ'לו", 'קונטרבס', 'פסנתר', 'גיטרה',
-  'אורגן', 'חרמוניקה', 'מנדולינה', 'כינור בארוק', 'ויולה דה גמבה',
-  'פלוטה רקורדר', 'אוקרינה', 'חליל פאן', 'דולצימר', 'אוטו-הרפ',
-  'פסנתר אלקטרוני', 'גיטרה בס', 'גיטרה אקוסטית', 'גיטרה קלאסית',
-  'בנג׳ו', 'חליל אירי', 'כינור קלטי', 'בודהראן'
-]
 
 // Helper function to calculate duration in minutes from start and end time
 const calculateDuration = (startTime: string, endTime: string): number => {
@@ -104,19 +115,35 @@ const validateTimeRange = (startTime: string, endTime: string): string | null =>
 
 const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTeacherAdded, teacherToEdit, mode = 'add' }) => {
   const { currentSchoolYear } = useSchoolYear()
-  const [activeTab, setActiveTab] = useState<'personal' | 'professional' | 'schedule' | 'conducting'>('personal')
+  const [activeTab, setActiveTab] = useState<'personal' | 'professional' | 'instruments' | 'subjects' | 'management' | 'schedule' | 'conducting'>('personal')
   const [formData, setFormData] = useState<TeacherFormData>({
     personalInfo: {
       firstName: '',
       lastName: '',
       phone: '',
       email: '',
-      address: ''
+      address: '',
+      idNumber: '',
+      birthYear: null
     },
     roles: [],
     professionalInfo: {
       instrument: '',
+      instruments: [],
+      classification: '',
+      degree: '',
+      hasTeachingCertificate: false,
+      teachingExperienceYears: null,
+      isUnionMember: false,
+      teachingSubjects: [],
       isActive: true
+    },
+    managementInfo: {
+      role: '',
+      managementHours: null,
+      accompHours: null,
+      ensembleCoordHours: null,
+      travelTimeHours: null
     },
     teaching: {
       schedule: []
@@ -177,12 +204,28 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
         lastName: teacher.personalInfo?.lastName || '',
         phone: teacher.personalInfo?.phone || '',
         email: teacher.personalInfo?.email || '',
-        address: teacher.personalInfo?.address || ''
+        address: teacher.personalInfo?.address || '',
+        idNumber: teacher.personalInfo?.idNumber || '',
+        birthYear: teacher.personalInfo?.birthYear || null
       },
       roles: teacher.roles || [],
       professionalInfo: {
         instrument: teacher.professionalInfo?.instrument || '',
+        instruments: teacher.professionalInfo?.instruments || [],
+        classification: teacher.professionalInfo?.classification || '',
+        degree: teacher.professionalInfo?.degree || '',
+        hasTeachingCertificate: teacher.professionalInfo?.hasTeachingCertificate || false,
+        teachingExperienceYears: teacher.professionalInfo?.teachingExperienceYears ?? null,
+        isUnionMember: teacher.professionalInfo?.isUnionMember || false,
+        teachingSubjects: teacher.professionalInfo?.teachingSubjects || [],
         isActive: teacher.professionalInfo?.isActive ?? true
+      },
+      managementInfo: {
+        role: teacher.managementInfo?.role || '',
+        managementHours: teacher.managementInfo?.managementHours ?? null,
+        accompHours: teacher.managementInfo?.accompHours ?? null,
+        ensembleCoordHours: teacher.managementInfo?.ensembleCoordHours ?? null,
+        travelTimeHours: teacher.managementInfo?.travelTimeHours ?? null
       },
       teaching: {
         schedule: timeBlocksForForm
@@ -220,11 +263,11 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
     }
 
     // Professional Info validation
-    const hasTeacherRole = formData.roles.includes('מורה') || 
+    const hasTeacherRole = formData.roles.includes('מורה') ||
                           formData.roles.includes('מגמה') ||
                           !formData.roles.includes('מורה תאוריה')
-    if (hasTeacherRole && !formData.professionalInfo.instrument) {
-      newErrors['professionalInfo.instrument'] = 'יש לבחור כלי נגינה'
+    if (hasTeacherRole && formData.professionalInfo.instruments.length === 0 && !formData.professionalInfo.instrument) {
+      newErrors['professionalInfo.instrument'] = 'יש לבחור לפחות כלי נגינה אחד'
     }
 
     // Schedule validation
@@ -371,6 +414,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
         personalInfo: formData.personalInfo,
         roles: formData.roles,
         professionalInfo: formData.professionalInfo,
+        managementInfo: formData.managementInfo,
         teaching: {
           studentIds: teacherToEdit?.teaching?.studentIds || [],
           timeBlocks: finalTimeBlocks
@@ -430,12 +474,28 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
         lastName: '',
         phone: '',
         email: '',
-        address: ''
+        address: '',
+        idNumber: '',
+        birthYear: null
       },
       roles: [],
       professionalInfo: {
         instrument: '',
+        instruments: [],
+        classification: '',
+        degree: '',
+        hasTeachingCertificate: false,
+        teachingExperienceYears: null,
+        isUnionMember: false,
+        teachingSubjects: [],
         isActive: true
+      },
+      managementInfo: {
+        role: '',
+        managementHours: null,
+        accompHours: null,
+        ensembleCoordHours: null,
+        travelTimeHours: null
       },
       teaching: {
         schedule: []
@@ -459,7 +519,10 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
 
   const tabs = [
     { id: 'personal', label: 'מידע אישי', icon: User },
-    { id: 'professional', label: 'מידע מקצועי', icon: Briefcase },
+    { id: 'professional', label: 'נתונים מקצועיים', icon: Briefcase },
+    { id: 'instruments', label: 'כלי נגינה', icon: Music2 },
+    { id: 'subjects', label: 'מקצועות הוראה', icon: BookOpen },
+    { id: 'management', label: 'שעות ניהול', icon: Clock },
     { id: 'schedule', label: 'לוח זמנים', icon: Calendar },
     { id: 'conducting', label: 'ניצוח', icon: Settings }
   ]
@@ -606,6 +669,30 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                       <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.address']}</p>
                     )}
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">תעודת זהות</label>
+                    <input
+                      type="text"
+                      value={formData.personalInfo.idNumber}
+                      onChange={(e) => handleInputChange('personalInfo', 'idNumber', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
+                      placeholder="9 ספרות"
+                      maxLength={9}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">שנת לידה</label>
+                    <input
+                      type="number"
+                      min={1940}
+                      max={2010}
+                      value={formData.personalInfo.birthYear ?? ''}
+                      onChange={(e) => handleInputChange('personalInfo', 'birthYear', e.target.value ? parseInt(e.target.value) : null)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
+                      placeholder="1940-2010"
+                    />
+                  </div>
                 </div>
 
                 {/* Roles */}
@@ -636,40 +723,247 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
             {/* Professional Info Tab */}
             {activeTab === 'professional' && (
               <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    כלי נגינה {!formData.roles.includes('מורה תאוריה') && '*'}
-                  </label>
-                  <select
-                    value={formData.professionalInfo.instrument}
-                    onChange={(e) => handleInputChange('professionalInfo', 'instrument', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 bg-white ${
-                      errors['professionalInfo.instrument']
-                        ? 'border-red-300 focus:ring-red-500'
-                        : 'border-gray-300 focus:ring-primary-500'
-                    }`}
-                    disabled={formData.roles.includes('מורה תאוריה') && formData.roles.length === 1}
-                  >
-                    <option value="">בחר כלי נגינה</option>
-                    {INSTRUMENTS.map(instrument => (
-                      <option key={instrument} value={instrument}>{instrument}</option>
-                    ))}
-                  </select>
-                  {errors['professionalInfo.instrument'] && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['professionalInfo.instrument']}</p>
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Classification */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">סיווג</label>
+                    <select
+                      value={formData.professionalInfo.classification}
+                      onChange={(e) => handleInputChange('professionalInfo', 'classification', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
+                    >
+                      <option value="">בחר סיווג</option>
+                      {CLASSIFICATIONS.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+
+                  {/* Degree */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">תואר</label>
+                    <select
+                      value={formData.professionalInfo.degree}
+                      onChange={(e) => handleInputChange('professionalInfo', 'degree', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
+                    >
+                      <option value="">בחר תואר</option>
+                      {DEGREES.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                  </div>
+
+                  {/* Teaching Experience Years */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">שנות ניסיון בהוראה</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={50}
+                      value={formData.professionalInfo.teachingExperienceYears ?? ''}
+                      onChange={(e) => handleInputChange('professionalInfo', 'teachingExperienceYears', e.target.value ? parseInt(e.target.value) : null)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
+                      placeholder="0-50"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="flex items-center">
+                {/* Toggles */}
+                <div className="space-y-3">
+                  <label className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={formData.professionalInfo.hasTeachingCertificate}
+                      onChange={(e) => handleInputChange('professionalInfo', 'hasTeachingCertificate', e.target.checked)}
+                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
+                    />
+                    <span className="mr-3 text-sm text-gray-700 font-medium">תעודת הוראה</span>
+                  </label>
+                  <label className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={formData.professionalInfo.isUnionMember}
+                      onChange={(e) => handleInputChange('professionalInfo', 'isUnionMember', e.target.checked)}
+                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
+                    />
+                    <span className="mr-3 text-sm text-gray-700 font-medium">חבר ארגון מורים</span>
+                  </label>
+                  <label className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
                     <input
                       type="checkbox"
                       checked={formData.professionalInfo.isActive}
                       onChange={(e) => handleInputChange('professionalInfo', 'isActive', e.target.checked)}
-                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
                     />
-                    <span className="ml-2 text-sm text-gray-700">מורה פעיל</span>
+                    <span className="mr-3 text-sm text-gray-700 font-medium">מורה פעיל</span>
                   </label>
+                </div>
+              </div>
+            )}
+
+            {/* Instruments Tab */}
+            {activeTab === 'instruments' && (
+              <div className="space-y-6">
+                <p className="text-sm text-gray-600">בחר את כלי הנגינה שהמורה מלמד. סמן את הכלי הראשי.</p>
+                {Object.entries(INSTRUMENT_DEPARTMENTS).map(([dept, instruments]) => (
+                  <div key={dept} className="border border-gray-200 rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-3">{dept}</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {instruments.map(instrument => {
+                        const isSelected = formData.professionalInfo.instruments.includes(instrument)
+                        const isPrimary = formData.professionalInfo.instrument === instrument
+                        return (
+                          <label key={instrument} className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors ${
+                            isSelected ? 'bg-primary-50 border border-primary-200' : 'hover:bg-gray-50 border border-transparent'
+                          }`}>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={(e) => {
+                                const newInstruments = e.target.checked
+                                  ? [...formData.professionalInfo.instruments, instrument]
+                                  : formData.professionalInfo.instruments.filter(i => i !== instrument)
+                                handleInputChange('professionalInfo', 'instruments', newInstruments)
+                                // Auto-set primary if first instrument selected
+                                if (e.target.checked && formData.professionalInfo.instruments.length === 0) {
+                                  handleInputChange('professionalInfo', 'instrument', instrument)
+                                }
+                                // Clear primary if it was unchecked
+                                if (!e.target.checked && formData.professionalInfo.instrument === instrument) {
+                                  handleInputChange('professionalInfo', 'instrument', newInstruments[0] || '')
+                                }
+                              }}
+                              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
+                            />
+                            <span className="mr-2 text-sm text-gray-700">{instrument}</span>
+                            {isSelected && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleInputChange('professionalInfo', 'instrument', instrument)
+                                }}
+                                className={`mr-auto text-xs px-2 py-0.5 rounded-full ${
+                                  isPrimary
+                                    ? 'bg-primary-500 text-white'
+                                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                                }`}
+                              >
+                                {isPrimary ? 'ראשי' : 'סמן כראשי'}
+                              </button>
+                            )}
+                          </label>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
+                {errors['professionalInfo.instrument'] && (
+                  <p className="text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['professionalInfo.instrument']}</p>
+                )}
+              </div>
+            )}
+
+            {/* Teaching Subjects Tab */}
+            {activeTab === 'subjects' && (
+              <div className="space-y-6">
+                <p className="text-sm text-gray-600">בחר את מקצועות ההוראה הנוספים מעבר לכלי הנגינה.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {TEACHING_SUBJECTS.map(subject => (
+                    <label key={subject} className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={formData.professionalInfo.teachingSubjects.includes(subject)}
+                        onChange={(e) => {
+                          const newSubjects = e.target.checked
+                            ? [...formData.professionalInfo.teachingSubjects, subject]
+                            : formData.professionalInfo.teachingSubjects.filter(s => s !== subject)
+                          handleInputChange('professionalInfo', 'teachingSubjects', newSubjects)
+                        }}
+                        className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
+                      />
+                      <span className="mr-3 text-sm text-gray-700 font-medium">{subject}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Management Hours Tab */}
+            {activeTab === 'management' && (
+              <div className="space-y-6">
+                <p className="text-sm text-gray-600">הגדר שעות ניהול ותפקיד ניהולי (ש"ש = שעות שבועיות).</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Management Role */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">תפקיד ניהולי</label>
+                    <select
+                      value={formData.managementInfo.role}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, role: e.target.value } }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
+                    >
+                      <option value="">ללא תפקיד ניהולי</option>
+                      {MANAGEMENT_ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+                    </select>
+                  </div>
+
+                  {/* Management Hours */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות ניהול (ש"ש)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={40}
+                      step={0.25}
+                      value={formData.managementInfo.managementHours ?? ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, managementHours: e.target.value ? parseFloat(e.target.value) : null } }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  {/* Accompaniment Hours */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות ליווי פסנתר (ש"ש)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={40}
+                      step={0.25}
+                      value={formData.managementInfo.accompHours ?? ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, accompHours: e.target.value ? parseFloat(e.target.value) : null } }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  {/* Ensemble Coordination Hours */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות ריכוז הרכבים (ש"ש)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={40}
+                      step={0.25}
+                      value={formData.managementInfo.ensembleCoordHours ?? ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, ensembleCoordHours: e.target.value ? parseFloat(e.target.value) : null } }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  {/* Travel Time Hours */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות נסיעות (ש"ש)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={40}
+                      step={0.25}
+                      value={formData.managementInfo.travelTimeHours ?? ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, travelTimeHours: e.target.value ? parseFloat(e.target.value) : null } }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
+                      placeholder="0"
+                    />
+                  </div>
                 </div>
               </div>
             )}

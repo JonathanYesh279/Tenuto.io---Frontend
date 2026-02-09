@@ -2,17 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Save, X, AlertCircle } from 'lucide-react';
 import { Card } from './ui/Card';
 import apiService from '../services/apiService';
-
-const VALID_CLASSES = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'אחר'];
-const VALID_STAGES = [1, 2, 3, 4, 5, 6, 7, 8];
-const VALID_INSTRUMENTS = [
-  'חלילית', 'חליל צד', 'אבוב', 'בסון', 'סקסופון', 'קלרינט',
-  'חצוצרה', 'קרן יער', 'טרומבון', 'טובה/בריטון', 'שירה',
-  'כינור', 'ויולה', "צ'לו", 'קונטרבס', 'פסנתר', 'גיטרה', 'גיטרה בס', 'תופים'
-];
-const VALID_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'];
-const VALID_DURATIONS = [30, 45, 60];
-const VALID_ROLES = ['מורה', 'מנצח', 'מדריך הרכב', 'מנהל', 'מורה תאוריה', 'מגמה'];
+import { VALID_INSTRUMENTS, VALID_DAYS, VALID_DURATIONS, VALID_ROLES } from '../utils/validationUtils';
+import { CLASSIFICATIONS, DEGREES, TEACHING_SUBJECTS, INSTRUMENT_DEPARTMENTS } from '../constants/enums';
 
 interface TeacherFormProps {
   teacher?: any;
@@ -28,11 +19,19 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
       lastName: '',
       phone: '',
       email: '',
-      address: ''
+      address: '',
+      idNumber: '',
+      birthYear: null as number | null
     },
     roles: ['מורה'],
     professionalInfo: {
       instrument: '',
+      classification: '' as string,
+      degree: '' as string,
+      hasTeachingCertificate: false,
+      teachingExperienceYears: null as number | null,
+      isUnionMember: false,
+      teachingSubjects: [] as string[],
       isActive: true
     },
     teaching: {
@@ -65,11 +64,19 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
           lastName: teacher.personalInfo?.lastName || '',
           phone: teacher.personalInfo?.phone || '',
           email: teacher.personalInfo?.email || '',
-          address: teacher.personalInfo?.address || ''
+          address: teacher.personalInfo?.address || '',
+          idNumber: teacher.personalInfo?.idNumber || '',
+          birthYear: teacher.personalInfo?.birthYear || null
         },
         roles: teacher.roles || ['מורה'],
         professionalInfo: {
           instrument: teacher.professionalInfo?.instrument || '',
+          classification: teacher.professionalInfo?.classification || '',
+          degree: teacher.professionalInfo?.degree || '',
+          hasTeachingCertificate: teacher.professionalInfo?.hasTeachingCertificate || false,
+          teachingExperienceYears: teacher.professionalInfo?.teachingExperienceYears ?? null,
+          isUnionMember: teacher.professionalInfo?.isUnionMember || false,
+          teachingSubjects: teacher.professionalInfo?.teachingSubjects || [],
           isActive: teacher.professionalInfo?.isActive !== undefined ? teacher.professionalInfo.isActive : true
         },
         teaching: {
@@ -205,7 +212,8 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     
-    newErrors['personalInfo.fullName'] = validateField('personalInfo.fullName', formData.personalInfo.fullName);
+    newErrors['personalInfo.firstName'] = validateField('personalInfo.firstName', formData.personalInfo.firstName);
+    newErrors['personalInfo.lastName'] = validateField('personalInfo.lastName', formData.personalInfo.lastName);
     newErrors['personalInfo.phone'] = validateField('personalInfo.phone', formData.personalInfo.phone);
     newErrors['personalInfo.email'] = validateField('personalInfo.email', formData.personalInfo.email);
     newErrors['credentials.email'] = validateField('credentials.email', formData.credentials.email);
@@ -365,6 +373,37 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 placeholder="הזן כתובת"
               />
             </div>
+
+            {/* ID Number */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                תעודת זהות
+              </label>
+              <input
+                type="text"
+                value={formData.personalInfo.idNumber}
+                onChange={(e) => handleInputChange('personalInfo.idNumber', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                placeholder="9 ספרות"
+                maxLength={9}
+              />
+            </div>
+
+            {/* Birth Year */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                שנת לידה
+              </label>
+              <input
+                type="number"
+                min={1940}
+                max={2010}
+                value={formData.personalInfo.birthYear ?? ''}
+                onChange={(e) => handleInputChange('personalInfo.birthYear', e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                placeholder="1940-2010"
+              />
+            </div>
           </div>
         </section>
 
@@ -409,10 +448,12 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 disabled={formData.roles.includes('מורה תאוריה')}
               >
                 <option value="">בחר נושא הוראה</option>
-                {VALID_INSTRUMENTS.map((instrument) => (
-                  <option key={instrument} value={instrument}>
-                    {instrument}
-                  </option>
+                {Object.entries(INSTRUMENT_DEPARTMENTS).map(([dept, instruments]) => (
+                  <optgroup key={dept} label={dept}>
+                    {instruments.map(instrument => (
+                      <option key={instrument} value={instrument}>{instrument}</option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
               {getFieldError('professionalInfo.instrument') && (
@@ -423,7 +464,66 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               )}
             </div>
 
+            {/* Classification */}
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">סיווג</label>
+              <select
+                value={formData.professionalInfo.classification}
+                onChange={(e) => handleInputChange('professionalInfo.classification', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+              >
+                <option value="">בחר סיווג</option>
+                {CLASSIFICATIONS.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+
+            {/* Degree */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">תואר</label>
+              <select
+                value={formData.professionalInfo.degree}
+                onChange={(e) => handleInputChange('professionalInfo.degree', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+              >
+                <option value="">בחר תואר</option>
+                {DEGREES.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
+
+            {/* Teaching Experience Years */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">שנות ניסיון בהוראה</label>
+              <input
+                type="number"
+                min={0}
+                max={50}
+                value={formData.professionalInfo.teachingExperienceYears ?? ''}
+                onChange={(e) => handleInputChange('professionalInfo.teachingExperienceYears', e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                placeholder="0-50"
+              />
+            </div>
+
+            {/* Toggles row */}
+            <div className="md:col-span-2 flex flex-wrap gap-6">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.professionalInfo.hasTeachingCertificate}
+                  onChange={(e) => handleInputChange('professionalInfo.hasTeachingCertificate', e.target.checked)}
+                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                />
+                <span className="text-sm text-gray-700">תעודת הוראה</span>
+              </label>
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.professionalInfo.isUnionMember}
+                  onChange={(e) => handleInputChange('professionalInfo.isUnionMember', e.target.checked)}
+                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                />
+                <span className="text-sm text-gray-700">חבר ארגון מורים</span>
+              </label>
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -434,6 +534,29 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 <span className="text-sm text-gray-700">פעיל מקצועית</span>
               </label>
             </div>
+          </div>
+        </section>
+
+        {/* Teaching Subjects */}
+        <section>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">מקצועות הוראה</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {TEACHING_SUBJECTS.map((subject) => (
+              <label key={subject} className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.professionalInfo.teachingSubjects.includes(subject)}
+                  onChange={(e) => {
+                    const newSubjects = e.target.checked
+                      ? [...formData.professionalInfo.teachingSubjects, subject]
+                      : formData.professionalInfo.teachingSubjects.filter(s => s !== subject);
+                    handleInputChange('professionalInfo.teachingSubjects', newSubjects);
+                  }}
+                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                />
+                <span className="text-sm text-gray-700">{subject}</span>
+              </label>
+            ))}
           </div>
         </section>
 

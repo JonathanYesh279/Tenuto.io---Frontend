@@ -1,0 +1,272 @@
+# =============================================================================
+# Tenuto.io Frontend — CI/CD Pipeline
+# =============================================================================
+#
+# Progressive pipeline: stages are enabled as the codebase matures.
+# Each stage has a gate comment (GATE) marking when to enable it.
+#
+# Current status:
+#   [x] Stage 1 — Build validation (always on)
+#   [ ] Stage 2 — Type safety (enable after fixing TS errors)
+#   [ ] Stage 3 — Code quality (enable after configuring lint rules)
+#   [ ] Stage 4 — Tests (enable after writing test suite)
+#   [ ] Stage 5 — Deploy staging (enable when hosting is set up)
+#   [ ] Stage 6 — Deploy production (enable for production releases)
+# =============================================================================
+
+name: Tenuto.io CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+
+# =============================================================================
+# Stage 1 — Build Validation (ACTIVE)
+# Ensures the app compiles without import/JSX errors.
+# This is the minimum bar: if it doesn't build, it doesn't ship.
+# =============================================================================
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Report bundle size
+        run: |
+          echo "## Bundle Size" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          du -sh dist/ >> $GITHUB_STEP_SUMMARY
+          du -sh dist/assets/*.js | sort -rh | head -10 >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload build artifacts
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 14
+
+  # ===========================================================================
+  # Stage 2 — Type Safety (DISABLED)
+  # GATE: Enable when `npx tsc --noEmit` produces 0 errors.
+  #       Currently ~753 errors across 143 files (pre-existing).
+  #       Plan: fix incrementally during phases F3-F6, then flip this on.
+  # ===========================================================================
+  # typecheck:
+  #   name: TypeScript
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'npm'
+  #
+  #     - name: Install dependencies
+  #       run: npm ci --prefer-offline --no-audit
+  #
+  #     - name: TypeScript type check
+  #       run: npx tsc --noEmit
+
+  # ===========================================================================
+  # Stage 3 — Code Quality (DISABLED)
+  # GATE: Enable after configuring .eslintrc to allow a reasonable warning
+  #       threshold. Current `--max-warnings 0` is too strict for this phase.
+  # ===========================================================================
+  # lint:
+  #   name: Lint & Format
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'npm'
+  #
+  #     - name: Install dependencies
+  #       run: npm ci --prefer-offline --no-audit
+  #
+  #     - name: ESLint
+  #       run: npx eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 50
+  #
+  #     - name: Check formatting
+  #       run: npx prettier --check "src/**/*.{ts,tsx}"
+
+  # ===========================================================================
+  # Stage 4 — Tests (DISABLED)
+  # GATE: Enable after writing at least a base test suite.
+  #       Currently only 1 test file exists (calendarDataProcessor.test.ts).
+  #       Plan: add tests for nameUtils, apiService, auth flow during F4-F6.
+  # ===========================================================================
+  # test:
+  #   name: Tests
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'npm'
+  #
+  #     - name: Install dependencies
+  #       run: npm ci --prefer-offline --no-audit
+  #
+  #     - name: Run unit tests
+  #       run: npx vitest --run --coverage --reporter=verbose
+  #
+  #     - name: Upload coverage
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: coverage
+  #         path: coverage/
+  #         retention-days: 7
+
+  # ===========================================================================
+  # Stage 5 — Deploy Staging (DISABLED)
+  # GATE: Enable when hosting platform is configured and secrets are set.
+  #
+  # Required GitHub secrets:
+  #   VITE_API_BASE_URL    — Backend API URL
+  #   VERCEL_TOKEN         — Vercel deployment token
+  #   VERCEL_ORG_ID        — Vercel organization ID
+  #   VERCEL_PROJECT_ID    — Vercel project ID
+  # ===========================================================================
+  # deploy-staging:
+  #   name: Deploy to Staging
+  #   runs-on: ubuntu-latest
+  #   needs: [build]  # Add typecheck, lint, test here as they become active
+  #   if: github.ref == 'refs/heads/main'
+  #   environment:
+  #     name: staging
+  #     url: ${{ steps.deploy.outputs.url }}
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'npm'
+  #
+  #     - name: Install dependencies
+  #       run: npm ci --prefer-offline --no-audit
+  #
+  #     - name: Build for staging
+  #       run: npm run build
+  #       env:
+  #         NODE_ENV: production
+  #         VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+  #         VITE_APP_ENVIRONMENT: staging
+  #         VITE_APP_VERSION: ${{ github.sha }}
+  #
+  #     - name: Deploy to Vercel (Staging)
+  #       id: deploy
+  #       run: |
+  #         npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deploy-url.txt
+  #         echo "url=$(cat deploy-url.txt)" >> $GITHUB_OUTPUT
+  #       env:
+  #         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  #
+  #     - name: Deployment summary
+  #       run: |
+  #         echo "## Staging Deployment" >> $GITHUB_STEP_SUMMARY
+  #         echo "Deployed to: ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+  #         echo "Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Stage 6 — Deploy Production (DISABLED)
+  # GATE: Enable when staging is stable and you're ready for production.
+  #       Uses a separate `production` branch to trigger deploys.
+  #       Requires manual approval via GitHub environment protection rules.
+  #
+  # Additional required secrets:
+  #   PRODUCTION_VITE_API_BASE_URL — Production backend URL
+  # ===========================================================================
+  # deploy-production:
+  #   name: Deploy to Production
+  #   runs-on: ubuntu-latest
+  #   needs: [build]  # Add typecheck, lint, test here as they become active
+  #   if: github.ref == 'refs/heads/production'
+  #   environment:
+  #     name: production
+  #     url: ${{ steps.deploy.outputs.url }}
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'npm'
+  #
+  #     - name: Install dependencies
+  #       run: npm ci --prefer-offline --no-audit
+  #
+  #     - name: Build for production
+  #       run: npm run build
+  #       env:
+  #         NODE_ENV: production
+  #         VITE_API_BASE_URL: ${{ secrets.PRODUCTION_VITE_API_BASE_URL }}
+  #         VITE_APP_ENVIRONMENT: production
+  #         VITE_APP_VERSION: ${{ github.sha }}
+  #
+  #     - name: Deploy to Vercel (Production)
+  #       id: deploy
+  #       run: |
+  #         npx vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deploy-url.txt
+  #         echo "url=$(cat deploy-url.txt)" >> $GITHUB_OUTPUT
+  #       env:
+  #         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  #
+  #     - name: Post-deploy health check
+  #       run: |
+  #         sleep 15
+  #         curl -sf "${{ steps.deploy.outputs.url }}" > /dev/null
+  #         echo "Health check passed"
+  #
+  #     - name: Deployment summary
+  #       run: |
+  #         echo "## Production Deployment" >> $GITHUB_STEP_SUMMARY
+  #         echo "Deployed to: ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+  #         echo "Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY

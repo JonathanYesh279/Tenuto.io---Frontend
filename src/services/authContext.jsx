@@ -163,28 +163,39 @@ export const AuthProvider = ({ children }) => {
     }
   }, [lastValidation])
 
-  const login = async (email, password) => {
+  const login = async (email, password, tenantId = null) => {
     try {
       setIsLoading(true)
       setAuthError(null)
-      
-      const loginResponse = await apiService.auth.login(email, password)
-      
+
+      const loginResponse = await apiService.auth.login(email, password, tenantId)
+
       if (!mountedRef.current) return
-      
+
+      // Handle multi-tenant: tenant selection required
+      if (loginResponse.requiresTenantSelection) {
+        console.log('🔐 AUTH CONTEXT - Tenant selection required:', loginResponse.tenants?.length, 'tenants')
+        setIsLoading(false)
+        return {
+          success: false,
+          requiresTenantSelection: true,
+          tenants: loginResponse.tenants || []
+        }
+      }
+
       console.log('🔐 AUTH CONTEXT - Login successful:', {
         hasToken: !!loginResponse.token,
         hasUserData: !!(loginResponse.teacher || loginResponse.user)
       })
-      
+
       const { token } = loginResponse
       // Extract basic user data from login response
-      const basicUserData = loginResponse.teacher || 
-                           loginResponse.user || 
-                           loginResponse.data?.teacher || 
+      const basicUserData = loginResponse.teacher ||
+                           loginResponse.user ||
+                           loginResponse.data?.teacher ||
                            loginResponse.data?.user ||
                            loginResponse.data
-      
+
       if (!token || !basicUserData) {
         throw new Error('Invalid login response: missing token or user data')
       }
@@ -216,6 +227,7 @@ export const AuthProvider = ({ children }) => {
       const normalizedUser = {
         ...userData,
         teacherId: userData?.teacherId || userData?._id,
+        tenantId: userData?.tenantId || basicUserData?.tenantId || tenantId,
         personalInfo: userData?.personalInfo || {
           firstName: userData?.firstName || basicUserData?.personalInfo?.firstName || basicUserData?.firstName || '',
           lastName: userData?.lastName || basicUserData?.personalInfo?.lastName || basicUserData?.lastName || '',
@@ -232,6 +244,7 @@ export const AuthProvider = ({ children }) => {
         hasUserData: !!normalizedUser,
         userRole: normalizedUser?.role || normalizedUser?.roles,
         userId: normalizedUser?.teacherId || normalizedUser?._id,
+        tenantId: normalizedUser?.tenantId || 'none',
         name: normalizedUser?.personalInfo?.firstName || normalizedUser?.personalInfo?.fullName
       })
       

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Building2, ArrowRight } from 'lucide-react'
+import { Building2, ArrowRight, Shield } from 'lucide-react'
 import { useAuth } from '../services/authContext.jsx'
 
 interface Tenant {
@@ -14,13 +14,14 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false)
 
   // Multi-tenant state
   const [showTenantSelector, setShowTenantSelector] = useState(false)
   const [availableTenants, setAvailableTenants] = useState<Tenant[]>([])
 
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, loginAsSuperAdmin } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,6 +29,12 @@ export default function Login() {
     setIsLoading(true)
 
     try {
+      if (isSuperAdmin) {
+        await loginAsSuperAdmin(email, password)
+        navigate('/dashboard')
+        return
+      }
+
       const result = await login(email, password)
 
       // Multi-tenant: show tenant selector if needed
@@ -160,8 +167,14 @@ export default function Login() {
                   className="mt-6 text-center text-3xl font-extrabold text-white drop-shadow-lg"
                   style={{ fontFamily: "'Reisinger Yonatan', 'Arial Hebrew', 'Noto Sans Hebrew', Arial, sans-serif" }}
                 >
-                  כניסה למערכת
+                  {isSuperAdmin ? 'כניסת מנהל-על' : 'כניסה למערכת'}
                 </h2>
+                {isSuperAdmin && (
+                  <div className="flex items-center justify-center gap-1.5 mt-2">
+                    <Shield className="w-4 h-4 text-amber-300" />
+                    <p className="text-sm text-amber-200 font-reisinger-yonatan">ממשק ניהול מערכת</p>
+                  </div>
+                )}
               </div>
               <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                 {error && (
@@ -226,13 +239,22 @@ export default function Login() {
                   </button>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center space-y-2">
                   <Link
                     to="/forgot-password"
                     className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 font-reisinger-yonatan underline"
                   >
                     שכחתי סיסמא
                   </Link>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => { setIsSuperAdmin(!isSuperAdmin); setError('') }}
+                      className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200 font-reisinger-yonatan"
+                    >
+                      {isSuperAdmin ? 'חזרה לכניסה רגילה' : 'כניסת מנהל-על'}
+                    </button>
+                  </div>
                 </div>
               </form>
             </>

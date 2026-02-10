@@ -105,6 +105,11 @@ class ApiClient {
         } else {
           console.log('🔐 API Client - Keeping token, might be temporary issue');
         }
+        // For login endpoints, pass through the backend's actual error message
+        const backendMessage = data?.error || data?.message;
+        if (backendMessage && (endpoint.includes('/login') || endpoint.includes('/seed'))) {
+          throw new Error(backendMessage);
+        }
         throw new Error('Authentication failed. Please login again.');
       } else if (response.status === 403) {
         throw new Error('Access denied. Insufficient permissions.');

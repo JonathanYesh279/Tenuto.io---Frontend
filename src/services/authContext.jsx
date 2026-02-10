@@ -10,7 +10,7 @@
  */
 
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
-import apiService from './apiService'
+import apiService, { superAdminService } from './apiService'
 
 const AuthContext = createContext(null)
 
@@ -73,21 +73,54 @@ export const AuthProvider = ({ children }) => {
     
     try {
       if (apiService.auth.isAuthenticated()) {
+        const loginType = localStorage.getItem('loginType')
+
+        // Super admin: validate by calling a super admin endpoint
+        if (loginType === 'super_admin') {
+          console.log('🔐 AUTH CONTEXT - Super admin token found, validating')
+          try {
+            // Use getTenants as a lightweight auth check
+            await superAdminService.getTenants()
+            if (!mountedRef.current) return
+
+            // Restore user from localStorage
+            const storedUser = localStorage.getItem('superAdminUser')
+            if (storedUser) {
+              const superAdminUser = JSON.parse(storedUser)
+              setIsAuthenticated(true)
+              setUser(superAdminUser)
+              setLastValidation(now)
+              console.log('🔐 AUTH CONTEXT - Super admin session restored')
+            } else {
+              throw new Error('Super admin user data not found')
+            }
+          } catch (err) {
+            console.error('🔐 AUTH CONTEXT - Super admin validation failed:', err)
+            localStorage.removeItem('loginType')
+            localStorage.removeItem('superAdminUser')
+            localStorage.removeItem('authToken')
+            setIsAuthenticated(false)
+            setUser(null)
+            setLastValidation(now)
+          }
+          return
+        }
+
         console.log('🔐 AUTH CONTEXT - Token found, validating with server')
-        
+
         // Validate the token with the server
         const validation = await apiService.auth.validateToken()
-        
+
         if (!mountedRef.current) return
-        
+
         // Extract basic user data from validation response
-        const basicUserData = validation?.data?.user || 
-                             validation?.user || 
+        const basicUserData = validation?.data?.user ||
+                             validation?.user ||
                              validation?.data ||
                              validation
-        
+
         console.log('🔐 AUTH CONTEXT - Token validation successful, fetching full teacher data')
-        
+
         // Fetch complete teacher data using the ID from the validation response
         let fullTeacherData = null
         if (basicUserData?._id) {
@@ -104,10 +137,10 @@ export const AuthProvider = ({ children }) => {
             fullTeacherData = basicUserData
           }
         }
-        
+
         // Use full teacher data if available, otherwise use basic data
         const userData = fullTeacherData || basicUserData
-        
+
         // Ensure the user object has the expected structure
         const normalizedUser = {
           ...userData,
@@ -268,14 +301,93 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const logout = async () => {
+  const loginAsSuperAdmin = async (email, password) => {
     try {
       setIsLoading(true)
-      await apiService.auth.logout()
+      setAuthError(null)
+
+      const response = await superAdminService.login(email, password)
+
+      if (!mountedRef.current) return
+
+      // Backend returns: { success, data: { accessToken, refreshToken, admin } }
+      const token = response?.data?.accessToken || response?.accessToken
+      const admin = response?.data?.admin || response?.admin
+
+      if (!token || !admin) {
+        throw new Error('תגובת התחברות לא תקינה')
+      }
+
+      // Store token (apiClient.setToken does localStorage + sets instance)
+      localStorage.setItem('authToken', token)
+
+      // Mark as super admin login so checkAuthStatus knows how to validate
+      localStorage.setItem('loginType', 'super_admin')
+
+      // Normalize super admin as a user compatible with the app
+      const normalizedUser = {
+        _id: admin._id,
+        teacherId: admin._id,
+        tenantId: null, // super admin is cross-tenant
+        isSuperAdmin: true,
+        personalInfo: {
+          firstName: admin.name || 'מנהל-על',
+          lastName: '',
+          fullName: admin.name || 'מנהל-על',
+          email: admin.email,
+          phone: '',
+          address: '',
+        },
+        roles: ['admin'],
+        role: 'admin',
+        permissions: admin.permissions || [],
+      }
+
+      // Store user data for restoration on page refresh
+      localStorage.setItem('superAdminUser', JSON.stringify(normalizedUser))
+
+      console.log('🔐 AUTH CONTEXT - Super admin login successful:', {
+        userId: admin._id,
+        email: admin.email,
+        permissions: admin.permissions,
+      })
+
+      setIsAuthenticated(true)
+      setUser(normalizedUser)
+      setLastValidation(Date.now())
+      return { success: true, user: normalizedUser }
+    } catch (error) {
+      console.error('🔐 AUTH CONTEXT - Super admin login failed:', error)
+
+      if (mountedRef.current) {
+        setAuthError(error.message)
+        setIsAuthenticated(false)
+        setUser(null)
+      }
+      throw error
+    } finally {
+      if (mountedRef.current) {
+        setIsLoading(false)
+      }
+    }
+  }
+
+  const logout = async () => {
+    const loginType = localStorage.getItem('loginType')
+    try {
+      setIsLoading(true)
+      if (loginType === 'super_admin') {
+        await superAdminService.logout()
+      } else {
+        await apiService.auth.logout()
+      }
       console.log('🔐 AUTH CONTEXT - Logout successful')
     } catch (error) {
       console.warn('🔐 AUTH CONTEXT - Logout API call failed:', error)
     } finally {
+      // Clean up super admin data
+      localStorage.removeItem('loginType')
+      localStorage.removeItem('superAdminUser')
       if (mountedRef.current) {
         setIsAuthenticated(false)
         setUser(null)
@@ -322,6 +434,7 @@ export const AuthProvider = ({ children }) => {
     user,
     authError,
     login,
+    loginAsSuperAdmin,
     logout,
     checkAuthStatus,
     refreshToken,

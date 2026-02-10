@@ -53,6 +53,8 @@ const adminNavigation: NavigationItem[] = [
   { name: 'חזרות', href: '/rehearsals', icon: Calendar, category: 'management', roles: ['admin'] },
   { name: 'בגרויות', href: '/bagruts', icon: Award, category: 'management', roles: ['admin'] },
   { name: 'נוכחות', href: '/teachers', icon: UserCheck, category: 'operations', roles: ['admin'] },
+  { name: 'דוחות משרד', href: '/ministry-reports', icon: FileText, category: 'operations', roles: ['admin'] },
+  { name: 'ייבוא נתונים', href: '/import', icon: Plus, category: 'operations', roles: ['admin'] },
   { name: 'הגדרות', href: '/settings', icon: Settings, category: 'system', roles: ['admin'] },
 ]
 

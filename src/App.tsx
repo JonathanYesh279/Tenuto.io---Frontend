@@ -24,6 +24,9 @@ const RehearsalDetails = lazyWithRetry(() => import('./pages/RehearsalDetails'),
 const Bagruts = lazyWithRetry(() => import('./pages/Bagruts'), 'Bagruts')
 const BagrutDetails = lazyWithRetry(() => import('./pages/BagrutDetails'), 'BagrutDetails')
 const Profile = lazyWithRetry(() => import('./pages/Profile'), 'Profile')
+const MinistryReports = lazyWithRetry(() => import('./pages/MinistryReports'), 'MinistryReports')
+const ImportData = lazyWithRetry(() => import('./pages/ImportData'), 'ImportData')
+const Settings = lazyWithRetry(() => import('./pages/Settings'), 'Settings')
 
 // Conductor-specific pages
 const ConductorAttendance = lazyWithRetry(() => import('./components/rehearsal/RehearsalAttendance'), 'ConductorAttendance')
@@ -356,6 +359,44 @@ function AppRoutes() {
               <Layout>
                 <Suspense fallback={<PageLoadingFallback message="טוען עמוד אישי..." />}>
                   <Profile />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin-only pages */}
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען הגדרות..." />}>
+                  <Settings />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ministry-reports"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען דוחות משרד..." />}>
+                  <MinistryReports />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/import"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען ייבוא נתונים..." />}>
+                  <ImportData />
                 </Suspense>
               </Layout>
             </ProtectedRoute>

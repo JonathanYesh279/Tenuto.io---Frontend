@@ -252,4 +252,5 @@ docker-compose.override.yml
 # Generated documentation that might expose internals
 docs/api/
 api-docs/
-!docs/api/public/
+!docs/api/public/tests/e2e/.auth/
+test-results/

@@ -288,7 +288,7 @@ export default function Students() {
         teacherAssignments: student.teacherAssignments,
         parentName: student.personalInfo.parentName,
         parentPhone: student.personalInfo.parentPhone,
-        orchestraIds: student.enrollments.orchestraIds,
+        orchestraIds: student.enrollments?.orchestraIds,
         isActive: student.isActive
       }))
 

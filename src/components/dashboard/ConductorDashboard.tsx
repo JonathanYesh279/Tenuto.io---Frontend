@@ -158,7 +158,7 @@ export default function ConductorDashboard() {
 
       const upcomingRehearsalsData = allRehearsals
         .filter(rehearsal => {
-          const rehearsalDate = new Date(rehearsal.scheduledDate)
+          const rehearsalDate = new Date(rehearsal.date)
           return rehearsalDate >= today && rehearsalDate <= nextWeek
         })
         .slice(0, 5)
@@ -167,7 +167,7 @@ export default function ConductorDashboard() {
           return {
             id: rehearsal._id,
             orchestraName: orchestra?.name || 'תזמורת',
-            date: new Date(rehearsal.scheduledDate).toLocaleDateString('he-IL'),
+            date: new Date(rehearsal.date).toLocaleDateString('he-IL'),
             time: rehearsal.startTime || '19:00',
             location: rehearsal.location || 'אולם מוזיקה',
             attendanceRate: Math.floor(Math.random() * 20) + 80, // Mock data
@@ -180,7 +180,7 @@ export default function ConductorDashboard() {
 
       // Calculate weekly rehearsals count
       const weeklyRehearsals = allRehearsals.filter(rehearsal => {
-        const rehearsalDate = new Date(rehearsal.scheduledDate)
+        const rehearsalDate = new Date(rehearsal.date)
         const weekStart = new Date(today)
         weekStart.setDate(today.getDate() - today.getDay())
         const weekEnd = new Date(weekStart)
@@ -295,7 +295,7 @@ export default function ConductorDashboard() {
           averageAttendance,
           upcomingConcerts: Math.floor(Math.random() * 3) + 1, // Mock data
           lastRehearsal: orchestraRehearsals.length > 0
-            ? new Date(orchestraRehearsals[orchestraRehearsals.length - 1].scheduledDate).toLocaleDateString('he-IL')
+            ? new Date(orchestraRehearsals[orchestraRehearsals.length - 1].date).toLocaleDateString('he-IL')
             : 'אין נתונים',
           status: averageAttendance >= 90 ? 'excellent' : averageAttendance >= 75 ? 'good' : 'needs_attention'
         }

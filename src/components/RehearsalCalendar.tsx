@@ -39,6 +39,13 @@ export default function RehearsalCalendar({
   const [currentDate, setCurrentDate] = useState(selectedDate)
   const [showAdditionalModal, setShowAdditionalModal] = useState(false)
   const [additionalRehearsals, setAdditionalRehearsals] = useState<Rehearsal[]>([])
+
+  // Sync with parent's selectedDate changes (e.g., auto-navigation)
+  useEffect(() => {
+    if (selectedDate.getTime() !== currentDate.getTime()) {
+      setCurrentDate(selectedDate)
+    }
+  }, [selectedDate])
   const [modalDate, setModalDate] = useState<Date>(new Date())
   
   // Navigation functions

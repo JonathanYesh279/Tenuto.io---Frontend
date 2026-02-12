@@ -70,10 +70,8 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
       setLoading(true)
       setError(null)
 
-      const [rehearsalData, attendanceData] = await Promise.all([
-        apiService.rehearsals.getRehearsal(rehearsalId),
-        apiService.rehearsals.getAttendance(rehearsalId)
-      ])
+      // Attendance is embedded in the rehearsal document (rehearsal.attendance.present / absent)
+      const rehearsalData = await apiService.rehearsals.getRehearsal(rehearsalId)
 
       // Get orchestra details
       const orchestra = await apiService.orchestras.getOrchestra(rehearsalData.groupId)
@@ -82,7 +80,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
         id: rehearsalData._id,
         orchestraId: rehearsalData.groupId,
         orchestraName: orchestra.name,
-        date: new Date(rehearsalData.scheduledDate).toLocaleDateString('he-IL'),
+        date: new Date(rehearsalData.date).toLocaleDateString('he-IL'),
         startTime: rehearsalData.startTime || '19:00',
         endTime: rehearsalData.endTime || '21:00',
         location: rehearsalData.location || 'אולם מוזיקה',
@@ -90,19 +88,19 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
         status: rehearsalData.status || 'scheduled'
       })
 
-      // Map members with attendance status
+      // Map members with attendance status from rehearsal.attendance
       const orchestraMembers = orchestra.memberDetails || []
+      const presentIds = new Set(rehearsalData.attendance?.present || [])
+      const absentIds = new Set(rehearsalData.attendance?.absent || [])
       const attendanceMap = new Map()
 
-      if (attendanceData && attendanceData.attendanceList) {
-        attendanceData.attendanceList.forEach(record => {
-          attendanceMap.set(record.studentId, {
-            status: record.status,
-            arrivalTime: record.arrivalTime,
-            notes: record.notes
-          })
-        })
-      }
+      orchestraMembers.forEach(member => {
+        if (presentIds.has(member._id)) {
+          attendanceMap.set(member._id, { status: 'present' })
+        } else if (absentIds.has(member._id)) {
+          attendanceMap.set(member._id, { status: 'absent' })
+        }
+      })
 
       const membersWithAttendance = orchestraMembers.map(member => {
         const attendance = attendanceMap.get(member._id)

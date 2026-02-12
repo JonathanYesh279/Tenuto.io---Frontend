@@ -94,16 +94,45 @@ export default function Rehearsals() {
     loadData()
   }, [])
 
+  // Auto-navigate calendar to where rehearsals exist
+  useEffect(() => {
+    if (rehearsals.length > 0 && viewMode === 'calendar') {
+      const now = new Date()
+      const currentMonth = now.getMonth()
+      const currentYear = now.getFullYear()
+
+      // Check if any rehearsals exist in the current month
+      const hasCurrentMonthRehearsals = rehearsals.some(r => {
+        const d = new Date(r.date)
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear
+      })
+
+      if (!hasCurrentMonthRehearsals) {
+        // Find the nearest rehearsal date (prefer upcoming, fall back to most recent)
+        const sortedDates = rehearsals
+          .map(r => new Date(r.date))
+          .sort((a, b) => a.getTime() - b.getTime())
+
+        const upcoming = sortedDates.find(d => d >= now)
+        const target = upcoming || sortedDates[sortedDates.length - 1]
+
+        if (target) {
+          setSelectedDate(target)
+        }
+      }
+    }
+  }, [rehearsals, viewMode])
+
   const loadData = async () => {
     try {
       setLoading(true)
       setError(null)
-      
+
       const [rehearsalsData, orchestrasData] = await Promise.all([
         rehearsalService.getRehearsals(),
         orchestraService.getOrchestras()
       ])
-      
+
       setRehearsals(rehearsalsData)
       setOrchestras(orchestrasData)
     } catch (error: any) {
@@ -367,7 +396,10 @@ export default function Rehearsals() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">חזרות</h1>
-          <p className="text-gray-600">ניהול חזרות תזמורת ומעקב נוכחות</p>
+          <p className="text-gray-600">
+            ניהול חזרות תזמורת ומעקב נוכחות
+            {rehearsals.length > 0 && ` • ${rehearsals.length} חזרות במערכת`}
+          </p>
         </div>
         
         <div className="flex items-center gap-3">

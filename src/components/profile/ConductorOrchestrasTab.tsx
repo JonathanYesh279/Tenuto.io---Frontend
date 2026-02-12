@@ -255,7 +255,7 @@ export default function ConductorOrchestrasTab() {
 
       const mappedRehearsals = rehearsals.map(rehearsal => {
         // Try different date field names and formats
-        const dateValue = rehearsal.scheduledDate || rehearsal.date || rehearsal.rehearsalDate
+        const dateValue = rehearsal.date || rehearsal.scheduledDate || rehearsal.rehearsalDate
         let formattedDate = 'תאריך לא זמין'
 
         if (dateValue) {
@@ -387,16 +387,16 @@ export default function ConductorOrchestrasTab() {
     if (!selectedOrchestra) return
 
     try {
+      const parsedDate = new Date(rehearsalData.date)
       const rehearsalPayload = {
         groupId: selectedOrchestra,
-        groupType: 'orchestra',
-        scheduledDate: new Date(rehearsalData.date).toISOString(),
+        type: 'תזמורת' as const,
+        date: parsedDate.toISOString(),
+        dayOfWeek: parsedDate.getDay(),
         startTime: rehearsalData.startTime,
         endTime: rehearsalData.endTime,
-        duration: calculateDurationMinutes(rehearsalData.startTime, rehearsalData.endTime),
         location: rehearsalData.location,
-        notes: rehearsalData.notes,
-        status: 'scheduled'
+        notes: rehearsalData.notes || '',
       }
 
       if (rehearsalData.recurring) {
@@ -436,7 +436,8 @@ export default function ConductorOrchestrasTab() {
     while (currentDate <= endDate) {
       rehearsals.push({
         ...baseRehearsal,
-        scheduledDate: new Date(currentDate).toISOString()
+        date: new Date(currentDate).toISOString(),
+        dayOfWeek: new Date(currentDate).getDay()
       })
 
       // Calculate next date based on pattern

@@ -9,6 +9,7 @@ import { getDisplayName } from '../utils/nameUtils'
 import ConductorDashboard from '../components/dashboard/ConductorDashboard'
 import TeacherDashboard from '../components/dashboard/TeacherDashboard'
 import TheoryTeacherDashboard from '../components/dashboard/TheoryTeacherDashboard'
+import SuperAdminDashboard from '../components/dashboard/SuperAdminDashboard'
 import {
   StudentActivityCharts,
   InstrumentDistributionChart,
@@ -136,17 +137,22 @@ export default function Dashboard() {
         })
       })
 
-      // Upcoming rehearsals
+      // Upcoming rehearsals — enrich with orchestra name
       const upcomingRehearsals = rehearsalsData
         .filter((r: any) => new Date(r.date) >= today)
         .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .slice(0, 3)
 
+      // Build a lookup map for orchestra names
+      const orchestraNameMap = new Map<string, string>()
+      orchestrasData.forEach((o: any) => orchestraNameMap.set(o._id, o.name))
+
       upcomingRehearsals.forEach((rehearsal: any) => {
+        const orchName = orchestraNameMap.get(rehearsal.groupId) || rehearsal.orchestraName || 'תזמורת'
         activities.push({
           type: 'rehearsal',
           title: 'חזרה מתוכננת',
-          description: `${rehearsal.groupId?.name || rehearsal.orchestraName || 'תזמורת'} - ${formatDate(rehearsal.date)} ${rehearsal.startTime || ''}`,
+          description: `${orchName} - ${formatDate(rehearsal.date)} ${rehearsal.startTime || ''}`,
           time: getRelativeTime(rehearsal.createdAt),
           color: 'success'
         })
@@ -156,7 +162,7 @@ export default function Dashboard() {
 
       // Generate upcoming events
       const events: any[] = upcomingRehearsals.slice(0, 4).map((rehearsal: any) => ({
-        title: rehearsal.groupId?.name || rehearsal.orchestraName || 'חזרת תזמורת',
+        title: orchestraNameMap.get(rehearsal.groupId) || rehearsal.orchestraName || 'חזרת תזמורת',
         date: formatDate(rehearsal.date),
         description: `${rehearsal.type || 'חזרה'} - ${rehearsal.location || 'אולם ראשי'}`,
         isPrimary: false
@@ -227,6 +233,11 @@ export default function Dashboard() {
   }
 
   const userRole = getUserRole()
+
+  // Super admin gets a dedicated dashboard (can't use regular tenant-scoped APIs)
+  if (user?.isSuperAdmin) {
+    return <SuperAdminDashboard />
+  }
 
   // Role-specific dashboards
   if (userRole === 'theory-teacher') {

@@ -6,7 +6,7 @@
  */
 
 import { StudentDetails } from '../features/students/details/types'
-import { getDisplayName } from '../utils/nameUtils'
+import { getDisplayName, formatAddress } from '../utils/nameUtils'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
@@ -76,7 +76,7 @@ class QuickActionsService {
       ['תעודת זהות', student.personalInfo.nationalId || ''],
       ['גיל', student.personalInfo.age?.toString() || ''],
       ['טלפון', student.personalInfo.phone || ''],
-      ['כתובת', student.personalInfo.address || ''],
+      ['כתובת', formatAddress(student.personalInfo.address)],
       ['הורה/אפוטרופוס', student.personalInfo.parentName || ''],
       ['טלפון הורה', student.personalInfo.parentPhone || '']
     ]
@@ -209,7 +209,7 @@ class QuickActionsService {
         ['גיל', student.personalInfo.age || ''],
         ['טלפון', student.personalInfo.phone || ''],
         ['אימייל', student.personalInfo.email || ''],
-        ['כתובת', student.personalInfo.address || ''],
+        ['כתובת', formatAddress(student.personalInfo.address)],
         ['הורה/אפוטרופוס', student.personalInfo.parentName || ''],
         ['טלפון הורה', student.personalInfo.parentPhone || ''],
         ['אימייל הורה', student.personalInfo.parentEmail || '']
@@ -303,7 +303,7 @@ class QuickActionsService {
       data.push(['פרטים אישיים', 'שם מלא', getDisplayName(student.personalInfo)])
       data.push(['פרטים אישיים', 'תעודת זהות', student.personalInfo.nationalId || ''])
       data.push(['פרטים אישיים', 'טלפון', student.personalInfo.phone || ''])
-      data.push(['פרטים אישיים', 'כתובת', student.personalInfo.address || ''])
+      data.push(['פרטים אישיים', 'כתובת', formatAddress(student.personalInfo.address)])
     }
     
     // Academic info

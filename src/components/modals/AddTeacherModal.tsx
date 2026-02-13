@@ -12,6 +12,7 @@ import apiService from '../../services/apiService'
 import { useSchoolYear } from '../../services/schoolYearContext'
 import { VALID_LOCATIONS } from '../../constants/locations'
 import { handleServerValidationError, VALID_INSTRUMENTS } from '../../utils/validationUtils'
+import { formatAddress } from '../../utils/nameUtils'
 import {
   CLASSIFICATIONS, DEGREES, MANAGEMENT_ROLES, TEACHING_SUBJECTS,
   INSTRUMENT_DEPARTMENTS
@@ -204,7 +205,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
         lastName: teacher.personalInfo?.lastName || '',
         phone: teacher.personalInfo?.phone || '',
         email: teacher.personalInfo?.email || '',
-        address: teacher.personalInfo?.address || '',
+        address: formatAddress(teacher.personalInfo?.address),
         idNumber: teacher.personalInfo?.idNumber || '',
         birthYear: teacher.personalInfo?.birthYear || null
       },

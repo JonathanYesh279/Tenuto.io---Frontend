@@ -13,6 +13,7 @@ import { usePermissionsAndAudit, useFieldPermissions } from '../../hooks/usePerm
 import PermissionWrapper, { ViewWrapper, EditWrapper } from '../PermissionWrapper'
 import AuditTrailPanel from '../AuditTrailPanel'
 import toast from 'react-hot-toast'
+import { formatAddress } from '../../../../../utils/nameUtils'
 
 interface PersonalInfoTabProps {
   student: StudentDetails
@@ -486,13 +487,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   </a>
                 ) : 'לא צוין'} 
               />
-              {personalInfo.address && (
-                <>
-                  <InfoRow label="רחוב" value={personalInfo.address.street} />
-                  <InfoRow label="עיר" value={personalInfo.address.city} />
-                  <InfoRow label="מיקוד" value={personalInfo.address.zipCode} />
-                </>
-              )}
+              <InfoRow label="כתובת" value={formatAddress(personalInfo.address) || 'לא צוין'} />
             </div>
           ) : (
             <div className="space-y-4">
@@ -512,27 +507,12 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                 />
               </div>
               <div className="border-t pt-4">
-                <h4 className="text-sm font-semibold text-gray-700 mb-3">כתובת</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <ValidatedInput
-                    section="personalInfo"
-                    field="address.street"
-                    label="רחוב"
-                    placeholder="רחוב הרצל 123"
-                  />
-                  <ValidatedInput
-                    section="personalInfo"
-                    field="address.city"
-                    label="עיר"
-                    placeholder="תל אביב"
-                  />
-                  <ValidatedInput
-                    section="personalInfo"
-                    field="address.zipCode"
-                    label="מיקוד"
-                    placeholder="12345"
-                  />
-                </div>
+                <ValidatedInput
+                  section="personalInfo"
+                  field="address"
+                  label="כתובת"
+                  placeholder="רחוב, עיר"
+                />
               </div>
             </div>
           )}

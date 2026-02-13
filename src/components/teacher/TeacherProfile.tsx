@@ -6,7 +6,7 @@ import {
 import { Card } from '../ui/Card';
 import TeacherTimeBlocks from './TeacherTimeBlocks';
 import apiService from '../../services/apiService';
-import { getDisplayName, getInitials as getNameInitials } from '../../utils/nameUtils';
+import { getDisplayName, getInitials as getNameInitials, formatAddress } from '../../utils/nameUtils';
 
 interface Teacher {
   _id: string;
@@ -144,7 +144,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
             {teacher.personalInfo.address && (
               <div className="flex items-center">
                 <MapPin className="w-4 h-4 mr-2" />
-                {teacher.personalInfo.address}
+                {formatAddress(teacher.personalInfo.address)}
               </div>
             )}
           </div>

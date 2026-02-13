@@ -15,11 +15,7 @@ export interface PersonalInfo {
   age: number;
   phone: string;
   email?: string;
-  address?: {
-    street: string;
-    city: string;
-    zipCode: string;
-  };
+  address?: string;
   parentName: string;
   parentPhone: string;
   parentEmail?: string;

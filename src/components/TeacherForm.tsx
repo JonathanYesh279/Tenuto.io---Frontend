@@ -4,6 +4,7 @@ import { Card } from './ui/Card';
 import apiService from '../services/apiService';
 import { VALID_INSTRUMENTS, VALID_DAYS, VALID_DURATIONS, VALID_ROLES } from '../utils/validationUtils';
 import { CLASSIFICATIONS, DEGREES, TEACHING_SUBJECTS, INSTRUMENT_DEPARTMENTS } from '../constants/enums';
+import { formatAddress } from '../utils/nameUtils';
 
 interface TeacherFormProps {
   teacher?: any;
@@ -64,7 +65,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
           lastName: teacher.personalInfo?.lastName || '',
           phone: teacher.personalInfo?.phone || '',
           email: teacher.personalInfo?.email || '',
-          address: teacher.personalInfo?.address || '',
+          address: formatAddress(teacher.personalInfo?.address),
           idNumber: teacher.personalInfo?.idNumber || '',
           birthYear: teacher.personalInfo?.birthYear || null
         },

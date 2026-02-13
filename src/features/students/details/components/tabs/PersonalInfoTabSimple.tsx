@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react'
 import { User, Phone, Mail, MapPin, Edit, Save, X } from 'lucide-react'
 import apiService from '../../../../../services/apiService'
-import { getDisplayName } from '../../../../../utils/nameUtils'
+import { getDisplayName, formatAddress } from '../../../../../utils/nameUtils'
 
 interface PersonalInfoTabProps {
   student: any
@@ -26,7 +26,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
     lastName: personalInfo.lastName || '',
     phone: personalInfo.phone || '',
     age: personalInfo.age || '',
-    address: personalInfo.address || '',
+    address: formatAddress(personalInfo.address),
     parentName: personalInfo.parentName || '',
     parentPhone: personalInfo.parentPhone || '',
     parentEmail: personalInfo.parentEmail || '',
@@ -40,7 +40,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
       lastName: personalInfo.lastName || '',
       phone: personalInfo.phone || '',
       age: personalInfo.age || '',
-      address: personalInfo.address || '',
+      address: formatAddress(personalInfo.address),
       parentName: personalInfo.parentName || '',
       parentPhone: personalInfo.parentPhone || '',
       parentEmail: personalInfo.parentEmail || '',
@@ -89,7 +89,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
       lastName: personalInfo.lastName || '',
       phone: personalInfo.phone || '',
       age: personalInfo.age || '',
-      address: personalInfo.address || '',
+      address: formatAddress(personalInfo.address),
       parentName: personalInfo.parentName || '',
       parentPhone: personalInfo.parentPhone || '',
       parentEmail: personalInfo.parentEmail || '',
@@ -247,7 +247,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
             ) : (
               <div className="text-gray-900 flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-gray-500" />
-                {personalInfo.address || 'לא צוין'}
+                {formatAddress(personalInfo.address) || 'לא צוין'}
               </div>
             )}
           </div>

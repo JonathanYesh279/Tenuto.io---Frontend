@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { User, Phone, Mail, MapPin, Edit, Save, X, Calendar, Award, AlertCircle, CheckCircle } from 'lucide-react'
 import { Teacher } from '../../types'
 import { teacherDetailsApi } from '../../../../../services/teacherDetailsApi'
-import { getDisplayName } from '../../../../../utils/nameUtils'
+import { getDisplayName, formatAddress } from '../../../../../utils/nameUtils'
 
 interface PersonalInfoTabProps {
   teacher: Teacher
@@ -34,7 +34,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
     lastName: teacher.personalInfo?.lastName || '',
     phone: teacher.personalInfo?.phone || '',
     email: teacher.personalInfo?.email || '',
-    address: teacher.personalInfo?.address || '',
+    address: formatAddress(teacher.personalInfo?.address),
   })
 
   // Validation functions
@@ -145,7 +145,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
       lastName: teacher.personalInfo?.lastName || '',
       phone: teacher.personalInfo?.phone || '',
       email: teacher.personalInfo?.email || '',
-      address: teacher.personalInfo?.address || '',
+      address: formatAddress(teacher.personalInfo?.address),
     })
     setSaveError(null)
     setFieldErrors({})
@@ -393,7 +393,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                 )}
               </>
             ) : (
-              <p className="text-gray-900">{teacher.personalInfo?.address || 'לא צוין'}</p>
+              <p className="text-gray-900">{formatAddress(teacher.personalInfo?.address) || 'לא צוין'}</p>
             )}
           </div>
         </div>

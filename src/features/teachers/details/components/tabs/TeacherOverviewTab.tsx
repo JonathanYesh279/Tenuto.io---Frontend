@@ -20,7 +20,7 @@ import {
   BookOpen
 } from 'lucide-react'
 import { TeacherDetails } from '../../types'
-import { getDisplayName } from '../../../../../utils/nameUtils'
+import { getDisplayName, formatAddress } from '../../../../../utils/nameUtils'
 
 interface TeacherOverviewTabProps {
   teacher: TeacherDetails
@@ -83,7 +83,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
               <MapPin className="w-4 h-4 text-gray-500 mt-1" />
               <div>
                 <p className="text-sm text-black font-semibold" style={{color: '#000000'}}>כתובת:</p>
-                <p className="font-medium text-gray-900">{teacher.personalInfo?.address || 'ללא מידע'}</p>
+                <p className="font-medium text-gray-900">{formatAddress(teacher.personalInfo?.address) || 'ללא מידע'}</p>
               </div>
             </div>
             

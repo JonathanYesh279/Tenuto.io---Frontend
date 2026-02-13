@@ -3,7 +3,7 @@ import { useAuth } from '../../services/authContext.jsx'
 import { Edit2, Save, X, Mail, Phone, MapPin, Calendar, AlertCircle, CheckCircle } from 'lucide-react'
 import { teacherService } from '../../services/apiService.js'
 import type { TeacherProfile, TeacherProfileUpdateData } from '../../types/teacher.types'
-import { getDisplayName } from '../../utils/nameUtils'
+import { getDisplayName, formatAddress } from '../../utils/nameUtils'
 
 export default function GeneralInfoTab() {
   const { user, checkAuthStatus } = useAuth()
@@ -40,7 +40,7 @@ export default function GeneralInfoTab() {
         lastName: profile?.personalInfo?.lastName || displayName.split(' ').slice(1).join(' ') || '',
         email: profile?.personalInfo?.email || '',
         phone: profile?.personalInfo?.phone || '',
-        address: profile?.personalInfo?.address || '',
+        address: formatAddress(profile?.personalInfo?.address),
         birthDate: profile?.personalInfo?.birthDate || ''
       })
     } catch (error) {
@@ -55,7 +55,7 @@ export default function GeneralInfoTab() {
           lastName: user?.personalInfo?.lastName || fallbackName.split(' ').slice(1).join(' ') || '',
           email: user?.personalInfo?.email || user?.email || '',
           phone: user?.personalInfo?.phone || user?.phone || '',
-          address: user?.personalInfo?.address || user?.address || '',
+          address: formatAddress(user?.personalInfo?.address || user?.address),
           birthDate: user?.personalInfo?.birthDate || user?.birthDate || ''
         })
       }
@@ -104,7 +104,7 @@ export default function GeneralInfoTab() {
       lastName: currentData?.personalInfo?.lastName || cancelName.split(' ').slice(1).join(' ') || '',
       email: currentData?.personalInfo?.email || currentData?.email || '',
       phone: currentData?.personalInfo?.phone || currentData?.phone || '',
-      address: currentData?.personalInfo?.address || currentData?.address || '',
+      address: formatAddress(currentData?.personalInfo?.address || currentData?.address),
       birthDate: currentData?.personalInfo?.birthDate || currentData?.birthDate || ''
     })
     setIsEditing(false)

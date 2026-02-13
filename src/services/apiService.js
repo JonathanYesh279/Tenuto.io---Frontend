@@ -1177,7 +1177,7 @@ export const studentService = {
 
 /**
  * Teacher API Service  
- * Uses exact backend schema: teacher.personalInfo.firstName/lastName, teacher.teaching.studentIds
+ * Uses exact backend schema: teacher.personalInfo.firstName/lastName, teacher.teaching.timeBlocks
  */
 export const teacherService = {
   /**

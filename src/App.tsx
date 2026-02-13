@@ -27,6 +27,7 @@ const Profile = lazyWithRetry(() => import('./pages/Profile'), 'Profile')
 const MinistryReports = lazyWithRetry(() => import('./pages/MinistryReports'), 'MinistryReports')
 const ImportData = lazyWithRetry(() => import('./pages/ImportData'), 'ImportData')
 const Settings = lazyWithRetry(() => import('./pages/Settings'), 'Settings')
+const AuditTrail = lazyWithRetry(() => import('./pages/AuditTrail'), 'AuditTrail')
 
 // Conductor-specific pages
 const ConductorAttendance = lazyWithRetry(() => import('./components/rehearsal/RehearsalAttendance'), 'ConductorAttendance')
@@ -398,6 +399,18 @@ function AppRoutes() {
               <Layout>
                 <Suspense fallback={<PageLoadingFallback message="טוען ייבוא נתונים..." />}>
                   <ImportData />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/audit-trail"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען יומן ביקורת..." />}>
+                  <AuditTrail />
                 </Suspense>
               </Layout>
             </ProtectedRoute>

@@ -196,6 +196,7 @@ const TeacherDetailsPage: React.FC = () => {
             ...(teacher?.conducting?.orchestraIds?.length > 0 || (teacher as any)?.conducting?.ensemblesIds?.length > 0 || teacher?.ensemblesIds?.length > 0 || teacher?.roles?.includes('מנצח') ?
               [{ id: 'conducting' as TeacherTabType, label: 'ניצוח', component: () => null }] : []
             ),
+            { id: 'hours', label: 'שעות שבועיות', component: () => null },
           ]}
         />
 

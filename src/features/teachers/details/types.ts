@@ -4,7 +4,7 @@
  * Type definitions for teacher details page components
  */
 
-export type TeacherTabType = 'personal' | 'students' | 'schedule' | 'conducting'
+export type TeacherTabType = 'personal' | 'students' | 'schedule' | 'conducting' | 'hours'
 
 export interface TeacherTab {
   id: TeacherTabType

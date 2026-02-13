@@ -10,6 +10,7 @@ import PersonalInfoTab from './tabs/PersonalInfoTab'
 import StudentManagementTab from './tabs/StudentManagementTab'
 import ScheduleTab from './tabs/ScheduleTab'
 import ConductingTab from './tabs/ConductingTab'
+import HoursSummaryTab from './tabs/HoursSummaryTab'
 
 const TeacherTabContent: React.FC<TeacherTabContentProps> = ({
   activeTab,
@@ -44,7 +45,10 @@ const TeacherTabContent: React.FC<TeacherTabContentProps> = ({
     
     case 'conducting':
       return <ConductingTab teacher={teacher} teacherId={teacherId} />
-    
+
+    case 'hours':
+      return <HoursSummaryTab teacher={teacher} teacherId={teacherId} />
+
     default:
       return (
         <div className="p-6 text-center text-gray-500">

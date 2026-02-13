@@ -5,7 +5,7 @@
  * Responsive design with mobile-friendly scrolling.
  */
 
-import { User, Users, Calendar, Music } from 'lucide-react'
+import { User, Users, Calendar, Music, Clock } from 'lucide-react'
 import { TeacherTabNavigationProps, TeacherTabType } from '../types'
 
 // Tab configuration with icons
@@ -14,6 +14,7 @@ const tabConfig = {
   students: { label: 'ניהול תלמידים', icon: Users },
   schedule: { label: 'לוח זמנים', icon: Calendar },
   conducting: { label: 'ניצוח', icon: Music },
+  hours: { label: 'שעות שבועיות', icon: Clock },
 }
 
 const TeacherTabNavigation: React.FC<TeacherTabNavigationProps> = ({

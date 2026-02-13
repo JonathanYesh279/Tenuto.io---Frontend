@@ -28,7 +28,7 @@ import {
   Save,
   Trash2
 } from 'lucide-react'
-import apiService from '../../services/apiService'
+import apiService, { hoursSummaryService } from '../../services/apiService'
 import { TeacherDataTransformUtils } from '../../services/teacherDetailsApi'
 import type { Bagrut } from '../../types/bagrut.types'
 import { getDisplayName } from '@/utils/nameUtils'
@@ -128,6 +128,12 @@ export default function TeacherDashboard() {
   const [orchestras, setOrchestras] = useState<Orchestra[]>([])
   const [theoryLessons, setTheoryLessons] = useState<TheoryLesson[]>([])
   const [userRoles, setUserRoles] = useState<string[]>([])
+  const [hoursSummary, setHoursSummary] = useState<{
+    totalWeeklyHours: number
+    individualLessons: number
+    orchestraConducting: number
+    theoryTeaching: number
+  } | null>(null)
 
   // Weekly schedule state for overview
   const [weeklySchedule, setWeeklySchedule] = useState<any>({
@@ -282,6 +288,16 @@ export default function TeacherDashboard() {
         } catch (error) {
           console.log('Error loading theory lessons:', error)
         }
+      }
+
+      // Load hours summary from backend
+      try {
+        const hoursData = await hoursSummaryService.getTeacherSummary(teacherId)
+        if (hoursData?.totals) {
+          setHoursSummary(hoursData.totals)
+        }
+      } catch (error) {
+        console.log('Hours summary not calculated yet:', error)
       }
 
       // Process Bagrut students data
@@ -626,9 +642,9 @@ export default function TeacherDashboard() {
           />
           <StatCard
             icon={<Clock className="w-6 h-6" />}
-            title="שעות השבוע"
-            value={stats.weeklyHours}
-            suffix="שעות"
+            title="ש״ש שבועי"
+            value={hoursSummary?.totalWeeklyHours ?? stats.weeklyHours}
+            suffix={hoursSummary ? 'ש"ש' : 'שעות'}
             bgColor="bg-purple-50"
             iconColor="text-purple-600"
             borderColor="border-purple-200"
@@ -951,8 +967,31 @@ export default function TeacherDashboard() {
                 )}
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">שעות השבוע</span>
-                  <span className="font-bold text-green-600">{stats.weeklyHours} שעות</span>
+                  <span className="font-bold text-green-600">{hoursSummary?.totalWeeklyHours ?? stats.weeklyHours} {hoursSummary ? 'ש"ש' : 'שעות'}</span>
                 </div>
+                {hoursSummary && (
+                  <>
+                    <div className="border-t border-gray-200 pt-3 mt-3">
+                      <span className="text-xs font-medium text-gray-500 mb-2 block">פירוט ש"ש</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">שיעורים פרטניים</span>
+                      <span className="font-medium text-blue-600">{hoursSummary.individualLessons}</span>
+                    </div>
+                    {hoursSummary.orchestraConducting > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">ניצוח תזמורות</span>
+                        <span className="font-medium text-purple-600">{hoursSummary.orchestraConducting}</span>
+                      </div>
+                    )}
+                    {hoursSummary.theoryTeaching > 0 && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">הוראת תיאוריה</span>
+                        <span className="font-medium text-green-600">{hoursSummary.theoryTeaching}</span>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>

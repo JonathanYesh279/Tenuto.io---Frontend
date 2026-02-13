@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Users, GraduationCap, Music, Calendar, BarChart3, Award, Clock, BookOpen, RefreshCw } from 'lucide-react'
+import { Users, GraduationCap, Music, Calendar, BarChart3, Award, Clock, BookOpen, RefreshCw, AlertCircle } from 'lucide-react'
 import StatsCard from '../components/ui/StatsCard'
 import { Card } from '../components/ui/Card'
-import apiService from '../services/apiService'
+import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
 import { getDisplayName } from '../utils/nameUtils'
@@ -18,7 +18,20 @@ import {
   DailyTeacherRoomTable
 } from '../components/dashboard/charts'
 
-type DashboardTab = 'overview' | 'students' | 'schedule' | 'bagrut';
+type DashboardTab = 'overview' | 'students' | 'schedule' | 'bagrut' | 'hours';
+
+interface TeacherHoursSummary {
+  teacherId: string
+  teacherName: string
+  totals: {
+    totalWeeklyHours: number
+    individualLessons: number
+    orchestraConducting: number
+    theoryTeaching: number
+    management: number
+  }
+  calculatedAt: string
+}
 
 export default function Dashboard() {
   const { user } = useAuth()
@@ -37,6 +50,10 @@ export default function Dashboard() {
   })
   const [recentActivities, setRecentActivities] = useState<any[]>([])
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
+  const [hoursSummaries, setHoursSummaries] = useState<TeacherHoursSummary[]>([])
+  const [hoursLoading, setHoursLoading] = useState(false)
+  const [hoursError, setHoursError] = useState<string | null>(null)
+  const [isRecalculating, setIsRecalculating] = useState(false)
 
   useEffect(() => {
     loadDashboardData()
@@ -256,7 +273,8 @@ export default function Dashboard() {
     { id: 'overview' as const, label: 'סקירה כללית', icon: BarChart3 },
     { id: 'students' as const, label: 'תלמידים', icon: Users },
     { id: 'schedule' as const, label: 'לוח זמנים', icon: Calendar },
-    { id: 'bagrut' as const, label: 'בגרויות', icon: Award }
+    { id: 'bagrut' as const, label: 'בגרויות', icon: Award },
+    { id: 'hours' as const, label: 'שעות מורים', icon: Clock }
   ]
 
   return (
@@ -505,6 +523,145 @@ export default function Dashboard() {
           schoolYearId={currentSchoolYear?._id}
         />
       )}
+
+      {/* Hours Tab */}
+      {activeTab === 'hours' && (
+        <AdminHoursOverview
+          hoursSummaries={hoursSummaries}
+          loading={hoursLoading}
+          error={hoursError}
+          isRecalculating={isRecalculating}
+          onLoad={async () => {
+            try {
+              setHoursLoading(true)
+              setHoursError(null)
+              const data = await hoursSummaryService.getAllSummaries()
+              setHoursSummaries(Array.isArray(data) ? data : data?.data || [])
+            } catch (err: any) {
+              setHoursError(err.message || 'שגיאה בטעינת נתוני שעות')
+            } finally {
+              setHoursLoading(false)
+            }
+          }}
+          onRecalculateAll={async () => {
+            if (!window.confirm('האם לחשב מחדש את השעות עבור כל המורים? פעולה זו עשויה לקחת מספר שניות.')) return
+            try {
+              setIsRecalculating(true)
+              await hoursSummaryService.calculateAll()
+              const data = await hoursSummaryService.getAllSummaries()
+              setHoursSummaries(Array.isArray(data) ? data : data?.data || [])
+            } catch (err: any) {
+              setHoursError(err.message || 'שגיאה בחישוב מחדש')
+            } finally {
+              setIsRecalculating(false)
+            }
+          }}
+        />
+      )}
     </div>
+  )
+}
+
+function AdminHoursOverview({
+  hoursSummaries,
+  loading,
+  error,
+  isRecalculating,
+  onLoad,
+  onRecalculateAll
+}: {
+  hoursSummaries: TeacherHoursSummary[]
+  loading: boolean
+  error: string | null
+  isRecalculating: boolean
+  onLoad: () => void
+  onRecalculateAll: () => void
+}) {
+  useEffect(() => {
+    if (hoursSummaries.length === 0 && !loading && !error) {
+      onLoad()
+    }
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="text-center py-12 text-gray-500">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+        טוען נתוני שעות...
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <div className="flex flex-col items-center py-12 text-center">
+          <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">שגיאה בטעינת נתוני שעות</h3>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={onLoad}
+            className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+          >
+            <RefreshCw className="w-4 h-4" />
+            נסה שוב
+          </button>
+        </div>
+      </Card>
+    )
+  }
+
+  return (
+    <Card>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-lg font-semibold text-gray-900">שעות שבועיות — כל המורים</h3>
+        <button
+          onClick={onRecalculateAll}
+          disabled={isRecalculating}
+          className="flex items-center gap-2 px-4 py-2 text-sm bg-primary-50 text-primary-700 border border-primary-200 rounded-lg hover:bg-primary-100 disabled:opacity-50"
+        >
+          <RefreshCw className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
+          {isRecalculating ? 'מחשב...' : 'חשב מחדש הכל'}
+        </button>
+      </div>
+
+      {hoursSummaries.length === 0 ? (
+        <div className="text-center py-12 text-gray-500">
+          <Clock className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+          <p>לא נמצאו נתוני שעות. לחץ "חשב מחדש הכל" ליצירת חישוב ראשוני.</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="text-right px-4 py-3 font-medium text-gray-700">מורה</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-700">סה"כ ש"ש</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-700">פרטניים</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-700">תזמורות</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-700">תיאוריה</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-700">ניהול</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {hoursSummaries.map((summary) => (
+                <tr key={summary.teacherId} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-gray-900 font-medium">{summary.teacherName}</td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-primary-100 text-primary-800">
+                      {summary.totals.totalWeeklyHours}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-gray-600">{summary.totals.individualLessons}</td>
+                  <td className="px-4 py-3 text-gray-600">{summary.totals.orchestraConducting}</td>
+                  <td className="px-4 py-3 text-gray-600">{summary.totals.theoryTeaching}</td>
+                  <td className="px-4 py-3 text-gray-600">{summary.totals.management}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Card>
   )
 }

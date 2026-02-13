@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { exportService } from '../services/apiService'
+import { exportService, schoolYearService } from '../services/apiService'
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import StatsCard from '../components/ui/StatsCard'
 import { Progress } from '../components/ui/progress'
@@ -16,6 +16,8 @@ import {
   CheckCircle2,
   XCircle,
   RefreshCw,
+  Clock,
+  Info,
 } from 'lucide-react'
 
 interface MissingItem {
@@ -48,6 +50,14 @@ interface ValidationResult {
   isValid: boolean
 }
 
+interface SchoolYear {
+  _id: string
+  name: string
+  startDate: string
+  endDate: string
+  isCurrent?: boolean
+}
+
 const REPORT_SECTIONS = [
   { key: 'teachers', title: 'מצבת כח-אדם להוראה', icon: GraduationCap, color: 'blue' as const },
   { key: 'students', title: 'נתוני תלמידים', icon: Users, color: 'green' as const },
@@ -62,28 +72,62 @@ export default function MinistryReports() {
   const [loading, setLoading] = useState(true)
   const [downloading, setDownloading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  const [endpointsAvailable, setEndpointsAvailable] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [schoolYears, setSchoolYears] = useState<SchoolYear[]>([])
+  const [selectedYear, setSelectedYear] = useState<string>('')
+
+  useEffect(() => {
+    loadSchoolYears()
+  }, [])
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [selectedYear])
+
+  const loadSchoolYears = async () => {
+    try {
+      const years = await schoolYearService.getSchoolYears()
+      setSchoolYears(years)
+      const current = years.find((y: SchoolYear) => y.isCurrent)
+      if (current) {
+        setSelectedYear(current._id)
+      } else if (years.length > 0) {
+        setSelectedYear(years[0]._id)
+      }
+    } catch (error) {
+      console.error('Error loading school years:', error)
+    }
+  }
 
   const loadData = async () => {
     try {
       setLoading(true)
+      setEndpointsAvailable(true)
       const [statusData, validationData] = await Promise.allSettled([
         exportService.getStatus(),
         exportService.validate(),
       ])
 
+      let anySucceeded = false
+
       if (statusData.status === 'fulfilled') {
         setStatus(statusData.value)
+        anySucceeded = true
       }
       if (validationData.status === 'fulfilled') {
         setValidation(validationData.value)
+        anySucceeded = true
       }
+
+      if (!anySucceeded) {
+        setEndpointsAvailable(false)
+      }
+
+      setLastUpdated(new Date())
     } catch (error) {
       console.error('Error loading report data:', error)
-      toast.error('שגיאה בטעינת נתוני הדוח')
+      setEndpointsAvailable(false)
     } finally {
       setLoading(false)
     }
@@ -93,7 +137,9 @@ export default function MinistryReports() {
     setRefreshing(true)
     await loadData()
     setRefreshing(false)
-    toast.success('הנתונים עודכנו')
+    if (endpointsAvailable) {
+      toast.success('הנתונים עודכנו')
+    }
   }
 
   const handleDownload = async () => {
@@ -133,6 +179,10 @@ export default function MinistryReports() {
     other: 'אחר',
   }
 
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
@@ -149,7 +199,7 @@ export default function MinistryReports() {
   return (
     <div className="p-6 max-w-6xl mx-auto" dir="rtl">
       {/* Page Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
             <FileText className="w-5 h-5 text-primary-600" />
@@ -159,34 +209,79 @@ export default function MinistryReports() {
             <p className="text-sm text-gray-500">סטטוס השלמת הנתונים והורדת דוח</p>
           </div>
         </div>
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
-        >
-          <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-          רענן
-        </button>
+        <div className="flex items-center gap-3">
+          {lastUpdated && (
+            <span className="flex items-center gap-1 text-xs text-gray-400">
+              <Clock className="w-3 h-3" />
+              עודכן {formatTime(lastUpdated)}
+            </span>
+          )}
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            רענן
+          </button>
+        </div>
       </div>
 
-      {/* Overall Completion */}
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-700">אחוז השלמה כולל</span>
-            <span className="text-2xl font-bold text-primary-600">{completionPct}%</span>
-          </div>
-          <Progress value={completionPct} />
-          <p className="text-xs text-gray-500 mt-2">
-            {completionPct === 100
-              ? 'כל הנתונים מלאים — ניתן להוריד את הדוח'
-              : 'יש נתונים חסרים — מומלץ להשלים לפני הגשת הדוח'}
-          </p>
-        </CardContent>
-      </Card>
+      {/* School Year Selector */}
+      {schoolYears.length > 0 && (
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-1">שנת לימודים</label>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white"
+          >
+            {schoolYears.map((year) => (
+              <option key={year._id} value={year._id}>
+                {year.name}{year.isCurrent ? ' (נוכחית)' : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
-      {/* Stats Cards */}
-      {status?.counts && (
+      {/* Export Service Unavailable Banner */}
+      {!endpointsAvailable && (
+        <Card className="mb-6 border-blue-200 bg-blue-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <Info className="w-6 h-6 text-blue-600 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium text-blue-800">שירות ייצוא אינו זמין עדיין</h3>
+                <p className="text-sm text-blue-600 mt-1">
+                  שירות הייצוא למשרד החינוך נמצא בפיתוח. הורדת דוחות ואימות נתונים יהיו זמינים בקרוב.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Overall Completion — only show when endpoints available */}
+      {endpointsAvailable && (
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-gray-700">אחוז השלמה כולל</span>
+              <span className="text-2xl font-bold text-primary-600">{completionPct}%</span>
+            </div>
+            <Progress value={completionPct} />
+            <p className="text-xs text-gray-500 mt-2">
+              {completionPct === 100
+                ? 'כל הנתונים מלאים — ניתן להוריד את הדוח'
+                : 'יש נתונים חסרים — מומלץ להשלים לפני הגשת הדוח'}
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Stats Cards — only show when endpoints available */}
+      {endpointsAvailable && status?.counts && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <StatsCard
             title="מורים"
@@ -237,8 +332,8 @@ export default function MinistryReports() {
         })}
       </div>
 
-      {/* Missing Data */}
-      {Object.keys(groupedMissing).length > 0 && (
+      {/* Missing Data — only show when endpoints available */}
+      {endpointsAvailable && Object.keys(groupedMissing).length > 0 && (
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -276,8 +371,8 @@ export default function MinistryReports() {
         </Card>
       )}
 
-      {/* Pre-Export Errors (blocking) */}
-      {(status?.preExportErrors?.length ?? 0) > 0 && (
+      {/* Pre-Export Errors (blocking) — only show when endpoints available */}
+      {endpointsAvailable && (status?.preExportErrors?.length ?? 0) > 0 && (
         <Card className="mb-6 border-red-200 bg-red-50">
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -298,8 +393,8 @@ export default function MinistryReports() {
         </Card>
       )}
 
-      {/* Pre-Export Warnings (non-blocking) */}
-      {(status?.preExportWarnings?.length ?? 0) > 0 && (
+      {/* Pre-Export Warnings (non-blocking) — only show when endpoints available */}
+      {endpointsAvailable && (status?.preExportWarnings?.length ?? 0) > 0 && (
         <Card className="mb-6 border-amber-200 bg-amber-50">
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -320,8 +415,8 @@ export default function MinistryReports() {
         </Card>
       )}
 
-      {/* Cross-Validation Results */}
-      {validation && (validation.warnings.length > 0 || validation.errors.length > 0) && (
+      {/* Cross-Validation Results — only show when endpoints available */}
+      {endpointsAvailable && validation && (validation.warnings.length > 0 || validation.errors.length > 0) && (
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -348,8 +443,8 @@ export default function MinistryReports() {
         </Card>
       )}
 
-      {/* All Valid — only when no missing data AND no blocking errors */}
-      {(status?.missing?.length === 0) && (status?.preExportErrors?.length === 0) && validation?.isValid && (
+      {/* All Valid — only when no missing data AND no blocking errors AND endpoints available */}
+      {endpointsAvailable && (status?.missing?.length === 0) && (status?.preExportErrors?.length === 0) && validation?.isValid && (
         <Card className="mb-6 border-green-200 bg-green-50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
@@ -367,13 +462,16 @@ export default function MinistryReports() {
       <div className="flex flex-col items-center pb-8 gap-2">
         <button
           onClick={handleDownload}
-          disabled={downloading || (status?.preExportErrors?.length ?? 0) > 0}
+          disabled={downloading || !endpointsAvailable || (status?.preExportErrors?.length ?? 0) > 0}
           className="flex items-center gap-2 px-8 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium shadow-sm"
         >
           <Download className="w-5 h-5" />
           {downloading ? 'מוריד...' : 'הורד דוח מלא'}
         </button>
-        {(status?.preExportErrors?.length ?? 0) > 0 && (
+        {!endpointsAvailable && (
+          <p className="text-sm text-gray-500">הורדת דוח תהיה זמינה כאשר שירות הייצוא יופעל</p>
+        )}
+        {endpointsAvailable && (status?.preExportErrors?.length ?? 0) > 0 && (
           <p className="text-sm text-red-600">יש לתקן את השגיאות החוסמות לפני הורדת הדוח</p>
         )}
       </div>

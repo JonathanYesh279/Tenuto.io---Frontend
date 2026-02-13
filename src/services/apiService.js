@@ -726,7 +726,6 @@ export const studentService = {
           theoryLessonIds: studentData.enrollments?.theoryLessonIds || [],
           schoolYears: studentData.enrollments?.schoolYears || []
         },
-        teacherIds: studentData.teacherIds || [],
         teacherAssignments: studentData.teacherAssignments || [],
         isActive: studentData.isActive !== undefined ? studentData.isActive : true,
         schoolYearId: schoolYearId || studentData.schoolYearId
@@ -1280,8 +1279,7 @@ export const teacherService = {
         // Add computed fields for easier frontend use
         primaryRole: teacher.roles?.[0] || 'לא מוגדר',
         allRoles: teacher.roles || [],
-        studentCount: teacher.teaching?.studentIds?.length || 0,
-        activeStudentIds: teacher.teaching?.studentIds || [],
+        studentCount: teacher.studentCount || 0,
         hasTimeBlocks: teacher.teaching?.timeBlocks?.length > 0,
         timeBlockCount: teacher.teaching?.timeBlocks?.length || 0,
 
@@ -1298,8 +1296,8 @@ export const teacherService = {
         ensembleCount: teacher.conducting?.ensemblesIds?.length || 0,
 
         // Legacy compatibility fields
-        assignmentCount: teacher.teaching?.studentIds?.length || 0,
-        activeStudents: teacher.teaching?.studentIds?.length || 0,
+        assignmentCount: teacher.studentCount || 0,
+        activeStudents: teacher.studentCount || 0,
         isActive: teacher.isActive && teacher.professionalInfo?.isActive,
         primaryInstrument: teacher.professionalInfo?.instrument || 'לא הוגדר'
       }));
@@ -1367,8 +1365,7 @@ export const teacherService = {
         ...teacher,
         primaryRole: teacher.roles?.[0] || 'לא מוגדר',
         allRoles: teacher.roles || [],
-        studentCount: teacher.teaching?.studentIds?.length || 0,
-        activeStudentIds: teacher.teaching?.studentIds || [],
+        studentCount: teacher.studentCount || 0,
         hasTimeBlocks: teacher.teaching?.timeBlocks?.length > 0,
         timeBlockCount: teacher.teaching?.timeBlocks?.length || 0,
         isTeacherActive: teacher.isActive && teacher.professionalInfo?.isActive,
@@ -1482,7 +1479,6 @@ export const teacherService = {
           isActive: teacherData.professionalInfo?.isActive !== undefined ? teacherData.professionalInfo.isActive : true
         },
         teaching: {
-          studentIds: teacherData.teaching?.studentIds || [],
           timeBlocks: teacherData.teaching?.timeBlocks || []
         },
         conducting: {

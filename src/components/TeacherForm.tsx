@@ -36,7 +36,6 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
       isActive: true
     },
     teaching: {
-      studentIds: [],
       schedule: []
     },
     conducting: {

@@ -61,7 +61,6 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
       theoryLessonIds: [],
       schoolYears: []
     },
-    teacherIds: [],
     teacherAssignments: [],
     isActive: true
   })

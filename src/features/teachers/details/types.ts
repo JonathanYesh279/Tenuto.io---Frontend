@@ -50,7 +50,6 @@ export interface Teacher {
     isActive: boolean
   }>
   teaching: {
-    studentIds: string[]
     schedule: any[]
     timeBlocks: any[]
   }

@@ -800,8 +800,8 @@ export default function Teachers() {
                 instrument: teacher.specialization,
                 isActive: teacher.isActive // Use the computed isActive from API
               },
+              studentCount: teacher.studentCount || 0,
               teaching: {
-                studentIds: Array(teacher.studentCount).fill(''), // Mock array for student count
                 schedule: [] // Will be populated if needed
               },
               isActive: teacher.isActive

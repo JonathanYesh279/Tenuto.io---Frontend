@@ -41,13 +41,8 @@ const exampleTeacherData = {
     }
   ],
   
+  studentCount: 4,
   teaching: {
-    studentIds: [
-      "68813849abdf329e8afc264c",
-      "68813849abdf329e8afc2648", 
-      "68813849abdf329e8afc2654",
-      "68813849abdf329e8afc2655"
-    ],
     schedule: [] // Will be populated with actual lesson slots
   },
   
@@ -289,7 +284,6 @@ export const teacherDetailsExamples = {
         },
         isActive: true,
         teaching: {
-          studentIds: [],
           schedule: []
         },
         timeBlocks: [

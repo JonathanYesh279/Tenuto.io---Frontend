@@ -47,7 +47,6 @@ export interface SchoolYear {
 }
 
 export interface Teaching {
-  studentIds: string[];
   schedule: TeachingScheduleSlot[];
 }
 

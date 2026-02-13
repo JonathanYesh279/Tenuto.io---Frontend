@@ -5300,6 +5300,20 @@ export const superAdminService = {
   }
 };
 
+// ==================== Admin Audit Service ====================
+
+/**
+ * Admin Audit Service
+ * Deletion audit log and past activities tracking
+ * Backend endpoints: /api/admin/deletion/*, /api/admin/past-activities*
+ */
+export const adminAuditService = {
+  getAuditLog: (params) => api.get('/admin/deletion/audit-log', { params }),
+  getPastActivities: (params) => api.get('/admin/past-activities', { params }),
+  getPastActivitiesByType: (type, params) => api.get(`/admin/past-activities/${type}`, { params }),
+  getSnapshots: () => api.get('/admin/deletion/snapshots'),
+};
+
 /**
  * Default export with all services
  * Complete API service collection matching backend schemas

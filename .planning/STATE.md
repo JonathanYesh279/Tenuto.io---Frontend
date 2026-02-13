@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 ## Current Position
 
-Phase: Phase 1 — Quick Fixes (next)
-Plan: Not yet planned
-Status: Roadmap approved, ready to plan Phase 1
-Last activity: 2026-02-13 — Roadmap created (4 phases, 12 requirements)
+Phase: Phase 3 — Audit Trail Page (next)
+Plan: —
+Status: Phases 1-2 complete, ready for Phase 3
+Last activity: 2026-02-13 — Phase 2 complete (backend instrument sync)
 
 ## Accumulated Context
 
@@ -26,10 +26,11 @@ Last activity: 2026-02-13 — Roadmap created (4 phases, 12 requirements)
 - Settings, MinistryReports, ImportData pages built
 - Hours Summary tab, Dashboard hours cards, Super Admin toggle
 
-### Known Issues
-- 10 demo/legacy pages still in codebase (dead code)
-- ProtectedRoute missing ensemble-director role mapping
-- Backend VALID_INSTRUMENTS only accepts 19 (frontend has 27)
+### Resolved (this milestone)
+- Phase 1: 10 demo/legacy pages deleted, ensemble-director role mapping added
+- Phase 2: Backend VALID_INSTRUMENTS synced to 27 (both validation files)
+
+### Remaining Issues
 - MinistryReports calls non-existent export endpoints
 - No audit trail UI despite 8 backend endpoints ready
 

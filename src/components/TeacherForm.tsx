@@ -81,7 +81,6 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
           isActive: teacher.professionalInfo?.isActive !== undefined ? teacher.professionalInfo.isActive : true
         },
         teaching: {
-          studentIds: teacher.teaching?.studentIds || [],
           timeBlocks: teacher.teaching?.timeBlocks || []
         },
         conducting: {

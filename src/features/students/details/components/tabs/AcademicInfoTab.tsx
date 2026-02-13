@@ -136,10 +136,10 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
     newStage: number
   } | null>(null)
 
-  // Load teacher names for enrolled teachers without assignments
+  // Load teacher names from teacherAssignments (source of truth)
   useEffect(() => {
     const loadTeachersData = async () => {
-      const teacherIds = enrollments?.teacherIds || []
+      const teacherIds = [...new Set(teacherAssignments?.map((a: any) => a.teacherId) || [])]
       if (teacherIds.length === 0) return
 
       setLoadingTeachers(true)
@@ -157,18 +157,10 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
     }
 
     loadTeachersData()
-  }, [enrollments?.teacherIds])
+  }, [teacherAssignments])
 
-  // Find teachers enrolled but without lesson assignments
-  const teachersWithoutLessons = useMemo(() => {
-    const enrolledTeacherIds = enrollments?.teacherIds || []
-    const assignedTeacherIds = teacherAssignments?.map((a: any) => a.teacherId) || []
-
-    return teachersData.filter((teacher) =>
-      enrolledTeacherIds.includes(teacher._id) &&
-      !assignedTeacherIds.includes(teacher._id)
-    )
-  }, [teachersData, enrollments?.teacherIds, teacherAssignments])
+  // teachersWithoutLessons is no longer applicable since we derive from assignments
+  const teachersWithoutLessons: any[] = []
 
   const InfoSection: React.FC<{ 
     title: string; 

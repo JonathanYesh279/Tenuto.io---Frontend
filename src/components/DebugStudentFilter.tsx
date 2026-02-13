@@ -20,25 +20,16 @@ export default function DebugStudentFilter() {
 
       console.log('🔍 Debug: Starting student filter test...')
 
-      // Get teacher profile
-      const teacherProfile = await teacherService.getMyProfile()
-      const studentIds = teacherProfile?.teaching?.studentIds || []
-
-      console.log('🔍 Debug: Teacher student IDs:', studentIds)
-
-      // Test the batch students API
-      const students = await apiService.students.getBatchStudents(studentIds)
+      // Get teacher's students via dedicated endpoint
+      const students = await apiService.teachers.getTeacherStudents(user._id)
 
       console.log('🔍 Debug: Received students:', students)
 
       setDebugInfo({
         teacherId: user._id,
-        expectedStudentIds: studentIds,
-        expectedCount: studentIds.length,
         receivedStudents: students,
         receivedCount: Array.isArray(students) ? students.length : 0,
-        correctlyFiltered: Array.isArray(students) && students.length === studentIds.length,
-        studentsMatchIds: Array.isArray(students) ? students.every(s => studentIds.includes(s._id || s.id)) : false
+        usesNewEndpoint: true
       })
 
     } catch (error) {

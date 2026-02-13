@@ -4297,7 +4297,7 @@ export const teacherUtils = {
   // Get teacher's workload
   getWorkload: (teacher) => {
     return {
-      studentCount: teacher.teaching?.studentIds?.length || 0,
+      studentCount: teacher.studentCount || 0,
       orchestraCount: teacher.conducting?.orchestraIds?.length || 0,
       ensembleCount: teacher.conducting?.ensemblesIds?.length || 0,
       timeBlockCount: teacher.teaching?.timeBlocks?.length || 0

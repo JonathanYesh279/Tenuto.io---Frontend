@@ -417,7 +417,6 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
         professionalInfo: formData.professionalInfo,
         managementInfo: formData.managementInfo,
         teaching: {
-          studentIds: teacherToEdit?.teaching?.studentIds || [],
           timeBlocks: finalTimeBlocks
         },
         conducting: formData.conducting,

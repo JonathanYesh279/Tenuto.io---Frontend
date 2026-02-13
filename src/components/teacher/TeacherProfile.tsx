@@ -23,8 +23,8 @@ interface Teacher {
     instrument: string;
     isActive: boolean;
   };
+  studentCount?: number;
   teaching: {
-    studentIds: string[];
     timeBlocks: any[];
   };
   conducting: {
@@ -69,7 +69,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
     const assignedLessons = activeTimeBlocks.reduce((sum, block) => sum + (block.assignedLessons?.length || 0), 0);
     
     return {
-      studentCount: teacher.teaching?.studentIds?.length || 0,
+      studentCount: teacher.studentCount || 0,
       orchestraCount: teacher.conducting?.orchestraIds?.length || 0,
       ensembleCount: teacher.ensemblesIds?.length || 0,
       totalTimeBlocks: timeBlocks.length,

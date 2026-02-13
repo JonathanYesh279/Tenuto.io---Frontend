@@ -317,7 +317,7 @@ export const enhancedDashboardAnalytics = {
         t.isActive !== false && t.professionalInfo?.isActive !== false
       );
       const teachersWithStudents = teachersData.filter((t: any) =>
-        (t.teaching?.studentIds?.length || 0) > 0 || (t.studentCount || 0) > 0
+        (t.studentCount || 0) > 0
       );
 
       // Calculate orchestra stats

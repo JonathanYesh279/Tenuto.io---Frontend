@@ -110,7 +110,6 @@ interface StudentFormData {
       isActive: boolean
     }>
   }
-  teacherIds: string[]
   teacherAssignments: TeacherAssignment[]
   isActive: boolean
 }
@@ -159,7 +158,6 @@ const StudentForm: React.FC<StudentFormProps> = ({
       theoryLessonIds: [],
       schoolYears: []
     },
-    teacherIds: [],
     teacherAssignments: [],
     isActive: true,
     ...initialData
@@ -643,10 +641,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
     setFormData(prev => ({
       ...prev,
-      teacherAssignments: [...prev.teacherAssignments, assignment],
-      teacherIds: prev.teacherIds.includes(slot.teacherId!)
-        ? prev.teacherIds
-        : [...prev.teacherIds, slot.teacherId!]
+      teacherAssignments: [...prev.teacherAssignments, assignment]
     }))
 
     // Remove selected slot from available slots
@@ -682,10 +677,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
       return {
         ...prev,
-        teacherAssignments: newAssignments,
-        teacherIds: teacherHasOtherAssignments
-          ? prev.teacherIds
-          : prev.teacherIds.filter(id => id !== assignment.teacherId)
+        teacherAssignments: newAssignments
       }
     })
 
@@ -762,7 +754,6 @@ const StudentForm: React.FC<StudentFormProps> = ({
     try {
       console.log('📋 Form data being submitted:', JSON.stringify(formData, null, 2))
       console.log('👥 Teacher assignments:', JSON.stringify(formData.teacherAssignments, null, 2))
-      console.log('👨‍🏫 Teacher IDs:', formData.teacherIds)
       await onSubmit(formData)
     } catch (error: any) {
       console.error('Error submitting form:', error)

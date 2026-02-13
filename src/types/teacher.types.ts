@@ -36,7 +36,6 @@ export interface TeacherManagementInfo {
 }
 
 export interface TeacherTeaching {
-  studentIds?: string[]
   schedule?: any[]
   timeBlocks?: any[]
 }

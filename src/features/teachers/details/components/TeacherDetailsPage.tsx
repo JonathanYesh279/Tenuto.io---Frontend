@@ -193,7 +193,7 @@ const TeacherDetailsPage: React.FC = () => {
             { id: 'personal', label: 'מידע אישי', component: () => null },
             { id: 'students', label: 'ניהול תלמידים', component: () => null },
             { id: 'schedule', label: 'לוח זמנים', component: () => null },
-            ...(teacher?.conducting?.orchestraIds?.length > 0 || teacher?.conducting?.ensemblesIds?.length > 0 || teacher?.roles?.includes('מנצח') ? 
+            ...(teacher?.conducting?.orchestraIds?.length > 0 || (teacher as any)?.conducting?.ensemblesIds?.length > 0 || teacher?.ensemblesIds?.length > 0 || teacher?.roles?.includes('מנצח') ?
               [{ id: 'conducting' as TeacherTabType, label: 'ניצוח', component: () => null }] : []
             ),
           ]}

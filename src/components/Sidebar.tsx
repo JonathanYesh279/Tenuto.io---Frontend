@@ -31,7 +31,8 @@ import {
   CalendarPlus,
   CheckSquare,
   Shield,
-  ChevronDown
+  ChevronDown,
+  Building2
 } from 'lucide-react'
 
 // Navigation item interface
@@ -86,6 +87,13 @@ const theoryTeacherNavigation: NavigationItem[] = [
   { name: 'נוכחות', href: '/profile?tab=lessons', icon: UserCheck, category: 'operations', roles: ['theory-teacher'] },
   { name: 'תכנית לימודים', href: '/theory-lessons', icon: FileText, category: 'personal', roles: ['theory-teacher'] },
   { name: 'פרופיל', href: '/profile', icon: User, category: 'personal' },
+]
+
+// Super admin navigation (platform-level)
+const superAdminNavigation: NavigationItem[] = [
+  { name: 'לוח בקרה', href: '/dashboard', icon: Home, category: 'general' },
+  { name: 'ניהול מוסדות', href: '/dashboard', icon: Building2, category: 'management' },
+  { name: 'הגדרות', href: '/settings', icon: Settings, category: 'system' },
 ]
 
 // Quick actions by role
@@ -171,8 +179,15 @@ export default function Sidebar() {
   const isAdmin = useMemo(() => userRoles.includes('admin'), [userRoles])
   const hasMultipleRoles = useMemo(() => userRoles.length > 1, [userRoles])
 
+  const isSuperAdmin = useMemo(() => !!user?.isSuperAdmin, [user])
+
   // Build merged navigation for multi-role users
   const getMergedNavigation = (): NavigationItem[] => {
+    // Super admin gets its own minimal navigation
+    if (isSuperAdmin) {
+      return superAdminNavigation
+    }
+
     if (isAdmin) {
       // Admin gets full admin navigation, but we need to adjust the attendance link
       // if they also have teacher or conductor roles

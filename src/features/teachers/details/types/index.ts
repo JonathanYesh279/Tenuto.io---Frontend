@@ -123,6 +123,9 @@ export interface TeacherDetails {
   updatedAt: Date;
 }
 
+// Alias used by tab components (PersonalInfoTab, StudentManagementTab, etc.)
+export type Teacher = TeacherDetails
+
 // Derived types for UI components
 export interface TeacherSummary {
   _id: string;

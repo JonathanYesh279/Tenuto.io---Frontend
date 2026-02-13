@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
             console.error('🔐 AUTH CONTEXT - Super admin validation failed:', err)
             localStorage.removeItem('loginType')
             localStorage.removeItem('superAdminUser')
-            localStorage.removeItem('authToken')
+            apiService.client.removeToken()
             setIsAuthenticated(false)
             setUser(null)
             setLastValidation(now)
@@ -318,8 +318,8 @@ export const AuthProvider = ({ children }) => {
         throw new Error('תגובת התחברות לא תקינה')
       }
 
-      // Store token (apiClient.setToken does localStorage + sets instance)
-      localStorage.setItem('authToken', token)
+      // Store token via apiClient so both localStorage AND in-memory token are updated
+      apiService.client.setToken(token)
 
       // Mark as super admin login so checkAuthStatus knows how to validate
       localStorage.setItem('loginType', 'super_admin')

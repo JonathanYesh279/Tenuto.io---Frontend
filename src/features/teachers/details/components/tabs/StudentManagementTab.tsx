@@ -564,7 +564,6 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                     <option value={30}>30 דקות</option>
                     <option value={45}>45 דקות</option>
                     <option value={60}>60 דקות</option>
-                    <option value={90}>90 דקות</option>
                   </select>
                 </div>
               </div>

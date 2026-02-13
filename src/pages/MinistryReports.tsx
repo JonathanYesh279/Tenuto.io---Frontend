@@ -18,9 +18,22 @@ import {
   RefreshCw,
 } from 'lucide-react'
 
+interface MissingItem {
+  type: string
+  name: string
+  field: string
+}
+
+interface PreExportItem {
+  type: string
+  message: string
+}
+
 interface ExportStatus {
   completionPercentage: number
-  missing: Array<{ type: string; id: string; name: string; field: string; message: string }>
+  missing: MissingItem[]
+  preExportErrors: PreExportItem[]
+  preExportWarnings: PreExportItem[]
   counts: {
     teachers: number
     students: number
@@ -105,7 +118,7 @@ export default function MinistryReports() {
   }
 
   // Group missing items by type
-  const groupedMissing = (status?.missing || []).reduce<Record<string, typeof status.missing>>((acc, item) => {
+  const groupedMissing = (status?.missing || []).reduce<Record<string, MissingItem[]>>((acc, item) => {
     const type = item.type || 'other'
     if (!acc[type]) acc[type] = []
     acc[type].push(item)
@@ -116,6 +129,7 @@ export default function MinistryReports() {
     teacher: 'מורים',
     student: 'תלמידים',
     orchestra: 'תזמורות',
+    tenant: 'פרופיל קונסרבטוריון',
     other: 'אחר',
   }
 
@@ -166,7 +180,7 @@ export default function MinistryReports() {
           <p className="text-xs text-gray-500 mt-2">
             {completionPct === 100
               ? 'כל הנתונים מלאים — ניתן להוריד את הדוח'
-              : 'יש להשלים את הנתונים החסרים לפני הורדת הדוח'}
+              : 'יש נתונים חסרים — מומלץ להשלים לפני הגשת הדוח'}
           </p>
         </CardContent>
       </Card>
@@ -244,8 +258,8 @@ export default function MinistryReports() {
                       <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
                         <XCircle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
                         <span>
-                          <span className="font-medium">{item.name || item.id}</span>
-                          {item.message && <span className="text-gray-400"> — {item.message}</span>}
+                          <span className="font-medium">{item.name}</span>
+                          {item.field && <span className="text-gray-400"> — חסר: {item.field}</span>}
                         </span>
                       </li>
                     ))}
@@ -262,13 +276,57 @@ export default function MinistryReports() {
         </Card>
       )}
 
-      {/* Validation Warnings */}
+      {/* Pre-Export Errors (blocking) */}
+      {(status?.preExportErrors?.length ?? 0) > 0 && (
+        <Card className="mb-6 border-red-200 bg-red-50">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <XCircle className="w-5 h-5 text-red-600" />
+              <CardTitle className="text-lg text-red-800">שגיאות חוסמות ייצוא</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {status!.preExportErrors.map((err, idx) => (
+                <div key={`pre-err-${idx}`} className="flex items-start gap-2 text-sm">
+                  <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-red-700">{err.message}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Pre-Export Warnings (non-blocking) */}
+      {(status?.preExportWarnings?.length ?? 0) > 0 && (
+        <Card className="mb-6 border-amber-200 bg-amber-50">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+              <CardTitle className="text-lg text-amber-800">אזהרות</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {status!.preExportWarnings.map((warn, idx) => (
+                <div key={`pre-warn-${idx}`} className="flex items-start gap-2 text-sm">
+                  <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-amber-700">{warn.message}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Cross-Validation Results */}
       {validation && (validation.warnings.length > 0 || validation.errors.length > 0) && (
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-yellow-500" />
-              <CardTitle className="text-lg">אימות נתונים</CardTitle>
+              <CardTitle className="text-lg">אימות צולב</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -290,8 +348,8 @@ export default function MinistryReports() {
         </Card>
       )}
 
-      {/* Validation Success */}
-      {validation?.isValid && (
+      {/* All Valid — only when no missing data AND no blocking errors */}
+      {(status?.missing?.length === 0) && (status?.preExportErrors?.length === 0) && validation?.isValid && (
         <Card className="mb-6 border-green-200 bg-green-50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
@@ -306,15 +364,18 @@ export default function MinistryReports() {
       )}
 
       {/* Download Button */}
-      <div className="flex justify-center pb-8">
+      <div className="flex flex-col items-center pb-8 gap-2">
         <button
           onClick={handleDownload}
-          disabled={downloading}
+          disabled={downloading || (status?.preExportErrors?.length ?? 0) > 0}
           className="flex items-center gap-2 px-8 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium shadow-sm"
         >
           <Download className="w-5 h-5" />
           {downloading ? 'מוריד...' : 'הורד דוח מלא'}
         </button>
+        {(status?.preExportErrors?.length ?? 0) > 0 && (
+          <p className="text-sm text-red-600">יש לתקן את השגיאות החוסמות לפני הורדת הדוח</p>
+        )}
       </div>
     </div>
   )

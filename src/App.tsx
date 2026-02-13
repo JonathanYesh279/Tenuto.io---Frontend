@@ -94,7 +94,8 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
       'מורה': 'teacher',
       'מנצח': 'conductor',
       'מדריך תדר': 'theory-teacher',
-      'מורה תיאוריה': 'theory-teacher'
+      'מורה תיאוריה': 'theory-teacher',
+      'מדריך הרכב': 'ensemble-director'
     }
 
     const normalizedUserRoles = userRoles.map((r: string) => roleMap[r] || r)

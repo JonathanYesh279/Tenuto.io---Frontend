@@ -24,7 +24,6 @@ export { default as Calendar } from './ui/Calendar'
 
 // Schedule Components
 export { default as WeeklyStudentCalendar } from './schedule/WeeklyStudentCalendar'
-export { default as StudentCalendarDemo } from './schedule/StudentCalendarDemo'
 export { default as WeeklyCalendarGrid } from './schedule/WeeklyCalendarGrid'
 
 // Orchestra Management Components

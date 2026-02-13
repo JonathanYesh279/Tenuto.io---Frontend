@@ -167,6 +167,7 @@ export default function Sidebar() {
       if (role === 'מורה') return 'teacher'
       if (role === 'מנצח') return 'conductor'
       if (role === 'מורה תיאוריה') return 'theory-teacher'
+      if (role === 'מדריך הרכב') return 'ensemble-director'
       return role
     }))]
   }

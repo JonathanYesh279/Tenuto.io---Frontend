@@ -73,6 +73,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
         })
 
         // Use dedicated endpoint to get teacher's students
+        // apiService normalizes the backend response into standard student shape
         const validStudents = await apiService.teachers.getTeacherStudents(teacherId)
         console.log('✅ StudentManagementTab - Fetched students:', validStudents.length)
         setStudents(validStudents)
@@ -80,10 +81,12 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
         // Check which students have active lessons with this teacher
         const lessonStatusMap: { [key: string]: boolean } = {}
         validStudents.forEach((student: any) => {
-          const hasActiveLesson = student.teacherAssignments?.some((assignment: any) =>
-            assignment.teacherId === teacherId && assignment.isActive === true
-          )
-          lessonStatusMap[student._id] = hasActiveLesson || false
+          lessonStatusMap[student._id] =
+            (student.lessons?.length > 0) ||
+            student.teacherAssignments?.some((a: any) =>
+              a.teacherId === teacherId && a.isActive === true
+            ) ||
+            false
         })
         setStudentsWithLessons(lessonStatusMap)
 

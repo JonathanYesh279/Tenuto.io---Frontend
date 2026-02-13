@@ -1567,9 +1567,44 @@ export const teacherService = {
   async getTeacherStudents(teacherId) {
     try {
       const response = await apiClient.get(`/teacher/${teacherId}/students-with-lessons`);
-      const students = response?.students || response || [];
-      console.log(`👥 Retrieved ${Array.isArray(students) ? students.length : 0} students for teacher ${teacherId}`);
-      return Array.isArray(students) ? students : [];
+      const raw = response?.data?.students || response?.students || [];
+      const students = Array.isArray(raw) ? raw : [];
+
+      // Normalize backend shape (studentId, studentName, instrumentName, lessons[])
+      // into the shape most callers expect (_id, personalInfo, academicInfo, etc.)
+      const normalized = students.map(s => {
+        // If already has personalInfo (full student object), use as-is
+        if (s.personalInfo || s._id) {
+          return { ...s, _id: s._id || s.studentId };
+        }
+        // Map flattened backend response to standard student shape
+        return {
+          _id: s.studentId,
+          personalInfo: {
+            fullName: s.studentName || '',
+            firstName: '',
+            lastName: '',
+          },
+          academicInfo: {
+            class: s.currentStage || '',
+            primaryInstrument: s.instrumentName || '',
+          },
+          primaryInstrument: s.instrumentName || '',
+          phone: s.studentPhone || '',
+          email: s.studentEmail || '',
+          lessons: s.lessons || [],
+          teacherAssignments: (s.lessons || []).map(l => ({
+            teacherId,
+            day: l.day,
+            time: l.time,
+            duration: l.duration,
+            isActive: true,
+          })),
+        };
+      });
+
+      console.log(`👥 Retrieved ${normalized.length} students for teacher ${teacherId}`);
+      return normalized;
     } catch (error) {
       console.error('Error fetching teacher students:', error);
       throw error;

@@ -177,8 +177,8 @@ class TeacherDetailsApiClient {
 
   // Teacher's students management
   async getTeacherStudents(teacherId: string) {
-    const response = await this.request(`/teacher/${teacherId}/students-with-lessons`)
-    const students = response?.students || response || []
+    const response = await this.request(`/teacher/${teacherId}/students-with-lessons`) as any
+    const students = response?.data?.students || response?.students || []
     return Array.isArray(students) ? students : []
   }
 

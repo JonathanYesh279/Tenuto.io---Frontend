@@ -56,10 +56,10 @@ export default function TeacherAttendanceTab() {
         return
       }
 
-      // Get teacher's students
-      const studentIds = user?.teaching?.studentIds || []
+      // Get teacher's students via dedicated endpoint
+      const studentsData = await apiService.teachers.getTeacherStudents(teacherId)
 
-      if (studentIds.length === 0) {
+      if (!Array.isArray(studentsData) || studentsData.length === 0) {
         setStudents([])
         setStats({
           totalStudents: 0,
@@ -70,8 +70,6 @@ export default function TeacherAttendanceTab() {
         setLoading(false)
         return
       }
-
-      const studentsData = await apiService.students.getBatchStudents(studentIds)
 
       // Get attendance records for selected date
       const attendancePromises = studentsData.map(async (student: any) => {

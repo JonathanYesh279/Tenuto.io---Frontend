@@ -226,18 +226,9 @@ export default function Students() {
           console.log('Admin - loaded all students:', result.length)
         }
       } else if (userRole === 'teacher') {
-        // Teacher sees only their assigned students (no pagination for now, as it's a smaller set)
-        const teacherProfile = await apiService.teachers.getMyProfile()
-        const assignedStudentIds = teacherProfile?.teaching?.studentIds || []
-        console.log('Teacher - assigned student IDs:', assignedStudentIds)
-
-        if (assignedStudentIds.length > 0) {
-          response = await apiService.students.getBatchStudents(assignedStudentIds)
-          console.log('Teacher - loaded assigned students:', response.length)
-        } else {
-          response = []
-          console.log('Teacher - no assigned students')
-        }
+        // Teacher sees only their assigned students via dedicated endpoint
+        response = await apiService.teachers.getTeacherStudents(user._id)
+        console.log('Teacher - loaded assigned students:', response.length)
         // For teachers, we load all at once, so no more pages
         setHasMore(false)
         setTotalStudentsCount(response.length)

@@ -105,8 +105,8 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
       if (role === 'teacher' && (teacherId || user?._id)) {
         // Load Bagrut records for specific teacher's students
         const actualTeacherId = teacherId || user._id
-        const teacherProfile = await apiService.teachers.getTeacher(actualTeacherId)
-        const studentIds = teacherProfile?.teaching?.studentIds || []
+        const teacherStudents = await apiService.teachers.getTeacherStudents(actualTeacherId)
+        const studentIds = teacherStudents.map((s: any) => s._id || s.id)
 
         if (studentIds.length > 0) {
           bagruts = await Promise.all(

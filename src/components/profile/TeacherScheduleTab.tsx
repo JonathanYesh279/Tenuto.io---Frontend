@@ -132,15 +132,11 @@ export default function TeacherScheduleTab() {
 
       // Get students data for enriching lesson days
       let students = []
-      if (teacherProfile?.teaching?.studentIds?.length > 0) {
-        try {
-          students = await apiService.students.getBatchStudents(teacherProfile.teaching.studentIds)
-          console.log('Students loaded:', students)
-        } catch (error) {
-          console.warn('Failed to load students:', error)
-        }
-      } else {
-        console.log('No student IDs found in teacher profile')
+      try {
+        students = await apiService.teachers.getTeacherStudents(teacherId)
+        console.log('Students loaded:', students.length)
+      } catch (error) {
+        console.warn('Failed to load students:', error)
       }
 
       // Create lesson blocks from student assignments
@@ -1531,19 +1527,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
         teacherAssignments: updatedTeacherAssignments
       })
 
-      // Add student to teacher's studentIds if not already there
-      console.log('👨‍🏫 Updating teacher student list...')
-      const teacher = await apiService.teachers.getTeacher(teacherId)
-      const teacherStudentIds = teacher.teaching?.studentIds || []
-
-      if (!teacherStudentIds.includes(selectedStudent)) {
-        await apiService.teachers.updateTeacher(teacherId, {
-          teaching: {
-            ...teacher.teaching,
-            studentIds: [...teacherStudentIds, selectedStudent]
-          }
-        })
-      }
+      // Student-teacher link is managed via teacherAssignments (backend handles it)
 
       // Also create time block for teacher's schedule with the actual start time
       const timeBlockData = {

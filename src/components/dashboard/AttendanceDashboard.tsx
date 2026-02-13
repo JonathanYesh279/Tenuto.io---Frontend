@@ -107,8 +107,8 @@ export default function AttendanceDashboard() {
       // Load different data based on user role
       if (userRole === 'teacher') {
         // For teachers - show their students' attendance
-        const teacherProfile = await apiService.teachers.getTeacher(user._id)
-        const studentIds = teacherProfile?.teaching?.studentIds || []
+        const teacherStudents = await apiService.teachers.getTeacherStudents(user._id)
+        const studentIds = teacherStudents.map((s: any) => s._id || s.id)
 
         if (studentIds.length > 0) {
           // Mock attendance data for teacher's students

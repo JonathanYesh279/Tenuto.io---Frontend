@@ -100,8 +100,8 @@ export default function BagrutDashboard() {
 
       if (user.role === 'teacher') {
         // Load Bagrut records for teacher's students
-        const teacherProfile = await apiService.teachers.getTeacher(user._id)
-        const studentIds = teacherProfile?.teaching?.studentIds || []
+        const teacherStudents = await apiService.teachers.getTeacherStudents(user._id)
+        const studentIds = teacherStudents.map((s: any) => s._id || s.id)
 
         if (studentIds.length > 0) {
           bagruts = await Promise.all(

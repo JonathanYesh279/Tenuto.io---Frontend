@@ -124,18 +124,17 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
 
   const loadTeacherBagrutData = async () => {
     // Load Bagrut data for teacher's students
-    const teacherProfile = await apiService.teachers.getTeacher(actualUserId)
-    const studentIds = teacherProfile?.teaching?.studentIds || []
+    const teacherStudents = await apiService.teachers.getTeacherStudents(actualUserId)
+    const studentIds = teacherStudents.map((s: any) => s._id || s.id)
 
     if (studentIds.length > 0) {
-      const [bagruts, students] = await Promise.all([
-        Promise.all(studentIds.map(id =>
+      const bagruts = await Promise.all(
+        studentIds.map(id =>
           apiService.bagrut.getBagrutByStudent(id).catch(() => null)
-        )).then(results => results.filter(Boolean)),
-        apiService.students.getBatchStudents(studentIds)
-      ])
+        )
+      ).then(results => results.filter(Boolean))
 
-      processBagrutData(bagruts, students, [])
+      processBagrutData(bagruts, teacherStudents, [])
     }
   }
 

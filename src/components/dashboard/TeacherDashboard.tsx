@@ -221,43 +221,19 @@ export default function TeacherDashboard() {
       // Debug log to see what data we're getting
       console.log('Teacher profile loaded:', {
         name: getDisplayName(teacherProfile?.personalInfo),
-        studentIds: teacherProfile?.teaching?.studentIds,
-        studentCount: teacherProfile?.teaching?.studentIds?.length || 0,
         timeBlocks: teacherProfile?.teaching?.timeBlocks?.length || 0
       })
 
-      const studentIds = teacherProfile?.teaching?.studentIds || []
       const timeBlocks = teacherProfile?.teaching?.timeBlocks || []
       setTeacherTimeBlocks(timeBlocks)
 
-      // Load students data
+      // Load students data via dedicated endpoint
       let studentsData = []
-      if (studentIds.length > 0) {
-        console.log('🎯 Teacher assigned student IDs:', studentIds)
-        const allStudentsReturned = await apiService.students.getBatchStudents(studentIds)
-        console.log(`📊 API returned ${allStudentsReturned.length} students for ${studentIds.length} requested IDs`)
-
-        // Ensure we only show the teacher's assigned students
-        // Filter by matching IDs (handle both _id and id fields)
-        studentsData = allStudentsReturned.filter(student => {
-          const studentId = student._id || student.id
-          const isAssigned = studentIds.includes(studentId)
-          if (!isAssigned && allStudentsReturned.length > studentIds.length) {
-            console.log(`⚠️ Filtering out unassigned student: ${studentId}`)
-          }
-          return isAssigned
-        })
-
-        console.log(`✅ Showing ${studentsData.length} assigned students (filtered from ${allStudentsReturned.length})`)
-
-        // Log warning if we're missing expected students
-        if (studentsData.length < studentIds.length) {
-          const foundIds = studentsData.map(s => s._id || s.id)
-          const missingIds = studentIds.filter(id => !foundIds.includes(id))
-          console.warn('⚠️ Missing students:', missingIds)
-        }
-      } else {
-        console.log('No student IDs found in teacher profile')
+      try {
+        studentsData = await apiService.teachers.getTeacherStudents(teacherId)
+        console.log(`✅ Loaded ${studentsData.length} students for teacher`)
+      } catch (err) {
+        console.warn('Failed to load teacher students:', err)
       }
       setStudents(studentsData)
 

@@ -124,15 +124,6 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
 
       const teacherId = user._id
 
-      // First get teacher profile to access studentIds
-      const teacherProfile = await apiService.teachers.getTeacher(teacherId)
-
-      if (!teacherProfile) {
-        throw new Error('לא נמצא פרופיל מורה')
-      }
-
-      const studentIds = teacherProfile?.teaching?.studentIds || []
-
       // Load teacher's teaching days (availability blocks)
       try {
         const timeBlocksResponse = await apiService.teacherSchedule.getTimeBlocks(teacherId)
@@ -148,31 +139,18 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
         setTeachingDays([])
       }
 
-      if (studentIds.length === 0) {
+      // Fetch teacher's students via dedicated endpoint
+      const students = await apiService.teachers.getTeacherStudents(teacherId)
+
+      if (!Array.isArray(students) || students.length === 0) {
         console.log('No students assigned to teacher')
         setStudents([])
         setRetryCount(0)
         return
       }
 
-      // Fetch specific students using batch endpoint
-      const students = await apiService.students.getBatchStudents(studentIds)
-
-      if (!Array.isArray(students)) {
-        throw new Error('תגובה לא תקינה מהשרת')
-      }
-
-      // Double-check filtering at component level for extra safety
-      const filteredStudents = students.filter(student =>
-        studentIds.includes(student._id) || studentIds.includes(student.id)
-      )
-
-      if (filteredStudents.length !== students.length) {
-        console.warn(`🔧 Component-level filtering: ${filteredStudents.length}/${students.length} students match teacher's student IDs`)
-      }
-
       // Map backend data to enhanced frontend format
-      const mappedStudents = filteredStudents.map(student => {
+      const mappedStudents = students.map(student => {
         // Use getDisplayName for backward-compatible name resolution
         const displayName = getDisplayName(student.personalInfo)
         const nameParts = displayName.split(' ')
@@ -229,10 +207,10 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
         return
       }
 
-      // Get current teacher's student IDs to filter them out
+      // Get current teacher's students to filter them out
       const teacherId = user?._id
-      const teacherProfile = await apiService.teachers.getTeacher(teacherId)
-      const assignedStudentIds = teacherProfile?.teaching?.studentIds || []
+      const assignedStudents = await apiService.teachers.getTeacherStudents(teacherId)
+      const assignedStudentIds = assignedStudents.map((s: any) => s._id || s.id)
 
       // Filter out students that are already assigned to this teacher
       const availableStudents = response.filter(student =>

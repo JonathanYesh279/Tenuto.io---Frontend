@@ -98,16 +98,15 @@ export default function Profile() {
       }
       
       // Extract data from teacher profile structure
-      const studentIds = teacherProfile?.teaching?.studentIds || []
       const orchestraIds = teacherProfile?.conducting?.orchestraIds || []
       const timeBlocks = teacherProfile?.teaching?.timeBlocks || []
-      
-      // Fetch actual data only if IDs exist, with individual error handling
+
+      // Fetch actual data with individual error handling
       const [studentDataResult, orchestraDataResult] = await Promise.allSettled([
-        studentIds.length > 0 ? apiService.students.getBatchStudents(studentIds) : Promise.resolve([]),
+        apiService.teachers.getTeacherStudents(user._id),
         orchestraIds.length > 0 ? apiService.orchestras.getBatchOrchestras(orchestraIds) : Promise.resolve([])
       ])
-      
+
       // Handle student data result
       const studentData = studentDataResult.status === 'fulfilled' ? studentDataResult.value : []
       if (studentDataResult.status === 'rejected') {

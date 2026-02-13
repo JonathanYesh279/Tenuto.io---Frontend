@@ -79,22 +79,18 @@ export default function Bagruts() {
         // Teacher role: Load their students and filter bagruts by their students
         console.log('🎓 Teacher role detected, loading student bagruts...')
 
-        // Get teacher profile to get their students
-        const teacherProfile = await apiService.teachers.getTeacher(user._id)
-        const teacherStudentIds = teacherProfile.teaching?.studentIds || []
+        // Get teacher's students via dedicated endpoint
+        const studentsData = await apiService.teachers.getTeacherStudents(user._id)
 
-        console.log('👥 Teacher has', teacherStudentIds.length, 'students')
+        console.log('👥 Teacher has', studentsData.length, 'students')
 
-        if (teacherStudentIds.length === 0) {
+        if (studentsData.length === 0) {
           // No students assigned to this teacher
           setTeacherBagruts([])
           setStudents([])
           setTeachers([])
           return
         }
-
-        // Load students
-        const studentsData = await apiService.students.getBatchStudents(teacherStudentIds)
         console.log('📚 Loaded', studentsData.length, 'students')
 
         // Filter students who have bagrut data

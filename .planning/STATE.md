@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** Cleanup & Polish milestone
+**Current focus:** Cleanup & Polish milestone — COMPLETE
 
 ## Current Position
 
-Phase: Phase 3 — Audit Trail Page (complete)
-Plan: 1/1 complete
-Status: Phases 1-3 complete
-Last activity: 2026-02-13 — Phase 3 Plan 1 complete (audit trail UI)
+Phase: All 4 phases complete
+Plan: —
+Status: Milestone v1.1 complete
+Last activity: 2026-02-13 — Phase 4 complete (MinistryReports polish)
 
 ## Accumulated Context
 
@@ -29,10 +29,12 @@ Last activity: 2026-02-13 — Phase 3 Plan 1 complete (audit trail UI)
 ### Resolved (this milestone)
 - Phase 1: 10 demo/legacy pages deleted, ensemble-director role mapping added
 - Phase 2: Backend VALID_INSTRUMENTS synced to 27 (both validation files)
-- Phase 3: Audit trail UI with deletion log and past activities tracking (adminAuditService + AuditTrail page + routing + sidebar)
+- Phase 3: Audit trail UI with deletion log and past activities tracking
+- Phase 4: MinistryReports graceful degradation + school year selector + last updated timestamp
 
 ### Remaining Issues
-- MinistryReports calls non-existent export endpoints
+- Backend export endpoints (/api/export/status, /validate, /download) not yet implemented
+- MinistryReports will show info banner until those endpoints are built
 
 ---
 *Last updated: 2026-02-13*

@@ -37,7 +37,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
 }) => {
   
   // Calculate statistics
-  const totalStudents = teacher.teaching?.studentIds?.length || 0
+  const totalStudents = teacher.studentCount || 0
   const totalTimeBlocks = teacher.teaching?.timeBlocks?.length || 0
   const weeklyHours = teacher.teaching?.timeBlocks?.reduce((total, block) => total + (block.totalDuration || 0), 0) / 60 || 0
   const activeTimeBlocks = teacher.teaching?.timeBlocks?.filter(block => block.isActive).length || 0
@@ -221,36 +221,16 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
       </div>
 
       {/* Recent Students */}
-      {teacher.teaching?.studentIds && teacher.teaching.studentIds.length > 0 && (
+      {totalStudents > 0 && (
         <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6 border border-orange-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Users className="w-5 h-5 text-orange-600" />
             תלמידים ({totalStudents})
           </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {teacher.teaching.studentIds.slice(0, 6).map((studentId, index) => (
-              <div key={studentId} className="p-4 bg-white rounded-lg border border-orange-100">
-                <div className="flex items-center space-x-3 space-x-reverse">
-                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">תלמיד #{index + 1}</p>
-                    <p className="text-sm text-gray-500">ID: {studentId.slice(-8)}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+
+          <div className="text-center py-4 text-gray-600">
+            <p>לצפייה ברשימת התלמידים המלאה, עבור ללשונית "ניהול תלמידים"</p>
           </div>
-          
-          {teacher.teaching.studentIds.length > 6 && (
-            <div className="mt-4 text-center">
-              <button className="text-sm text-orange-600 hover:text-orange-700 font-medium">
-                צפה בכל התלמידים ({teacher.teaching.studentIds.length})
-              </button>
-            </div>
-          )}
         </div>
       )}
 

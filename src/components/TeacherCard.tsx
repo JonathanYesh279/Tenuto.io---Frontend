@@ -103,7 +103,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
   }
 
   const primaryRole = getPrimaryRole()
-  const studentCount = teacher.teaching?.studentIds?.length || 0
+  const studentCount = teacher.studentCount || 0
   const scheduleInfo = getScheduleInfo()
 
   return (

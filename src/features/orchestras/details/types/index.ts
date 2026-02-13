@@ -11,11 +11,13 @@ export interface Orchestra {
   tenantId?: string
   name: string
   type: 'תזמורת' | 'הרכב'
-  subType?: string // 9 options — critical for Ministry reports
-  performanceLevel?: string // התחלתי | ביניים | ייצוגי
+  // Backend valid values: 'תזמורת מיתרים','תזמורת נשיפה','תזמורת סימפונית',
+  // 'תזמורת קאמרית','הרכב מיתרים','הרכב נשיפה','הרכב מעורב','הרכב הקשה','הרכב גיטרות'
+  subType?: string
+  performanceLevel?: 'התחלתי' | 'ביניים' | 'ייצוגי'
   conductorId: string
   memberIds: string[]
-  rehearsalIds: string[]
+  rehearsalIds: string[] // references separate rehearsal collection
   schoolYearId: string
   location: string
   ministryData?: {

@@ -19,14 +19,14 @@ export interface PersonalInfo {
 
 export interface ProfessionalInfo {
   instrument?: string; // legacy single instrument
-  instruments?: string[]; // multi-instrument (new)
+  instruments?: string[]; // multi-instrument (new) — values from INSTRUMENTS list
   isActive: boolean;
-  classification?: string; // ממשיך | חדש
-  degree?: string; // תואר שני | תואר ראשון | מוסמך | בלתי מוסמך
+  classification?: string; // backend: 'ממשיך' | 'חדש'
+  degree?: string; // backend: 'תואר שני' | 'תואר ראשון' | 'מוסמך' | 'בלתי מוסמך'
   hasTeachingCertificate?: boolean;
   teachingExperienceYears?: number;
   isUnionMember?: boolean;
-  teachingSubjects?: string[];
+  teachingSubjects?: string[]; // backend values defined in TEACHING_SUBJECTS constant
 }
 
 export interface ManagementInfo {
@@ -88,9 +88,10 @@ export interface TimeBlock {
   updatedAt: Date;
 }
 
+// Most credential fields are service-managed (not in Joi validation schema)
 export interface Credentials {
   email: string;
-  refreshToken?: string;
+  refreshToken?: string; // service-managed
   password: string;
   passwordSetAt?: Date;
   lastLogin?: Date;
@@ -417,12 +418,14 @@ export type TeacherDetailsField = keyof TeacherDetails;
 export const HEBREW_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'] as const;
 export const WORKING_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי'] as const;
 
+// Must match backend TEACHER_ROLES constant and VALID_ROLES in validationUtils.ts
 export const TEACHER_ROLES = [
   'מורה',
-  'מנהל מקצועי', 
   'מנצח',
-  'רכז מחלקה',
-  'מנהל'
+  'מדריך הרכב',
+  'מנהל',
+  'מורה תאוריה',
+  'מגמה',
 ] as const;
 
 export const INSTRUMENTS = [

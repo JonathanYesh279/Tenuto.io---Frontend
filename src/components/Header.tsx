@@ -47,7 +47,6 @@ export default function Header() {
     user.role === 'מורה תיאוריה' ||
     user.roles?.includes('מורה תיאוריה') ||
     // Implicit roles
-    user.teaching?.studentIds?.length > 0 ||
     user.conducting?.orchestraIds?.length > 0
   )
 

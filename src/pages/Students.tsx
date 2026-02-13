@@ -148,8 +148,7 @@ export default function Students() {
     if (user.role === 'teacher' ||
         user.roles?.includes('teacher') ||
         user.role === 'מורה' ||
-        user.roles?.includes('מורה') ||
-        user.teaching?.studentIds?.length > 0) {
+        user.roles?.includes('מורה')) {
       return 'teacher'
     }
 

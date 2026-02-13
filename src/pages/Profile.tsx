@@ -171,8 +171,7 @@ export default function Profile() {
   const isTeacher = () => {
     return (
       user?.roles?.includes('teacher') ||
-      user?.roles?.includes('מורה') ||
-      (user?.teaching?.studentIds && user.teaching.studentIds.length > 0)
+      user?.roles?.includes('מורה')
     )
   }
 
@@ -210,9 +209,8 @@ export default function Profile() {
         icon: Calendar,
         component: TeacherScheduleTab
       })
-      // Add attendance tab only if teacher has students
-      const hasStudents = user?.teaching?.studentIds && user.teaching.studentIds.length > 0
-      if (hasStudents) {
+      // Add attendance tab for teachers
+      if (isTeacher()) {
         tabs.push({
           id: 'attendance',
           label: 'נוכחות',

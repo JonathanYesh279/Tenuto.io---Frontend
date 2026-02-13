@@ -224,8 +224,7 @@ export default function Dashboard() {
     }
 
     if (user.role === 'teacher' || user.roles?.includes('teacher') ||
-        user.role === 'מורה' || user.roles?.includes('מורה') ||
-        user.teaching?.studentIds?.length > 0) {
+        user.role === 'מורה' || user.roles?.includes('מורה')) {
       return 'teacher'
     }
 

@@ -37,7 +37,6 @@ export default function Layout({ children }: LayoutProps) {
     user.role === 'מורה תיאוריה' ||
     user.roles?.includes('מורה תיאוריה') ||
     // Implicit roles based on data
-    user.teaching?.studentIds?.length > 0 ||
     user.conducting?.orchestraIds?.length > 0
   )
 

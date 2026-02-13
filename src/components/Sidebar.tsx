@@ -154,10 +154,7 @@ export default function Sidebar() {
       roles.push(...user.roles)
     }
 
-    // Check for implicit roles based on data
-    if (user.teaching?.studentIds?.length > 0 && !roles.includes('teacher') && !roles.includes('מורה')) {
-      roles.push('teacher')
-    }
+    // Note: implicit teacher detection via studentIds removed — use roles[] only
     if (user.conducting?.orchestraIds?.length > 0 && !roles.includes('conductor') && !roles.includes('מנצח')) {
       roles.push('conductor')
     }

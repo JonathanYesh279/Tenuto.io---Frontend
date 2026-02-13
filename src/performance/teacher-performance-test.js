@@ -143,7 +143,6 @@ class PerformanceDataGenerator {
           isActive: true
         },
         teaching: {
-          studentIds: [],
           schedule: []
         },
         conducting: {

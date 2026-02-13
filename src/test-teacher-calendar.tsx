@@ -23,13 +23,8 @@ const mockTeacher = {
     orchestraIds: ["orch1", "orch2"],
     ensemblesIds: ["ens1"]
   },
+  studentCount: 4,
   teaching: {
-    studentIds: [
-      "68813849abdf329e8afc264c",
-      "68813849abdf329e8afc2648", 
-      "68813849abdf329e8afc2654",
-      "68813849abdf329e8afc2655"
-    ],
     schedule: [
       {
         _id: "sched1",

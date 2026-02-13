@@ -17,8 +17,9 @@ interface Teacher {
     instrument?: string
     isActive: boolean
   }
+  studentCount?: number
   teaching?: {
-    studentIds: string[]
+    timeBlocks?: any[]
     schedule?: Array<{
       day: string
       startTime: string

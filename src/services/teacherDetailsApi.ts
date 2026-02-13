@@ -177,29 +177,9 @@ class TeacherDetailsApiClient {
 
   // Teacher's students management
   async getTeacherStudents(teacherId: string) {
-    const teacher = await this.getTeacherDetails(teacherId)
-    const studentIds = teacher.teaching?.studentIds || []
-    
-    if (studentIds.length === 0) {
-      return []
-    }
-
-    // Fetch student details for each ID
-    const studentPromises = studentIds.map(async (studentId: string) => {
-      try {
-        return await this.request(`/student/${studentId}`)
-      } catch (error) {
-        console.warn(`Failed to fetch student ${studentId}:`, error)
-        return null
-      }
-    })
-
-    const students = await Promise.allSettled(studentPromises)
-    return students
-      .filter((result): result is PromiseFulfilledResult<any> => 
-        result.status === 'fulfilled' && result.value !== null
-      )
-      .map(result => result.value)
+    const response = await this.request(`/teacher/${teacherId}/students-with-lessons`)
+    const students = response?.students || response || []
+    return Array.isArray(students) ? students : []
   }
 
   // Schedule management

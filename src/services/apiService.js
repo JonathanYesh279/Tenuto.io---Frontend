@@ -1570,19 +1570,9 @@ export const teacherService = {
    */
   async getTeacherStudents(teacherId) {
     try {
-      const teacher = await this.getTeacher(teacherId);
-      const studentIds = teacher.teaching?.studentIds || [];
-      
-      if (studentIds.length === 0) {
-        return [];
-      }
-
-      // Get full student data
-      const students = await apiClient.get('/student', {
-        ids: studentIds.join(',')
-      });
-      
-      console.log(`👥 Retrieved ${students.length} students for teacher ${teacherId}`);
+      const response = await apiClient.get(`/teacher/${teacherId}/students-with-lessons`);
+      const students = response?.students || response || [];
+      console.log(`👥 Retrieved ${Array.isArray(students) ? students.length : 0} students for teacher ${teacherId}`);
       return Array.isArray(students) ? students : [];
     } catch (error) {
       console.error('Error fetching teacher students:', error);

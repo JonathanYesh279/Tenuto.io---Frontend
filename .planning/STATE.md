@@ -2,7 +2,7 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-13)
+See: .planning/PROJECT.md (updated 2026-02-14)
 
 **Core value:** Administrators can efficiently manage their conservatory
 **Current focus:** Cleanup & Polish milestone — COMPLETE
@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 05 (Audit Claude Skills & GSD Workflow Agents)
-Plan: 01 of 03 complete
+Plan: 02 of 03 complete
 Status: In progress
-Last activity: 2026-02-14 — Phase 5 Plan 1 complete (.claude ecosystem cleanup)
+Last activity: 2026-02-14 — Phase 5 Plan 2 complete (documentation staleness fixes)
 
 ## Accumulated Context
 
@@ -34,6 +34,7 @@ Last activity: 2026-02-14 — Phase 5 Plan 1 complete (.claude ecosystem cleanup
 
 ### Resolved (Phase 5)
 - Plan 01: .claude ecosystem cleanup — deleted .agents/ duplicate, removed component-refactoring skill (Dify-specific), removed MULTI_TENANT_GUIDE (expired task prompt), created comprehensive audit report
+- Plan 02: Documentation staleness fixes — updated CLAUDE.md (F3-F6 complete), PROJECT.md (correct backend path), REQUIREMENTS.md (all 12 requirements complete), ROADMAP.md (Phases 1-4 complete status)
 
 ### Roadmap Evolution
 - Phase 5 added: Audit Claude skills and GSD workflow agents (architectural alignment, remove redundancy, improve separation of concerns)

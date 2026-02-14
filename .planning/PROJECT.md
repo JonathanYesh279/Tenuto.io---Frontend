@@ -21,12 +21,6 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 - [x] **F5: New Pages** — Settings, MinistryReports, ImportData (3 admin-only pages)
 - [x] **F6: Polish** — Hours Summary tab, Dashboard hours cards, Admin hours overview, Super Admin toggle
 
-### Active
-
-<!-- Current scope. Building toward these. -->
-
-None — Cleanup & Polish milestone (Phases 1-4) complete.
-
 ### Out of Scope
 
 <!-- Explicit boundaries. -->

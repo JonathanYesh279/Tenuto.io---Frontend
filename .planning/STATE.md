@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 ## Current Position
 
-Phase: All 4 phases complete
-Plan: —
-Status: Milestone v1.1 complete
-Last activity: 2026-02-13 — Phase 4 complete (MinistryReports polish)
+Phase: 05 (Audit Claude Skills & GSD Workflow Agents)
+Plan: 01 of 03 complete
+Status: In progress
+Last activity: 2026-02-14 — Phase 5 Plan 1 complete (.claude ecosystem cleanup)
 
 ## Accumulated Context
 
@@ -26,11 +26,14 @@ Last activity: 2026-02-13 — Phase 4 complete (MinistryReports polish)
 - Settings, MinistryReports, ImportData pages built
 - Hours Summary tab, Dashboard hours cards, Super Admin toggle
 
-### Resolved (this milestone)
+### Resolved (v1.1 milestone)
 - Phase 1: 10 demo/legacy pages deleted, ensemble-director role mapping added
 - Phase 2: Backend VALID_INSTRUMENTS synced to 27 (both validation files)
 - Phase 3: Audit trail UI with deletion log and past activities tracking
 - Phase 4: MinistryReports graceful degradation + school year selector + last updated timestamp
+
+### Resolved (Phase 5)
+- Plan 01: .claude ecosystem cleanup — deleted .agents/ duplicate, removed component-refactoring skill (Dify-specific), removed MULTI_TENANT_GUIDE (expired task prompt), created comprehensive audit report
 
 ### Roadmap Evolution
 - Phase 5 added: Audit Claude skills and GSD workflow agents (architectural alignment, remove redundancy, improve separation of concerns)
@@ -41,4 +44,4 @@ Last activity: 2026-02-13 — Phase 4 complete (MinistryReports polish)
 - MinistryReports will show info banner until those endpoints are built
 
 ---
-*Last updated: 2026-02-13*
+*Last updated: 2026-02-14*

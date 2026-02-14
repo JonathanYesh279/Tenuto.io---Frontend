@@ -12,7 +12,7 @@
 | 2 | Backend Instrument Sync | Align backend validation with frontend | DATA-01 | 2 |
 | 3 | Audit Trail Page | Build admin audit UI with two tabs | AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04 | 5 |
 | 4 | Ministry Reports Polish | Graceful degradation and UX improvements | RPT-01, RPT-02, RPT-03, RPT-04 | 4 |
-| 5 | Audit Claude Skills & GSD Agents | Architectural alignment, remove redundancy, improve separation of concerns | — | TBD |
+| 5 | Audit Claude Skills & GSD Agents | Architectural alignment, remove redundancy, improve separation of concerns | — | 4 ✓ |
 | 6 | Skills Architecture Review | Review and improve skills architecture | — | TBD |
 
 ---
@@ -108,6 +108,8 @@ All phases are independent and could theoretically run in parallel, but sequenti
 
 ## Phase 5: Audit Claude Skills & GSD Workflow Agents
 
+**Status:** Complete (2026-02-14)
+
 **Goal:** Architectural alignment, removal of redundancy, improved separation of concerns across Claude skills and GSD workflow agents
 
 **Requirements:** —
@@ -115,15 +117,15 @@ All phases are independent and could theoretically run in parallel, but sequenti
 **Plans:** 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Delete dead/duplicate files, create audit report
-- [ ] 05-02-PLAN.md — Fix stale documentation across 4 files
-- [ ] 05-03-PLAN.md — Consolidate MEMORY.md, create ARCHITECTURE.md
+- [x] 05-01-PLAN.md — Delete dead/duplicate files, create audit report
+- [x] 05-02-PLAN.md — Fix stale documentation across 4 files
+- [x] 05-03-PLAN.md — Consolidate MEMORY.md, create ARCHITECTURE.md
 
 **Success Criteria:**
-1. No duplicate files between .agents/ and .claude/skills/
-2. No stale status references in documentation
-3. Architecture document exists
-4. Audit report with verifiable pass/fail criteria
+1. No duplicate files between .agents/ and .claude/skills/ ✓
+2. No stale status references in documentation ✓
+3. Architecture document exists at .claude/ARCHITECTURE.md ✓
+4. Audit report with verifiable pass/fail criteria ✓
 
 **Estimated effort:** Small (documentation cleanup + file deletions)
 
@@ -142,4 +144,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-14*
+*Last updated: 2026-02-14 (Phase 5 complete)*

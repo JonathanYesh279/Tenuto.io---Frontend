@@ -1,7 +1,7 @@
 # Roadmap: Tenuto.io Frontend — Cleanup & Polish (v1.1)
 
 **Created:** 2026-02-13
-**Phases:** 4
+**Phases:** 6
 **Requirements:** 12 mapped
 
 ## Phase Overview
@@ -12,6 +12,8 @@
 | 2 | Backend Instrument Sync | Align backend validation with frontend | DATA-01 | 2 |
 | 3 | Audit Trail Page | Build admin audit UI with two tabs | AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04 | 5 |
 | 4 | Ministry Reports Polish | Graceful degradation and UX improvements | RPT-01, RPT-02, RPT-03, RPT-04 | 4 |
+| 5 | Audit Claude Skills & GSD Agents | Architectural alignment, remove redundancy, improve separation of concerns | — | TBD |
+| 6 | Skills Architecture Review | Review and improve skills architecture | — | TBD |
 
 ---
 
@@ -96,6 +98,42 @@ Phase 4 (Ministry Reports Polish)
 
 All phases are independent and could theoretically run in parallel, but sequential execution is recommended for clean commits and verification.
 
+## Phase 5: Audit Claude Skills & GSD Workflow Agents
+
+**Goal:** Architectural alignment, removal of redundancy, improved separation of concerns across Claude skills and GSD workflow agents
+
+**Requirements:** —
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Delete dead/duplicate files, create audit report
+- [ ] 05-02-PLAN.md — Fix stale documentation across 4 files
+- [ ] 05-03-PLAN.md — Consolidate MEMORY.md, create ARCHITECTURE.md
+
+**Success Criteria:**
+1. No duplicate files between .agents/ and .claude/skills/
+2. No skills reference wrong project (Dify) in Tenuto.io repo
+3. No stale status references in documentation (CLAUDE.md, PROJECT.md, REQUIREMENTS.md, ROADMAP.md)
+4. MEMORY.md follows single source of truth principle (references STATE.md, no progress duplication)
+5. Architecture document exists at .claude/ARCHITECTURE.md
+6. Audit report with verifiable pass/fail criteria exists
+
+**Estimated effort:** Small (documentation cleanup + file deletions)
+
+---
+
+## Phase 6: Skills Architecture Review
+
+**Goal:** Review and improve skills architecture
+
+**Requirements:** —
+
+**Success Criteria:**
+1. TBD (run /gsd:plan-phase 6 to break down)
+
+**Estimated effort:** TBD
+
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-13*
+*Last updated: 2026-02-14*

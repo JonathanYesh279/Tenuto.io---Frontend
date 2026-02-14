@@ -25,11 +25,7 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 
 <!-- Current scope. Building toward these. -->
 
-- [ ] Delete 10 unused demo/legacy pages
-- [ ] Fix ProtectedRoute ensemble-director role mapping
-- [ ] Sync backend VALID_INSTRUMENTS to match frontend 27 instruments
-- [ ] Build Audit Trail page (deletion log + past activities)
-- [ ] Polish MinistryReports with graceful degradation
+None — Cleanup & Polish milestone (Phases 1-4) complete.
 
 ### Out of Scope
 
@@ -42,7 +38,7 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 
 ## Context
 
-- **Backend:** Complete at `/mnt/c/Projects/conservatory-app/Backend` — all API endpoints live
+- **Backend:** Complete at `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Backend` — all API endpoints live
 - **Tech stack:** React 18 + TypeScript + Vite + Tailwind CSS + React Hook Form + Zod + React Query
 - **Patterns:** RTL-first, Hebrew hardcoded, feature modules at `src/features/[module]/details/`
 - **CI:** GitHub Actions pipeline with 6 progressive stages (Build -> TypeScript -> Lint -> Tests -> Deploy)
@@ -52,7 +48,6 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 
 - **Git workflow**: Never run `git push` — user pushes from Windows
 - **Case sensitivity**: Linux CI is case-sensitive, Windows is not — always match exact filenames
-- **Backend instruments**: Backend validation only accepts 19 instruments — needs sync to 27
 - **Export endpoints**: `/api/export/status`, `/validate`, `/download` don't exist yet on backend
 
 ## Key Decisions
@@ -60,10 +55,10 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | React Hook Form + Zod over Formik | Better TypeScript support, smaller bundle | ✓ Good |
-| Single apiService.js file (~4800 lines) | Centralized HTTP layer, easy to find endpoints | ⚠️ Revisit (large file) |
+| Single apiService.js file (~5200 lines) | Centralized HTTP layer, easy to find endpoints | ⚠️ Revisit (large file) |
 | Hebrew hardcoded (no i18n) | Single-market product, reduces complexity | ✓ Good |
 | Feature-based module structure | Clean separation of concerns per entity | ✓ Good |
 | Backward-compat fullName fallbacks | Smooth transition, no data migration needed | ✓ Good |
 
 ---
-*Last updated: 2026-02-13 after F6 completion, starting Cleanup & Polish milestone*
+*Last updated: 2026-02-14*

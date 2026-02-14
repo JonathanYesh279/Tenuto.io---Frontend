@@ -9,30 +9,30 @@ Requirements for Cleanup & Polish milestone. Each maps to roadmap phases.
 
 ### Cleanup
 
-- [ ] **CLN-01**: Dead demo/legacy pages are deleted from codebase (10 files)
-- [ ] **CLN-02**: No broken imports after deletion (build passes clean)
+- [x] **CLN-01**: Dead demo/legacy pages are deleted from codebase (10 files)
+- [x] **CLN-02**: No broken imports after deletion (build passes clean)
 
 ### Auth
 
-- [ ] **AUTH-01**: ProtectedRoute recognizes ensemble-director role via Hebrew→English mapping
+- [x] **AUTH-01**: ProtectedRoute recognizes ensemble-director role via Hebrew→English mapping
 
 ### Data Integrity
 
-- [ ] **DATA-01**: Backend VALID_INSTRUMENTS accepts all 27 instruments matching frontend list
+- [x] **DATA-01**: Backend VALID_INSTRUMENTS accepts all 27 instruments matching frontend list
 
 ### Audit
 
-- [ ] **AUDIT-01**: Admin can view deletion audit log with date range and entity type filters
-- [ ] **AUDIT-02**: Admin can view past activities with type filter
-- [ ] **AUDIT-03**: Both audit tabs support pagination
-- [ ] **AUDIT-04**: API service layer for audit endpoints exists in apiService.js
+- [x] **AUDIT-01**: Admin can view deletion audit log with date range and entity type filters
+- [x] **AUDIT-02**: Admin can view past activities with type filter
+- [x] **AUDIT-03**: Both audit tabs support pagination
+- [x] **AUDIT-04**: API service layer for audit endpoints exists in apiService.js
 
 ### Reports
 
-- [ ] **RPT-01**: MinistryReports shows graceful banner when export endpoints are unavailable
-- [ ] **RPT-02**: Download/validate buttons disabled when endpoints unavailable
-- [ ] **RPT-03**: School year selector added to MinistryReports page
-- [ ] **RPT-04**: Last updated timestamp shown on MinistryReports
+- [x] **RPT-01**: MinistryReports shows graceful banner when export endpoints are unavailable
+- [x] **RPT-02**: Download/validate buttons disabled when endpoints unavailable
+- [x] **RPT-03**: School year selector added to MinistryReports page
+- [x] **RPT-04**: Last updated timestamp shown on MinistryReports
 
 ## v2 Requirements
 
@@ -62,18 +62,18 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CLN-01 | Phase 1 | Pending |
-| CLN-02 | Phase 1 | Pending |
-| AUTH-01 | Phase 1 | Pending |
-| DATA-01 | Phase 2 | Pending |
-| AUDIT-01 | Phase 3 | Pending |
-| AUDIT-02 | Phase 3 | Pending |
-| AUDIT-03 | Phase 3 | Pending |
-| AUDIT-04 | Phase 3 | Pending |
-| RPT-01 | Phase 4 | Pending |
-| RPT-02 | Phase 4 | Pending |
-| RPT-03 | Phase 4 | Pending |
-| RPT-04 | Phase 4 | Pending |
+| CLN-01 | Phase 1 | Complete |
+| CLN-02 | Phase 1 | Complete |
+| AUTH-01 | Phase 1 | Complete |
+| DATA-01 | Phase 2 | Complete |
+| AUDIT-01 | Phase 3 | Complete |
+| AUDIT-02 | Phase 3 | Complete |
+| AUDIT-03 | Phase 3 | Complete |
+| AUDIT-04 | Phase 3 | Complete |
+| RPT-01 | Phase 4 | Complete |
+| RPT-02 | Phase 4 | Complete |
+| RPT-03 | Phase 4 | Complete |
+| RPT-04 | Phase 4 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 12 total
@@ -82,4 +82,4 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-02-13*
-*Last updated: 2026-02-13 after initial definition*
+*Last updated: 2026-02-14*

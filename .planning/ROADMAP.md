@@ -19,6 +19,8 @@
 
 ## Phase 1: Quick Fixes
 
+**Status:** Complete
+
 **Goal:** Remove dead code and fix role mapping gap
 
 **Requirements:** CLN-01, CLN-02, AUTH-01
@@ -35,6 +37,8 @@
 
 ## Phase 2: Backend Instrument Sync
 
+**Status:** Complete
+
 **Goal:** Backend accepts all 27 instruments that frontend offers
 
 **Requirements:** DATA-01
@@ -48,6 +52,8 @@
 ---
 
 ## Phase 3: Audit Trail Page
+
+**Status:** Complete
 
 **Goal:** Admins can view deletion logs and past activities through a dedicated UI
 
@@ -65,6 +71,8 @@
 ---
 
 ## Phase 4: Ministry Reports Polish
+
+**Status:** Complete
 
 **Goal:** MinistryReports handles missing export endpoints gracefully with improved UX
 
@@ -113,11 +121,9 @@ Plans:
 
 **Success Criteria:**
 1. No duplicate files between .agents/ and .claude/skills/
-2. No skills reference wrong project (Dify) in Tenuto.io repo
-3. No stale status references in documentation (CLAUDE.md, PROJECT.md, REQUIREMENTS.md, ROADMAP.md)
-4. MEMORY.md follows single source of truth principle (references STATE.md, no progress duplication)
-5. Architecture document exists at .claude/ARCHITECTURE.md
-6. Audit report with verifiable pass/fail criteria exists
+2. No stale status references in documentation
+3. Architecture document exists
+4. Audit report with verifiable pass/fail criteria
 
 **Estimated effort:** Small (documentation cleanup + file deletions)
 

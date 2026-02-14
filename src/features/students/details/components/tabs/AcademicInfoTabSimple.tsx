@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'react'
-import { BookOpen, Music, Trophy, Clock, FileText, CheckCircle, XCircle, Star, Edit, Save, X, AlertTriangle, User } from 'lucide-react'
+import { BookOpen, Trophy, Clock, FileText, CheckCircle, XCircle, Star, Edit, Save, X, AlertTriangle, User } from 'lucide-react'
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
 
@@ -30,22 +30,19 @@ const TEST_STATUSES = [
 const PASSING_STATUSES = ['עבר/ה', 'עבר/ה בהצטיינות', 'עבר/ה בהצטיינות יתרה']
 
 const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studentId, isLoading, onStudentUpdate }) => {
-  console.log('🎓 AcademicInfoTabSimple - Full student object:', student)
-  console.log('📚 Student enrollments:', student?.enrollments)
-  console.log('👨‍🏫 Student teacherAssignments:', student?.teacherAssignments)
-
   const academicInfo = student?.academicInfo || {}
   const teacherAssignments = student?.teacherAssignments || []
-  const enrollments = student?.enrollments || {}
-  // teacherIds can be at root level OR inside enrollments - check both
-  const teacherIds = student?.teacherIds || student?.enrollments?.teacherIds || []
 
-  console.log('📚 AcademicInfoTabSimple data:', {
-    teacherAssignments,
-    teacherIds,
-    'student.teacherIds': student?.teacherIds,
-    'enrollments.teacherIds': student?.enrollments?.teacherIds
-  })
+  // Derive a stable, deduplicated list of teacher IDs from teacherAssignments
+  // Backend has NO teacherIds field — teachers are only in teacherAssignments[].teacherId
+  // Dependency is student?.teacherAssignments directly (stable undefined or same array ref)
+  const teacherIdsToFetch = useMemo(() => {
+    const assignments = student?.teacherAssignments || []
+    const ids = assignments
+      .map((ta: any) => ta.teacherId)
+      .filter(Boolean)
+    return [...new Set(ids)] as string[]
+  }, [student?.teacherAssignments])
 
   // State declarations - must come before memos that use them
   const [isEditing, setIsEditing] = useState(false)
@@ -54,39 +51,24 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
   const [loadingTeachers, setLoadingTeachers] = useState(false)
 
   // Get primary teacher name from teacher assignments
-  // Need to look up teacher name from teachersData since teacherAssignments only has teacherId
   const primaryTeacher = useMemo(() => {
-    console.log('🔍 Finding primary teacher:', { teacherAssignments, teachersData })
-
     if (teacherAssignments && teacherAssignments.length > 0) {
-      // First try to get the active teacher assignment
       const activeAssignment = teacherAssignments.find((ta: any) => ta.isActive) || teacherAssignments[0]
 
-      // If the assignment already has a teacherName, use it
-      if (activeAssignment?.teacherName) {
-        console.log('✅ Found teacherName in assignment:', activeAssignment.teacherName)
-        return activeAssignment.teacherName
-      }
-
-      // Otherwise, look up the teacher name from teachersData using teacherId
+      // Look up the teacher name from teachersData using teacherId
       if (activeAssignment?.teacherId && teachersData.length > 0) {
         const teacher = teachersData.find((t: any) => t._id === activeAssignment.teacherId)
         const teacherName = getDisplayName(teacher?.personalInfo)
-        if (teacherName) {
-          console.log('✅ Found teacher name from teachersData:', teacherName)
-          return teacherName
-        }
+        if (teacherName) return teacherName
       }
     }
 
     // Fallback: if we have teachersData but no assignments, show the first teacher
-    const firstTeacherName = getDisplayName(teachersData[0]?.personalInfo)
-    if (teachersData.length > 0 && firstTeacherName) {
-      console.log('✅ Using first teacher from teachersData:', firstTeacherName)
-      return firstTeacherName
+    if (teachersData.length > 0) {
+      const firstTeacherName = getDisplayName(teachersData[0]?.personalInfo)
+      if (firstTeacherName) return firstTeacherName
     }
 
-    console.log('⚠️ No teacher name found')
     return null
   }, [teacherAssignments, teachersData])
 
@@ -125,67 +107,51 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
     setEditedData(initializeEditData())
   }, [academicInfo])
 
-  // Load teacher names - from teacherAssignments or teacherIds
+  // Load teacher names from teacherAssignments
+  // Uses teacherIdsToFetch (memoized) so the effect only re-runs when IDs actually change
   useEffect(() => {
+    if (teacherIdsToFetch.length === 0) {
+      setTeachersData([])
+      return
+    }
+
+    let cancelled = false
     const loadTeachersData = async () => {
-      // Collect all teacher IDs from both sources
-      const assignmentTeacherIds = teacherAssignments
-        .map((ta: any) => ta.teacherId)
-        .filter(Boolean)
-
-      // Combine with teacherIds, removing duplicates
-      const allTeacherIds = [...new Set([...assignmentTeacherIds, ...teacherIds])]
-
-      console.log('🔍 Teacher IDs to load:', {
-        fromAssignments: assignmentTeacherIds,
-        fromTeacherIds: teacherIds,
-        combined: allTeacherIds
-      })
-
-      if (allTeacherIds.length === 0) {
-        console.log('⚠️ No teachers to load')
-        return
-      }
-
       setLoadingTeachers(true)
       try {
-        console.log('🔄 Loading teacher data for IDs:', allTeacherIds)
-        const teachersPromises = allTeacherIds.map((teacherId: string) =>
+        const teachersPromises = teacherIdsToFetch.map((teacherId: string) =>
           apiService.teachers.getTeacher(teacherId).catch(err => {
             console.error(`Failed to load teacher ${teacherId}:`, err)
             return null
           })
         )
         const teachers = (await Promise.all(teachersPromises)).filter(Boolean)
-        console.log('✅ Loaded teachers:', teachers)
-        setTeachersData(teachers)
+        if (!cancelled) {
+          setTeachersData(teachers)
+        }
       } catch (error) {
-        console.error('❌ Failed to load teachers:', error)
+        console.error('Failed to load teachers:', error)
       } finally {
-        setLoadingTeachers(false)
+        if (!cancelled) {
+          setLoadingTeachers(false)
+        }
       }
     }
 
     loadTeachersData()
-  }, [teacherIds, teacherAssignments])
+    return () => { cancelled = true }
+  }, [teacherIdsToFetch])
 
-  // Find teachers enrolled but without lesson assignments
+  // Find teachers assigned but without active lesson (no scheduleInfo)
   const teachersWithoutLessons = useMemo(() => {
-    const assignedTeacherIds = teacherAssignments?.map((a: any) => a.teacherId) || []
+    const inactiveTeacherIds = teacherAssignments
+      .filter((a: any) => a.isActive && !a.timeBlockId)
+      .map((a: any) => a.teacherId)
 
-    console.log('🔍 Finding teachers without lessons:')
-    console.log('  - Enrolled teacher IDs:', teacherIds)
-    console.log('  - Assigned teacher IDs:', assignedTeacherIds)
-    console.log('  - Teachers data:', teachersData)
-
-    const result = teachersData.filter((teacher) =>
-      teacherIds.includes(teacher._id) &&
-      !assignedTeacherIds.includes(teacher._id)
+    return teachersData.filter((teacher) =>
+      inactiveTeacherIds.includes(teacher._id)
     )
-
-    console.log('📊 Teachers without lessons:', result)
-    return result
-  }, [teachersData, teacherIds, teacherAssignments])
+  }, [teachersData, teacherAssignments])
 
   const handleSave = async () => {
     try {
@@ -402,7 +368,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                 <span className="text-gray-400 animate-pulse">טוען...</span>
               ) : primaryTeacher ? (
                 primaryTeacher
-              ) : (teacherAssignments.length > 0 || teacherIds.length > 0) ? (
+              ) : teacherAssignments.length > 0 ? (
                 <span className="text-orange-500">טוען שם מורה...</span>
               ) : (
                 <span className="text-gray-400">לא משויך</span>

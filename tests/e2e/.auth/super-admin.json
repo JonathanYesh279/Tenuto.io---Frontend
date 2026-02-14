@@ -1,0 +1,22 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:5173",
+      "localStorage": [
+        {
+          "name": "authToken",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OThiYTAyODVkMGIxMWU3YmNlZWE1MDYiLCJ0eXBlIjoic3VwZXJfYWRtaW4iLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzcwOTg4NDExLCJleHAiOjE3NzA5OTIwMTF9.hJMqUaCp6B3HOAloJBR2apfAbsetflz-SoLEEH-lz1w"
+        },
+        {
+          "name": "superAdminUser",
+          "value": "{\"_id\":\"698ba0285d0b11e7bceea506\",\"teacherId\":\"698ba0285d0b11e7bceea506\",\"tenantId\":null,\"isSuperAdmin\":true,\"personalInfo\":{\"firstName\":\"יונתן ישעיהו\",\"lastName\":\"\",\"fullName\":\"יונתן ישעיהו\",\"email\":\"admin@example.com\",\"phone\":\"\",\"address\":\"\"},\"roles\":[\"admin\"],\"role\":\"admin\",\"permissions\":[\"manage_tenants\",\"view_analytics\",\"billing\"]}"
+        },
+        {
+          "name": "loginType",
+          "value": "super_admin"
+        }
+      ]
+    }
+  ]
+}

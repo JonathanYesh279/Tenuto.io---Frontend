@@ -32,6 +32,10 @@ Last activity: 2026-02-13 — Phase 4 complete (MinistryReports polish)
 - Phase 3: Audit trail UI with deletion log and past activities tracking
 - Phase 4: MinistryReports graceful degradation + school year selector + last updated timestamp
 
+### Roadmap Evolution
+- Phase 5 added: Audit Claude skills and GSD workflow agents (architectural alignment, remove redundancy, improve separation of concerns)
+- Phase 6 added: Skills Architecture Review
+
 ### Remaining Issues
 - Backend export endpoints (/api/export/status, /validate, /download) not yet implemented
 - MinistryReports will show info banner until those endpoints are built

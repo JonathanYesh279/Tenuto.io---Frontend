@@ -217,6 +217,7 @@ export default {
     },
   },
   plugins: [
+    require('tailwindcss-animate'),
     // RTL support plugin
     function({ addUtilities, addComponents, theme }) {
       addUtilities({

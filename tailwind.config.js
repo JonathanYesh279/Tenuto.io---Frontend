@@ -191,6 +191,9 @@ export default {
         'slide-down': 'slideDown 0.2s ease-out',
         // Modals: 200ms scale-in
         'scale-in': 'scaleIn 0.2s ease-out',
+        // Toast slide-in/out: RTL-correct (physical left = visual right in RTL)
+        'slide-from-right': 'slideFromRight 0.2s ease-out',
+        'slide-to-right': 'slideToRight 0.15s ease-in forwards',
         // pulse-soft removed: decorative infinite animation — no decorative motion per user decision
       },
       keyframes: {
@@ -209,6 +212,14 @@ export default {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        slideFromRight: {
+          '0%': { transform: 'translateX(-100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideToRight: {
+          '0%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(-100%)', opacity: '0' },
         },
       },
       screens: {

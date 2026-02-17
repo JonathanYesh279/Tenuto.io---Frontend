@@ -10,7 +10,7 @@ import Login from './pages/Login'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import { lazyWithRetry, initializeBundleOptimizations } from './utils/bundleOptimization'
-import { Toaster } from 'react-hot-toast'
+import { Toaster, ToastBar } from 'react-hot-toast'
 
 // Lazy load all pages with retry mechanism for better reliability
 const Dashboard = lazyWithRetry(() => import('./pages/Dashboard'), 'Dashboard')
@@ -537,7 +537,7 @@ function App() {
           <BagrutProvider>
             <SidebarProvider>
               <Toaster
-                position="top-center"
+                position="top-left"
                 reverseOrder={false}
                 gutter={8}
                 containerClassName=""
@@ -551,35 +551,47 @@ function App() {
                     padding: '16px',
                     borderRadius: '8px',
                     fontSize: '14px',
-                    fontFamily: 'Reisinger-Yonatan, sans-serif',
-                    direction: 'rtl'
+                    fontFamily: 'Heebo, sans-serif',
+                    direction: 'rtl',
                   },
                   // Success toast styling
                   success: {
                     style: {
                       background: '#F0FDF4',
                       color: '#166534',
-                      border: '1px solid #86EFAC'
+                      border: '1px solid #86EFAC',
                     },
                     iconTheme: {
                       primary: '#22C55E',
-                      secondary: '#F0FDF4'
-                    }
+                      secondary: '#F0FDF4',
+                    },
                   },
                   // Error toast styling
                   error: {
                     style: {
                       background: '#FEE2E2',
                       color: '#991B1B',
-                      border: '1px solid #FCA5A5'
+                      border: '1px solid #FCA5A5',
                     },
                     iconTheme: {
                       primary: '#EF4444',
-                      secondary: '#FEE2E2'
-                    }
-                  }
+                      secondary: '#FEE2E2',
+                    },
+                  },
                 }}
-              />
+              >
+                {(t) => (
+                  <ToastBar
+                    toast={t}
+                    style={{
+                      ...t.style,
+                      animation: t.visible
+                        ? 'slideFromRight 0.2s ease-out'
+                        : 'slideToRight 0.15s ease-in forwards',
+                    }}
+                  />
+                )}
+              </Toaster>
               <AppRoutes />
             </SidebarProvider>
           </BagrutProvider>

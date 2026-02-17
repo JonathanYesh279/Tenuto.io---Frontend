@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Save, Music, User, MapPin, Users } from 'lucide-react'
+import { X, Save, Music, User, Users } from 'lucide-react'
 import {
   VALID_ORCHESTRA_TYPES,
   VALID_LOCATIONS,
@@ -12,6 +12,21 @@ import {
 import { handleServerValidationError } from '../utils/validationUtils'
 import { getDisplayName } from '@/utils/nameUtils'
 import { ORCHESTRA_SUBTYPES, PERFORMANCE_LEVELS } from '../constants/enums'
+import { cn } from '@/lib/utils'
+import { FormField } from '@/components/ui/form-field'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface OrchestraFormProps {
   orchestra?: Orchestra | null
@@ -105,25 +120,25 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
   }
 
   // Filter conductors (teachers with conductor role)
-  const conductors = teachers.filter(teacher => 
-    teacher.roles?.includes('מנצח') || 
+  const conductors = teachers.filter(teacher =>
+    teacher.roles?.includes('מנצח') ||
     teacher.professionalInfo?.instrument === 'מנהיגות מוזיקלית' ||
     teacher.conducting?.orchestraIds?.length > 0
   )
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-background rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Form Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h2 className="text-xl font-semibold text-foreground">
             {orchestra ? 'עריכת תזמורת' : 'תזמורת חדשה'}
           </h2>
           <button
             onClick={onCancel}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
@@ -131,8 +146,8 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Error Display */}
           {errors.general && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-red-800 text-sm">{errors.general}</p>
+            <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4">
+              <p className="text-destructive text-sm">{errors.general}</p>
             </div>
           )}
 
@@ -140,160 +155,130 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Orchestra Name */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <Music className="w-4 h-4 inline ml-1" />
-                שם התזמורת *
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
-                  errors.name ? 'border-red-300' : 'border-gray-300'
-                }`}
-                placeholder="הזן שם לתזמורת"
-                required
-              />
-              {errors.name && (
-                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
-              )}
+              <FormField label="שם התזמורת" htmlFor="name" error={errors.name} required>
+                <div className="relative">
+                  <Music className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? 'name-error' : undefined}
+                    className={cn("ps-9", errors.name && "border-destructive focus-visible:ring-destructive")}
+                    placeholder="הזן שם לתזמורת"
+                  />
+                </div>
+              </FormField>
             </div>
 
             {/* Orchestra Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                סוג הרכב *
-              </label>
-              <select
-                value={formData.type}
-                onChange={(e) => handleInputChange('type', e.target.value as OrchestraType)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
-                  errors.type ? 'border-red-300' : 'border-gray-300'
-                }`}
-                required
-              >
-                {VALID_ORCHESTRA_TYPES.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
-              {errors.type && (
-                <p className="text-red-500 text-xs mt-1">{errors.type}</p>
-              )}
-            </div>
+            <FormField label="סוג הרכב" htmlFor="type" error={errors.type} required>
+              <Select value={formData.type} onValueChange={(val) => handleInputChange('type', val as OrchestraType)}>
+                <SelectTrigger id="type" className={cn(errors.type && "border-destructive focus:ring-destructive")}>
+                  <SelectValue placeholder="בחר סוג" />
+                </SelectTrigger>
+                <SelectContent>
+                  {VALID_ORCHESTRA_TYPES.map(type => (
+                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
 
             {/* Location */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <MapPin className="w-4 h-4 inline ml-1" />
-                מיקום חזרות *
-              </label>
-              <select
-                value={formData.location}
-                onChange={(e) => handleInputChange('location', e.target.value as LocationType)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
-                  errors.location ? 'border-red-300' : 'border-gray-300'
-                }`}
-                required
-              >
-                {/* Group locations by category */}
-                <optgroup label="אולמות">
-                  {VALID_LOCATIONS.filter(loc => loc.includes('אולם')).map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </optgroup>
-                
-                <optgroup label="סטודיואים">
-                  {VALID_LOCATIONS.filter(loc => loc.includes('סטודיו')).map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </optgroup>
-                
-                <optgroup label="חדרי חזרות">
-                  {VALID_LOCATIONS.filter(loc => loc.includes('חדר חזרות')).map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </optgroup>
-                
-                <optgroup label="חדרי לימוד">
-                  {VALID_LOCATIONS.filter(loc => 
-                    loc.startsWith('חדר') && 
-                    !loc.includes('חזרות') && 
-                    !loc.includes('תאוריה')
-                  ).map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </optgroup>
-                
-                <optgroup label="חדרי תיאוריה">
-                  {VALID_LOCATIONS.filter(loc => loc.includes('תאוריה')).map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </optgroup>
-                
-                <optgroup label="אחר">
-                  {VALID_LOCATIONS.filter(loc => 
-                    !loc.includes('אולם') && 
-                    !loc.includes('סטודיו') && 
-                    !loc.includes('חדר')
-                  ).map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </optgroup>
-              </select>
-              {errors.location && (
-                <p className="text-red-500 text-xs mt-1">{errors.location}</p>
-              )}
-            </div>
+            <FormField label="מיקום חזרות" htmlFor="location" error={errors.location} required>
+              <Select value={formData.location} onValueChange={(val) => handleInputChange('location', val as LocationType)}>
+                <SelectTrigger id="location" className={cn(errors.location && "border-destructive focus:ring-destructive")}>
+                  <SelectValue placeholder="בחר מיקום" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>אולמות</SelectLabel>
+                    {VALID_LOCATIONS.filter(loc => loc.includes('אולם')).map(location => (
+                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                  <SelectGroup>
+                    <SelectLabel>סטודיואים</SelectLabel>
+                    {VALID_LOCATIONS.filter(loc => loc.includes('סטודיו')).map(location => (
+                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                  <SelectGroup>
+                    <SelectLabel>חדרי חזרות</SelectLabel>
+                    {VALID_LOCATIONS.filter(loc => loc.includes('חדר חזרות')).map(location => (
+                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                  <SelectGroup>
+                    <SelectLabel>חדרי לימוד</SelectLabel>
+                    {VALID_LOCATIONS.filter(loc => loc.startsWith('חדר') && !loc.includes('חזרות') && !loc.includes('תאוריה')).map(location => (
+                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                  <SelectGroup>
+                    <SelectLabel>חדרי תיאוריה</SelectLabel>
+                    {VALID_LOCATIONS.filter(loc => loc.includes('תאוריה')).map(location => (
+                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                  <SelectGroup>
+                    <SelectLabel>אחר</SelectLabel>
+                    {VALID_LOCATIONS.filter(loc => !loc.includes('אולם') && !loc.includes('סטודיו') && !loc.includes('חדר')).map(location => (
+                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FormField>
           </div>
 
           {/* Sub-Type, Performance Level, Coordination Hours */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Sub-Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                תת-סוג הרכב *
-              </label>
-              <select
-                value={formData.subType || ''}
-                onChange={(e) => handleInputChange('subType' as any, e.target.value || null)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
-                  errors.subType ? 'border-red-300' : 'border-gray-300'
-                }`}
+            <FormField
+              label="תת-סוג הרכב"
+              htmlFor="subType"
+              error={errors.subType}
+              hint="נדרש לדוחות משרד החינוך"
+              required
+            >
+              <Select
+                value={formData.subType ?? undefined}
+                onValueChange={(val) => handleInputChange('subType' as any, val || null)}
               >
-                <option value="">בחר תת-סוג</option>
-                {ORCHESTRA_SUBTYPES.map(st => (
-                  <option key={st} value={st}>{st}</option>
-                ))}
-              </select>
-              {errors.subType && (
-                <p className="text-red-500 text-xs mt-1">{errors.subType}</p>
-              )}
-              <p className="text-xs text-gray-500 mt-1">נדרש לדוחות משרד החינוך</p>
-            </div>
+                <SelectTrigger id="subType" className={cn(errors.subType && "border-destructive focus:ring-destructive")}>
+                  <SelectValue placeholder="בחר תת-סוג" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ORCHESTRA_SUBTYPES.map(st => (
+                    <SelectItem key={st} value={st}>{st}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
 
             {/* Performance Level */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                רמת ביצוע
-              </label>
-              <select
-                value={formData.performanceLevel || ''}
-                onChange={(e) => handleInputChange('performanceLevel' as any, e.target.value || null)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+            <FormField label="רמת ביצוע" htmlFor="performanceLevel">
+              <Select
+                value={formData.performanceLevel ?? undefined}
+                onValueChange={(val) => handleInputChange('performanceLevel' as any, val || null)}
               >
-                <option value="">בחר רמה</option>
-                {PERFORMANCE_LEVELS.map(pl => (
-                  <option key={pl} value={pl}>{pl}</option>
-                ))}
-              </select>
-            </div>
+                <SelectTrigger id="performanceLevel">
+                  <SelectValue placeholder="בחר רמה" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PERFORMANCE_LEVELS.map(pl => (
+                    <SelectItem key={pl} value={pl}>{pl}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
 
             {/* Coordination Hours */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                שעות ריכוז (ש"ש)
-              </label>
-              <input
+            <FormField label='שעות ריכוז (ש"ש)' htmlFor="coordinationHours">
+              <Input
+                id="coordinationHours"
                 type="number"
                 min="0"
                 max="50"
@@ -306,67 +291,62 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
                     coordinationHours: e.target.value ? parseFloat(e.target.value) : null
                   }
                 }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
                 placeholder="0-50"
               />
-            </div>
+            </FormField>
           </div>
 
           {/* Conductor Assignment */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <User className="w-4 h-4 inline ml-1" />
-              מנצח *
-            </label>
-            <select
-              value={formData.conductorId}
-              onChange={(e) => handleInputChange('conductorId', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                errors.conductorId ? 'border-red-300' : 'border-gray-300'
-              }`}
-              required
-            >
-              <option value="">בחר מנצח</option>
-              {conductors.map(conductor => (
-                <option key={conductor._id} value={conductor._id}>
-                  {getDisplayName(conductor.personalInfo)}
-                  {conductor.professionalInfo?.instrument && (
-                    <span className="text-gray-500"> - {conductor.professionalInfo.instrument}</span>
-                  )}
-                </option>
-              ))}
-            </select>
-            {errors.conductorId && (
-              <p className="text-red-500 text-xs mt-1">{errors.conductorId}</p>
-            )}
-            
+          <FormField label="מנצח" htmlFor="conductorId" error={errors.conductorId} required>
+            <div className="relative">
+              <User className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
+              <Select
+                value={formData.conductorId || undefined}
+                onValueChange={(val) => handleInputChange('conductorId', val)}
+              >
+                <SelectTrigger
+                  id="conductorId"
+                  className={cn("ps-9", errors.conductorId && "border-destructive focus:ring-destructive")}
+                >
+                  <SelectValue placeholder="בחר מנצח" />
+                </SelectTrigger>
+                <SelectContent>
+                  {conductors.map(conductor => (
+                    <SelectItem key={conductor._id} value={conductor._id}>
+                      {getDisplayName(conductor.personalInfo)}
+                      {conductor.professionalInfo?.instrument ? ` - ${conductor.professionalInfo.instrument}` : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             {conductors.length === 0 && (
-              <p className="text-orange-600 text-xs mt-1">
-                ⚠️ לא נמצאו מורים עם תפקיד מנצח. ניתן להוסיף מורים חדשים בעמוד המורים.
+              <p className="text-amber-600 text-xs mt-1">
+                לא נמצאו מורים עם תפקיד מנצח. ניתן להוסיף מורים חדשים בעמוד המורים.
               </p>
             )}
-          </div>
+          </FormField>
 
           {/* Members Section - Read Only Display for Now */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Users className="w-4 h-4 inline ml-1" />
+            <label className="block text-sm font-medium text-foreground mb-2">
+              <Users className="w-4 h-4 inline ms-1" />
               חברי התזמורת
             </label>
-            
+
             {formData.memberIds.length > 0 ? (
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <p className="text-sm text-gray-600 mb-2">
+              <div className="bg-muted border border-border rounded-lg p-4">
+                <p className="text-sm text-muted-foreground mb-2">
                   {formData.memberIds.length} חברים בתזמורת
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   ניהול חברים יהיה זמין בעמוד הפרטים של התזמורת
                 </p>
               </div>
             ) : (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-blue-800 text-sm">
-                  📝 לאחר יצירת התזמורת, תוכל להוסיף חברים בעמוד הפרטים
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                <p className="text-foreground text-sm">
+                  לאחר יצירת התזמורת, תוכל להוסיף חברים בעמוד הפרטים
                 </p>
               </div>
             )}
@@ -374,42 +354,40 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
 
           {/* Orchestra Status */}
           <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="isActive"
                 checked={formData.isActive}
-                onChange={(e) => handleInputChange('isActive', e.target.checked)}
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                onCheckedChange={(checked) => handleInputChange('isActive', checked as boolean)}
               />
-              <span className="mr-2 text-sm text-gray-700">תזמורת פעילה</span>
-            </label>
-            <p className="text-xs text-gray-500 mt-1">
+              <Label htmlFor="isActive">תזמורת פעילה</Label>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
               תזמורות לא פעילות לא יוצגו ברשימות הראשיות
             </p>
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
-            <button
+          <div className="flex justify-end gap-3 pt-6 border-t border-border">
+            <Button
               type="button"
+              variant="outline"
               onClick={onCancel}
-              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               disabled={loading}
             >
               ביטול
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={loading}
-              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
             >
               {loading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground ms-2"></div>
               ) : (
-                <Save className="w-4 h-4 ml-2" />
+                <Save className="w-4 h-4 ms-2" />
               )}
               {orchestra ? 'עדכן תזמורת' : 'צור תזמורת'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

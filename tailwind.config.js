@@ -184,11 +184,14 @@ export default {
         'header': '0 1px 3px 0 rgb(0 0 0 / 0.1)',
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'slide-down': 'slideDown 0.3s ease-out',
+        // Page transitions: 150ms ease-out per user decision (purposeful-and-limited philosophy)
+        'fade-in': 'fadeIn 0.15s ease-out',
+        // Toasts and slide-in panels: 200ms ease-out per user decision
+        'slide-up': 'slideUp 0.2s ease-out',
+        'slide-down': 'slideDown 0.2s ease-out',
+        // Modals: 200ms scale-in
         'scale-in': 'scaleIn 0.2s ease-out',
-        'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+        // pulse-soft removed: decorative infinite animation — no decorative motion per user decision
       },
       keyframes: {
         fadeIn: {
@@ -206,10 +209,6 @@ export default {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
-        },
-        pulseSoft: {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.8' },
         },
       },
       screens: {

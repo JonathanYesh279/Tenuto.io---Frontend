@@ -224,7 +224,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .animate-slide-down {
-  animation: slide-down 0.3s ease-out;
+  animation: slide-down 0.2s ease-out;
 }
 
 /* Modal Animations */
@@ -254,4 +254,24 @@ body::-webkit-scrollbar-thumb:hover {
 
 .animate-zoom-in {
   animation: zoom-in 0.2s ease-out;
+}
+
+/* Print styles — migrated from globals.css (dead file removed in Phase 06-02) */
+@media print {
+  .no-print {
+    display: none !important; /* Legitimate: print media query !important per WAI-ARIA pattern */
+  }
+}
+
+/* Reduced motion — WAI-ARIA accessibility pattern (A11Y-04) */
+/* Migrated from globals.css (dead file removed in Phase 06-02) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important; /* Legitimate: WAI-ARIA standard reduced-motion pattern */
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

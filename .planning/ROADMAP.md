@@ -61,11 +61,11 @@ Plans:
   3. Hovering any button shows a visible color-shift transition within 150ms; pressing shows an active/pressed state
   4. Every interactive element (button, link, tab, menu item) shows a visible focus ring when reached by Tab key
   5. A status value (active/inactive/graduated) and an instrument value each display as a consistently styled Badge component across all pages where they appear
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 07-01: Radix packages install, Dialog/Tabs/DropdownMenu
-- [ ] 07-02: Tooltip, Avatar, Switch, Checkbox, Separator, Progress, remaining primitives
+- [ ] 07-01-PLAN.md — Install tailwindcss-animate + 9 Radix packages, generate shadcn primitives, build ConfirmDeleteDialog, update Modal wrapper, extend Badge, migrate Header dropdown
+- [ ] 07-02-PLAN.md — Migrate Teacher/Student/Orchestra tabs to shadcn Tabs, migrate Orchestras delete to ConfirmDeleteDialog, update ConfirmationModal, clean dead CSS
 
 ### Phase 8: Domain Components & Loading States
 **Goal:** Conservatory-specific reusable components exist — InstrumentBadge, StatusBadge, StatsCard, AvatarInitials, Skeleton loaders, EmptyState, ErrorState, and the toast notification system — so every page can display loading feedback, errors, and music-school identity without reimplementing them.
@@ -172,7 +172,7 @@ Plans:
 | 4. Ministry Reports Polish | v1.1 | 1/1 | Complete | 2026-02-13 |
 | 5. Audit Claude Skills & GSD Agents | v1.1 | 3/3 | Complete | 2026-02-14 |
 | 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
-| 7. Primitives | v2.0 | 0/2 | Not started | - |
+| 7. Primitives | v2.0 | 0/2 | Planned | - |
 | 8. Domain Components & Loading | v2.0 | 0/3 | Not started | - |
 | 9. Form System | v2.0 | 0/1 | Not started | - |
 | 10. List Pages | v2.0 | 0/2 | Not started | - |

@@ -27,7 +27,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 6: Foundation** — Design token system, RTL fixes, CSS cleanup, package upgrades
 - [x] **Phase 7: Primitives** — Missing shadcn/ui components, modal migration, button/badge system
 - [x] **Phase 8: Domain Components & Loading States** — Conservatory-specific components, skeletons, empty/error states, toast system
-- [ ] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
+- [x] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
 - [ ] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
 - [ ] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
 - [ ] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
@@ -96,9 +96,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — FormField wrapper component + OrchestraForm migration to shadcn primitives
-- [ ] 09-02-PLAN.md — AddTeacherModal RHF migration + shadcn primitives + CSS cleanup
-- [ ] 09-03-PLAN.md — StudentForm migration to shadcn primitives
+- [x] 09-01-PLAN.md — FormField wrapper component + OrchestraForm migration to shadcn primitives
+- [x] 09-02-PLAN.md — AddTeacherModal RHF migration + shadcn primitives + CSS cleanup
+- [x] 09-03-PLAN.md — StudentForm migration to shadcn primitives
 
 ### Phase 10: List Pages
 **Goal:** All 5 main list pages display consistent, polished table design with hover states, sticky headers, contextual pagination, search-with-clear, skeleton loading, and music-themed empty states.
@@ -176,7 +176,7 @@ Plans:
 | 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 7. Primitives | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 8. Domain Components & Loading | v2.0 | 3/3 | Complete | 2026-02-17 |
-| 9. Form System | v2.0 | 0/3 | Not started | - |
+| 9. Form System | v2.0 | 3/3 | Complete | 2026-02-18 |
 | 10. List Pages | v2.0 | 0/2 | Not started | - |
 | 11. Detail Pages | v2.0 | 0/2 | Not started | - |
 | 12. Layout & Dashboard | v2.0 | 0/2 | Not started | - |
@@ -184,4 +184,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-17 (Phase 8 Domain Components & Loading complete)*
+*Last updated: 2026-02-18 (Phase 9 Form System complete)*

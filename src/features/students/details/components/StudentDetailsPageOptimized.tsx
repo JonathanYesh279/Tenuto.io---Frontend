@@ -1,23 +1,41 @@
 /**
  * Student Details Page - Optimized Version
- * 
+ *
  * Uses React.memo, useMemo, and performance optimizations
  * to minimize re-renders and improve performance
  */
 
 import React, { useState, useMemo, memo, useCallback } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
-import { ArrowRight, RefreshCw } from 'lucide-react'
-import { TabType, TabConfig } from '../types'
-import StudentTabNavigation from './StudentTabNavigation'
-import StudentTabContent from './StudentTabContent'
+import { ArrowRight, RefreshCw, User, GraduationCap, Calendar, CheckCircle, Music, BookOpen, FileText } from 'lucide-react'
+import { TabType } from '../types'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import PersonalInfoTab from './tabs/PersonalInfoTabSimple'
+import AcademicInfoTab from './tabs/AcademicInfoTabSimple'
+import ScheduleTab from './tabs/ScheduleTab'
+import OrchestraTab from './tabs/OrchestraTab'
+import TheoryTabOptimized from './tabs/TheoryTabOptimized'
 import { useStudent } from '../../../../services/apiCache'
 import { getDisplayName, getInitials } from '../../../../utils/nameUtils'
-import { 
-  SmartLoadingState, 
+import {
   SkeletonComponents,
-  usePerformanceOptimizations 
+  usePerformanceOptimizations
 } from '../../../../services/performanceOptimizations'
+
+// Placeholder tabs not yet implemented
+const AttendanceTab = ({ student }: { student: any }) => (
+  <div className="p-6 text-center text-gray-500">
+    <div className="text-4xl mb-4">✅</div>
+    <div>נוכחות - בפיתוח</div>
+  </div>
+)
+
+const DocumentsTab = ({ student }: { student: any }) => (
+  <div className="p-6 text-center text-gray-500">
+    <div className="text-4xl mb-4">📄</div>
+    <div>מסמכים - בפיתוח</div>
+  </div>
+)
 
 // Memoized header component to prevent unnecessary re-renders
 const StudentHeader = memo(({ student }: { student: any }) => {
@@ -30,7 +48,7 @@ const StudentHeader = memo(({ student }: { student: any }) => {
     getInitials(student?.personalInfo) || '?',
     [student?.personalInfo?.firstName, student?.personalInfo?.lastName, student?.personalInfo?.fullName]
   )
-  
+
   const statusBadge = useMemo(() => {
     const isActive = student?.isActive
     return {
@@ -81,12 +99,12 @@ const Breadcrumb = memo(({ onNavigateBack }: { onNavigateBack: () => void }) => 
 Breadcrumb.displayName = 'Breadcrumb'
 
 // Memoized error component
-const ErrorState = memo(({ 
-  error, 
-  onRetry 
-}: { 
+const ErrorState = memo(({
+  error,
+  onRetry
+}: {
   error: string
-  onRetry: () => void 
+  onRetry: () => void
 }) => (
   <div className="flex flex-col items-center justify-center min-h-96 text-center">
     <div className="text-6xl mb-4">❌</div>
@@ -124,13 +142,13 @@ NotFoundState.displayName = 'NotFoundState'
 
 const StudentDetailsPageOptimized: React.FC = () => {
   console.log('🔍 StudentDetailsPageOptimized component loading...')
-  
+
   // Performance monitoring
   const { monitoring } = usePerformanceOptimizations({
     componentName: 'StudentDetailsPageOptimized',
     enablePerformanceMonitoring: true
   })
-  
+
   const { studentId } = useParams<{ studentId: string }>()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<TabType>('personal')
@@ -139,20 +157,10 @@ const StudentDetailsPageOptimized: React.FC = () => {
   const { data: student, isLoading, error, refetch } = useStudent(studentId)
 
   // Memoized computed values
-  const isValidStudentId = useMemo(() => 
-    !!studentId && studentId.trim() !== '', 
+  const isValidStudentId = useMemo(() =>
+    !!studentId && studentId.trim() !== '',
     [studentId]
   )
-
-  const tabs: TabConfig[] = useMemo(() => [
-    { id: 'personal', label: 'פרטים אישיים', component: () => null },
-    { id: 'academic', label: 'מידע אקדמי', component: () => null },
-    { id: 'schedule', label: 'לוח זמנים', component: () => null },
-    { id: 'attendance', label: 'נוכחות', component: () => null },
-    { id: 'orchestra', label: 'תזמורות', component: () => null },
-    { id: 'theory', label: 'תאוריה', component: () => null },
-    { id: 'documents', label: 'מסמכים', component: () => null }
-  ], [])
 
   // Memoized handlers
   const handleNavigateBack = useCallback(() => {
@@ -191,8 +199,8 @@ const StudentDetailsPageOptimized: React.FC = () => {
   // Error state
   if (error) {
     return (
-      <ErrorState 
-        error={(error as Error).message || 'Failed to load student data'} 
+      <ErrorState
+        error={(error as Error).message || 'Failed to load student data'}
         onRetry={handleRetry}
       />
     )
@@ -211,22 +219,81 @@ const StudentDetailsPageOptimized: React.FC = () => {
       {/* Student Header */}
       <StudentHeader student={student} />
 
-      {/* Tab Navigation */}
-      <StudentTabNavigation 
-        activeTab={activeTab} 
-        onTabChange={handleTabChange} 
-        tabs={tabs}
-      />
+      {/* Tab Navigation and Content — shadcn Tabs */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
+        <Tabs value={activeTab} onValueChange={(v) => handleTabChange(v as TabType)} className="w-full">
+          <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
+            <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <User className="h-4 w-4" />
+              פרטים אישיים
+            </TabsTrigger>
+            <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <GraduationCap className="h-4 w-4" />
+              מידע אקדמי
+            </TabsTrigger>
+            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <Calendar className="h-4 w-4" />
+              לוח זמנים
+            </TabsTrigger>
+            <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <CheckCircle className="h-4 w-4" />
+              נוכחות
+            </TabsTrigger>
+            <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <Music className="h-4 w-4" />
+              תזמורות
+            </TabsTrigger>
+            <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <BookOpen className="h-4 w-4" />
+              תאוריה
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <FileText className="h-4 w-4" />
+              מסמכים
+            </TabsTrigger>
+          </TabsList>
 
-      {/* Tab Content */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <StudentTabContent 
-          activeTab={activeTab}
-          studentId={studentId!}
-          student={student}
-          isLoading={false}
-          onStudentUpdate={handleStudentUpdate}
-        />
+          <TabsContent value="personal" className="mt-0">
+            <PersonalInfoTab
+              student={student}
+              studentId={studentId!}
+              onStudentUpdate={handleStudentUpdate}
+            />
+          </TabsContent>
+          <TabsContent value="academic" className="mt-0">
+            <AcademicInfoTab
+              student={student}
+              studentId={studentId!}
+              onStudentUpdate={handleStudentUpdate}
+            />
+          </TabsContent>
+          <TabsContent value="schedule" className="mt-0">
+            <ScheduleTab
+              student={student}
+              studentId={studentId!}
+              isLoading={false}
+            />
+          </TabsContent>
+          <TabsContent value="attendance" className="mt-0">
+            <AttendanceTab student={student} />
+          </TabsContent>
+          <TabsContent value="orchestra" className="mt-0">
+            <OrchestraTab
+              student={student}
+              studentId={studentId!}
+              isLoading={false}
+            />
+          </TabsContent>
+          <TabsContent value="theory" className="mt-0">
+            <TheoryTabOptimized
+              student={student}
+              studentId={studentId!}
+            />
+          </TabsContent>
+          <TabsContent value="documents" className="mt-0">
+            <DocumentsTab student={student} />
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Performance monitoring in dev mode */}

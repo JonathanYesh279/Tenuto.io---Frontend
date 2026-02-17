@@ -8,8 +8,8 @@
 // Main Components
 export { default as StudentDetailsPage } from './components/StudentDetailsPage'
 export { default as StudentDetailsHeader } from './components/StudentDetailsHeader'
-export { default as StudentTabNavigation } from './components/StudentTabNavigation'
-export { default as StudentTabContent } from './components/StudentTabContent'
+// Note: StudentTabNavigation and StudentTabContent are no longer re-exported —
+// detail pages now use shadcn Tabs directly. Files kept for reference only.
 export { default as StudentDetailsErrorBoundary } from './components/StudentDetailsErrorBoundary'
 
 // Tab Components

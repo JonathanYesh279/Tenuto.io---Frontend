@@ -1,16 +1,18 @@
 /**
  * Orchestra Details Page - Main Container Component
- * 
+ *
  * Handles route parameters, data fetching, error boundaries,
  * and coordinates all child components for the orchestra details view.
  */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
-import { ArrowRight, RefreshCw } from 'lucide-react'
+import { ArrowRight, RefreshCw, Info, Users, Calendar } from 'lucide-react'
 import { OrchestraTabType } from '../types'
-import OrchestraTabNavigation from './OrchestraTabNavigation'
-import OrchestraTabContent from './OrchestraTabContent'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import PersonalInfoTab from './tabs/PersonalInfoTab'
+import MembersTab from './tabs/MembersTab'
+import ScheduleTab from './tabs/ScheduleTab'
 import apiService from '../../../../services/apiService'
 
 const OrchestraDetailsPage: React.FC = () => {
@@ -29,21 +31,21 @@ const OrchestraDetailsPage: React.FC = () => {
   // Fetch orchestra data - memoized to prevent unnecessary re-runs
   const fetchOrchestra = useCallback(async () => {
     if (!orchestraId) return
-    
+
     try {
       setIsLoading(true)
       setError(null)
       console.log('🔄 Fetching orchestra data for ID:', orchestraId)
-      
+
       const orchestraData = await apiService.orchestras.getOrchestra(orchestraId)
       console.log('✅ Orchestra data loaded:', orchestraData?.name)
-      
+
       setOrchestra(orchestraData)
     } catch (err) {
       console.error('❌ Error fetching orchestra:', err)
       setError({
-        code: err.status === 404 ? 'NOT_FOUND' : 
-              err.status === 401 ? 'UNAUTHORIZED' : 
+        code: err.status === 404 ? 'NOT_FOUND' :
+              err.status === 401 ? 'UNAUTHORIZED' :
               err.status === 403 ? 'FORBIDDEN' : 'SERVER_ERROR',
         message: err.message || 'שגיאה בטעינת נתוני התזמורת'
       })
@@ -181,25 +183,50 @@ const OrchestraDetailsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Tab Navigation and Content */}
+      {/* Tab Navigation and Content — shadcn Tabs */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
-        <OrchestraTabNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          tabs={[
-            { id: 'personal', label: 'פרטי תזמורת', component: () => null },
-            { id: 'members', label: 'חברי תזמורת', component: () => null },
-            { id: 'schedule', label: 'לוח זמנים', component: () => null },
-          ]}
-        />
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as OrchestraTabType)} className="w-full">
+          <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6">
+            <TabsTrigger value="personal" className="gap-2 inline-flex items-center">
+              <Info className="h-4 w-4" />
+              פרטי תזמורת
+            </TabsTrigger>
+            <TabsTrigger value="members" className="gap-2 inline-flex items-center">
+              <Users className="h-4 w-4" />
+              חברי תזמורת
+            </TabsTrigger>
+            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center">
+              <Calendar className="h-4 w-4" />
+              לוח זמנים
+            </TabsTrigger>
+          </TabsList>
 
-        <OrchestraTabContent
-          activeTab={activeTab}
-          orchestraId={orchestraId}
-          orchestra={orchestra}
-          isLoading={isLoading}
-          onUpdate={fetchOrchestra}
-        />
+          <TabsContent value="personal" className="mt-0">
+            <PersonalInfoTab
+              orchestraId={orchestraId}
+              orchestra={orchestra}
+              isLoading={false}
+              activeTab={activeTab}
+            />
+          </TabsContent>
+          <TabsContent value="members" className="mt-0">
+            <MembersTab
+              orchestraId={orchestraId}
+              orchestra={orchestra}
+              isLoading={false}
+              activeTab={activeTab}
+              onUpdate={fetchOrchestra}
+            />
+          </TabsContent>
+          <TabsContent value="schedule" className="mt-0">
+            <ScheduleTab
+              orchestraId={orchestraId}
+              orchestra={orchestra}
+              isLoading={false}
+              activeTab={activeTab}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

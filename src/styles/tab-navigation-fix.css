@@ -1,4 +1,4 @@
-/* Fix for Student Tab Navigation Overflow Issues */
+/* Fix for Student Details Page Overflow Issues */
 
 /* Main container width constraints */
 .student-details-container {
@@ -6,74 +6,6 @@
   overflow-x: hidden;
   background-color: hsl(var(--background));
   min-height: 100vh;
-}
-
-/* Tab navigation container fixes */
-.student-tab-navigation {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-/* Desktop tab navigation fixes */
-.desktop-tab-nav {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.desktop-tab-nav::-webkit-scrollbar {
-  height: 2px;
-}
-
-.desktop-tab-nav::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-.desktop-tab-nav::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 1px;
-}
-
-.desktop-tab-nav nav {
-  min-width: fit-content;
-  width: 100%;
-  flex-shrink: 0;
-}
-
-/* Mobile tab navigation fixes */
-.mobile-tab-nav {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.mobile-tab-nav .scrollbar-hide {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
-  max-width: 100%;
-}
-
-.mobile-tab-nav .scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.mobile-tab-nav nav {
-  width: max-content;
-  min-width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-/* Tab button width constraints */
-.tab-button {
-  flex-shrink: 0;
-  white-space: nowrap;
-  min-width: fit-content;
 }
 
 /* Prevent horizontal page expansion */
@@ -111,31 +43,4 @@ body, html {
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-}
-
-/* Responsive design improvements */
-/* TODO(Phase 7): remove !important after tab migration to shadcn Tabs — needed to override inline styles */
-@media (max-width: 768px) {
-  .desktop-tab-nav {
-    display: none !important;
-  }
-
-  .mobile-tab-nav {
-    display: block !important;
-  }
-
-  .student-tab-navigation {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
-@media (min-width: 769px) {
-  .desktop-tab-nav {
-    display: flex !important;
-  }
-
-  .mobile-tab-nav {
-    display: none !important;
-  }
 }

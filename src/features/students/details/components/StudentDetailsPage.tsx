@@ -1,24 +1,28 @@
 /**
  * Student Details Page - Main Container Component
- * 
+ *
  * Handles route parameters, data fetching, error boundaries,
  * and coordinates all child components for the student details view.
  */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
-import { ArrowRight, RefreshCw, Wifi, WifiOff, Trash2, Shield, Database, AlertTriangle, Archive } from 'lucide-react'
+import {
+  ArrowRight, RefreshCw, Wifi, WifiOff, Trash2, Shield, Database, AlertTriangle,
+  User, GraduationCap, Calendar, CheckCircle, Music, BookOpen, Award, FileText
+} from 'lucide-react'
 import { TabType } from '../types'
-import StudentTabNavigation from './StudentTabNavigation'
-import StudentTabContent from './StudentTabContent'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import PersonalInfoTab from './tabs/PersonalInfoTabSimple'
+import AcademicInfoTab from './tabs/AcademicInfoTabSimple'
+import ScheduleTab from './tabs/ScheduleTab'
+import OrchestraTab from './tabs/OrchestraTab'
+import TheoryTabOptimized from './tabs/TheoryTabOptimized'
+import BagrutTab from './tabs/BagrutTab'
 import apiService from '../../../../services/apiService'
 import { getDisplayName } from '../../../../utils/nameUtils'
 import { useWebSocketStatus } from '../../../../services/websocketService'
 import { usePerformanceOptimizations } from '../../../../services/performanceOptimizations'
-import { 
-  SmartLoadingState, 
-  SkeletonComponents 
-} from '../../../../services/performanceOptimizations'
 import { StudentDetailsErrorBoundary } from './StudentDetailsErrorBoundary'
 import ConfirmationModal from '../../../../components/ui/ConfirmationModal'
 import { useCascadeDeletion } from '../../../../hooks/useCascadeDeletion'
@@ -26,6 +30,37 @@ import { cascadeDeletionService } from '../../../../services/cascadeDeletionServ
 import SafeDeleteModal from '../../../../components/SafeDeleteModal'
 import DeletionImpactModal from '../../../../components/DeletionImpactModal'
 import DeletionImpactSummary from './DeletionImpactSummary'
+import React, { Suspense } from 'react'
+import { Loader } from 'lucide-react'
+import {
+  SmartLoadingState,
+  SkeletonComponents
+} from '../../../../services/performanceOptimizations'
+
+// Simple placeholder components for tabs that need more work
+const AttendanceTab = ({ student }: { student: any }) => (
+  <div className="p-6 text-center text-gray-500">
+    <div className="text-4xl mb-4">✅</div>
+    <div>נוכחות - בפיתוח</div>
+  </div>
+)
+
+const DocumentsTab = ({ student }: { student: any }) => (
+  <div className="p-6 text-center text-gray-500">
+    <div className="text-4xl mb-4">📄</div>
+    <div>מסמכים - בפיתוח</div>
+  </div>
+)
+
+// Loading component for tab content
+const TabLoadingFallback: React.FC = () => (
+  <div className="flex items-center justify-center py-12">
+    <div className="text-center">
+      <Loader className="w-6 h-6 animate-spin mx-auto mb-3 text-primary-600" />
+      <div className="text-sm text-gray-600">טוען נתונים...</div>
+    </div>
+  </div>
+)
 
 const StudentDetailsPage: React.FC = () => {
   console.log('🔍 StudentDetailsPage component loading...')
@@ -44,48 +79,48 @@ const StudentDetailsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  
+
   // Cascade deletion states
   const [showSafeDeleteModal, setShowSafeDeleteModal] = useState(false)
   const [showDeletionImpactModal, setShowDeletionImpactModal] = useState(false)
   const [deletionPreview, setDeletionPreview] = useState(null)
   const [showImpactSummary, setShowImpactSummary] = useState(false)
-  
+
   // Cascade deletion hooks
   const { previewDeletion, executeDeletion, isDeleting } = useCascadeDeletion()
 
   // WebSocket connection status (with error handling)
   let wsStatus = null
   let wsError = false
-  
+
   try {
     wsStatus = useWebSocketStatus()
   } catch (error) {
     console.warn('WebSocket status unavailable:', error)
     wsError = true
   }
-  
+
   // Performance optimizations
   const { prefetchTabData } = usePerformanceOptimizations()
 
   // Fetch student data
   const fetchStudent = useCallback(async () => {
     if (!studentId) return
-    
+
     try {
       setIsLoading(true)
       setError(null)
       console.log('🔄 Fetching student data for ID:', studentId)
-      
+
       const studentData = await apiService.students.getStudentById(studentId)
       setStudent(studentData)
-      
+
       console.log('✅ Student data loaded successfully:', getDisplayName(studentData.personalInfo))
     } catch (err) {
       console.error('❌ Error fetching student:', err)
       setError({
-        code: err.status === 404 ? 'NOT_FOUND' : 
-              err.status === 401 ? 'UNAUTHORIZED' : 
+        code: err.status === 404 ? 'NOT_FOUND' :
+              err.status === 401 ? 'UNAUTHORIZED' :
               err.status === 403 ? 'FORBIDDEN' : 'SERVER_ERROR',
         message: err.message || 'שגיאה בטעינת נתוני התלמיד'
       })
@@ -111,7 +146,7 @@ const StudentDetailsPage: React.FC = () => {
 
   const handleConfirmDelete = async () => {
     if (!studentId) return
-    
+
     try {
       await apiService.students.deleteStudent(studentId)
       // Navigate back to students list after successful deletion
@@ -248,7 +283,7 @@ const StudentDetailsPage: React.FC = () => {
     )
   }
 
-  // Enhanced loading state with smart loading and skeletons
+  // Enhanced loading state with skeletons
   if (isLoading) {
     return (
       <div className="space-y-6 animate-pulse">
@@ -272,7 +307,7 @@ const StudentDetailsPage: React.FC = () => {
               ))}
             </div>
           </div>
-          
+
           {/* Content skeleton */}
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -303,7 +338,7 @@ const StudentDetailsPage: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {/* Only show disconnection warning if we were previously connected */}
         {wsStatus && !wsError && !wsStatus.isConnected && wsStatus.reconnectAttempts > 0 && (
           <div className="flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2 text-sm">
@@ -352,15 +387,15 @@ const StudentDetailsPage: React.FC = () => {
               <button
                 onClick={handleToggleImpactSummary}
                 className={`p-2 rounded-lg transition-colors ${
-                  showImpactSummary 
-                    ? 'bg-blue-100 text-blue-700' 
+                  showImpactSummary
+                    ? 'bg-blue-100 text-blue-700'
                     : 'text-blue-600 hover:bg-blue-50'
                 }`}
                 title="הצג/הסתר השפעת מחיקה"
               >
                 <Database className="w-5 h-5" />
               </button>
-              
+
               <button
                 onClick={handleCheckReferences}
                 className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
@@ -368,7 +403,7 @@ const StudentDetailsPage: React.FC = () => {
               >
                 <AlertTriangle className="w-5 h-5" />
               </button>
-              
+
               <button
                 onClick={handleSafeDeleteClick}
                 className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
@@ -376,7 +411,7 @@ const StudentDetailsPage: React.FC = () => {
               >
                 <Shield className="w-5 h-5" />
               </button>
-              
+
               <button
                 onClick={handleDeleteClick}
                 className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -396,38 +431,119 @@ const StudentDetailsPage: React.FC = () => {
           onClose={() => setShowImpactSummary(false)}
         />
 
-        {/* Tab Navigation and Content */}
+        {/* Tab Navigation and Content — shadcn Tabs with 8-tab overflow handling */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
-          <StudentTabNavigation
-            activeTab={activeTab}
-            onTabChange={(tab) => {
-              setActiveTab(tab)
-              // Prefetch data for the new tab if available
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => {
+              setActiveTab(v as TabType)
               try {
-                prefetchTabData(tab)
+                prefetchTabData(v)
               } catch (error) {
                 console.warn('Failed to prefetch tab data:', error)
               }
             }}
-            tabs={[
-              { id: 'personal', label: 'פרטים אישיים', component: () => null },
-              { id: 'academic', label: 'פרטים אקדמיים', component: () => null },
-              { id: 'schedule', label: 'לוח זמנים', component: () => null },
-              { id: 'attendance', label: 'נוכחות', component: () => null },
-              { id: 'orchestra', label: 'תזמורות', component: () => null },
-              { id: 'theory', label: 'תיאוריה', component: () => null },
-              { id: 'bagrut', label: 'בגרות', component: () => null },
-              { id: 'documents', label: 'מסמכים', component: () => null },
-            ]}
-          />
+            className="w-full"
+          >
+            <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
+              <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <User className="h-4 w-4" />
+                פרטים אישיים
+              </TabsTrigger>
+              <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <GraduationCap className="h-4 w-4" />
+                מידע אקדמי
+              </TabsTrigger>
+              <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <Calendar className="h-4 w-4" />
+                לוח זמנים
+              </TabsTrigger>
+              <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <CheckCircle className="h-4 w-4" />
+                נוכחות
+              </TabsTrigger>
+              <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <Music className="h-4 w-4" />
+                תזמורות
+              </TabsTrigger>
+              <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <BookOpen className="h-4 w-4" />
+                תאוריה
+              </TabsTrigger>
+              <TabsTrigger value="bagrut" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <Award className="h-4 w-4" />
+                בגרות
+              </TabsTrigger>
+              <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap">
+                <FileText className="h-4 w-4" />
+                מסמכים
+              </TabsTrigger>
+            </TabsList>
 
-          <StudentTabContent
-            activeTab={activeTab}
-            studentId={studentId}
-            student={student}
-            isLoading={isLoading}
-            onStudentUpdate={handleStudentUpdate}
-          />
+            <TabsContent value="personal" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <PersonalInfoTab
+                  student={student}
+                  studentId={studentId}
+                  onStudentUpdate={handleStudentUpdate}
+                />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="academic" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <AcademicInfoTab
+                  student={student}
+                  studentId={studentId}
+                  onStudentUpdate={handleStudentUpdate}
+                />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="schedule" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <ScheduleTab
+                  student={student}
+                  studentId={studentId}
+                  isLoading={false}
+                />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="attendance" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <AttendanceTab student={student} />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="orchestra" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <OrchestraTab
+                  student={student}
+                  studentId={studentId}
+                  isLoading={false}
+                />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="theory" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <TheoryTabOptimized
+                  student={student}
+                  studentId={studentId}
+                />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="bagrut" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <BagrutTab
+                  student={student}
+                  studentId={studentId}
+                  onStudentUpdate={handleStudentUpdate}
+                />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="documents" className="mt-0 min-h-96">
+              <Suspense fallback={<TabLoadingFallback />}>
+                <DocumentsTab student={student} />
+              </Suspense>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
 
@@ -442,7 +558,7 @@ const StudentDetailsPage: React.FC = () => {
         onCancel={handleCancelDelete}
         variant="danger"
       />
-      
+
       {/* Safe Delete Modal */}
       <SafeDeleteModal
         isOpen={showSafeDeleteModal}
@@ -451,7 +567,7 @@ const StudentDetailsPage: React.FC = () => {
         onClose={() => setShowSafeDeleteModal(false)}
         onConfirm={handleSafeDelete}
       />
-      
+
       {/* Deletion Impact Modal */}
       <DeletionImpactModal
         isOpen={showDeletionImpactModal}

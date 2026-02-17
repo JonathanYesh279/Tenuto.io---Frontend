@@ -9,7 +9,7 @@
   color-scheme: light;
 }
 
-/* TODO(Phase 7): replace native <select> with shadcn Select — native <option> styling is */
+/* TODO(Phase 9): replace native <select> with shadcn Select — native <option> styling is */
 /* browser-controlled and requires !important to override reliably across all browsers. */
 .teacher-student-select option {
   color: hsl(var(--foreground)) !important;

@@ -45,11 +45,11 @@ Full details: `milestones/v1.1-ROADMAP.md`
   3. A shadcn Dialog opened in a form shows Hebrew text aligned correctly and animations entering from the right edge (RTL-correct portal behavior)
   4. Running a color contrast checker on the primary action button shows WCAG AA pass (4.5:1 ratio or better)
   5. Tab key navigation follows logical RTL order in any existing form — no focus jumps to a logically incorrect position
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 06-01: Token layer, Tailwind config, package upgrades
-- [ ] 06-02: CSS audit, RTL fixes, animation reconciliation
+- [ ] 06-01-PLAN.md — CSS token layer, Tailwind config merge, DirectionProvider, Heebo font, components.json
+- [ ] 06-02-PLAN.md — !important removal, RTL logical properties, dead CSS cleanup, animation reconciliation
 
 ### Phase 7: Primitives
 **Goal:** A complete shadcn/ui primitive component set exists — Dialog, Tabs, DropdownMenu, Tooltip, and supporting components — all RTL-verified and ready to compose domain components and pages on top of.

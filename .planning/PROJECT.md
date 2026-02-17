@@ -22,20 +22,51 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 - ✓ **F6: Polish** — Hours Summary tab, Dashboard hours cards, Admin hours overview, Super Admin toggle — v1.0
 - ✓ **v1.1 Cleanup** — Dead code removal, role mapping fix, instrument sync, audit trail UI, MinistryReports polish, .claude ecosystem cleanup — v1.1
 
+### Active
+
+<!-- Current scope. Building toward these. -->
+
+- [ ] Full UI/UX redesign — audit current state, define design system, redesign every page
+- [ ] Design system definition — color palette, typography, spacing, components, motion standards
+- [ ] shadcn/ui migration — replace generic components with polished Radix-based library
+- [ ] Music school identity — warm tones, musical accents woven into branding
+- [ ] Monday.com-inspired aesthetic — rounded shapes, intentional color, personality with precision
+- [ ] Accessibility improvements — contrast ratios, focus indicators, keyboard navigation
+- [ ] RTL/Hebrew quality pass — text alignment, layout mirroring, bidirectional handling
+- [ ] Loading/error/empty states — consistent feedback patterns across all pages
+- [ ] Micro-interactions — purposeful animations that provide user feedback
+
 ### Out of Scope
 
 <!-- Explicit boundaries. -->
 
+- New features or functionality — this milestone is visual-only, zero regressions
 - Multi-tenant admin features beyond current — defer to next milestone
 - i18n / English translation — Hebrew-only for now
 - Mobile app — web-first
 - Real-time notifications — not needed yet
 - Backend export endpoints — not yet implemented on backend side
 
+## Current Milestone: v2.0 UI/UX Redesign
+
+**Goal:** Transform Tenuto from a generic-looking admin template into a polished, distinctive music school management platform with warm, Monday.com-inspired aesthetics and a music identity.
+
+**Target features:**
+- Complete UI audit and design system definition
+- shadcn/ui component library migration
+- Music school branding (warm palette, musical accents)
+- Full page-by-page redesign (dashboard, lists, forms, detail views, admin pages)
+- Accessibility and RTL quality improvements
+- Consistent loading/error/empty states and micro-interactions
+
+**Design references:** Monday.com (warmth, color, rounded shapes), Linear (precision, whitespace)
+**Component library:** shadcn/ui (Radix-based, Tailwind-compatible)
+
 ## Context
 
 - **Backend:** Complete at `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Backend` — all API endpoints live
 - **Tech stack:** React 18 + TypeScript + Vite + Tailwind CSS + React Hook Form + Zod + React Query
+- **Design stack (v2.0):** shadcn/ui + Radix UI primitives + Tailwind CSS
 - **Patterns:** RTL-first, Hebrew hardcoded, feature modules at `src/features/[module]/details/`
 - **CI:** GitHub Actions pipeline with 6 progressive stages (Build -> TypeScript -> Lint -> Tests -> Deploy)
 - **Codebase map:** `.planning/codebase/` (7 documents)
@@ -59,5 +90,7 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 | Single source of truth for progress | STATE.md canonical, MEMORY.md references it | ✓ Good (v1.1) |
 | .claude/ARCHITECTURE.md for config map | Documents 13 configuration layers and skills | ✓ Good (v1.1) |
 
+| Design system: shadcn/ui + music identity | Monday.com warmth, polished components, RTL-native | — Pending |
+
 ---
-*Last updated: 2026-02-14 after v1.1 milestone*
+*Last updated: 2026-02-17 after v2.0 milestone initialization*

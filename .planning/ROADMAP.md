@@ -26,7 +26,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 
 - [x] **Phase 6: Foundation** — Design token system, RTL fixes, CSS cleanup, package upgrades
 - [x] **Phase 7: Primitives** — Missing shadcn/ui components, modal migration, button/badge system
-- [ ] **Phase 8: Domain Components & Loading States** — Conservatory-specific components, skeletons, empty/error states, toast system
+- [x] **Phase 8: Domain Components & Loading States** — Conservatory-specific components, skeletons, empty/error states, toast system
 - [ ] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
 - [ ] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
 - [ ] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
@@ -80,9 +80,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Domain components (InstrumentBadge, StatusBadge, AvatarInitials, StatsCard) + Skeleton primitive
-- [ ] 08-02-PLAN.md — EmptyState, ErrorState + wire all 3 list pages (skeleton/empty/error)
-- [ ] 08-03-PLAN.md — Toast RTL fix + slide animation + warning/info helpers + page fade-in
+- [x] 08-01-PLAN.md — Domain components (InstrumentBadge, StatusBadge, AvatarInitials, StatsCard) + Skeleton primitive
+- [x] 08-02-PLAN.md — EmptyState, ErrorState + wire all 3 list pages (skeleton/empty/error)
+- [x] 08-03-PLAN.md — Toast RTL fix + slide animation + warning/info helpers + page fade-in
 
 ### Phase 9: Form System
 **Goal:** All forms use consistently styled shadcn/ui-wrapped inputs with section grouping, inline validation feedback, and labeled fields — without any React Hook Form regressions.
@@ -173,7 +173,7 @@ Plans:
 | 5. Audit Claude Skills & GSD Agents | v1.1 | 3/3 | Complete | 2026-02-14 |
 | 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 7. Primitives | v2.0 | 2/2 | Complete | 2026-02-17 |
-| 8. Domain Components & Loading | v2.0 | 0/3 | Planned | - |
+| 8. Domain Components & Loading | v2.0 | 3/3 | Complete | 2026-02-17 |
 | 9. Form System | v2.0 | 0/1 | Not started | - |
 | 10. List Pages | v2.0 | 0/2 | Not started | - |
 | 11. Detail Pages | v2.0 | 0/2 | Not started | - |
@@ -182,4 +182,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-17 (Phase 7 Primitives complete)*
+*Last updated: 2026-02-17 (Phase 8 Domain Components & Loading complete)*

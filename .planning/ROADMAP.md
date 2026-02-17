@@ -110,11 +110,11 @@ Plans:
   3. The pagination control reads "מציג 21-40 מתוך 127 תלמידים" (contextual copy) instead of bare page numbers
   4. The search input on any list page shows an X button when text is present; clicking it clears the field and resets the list immediately
   5. All 5 list pages (Teachers, Students, Orchestras, Rehearsals, Audit Trail) share identical table chrome — same header style, row height, action column position
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 10-01: Teachers and Students list pages
-- [ ] 10-02: Orchestras, Rehearsals, Audit Trail list pages
+- [ ] 10-01-PLAN.md — Upgrade Table.tsx (sticky headers, warm hover), create SearchInput, upgrade Pagination (entityLabel)
+- [ ] 10-02-PLAN.md — Wire all 5 pages: SearchInput on Teachers/Students/Orchestras/Rehearsals, AuditTrail Table+Pagination migration, Rehearsals TableSkeleton+EmptyState
 
 ### Phase 11: Detail Pages
 **Goal:** All entity detail pages display gradient header strips with avatar initials, breadcrumb navigation, "last updated" metadata, and smooth tab transitions — giving every detail view consistent structure and music-school identity.

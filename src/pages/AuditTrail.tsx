@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { adminAuditService } from '../services/apiService'
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
+import Table from '../components/ui/Table'
+import Pagination from '../components/ui/Pagination'
+import { TableSkeleton } from '../components/feedback/Skeleton'
 import toast from 'react-hot-toast'
 import {
   Shield,
   Calendar,
-  ChevronLeft,
-  ChevronRight,
   AlertTriangle,
   FileText,
   RefreshCw,
@@ -191,6 +192,23 @@ export default function AuditTrail() {
     )
   }
 
+  const deletionLogColumns = [
+    { key: 'timestamp', label: 'תאריך', render: (row: any) => formatDate(row.timestamp) },
+    { key: 'action', label: 'פעולה' },
+    { key: 'entityType', label: 'סוג', render: (row: any) => getEntityTypeLabel(row.entityType) },
+    { key: 'entityName', label: 'שם' },
+    { key: 'adminName', label: 'מנהל', render: (row: any) => row.performedBy?.adminName || '-' },
+    { key: 'status', label: 'סטטוס', render: (row: any) => getStatusBadge(row.status) },
+  ]
+
+  const pastActivitiesColumns = [
+    { key: 'date', label: 'תאריך', render: (row: any) => formatDate(row.date) },
+    { key: 'type', label: 'סוג', render: (row: any) => getActivityTypeLabel(row.type) },
+    { key: 'details', label: 'פרטים' },
+    { key: 'teacher', label: 'מורה', render: (row: any) => row.teacher ? `${row.teacher.firstName} ${row.teacher.lastName}` : '-' },
+    { key: 'students', label: 'תלמידים', render: (row: any) => row.students?.length > 0 ? row.students.map((s: any) => `${s.firstName} ${s.lastName}`).join(', ') : '-' },
+  ]
+
   return (
     <div className="p-6 max-w-7xl mx-auto" dir="rtl">
       <div className="flex items-center gap-3 mb-6">
@@ -301,9 +319,7 @@ export default function AuditTrail() {
 
               {/* Loading State */}
               {loading && (
-                <div className="flex justify-center items-center py-12">
-                  <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
-                </div>
+                <TableSkeleton rows={5} cols={6} />
               )}
 
               {/* Empty State */}
@@ -317,81 +333,22 @@ export default function AuditTrail() {
               {/* Table */}
               {!loading && auditLog && auditLog.auditEntries.length > 0 && (
                 <>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            תאריך
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            פעולה
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            סוג
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            שם
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            מנהל
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            סטטוס
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {auditLog.auditEntries.map((entry) => (
-                          <tr key={entry._id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {formatDate(entry.timestamp)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {entry.action}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {getEntityTypeLabel(entry.entityType)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {entry.entityName}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {entry.performedBy.adminName}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm">
-                              {getStatusBadge(entry.status)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  <Table
+                    columns={deletionLogColumns}
+                    data={auditLog.auditEntries}
+                  />
 
                   {/* Pagination */}
-                  <div className="mt-6 flex items-center justify-between">
-                    <p className="text-sm text-gray-700">
-                      סך הכל {auditLog.pagination.total} רשומות
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setAuditPage((p) => Math.max(1, p - 1))}
-                        disabled={auditPage === 1}
-                        className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                      <span className="text-sm text-gray-700">
-                        עמוד {auditPage} מתוך {auditLog.pagination.pages}
-                      </span>
-                      <button
-                        onClick={() => setAuditPage((p) => Math.min(auditLog.pagination.pages, p + 1))}
-                        disabled={auditPage >= auditLog.pagination.pages}
-                        className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                    </div>
+                  <div className="mt-6">
+                    <Pagination
+                      currentPage={auditPage}
+                      totalPages={auditLog.pagination.pages}
+                      totalItems={auditLog.pagination.total}
+                      itemsPerPage={20}
+                      onPageChange={setAuditPage}
+                      entityLabel="רשומות"
+                      showItemsPerPage={false}
+                    />
                   </div>
                 </>
               )}
@@ -430,9 +387,7 @@ export default function AuditTrail() {
 
               {/* Loading State */}
               {loading && (
-                <div className="flex justify-center items-center py-12">
-                  <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
-                </div>
+                <TableSkeleton rows={5} cols={5} />
               )}
 
               {/* Empty State */}
@@ -446,84 +401,23 @@ export default function AuditTrail() {
               {/* Table */}
               {!loading && pastActivities.length > 0 && (
                 <>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            תאריך
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            סוג
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            פרטים
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            מורה
-                          </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            תלמידים
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {pastActivities.map((activity) => (
-                          <tr key={activity._id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {formatDate(activity.date)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {getActivityTypeLabel(activity.type)}
-                            </td>
-                            <td className="px-6 py-4 text-sm text-gray-900">
-                              {activity.details}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {activity.teacher
-                                ? `${activity.teacher.firstName} ${activity.teacher.lastName}`
-                                : '-'}
-                            </td>
-                            <td className="px-6 py-4 text-sm text-gray-900">
-                              {activity.students && activity.students.length > 0
-                                ? activity.students
-                                    .map((s) => `${s.firstName} ${s.lastName}`)
-                                    .join(', ')
-                                : '-'}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  <Table
+                    columns={pastActivitiesColumns}
+                    data={pastActivities}
+                  />
 
                   {/* Pagination */}
                   {activitiesPagination && (
-                    <div className="mt-6 flex items-center justify-between">
-                      <p className="text-sm text-gray-700">
-                        סך הכל {activitiesPagination.total} רשומות
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setActivitiesPage((p) => Math.max(1, p - 1))}
-                          disabled={activitiesPage === 1}
-                          className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <ChevronRight className="w-5 h-5" />
-                        </button>
-                        <span className="text-sm text-gray-700">
-                          עמוד {activitiesPage} מתוך {activitiesPagination.pages}
-                        </span>
-                        <button
-                          onClick={() =>
-                            setActivitiesPage((p) => Math.min(activitiesPagination.pages, p + 1))
-                          }
-                          disabled={activitiesPage >= activitiesPagination.pages}
-                          className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <ChevronLeft className="w-5 h-5" />
-                        </button>
-                      </div>
+                    <div className="mt-6">
+                      <Pagination
+                        currentPage={activitiesPage}
+                        totalPages={activitiesPagination.pages}
+                        totalItems={activitiesPagination.total}
+                        itemsPerPage={20}
+                        onPageChange={setActivitiesPage}
+                        entityLabel="רשומות"
+                        showItemsPerPage={false}
+                      />
                     </div>
                   )}
                 </>

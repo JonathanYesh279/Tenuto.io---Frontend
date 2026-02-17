@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { 
-  Calendar, 
-  Plus, 
-  Search, 
-  Filter, 
+import {
+  Calendar,
+  Plus,
+  Filter,
   MoreVertical,
   Edit,
   Trash2,
@@ -20,6 +19,9 @@ import {
 } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
+import { SearchInput } from '../components/ui/SearchInput'
+import { TableSkeleton } from '../components/feedback/Skeleton'
+import { EmptyState } from '../components/feedback/EmptyState'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import Modal from '../components/ui/Modal'
 import RehearsalCalendar from '../components/RehearsalCalendar'
@@ -380,14 +382,7 @@ export default function Rehearsals() {
   ]
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <div className="text-gray-600">טוען חזרות...</div>
-        </div>
-      </div>
-    )
+    return <TableSkeleton rows={6} cols={5} />
   }
 
   return (
@@ -463,16 +458,12 @@ export default function Rehearsals() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             {/* Search */}
-            <div className="relative">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="חיפוש חזרות..."
-                value={filters.searchQuery}
-                onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
-                className="pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              />
-            </div>
+            <SearchInput
+              value={filters.searchQuery}
+              onChange={(value) => handleFilterChange('searchQuery', value)}
+              onClear={() => handleFilterChange('searchQuery', '')}
+              placeholder="חיפוש חזרות..."
+            />
 
             {/* Toggle Filters */}
             <button
@@ -697,24 +688,21 @@ export default function Rehearsals() {
               }}
             />
           ) : (
-            <div className="text-center py-12">
-              <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">אין חזרות</h3>
-              <p className="text-gray-600 mb-4">
-                {Object.values(filters).some(f => f && f !== 'all') 
-                  ? 'לא נמצאו חזרות התואמות למסננים'
-                  : 'התחל על ידי יצירת החזרה הראשונה'}
-              </p>
-              {!Object.values(filters).some(f => f && f !== 'all') && (
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4 ml-1" />
-                  צור חזרה חדשה
-                </button>
-              )}
-            </div>
+            (() => {
+              const hasActiveFilters = Object.values(filters).some(f => f && f !== 'all')
+              return (
+                <EmptyState
+                  icon={<Calendar className="w-12 h-12" />}
+                  title="אין חזרות"
+                  description={
+                    hasActiveFilters
+                      ? 'לא נמצאו חזרות התואמות למסננים'
+                      : 'התחל על ידי יצירת החזרה הראשונה'
+                  }
+                  action={!hasActiveFilters ? { label: 'צור חזרה חדשה', onClick: () => setShowCreateForm(true) } : undefined}
+                />
+              )
+            })()
           )}
         </Card>
       )}

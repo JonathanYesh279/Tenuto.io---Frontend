@@ -33,7 +33,7 @@ Progress: [████░░░░░░] 35% (v2.0) — [███████
 | v2.0 Phase 7 Plan 1 | 1 | 117min | 117 min |
 | v2.0 Phase 7 Plan 2 | 1 | 6min | 6 min |
 | v2.0 Phase 8 Plan 1 | 1 | 10min | 10 min |
-| v2.0 Phase 8 Plan 2 | 1 | ~10min | 10 min |
+| v2.0 Phase 8 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 8 Plan 3 | 1 | 2min | 2 min |
 
 *Updated after each plan completion*
@@ -65,6 +65,9 @@ Progress: [████░░░░░░] 35% (v2.0) — [███████
 - [08-01]: StatsCard is a re-export of dashboard/StatCard — no duplicate implementation
 - [08-01]: DesignSystem.tsx StatusBadge/InstrumentBadge left untouched — Phase 10 handles callsite migration
 - [08-01]: Skeleton uses bg-muted CSS token (not bg-gray-200) — consistent with CSS variable system
+- [08-02]: EmptyState uses shadcn Button — consistent with Phase 7 design system
+- [08-02]: ErrorState uses text-destructive CSS var — not text-red-600 hardcoded
+- [08-02]: Search-no-results shows muted text; truly-empty shows EmptyState with CTA — prevents misleading CTA when filters active
 - [08-03]: Toast position top-left (physical) = visual right edge in RTL — satisfies TOAST-01/02/03
 - [08-03]: ToastBar render prop approach for animation — toast.custom() bypasses render prop entirely
 - [08-03]: showWarning/showInfo use toast() not toast.custom() so they inherit slideFromRight animation

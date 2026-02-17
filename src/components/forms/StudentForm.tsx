@@ -7,6 +7,17 @@ import {
 import apiService from '../../services/apiService'
 import ConfirmationModal from '../ui/ConfirmationModal'
 import { handleServerValidationError } from '../../utils/validationUtils'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
+import { FormField } from '@/components/ui/form-field'
+import {
+  Select, SelectTrigger, SelectValue, SelectContent,
+  SelectItem, SelectGroup, SelectLabel
+} from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 
 // Constants from schema
 const VALID_CLASSES = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'אחר']
@@ -121,11 +132,11 @@ interface StudentFormProps {
   isEdit?: boolean
 }
 
-const StudentForm: React.FC<StudentFormProps> = ({ 
-  initialData, 
-  onSubmit, 
-  onCancel, 
-  isEdit = false 
+const StudentForm: React.FC<StudentFormProps> = ({
+  initialData,
+  onSubmit,
+  onCancel,
+  isEdit = false
 }) => {
   const [formData, setFormData] = useState<StudentFormData>({
     personalInfo: {
@@ -181,7 +192,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
   const [selectedTeacherId, setSelectedTeacherId] = useState<string>('')
   const [loadingSlots, setLoadingSlots] = useState(false)
   const [rehearsals, setRehearsals] = useState<any[]>([])
-  
+
   // Slot filters state
   const [slotFilters, setSlotFilters] = useState({
     duration: null as number | null,
@@ -189,7 +200,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
     startTime: '',
     endTime: ''
   })
-  
+
   // Slots menu visibility state
   const [showSlotsMenu, setShowSlotsMenu] = useState(true)
 
@@ -222,7 +233,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
       try {
         const orchestrasList = await apiService.orchestras.getOrchestras()
         console.log('Fetched orchestras:', orchestrasList)
-        
+
         // Fetch rehearsal data for each orchestra to get schedule info
         const orchestrasWithRehearsals = await Promise.all(
           (orchestrasList || []).map(async (orchestra) => {
@@ -247,7 +258,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             return orchestra
           })
         )
-        
+
         setOrchestras(orchestrasWithRehearsals)
       } catch (error) {
         console.error('Error fetching orchestras:', error)
@@ -484,7 +495,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
         [field]: value
       }
     }))
-    
+
     // Clear error for this field
     setErrors(prev => ({
       ...prev,
@@ -494,7 +505,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
   const handleInstrumentChange = (index: number, field: string, value: any) => {
     const updatedInstruments = [...formData.academicInfo.instrumentProgress]
-    
+
     if (field === 'tests') {
       updatedInstruments[index] = {
         ...updatedInstruments[index],
@@ -525,7 +536,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
   const addInstrument = () => {
     const hasPrimary = formData.academicInfo.instrumentProgress.some(i => i.isPrimary)
-    
+
     setFormData(prev => ({
       ...prev,
       academicInfo: {
@@ -548,7 +559,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
   const removeInstrument = (index: number) => {
     const updatedInstruments = formData.academicInfo.instrumentProgress.filter((_, i) => i !== index)
-    
+
     // Ensure at least one primary instrument remains
     if (updatedInstruments.length > 0 && !updatedInstruments.some(i => i.isPrimary)) {
       updatedInstruments[0].isPrimary = true
@@ -745,7 +756,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -771,189 +782,170 @@ const StudentForm: React.FC<StudentFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <h2 className="text-2xl font-bold text-foreground">
           {isEdit ? 'עריכת תלמיד' : 'הוספת תלמיד חדש'}
         </h2>
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon"
           onClick={onCancel}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <X className="w-5 h-5" />
-        </button>
+        </Button>
       </div>
 
       {errors.submit && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-600" />
-          <span className="text-red-700">{errors.submit}</span>
+        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-destructive" />
+          <span className="text-destructive">{errors.submit}</span>
         </div>
       )}
 
       {/* Personal Information Section */}
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-border">
         <button
           type="button"
           onClick={() => toggleSection('personal')}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
             <User className="w-5 h-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-gray-900">פרטים אישיים</h3>
+            <h3 className="text-lg font-semibold text-foreground">פרטים אישיים</h3>
           </div>
           {expandedSections.personal ? <ChevronUp /> : <ChevronDown />}
         </button>
-        
+
         {expandedSections.personal && (
-          <div className="p-6 border-t border-gray-200">
+          <div className="p-6 border-t border-border">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* First Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  שם פרטי <span className="text-red-500">*</span>
-                </label>
-                <input
+              <FormField label="שם פרטי" htmlFor="firstName" error={errors['personalInfo.firstName']} required>
+                <Input
+                  id="firstName"
                   type="text"
                   value={formData.personalInfo.firstName}
                   onChange={(e) => handleInputChange('personalInfo', 'firstName', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['personalInfo.firstName'] ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  aria-invalid={!!errors['personalInfo.firstName']}
+                  aria-describedby={errors['personalInfo.firstName'] ? 'firstName-error' : undefined}
+                  className={cn(errors['personalInfo.firstName'] && "border-destructive focus-visible:ring-destructive")}
                   placeholder="הכנס שם פרטי"
                 />
-                {errors['personalInfo.firstName'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.firstName']}</p>
-                )}
-              </div>
+              </FormField>
 
               {/* Last Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  שם משפחה <span className="text-red-500">*</span>
-                </label>
-                <input
+              <FormField label="שם משפחה" htmlFor="lastName" error={errors['personalInfo.lastName']} required>
+                <Input
+                  id="lastName"
                   type="text"
                   value={formData.personalInfo.lastName}
                   onChange={(e) => handleInputChange('personalInfo', 'lastName', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['personalInfo.lastName'] ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  aria-invalid={!!errors['personalInfo.lastName']}
+                  aria-describedby={errors['personalInfo.lastName'] ? 'lastName-error' : undefined}
+                  className={cn(errors['personalInfo.lastName'] && "border-destructive focus-visible:ring-destructive")}
                   placeholder="הכנס שם משפחה"
                 />
-                {errors['personalInfo.lastName'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.lastName']}</p>
-                )}
-              </div>
+              </FormField>
 
               {/* Student Phone */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">טלפון תלמיד</label>
-                <input
+              <FormField label="טלפון תלמיד" htmlFor="phone" error={errors['personalInfo.phone']}>
+                <Input
+                  id="phone"
                   type="tel"
                   value={formData.personalInfo.phone}
                   onChange={(e) => handleInputChange('personalInfo', 'phone', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['personalInfo.phone'] ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  aria-invalid={!!errors['personalInfo.phone']}
+                  aria-describedby={errors['personalInfo.phone'] ? 'phone-error' : undefined}
+                  className={cn(errors['personalInfo.phone'] && "border-destructive focus-visible:ring-destructive")}
                   placeholder="0501234567"
                 />
-                {errors['personalInfo.phone'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.phone']}</p>
-                )}
-              </div>
+              </FormField>
 
               {/* Age */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">גיל</label>
-                <input
+              <FormField label="גיל" htmlFor="age">
+                <Input
+                  id="age"
                   type="number"
                   value={formData.personalInfo.age || ''}
                   onChange={(e) => handleInputChange('personalInfo', 'age', e.target.value ? parseInt(e.target.value) : null)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                   placeholder="גיל התלמיד"
                   min="0"
                   max="99"
                 />
-              </div>
+              </FormField>
 
               {/* Student Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">אימייל תלמיד</label>
-                <input
+              <FormField label="אימייל תלמיד" htmlFor="studentEmail" error={errors['personalInfo.studentEmail']}>
+                <Input
+                  id="studentEmail"
                   type="email"
                   value={formData.personalInfo.studentEmail}
                   onChange={(e) => handleInputChange('personalInfo', 'studentEmail', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['personalInfo.studentEmail'] ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  aria-invalid={!!errors['personalInfo.studentEmail']}
+                  aria-describedby={errors['personalInfo.studentEmail'] ? 'studentEmail-error' : undefined}
+                  className={cn(errors['personalInfo.studentEmail'] && "border-destructive focus-visible:ring-destructive")}
                   placeholder="student@example.com"
                 />
-                {errors['personalInfo.studentEmail'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.studentEmail']}</p>
-                )}
-              </div>
+              </FormField>
 
               {/* Address */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">כתובת</label>
-                <input
-                  type="text"
-                  value={formData.personalInfo.address}
-                  onChange={(e) => handleInputChange('personalInfo', 'address', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
-                  placeholder="הכנס כתובת מלאה"
-                />
+                <FormField label="כתובת" htmlFor="address">
+                  <Input
+                    id="address"
+                    type="text"
+                    value={formData.personalInfo.address}
+                    onChange={(e) => handleInputChange('personalInfo', 'address', e.target.value)}
+                    placeholder="הכנס כתובת מלאה"
+                  />
+                </FormField>
               </div>
 
               {/* Parent section divider */}
-              <div className="md:col-span-2 border-t pt-4 mt-2">
-                <h4 className="text-md font-medium text-gray-800 mb-4">פרטי הורה</h4>
+              <div className="md:col-span-2">
+                <Separator className="mb-4" />
+                <h4 className="text-md font-medium text-foreground mb-4">פרטי הורה</h4>
               </div>
 
               {/* Parent Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">שם הורה</label>
-                <input
+              <FormField label="שם הורה" htmlFor="parentName">
+                <Input
+                  id="parentName"
                   type="text"
                   value={formData.personalInfo.parentName}
                   onChange={(e) => handleInputChange('personalInfo', 'parentName', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                   placeholder="שם ההורה"
                 />
-              </div>
+              </FormField>
 
               {/* Parent Phone */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">טלפון הורה</label>
-                <input
+              <FormField label="טלפון הורה" htmlFor="parentPhone" error={errors['personalInfo.parentPhone']}>
+                <Input
+                  id="parentPhone"
                   type="tel"
                   value={formData.personalInfo.parentPhone}
                   onChange={(e) => handleInputChange('personalInfo', 'parentPhone', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['personalInfo.parentPhone'] ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  aria-invalid={!!errors['personalInfo.parentPhone']}
+                  aria-describedby={errors['personalInfo.parentPhone'] ? 'parentPhone-error' : undefined}
+                  className={cn(errors['personalInfo.parentPhone'] && "border-destructive focus-visible:ring-destructive")}
                   placeholder="0501234567"
                 />
-                {errors['personalInfo.parentPhone'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.parentPhone']}</p>
-                )}
-              </div>
+              </FormField>
 
               {/* Parent Email */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">אימייל הורה</label>
-                <input
-                  type="email"
-                  value={formData.personalInfo.parentEmail}
-                  onChange={(e) => handleInputChange('personalInfo', 'parentEmail', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['personalInfo.parentEmail'] ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="parent@example.com"
-                />
-                {errors['personalInfo.parentEmail'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['personalInfo.parentEmail']}</p>
-                )}
+                <FormField label="אימייל הורה" htmlFor="parentEmail" error={errors['personalInfo.parentEmail']}>
+                  <Input
+                    id="parentEmail"
+                    type="email"
+                    value={formData.personalInfo.parentEmail}
+                    onChange={(e) => handleInputChange('personalInfo', 'parentEmail', e.target.value)}
+                    aria-invalid={!!errors['personalInfo.parentEmail']}
+                    aria-describedby={errors['personalInfo.parentEmail'] ? 'parentEmail-error' : undefined}
+                    className={cn(errors['personalInfo.parentEmail'] && "border-destructive focus-visible:ring-destructive")}
+                    placeholder="parent@example.com"
+                  />
+                </FormField>
               </div>
             </div>
           </div>
@@ -961,202 +953,217 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </div>
 
       {/* Academic Information Section */}
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-border">
         <button
           type="button"
           onClick={() => toggleSection('academic')}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-gray-900">פרטים אקדמיים</h3>
+            <h3 className="text-lg font-semibold text-foreground">פרטים אקדמיים</h3>
           </div>
           {expandedSections.academic ? <ChevronUp /> : <ChevronDown />}
         </button>
-        
+
         {expandedSections.academic && (
-          <div className="p-6 border-t border-gray-200">
+          <div className="p-6 border-t border-border">
             <div className="space-y-4">
               {/* Class */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  כיתה <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={formData.academicInfo.class}
-                  onChange={(e) => handleInputChange('academicInfo', 'class', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                    errors['academicInfo.class'] ? 'border-red-500' : 'border-gray-300'
-                  }`}
+              <FormField label="כיתה" htmlFor="class" error={errors['academicInfo.class']} required>
+                <Select
+                  value={formData.academicInfo.class || undefined}
+                  onValueChange={(val) => handleInputChange('academicInfo', 'class', val)}
                 >
-                  {VALID_CLASSES.map(cls => (
-                    <option key={cls} value={cls}>{cls}</option>
-                  ))}
-                </select>
-                {errors['academicInfo.class'] && (
-                  <p className="text-red-500 text-sm mt-1">{errors['academicInfo.class']}</p>
-                )}
-              </div>
+                  <SelectTrigger
+                    id="class"
+                    aria-invalid={!!errors['academicInfo.class']}
+                    aria-describedby={errors['academicInfo.class'] ? 'class-error' : undefined}
+                    className={cn(errors['academicInfo.class'] && "border-destructive")}
+                  >
+                    <SelectValue placeholder="בחר כיתה" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {VALID_CLASSES.map(cls => (
+                      <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormField>
             </div>
           </div>
         )}
       </div>
 
       {/* Instruments Section */}
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-border">
         <button
           type="button"
           onClick={() => toggleSection('instruments')}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
             <Music className="w-5 h-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-gray-900">כלי נגינה</h3>
+            <h3 className="text-lg font-semibold text-foreground">כלי נגינה</h3>
           </div>
           {expandedSections.instruments ? <ChevronUp /> : <ChevronDown />}
         </button>
-        
+
         {expandedSections.instruments && (
-          <div className="p-6 border-t border-gray-200">
+          <div className="p-6 border-t border-border">
             {errors['academicInfo.instruments'] && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-700 text-sm">{errors['academicInfo.instruments']}</p>
+              <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded-lg">
+                <p className="text-destructive text-sm">{errors['academicInfo.instruments']}</p>
               </div>
             )}
-            
+
             {errors['academicInfo.primaryInstrument'] && (
-              <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-yellow-700 text-sm">{errors['academicInfo.primaryInstrument']}</p>
+              <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-amber-700 text-sm">{errors['academicInfo.primaryInstrument']}</p>
               </div>
             )}
 
             <div className="space-y-4">
               {formData.academicInfo.instrumentProgress.map((instrument, index) => (
-                <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div key={index} className="p-4 bg-muted/50 rounded-lg border border-border">
                   <div className="flex items-start justify-between mb-3">
-                    <h4 className="font-medium text-gray-900">כלי נגינה {index + 1}</h4>
+                    <h4 className="font-medium text-foreground">כלי נגינה {index + 1}</h4>
                     {formData.academicInfo.instrumentProgress.length > 1 && (
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="sm"
                         onClick={() => removeInstrument(index)}
-                        className="p-1 hover:bg-red-50 rounded text-red-600"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </Button>
                     )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Instrument Name */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        שם הכלי <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={instrument.instrumentName}
-                        onChange={(e) => handleInstrumentChange(index, 'instrumentName', e.target.value)}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 ${
-                          errors[`instrument.${index}.name`] ? 'border-red-500' : 'border-gray-300'
-                        }`}
+                    <FormField
+                      label="שם הכלי"
+                      htmlFor={`instrumentName-${index}`}
+                      error={errors[`instrument.${index}.name`]}
+                      required
+                    >
+                      <Select
+                        value={instrument.instrumentName || undefined}
+                        onValueChange={(val) => handleInstrumentChange(index, 'instrumentName', val)}
                       >
-                        <option value="">בחר כלי</option>
-                        {VALID_INSTRUMENTS.map(inst => (
-                          <option key={inst} value={inst}>{inst}</option>
-                        ))}
-                      </select>
-                      {errors[`instrument.${index}.name`] && (
-                        <p className="text-red-500 text-xs mt-1">{errors[`instrument.${index}.name`]}</p>
-                      )}
-                    </div>
+                        <SelectTrigger
+                          id={`instrumentName-${index}`}
+                          aria-invalid={!!errors[`instrument.${index}.name`]}
+                          aria-describedby={errors[`instrument.${index}.name`] ? `instrumentName-${index}-error` : undefined}
+                          className={cn(errors[`instrument.${index}.name`] && "border-destructive")}
+                        >
+                          <SelectValue placeholder="בחר כלי" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {VALID_INSTRUMENTS.map(inst => (
+                            <SelectItem key={inst} value={inst}>{inst}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormField>
 
                     {/* Current Stage */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">שלב נוכחי</label>
-                      <select
-                        value={instrument.currentStage}
-                        onChange={(e) => handleInstrumentChange(index, 'currentStage', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
+                    <FormField label="שלב נוכחי" htmlFor={`currentStage-${index}`}>
+                      <Select
+                        value={instrument.currentStage?.toString() || undefined}
+                        onValueChange={(val) => handleInstrumentChange(index, 'currentStage', val ? parseInt(val) : 1)}
                       >
-                        {VALID_STAGES.map(stage => (
-                          <option key={stage} value={stage}>שלב {stage}</option>
-                        ))}
-                      </select>
-                    </div>
+                        <SelectTrigger id={`currentStage-${index}`}>
+                          <SelectValue placeholder="בחר שלב" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {VALID_STAGES.map(stage => (
+                            <SelectItem key={stage} value={stage.toString()}>שלב {stage}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormField>
 
                     {/* Is Primary */}
-                    <div>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={instrument.isPrimary}
-                          onChange={(e) => handleInstrumentChange(index, 'isPrimary', e.target.checked)}
-                          className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
-                        />
-                        <span className="text-sm font-medium text-gray-700">כלי ראשי</span>
-                      </label>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id={`isPrimary-${index}`}
+                        checked={instrument.isPrimary}
+                        onCheckedChange={(checked) => handleInstrumentChange(index, 'isPrimary', checked as boolean)}
+                      />
+                      <Label htmlFor={`isPrimary-${index}`} className="cursor-pointer">כלי ראשי</Label>
                     </div>
 
                     {/* Test Statuses */}
                     <div className="md:col-span-2 grid grid-cols-2 gap-4 mt-2">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">מבחן שלב</label>
-                        <select
-                          value={instrument.tests.stageTest.status}
-                          onChange={(e) => handleInstrumentChange(index, 'tests', {
+                      <FormField label="מבחן שלב" htmlFor={`stageTest-${index}`}>
+                        <Select
+                          value={instrument.tests.stageTest.status || undefined}
+                          onValueChange={(val) => handleInstrumentChange(index, 'tests', {
                             ...instrument.tests,
-                            stageTest: { ...instrument.tests.stageTest, status: e.target.value }
+                            stageTest: { ...instrument.tests.stageTest, status: val }
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                         >
-                          {TEST_STATUSES.map(status => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
-                        </select>
-                      </div>
+                          <SelectTrigger id={`stageTest-${index}`}>
+                            <SelectValue placeholder="בחר סטטוס" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TEST_STATUSES.map(status => (
+                              <SelectItem key={status} value={status}>{status}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">מבחן טכני</label>
-                        <select
-                          value={instrument.tests.technicalTest.status}
-                          onChange={(e) => handleInstrumentChange(index, 'tests', {
+                      <FormField label="מבחן טכני" htmlFor={`technicalTest-${index}`}>
+                        <Select
+                          value={instrument.tests.technicalTest.status || undefined}
+                          onValueChange={(val) => handleInstrumentChange(index, 'tests', {
                             ...instrument.tests,
-                            technicalTest: { ...instrument.tests.technicalTest, status: e.target.value }
+                            technicalTest: { ...instrument.tests.technicalTest, status: val }
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                         >
-                          {TEST_STATUSES.map(status => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
-                        </select>
-                      </div>
+                          <SelectTrigger id={`technicalTest-${index}`}>
+                            <SelectValue placeholder="בחר סטטוס" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TEST_STATUSES.map(status => (
+                              <SelectItem key={status} value={status}>{status}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
                     </div>
                   </div>
                 </div>
               ))}
 
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={addInstrument}
-                className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-500 transition-colors flex items-center justify-center gap-2 text-gray-600 hover:text-primary-600"
+                className="w-full border-dashed border-2 text-muted-foreground hover:text-primary hover:border-primary"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 ms-2" />
                 הוסף כלי נגינה
-              </button>
+              </Button>
             </div>
           </div>
         )}
       </div>
 
       {/* Teacher & Schedule Section */}
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-border">
         <button
           type="button"
           onClick={() => toggleSection('teachers')}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-gray-900">מורים ושיעורים</h3>
+            <h3 className="text-lg font-semibold text-foreground">מורים ושיעורים</h3>
             {formData.teacherAssignments.length > 0 && (
               <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded-full text-xs">
                 {formData.teacherAssignments.length} שיבוצים
@@ -1165,44 +1172,46 @@ const StudentForm: React.FC<StudentFormProps> = ({
           </div>
           {expandedSections.teachers ? <ChevronUp /> : <ChevronDown />}
         </button>
-        
+
         {expandedSections.teachers && (
-          <div className="p-6 border-t border-gray-200">
+          <div className="p-6 border-t border-border">
             {/* Current Assignments */}
             {formData.teacherAssignments.length > 0 && (
               <div className="mb-6">
-                <h4 className="text-sm font-medium text-gray-700 mb-3">שיעורים מתוכננים</h4>
+                <h4 className="text-sm font-medium text-muted-foreground mb-3">שיעורים מתוכננים</h4>
                 <div className="space-y-2">
                   {formData.teacherAssignments.map((assignment, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
                       <div className="flex items-center gap-4">
                         <CheckCircle className="w-5 h-5 text-green-600" />
                         <div>
-                          <p className="font-medium text-gray-900">
+                          <p className="font-medium text-foreground">
                             מורה - {teachers.find(t => t._id === assignment.teacherId)?.professionalInfo?.instrument || 'כלי'}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-muted-foreground">
                             {assignment.day} | {assignment.time}-{calculateEndTime(assignment.time, assignment.duration)} | {assignment.duration} דקות
                             {assignment.location && ` | ${assignment.location}`}
                           </p>
                         </div>
                       </div>
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="sm"
                         onClick={() => removeTeacherAssignment(index)}
-                        className="p-1 hover:bg-red-50 rounded text-red-600"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Teacher Selection - Searchable Dropdown */}
+            {/* Teacher Selection - Searchable Dropdown (custom UI - keep as-is for fixed-positioning escape) */}
             <div className="relative" ref={teacherDropdownRef}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">בחר מורה</label>
+              <Label className="block mb-2">בחר מורה</Label>
 
               {/* Dropdown trigger button */}
               <button
@@ -1219,18 +1228,18 @@ const StudentForm: React.FC<StudentFormProps> = ({
                   }
                   setIsTeacherDropdownOpen(!isTeacherDropdownOpen)
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white text-right flex items-center justify-between"
+                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground text-right flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                <span className={selectedTeacherId ? 'text-gray-900' : 'text-gray-500'}>
+                <span className={selectedTeacherId ? 'text-foreground' : 'text-muted-foreground'}>
                   {getSelectedTeacherDisplay()}
                 </span>
-                <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isTeacherDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isTeacherDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Dropdown menu - Fixed positioning to escape modal overflow */}
               {isTeacherDropdownOpen && (
                 <div
-                  className="fixed z-[9999] bg-white border border-gray-300 rounded-lg shadow-xl overflow-hidden"
+                  className="fixed z-[9999] bg-popover border border-border rounded-lg shadow-xl overflow-hidden"
                   style={{
                     top: dropdownPosition.top,
                     left: dropdownPosition.left,
@@ -1239,15 +1248,15 @@ const StudentForm: React.FC<StudentFormProps> = ({
                   }}
                 >
                   {/* Search input */}
-                  <div className="p-2 border-b border-gray-200 sticky top-0 bg-white">
+                  <div className="p-2 border-b border-border sticky top-0 bg-popover">
                     <div className="relative">
-                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      <input
+                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
                         type="text"
                         value={teacherSearchQuery}
                         onChange={(e) => setTeacherSearchQuery(e.target.value)}
                         placeholder="חיפוש לפי שם או כלי נגינה..."
-                        className="w-full pr-9 pl-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm text-gray-900"
+                        className="pr-9 text-sm"
                         autoFocus
                       />
                     </div>
@@ -1263,7 +1272,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         setTeacherSearchQuery('')
                         setIsTeacherDropdownOpen(false)
                       }}
-                      className="w-full px-3 py-2 text-right text-gray-500 hover:bg-gray-50 border-b border-gray-100"
+                      className="w-full px-3 py-2 text-right text-muted-foreground hover:bg-muted border-b border-border"
                     >
                       בחר מורה לראות זמנים פנויים
                     </button>
@@ -1278,20 +1287,20 @@ const StudentForm: React.FC<StudentFormProps> = ({
                             setTeacherSearchQuery('')
                             setIsTeacherDropdownOpen(false)
                           }}
-                          className={`w-full px-3 py-2 text-right hover:bg-primary-50 flex items-center justify-between ${
-                            selectedTeacherId === teacher._id ? 'bg-primary-100 text-primary-700' : 'text-gray-900'
+                          className={`w-full px-3 py-2 text-right hover:bg-accent flex items-center justify-between ${
+                            selectedTeacherId === teacher._id ? 'bg-accent text-accent-foreground' : 'text-foreground'
                           }`}
                         >
                           <span>
                             {teacher.personalInfo?.firstName} {teacher.personalInfo?.lastName} - {teacher.professionalInfo?.instrument || 'ללא כלי'}
                           </span>
                           {selectedTeacherId === teacher._id && (
-                            <CheckCircle className="w-4 h-4 text-primary-600" />
+                            <CheckCircle className="w-4 h-4 text-primary" />
                           )}
                         </button>
                       ))
                     ) : (
-                      <div className="px-3 py-4 text-center text-gray-500 text-sm">
+                      <div className="px-3 py-4 text-center text-muted-foreground text-sm">
                         לא נמצאו מורים תואמים
                       </div>
                     )}
@@ -1303,29 +1312,28 @@ const StudentForm: React.FC<StudentFormProps> = ({
             {/* Available Slots */}
             {selectedTeacherId && (
               <div className="mt-4">
-                <h4 className="text-sm font-medium text-gray-700 mb-3">
+                <h4 className="text-sm font-medium text-muted-foreground mb-3">
                   זמנים פנויים - {(() => { const t = teachers.find(t => t._id === selectedTeacherId); return t ? (t.personalInfo?.firstName || '') + ' ' + (t.personalInfo?.lastName || '') : 'מורה' })()}
                 </h4>
-                
+
                 {/* Add Additional Lesson Button - shows when menu is closed and there are available slots */}
                 {!showSlotsMenu && availableSlots.length > 0 && (
                   <div className="mb-4">
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setShowSlotsMenu(true)}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-4 h-4 ms-2" />
                       בחר שיעור נוסף
-                    </button>
+                    </Button>
                   </div>
                 )}
-                
+
                 {/* Filters Section - only show when slots menu is open */}
                 {showSlotsMenu && !loadingSlots && availableSlots.length > 0 && (
-                  <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="mb-4 p-4 bg-muted/50 rounded-lg border border-border">
                     <div className="flex items-center justify-between mb-3">
-                      <h5 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                      <h5 className="text-sm font-medium text-foreground flex items-center gap-2">
                         <Filter className="w-4 h-4" />
                         סינון זמנים
                       </h5>
@@ -1338,40 +1346,44 @@ const StudentForm: React.FC<StudentFormProps> = ({
                             startTime: '',
                             endTime: ''
                           })}
-                          className="text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                          className="text-xs text-primary hover:text-primary/80 flex items-center gap-1"
                         >
                           <X className="w-3 h-3" />
                           נקה סינון
                         </button>
                       )}
                     </div>
-                    
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       {/* Duration Filter */}
                       <div>
-                        <label className="text-xs text-gray-600 mb-1 block">משך שיעור</label>
-                        <select
-                          value={slotFilters.duration || ''}
-                          onChange={(e) => setSlotFilters(prev => ({
+                        <Label className="text-xs text-muted-foreground mb-1 block">משך שיעור</Label>
+                        <Select
+                          value={slotFilters.duration?.toString() || ''}
+                          onValueChange={(val) => setSlotFilters(prev => ({
                             ...prev,
-                            duration: e.target.value ? Number(e.target.value) : null
+                            duration: val ? Number(val) : null
                           }))}
-                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-gray-900 bg-white"
                         >
-                          <option value="">כל המשכים</option>
-                          <option value="30">30 דקות</option>
-                          <option value="45">45 דקות</option>
-                          <option value="60">60 דקות</option>
-                        </select>
+                          <SelectTrigger className="h-8 text-sm">
+                            <SelectValue placeholder="כל המשכים" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">כל המשכים</SelectItem>
+                            <SelectItem value="30">30 דקות</SelectItem>
+                            <SelectItem value="45">45 דקות</SelectItem>
+                            <SelectItem value="60">60 דקות</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
-                      
-                      {/* Days Filter */}
+
+                      {/* Days Filter - keep custom checkbox dropdown */}
                       <div>
-                        <label className="text-xs text-gray-600 mb-1 block">ימים</label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">ימים</Label>
                         <div className="relative">
                           <button
                             type="button"
-                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-right flex items-center justify-between text-gray-900"
+                            className="w-full h-8 px-2 py-1.5 text-sm border border-input rounded-md bg-background text-right flex items-center justify-between text-foreground"
                             onClick={(e) => {
                               const dropdown = e.currentTarget.nextElementSibling
                               if (dropdown) {
@@ -1380,20 +1392,19 @@ const StudentForm: React.FC<StudentFormProps> = ({
                             }}
                           >
                             <span className="truncate">
-                              {slotFilters.selectedDays.length > 0 
+                              {slotFilters.selectedDays.length > 0
                                 ? `${slotFilters.selectedDays.length} ימים נבחרו`
                                 : 'כל הימים'}
                             </span>
-                            <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                            <ChevronDown className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
                           </button>
-                          <div className="hidden absolute top-full mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                          <div className="hidden absolute top-full mt-1 w-full bg-popover border border-border rounded-md shadow-lg z-10">
                             {VALID_DAYS.map(day => (
-                              <label key={day} className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
-                                <input
-                                  type="checkbox"
+                              <label key={day} className="flex items-center px-3 py-2 hover:bg-muted cursor-pointer">
+                                <Checkbox
                                   checked={slotFilters.selectedDays.includes(day)}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
                                       setSlotFilters(prev => ({
                                         ...prev,
                                         selectedDays: [...prev.selectedDays, day]
@@ -1405,54 +1416,54 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                       }))
                                     }
                                   }}
-                                  className="ml-2 text-primary-600 rounded"
+                                  className="ms-2"
                                 />
-                                <span className="text-sm text-gray-900">{day}</span>
+                                <span className="text-sm text-foreground">{day}</span>
                               </label>
                             ))}
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Start Time Filter */}
                       <div>
-                        <label className="text-xs text-gray-600 mb-1 block">משעה</label>
-                        <input
+                        <Label className="text-xs text-muted-foreground mb-1 block">משעה</Label>
+                        <Input
                           type="time"
                           value={slotFilters.startTime}
                           onChange={(e) => setSlotFilters(prev => ({
                             ...prev,
                             startTime: e.target.value
                           }))}
-                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-gray-900 bg-white"
+                          className="h-8 text-sm"
                         />
                       </div>
-                      
+
                       {/* End Time Filter */}
                       <div>
-                        <label className="text-xs text-gray-600 mb-1 block">עד שעה</label>
-                        <input
+                        <Label className="text-xs text-muted-foreground mb-1 block">עד שעה</Label>
+                        <Input
                           type="time"
                           value={slotFilters.endTime}
                           onChange={(e) => setSlotFilters(prev => ({
                             ...prev,
                             endTime: e.target.value
                           }))}
-                          className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-gray-900 bg-white"
+                          className="h-8 text-sm"
                         />
                       </div>
                     </div>
                   </div>
                 )}
-                
+
                 {loadingSlots ? (
                   <div className="text-center py-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
-                    <p className="text-sm text-gray-600 mt-2">טוען זמנים פנויים...</p>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-sm text-muted-foreground mt-2">טוען זמנים פנויים...</p>
                   </div>
                 ) : showSlotsMenu && availableSlots.length > 0 ? (
                   <div>
-                    <p className="text-xs text-gray-500 mb-3">
+                    <p className="text-xs text-muted-foreground mb-3">
                       בחר זמן ומשך שיעור מהאפשרויות הזמינות:
                     </p>
                     {/* Group slots by day for better organization */}
@@ -1463,12 +1474,12 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         if (slotFilters.duration && slot.duration !== slotFilters.duration) {
                           return false
                         }
-                        
+
                         // Days filter
                         if (slotFilters.selectedDays.length > 0 && !slotFilters.selectedDays.includes(slot.day)) {
                           return false
                         }
-                        
+
                         // Time range filter
                         if (slotFilters.startTime && slot.startTime < slotFilters.startTime) {
                           return false
@@ -1476,15 +1487,15 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         if (slotFilters.endTime && slot.endTime > slotFilters.endTime) {
                           return false
                         }
-                        
+
                         return true
                       })
-                      
+
                       if (filteredSlots.length === 0) {
                         return (
-                          <div className="text-center py-8 bg-gray-50 rounded-lg">
-                            <Filter className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                            <p className="text-gray-500 text-sm mb-2">אין זמנים התואמים לסינון שבחרת</p>
+                          <div className="text-center py-8 bg-muted/50 rounded-lg">
+                            <Filter className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                            <p className="text-muted-foreground text-sm mb-2">אין זמנים התואמים לסינון שבחרת</p>
                             <button
                               type="button"
                               onClick={() => setSlotFilters({
@@ -1493,23 +1504,23 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                 startTime: '',
                                 endTime: ''
                               })}
-                              className="text-xs text-primary-600 hover:text-primary-700"
+                              className="text-xs text-primary hover:text-primary/80"
                             >
                               נקה סינון ותראה את כל הזמנים
                             </button>
                           </div>
                         )
                       }
-                      
+
                       const slotsByDay = filteredSlots.reduce((acc, slot) => {
                         if (!acc[slot.day]) acc[slot.day] = []
                         acc[slot.day].push(slot)
                         return acc
                       }, {} as Record<string, typeof availableSlots>)
-                      
+
                       return Object.entries(slotsByDay).map(([day, daySlots]) => (
                         <div key={day} className="mb-4">
-                          <h5 className="text-sm font-medium text-gray-600 mb-2 flex items-center gap-2">
+                          <h5 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
                             {day}
                           </h5>
@@ -1521,7 +1532,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                 key={slot._id}
                                 type="button"
                                 onClick={() => handleSlotSelection(slot)}
-                                className={`p-3 border rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-right ${
+                                className={`p-3 border rounded-lg hover:border-primary hover:bg-primary/5 transition-colors text-right ${
                                   slot.duration === 30 ? 'border-green-300 bg-green-50' :
                                   slot.duration === 45 ? 'border-blue-300 bg-blue-50' :
                                   'border-purple-300 bg-purple-50'
@@ -1531,7 +1542,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1">
                                       <Clock className="w-3 h-3" />
-                                      <span className="text-sm font-medium text-gray-900">
+                                      <span className="text-sm font-medium text-foreground">
                                         {slot.startTime}-{slot.endTime}
                                       </span>
                                     </div>
@@ -1544,12 +1555,12 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                     </span>
                                   </div>
                                   {slot.location && (
-                                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
                                       <MapPin className="w-3 h-3" />
                                       {slot.location}
                                     </div>
                                   )}
-                                  <div className="text-xs text-gray-600">
+                                  <div className="text-xs text-muted-foreground">
                                     {slot.instrument}
                                   </div>
                                 </div>
@@ -1561,10 +1572,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
                     })()}
                   </div>
                 ) : selectedTeacherId && !loadingSlots && showSlotsMenu && availableSlots.length === 0 ? (
-                  <div className="text-center py-6 bg-gray-50 rounded-lg">
-                    <Clock className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                    <p className="text-gray-500 text-sm mb-2">אין זמנים פנויים למורה זה</p>
-                    <p className="text-xs text-gray-400">
+                  <div className="text-center py-6 bg-muted/50 rounded-lg">
+                    <Clock className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                    <p className="text-muted-foreground text-sm mb-2">אין זמנים פנויים למורה זה</p>
+                    <p className="text-xs text-muted-foreground/70">
                       ייתכן שכל הזמנים הפנויים כבר תפוסים או שהמורה לא הגדיר זמני הוראה
                     </p>
                   </div>
@@ -1576,192 +1587,195 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </div>
 
       {/* Enrollments Section (Optional) */}
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-border">
         <button
           type="button"
           onClick={() => toggleSection('enrollments')}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-gray-900">הרשמות</h3>
+            <h3 className="text-lg font-semibold text-foreground">הרשמות</h3>
           </div>
           {expandedSections.enrollments ? <ChevronUp /> : <ChevronDown />}
         </button>
-        
+
         {expandedSections.enrollments && (
-          <div className="p-6 border-t border-gray-200">
+          <div className="p-6 border-t border-border">
             <div className="space-y-6">
               {/* Orchestra Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">תזמורת</label>
-                <select
-                  value={formData.enrollments.orchestraIds[0] || ''}
-                  onChange={(e) => {
+              <FormField label="תזמורת" htmlFor="orchestra">
+                <Select
+                  value={formData.enrollments.orchestraIds[0] || undefined}
+                  onValueChange={(val) => {
                     setFormData(prev => ({
                       ...prev,
                       enrollments: {
                         ...prev.enrollments,
-                        orchestraIds: e.target.value ? [e.target.value] : []
+                        orchestraIds: val ? [val] : []
                       }
                     }))
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                 >
-                  <option value="">בחר תזמורת</option>
-                  {orchestras.map(orchestra => {
-                    // Check for schedule information in various places
-                    const scheduleInfo = orchestra.rehearsalSchedule || 
-                                       (orchestra.schedule && orchestra.schedule[0]) || 
-                                       (orchestra.rehearsals && orchestra.rehearsals[0]) ||
-                                       null;
-                    
-                    // Build the display string with available information
-                    let displayText = orchestra.name;
-                    
-                    if (scheduleInfo) {
-                      const day = scheduleInfo.day || scheduleInfo.dayOfWeek || '';
-                      const startTime = scheduleInfo.startTime || '';
-                      const endTime = scheduleInfo.endTime || '';
-                      const location = scheduleInfo.location || orchestra.location || '';
-                      
-                      if (day && startTime && endTime) {
-                        displayText += ` | ${day} ${startTime}-${endTime}`;
+                  <SelectTrigger id="orchestra">
+                    <SelectValue placeholder="בחר תזמורת" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {orchestras.map(orchestra => {
+                      // Check for schedule information in various places
+                      const scheduleInfo = orchestra.rehearsalSchedule ||
+                                         (orchestra.schedule && orchestra.schedule[0]) ||
+                                         (orchestra.rehearsals && orchestra.rehearsals[0]) ||
+                                         null;
+
+                      // Build the display string with available information
+                      let displayText = orchestra.name;
+
+                      if (scheduleInfo) {
+                        const day = scheduleInfo.day || scheduleInfo.dayOfWeek || '';
+                        const startTime = scheduleInfo.startTime || '';
+                        const endTime = scheduleInfo.endTime || '';
+                        const location = scheduleInfo.location || orchestra.location || '';
+
+                        if (day && startTime && endTime) {
+                          displayText += ` | ${day} ${startTime}-${endTime}`;
+                        }
+                        if (location) {
+                          displayText += ` | ${location}`;
+                        }
+                      } else if (orchestra.location) {
+                        displayText += ` | ${orchestra.location}`;
                       }
-                      if (location) {
-                        displayText += ` | ${location}`;
-                      }
-                    } else if (orchestra.location) {
-                      // If no schedule info but we have location, show it
-                      displayText += ` | ${orchestra.location}`;
-                    }
-                    
-                    return (
-                      <option key={orchestra._id} value={orchestra._id}>
-                        {displayText}
-                      </option>
-                    );
-                  })}
-                </select>
-                
-                {/* Orchestra Preview */}
-                {formData.enrollments.orchestraIds[0] && (
-                  <div className="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
-                    {(() => {
-                      const selectedOrchestra = orchestras.find(o => o._id === formData.enrollments.orchestraIds[0])
-                      if (!selectedOrchestra) return null
+
                       return (
-                        <div className="space-y-1">
-                          <h4 className="font-medium text-purple-900">{selectedOrchestra.name}</h4>
-                          <div className="text-sm text-purple-700 space-y-1">
-                            {selectedOrchestra.rehearsalSchedule && (
-                              <div className="p-2 bg-purple-100 rounded">
-                                <strong>זמני חזרות:</strong> {selectedOrchestra.rehearsalSchedule.day} 
-                                {' '}{selectedOrchestra.rehearsalSchedule.startTime}-{selectedOrchestra.rehearsalSchedule.endTime}
-                                {selectedOrchestra.rehearsalSchedule.location && 
-                                  <span> | {selectedOrchestra.rehearsalSchedule.location}</span>
-                                }
-                              </div>
-                            )}
-                            <div><strong>סוג:</strong> {selectedOrchestra.type || 'תזמורת'}</div>
-                            {!selectedOrchestra.rehearsalSchedule && selectedOrchestra.location && (
-                              <div><strong>מיקום:</strong> {selectedOrchestra.location}</div>
-                            )}
-                            {selectedOrchestra.memberIds && (
-                              <div><strong>מספר חברים:</strong> {selectedOrchestra.memberIds.length}</div>
-                            )}
-                            <div><strong>סטטוס:</strong> {selectedOrchestra.isActive ? 'פעיל' : 'לא פעיל'}</div>
-                            {selectedOrchestra.rehearsalIds && selectedOrchestra.rehearsalIds.length > 0 && (
-                              <div><strong>מספר חזרות שמורות:</strong> {selectedOrchestra.rehearsalIds.length}</div>
-                            )}
-                          </div>
+                        <SelectItem key={orchestra._id} value={orchestra._id}>
+                          {displayText}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </FormField>
+
+              {/* Orchestra Preview */}
+              {formData.enrollments.orchestraIds[0] && (
+                <div className="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                  {(() => {
+                    const selectedOrchestra = orchestras.find(o => o._id === formData.enrollments.orchestraIds[0])
+                    if (!selectedOrchestra) return null
+                    return (
+                      <div className="space-y-1">
+                        <h4 className="font-medium text-purple-900">{selectedOrchestra.name}</h4>
+                        <div className="text-sm text-purple-700 space-y-1">
+                          {selectedOrchestra.rehearsalSchedule && (
+                            <div className="p-2 bg-purple-100 rounded">
+                              <strong>זמני חזרות:</strong> {selectedOrchestra.rehearsalSchedule.day}
+                              {' '}{selectedOrchestra.rehearsalSchedule.startTime}-{selectedOrchestra.rehearsalSchedule.endTime}
+                              {selectedOrchestra.rehearsalSchedule.location &&
+                                <span> | {selectedOrchestra.rehearsalSchedule.location}</span>
+                              }
+                            </div>
+                          )}
+                          <div><strong>סוג:</strong> {selectedOrchestra.type || 'תזמורת'}</div>
+                          {!selectedOrchestra.rehearsalSchedule && selectedOrchestra.location && (
+                            <div><strong>מיקום:</strong> {selectedOrchestra.location}</div>
+                          )}
+                          {selectedOrchestra.memberIds && (
+                            <div><strong>מספר חברים:</strong> {selectedOrchestra.memberIds.length}</div>
+                          )}
+                          <div><strong>סטטוס:</strong> {selectedOrchestra.isActive ? 'פעיל' : 'לא פעיל'}</div>
+                          {selectedOrchestra.rehearsalIds && selectedOrchestra.rehearsalIds.length > 0 && (
+                            <div><strong>מספר חזרות שמורות:</strong> {selectedOrchestra.rehearsalIds.length}</div>
+                          )}
                         </div>
-                      )
-                    })()}
-                  </div>
-                )}
-              </div>
+                      </div>
+                    )
+                  })()}
+                </div>
+              )}
 
               {/* Theory Lessons */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">שיעור תיאוריה</label>
-                <select
-                  value={formData.enrollments.theoryLessonIds[0] || ''}
-                  onChange={(e) => {
+              <FormField label="שיעור תיאוריה" htmlFor="theoryLesson">
+                <Select
+                  value={formData.enrollments.theoryLessonIds[0] || undefined}
+                  onValueChange={(val) => {
                     setFormData(prev => ({
                       ...prev,
                       enrollments: {
                         ...prev.enrollments,
-                        theoryLessonIds: e.target.value ? [e.target.value] : []
+                        theoryLessonIds: val ? [val] : []
                       }
                     }))
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                 >
-                  <option value="">בחר שיעור תיאוריה</option>
-                  {theoryLessons.map(lesson => {
-                    const scheduleInfo = lesson.schedule && lesson.schedule.length > 0 ? lesson.schedule[0] : null;
-                    const dayTimeLocation = scheduleInfo 
-                      ? `${scheduleInfo.day} ${scheduleInfo.startTime}-${scheduleInfo.endTime}${scheduleInfo.location ? ` | ${scheduleInfo.location}` : ''}`
-                      : '';
-                    
-                    return (
-                      <option key={lesson._id} value={lesson._id}>
-                        {lesson.name || lesson.title || lesson.category} {dayTimeLocation ? `| ${dayTimeLocation}` : ''}
-                        {lesson.teacher?.personalInfo?.firstName && ` | מורה: ${lesson.teacher.personalInfo.firstName} ${lesson.teacher.personalInfo.lastName || ''}`}
-                      </option>
-                    );
-                  })}
-                </select>
+                  <SelectTrigger id="theoryLesson">
+                    <SelectValue placeholder="בחר שיעור תיאוריה" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {theoryLessons.map(lesson => {
+                      const scheduleInfo = lesson.schedule && lesson.schedule.length > 0 ? lesson.schedule[0] : null;
+                      const dayTimeLocation = scheduleInfo
+                        ? `${scheduleInfo.day} ${scheduleInfo.startTime}-${scheduleInfo.endTime}${scheduleInfo.location ? ` | ${scheduleInfo.location}` : ''}`
+                        : '';
 
-                {/* Theory Lesson Preview */}
-                {formData.enrollments.theoryLessonIds[0] && (
-                  <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    {(() => {
-                      const selectedLesson = theoryLessons.find(l => l._id === formData.enrollments.theoryLessonIds[0])
-                      if (!selectedLesson) return null
                       return (
-                        <div className="space-y-1">
-                          <h4 className="font-medium text-blue-900">{selectedLesson.name}</h4>
-                          <div className="text-sm text-blue-700 space-y-1">
-                            <div><strong>רמה:</strong> {selectedLesson.level}</div>
-                            {selectedLesson.teacher?.personalInfo?.firstName && (
-                              <div><strong>מורה:</strong> {selectedLesson.teacher.personalInfo.firstName} {selectedLesson.teacher.personalInfo.lastName || ''}</div>
-                            )}
-                            {selectedLesson.description && (
-                              <div><strong>תיאור:</strong> {selectedLesson.description}</div>
-                            )}
-                            {selectedLesson.maxStudents && (
-                              <div><strong>מקסימום תלמידים:</strong> {selectedLesson.maxStudents}</div>
-                            )}
-                            {selectedLesson.currentStudents !== undefined && (
-                              <div><strong>תלמידים נוכחיים:</strong> {selectedLesson.currentStudents}/{selectedLesson.maxStudents || '∞'}</div>
-                            )}
-                            {selectedLesson.schedule && selectedLesson.schedule.length > 0 && (
-                              <div>
-                                <strong>זמני שיעור:</strong>
-                                <div className="mt-1 space-y-1">
-                                  {selectedLesson.schedule.map((slot, index) => (
-                                    <div key={index} className="text-xs bg-blue-100 px-2 py-1 rounded">
-                                      {slot.day} {slot.startTime}-{slot.endTime}
-                                      {slot.location && ` | ${slot.location}`}
-                                    </div>
-                                  ))}
-                                </div>
+                        <SelectItem key={lesson._id} value={lesson._id}>
+                          {lesson.name || lesson.title || lesson.category} {dayTimeLocation ? `| ${dayTimeLocation}` : ''}
+                          {lesson.teacher?.personalInfo?.firstName && ` | מורה: ${lesson.teacher.personalInfo.firstName} ${lesson.teacher.personalInfo.lastName || ''}`}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </FormField>
+
+              {/* Theory Lesson Preview */}
+              {formData.enrollments.theoryLessonIds[0] && (
+                <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  {(() => {
+                    const selectedLesson = theoryLessons.find(l => l._id === formData.enrollments.theoryLessonIds[0])
+                    if (!selectedLesson) return null
+                    return (
+                      <div className="space-y-1">
+                        <h4 className="font-medium text-blue-900">{selectedLesson.name}</h4>
+                        <div className="text-sm text-blue-700 space-y-1">
+                          <div><strong>רמה:</strong> {selectedLesson.level}</div>
+                          {selectedLesson.teacher?.personalInfo?.firstName && (
+                            <div><strong>מורה:</strong> {selectedLesson.teacher.personalInfo.firstName} {selectedLesson.teacher.personalInfo.lastName || ''}</div>
+                          )}
+                          {selectedLesson.description && (
+                            <div><strong>תיאור:</strong> {selectedLesson.description}</div>
+                          )}
+                          {selectedLesson.maxStudents && (
+                            <div><strong>מקסימום תלמידים:</strong> {selectedLesson.maxStudents}</div>
+                          )}
+                          {selectedLesson.currentStudents !== undefined && (
+                            <div><strong>תלמידים נוכחיים:</strong> {selectedLesson.currentStudents}/{selectedLesson.maxStudents || '∞'}</div>
+                          )}
+                          {selectedLesson.schedule && selectedLesson.schedule.length > 0 && (
+                            <div>
+                              <strong>זמני שיעור:</strong>
+                              <div className="mt-1 space-y-1">
+                                {selectedLesson.schedule.map((slot: any, idx: number) => (
+                                  <div key={idx} className="text-xs bg-blue-100 px-2 py-1 rounded">
+                                    {slot.day} {slot.startTime}-{slot.endTime}
+                                    {slot.location && ` | ${slot.location}`}
+                                  </div>
+                                ))}
                               </div>
-                            )}
-                            {selectedLesson.prerequisites && (
-                              <div className="text-xs text-blue-600 mt-2">
-                                <strong>דרישות קדם:</strong> {selectedLesson.prerequisites}
-                              </div>
-                            )}
-                          </div>
+                            </div>
+                          )}
+                          {selectedLesson.prerequisites && (
+                            <div className="text-xs text-blue-600 mt-2">
+                              <strong>דרישות קדם:</strong> {selectedLesson.prerequisites}
+                            </div>
+                          )}
                         </div>
-                      )
-                    })()}
-                  </div>
-                )}
-              </div>
+                      </div>
+                    )
+                  })()}
+                </div>
+              )}
 
             </div>
           </div>
@@ -1770,30 +1784,30 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
       {/* Form Actions */}
       <div className="flex items-center justify-end gap-3 pt-6">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={onCancel}
-          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          disabled={isSubmitting}
         >
           ביטול
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
         >
           {isSubmitting ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin ms-2"></div>
               שומר...
             </>
           ) : (
             <>
-              <Save className="w-4 h-4" />
+              <Save className="w-4 h-4 ms-2" />
               {isEdit ? 'עדכן תלמיד' : 'הוסף תלמיד'}
             </>
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Conflict Warning Modal */}

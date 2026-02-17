@@ -10,6 +10,7 @@ interface PaginationProps {
   showItemsPerPage?: boolean
   itemsPerPageOptions?: number[]
   className?: string
+  entityLabel?: string  // e.g. "תלמידים" | "מורים" | "חזרות" | "רשומות"
 }
 
 export default function Pagination({
@@ -21,7 +22,8 @@ export default function Pagination({
   onItemsPerPageChange,
   showItemsPerPage = true,
   itemsPerPageOptions = [10, 20, 50, 100],
-  className = ''
+  className = '',
+  entityLabel
 }: PaginationProps) {
   // Calculate displayed items range
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1
@@ -116,7 +118,7 @@ export default function Pagination({
 
       {/* Page info */}
       <div className="text-sm text-gray-600">
-        מציג {startItem}-{endItem} מתוך {totalItems} פריטים
+        מציג {startItem}–{endItem} מתוך {totalItems} {entityLabel ?? 'פריטים'}
       </div>
 
       {/* Pagination controls */}

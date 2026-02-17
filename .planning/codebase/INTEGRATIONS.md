@@ -1,222 +1,254 @@
 # External Integrations
 
-**Analysis Date:** 2026-02-13
+**Analysis Date:** 2026-02-17
 
 ## APIs & External Services
 
 **Backend REST API:**
-- Service: Tenuto.io Backend (Node.js/Express)
-- What it's used for: All data operations (students, teachers, orchestras, lessons, bagrut, imports)
-- SDK/Client: Custom HTTP client in `src/services/apiService.js` (4800+ lines)
-- Authentication: Bearer token in Authorization header
-- Base URL: `http://localhost:3001/api` (via `VITE_API_URL`)
-- Timeout: 30 seconds
-- Features:
-  - Request deduplication (prevent duplicate POSTs)
-  - Automatic retry on 404/403 with no retry, up to 3 retries on other failures
-  - Token refresh mechanism for 401 Unauthorized
-  - Cache-Control header support
+- Service: Conservatory Management System Backend (Node.js + Express)
+- Location: `http://localhost:3001/api` (configurable via `VITE_API_URL`)
+- Client: `src/services/apiService.js` (~5350 lines, all HTTP in single file)
+- Authentication: Bearer token in `Authorization` header
+- Error handling: Validation errors with field-level details, 401/403/404/500 specific handling
+- Request deduplication: Prevents duplicate identical requests in flight
 
-**WebSocket Real-time Service:**
-- SDK: Socket.IO Client 4.8.1
-- Service: Backend Socket.IO server (same base URL)
-- Implementation: `src/services/websocketService.ts`, `src/services/cascadeWebSocket.js`
-- Uses:
-  - Student data updates (real-time reflection across users)
-  - Cascade deletion operation streaming
-  - Attendance updates
-  - Schedule notifications
-  - Document updates
-- Configuration:
-  - URL: `VITE_API_URL` with `/api` suffix removed
-  - Reconnect delay: 1000ms, max 5 attempts
-  - Heartbeat interval: 30 seconds
-  - Connection timeout: 10 seconds
-- Message Types:
-  - `student_update` - Field changes with updatedBy tracking
-  - `attendance_update` - Lesson attendance status changes
-  - `schedule_update` - Calendar/schedule notifications
-  - `document_update` - Document uploads/changes
-  - `heartbeat` - Keep-alive pings
+**Real-time WebSocket Communication:**
+- Service: Socket.IO (same backend)
+- Client: `src/services/websocketService.ts`, `src/services/cascadeWebSocket.js`
+- Channels:
+  - `student.update` - Real-time student data changes
+  - `attendance.update` - Attendance mark changes
+  - `schedule.update` - Schedule modifications
+  - `document.update` - Document uploads/deletions
+  - `cascade.progress` - Cascade deletion operation progress
+  - `cascade.complete` - Deletion operation completion
+  - `integrity.issue` - Data integrity alerts
+- Reconnection: 5 attempts with exponential backoff (1s → 30s max)
+- Heartbeat: 30-second keep-alive interval
+
+**File Upload/Download:**
+- Endpoint: `/api/file/student/{studentId}` - File uploads for student records
+- Endpoint: `/api/export/status` - Export operation status (Placeholder - not yet on backend)
+- Endpoint: `/api/export/validate` - Export validation (Placeholder - not yet on backend)
+- Endpoint: `/api/export/download` - Export file download (Placeholder - not yet on backend)
+- Client: File reading via File API, XMLHttpRequest/Fetch for upload
+- Supported: PDFs, documents (XLSX, CSV via import page)
 
 ## Data Storage
 
-**Databases:**
-- MongoDB (via Backend API)
-  - Connection: Managed by backend at `mongodb://...` (env configured)
-  - Client: MongoDB Native Driver (backend only)
-  - Frontend interaction: Exclusively through REST API
+**Backend Database:**
+- Type: MongoDB 6.13.0
+- Connection: Via backend server only (not directly from frontend)
+- Models: Students, Teachers, Orchestras, Rehearsals, Lessons, Attendance, Bagrut, AuditTrail
+- Timezone: Asia/Jerusalem (hardcoded in Playwright tests)
+- Accessed through: REST API in `src/services/apiService.js`
+
+**Service Categories in apiService.js:**
+```javascript
+export const authService              // Login, token validation, refresh
+export const studentService           // CRUD students, attendance, documents
+export const teacherService          // Teacher profiles, assignments, schedules
+export const theoryService           // Theory exams and grading
+export const orchestraService        // Orchestra management and rehearsals
+export const rehearsalService        // Rehearsal scheduling and records
+export const schoolYearService       // School year configuration
+export const bagrutService           // Israeli matriculation exam tracking
+export const scheduleService         // Lesson scheduling
+export const attendanceService       // Attendance management
+export const tenantService           // Multi-tenant school selection
+export const hoursSummaryService     // Hours tracking summaries
+export const importService           // Bulk student/teacher import
+export const exportService           // Export reports and data
+export const superAdminService       // Super admin tenant management
+export const adminAuditService       // Audit trail logging
+```
+
+**Client-Side Storage:**
+- localStorage:
+  - `authToken` - JWT bearer token (persistent)
+  - `loginType` - 'standard' | 'super_admin' (auth type)
+  - `superAdminUser` - Super admin user data snapshot
+  - `recentSearches` - Global search history
+  - `OFFLINE_QUEUE` - Progressive save queue (JSON)
+- sessionStorage:
+  - Temporary auth token if localStorage unavailable
+- No persistent database on client
 
 **File Storage:**
-- Local filesystem only
-- File handling: `src/services/fileHandlingService.ts`
-- Upload mechanism: Multipart form data via apiService
-- Supported formats:
-  - Excel: `.xlsx` files (via xlsx library) for import
-  - PDF: Generated locally via jsPDF for export/reports
-
-**Caching:**
-- React Query Cache (`@tanstack/react-query`)
-  - Stale time: 5 minutes default
-  - Cache invalidation on mutations
-- Browser localStorage
-  - Auth tokens (authToken)
-  - User session data (userRole, loginType, tenantId)
-  - Super admin user data (superAdminUser)
-- Browser sessionStorage
-  - Alternative token storage for session-only auth
+- Backend: AWS S3 (via `@aws-sdk/client-s3`, `@aws-sdk/lib-storage` in backend)
+- Frontend: File upload only, no file preview/manipulation
+- Formats: PDF, XLSX, CSV (recognized but not processed client-side except for import)
 
 ## Authentication & Identity
 
 **Auth Provider:**
-- Custom JWT-based authentication (Backend provides tokens)
-- Implementation: `src/services/authContext.jsx`
-- Token storage:
-  - Primary: `localStorage.authToken`
-  - Fallback: `sessionStorage.authToken`
-  - Tokens obtained from backend login endpoint
+- Custom JWT-based authentication (backend-managed)
+- Implementation: React Context in `src/services/authContext.jsx`
+- Flow:
+  1. User logs in with credentials via `authService.login(email, password)`
+  2. Backend returns JWT token
+  3. Token stored in `localStorage.authToken` or `sessionStorage.authToken`
+  4. All API requests include `Authorization: Bearer {token}` header
+  5. On app start, `validateToken()` checks token validity
+  6. 30-second auth cache to prevent validation spam
+  7. Auto-logout on 401 response (critical auth endpoints only)
 
-**Multi-tenant Support:**
-- Tenant selection flow (backend returns `TENANT_SELECTION_REQUIRED`)
-- Implementation: `src/pages/Login` handles tenant prompt
-- Tenant ID stored in localStorage, passed to backend in requests
+**Multi-Tenant Selection:**
+- Super admin mode: Special login type for tenant selection
+- Flow: Super admin authenticates → `superAdminService.getTenants()` → select tenant → switch to standard auth
+- Auth context: `useAuth()` hook for current user, `isAuthenticated`, `user` state
+- User data structure:
+  ```javascript
+  {
+    teacherId / _id,
+    personalInfo: { firstName, lastName },
+    roles: ['teacher', 'admin', 'super_admin'],
+    schoolId,
+    email
+  }
+  ```
 
-**Super Admin Mode:**
-- Special JWT token for super admin login
-- Storage: `localStorage.superAdminUser` (JSON serialized user data)
-- Special endpoint validation: `superAdminService.getTenants()`
-- Feature flag: `loginType === 'super_admin'` in localStorage
-
-**Role-Based Access:**
-- Frontend role mapping:
-  - 'מנהל' → 'admin'
-  - 'מורה' → 'teacher'
-  - 'מנצח' → 'conductor'
-  - 'מדריך תדר' / 'מורה תיאוריה' → 'theory-teacher'
-- Roles stored in user object, checked in protected routes
+**Token Management:**
+- Validation endpoint: `/auth/validate` - Check if token still valid
+- Refresh endpoint: `/auth/refresh` - Request new token (not currently used)
+- Logout: Remove token from storage, clear auth context
+- Token decay: Server determines expiration, frontend validates on app load
 
 ## Monitoring & Observability
 
 **Error Tracking:**
-- Sentry (optional, via `VITE_SENTRY_DSN`)
-- Service: `src/services/errorTrackingService.ts`
-- Implementation: Error reporting for frontend crashes
-- Status: Configuration available but not enabled by default
+- Service: Optional Sentry integration (if `VITE_SENTRY_DSN` set)
+- File: `src/services/errorTrackingService.ts`
+- Initialize: Conditional Sentry setup with version tagging
+- Endpoint fallback: If Sentry unavailable, post errors to `VITE_ERROR_LOGGING_ENDPOINT`
+- Not currently enabled in .env.example
 
 **Logging:**
-- Console-based logging in development
-- Services include logging:
-  - `src/services/apiService.js` - API calls, auth failures, retries
-  - `src/services/websocketService.ts` - Socket events
-  - `src/services/cascadeDeletionService.ts` - Deletion operations
-  - `src/services/healthCheckService.ts` - Health monitoring
+- Frontend: Browser console only (structured logs with emoji prefixes: 🔐 for auth, 🌐 for API, etc.)
+- Backend: Pino (structured JSON logging)
+- Audit trail: `adminAuditService.getAuditLog()` for admin-visible changes
+- Performance: Optional monitoring via `VITE_ENABLE_PERFORMANCE_MONITORING`
 
-**Performance Monitoring:**
-- Feature flag: `VITE_ENABLE_PERFORMANCE_MONITORING`
-- Service: `src/performance/` (performance monitoring modules)
-- Monitors: React Query metrics, component render times, cascade deletion performance
-- Dashboard analytics: `src/services/enhancedDashboardAnalytics.ts`
-
-**Audit Trail:**
-- Service: `src/services/auditTrailService.ts`
-- Tracks: User actions, deletions, updates
-- Deletion audit: `VITE_ENABLE_DELETION_AUDIT` flag
+**Analytics:**
+- Service: Optional custom analytics (if `VITE_ANALYTICS_ENABLED=true`)
+- File: `src/services/analyticsService.ts`
+- Endpoint: `VITE_ANALYTICS_ENDPOINT` (optional, falls back to no-op)
+- Events tracked: Form submissions, page views, errors (if enabled)
+- Not currently enabled in .env.example
 
 ## CI/CD & Deployment
 
 **Hosting:**
-- Deployment target: Vercel or similar (static hosting with SPA support)
-- Build output: `dist/` directory (optimized Vite bundle)
-- Asset routing: SPA index.html fallback for client-side routing
+- Static site deployment (frontend)
+- Vite build output: `dist/` directory (git-ignored)
+- Deployed to: TBD (configure based on platform)
 
 **CI Pipeline:**
-- Platform: GitHub Actions
-- Config: `.github/workflows/ci.yml`
+- GitHub Actions: `.github/workflows/ci.yml`
 - Stages (progressive):
-  1. Build - Vite compilation
-  2. TypeScript - Type checking (`npm run typecheck`)
-  3. Lint - ESLint validation (`npm run lint`)
-  4. Tests - Vitest unit/integration (`npm run test`)
-  5. Deploy Staging - Conditional on tests passing
-  6. Deploy Production - Conditional on all previous stages
-- Pre-commit hooks: Optional (can enable)
+  1. **Build** - `npm run build` ✓ ENABLED
+  2. **TypeScript** - `npm run typecheck` (GATE: enable after fixing TS errors)
+  3. **Lint** - `npm run lint` (GATE: auto-enabled, max-warnings 0)
+  4. **Tests** - `npm run test` (GATE: enable after test coverage >80%)
+  5. **Deploy Staging** - Manual trigger (GATE: after all quality gates pass)
+  6. **Deploy Production** - Manual trigger (GATE: after staging validation)
+- Review stages before/after each phase for enabling/disabling
 
 ## Environment Configuration
 
-**Required env vars:**
-- `VITE_API_URL` - Backend API base URL (default: http://localhost:3001/api)
+**Required Environment Variables:**
+```
+VITE_API_URL                           # Backend API URL (default: http://localhost:3001/api)
+VITE_APP_NAME                          # Application title
+VITE_APP_VERSION                       # Semantic version for telemetry
+```
 
-**Feature flags (optional):**
-- `VITE_CASCADE_DELETION_ENABLED` - Enable cascade deletion UI
-- `VITE_FEATURE_CASCADE_DELETION_PREVIEW` - Preview mode for deletion impacts
-- `VITE_FEATURE_CASCADE_DELETION_EXECUTE` - Allow executing deletions
-- `VITE_FEATURE_BULK_DELETION_ENABLED` - Multi-select deletion mode
-- `VITE_ENABLE_PERFORMANCE_MONITORING` - Performance tracking
-- `VITE_ANALYTICS_ENABLED` - Analytics collection
+**Feature Flags (Optional):**
+```
+VITE_CASCADE_DELETION_ENABLED=false     # Enable cascade deletion UI
+VITE_FEATURE_CASCADE_DELETION_PREVIEW=false   # Show impact preview
+VITE_FEATURE_CASCADE_DELETION_EXECUTE=false   # Allow execution
+VITE_FEATURE_BULK_DELETION_ENABLED=false      # Bulk deletion support
+```
 
-**Security configuration:**
-- `VITE_MAX_DELETION_REQUESTS_PER_MINUTE` - Rate limit deletions (default: 10)
-- `VITE_ENABLE_DELETION_RATE_LIMITING` - Enforce rate limits
+**Monitoring/Debug (Optional):**
+```
+VITE_ENABLE_PERFORMANCE_MONITORING=false      # Real User Monitoring
+VITE_ENABLE_DELETION_AUDIT=true               # Log cascade operations
+VITE_SENTRY_DSN=                              # Error tracking (empty = disabled)
+VITE_ANALYTICS_ENABLED=false                  # Analytics collection
+```
 
-**Cascade deletion specific:**
-- `VITE_DELETION_BATCH_LIMIT` - Records per batch (default: 10)
-- `VITE_DELETION_TIMEOUT_MS` - Operation timeout (default: 30000ms)
-- `VITE_WEBSOCKET_DELETION_CHANNEL` - Socket.IO event name
+**WebSocket & Cascade Deletion:**
+```
+VITE_WEBSOCKET_DELETION_CHANNEL=cascade-operations   # Socket.IO namespace
+VITE_DELETION_BATCH_LIMIT=10                         # Items per batch delete
+VITE_DELETION_TIMEOUT_MS=30000                       # Operation timeout
+VITE_MAX_DELETION_REQUESTS_PER_MINUTE=10             # Rate limiting
+VITE_ENABLE_DELETION_RATE_LIMITING=true              # Enforce rate limit
+```
 
-**Secrets location:**
-- Never committed to repo
-- `.env` file (git-ignored)
-- Deployment platform secrets (GitHub Actions, Vercel, etc.)
+**Secrets Location:**
+- Backend: `.env` file (NOT committed, listed in `.gitignore`)
+- Frontend: `.env` file (NOT committed, listed in `.gitignore`)
+- CI/CD: GitHub Secrets (platform-specific, not in repo)
+- Never commit: `.env`, credentials, API keys, tokens
 
 ## Webhooks & Callbacks
 
-**Incoming:**
-- Socket.IO events from backend (see WebSocket Real-time Service section)
-- No external webhook endpoints
+**Incoming Webhooks:**
+- Not currently implemented
 
-**Outgoing:**
-- HTTP requests to backend REST API only
-- Socket.IO emit events to backend (WebSocket push)
-- Analytics events (if enabled, sent to Sentry or monitoring service)
+**Outgoing Webhooks:**
+- Not currently implemented
 
-## Data Export & Import
+**Server-Sent Events (SSE):**
+- Not used (WebSocket used instead)
 
-**Excel Import:**
-- Service: File upload handling in `src/services/fileHandlingService.ts`
-- Format: `.xlsx` (Excel workbook)
-- Parser: `xlsx` library (v0.18.5)
-- Use case: Bulk student/teacher import (F5 feature)
-- Endpoint: Backend import API
+**Export Endpoints (Planned, not yet on backend):**
+- `POST /api/export/status` - Get export job status
+- `POST /api/export/validate` - Validate export parameters
+- `GET /api/export/download` - Download completed export
+- Note: Export functionality is planned but endpoint stubs don't exist on backend yet
 
-**PDF Export:**
-- Library: jsPDF 3.0.1 + jspdf-autotable 5.0.2
-- Uses: Ministry Reports generation (F5 feature)
-- Generation: Client-side PDF creation from data in memory
+## API Client Architecture
 
-## Backend API Contract
+**File:** `src/services/apiService.js` (5350 lines, single source of truth)
 
-**Key Endpoints Used:**
-- Authentication: `/auth/login`, `/auth/logout`, `/auth/refresh`
-- Students: GET/POST/PUT/DELETE `/students/*`
-- Teachers: GET/POST/PUT/DELETE `/teachers/*`
-- Orchestras: GET/POST/PUT/DELETE `/orchestras/*`
-- Lessons: GET/POST/PUT/DELETE `/lessons/*`
-- Bagrut: GET/POST/PUT/DELETE `/bagrut/*`
-- Theory Lessons: GET/POST/PUT/DELETE `/theory-lessons/*`
-- Import: POST `/import/students`, `/import/teachers`
-- Reports: GET `/reports/ministry`
-- Health: GET `/health/*` (cascade deletion checks)
+**HTTP Client Features:**
+- Fetch API (not axios)
+- Request/response interception via `ApiClient` class
+- Automatic retry on transient failures (not 401/403)
+- Request deduplication (prevents double-submission)
+- Timeout: 30 seconds per request
+- Content-Type auto-detection (JSON and text)
 
-**Response Format:**
-- JSON with consistent structure
-- Success: `{ data: {...}, status: 200 }`
-- Error: `{ error: {...}, status: 4xx/5xx }`
+**Authentication Integration:**
+- Bearer token in every request (if authenticated)
+- Token refresh on 401 for eligible endpoints
+- Token removal on critical endpoint 401 failures
+- Separate login endpoint behavior (returns backend-specific error messages)
 
-**Authentication Method:**
-- Header: `Authorization: Bearer {token}`
-- Token obtained from login endpoint
-- Token refresh via endpoint or re-login
+**Error Handling Patterns:**
+```javascript
+// Validation errors with field-level details
+if (response.status === 400 && data?.code === 'VALIDATION_ERROR') {
+  error.code = 'VALIDATION_ERROR'
+  error.validationErrors = data.validationErrors  // { fieldName: [errors] }
+}
+
+// Auth-specific handling
+if (response.status === 401) {
+  // For auth endpoints: pass through backend message
+  // For data endpoints: keep token, might be temporary
+}
+
+// Attendance lookups return null on 404 (not error)
+if (response.status === 404 && endpoint.includes('/attendance/individual')) {
+  return null
+}
+```
 
 ---
 
-*Integration audit: 2026-02-13*
+*Integration audit: 2026-02-17*

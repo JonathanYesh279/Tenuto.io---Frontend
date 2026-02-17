@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.0 Phase 9 — Form Redesign (next)
+**Current focus:** v2.0 Phase 9 — Form Redesign (in progress, Plan 1 of 3 complete)
 
 ## Current Position
 
-Phase: 8 of 13 ([v2.0] Domain Components & Loading States) — COMPLETE
-Plan: 3 of 3 in current phase — COMPLETE
-Status: Phase 8 fully complete (all 3 plans: domain components, loading states, toast system)
-Last activity: 2026-02-17 — Phase 8 Plan 3 complete (toast RTL + slide animation + page fade-in)
+Phase: 9 of 13 ([v2.0] Form System Redesign) — IN PROGRESS
+Plan: 1 of 3 complete — ready for Plan 2 (StudentForm)
+Status: Phase 9 Plan 1 complete (FormField wrapper + OrchestraForm migration)
+Last activity: 2026-02-17 — Phase 9 Plan 1 complete (FormField + OrchestraForm shadcn migration)
 
-Progress: [████░░░░░░] 35% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [████░░░░░░] 38% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12 (7 v1.1 + 5 v2.0)
-- Average duration: ~22 min
+- Total plans completed: 13 (7 v1.1 + 6 v2.0)
+- Average duration: ~21 min
 - Total execution time: ~4.4 hours
 
 **By Phase:**
@@ -35,6 +35,7 @@ Progress: [████░░░░░░] 35% (v2.0) — [███████
 | v2.0 Phase 8 Plan 1 | 1 | 10min | 10 min |
 | v2.0 Phase 8 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 8 Plan 3 | 1 | 2min | 2 min |
+| v2.0 Phase 9 Plan 1 | 1 | 3min | 3 min |
 
 *Updated after each plan completion*
 
@@ -73,10 +74,14 @@ Progress: [████░░░░░░] 35% (v2.0) — [███████
 - [08-03]: showWarning/showInfo use toast() not toast.custom() so they inherit slideFromRight animation
 - [08-03]: No key prop on Layout — avoids sidebar/header state reset on route change (Pitfall 5 from research)
 - [08-03]: LOAD-06 confirmed satisfied from Phase 7 — no changes needed to ConfirmDeleteDialog
+- [09-01]: FormField wrapper uses htmlFor/id pairing (not aria-labelledby) — simpler, standard, matches shadcn Label
+- [09-01]: Radix Select value={undefined} for empty/null state — Radix does not support empty string value
+- [09-01]: OrchestraForm keeps useState — no RHF migration needed (single page, no tab-switch data loss risk)
 
 ### Pending Todos
 
-- [06-02 TODO Phase 9]: Replace native <select> with shadcn Select in teacher modal — eliminates option !important in teacher-modal-fixes.css (was Phase 7, now deferred to Phase 9 form redesign)
+- [09-02]: Migrate StudentForm to FormField + shadcn primitives (collapsible sections, keep useState)
+- [09-03]: Migrate AddTeacherModal to FormField + RHF Controller (7-tab form, needs tab-switch data preservation); remove teacher-modal-fixes.css option !important block
 
 ### Blockers/Concerns
 
@@ -88,5 +93,5 @@ Progress: [████░░░░░░] 35% (v2.0) — [███████
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Phase 8 complete — all 3 plans done. Toast RTL positioning, slide animation, page fade-in, warning/info helpers. Ready for Phase 9.
+Stopped at: Phase 9 Plan 1 complete — FormField wrapper created, OrchestraForm migrated to shadcn. Ready for Phase 9 Plan 2 (StudentForm).
 Resume file: None

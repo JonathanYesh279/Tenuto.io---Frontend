@@ -10,6 +10,9 @@ import apiService from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
 import { getDisplayName } from '../utils/nameUtils'
+import { TableSkeleton } from '../components/feedback/Skeleton'
+import { EmptyState } from '../components/feedback/EmptyState'
+import { ErrorState } from '../components/feedback/ErrorState'
 
 interface Teacher {
   id: string
@@ -536,28 +539,14 @@ export default function Teachers() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary-600" />
-          <div className="text-lg text-gray-600">טוען מורים...</div>
-        </div>
+      <div className="animate-fade-in">
+        <TableSkeleton rows={8} cols={5} />
       </div>
     )
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12">
-        <div className="text-red-600 text-lg mb-4">❌ שגיאה בטעינת הנתונים</div>
-        <div className="text-gray-600 mb-6">{error}</div>
-        <button
-          onClick={() => loadTeachers(1, false)}
-          className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
-        >
-          נסה שוב
-        </button>
-      </div>
-    )
+    return <ErrorState message={error} onRetry={() => loadTeachers(1, false)} />
   }
 
   return (
@@ -823,9 +812,16 @@ export default function Teachers() {
       )}
 
       {filteredTeachers.length === 0 && !loading && !searchLoading && (
-        <div className="text-center py-12 text-gray-500">
-          לא נמצאו מורים התואמים לחיפוש
-        </div>
+        searchTerm || filters.instrument || filters.role ? (
+          <div className="text-center py-12 text-muted-foreground">לא נמצאו מורים התואמים לחיפוש</div>
+        ) : (
+          <EmptyState
+            title="אין מורים עדיין"
+            description="הוסף מורים לקונסרבטוריון כדי להתחיל"
+            icon={<Users className="w-12 h-12" />}
+            action={{ label: 'הוסף מורה', onClick: () => setShowAddTeacherModal(true) }}
+          />
+        )
       )}
       </div>
 

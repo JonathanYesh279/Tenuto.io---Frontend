@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Search, Plus, Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users } from 'lucide-react'
+import { Search, Plus, Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users, GraduationCap } from 'lucide-react'
 import { clsx } from 'clsx'
 import { Card } from '../components/ui/Card'
 import Table, { StatusBadge } from '../components/ui/Table'
@@ -16,6 +16,9 @@ import { getDisplayName } from '../utils/nameUtils'
 import SafeDeleteModal from '../components/SafeDeleteModal'
 import DeletionImpactModal from '../components/DeletionImpactModal'
 import BatchDeletionModal from '../components/BatchDeletionModal'
+import { TableSkeleton } from '../components/feedback/Skeleton'
+import { EmptyState } from '../components/feedback/EmptyState'
+import { ErrorState } from '../components/feedback/ErrorState'
 
 export default function Students() {
   const navigate = useNavigate()
@@ -794,28 +797,14 @@ export default function Students() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary-600" />
-          <div className="text-lg text-gray-600">טוען תלמידים...</div>
-        </div>
+      <div className="animate-fade-in">
+        <TableSkeleton rows={8} cols={6} />
       </div>
     )
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12">
-        <div className="text-red-600 text-lg mb-4">❌ שגיאה בטעינת הנתונים</div>
-        <div className="text-gray-600 mb-6">{error}</div>
-        <button 
-          onClick={loadStudents}
-          className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
-        >
-          נסה שוב
-        </button>
-      </div>
-    )
+    return <ErrorState message={error} onRetry={loadStudents} />
   }
 
   return (
@@ -1127,9 +1116,16 @@ export default function Students() {
       )}
 
       {filteredStudents.length === 0 && !loading && !searchLoading && (
-        <div className="text-center py-12 text-gray-500">
-          לא נמצאו תלמידים התואמים לחיפוש
-        </div>
+        searchTerm || filters.orchestra || filters.instrument || filters.stageLevel ? (
+          <div className="text-center py-12 text-muted-foreground">לא נמצאו תלמידים התואמים לחיפוש</div>
+        ) : (
+          <EmptyState
+            title="אין תלמידים עדיין"
+            description="הוסף תלמידים לקונסרבטוריון כדי להתחיל"
+            icon={<GraduationCap className="w-12 h-12" />}
+            action={{ label: 'הוסף תלמיד', onClick: () => setShowForm(true) }}
+          />
+        )
       )}
       </div>
 

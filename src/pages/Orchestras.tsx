@@ -12,6 +12,9 @@ import ConfirmDeleteDialog from '../components/ui/ConfirmDeleteDialog'
 import { orchestraService, teacherService } from '../services/apiService'
 import { useAuth } from '../services/authContext'
 import { useSchoolYear } from '../services/schoolYearContext'
+import { TableSkeleton } from '../components/feedback/Skeleton'
+import { EmptyState } from '../components/feedback/EmptyState'
+import { ErrorState } from '../components/feedback/ErrorState'
 import {
   filterOrchestras,
   sortOrchestras,
@@ -253,13 +256,14 @@ export default function Orchestras() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <div className="text-gray-600">טוען תזמורות...</div>
-        </div>
+      <div className="animate-fade-in">
+        <TableSkeleton rows={6} cols={4} />
       </div>
     )
+  }
+
+  if (error && orchestras.length === 0) {
+    return <ErrorState message={error} onRetry={loadData} />
   }
 
   return (
@@ -463,18 +467,16 @@ export default function Orchestras() {
         </div>
 
         {filteredAndSortedOrchestras.length === 0 ? (
-          <div className="text-center py-12">
-            <Music className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">אין תזמורות</h3>
-            <p className="text-gray-600 mb-4">התחל על ידי יצירת התזמורת הראשונה</p>
-            <button
-              onClick={handleCreateOrchestra}
-              className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-            >
-              <Plus className="w-4 h-4 ml-2" />
-              צור תזמורת ראשונה
-            </button>
-          </div>
+          searchQuery || filters.type || filters.conductorId || filters.location ? (
+            <div className="text-center py-12 text-muted-foreground">לא נמצאו תזמורות התואמות לחיפוש</div>
+          ) : (
+            <EmptyState
+              title="אין תזמורות עדיין"
+              description="צור תזמורת חדשה כדי להתחיל"
+              icon={<Music className="w-12 h-12" />}
+              action={{ label: 'תזמורת חדשה', onClick: handleCreateOrchestra }}
+            />
+          )
         ) : viewMode === 'table' ? (
           <Table
             data={filteredAndSortedOrchestras}

@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Search, Plus, Filter, Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown } from 'lucide-react'
+import { Plus, Filter, Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import Table, { StatusBadge } from '../components/ui/Table'
+import { SearchInput } from '../components/ui/SearchInput'
 import TeacherCard from '../components/TeacherCard'
 import AddTeacherModal from '../components/modals/AddTeacherModal'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
@@ -556,16 +557,13 @@ export default function Teachers() {
       <Card className="mb-6" padding="md">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="חיפוש מורים..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-              />
-            </div>
+            <SearchInput
+              value={searchTerm}
+              onChange={(value) => setSearchTerm(value)}
+              onClear={() => setSearchTerm('')}
+              placeholder="חיפוש מורים..."
+              isLoading={searchLoading}
+            />
           </div>
           <div className="flex gap-3">
             {/* Instrument Filter - Searchable */}

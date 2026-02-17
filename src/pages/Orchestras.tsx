@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings } from 'lucide-react'
+import { Plus, Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
+import { SearchInput } from '../components/ui/SearchInput'
 import StatsCard from '../components/ui/StatsCard'
 import OrchestraForm from '../components/OrchestraForm'
 import OrchestraCard from '../components/OrchestraCard'
@@ -293,16 +294,12 @@ export default function Orchestras() {
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="חיפוש תזמורות..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
-              </div>
+              <SearchInput
+                value={searchQuery}
+                onChange={(value) => setSearchQuery(value)}
+                onClear={() => setSearchQuery('')}
+                placeholder="חיפוש תזמורות..."
+              />
             </div>
 
             {/* Type Filter */}

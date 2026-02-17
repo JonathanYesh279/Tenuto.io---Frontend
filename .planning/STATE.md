@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 
 ## Current Position
 
-Phase: 7 of 13 ([v2.0] Primitives) — COMPLETE
-Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase complete, verified, ready for Phase 8
-Last activity: 2026-02-17 — Phase 7 complete (9 primitives, tab migration, modal migration, CSS cleanup)
+Phase: 8 of 13 ([v2.0] Domain Components & Loading States) — IN PROGRESS
+Plan: 1 of 3 in current phase — COMPLETE
+Status: Plan 08-01 complete; ready for Plan 08-02 (loading states)
+Last activity: 2026-02-17 — Phase 8 Plan 1 complete (domain components + skeleton)
 
-Progress: [███░░░░░░░] 25% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [████░░░░░░] 30% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
@@ -32,6 +32,7 @@ Progress: [███░░░░░░░] 25% (v2.0) — [███████
 | v2.0 Phase 6 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 7 Plan 1 | 1 | 117min | 117 min |
 | v2.0 Phase 7 Plan 2 | 1 | 6min | 6 min |
+| v2.0 Phase 8 Plan 1 | 1 | 10min | 10 min |
 
 *Updated after each plan completion*
 
@@ -59,6 +60,9 @@ Progress: [███░░░░░░░] 25% (v2.0) — [███████
 - [07-02]: Student bagrut tab added to StudentDetailsPage — original tabs array omitted it despite working BagrutTab component
 - [07-02]: ConfirmationModal warning/info → Button variant="default" — shadcn Button has no yellow/blue semantic variant; defer to Phase 9
 - [07-02]: Dead tab navigation files preserved on disk — barrel exports removed but files not deleted (reference value)
+- [08-01]: StatsCard is a re-export of dashboard/StatCard — no duplicate implementation
+- [08-01]: DesignSystem.tsx StatusBadge/InstrumentBadge left untouched — Phase 10 handles callsite migration
+- [08-01]: Skeleton uses bg-muted CSS token (not bg-gray-200) — consistent with CSS variable system
 
 ### Pending Todos
 
@@ -75,5 +79,5 @@ Progress: [███░░░░░░░] 25% (v2.0) — [███████
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Phase 7 Primitives complete and verified. Button active:scale-95 fix applied post-verification.
+Stopped at: Phase 8 Plan 1 complete — domain component library + Skeleton created. Ready for Plan 08-02.
 Resume file: None

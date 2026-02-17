@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.0 Phase 10 — List Pages (next)
+**Current focus:** v2.0 Phase 10 — List Pages (in progress, Plan 1 complete)
 
 ## Current Position
 
-Phase: 9 of 13 ([v2.0] Form System) — COMPLETE (verified)
-Plan: 3 of 3 in current phase — COMPLETE
-Status: Phase 9 verified (4/4 must-haves passed). Ready for Phase 10.
-Last activity: 2026-02-18 — Phase 9 execution complete + verified
+Phase: 10 of 13 ([v2.0] List Pages) — IN PROGRESS
+Plan: 1 of 3 in current phase — COMPLETE
+Status: Phase 10 Plan 1 complete. Shared UI components upgraded (Table, SearchInput, Pagination). Ready for Plan 2 (per-page wiring).
+Last activity: 2026-02-18 — Phase 10 Plan 1 execution complete
 
-Progress: [█████░░░░░] 50% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [█████░░░░░] 53% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16 (7 v1.1 + 9 v2.0)
+- Total plans completed: 17 (7 v1.1 + 10 v2.0)
 - Average duration: ~19 min
-- Total execution time: ~5.1 hours
+- Total execution time: ~5.2 hours
 
 **By Phase:**
 
@@ -38,6 +38,7 @@ Progress: [█████░░░░░] 50% (v2.0) — [███████
 | v2.0 Phase 9 Plan 1 | 1 | 3min | 3 min |
 | v2.0 Phase 9 Plan 2 | 1 | 7min | 7 min |
 | v2.0 Phase 9 Plan 3 | 1 | 6min | 6 min |
+| v2.0 Phase 10 Plan 1 | 1 | 8min | 8 min |
 
 *Updated after each plan completion*
 
@@ -85,10 +86,14 @@ Progress: [█████░░░░░] 50% (v2.0) — [███████
 - [09-03]: StudentForm keeps useState — collapsible sections do not unmount data (unlike tabs), no data loss risk without RHF
 - [09-03]: Custom teacher searchable dropdown preserved — requires fixed positioning to escape modal overflow, incompatible with standard Radix Select portal
 - [09-03]: Days filter checkbox dropdown preserved as custom — multi-select inline behavior incompatible with single-select Radix Select
+- [10-01]: Table wrapper restructured to three layers (overflow-hidden > overflow-x-auto > max-h overflow-y-auto) — enables sticky thead inside scroll container
+- [10-01]: thead shadow separator instead of border-b — CSS borders disappear on sticky elements, box-shadow does not
+- [10-01]: Pagination entityLabel optional with 'פריטים' fallback — all existing callers backward-compatible
+- [10-01]: SearchInput RTL positions: right-3 for search icon (visual start), left-2 for clear X (visual end)
 
 ### Pending Todos
 
-None for Phase 9. Phase 10 is next: badge/status component migration and callsite cleanup.
+Phase 10 Plan 2 is next: wire SearchInput, Pagination entityLabel, and new shared components into all 5 list pages (Students, Teachers, Orchestras, Rehearsals, AuditTrail).
 
 ### Blockers/Concerns
 
@@ -100,5 +105,5 @@ None for Phase 9. Phase 10 is next: badge/status component migration and callsit
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 9 complete + verified (4/4 must-haves). ROADMAP.md updated. Ready for Phase 10 planning.
+Stopped at: Phase 10 Plan 1 complete. Shared UI components done. Ready for Plan 2 (per-page wiring).
 Resume file: None

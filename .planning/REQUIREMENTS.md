@@ -132,13 +132,71 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated during roadmap creation) | | |
+| FNDTN-01 | Phase 6 | Pending |
+| FNDTN-02 | Phase 6 | Pending |
+| FNDTN-03 | Phase 6 | Pending |
+| FNDTN-04 | Phase 6 | Pending |
+| FNDTN-05 | Phase 6 | Pending |
+| FNDTN-06 | Phase 6 | Pending |
+| FNDTN-07 | Phase 6 | Pending |
+| FNDTN-08 | Phase 6 | Pending |
+| PRIM-01 | Phase 7 | Pending |
+| PRIM-02 | Phase 7 | Pending |
+| PRIM-03 | Phase 7 | Pending |
+| PRIM-04 | Phase 7 | Pending |
+| PRIM-05 | Phase 7 | Pending |
+| PRIM-06 | Phase 7 | Pending |
+| LOAD-01 | Phase 8 | Pending |
+| LOAD-02 | Phase 8 | Pending |
+| LOAD-03 | Phase 8 | Pending |
+| LOAD-04 | Phase 8 | Pending |
+| LOAD-05 | Phase 8 | Pending |
+| LOAD-06 | Phase 8 | Pending |
+| TOAST-01 | Phase 8 | Pending |
+| TOAST-02 | Phase 8 | Pending |
+| TOAST-03 | Phase 8 | Pending |
+| FORM-01 | Phase 9 | Pending |
+| FORM-02 | Phase 9 | Pending |
+| FORM-03 | Phase 9 | Pending |
+| FORM-04 | Phase 9 | Pending |
+| TABLE-01 | Phase 10 | Pending |
+| TABLE-02 | Phase 10 | Pending |
+| TABLE-03 | Phase 10 | Pending |
+| TABLE-04 | Phase 10 | Pending |
+| TABLE-05 | Phase 10 | Pending |
+| DETAIL-01 | Phase 11 | Pending |
+| DETAIL-02 | Phase 11 | Pending |
+| DETAIL-03 | Phase 11 | Pending |
+| DETAIL-04 | Phase 11 | Pending |
+| DETAIL-05 | Phase 11 | Pending |
+| DASH-01 | Phase 12 | Pending |
+| DASH-02 | Phase 12 | Pending |
+| DASH-03 | Phase 12 | Pending |
+| DASH-04 | Phase 12 | Pending |
+| LAYOUT-01 | Phase 12 | Pending |
+| LAYOUT-02 | Phase 12 | Pending |
+| LAYOUT-03 | Phase 12 | Pending |
+| LAYOUT-04 | Phase 12 | Pending |
+| A11Y-01 | Phase 7 | Pending |
+| A11Y-02 | Phase 6 | Pending |
+| A11Y-03 | Phase 9 | Pending |
+| A11Y-04 | Phase 6 | Pending |
+| MICRO-01 | Phase 7 | Pending |
+| MICRO-02 | Phase 7 | Pending |
+| MICRO-03 | Phase 8 | Pending |
+| MICRO-04 | Phase 6 | Pending |
+| SPEC-01 | Phase 13 | Pending |
+| SPEC-02 | Phase 13 | Pending |
+| SPEC-03 | Phase 13 | Pending |
+| SPEC-04 | Phase 13 | Pending |
+| SPEC-05 | Phase 13 | Pending |
+| SPEC-06 | Phase 13 | Pending |
 
 **Coverage:**
-- v2.0 requirements: 48 total
-- Mapped to phases: 0
-- Unmapped: 48 (pending roadmap)
+- v2.0 requirements: 59 total (note: REQUIREMENTS.md previously showed 48 — recount confirms 59 across all 12 categories)
+- Mapped to phases: 59
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-17*
-*Last updated: 2026-02-17 after initial definition*
+*Last updated: 2026-02-17 — traceability populated after roadmap creation*

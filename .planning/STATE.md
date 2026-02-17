@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.0 Phase 9 — Form Redesign (in progress, Plan 1 of 3 complete)
+**Current focus:** v2.0 Phase 9 — Form Redesign (COMPLETE — all 3 plans done)
 
 ## Current Position
 
-Phase: 9 of 13 ([v2.0] Form System Redesign) — IN PROGRESS
-Plan: 1 of 3 complete — ready for Plan 2 (StudentForm)
-Status: Phase 9 Plan 1 complete (FormField wrapper + OrchestraForm migration)
-Last activity: 2026-02-17 — Phase 9 Plan 1 complete (FormField + OrchestraForm shadcn migration)
+Phase: 9 of 13 ([v2.0] Form System Redesign) — COMPLETE
+Plan: 3 of 3 complete — Phase 9 finished, ready for Phase 10
+Status: Phase 9 complete (FormField wrapper + OrchestraForm + AddTeacherModal + StudentForm all migrated)
+Last activity: 2026-02-17 — Phase 9 Plan 3 complete (StudentForm shadcn migration, 6min)
 
-Progress: [████░░░░░░] 38% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [████░░░░░░] 42% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13 (7 v1.1 + 6 v2.0)
-- Average duration: ~21 min
-- Total execution time: ~4.4 hours
+- Total plans completed: 16 (7 v1.1 + 9 v2.0)
+- Average duration: ~19 min
+- Total execution time: ~5.1 hours
 
 **By Phase:**
 
@@ -36,6 +36,8 @@ Progress: [████░░░░░░] 38% (v2.0) — [███████
 | v2.0 Phase 8 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 8 Plan 3 | 1 | 2min | 2 min |
 | v2.0 Phase 9 Plan 1 | 1 | 3min | 3 min |
+| v2.0 Phase 9 Plan 2 | 1 | ~15min | 15 min |
+| v2.0 Phase 9 Plan 3 | 1 | 6min | 6 min |
 
 *Updated after each plan completion*
 
@@ -77,11 +79,13 @@ Progress: [████░░░░░░] 38% (v2.0) — [███████
 - [09-01]: FormField wrapper uses htmlFor/id pairing (not aria-labelledby) — simpler, standard, matches shadcn Label
 - [09-01]: Radix Select value={undefined} for empty/null state — Radix does not support empty string value
 - [09-01]: OrchestraForm keeps useState — no RHF migration needed (single page, no tab-switch data loss risk)
+- [09-03]: StudentForm keeps useState — collapsible sections do not unmount data (unlike tabs), no data loss risk without RHF
+- [09-03]: Custom teacher searchable dropdown preserved — requires fixed positioning to escape modal overflow, incompatible with standard Radix Select portal
+- [09-03]: Days filter checkbox dropdown preserved as custom — multi-select inline behavior incompatible with single-select Radix Select
 
 ### Pending Todos
 
-- [09-02]: Migrate StudentForm to FormField + shadcn primitives (collapsible sections, keep useState)
-- [09-03]: Migrate AddTeacherModal to FormField + RHF Controller (7-tab form, needs tab-switch data preservation); remove teacher-modal-fixes.css option !important block
+None for Phase 9. Phase 10 is next: badge/status component migration and callsite cleanup.
 
 ### Blockers/Concerns
 
@@ -93,5 +97,5 @@ Progress: [████░░░░░░] 38% (v2.0) — [███████
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Phase 9 Plan 1 complete — FormField wrapper created, OrchestraForm migrated to shadcn. Ready for Phase 9 Plan 2 (StudentForm).
+Stopped at: Phase 9 Plan 3 complete — StudentForm migrated to shadcn primitives. Phase 9 fully complete. Ready for Phase 10.
 Resume file: None

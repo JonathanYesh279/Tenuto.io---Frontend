@@ -14,10 +14,38 @@
 /* Import simple weekly grid styles */
 @import './styles/simple-weekly-grid.css';
 
-/* Import Inter font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* === Design Token System (Phase 6: Foundation) === */
+/* Warm coral/amber palette per user decision (FNDTN-06). */
+/* bg-primary-500 (hardcoded hex) is unaffected — only bg-primary uses these CSS vars. */
+@layer base {
+  :root {
+    --background: 30 25% 97%;
+    --foreground: 20 15% 15%;
+    --card: 30 20% 99%;
+    --card-foreground: 20 15% 15%;
+    --popover: 30 20% 99%;
+    --popover-foreground: 20 15% 15%;
+    --primary: 15 85% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 20 12% 45%;
+    --secondary-foreground: 30 20% 98%;
+    --muted: 25 15% 93%;
+    --muted-foreground: 20 10% 45%;
+    --accent: 35 90% 55%;
+    --accent-foreground: 25 60% 20%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 25 12% 88%;
+    --input: 25 12% 88%;
+    --ring: 15 85% 45%;
+    --radius: 0.75rem;
+    --sidebar: 220 25% 18%;
+    --sidebar-foreground: 30 25% 97%;
+  }
+}
 
 /* Reisinger Hebrew Font Family - Custom Fonts */
+/* Note: Heebo font loaded via <link> in index.html (performance — no render-blocking @import) */
 @font-face {
   font-family: 'Reisinger Yonatan';
   src: url('/fonts/Reisinger-Yonatan-web/Reisinger-Yonatan-Regular.woff2') format('woff2'),
@@ -38,7 +66,7 @@
 html {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
-  font-family: 'Reisinger Yonatan', 'Inter', system-ui, sans-serif;
+  font-family: 'Heebo', 'Reisinger Yonatan', 'Arial Hebrew', system-ui, sans-serif;
   font-weight: 500;
   direction: rtl;
   /* Custom scrollbar for html element */
@@ -72,8 +100,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 500;
-  background-color: rgb(249 250 251);
-  color: rgb(17 24 39);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   /* Custom scrollbar for entire page */
   scrollbar-width: thin;
   scrollbar-color: rgb(209 213 219) transparent;

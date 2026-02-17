@@ -7,6 +7,37 @@ export default {
   theme: {
     extend: {
       colors: {
+        // === Semantic tokens (CSS variable backed, for shadcn/ui components) ===
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))",
+        },
+        // === Existing palettes with semantic tokens MERGED in ===
         // Modern professional blue theme (inspired by InsideBox design)
         primary: {
           50: '#eff6ff',
@@ -20,6 +51,8 @@ export default {
           800: '#1e40af',
           900: '#1e3a8a',
           950: '#172554',
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         // Supporting blue tones
         secondary: {
@@ -34,6 +67,8 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
           950: '#020617',
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         // Success/green accents
         success: {
@@ -93,18 +128,18 @@ export default {
         }
       },
       fontFamily: {
-        // Hebrew-optimized font stack with Reisinger Yonatan
+        // Hebrew-optimized font stack — Heebo primary, Reisinger fallback
         sans: [
+          'Heebo',
           'Reisinger Yonatan',
-          'Inter',
           'Arial Hebrew',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
-          'Segoe UI',
-          'Roboto',
           'sans-serif'
         ],
+        // Utility alias for explicit Hebrew font use
+        hebrew: ['Heebo', 'Arial Hebrew', 'Noto Sans Hebrew', 'sans-serif'],
         // Music notation fonts
         music: [
           'Bravura',
@@ -136,6 +171,9 @@ export default {
         '144': '36rem',
       },
       borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
         '4xl': '2rem',
       },
       boxShadow: {

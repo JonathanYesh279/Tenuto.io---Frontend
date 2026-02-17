@@ -25,7 +25,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 **Milestone Goal:** Transform Tenuto from a generic admin template into a polished, premium music school management platform with warm Monday.com-inspired aesthetics, shadcn/ui components, and Hebrew RTL correctness throughout.
 
 - [x] **Phase 6: Foundation** — Design token system, RTL fixes, CSS cleanup, package upgrades
-- [ ] **Phase 7: Primitives** — Missing shadcn/ui components, modal migration, button/badge system
+- [x] **Phase 7: Primitives** — Missing shadcn/ui components, modal migration, button/badge system
 - [ ] **Phase 8: Domain Components & Loading States** — Conservatory-specific components, skeletons, empty/error states, toast system
 - [ ] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
 - [ ] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
@@ -64,8 +64,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Install tailwindcss-animate + 9 Radix packages, generate shadcn primitives, build ConfirmDeleteDialog, update Modal wrapper, extend Badge, migrate Header dropdown
-- [ ] 07-02-PLAN.md — Migrate Teacher/Student/Orchestra tabs to shadcn Tabs, migrate Orchestras delete to ConfirmDeleteDialog, update ConfirmationModal, clean dead CSS
+- [x] 07-01-PLAN.md — Install tailwindcss-animate + 9 Radix packages, generate shadcn primitives, build ConfirmDeleteDialog, update Modal wrapper, extend Badge, migrate Header dropdown
+- [x] 07-02-PLAN.md — Migrate Teacher/Student/Orchestra tabs to shadcn Tabs, migrate Orchestras delete to ConfirmDeleteDialog, update ConfirmationModal, clean dead CSS
 
 ### Phase 8: Domain Components & Loading States
 **Goal:** Conservatory-specific reusable components exist — InstrumentBadge, StatusBadge, StatsCard, AvatarInitials, Skeleton loaders, EmptyState, ErrorState, and the toast notification system — so every page can display loading feedback, errors, and music-school identity without reimplementing them.
@@ -172,7 +172,7 @@ Plans:
 | 4. Ministry Reports Polish | v1.1 | 1/1 | Complete | 2026-02-13 |
 | 5. Audit Claude Skills & GSD Agents | v1.1 | 3/3 | Complete | 2026-02-14 |
 | 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
-| 7. Primitives | v2.0 | 0/2 | Planned | - |
+| 7. Primitives | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 8. Domain Components & Loading | v2.0 | 0/3 | Not started | - |
 | 9. Form System | v2.0 | 0/1 | Not started | - |
 | 10. List Pages | v2.0 | 0/2 | Not started | - |
@@ -182,4 +182,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-17 (Phase 6 Foundation complete)*
+*Last updated: 2026-02-17 (Phase 7 Primitives complete)*

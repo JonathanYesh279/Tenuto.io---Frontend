@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.0 Phase 8 — Domain Components & Loading States
+**Current focus:** v2.0 Phase 9 — Form Redesign (next)
 
 ## Current Position
 
-Phase: 8 of 13 ([v2.0] Domain Components & Loading States) — IN PROGRESS
-Plan: 1 of 3 in current phase — COMPLETE
-Status: Plan 08-01 complete; ready for Plan 08-02 (loading states)
-Last activity: 2026-02-17 — Phase 8 Plan 1 complete (domain components + skeleton)
+Phase: 8 of 13 ([v2.0] Domain Components & Loading States) — COMPLETE
+Plan: 3 of 3 in current phase — COMPLETE
+Status: Phase 8 fully complete (all 3 plans: domain components, loading states, toast system)
+Last activity: 2026-02-17 — Phase 8 Plan 3 complete (toast RTL + slide animation + page fade-in)
 
-Progress: [████░░░░░░] 30% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [████░░░░░░] 35% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9 (7 v1.1 + 2 v2.0)
-- Average duration: ~27 min
-- Total execution time: ~3.7 hours
+- Total plans completed: 12 (7 v1.1 + 5 v2.0)
+- Average duration: ~22 min
+- Total execution time: ~4.4 hours
 
 **By Phase:**
 
@@ -33,6 +33,8 @@ Progress: [████░░░░░░] 30% (v2.0) — [███████
 | v2.0 Phase 7 Plan 1 | 1 | 117min | 117 min |
 | v2.0 Phase 7 Plan 2 | 1 | 6min | 6 min |
 | v2.0 Phase 8 Plan 1 | 1 | 10min | 10 min |
+| v2.0 Phase 8 Plan 2 | 1 | ~10min | 10 min |
+| v2.0 Phase 8 Plan 3 | 1 | 2min | 2 min |
 
 *Updated after each plan completion*
 
@@ -63,6 +65,11 @@ Progress: [████░░░░░░] 30% (v2.0) — [███████
 - [08-01]: StatsCard is a re-export of dashboard/StatCard — no duplicate implementation
 - [08-01]: DesignSystem.tsx StatusBadge/InstrumentBadge left untouched — Phase 10 handles callsite migration
 - [08-01]: Skeleton uses bg-muted CSS token (not bg-gray-200) — consistent with CSS variable system
+- [08-03]: Toast position top-left (physical) = visual right edge in RTL — satisfies TOAST-01/02/03
+- [08-03]: ToastBar render prop approach for animation — toast.custom() bypasses render prop entirely
+- [08-03]: showWarning/showInfo use toast() not toast.custom() so they inherit slideFromRight animation
+- [08-03]: No key prop on Layout — avoids sidebar/header state reset on route change (Pitfall 5 from research)
+- [08-03]: LOAD-06 confirmed satisfied from Phase 7 — no changes needed to ConfirmDeleteDialog
 
 ### Pending Todos
 
@@ -70,7 +77,6 @@ Progress: [████░░░░░░] 30% (v2.0) — [███████
 
 ### Blockers/Concerns
 
-- [Research flag, Phase 8]: Instrument SVG icon coverage — Lucide has Piano/Guitar/Music/Drum/Mic but may not cover all 27 instrument families. Assess during Phase 8 planning.
 - [Research flag, Phase 13]: Toast migration scope — run `grep -r "toast\." src/ | wc -l` before planning Phase 13 to decide if Sonner migration fits or defers to v3.0.
 - [Constraint]: Backend export endpoints (/api/export/status, /validate, /download) still not implemented — MinistryReports info banner stays until next backend milestone.
 - [Pre-existing]: TypeScript errors in bagrutMigration.ts, cascadeErrorHandler.ts, errorRecovery.ts, memoryManager.ts, performanceEnhancements.tsx, securityUtils.ts — unrelated to CSS foundation work. Needs resolution before CI typecheck stage is enabled.
@@ -79,5 +85,5 @@ Progress: [████░░░░░░] 30% (v2.0) — [███████
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Phase 8 Plan 1 complete — domain component library + Skeleton created. Ready for Plan 08-02.
+Stopped at: Phase 8 complete — all 3 plans done. Toast RTL positioning, slide animation, page fade-in, warning/info helpers. Ready for Phase 9.
 Resume file: None

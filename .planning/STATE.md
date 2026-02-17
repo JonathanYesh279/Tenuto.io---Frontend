@@ -36,7 +36,7 @@ Progress: [████░░░░░░] 42% (v2.0) — [███████
 | v2.0 Phase 8 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 8 Plan 3 | 1 | 2min | 2 min |
 | v2.0 Phase 9 Plan 1 | 1 | 3min | 3 min |
-| v2.0 Phase 9 Plan 2 | 1 | ~15min | 15 min |
+| v2.0 Phase 9 Plan 2 | 1 | 7min | 7 min |
 | v2.0 Phase 9 Plan 3 | 1 | 6min | 6 min |
 
 *Updated after each plan completion*
@@ -79,6 +79,9 @@ Progress: [████░░░░░░] 42% (v2.0) — [███████
 - [09-01]: FormField wrapper uses htmlFor/id pairing (not aria-labelledby) — simpler, standard, matches shadcn Label
 - [09-01]: Radix Select value={undefined} for empty/null state — Radix does not support empty string value
 - [09-01]: OrchestraForm keeps useState — no RHF migration needed (single page, no tab-switch data loss risk)
+- [09-02]: AddTeacherModal uses RHF useForm (shouldUnregister:false default) — tab switching preserves all 7 tab fields in RHF internal store
+- [09-02]: Schedule array managed via watch/setValue (no useFieldArray) — simpler add/remove for a non-dynamic array
+- [09-02]: Sidebar.tsx onSuccess -> onTeacherAdded prop fix applied inline — pre-existing bug eliminated
 - [09-03]: StudentForm keeps useState — collapsible sections do not unmount data (unlike tabs), no data loss risk without RHF
 - [09-03]: Custom teacher searchable dropdown preserved — requires fixed positioning to escape modal overflow, incompatible with standard Radix Select portal
 - [09-03]: Days filter checkbox dropdown preserved as custom — multi-select inline behavior incompatible with single-select Radix Select
@@ -96,6 +99,6 @@ None for Phase 9. Phase 10 is next: badge/status component migration and callsit
 
 ## Session Continuity
 
-Last session: 2026-02-17
-Stopped at: Phase 9 Plan 3 complete — StudentForm migrated to shadcn primitives. Phase 9 fully complete. Ready for Phase 10.
+Last session: 2026-02-18
+Stopped at: Phase 9 Plan 2 re-executed (09-02-SUMMARY.md created, commits b92b62b + 99d4f27). Phase 9 fully complete. Ready for Phase 10.
 Resume file: None

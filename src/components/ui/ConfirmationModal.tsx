@@ -1,13 +1,25 @@
 /**
  * Custom Confirmation Modal Component
- * 
- * A styled confirmation dialog that matches our design system
- * and replaces the default browser confirm dialogs.
+ *
+ * A styled confirmation dialog that wraps shadcn Dialog.
+ * Replaces the previous Modal-based implementation with Radix-based
+ * focus trap, Escape key handling, and entrance/exit animations.
+ *
+ * Prop interface is unchanged — all callsites continue to work:
+ *   isOpen, onCancel, onConfirm, title, message, confirmText, cancelText, variant
  */
 
 import React from 'react'
 import { AlertTriangle } from 'lucide-react'
-import Modal from './Modal'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 interface ConfirmationModalProps {
   isOpen: boolean
@@ -30,33 +42,31 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onCancel,
   variant = 'danger'
 }) => {
-  if (!isOpen) return null
-
   const getVariantStyles = () => {
     switch (variant) {
       case 'danger':
         return {
           icon: 'text-red-600',
-          confirmButton: 'bg-red-600 hover:bg-red-700 text-white',
-          iconBg: 'bg-red-100'
+          iconBg: 'bg-red-100',
+          confirmVariant: 'destructive' as const,
         }
       case 'warning':
         return {
           icon: 'text-yellow-600',
-          confirmButton: 'bg-yellow-600 hover:bg-yellow-700 text-white',
-          iconBg: 'bg-yellow-100'
+          iconBg: 'bg-yellow-100',
+          confirmVariant: 'default' as const,
         }
       case 'info':
         return {
           icon: 'text-blue-600',
-          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white',
-          iconBg: 'bg-blue-100'
+          iconBg: 'bg-blue-100',
+          confirmVariant: 'default' as const,
         }
       default:
         return {
           icon: 'text-red-600',
-          confirmButton: 'bg-red-600 hover:bg-red-700 text-white',
-          iconBg: 'bg-red-100'
+          iconBg: 'bg-red-100',
+          confirmVariant: 'destructive' as const,
         }
     }
   }
@@ -64,44 +74,38 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   const styles = getVariantStyles()
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onCancel}
-      maxWidth="md"
-      showCloseButton={false}
-      closeOnBackdrop={true}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${styles.iconBg}`}>
-            <AlertTriangle className={`w-5 h-5 ${styles.icon}`} />
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        </div>
-      </div>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onCancel() }}>
+      <DialogContent className="max-w-md duration-200">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${styles.iconBg}`}>
+              <AlertTriangle className={`w-5 h-5 ${styles.icon}`} />
+            </div>
+            {title}
+          </DialogTitle>
+          <DialogDescription className="text-right text-gray-700 text-sm leading-relaxed pt-1">
+            {message}
+          </DialogDescription>
+        </DialogHeader>
 
-      {/* Content */}
-      <div className="p-6">
-        <p className="text-gray-700 text-sm leading-relaxed">{message}</p>
-      </div>
-
-      {/* Actions */}
-      <div className="flex gap-3 p-6 pt-0">
-        <button
-          onClick={onCancel}
-          className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-        >
-          {cancelText}
-        </button>
-        <button
-          onClick={onConfirm}
-          className={`flex-1 px-4 py-2 rounded-lg transition-colors font-medium ${styles.confirmButton}`}
-        >
-          {confirmText}
-        </button>
-      </div>
-    </Modal>
+        <DialogFooter className="gap-3 sm:gap-3">
+          <Button
+            variant={styles.confirmVariant}
+            onClick={onConfirm}
+            className="flex-1"
+          >
+            {confirmText}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            className="flex-1"
+          >
+            {cancelText}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
 

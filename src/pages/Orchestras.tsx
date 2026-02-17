@@ -8,7 +8,7 @@ import OrchestraForm from '../components/OrchestraForm'
 import OrchestraCard from '../components/OrchestraCard'
 import OrchestraManagementDashboard from '../components/OrchestraManagementDashboard'
 import OrchestraMemberManagement from '../components/OrchestraMemberManagement'
-import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal'
+import ConfirmDeleteDialog from '../components/ui/ConfirmDeleteDialog'
 import { orchestraService, teacherService } from '../services/apiService'
 import { useAuth } from '../services/authContext'
 import { useSchoolYear } from '../services/schoolYearContext'
@@ -534,16 +534,18 @@ export default function Orchestras() {
         />
       )}
 
-      {/* Delete Confirmation Modal */}
-      <ConfirmDeleteModal
-        isOpen={showDeleteConfirm}
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDeleteDialog
+        open={showDeleteConfirm}
+        onOpenChange={(open) => { if (!open) cancelDeleteOrchestra() }}
         title="מחיקת תזמורת"
-        message="האם אתה בטוח שברצונך למחוק את התזמורת?"
+        description="האם אתה בטוח שברצונך למחוק את התזמורת?"
         itemName={orchestraToDelete?.name}
         confirmText="מחק תזמורת"
+        cancelText="ביטול"
         onConfirm={confirmDeleteOrchestra}
-        onCancel={cancelDeleteOrchestra}
         isLoading={isDeleting}
+        variant="danger"
       />
     </div>
   )

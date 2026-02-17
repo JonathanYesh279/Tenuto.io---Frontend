@@ -28,7 +28,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 7: Primitives** — Missing shadcn/ui components, modal migration, button/badge system
 - [x] **Phase 8: Domain Components & Loading States** — Conservatory-specific components, skeletons, empty/error states, toast system
 - [x] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
-- [ ] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
+- [x] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
 - [ ] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
 - [ ] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
 - [ ] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
@@ -113,8 +113,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 10-01-PLAN.md — Upgrade Table.tsx (sticky headers, warm hover), create SearchInput, upgrade Pagination (entityLabel)
-- [ ] 10-02-PLAN.md — Wire all 5 pages: SearchInput on Teachers/Students/Orchestras/Rehearsals, AuditTrail Table+Pagination migration, Rehearsals TableSkeleton+EmptyState
+- [x] 10-01-PLAN.md — Upgrade Table.tsx (sticky headers, warm hover), create SearchInput, upgrade Pagination (entityLabel)
+- [x] 10-02-PLAN.md — Wire all 5 pages: SearchInput on Teachers/Students/Orchestras/Rehearsals, AuditTrail Table+Pagination migration, Rehearsals TableSkeleton+EmptyState
 
 ### Phase 11: Detail Pages
 **Goal:** All entity detail pages display gradient header strips with avatar initials, breadcrumb navigation, "last updated" metadata, and smooth tab transitions — giving every detail view consistent structure and music-school identity.
@@ -177,11 +177,11 @@ Plans:
 | 7. Primitives | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 8. Domain Components & Loading | v2.0 | 3/3 | Complete | 2026-02-17 |
 | 9. Form System | v2.0 | 3/3 | Complete | 2026-02-18 |
-| 10. List Pages | v2.0 | 0/2 | Not started | - |
+| 10. List Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 11. Detail Pages | v2.0 | 0/2 | Not started | - |
 | 12. Layout & Dashboard | v2.0 | 0/2 | Not started | - |
 | 13. Special Pages | v2.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 (Phase 9 Form System complete)*
+*Last updated: 2026-02-18 (Phase 10 List Pages complete)*

@@ -93,10 +93,12 @@ Plans:
   2. Every form input on the Teacher, Student, and Orchestra forms has a visible label that stays visible regardless of whether the field has a value
   3. The 7-tab Teacher form retains all field values when switching between tabs — no data loss from tab navigation
   4. Form primary action buttons (save) appear in a consistent bottom-right position in RTL; cancel appears to their right (outward direction)
-**Plans:** TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 09-01: Form system redesign — all three entity forms
+- [ ] 09-01-PLAN.md — FormField wrapper component + OrchestraForm migration to shadcn primitives
+- [ ] 09-02-PLAN.md — AddTeacherModal RHF migration + shadcn primitives + CSS cleanup
+- [ ] 09-03-PLAN.md — StudentForm migration to shadcn primitives
 
 ### Phase 10: List Pages
 **Goal:** All 5 main list pages display consistent, polished table design with hover states, sticky headers, contextual pagination, search-with-clear, skeleton loading, and music-themed empty states.
@@ -174,7 +176,7 @@ Plans:
 | 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 7. Primitives | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 8. Domain Components & Loading | v2.0 | 3/3 | Complete | 2026-02-17 |
-| 9. Form System | v2.0 | 0/1 | Not started | - |
+| 9. Form System | v2.0 | 0/3 | Not started | - |
 | 10. List Pages | v2.0 | 0/2 | Not started | - |
 | 11. Detail Pages | v2.0 | 0/2 | Not started | - |
 | 12. Layout & Dashboard | v2.0 | 0/2 | Not started | - |

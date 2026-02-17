@@ -77,12 +77,12 @@ Plans:
   3. A network error on any list page shows a human-readable error message and a "נסה שוב" retry button — not an empty table or console error
   4. A successful save action triggers a toast notification that slides in from the right edge (RTL-correct), uses warm amber/green success color, and includes a checkmark icon
   5. Navigating between routes shows a smooth fade-in on the incoming page — no white flash between pages
-**Plans:** TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 08-01: InstrumentBadge, StatusBadge, AvatarInitials, StatsCard domain components
-- [ ] 08-02: Skeleton, EmptyState, ErrorState, Pagination, ConfirmDialog
-- [ ] 08-03: Toast system, page transition, LOAD-05
+- [ ] 08-01-PLAN.md — Domain components (InstrumentBadge, StatusBadge, AvatarInitials, StatsCard) + Skeleton primitive
+- [ ] 08-02-PLAN.md — EmptyState, ErrorState + wire all 3 list pages (skeleton/empty/error)
+- [ ] 08-03-PLAN.md — Toast RTL fix + slide animation + warning/info helpers + page fade-in
 
 ### Phase 9: Form System
 **Goal:** All forms use consistently styled shadcn/ui-wrapped inputs with section grouping, inline validation feedback, and labeled fields — without any React Hook Form regressions.
@@ -173,7 +173,7 @@ Plans:
 | 5. Audit Claude Skills & GSD Agents | v1.1 | 3/3 | Complete | 2026-02-14 |
 | 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 7. Primitives | v2.0 | 2/2 | Complete | 2026-02-17 |
-| 8. Domain Components & Loading | v2.0 | 0/3 | Not started | - |
+| 8. Domain Components & Loading | v2.0 | 0/3 | Planned | - |
 | 9. Form System | v2.0 | 0/1 | Not started | - |
 | 10. List Pages | v2.0 | 0/2 | Not started | - |
 | 11. Detail Pages | v2.0 | 0/2 | Not started | - |

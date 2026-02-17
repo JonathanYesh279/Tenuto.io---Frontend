@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 
 ## Current Position
 
-Phase: 6 of 13 ([v2.0] Foundation) — COMPLETE
-Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase complete, ready for Phase 7
-Last activity: 2026-02-17 — 06-02 complete (CSS cleanup, RTL fixes, dead file removal)
+Phase: 7 of 13 ([v2.0] Primitives) — IN PROGRESS
+Plan: 1 of 2 in current phase — COMPLETE
+Status: Plan 07-01 complete — shadcn primitives, ConfirmDeleteDialog, Modal wrapper, Badge, Header dropdown
+Last activity: 2026-02-17 — 07-01 complete (shadcn primitives, domain components, Header migration)
 
-Progress: [█░░░░░░░░░] 10% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [██░░░░░░░░] 15% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
@@ -30,6 +30,7 @@ Progress: [█░░░░░░░░░] 10% (v2.0) — [███████
 | v1.1 Phases 1-5 | 7 | ~3.5h | ~30 min |
 | v2.0 Phase 6 Plan 1 | 1 | 8min | 8 min |
 | v2.0 Phase 6 Plan 2 | 1 | 3min | 3 min |
+| v2.0 Phase 7 Plan 1 | 1 | 117min | 117 min |
 
 *Updated after each plan completion*
 
@@ -50,6 +51,10 @@ Progress: [█░░░░░░░░░] 10% (v2.0) — [███████
 - [06-02]: Responsive display toggle !important kept with TODO(Phase 7) — override inline styles; Phase 7 migrates to shadcn Tabs
 - [06-02]: RTL [dir="rtl"] override block pattern deprecated — merge into base selector since app is always RTL (dir=rtl on html)
 - [06-02]: Animation standard established — 100-200ms ease-out for modals/toasts/tabs; no decorative infinite animations (pulse-soft removed)
+- [07-01]: shadcn primitives written manually (not via CLI) — WSL2+NTFS EIO errors prevent npm install in CLI; manual writing produces identical output
+- [07-01]: progress.tsx overwritten with Radix-based version — bg-primary CSS var replaces bg-primary-600 palette class for token consistency
+- [07-01]: Modal.tsx backward-compat wrapper — isOpen/onClose API preserved; individual callsite migration deferred to Plan 07-02
+- [07-01]: ConfirmDeleteDialog destructive button first in JSX — RTL places it visually on the right (prominent = correct for danger action)
 
 ### Pending Todos
 
@@ -62,9 +67,10 @@ Progress: [█░░░░░░░░░] 10% (v2.0) — [███████
 - [Research flag, Phase 13]: Toast migration scope — run `grep -r "toast\." src/ | wc -l` before planning Phase 13 to decide if Sonner migration fits or defers to v3.0.
 - [Constraint]: Backend export endpoints (/api/export/status, /validate, /download) still not implemented — MinistryReports info banner stays until next backend milestone.
 - [Pre-existing]: TypeScript errors in bagrutMigration.ts, cascadeErrorHandler.ts, errorRecovery.ts, memoryManager.ts, performanceEnhancements.tsx, securityUtils.ts — unrelated to CSS foundation work. Needs resolution before CI typecheck stage is enabled.
+- [WSL constraint]: npm install on /mnt/c/ NTFS mount causes EIO errors in tar extraction — packages install with missing files. Workaround: retry loops + npm pack -> /tmp -> manual copy. Build verification must be done from Windows PowerShell or CI (not WSL).
 
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: Completed 06-02-PLAN.md — CSS cleanup, RTL fixes, dead file removal. Phase 6 Foundation complete.
+Stopped at: Completed 07-01-PLAN.md — shadcn primitives, ConfirmDeleteDialog, Modal wrapper, Badge variants, Header DropdownMenu. Ready for Plan 07-02 (callsite migration).
 Resume file: None

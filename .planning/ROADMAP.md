@@ -24,7 +24,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 
 **Milestone Goal:** Transform Tenuto from a generic admin template into a polished, premium music school management platform with warm Monday.com-inspired aesthetics, shadcn/ui components, and Hebrew RTL correctness throughout.
 
-- [ ] **Phase 6: Foundation** — Design token system, RTL fixes, CSS cleanup, package upgrades
+- [x] **Phase 6: Foundation** — Design token system, RTL fixes, CSS cleanup, package upgrades
 - [ ] **Phase 7: Primitives** — Missing shadcn/ui components, modal migration, button/badge system
 - [ ] **Phase 8: Domain Components & Loading States** — Conservatory-specific components, skeletons, empty/error states, toast system
 - [ ] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
@@ -48,8 +48,8 @@ Full details: `milestones/v1.1-ROADMAP.md`
 **Plans:** 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — CSS token layer, Tailwind config merge, DirectionProvider, Heebo font, components.json
-- [ ] 06-02-PLAN.md — !important removal, RTL logical properties, dead CSS cleanup, animation reconciliation
+- [x] 06-01-PLAN.md — CSS token layer, Tailwind config merge, DirectionProvider, Heebo font, components.json
+- [x] 06-02-PLAN.md — !important removal, RTL logical properties, dead CSS cleanup, animation reconciliation
 
 ### Phase 7: Primitives
 **Goal:** A complete shadcn/ui primitive component set exists — Dialog, Tabs, DropdownMenu, Tooltip, and supporting components — all RTL-verified and ready to compose domain components and pages on top of.
@@ -171,7 +171,7 @@ Plans:
 | 3. Audit Trail Page | v1.1 | 1/1 | Complete | 2026-02-13 |
 | 4. Ministry Reports Polish | v1.1 | 1/1 | Complete | 2026-02-13 |
 | 5. Audit Claude Skills & GSD Agents | v1.1 | 3/3 | Complete | 2026-02-14 |
-| 6. Foundation | v2.0 | 0/2 | Not started | - |
+| 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
 | 7. Primitives | v2.0 | 0/2 | Not started | - |
 | 8. Domain Components & Loading | v2.0 | 0/3 | Not started | - |
 | 9. Form System | v2.0 | 0/1 | Not started | - |
@@ -182,4 +182,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-17 (v2.0 milestone phases added)*
+*Last updated: 2026-02-17 (Phase 6 Foundation complete)*

@@ -55,7 +55,7 @@ export default function Layout({ children }: LayoutProps) {
           marginRight: shouldShowSidebar && !isMobile && isDesktopOpen ? '280px' : '0'
         }}
       >
-        <div className="p-6 bg-gray-50">
+        <div className="p-6 bg-gray-50 animate-fade-in">
           {children}
         </div>
       </main>

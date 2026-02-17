@@ -646,7 +646,7 @@ export default function Sidebar() {
         <AddTeacherModal
           isOpen={showTeacherModal}
           onClose={() => setShowTeacherModal(false)}
-          onSuccess={handleTeacherFormSubmit}
+          onTeacherAdded={handleTeacherFormSubmit}
         />
       )}
 

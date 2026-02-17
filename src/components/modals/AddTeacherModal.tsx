@@ -1,12 +1,16 @@
 /**
  * Add Teacher Modal Component
- * 
+ *
  * A comprehensive form for creating new teachers with all required fields
  * including personal info, roles, professional info, and schedule slots.
  * Only accessible by admin users.
+ *
+ * Migrated to React Hook Form (shouldUnregister: false default) for tab-switch
+ * data persistence. All native inputs replaced with shadcn/ui primitives.
  */
 
 import React, { useState, useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
 import { X, Plus, Trash2, Clock, MapPin, Save, AlertCircle, User, Briefcase, Calendar, Settings, Music2, BookOpen } from 'lucide-react'
 import apiService from '../../services/apiService'
 import { useSchoolYear } from '../../services/schoolYearContext'
@@ -17,6 +21,16 @@ import {
   CLASSIFICATIONS, DEGREES, MANAGEMENT_ROLES, TEACHING_SUBJECTS,
   INSTRUMENT_DEPARTMENTS
 } from '../../constants/enums'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { FormField } from '@/components/ui/form-field'
+import {
+  Select, SelectTrigger, SelectValue, SelectContent,
+  SelectItem, SelectGroup, SelectLabel
+} from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 
 interface AddTeacherModalProps {
   isOpen: boolean
@@ -75,97 +89,108 @@ interface TeacherFormData {
 const VALID_ROLES = ['מורה', 'מנצח', 'מדריך הרכב', 'מנהל', 'מורה תאוריה', 'מגמה']
 const VALID_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי']
 
+const DEFAULT_FORM_VALUES: TeacherFormData = {
+  personalInfo: {
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    address: '',
+    idNumber: '',
+    birthYear: null
+  },
+  roles: [],
+  professionalInfo: {
+    instrument: '',
+    instruments: [],
+    classification: '',
+    degree: '',
+    hasTeachingCertificate: false,
+    teachingExperienceYears: null,
+    isUnionMember: false,
+    teachingSubjects: [],
+    isActive: true
+  },
+  managementInfo: {
+    role: '',
+    managementHours: null,
+    accompHours: null,
+    ensembleCoordHours: null,
+    travelTimeHours: null
+  },
+  teaching: {
+    schedule: []
+  },
+  conducting: {
+    orchestraIds: []
+  },
+  ensemblesIds: []
+}
+
 // Helper function to calculate duration in minutes from start and end time
 const calculateDuration = (startTime: string, endTime: string): number => {
   if (!startTime || !endTime) return 0
-  
+
   const [startHours, startMinutes] = startTime.split(':').map(Number)
   const [endHours, endMinutes] = endTime.split(':').map(Number)
-  
+
   const startTotalMinutes = startHours * 60 + startMinutes
   const endTotalMinutes = endHours * 60 + endMinutes
-  
+
   // Handle case where end time is before start time (invalid)
   if (endTotalMinutes <= startTotalMinutes) {
     return 0
   }
-  
+
   return endTotalMinutes - startTotalMinutes
 }
 
 // Helper function to validate time range
 const validateTimeRange = (startTime: string, endTime: string): string | null => {
   if (!startTime || !endTime) return null
-  
+
   const duration = calculateDuration(startTime, endTime)
-  
+
   if (duration <= 0) {
     return 'שעת הסיום חייבת להיות אחרי שעת ההתחלה'
   }
-  
+
   if (duration < 30) {
     return 'יום לימוד חייב להיות לפחות 30 דקות'
   }
-  
+
   if (duration > 480) { // 8 hours
     return 'יום לימוד לא יכול להיות יותר מ-8 שעות'
   }
-  
+
   return null
 }
 
 const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTeacherAdded, teacherToEdit, mode = 'add' }) => {
   const { currentSchoolYear } = useSchoolYear()
   const [activeTab, setActiveTab] = useState<'personal' | 'professional' | 'instruments' | 'subjects' | 'management' | 'schedule' | 'conducting'>('personal')
-  const [formData, setFormData] = useState<TeacherFormData>({
-    personalInfo: {
-      firstName: '',
-      lastName: '',
-      phone: '',
-      email: '',
-      address: '',
-      idNumber: '',
-      birthYear: null
-    },
-    roles: [],
-    professionalInfo: {
-      instrument: '',
-      instruments: [],
-      classification: '',
-      degree: '',
-      hasTeachingCertificate: false,
-      teachingExperienceYears: null,
-      isUnionMember: false,
-      teachingSubjects: [],
-      isActive: true
-    },
-    managementInfo: {
-      role: '',
-      managementHours: null,
-      accompHours: null,
-      ensembleCoordHours: null,
-      travelTimeHours: null
-    },
-    teaching: {
-      schedule: []
-    },
-    conducting: {
-      orchestraIds: []
-    },
-    ensemblesIds: []
-  })
   const [orchestras, setOrchestras] = useState<any[]>([])
   const [ensembles, setEnsembles] = useState<any[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitError, setSubmitError] = useState('')
+
+  // React Hook Form — shouldUnregister: false (default) ensures tab-switch data retention
+  const { control, handleSubmit, formState: { errors }, reset, setValue, watch, getValues } = useForm<TeacherFormData>({
+    defaultValues: DEFAULT_FORM_VALUES,
+    mode: 'onTouched', // validate after first touch, then live
+  })
+
+  // Watch schedule array for reactive rendering
+  const scheduleSlots = watch('teaching.schedule')
 
   // Load teacher data when editing
   useEffect(() => {
     if (isOpen && mode === 'edit' && teacherToEdit) {
       loadTeacherData(teacherToEdit)
     } else if (isOpen && mode === 'add') {
-      resetForm()
+      reset(DEFAULT_FORM_VALUES)
+      setActiveTab('personal')
+      setSubmitError('')
     }
   }, [isOpen, mode, teacherToEdit])
 
@@ -199,7 +224,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
       notes: block.notes || ''
     }))
 
-    setFormData({
+    reset({
       personalInfo: {
         firstName: teacher.personalInfo?.firstName || '',
         lastName: teacher.personalInfo?.lastName || '',
@@ -238,154 +263,26 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
     })
   }
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {}
-
-    // Personal Info validation
-    if (!formData.personalInfo.firstName.trim()) {
-      newErrors['personalInfo.firstName'] = 'שם פרטי נדרש'
-    }
-    if (!formData.personalInfo.lastName.trim()) {
-      newErrors['personalInfo.lastName'] = 'שם משפחה נדרש'
-    }
-    if (!formData.personalInfo.phone.match(/^05\d{8}$/)) {
-      newErrors['personalInfo.phone'] = 'מספר טלפון חייב להיות בפורמט: 05XXXXXXXX'
-    }
-    if (!formData.personalInfo.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      newErrors['personalInfo.email'] = 'כתובת אימייל לא תקינה'
-    }
-    if (!formData.personalInfo.address.trim()) {
-      newErrors['personalInfo.address'] = 'כתובת נדרשת'
-    }
-
-    // Roles validation
-    if (formData.roles.length === 0) {
-      newErrors['roles'] = 'יש לבחור לפחות תפקיד אחד'
-    }
-
-    // Professional Info validation
-    const hasTeacherRole = formData.roles.includes('מורה') ||
-                          formData.roles.includes('מגמה') ||
-                          !formData.roles.includes('מורה תאוריה')
-    if (hasTeacherRole && formData.professionalInfo.instruments.length === 0 && !formData.professionalInfo.instrument) {
-      newErrors['professionalInfo.instrument'] = 'יש לבחור לפחות כלי נגינה אחד'
-    }
-
-    // Schedule validation
-    formData.teaching.schedule.forEach((slot, index) => {
-      if (!slot.startTime) {
-        newErrors[`schedule.${index}.startTime`] = 'שעת התחלה נדרשת'
-      }
-      if (!slot.endTime) {
-        newErrors[`schedule.${index}.endTime`] = 'שעת סיום נדרשת'
-      }
-      if (!slot.location) {
-        newErrors[`schedule.${index}.location`] = 'יש לבחור מיקום'
-      } else if (!VALID_LOCATIONS.includes(slot.location)) {
-        newErrors[`schedule.${index}.location`] = 'מיקום לא תקין'
-      }
-      if (slot.startTime && slot.endTime) {
-        const error = validateTimeRange(slot.startTime, slot.endTime)
-        if (error) {
-          newErrors[`schedule.${index}.timeRange`] = error
-        }
-      }
-    })
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleInputChange = (section: string, field: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof TeacherFormData],
-        [field]: value
-      }
-    }))
-    
-    // Clear related errors
-    const errorKey = `${section}.${field}`
-    if (errors[errorKey]) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[errorKey]
-        return newErrors
-      })
-    }
-  }
-
-  const handleRoleChange = (role: string, checked: boolean) => {
-    const newRoles = checked
-      ? [...formData.roles, role]
-      : formData.roles.filter(r => r !== role)
-    
-    setFormData(prev => ({ ...prev, roles: newRoles }))
-    
-    // Clear roles error
-    if (errors['roles']) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors['roles']
-        return newErrors
-      })
-    }
-  }
-
   const addScheduleSlot = () => {
-    const newSlot: ScheduleSlot = {
-      day: 'ראשון',
-      startTime: '14:00',
-      endTime: '15:30',
-      location: '',
-      notes: ''
-    }
-    
-    setFormData(prev => ({
-      ...prev,
-      teaching: {
-        ...prev.teaching,
-        schedule: [...prev.teaching.schedule, newSlot]
-      }
-    }))
+    const current = getValues('teaching.schedule') || []
+    setValue('teaching.schedule', [
+      ...current,
+      { day: 'ראשון', startTime: '14:00', endTime: '15:30', location: '', notes: '' }
+    ])
   }
 
   const removeScheduleSlot = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      teaching: {
-        ...prev.teaching,
-        schedule: prev.teaching.schedule.filter((_, i) => i !== index)
-      }
-    }))
+    const current = getValues('teaching.schedule') || []
+    setValue('teaching.schedule', current.filter((_, i) => i !== index))
   }
 
-  const updateScheduleSlot = (index: number, field: keyof ScheduleSlot, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      teaching: {
-        ...prev.teaching,
-        schedule: prev.teaching.schedule.map((slot, i) =>
-          i === index ? { ...slot, [field]: value } : slot
-        )
-      }
-    }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
-
+  const onSubmit = async (data: TeacherFormData) => {
     setIsSubmitting(true)
     setSubmitError('')
 
     try {
       // Convert form schedule entries to timeBlocks format
-      const newTimeBlocks = formData.teaching.schedule.map(slot => ({
+      const newTimeBlocks = data.teaching.schedule.map(slot => ({
         day: slot.day,
         startTime: slot.startTime,
         endTime: slot.endTime,
@@ -412,21 +309,21 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
 
       // Prepare teacher data according to backend schema
       const teacherData = {
-        personalInfo: formData.personalInfo,
-        roles: formData.roles,
-        professionalInfo: formData.professionalInfo,
-        managementInfo: formData.managementInfo,
+        personalInfo: data.personalInfo,
+        roles: data.roles,
+        professionalInfo: data.professionalInfo,
+        managementInfo: data.managementInfo,
         teaching: {
           timeBlocks: finalTimeBlocks
         },
-        conducting: formData.conducting,
-        ensemblesIds: formData.ensemblesIds,
+        conducting: data.conducting,
+        ensemblesIds: data.ensemblesIds,
         schoolYears: currentSchoolYear ? [{
           schoolYearId: currentSchoolYear._id,
           isActive: true
         }] : [],
         credentials: {
-          email: formData.personalInfo.email,
+          email: data.personalInfo.email,
           password: null, // Will be set through invitation system
           isInvitationAccepted: false
         },
@@ -434,20 +331,19 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
       }
 
       if (mode === 'edit' && teacherToEdit) {
-        // Update existing teacher
         console.log('🔄 Updating teacher with preserved lessons:', teacherData)
         const updatedTeacher = await apiService.teachers.updateTeacher(teacherToEdit._id, teacherData)
         console.log('✅ Teacher updated successfully:', updatedTeacher)
         onTeacherAdded(updatedTeacher)
       } else {
-        // Create new teacher
         console.log('🔄 Creating teacher:', teacherData)
         const newTeacher = await apiService.teachers.addTeacher(teacherData)
         console.log('✅ Teacher created successfully:', newTeacher)
         onTeacherAdded(newTeacher)
       }
 
-      resetForm()
+      reset(DEFAULT_FORM_VALUES)
+      setActiveTab('personal')
       onClose()
     } catch (error: any) {
       console.error(`❌ Failed to ${mode === 'edit' ? 'update' : 'create'} teacher:`, error)
@@ -459,7 +355,11 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
       )
 
       if (isValidationError) {
-        setErrors(fieldErrors)
+        // Set server errors on RHF fields
+        Object.entries(fieldErrors).forEach(([key, message]) => {
+          // No-op: server errors are shown via submitError banner
+          // Field-level server errors can be added here if needed
+        })
       }
       setSubmitError(generalMessage)
     } finally {
@@ -467,51 +367,10 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
     }
   }
 
-  const resetForm = () => {
-    setFormData({
-      personalInfo: {
-        firstName: '',
-        lastName: '',
-        phone: '',
-        email: '',
-        address: '',
-        idNumber: '',
-        birthYear: null
-      },
-      roles: [],
-      professionalInfo: {
-        instrument: '',
-        instruments: [],
-        classification: '',
-        degree: '',
-        hasTeachingCertificate: false,
-        teachingExperienceYears: null,
-        isUnionMember: false,
-        teachingSubjects: [],
-        isActive: true
-      },
-      managementInfo: {
-        role: '',
-        managementHours: null,
-        accompHours: null,
-        ensembleCoordHours: null,
-        travelTimeHours: null
-      },
-      teaching: {
-        schedule: []
-      },
-      conducting: {
-        orchestraIds: []
-      },
-      ensemblesIds: []
-    })
-    setActiveTab('personal')
-    setErrors({})
-    setSubmitError('')
-  }
-
   const handleClose = () => {
-    resetForm()
+    reset(DEFAULT_FORM_VALUES)
+    setActiveTab('personal')
+    setSubmitError('')
     onClose()
   }
 
@@ -529,31 +388,33 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[85vh] overflow-hidden border border-gray-200">
+      <div className="bg-card rounded-xl shadow-2xl w-full max-w-4xl h-[85vh] overflow-hidden border border-border">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h2 className="text-xl font-bold text-foreground">
             {mode === 'edit' ? 'עריכת פרטי מורה' : 'הוספת מורה חדש'}
           </h2>
           <button
+            type="button"
             onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200">
+        <div className="border-b border-border">
           <nav className="flex space-x-8 px-6">
             {tabs.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
+                type="button"
                 onClick={() => setActiveTab(id as any)}
                 className={`flex items-center gap-2 py-4 px-2 border-b-2 font-medium text-sm ${
                   activeTab === id
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -564,158 +425,182 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
         </div>
 
         {/* Form Content */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="p-6 overflow-y-auto max-h-[60vh]">
             {/* Personal Info Tab */}
             {activeTab === 'personal' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      שם פרטי *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.personalInfo.firstName}
-                      onChange={(e) => handleInputChange('personalInfo', 'firstName', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-500 bg-white ${
-                        errors['personalInfo.firstName']
-                          ? 'border-red-300 focus:ring-red-500'
-                          : 'border-gray-300 focus:ring-primary-500'
-                      }`}
-                      placeholder="הכנס שם פרטי"
-                    />
-                    {errors['personalInfo.firstName'] && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.firstName']}</p>
+                  <Controller
+                    name="personalInfo.firstName"
+                    control={control}
+                    rules={{ required: 'שם פרטי נדרש' }}
+                    render={({ field, fieldState }) => (
+                      <FormField label="שם פרטי" htmlFor="firstName" error={fieldState.error?.message} required>
+                        <Input
+                          id="firstName"
+                          {...field}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'firstName-error' : undefined}
+                          className={cn(fieldState.error && 'border-destructive focus-visible:ring-destructive')}
+                          placeholder="הכנס שם פרטי"
+                        />
+                      </FormField>
                     )}
-                  </div>
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      שם משפחה *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.personalInfo.lastName}
-                      onChange={(e) => handleInputChange('personalInfo', 'lastName', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-500 bg-white ${
-                        errors['personalInfo.lastName']
-                          ? 'border-red-300 focus:ring-red-500'
-                          : 'border-gray-300 focus:ring-primary-500'
-                      }`}
-                      placeholder="הכנס שם משפחה"
-                    />
-                    {errors['personalInfo.lastName'] && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.lastName']}</p>
+                  <Controller
+                    name="personalInfo.lastName"
+                    control={control}
+                    rules={{ required: 'שם משפחה נדרש' }}
+                    render={({ field, fieldState }) => (
+                      <FormField label="שם משפחה" htmlFor="lastName" error={fieldState.error?.message} required>
+                        <Input
+                          id="lastName"
+                          {...field}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'lastName-error' : undefined}
+                          className={cn(fieldState.error && 'border-destructive focus-visible:ring-destructive')}
+                          placeholder="הכנס שם משפחה"
+                        />
+                      </FormField>
                     )}
-                  </div>
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      טלפון *
-                    </label>
-                    <input
-                      type="tel"
-                      value={formData.personalInfo.phone}
-                      onChange={(e) => handleInputChange('personalInfo', 'phone', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-500 bg-white ${
-                        errors['personalInfo.phone']
-                          ? 'border-red-300 focus:ring-red-500'
-                          : 'border-gray-300 focus:ring-primary-500'
-                      }`}
-                      placeholder="05XXXXXXXX"
-                    />
-                    {errors['personalInfo.phone'] && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.phone']}</p>
+                  <Controller
+                    name="personalInfo.phone"
+                    control={control}
+                    rules={{
+                      required: 'טלפון נדרש',
+                      pattern: { value: /^05\d{8}$/, message: 'מספר טלפון חייב להיות בפורמט: 05XXXXXXXX' }
+                    }}
+                    render={({ field, fieldState }) => (
+                      <FormField label="טלפון" htmlFor="phone" error={fieldState.error?.message} required>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          {...field}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'phone-error' : undefined}
+                          className={cn(fieldState.error && 'border-destructive focus-visible:ring-destructive')}
+                          placeholder="05XXXXXXXX"
+                        />
+                      </FormField>
                     )}
-                  </div>
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      אימייל *
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.personalInfo.email}
-                      onChange={(e) => handleInputChange('personalInfo', 'email', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-500 bg-white ${
-                        errors['personalInfo.email']
-                          ? 'border-red-300 focus:ring-red-500'
-                          : 'border-gray-300 focus:ring-primary-500'
-                      }`}
-                      placeholder="teacher@example.com"
-                    />
-                    {errors['personalInfo.email'] && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.email']}</p>
+                  <Controller
+                    name="personalInfo.email"
+                    control={control}
+                    rules={{
+                      required: 'אימייל נדרש',
+                      pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'כתובת אימייל לא תקינה' }
+                    }}
+                    render={({ field, fieldState }) => (
+                      <FormField label="אימייל" htmlFor="email" error={fieldState.error?.message} required>
+                        <Input
+                          id="email"
+                          type="email"
+                          {...field}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'email-error' : undefined}
+                          className={cn(fieldState.error && 'border-destructive focus-visible:ring-destructive')}
+                          placeholder="teacher@example.com"
+                        />
+                      </FormField>
                     )}
-                  </div>
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      כתובת *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.personalInfo.address}
-                      onChange={(e) => handleInputChange('personalInfo', 'address', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-500 bg-white ${
-                        errors['personalInfo.address']
-                          ? 'border-red-300 focus:ring-red-500'
-                          : 'border-gray-300 focus:ring-primary-500'
-                      }`}
-                      placeholder="רחוב מספר, עיר"
-                    />
-                    {errors['personalInfo.address'] && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['personalInfo.address']}</p>
+                  <Controller
+                    name="personalInfo.address"
+                    control={control}
+                    rules={{ required: 'כתובת נדרשת' }}
+                    render={({ field, fieldState }) => (
+                      <FormField label="כתובת" htmlFor="address" error={fieldState.error?.message} required>
+                        <Input
+                          id="address"
+                          {...field}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'address-error' : undefined}
+                          className={cn(fieldState.error && 'border-destructive focus-visible:ring-destructive')}
+                          placeholder="רחוב מספר, עיר"
+                        />
+                      </FormField>
                     )}
-                  </div>
+                  />
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">תעודת זהות</label>
-                    <input
-                      type="text"
-                      value={formData.personalInfo.idNumber}
-                      onChange={(e) => handleInputChange('personalInfo', 'idNumber', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                      placeholder="9 ספרות"
-                      maxLength={9}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שנת לידה</label>
-                    <input
-                      type="number"
-                      min={1940}
-                      max={2010}
-                      value={formData.personalInfo.birthYear ?? ''}
-                      onChange={(e) => handleInputChange('personalInfo', 'birthYear', e.target.value ? parseInt(e.target.value) : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                      placeholder="1940-2010"
-                    />
-                  </div>
+                  <Controller
+                    name="personalInfo.idNumber"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label="תעודת זהות" htmlFor="idNumber" error={fieldState.error?.message}>
+                        <Input
+                          id="idNumber"
+                          {...field}
+                          aria-invalid={!!fieldState.error}
+                          placeholder="9 ספרות"
+                          maxLength={9}
+                        />
+                      </FormField>
+                    )}
+                  />
+
+                  <Controller
+                    name="personalInfo.birthYear"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label="שנת לידה" htmlFor="birthYear" error={fieldState.error?.message}>
+                        <Input
+                          id="birthYear"
+                          type="number"
+                          min={1940}
+                          max={2010}
+                          aria-invalid={!!fieldState.error}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : null)}
+                          placeholder="1940-2010"
+                        />
+                      </FormField>
+                    )}
+                  />
                 </div>
 
                 {/* Roles */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    תפקידים *
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {VALID_ROLES.map(role => (
-                      <label key={role} className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={formData.roles.includes(role)}
-                          onChange={(e) => handleRoleChange(role, e.target.checked)}
-                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
-                        />
-                        <span className="mr-3 text-sm text-gray-700 font-medium">{role}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {errors['roles'] && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['roles']}</p>
-                  )}
+                  <Label className="block text-sm font-medium mb-3">
+                    תפקידים <span className="text-destructive ms-1" aria-hidden="true">*</span>
+                  </Label>
+                  <Controller
+                    name="roles"
+                    control={control}
+                    rules={{ validate: (v) => v.length > 0 || 'יש לבחור לפחות תפקיד אחד' }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                          {VALID_ROLES.map(role => (
+                            <div key={role} className="flex items-center gap-2 p-2 hover:bg-muted rounded-lg cursor-pointer transition-colors">
+                              <Checkbox
+                                id={`role-${role}`}
+                                checked={field.value.includes(role)}
+                                onCheckedChange={(checked) => {
+                                  const newRoles = checked
+                                    ? [...field.value, role]
+                                    : field.value.filter((r: string) => r !== role)
+                                  field.onChange(newRoles)
+                                }}
+                              />
+                              <Label htmlFor={`role-${role}`} className="text-sm font-medium cursor-pointer">{role}</Label>
+                            </div>
+                          ))}
+                        </div>
+                        {fieldState.error && (
+                          <p className="mt-1 text-sm text-destructive flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />{fieldState.error.message}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  />
                 </div>
               </div>
             )}
@@ -725,75 +610,106 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Classification */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">סיווג</label>
-                    <select
-                      value={formData.professionalInfo.classification}
-                      onChange={(e) => handleInputChange('professionalInfo', 'classification', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
-                    >
-                      <option value="">בחר סיווג</option>
-                      {CLASSIFICATIONS.map(c => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                  </div>
+                  <Controller
+                    name="professionalInfo.classification"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label="סיווג" htmlFor="classification" error={fieldState.error?.message}>
+                        <Select value={field.value || undefined} onValueChange={field.onChange}>
+                          <SelectTrigger id="classification" className={cn(fieldState.error && 'border-destructive')}>
+                            <SelectValue placeholder="בחר סיווג" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {CLASSIFICATIONS.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+                    )}
+                  />
 
                   {/* Degree */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">תואר</label>
-                    <select
-                      value={formData.professionalInfo.degree}
-                      onChange={(e) => handleInputChange('professionalInfo', 'degree', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
-                    >
-                      <option value="">בחר תואר</option>
-                      {DEGREES.map(d => <option key={d} value={d}>{d}</option>)}
-                    </select>
-                  </div>
+                  <Controller
+                    name="professionalInfo.degree"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label="תואר" htmlFor="degree" error={fieldState.error?.message}>
+                        <Select value={field.value || undefined} onValueChange={field.onChange}>
+                          <SelectTrigger id="degree" className={cn(fieldState.error && 'border-destructive')}>
+                            <SelectValue placeholder="בחר תואר" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {DEGREES.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+                    )}
+                  />
 
                   {/* Teaching Experience Years */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שנות ניסיון בהוראה</label>
-                    <input
-                      type="number"
-                      min={0}
-                      max={50}
-                      value={formData.professionalInfo.teachingExperienceYears ?? ''}
-                      onChange={(e) => handleInputChange('professionalInfo', 'teachingExperienceYears', e.target.value ? parseInt(e.target.value) : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                      placeholder="0-50"
-                    />
-                  </div>
+                  <Controller
+                    name="professionalInfo.teachingExperienceYears"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label="שנות ניסיון בהוראה" htmlFor="teachingExperienceYears" error={fieldState.error?.message}>
+                        <Input
+                          id="teachingExperienceYears"
+                          type="number"
+                          min={0}
+                          max={50}
+                          aria-invalid={!!fieldState.error}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : null)}
+                          placeholder="0-50"
+                        />
+                      </FormField>
+                    )}
+                  />
                 </div>
 
                 {/* Toggles */}
                 <div className="space-y-3">
-                  <label className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={formData.professionalInfo.hasTeachingCertificate}
-                      onChange={(e) => handleInputChange('professionalInfo', 'hasTeachingCertificate', e.target.checked)}
-                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
-                    />
-                    <span className="mr-3 text-sm text-gray-700 font-medium">תעודת הוראה</span>
-                  </label>
-                  <label className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={formData.professionalInfo.isUnionMember}
-                      onChange={(e) => handleInputChange('professionalInfo', 'isUnionMember', e.target.checked)}
-                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
-                    />
-                    <span className="mr-3 text-sm text-gray-700 font-medium">חבר ארגון מורים</span>
-                  </label>
-                  <label className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={formData.professionalInfo.isActive}
-                      onChange={(e) => handleInputChange('professionalInfo', 'isActive', e.target.checked)}
-                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
-                    />
-                    <span className="mr-3 text-sm text-gray-700 font-medium">מורה פעיל</span>
-                  </label>
+                  <Controller
+                    name="professionalInfo.hasTeachingCertificate"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="flex items-center gap-2 p-2 hover:bg-muted rounded-lg transition-colors">
+                        <Checkbox
+                          id="hasTeachingCertificate"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <Label htmlFor="hasTeachingCertificate" className="text-sm font-medium cursor-pointer">תעודת הוראה</Label>
+                      </div>
+                    )}
+                  />
+                  <Controller
+                    name="professionalInfo.isUnionMember"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="flex items-center gap-2 p-2 hover:bg-muted rounded-lg transition-colors">
+                        <Checkbox
+                          id="isUnionMember"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <Label htmlFor="isUnionMember" className="text-sm font-medium cursor-pointer">חבר ארגון מורים</Label>
+                      </div>
+                    )}
+                  />
+                  <Controller
+                    name="professionalInfo.isActive"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="flex items-center gap-2 p-2 hover:bg-muted rounded-lg transition-colors">
+                        <Checkbox
+                          id="isActive"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <Label htmlFor="isActive" className="text-sm font-medium cursor-pointer">מורה פעיל</Label>
+                      </div>
+                    )}
+                  />
                 </div>
               </div>
             )}
@@ -801,169 +717,217 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
             {/* Instruments Tab */}
             {activeTab === 'instruments' && (
               <div className="space-y-6">
-                <p className="text-sm text-gray-600">בחר את כלי הנגינה שהמורה מלמד. סמן את הכלי הראשי.</p>
-                {Object.entries(INSTRUMENT_DEPARTMENTS).map(([dept, instruments]) => (
-                  <div key={dept} className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="text-sm font-semibold text-gray-800 mb-3">{dept}</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                      {instruments.map(instrument => {
-                        const isSelected = formData.professionalInfo.instruments.includes(instrument)
-                        const isPrimary = formData.professionalInfo.instrument === instrument
-                        return (
-                          <label key={instrument} className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors ${
-                            isSelected ? 'bg-primary-50 border border-primary-200' : 'hover:bg-gray-50 border border-transparent'
-                          }`}>
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              onChange={(e) => {
-                                const newInstruments = e.target.checked
-                                  ? [...formData.professionalInfo.instruments, instrument]
-                                  : formData.professionalInfo.instruments.filter(i => i !== instrument)
-                                handleInputChange('professionalInfo', 'instruments', newInstruments)
-                                // Auto-set primary if first instrument selected
-                                if (e.target.checked && formData.professionalInfo.instruments.length === 0) {
-                                  handleInputChange('professionalInfo', 'instrument', instrument)
-                                }
-                                // Clear primary if it was unchecked
-                                if (!e.target.checked && formData.professionalInfo.instrument === instrument) {
-                                  handleInputChange('professionalInfo', 'instrument', newInstruments[0] || '')
-                                }
-                              }}
-                              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
-                            />
-                            <span className="mr-2 text-sm text-gray-700">{instrument}</span>
-                            {isSelected && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.preventDefault()
-                                  handleInputChange('professionalInfo', 'instrument', instrument)
-                                }}
-                                className={`mr-auto text-xs px-2 py-0.5 rounded-full ${
-                                  isPrimary
-                                    ? 'bg-primary-500 text-white'
-                                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                                }`}
-                              >
-                                {isPrimary ? 'ראשי' : 'סמן כראשי'}
-                              </button>
-                            )}
-                          </label>
-                        )
-                      })}
-                    </div>
-                  </div>
-                ))}
-                {errors['professionalInfo.instrument'] && (
-                  <p className="text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors['professionalInfo.instrument']}</p>
-                )}
+                <p className="text-sm text-muted-foreground">בחר את כלי הנגינה שהמורה מלמד. סמן את הכלי הראשי.</p>
+                <Controller
+                  name="professionalInfo.instruments"
+                  control={control}
+                  render={({ field: instrumentsField, fieldState }) => (
+                    <Controller
+                      name="professionalInfo.instrument"
+                      control={control}
+                      render={({ field: primaryField }) => (
+                        <>
+                          {Object.entries(INSTRUMENT_DEPARTMENTS).map(([dept, instruments]) => (
+                            <div key={dept} className="border border-border rounded-lg p-4">
+                              <h4 className="text-sm font-semibold text-foreground mb-3">{dept}</h4>
+                              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                {instruments.map(instrument => {
+                                  const isSelected = instrumentsField.value.includes(instrument)
+                                  const isPrimary = primaryField.value === instrument
+                                  return (
+                                    <div key={instrument} className={`flex items-center p-2 rounded-lg transition-colors ${
+                                      isSelected ? 'bg-primary/10 border border-primary/30' : 'hover:bg-muted border border-transparent'
+                                    }`}>
+                                      <Checkbox
+                                        id={`inst-${instrument}`}
+                                        checked={isSelected}
+                                        onCheckedChange={(checked) => {
+                                          const newInstruments = checked
+                                            ? [...instrumentsField.value, instrument]
+                                            : instrumentsField.value.filter((i: string) => i !== instrument)
+                                          instrumentsField.onChange(newInstruments)
+                                          // Auto-set primary if first instrument selected
+                                          if (checked && instrumentsField.value.length === 0) {
+                                            primaryField.onChange(instrument)
+                                          }
+                                          // Clear primary if it was unchecked
+                                          if (!checked && primaryField.value === instrument) {
+                                            primaryField.onChange(newInstruments[0] || '')
+                                          }
+                                        }}
+                                      />
+                                      <Label htmlFor={`inst-${instrument}`} className="mr-2 text-sm cursor-pointer flex-1">{instrument}</Label>
+                                      {isSelected && (
+                                        <button
+                                          type="button"
+                                          onClick={() => primaryField.onChange(instrument)}
+                                          className={`text-xs px-2 py-0.5 rounded-full ${
+                                            isPrimary
+                                              ? 'bg-primary text-primary-foreground'
+                                              : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                          }`}
+                                        >
+                                          {isPrimary ? 'ראשי' : 'סמן כראשי'}
+                                        </button>
+                                      )}
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                          {fieldState.error && (
+                            <p className="text-sm text-destructive flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3" />{fieldState.error.message}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    />
+                  )}
+                />
               </div>
             )}
 
             {/* Teaching Subjects Tab */}
             {activeTab === 'subjects' && (
               <div className="space-y-6">
-                <p className="text-sm text-gray-600">בחר את מקצועות ההוראה הנוספים מעבר לכלי הנגינה.</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {TEACHING_SUBJECTS.map(subject => (
-                    <label key={subject} className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                      <input
-                        type="checkbox"
-                        checked={formData.professionalInfo.teachingSubjects.includes(subject)}
-                        onChange={(e) => {
-                          const newSubjects = e.target.checked
-                            ? [...formData.professionalInfo.teachingSubjects, subject]
-                            : formData.professionalInfo.teachingSubjects.filter(s => s !== subject)
-                          handleInputChange('professionalInfo', 'teachingSubjects', newSubjects)
-                        }}
-                        className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 w-4 h-4"
-                      />
-                      <span className="mr-3 text-sm text-gray-700 font-medium">{subject}</span>
-                    </label>
-                  ))}
-                </div>
+                <p className="text-sm text-muted-foreground">בחר את מקצועות ההוראה הנוספים מעבר לכלי הנגינה.</p>
+                <Controller
+                  name="professionalInfo.teachingSubjects"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {TEACHING_SUBJECTS.map(subject => (
+                        <div key={subject} className="flex items-center gap-2 p-3 border border-border rounded-lg hover:bg-muted cursor-pointer transition-colors">
+                          <Checkbox
+                            id={`subj-${subject}`}
+                            checked={field.value.includes(subject)}
+                            onCheckedChange={(checked) => {
+                              const newSubjects = checked
+                                ? [...field.value, subject]
+                                : field.value.filter((s: string) => s !== subject)
+                              field.onChange(newSubjects)
+                            }}
+                          />
+                          <Label htmlFor={`subj-${subject}`} className="text-sm font-medium cursor-pointer">{subject}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                />
               </div>
             )}
 
             {/* Management Hours Tab */}
             {activeTab === 'management' && (
               <div className="space-y-6">
-                <p className="text-sm text-gray-600">הגדר שעות ניהול ותפקיד ניהולי (ש"ש = שעות שבועיות).</p>
+                <p className="text-sm text-muted-foreground">הגדר שעות ניהול ותפקיד ניהולי (ש"ש = שעות שבועיות).</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Management Role */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">תפקיד ניהולי</label>
-                    <select
-                      value={formData.managementInfo.role}
-                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, role: e.target.value } }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
-                    >
-                      <option value="">ללא תפקיד ניהולי</option>
-                      {MANAGEMENT_ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-                    </select>
+                    <Controller
+                      name="managementInfo.role"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <FormField label="תפקיד ניהולי" htmlFor="managementRole" error={fieldState.error?.message}>
+                          <Select value={field.value || undefined} onValueChange={field.onChange}>
+                            <SelectTrigger id="managementRole">
+                              <SelectValue placeholder="ללא תפקיד ניהולי" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {MANAGEMENT_ROLES.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+                            </SelectContent>
+                          </Select>
+                        </FormField>
+                      )}
+                    />
                   </div>
 
                   {/* Management Hours */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות ניהול (ש"ש)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      max={40}
-                      step={0.25}
-                      value={formData.managementInfo.managementHours ?? ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, managementHours: e.target.value ? parseFloat(e.target.value) : null } }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                      placeholder="0"
-                    />
-                  </div>
+                  <Controller
+                    name="managementInfo.managementHours"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label='שעות ניהול (ש"ש)' htmlFor="managementHours" error={fieldState.error?.message}>
+                        <Input
+                          id="managementHours"
+                          type="number"
+                          min={0}
+                          max={40}
+                          step={0.25}
+                          aria-invalid={!!fieldState.error}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                          placeholder="0"
+                        />
+                      </FormField>
+                    )}
+                  />
 
                   {/* Accompaniment Hours */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות ליווי פסנתר (ש"ש)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      max={40}
-                      step={0.25}
-                      value={formData.managementInfo.accompHours ?? ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, accompHours: e.target.value ? parseFloat(e.target.value) : null } }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                      placeholder="0"
-                    />
-                  </div>
+                  <Controller
+                    name="managementInfo.accompHours"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label='שעות ליווי פסנתר (ש"ש)' htmlFor="accompHours" error={fieldState.error?.message}>
+                        <Input
+                          id="accompHours"
+                          type="number"
+                          min={0}
+                          max={40}
+                          step={0.25}
+                          aria-invalid={!!fieldState.error}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                          placeholder="0"
+                        />
+                      </FormField>
+                    )}
+                  />
 
                   {/* Ensemble Coordination Hours */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות ריכוז הרכבים (ש"ש)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      max={40}
-                      step={0.25}
-                      value={formData.managementInfo.ensembleCoordHours ?? ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, ensembleCoordHours: e.target.value ? parseFloat(e.target.value) : null } }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                      placeholder="0"
-                    />
-                  </div>
+                  <Controller
+                    name="managementInfo.ensembleCoordHours"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label='שעות ריכוז הרכבים (ש"ש)' htmlFor="ensembleCoordHours" error={fieldState.error?.message}>
+                        <Input
+                          id="ensembleCoordHours"
+                          type="number"
+                          min={0}
+                          max={40}
+                          step={0.25}
+                          aria-invalid={!!fieldState.error}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                          placeholder="0"
+                        />
+                      </FormField>
+                    )}
+                  />
 
                   {/* Travel Time Hours */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שעות נסיעות (ש"ש)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      max={40}
-                      step={0.25}
-                      value={formData.managementInfo.travelTimeHours ?? ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, managementInfo: { ...prev.managementInfo, travelTimeHours: e.target.value ? parseFloat(e.target.value) : null } }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                      placeholder="0"
-                    />
-                  </div>
+                  <Controller
+                    name="managementInfo.travelTimeHours"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormField label='שעות נסיעות (ש"ש)' htmlFor="travelTimeHours" error={fieldState.error?.message}>
+                        <Input
+                          id="travelTimeHours"
+                          type="number"
+                          min={0}
+                          max={40}
+                          step={0.25}
+                          aria-invalid={!!fieldState.error}
+                          value={field.value ?? ''}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                          placeholder="0"
+                        />
+                      </FormField>
+                    )}
+                  />
                 </div>
               </div>
             )}
@@ -972,129 +936,142 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
             {activeTab === 'schedule' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-900">בלוקי זמן להוראה</h3>
-                  <button
+                  <h3 className="text-lg font-medium text-foreground">בלוקי זמן להוראה</h3>
+                  <Button
                     type="button"
+                    variant="outline"
+                    size="sm"
                     onClick={addScheduleSlot}
-                    className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
                   >
                     <Plus className="w-4 h-4 ml-2" />
                     הוסף בלוק זמן
-                  </button>
+                  </Button>
                 </div>
 
-                {formData.teaching.schedule.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                {(!scheduleSlots || scheduleSlots.length === 0) ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Calendar className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
                     <p>לא הוגדרו בלוקי זמן</p>
                     <p className="text-sm">הוסף בלוק זמן כדי לקבוע מתי המורה זמין להוראה</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {formData.teaching.schedule.map((slot, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg p-4">
+                    {scheduleSlots.map((slot, index) => (
+                      <div key={index} className="border border-border rounded-lg p-4">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              יום
-                            </label>
-                            <select
-                              value={slot.day}
-                              onChange={(e) => updateScheduleSlot(index, 'day', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
-                            >
-                              {VALID_DAYS.map(day => (
-                                <option key={day} value={day}>{day}</option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              שעת התחלה
-                            </label>
-                            <input
-                              type="time"
-                              value={slot.startTime}
-                              onChange={(e) => updateScheduleSlot(index, 'startTime', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              שעת סיום
-                            </label>
-                            <input
-                              type="time"
-                              value={slot.endTime}
-                              onChange={(e) => updateScheduleSlot(index, 'endTime', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white"
-                            />
-                            {/* Show duration and validation */}
-                            {slot.startTime && slot.endTime && (
-                              <div className="mt-1 text-xs">
-                                {(() => {
-                                  const duration = calculateDuration(slot.startTime, slot.endTime)
-                                  const error = validateTimeRange(slot.startTime, slot.endTime)
-                                  
-                                  if (error) {
-                                    return <span className="text-red-600">{error}</span>
-                                  } else if (duration > 0) {
-                                    return <span className="text-gray-500">משך: {duration} דקות</span>
-                                  }
-                                  return null
-                                })()}
-                              </div>
+                          <Controller
+                            name={`teaching.schedule.${index}.day`}
+                            control={control}
+                            render={({ field, fieldState }) => (
+                              <FormField label="יום" htmlFor={`day-${index}`} error={fieldState.error?.message}>
+                                <Select value={field.value || undefined} onValueChange={field.onChange}>
+                                  <SelectTrigger id={`day-${index}`}>
+                                    <SelectValue placeholder="בחר יום" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {VALID_DAYS.map(day => (
+                                      <SelectItem key={day} value={day}>{day}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormField>
                             )}
-                          </div>
+                          />
 
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              מיקום
-                            </label>
-                            <select
-                              value={slot.location}
-                              onChange={(e) => updateScheduleSlot(index, 'location', e.target.value)}
-                              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 bg-white ${
-                                errors[`schedule.${index}.location`] 
-                                  ? 'border-red-300 focus:ring-red-500' 
-                                  : 'border-gray-300'
-                              }`}
-                            >
-                              <option value="">בחר מיקום...</option>
-                              {VALID_LOCATIONS.map(location => (
-                                <option key={location} value={location}>{location}</option>
-                              ))}
-                            </select>
-                            {errors[`schedule.${index}.location`] && (
-                              <p className="mt-1 text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors[`schedule.${index}.location`]}</p>
+                          <Controller
+                            name={`teaching.schedule.${index}.startTime`}
+                            control={control}
+                            render={({ field, fieldState }) => (
+                              <FormField label="שעת התחלה" htmlFor={`startTime-${index}`} error={fieldState.error?.message}>
+                                <Input
+                                  id={`startTime-${index}`}
+                                  type="time"
+                                  {...field}
+                                  aria-invalid={!!fieldState.error}
+                                  className={cn(fieldState.error && 'border-destructive')}
+                                />
+                              </FormField>
                             )}
-                          </div>
+                          />
+
+                          <Controller
+                            name={`teaching.schedule.${index}.endTime`}
+                            control={control}
+                            render={({ field, fieldState }) => {
+                              const startTime = scheduleSlots[index]?.startTime
+                              const endTime = field.value
+                              const duration = startTime && endTime ? calculateDuration(startTime, endTime) : 0
+                              const timeError = startTime && endTime ? validateTimeRange(startTime, endTime) : null
+                              return (
+                                <FormField label="שעת סיום" htmlFor={`endTime-${index}`} error={fieldState.error?.message}>
+                                  <Input
+                                    id={`endTime-${index}`}
+                                    type="time"
+                                    {...field}
+                                    aria-invalid={!!fieldState.error}
+                                    className={cn((fieldState.error || timeError) && 'border-destructive')}
+                                  />
+                                  {startTime && endTime && (
+                                    <div className="mt-1 text-xs">
+                                      {timeError ? (
+                                        <span className="text-destructive">{timeError}</span>
+                                      ) : duration > 0 ? (
+                                        <span className="text-muted-foreground">משך: {duration} דקות</span>
+                                      ) : null}
+                                    </div>
+                                  )}
+                                </FormField>
+                              )
+                            }}
+                          />
+
+                          <Controller
+                            name={`teaching.schedule.${index}.location`}
+                            control={control}
+                            render={({ field, fieldState }) => (
+                              <FormField label="מיקום" htmlFor={`location-${index}`} error={fieldState.error?.message}>
+                                <Select value={field.value || undefined} onValueChange={field.onChange}>
+                                  <SelectTrigger id={`location-${index}`} className={cn(fieldState.error && 'border-destructive')}>
+                                    <SelectValue placeholder="בחר מיקום..." />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {VALID_LOCATIONS.map(location => (
+                                      <SelectItem key={location} value={location}>{location}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormField>
+                            )}
+                          />
                         </div>
 
                         <div className="mb-3">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            הערות
-                          </label>
-                          <input
-                            type="text"
-                            value={slot.notes}
-                            onChange={(e) => updateScheduleSlot(index, 'notes', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500 bg-white"
-                            placeholder="הערות נוספות"
+                          <Controller
+                            name={`teaching.schedule.${index}.notes`}
+                            control={control}
+                            render={({ field, fieldState }) => (
+                              <FormField label="הערות" htmlFor={`notes-${index}`} error={fieldState.error?.message}>
+                                <Input
+                                  id={`notes-${index}`}
+                                  {...field}
+                                  placeholder="הערות נוספות"
+                                />
+                              </FormField>
+                            )}
                           />
                         </div>
 
                         <div className="flex justify-end">
-                          <button
+                          <Button
                             type="button"
+                            variant="ghost"
+                            size="sm"
                             onClick={() => removeScheduleSlot(index)}
-                            className="flex items-center px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <Trash2 className="w-4 h-4 ml-1" />
                             הסר
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -1113,36 +1090,42 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                       <Settings className="w-5 h-5 text-purple-600" />
                     </div>
                     <div>
-                      <label className="block text-lg font-semibold text-gray-900">
+                      <Label className="block text-lg font-semibold text-foreground">
                         תזמורות לניצוח
-                      </label>
-                      <p className="text-sm text-gray-600">בחר את התזמורות שהמורה ינצח</p>
+                      </Label>
+                      <p className="text-sm text-muted-foreground">בחר את התזמורות שהמורה ינצח</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
-                    {orchestras.map(orchestra => (
-                      <label key={orchestra._id} className="flex items-center p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={formData.conducting.orchestraIds.includes(orchestra._id)}
-                          onChange={(e) => {
-                            const newIds = e.target.checked
-                              ? [...formData.conducting.orchestraIds, orchestra._id]
-                              : formData.conducting.orchestraIds.filter(id => id !== orchestra._id)
-                            handleInputChange('conducting', 'orchestraIds', newIds)
-                          }}
-                          className="rounded-lg border-gray-300 text-purple-600 focus:ring-purple-500 w-5 h-5"
-                        />
-                        <div className="mr-4 flex-1">
-                          <div className="text-base font-semibold text-gray-900 group-hover:text-purple-700 transition-colors">{orchestra.name}</div>
-                          <div className="text-sm text-gray-500 mt-1">{orchestra.description || 'תזמורת ללא תיאור'}</div>
-                          {orchestra.memberCount && (
-                            <div className="text-xs text-purple-600 mt-1">👥 {orchestra.memberCount} חברים</div>
-                          )}
-                        </div>
-                      </label>
-                    ))}
-                  </div>
+                  <Controller
+                    name="conducting.orchestraIds"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
+                        {orchestras.map(orchestra => (
+                          <div key={orchestra._id} className="flex items-center p-4 bg-card border-2 border-border rounded-xl hover:border-purple-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                            <Checkbox
+                              id={`orch-${orchestra._id}`}
+                              checked={field.value.includes(orchestra._id)}
+                              onCheckedChange={(checked) => {
+                                const newIds = checked
+                                  ? [...field.value, orchestra._id]
+                                  : field.value.filter((id: string) => id !== orchestra._id)
+                                field.onChange(newIds)
+                              }}
+                              className="w-5 h-5"
+                            />
+                            <div className="mr-4 flex-1">
+                              <div className="text-base font-semibold text-foreground group-hover:text-purple-700 transition-colors">{orchestra.name}</div>
+                              <div className="text-sm text-muted-foreground mt-1">{orchestra.description || 'תזמורת ללא תיאור'}</div>
+                              {orchestra.memberCount && (
+                                <div className="text-xs text-purple-600 mt-1">👥 {orchestra.memberCount} חברים</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  />
                 </div>
 
                 {/* Ensemble Section */}
@@ -1152,71 +1135,76 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                       <User className="w-5 h-5 text-green-600" />
                     </div>
                     <div>
-                      <label className="block text-lg font-semibold text-gray-900">
+                      <Label className="block text-lg font-semibold text-foreground">
                         אנסמבלים להדרכה
-                      </label>
-                      <p className="text-sm text-gray-600">בחר את האנסמבלים שהמורה ידריך</p>
+                      </Label>
+                      <p className="text-sm text-muted-foreground">בחר את האנסמבלים שהמורה ידריך</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
-                    {ensembles.map(ensemble => (
-                      <label key={ensemble._id} className="flex items-center p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={formData.ensemblesIds.includes(ensemble._id)}
-                          onChange={(e) => {
-                            const newIds = e.target.checked
-                              ? [...formData.ensemblesIds, ensemble._id]
-                              : formData.ensemblesIds.filter(id => id !== ensemble._id)
-                            setFormData(prev => ({ ...prev, ensemblesIds: newIds }))
-                          }}
-                          className="rounded-lg border-gray-300 text-green-600 focus:ring-green-500 w-5 h-5"
-                        />
-                        <div className="mr-4 flex-1">
-                          <div className="text-base font-semibold text-gray-900 group-hover:text-green-700 transition-colors">{ensemble.name}</div>
-                          <div className="text-sm text-gray-500 mt-1">{ensemble.description || 'אנסמבל ללא תיאור'}</div>
-                          {ensemble.memberCount && (
-                            <div className="text-xs text-green-600 mt-1">🎵 {ensemble.memberCount} חברים</div>
-                          )}
-                        </div>
-                      </label>
-                    ))}
-                  </div>
+                  <Controller
+                    name="ensemblesIds"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
+                        {ensembles.map(ensemble => (
+                          <div key={ensemble._id} className="flex items-center p-4 bg-card border-2 border-border rounded-xl hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                            <Checkbox
+                              id={`ens-${ensemble._id}`}
+                              checked={field.value.includes(ensemble._id)}
+                              onCheckedChange={(checked) => {
+                                const newIds = checked
+                                  ? [...field.value, ensemble._id]
+                                  : field.value.filter((id: string) => id !== ensemble._id)
+                                field.onChange(newIds)
+                              }}
+                              className="w-5 h-5"
+                            />
+                            <div className="mr-4 flex-1">
+                              <div className="text-base font-semibold text-foreground group-hover:text-green-700 transition-colors">{ensemble.name}</div>
+                              <div className="text-sm text-muted-foreground mt-1">{ensemble.description || 'אנסמבל ללא תיאור'}</div>
+                              {ensemble.memberCount && (
+                                <div className="text-xs text-green-600 mt-1">🎵 {ensemble.memberCount} חברים</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  />
                 </div>
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t border-gray-200">
+          <div className="px-6 py-4 border-t border-border">
             {submitError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-red-700">{submitError}</span>
+              <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded-lg flex items-start gap-2">
+                <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                <span className="text-sm text-destructive">{submitError}</span>
               </div>
             )}
-            
+
             <div className="flex justify-end gap-3">
-              <button
+              <Button
                 type="button"
+                variant="outline"
                 onClick={handleClose}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 disabled={isSubmitting}
               >
                 ביטול
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin ml-2" />
+                  <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin ml-2" />
                 ) : (
                   <Save className="w-4 h-4 ml-2" />
                 )}
                 {isSubmitting ? 'שומר...' : (mode === 'edit' ? 'עדכן מורה' : 'שמור מורה')}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

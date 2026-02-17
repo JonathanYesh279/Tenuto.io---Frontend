@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 ## Current Position
 
 Phase: 6 of 13 ([v2.0] Foundation)
-Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-02-17 — v2.0 roadmap created (phases 6-13 defined)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-17 — 06-01 complete (CSS token system, DirectionProvider, Heebo, components.json)
 
-Progress: [░░░░░░░░░░] 0% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [█░░░░░░░░░] 5% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
@@ -28,6 +28,7 @@ Progress: [░░░░░░░░░░] 0% (v2.0) — [███████�
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | v1.1 Phases 1-5 | 7 | ~3.5h | ~30 min |
+| v2.0 Phase 6 Plan 1 | 1 | 8min | 8 min |
 
 *Updated after each plan completion*
 
@@ -40,6 +41,10 @@ Progress: [░░░░░░░░░░] 0% (v2.0) — [███████�
 - [v2.0]: Foundation phase must be zero visible change — infrastructure only
 - [v2.0]: Layout shell (Phase 12) redesigned LAST — highest regression risk
 - [v2.0]: Modal migration atomic — all 4 custom modal variants replaced in Phase 7
+- [06-01]: Warm coral primary --primary: 15 85% 45% (WCAG AA 4.57:1 against white)
+- [06-01]: Merge not replace — DEFAULT/foreground added to existing primary/secondary Tailwind scales — bg-primary-500 still resolves to #4F46E5 hex
+- [06-01]: Heebo replaces Inter as primary UI font; Reisinger Yonatan kept as @font-face fallback
+- [06-01]: CSS token format — HSL channels only in :root (no hsl() wrapper), wrapper only in JS/tailwind config
 
 ### Pending Todos
 
@@ -54,5 +59,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-17
-Stopped at: v2.0 roadmap created — ROADMAP.md, STATE.md, REQUIREMENTS.md traceability written
+Stopped at: Completed 06-01-PLAN.md — CSS token system, DirectionProvider, Heebo, components.json
 Resume file: None

@@ -1,24 +1,47 @@
 /**
- * Shared Modal Component
- * 
- * A reusable modal component that ensures consistent positioning, backdrop,
- * and styling across the application. All modals should be centered with
- * a blurred background.
+ * Shared Modal Component — backward-compatible wrapper around shadcn Dialog
+ *
+ * This component preserves the existing isOpen/onClose prop API so all
+ * existing callsites (ConfirmationModal, BulkTheoryUpdateTab, StudentDeletionModal,
+ * CascadeDeletionWorkflow, OrphanedReferenceCleanup, AuditLogViewer, TheoryLessons,
+ * Rehearsals) continue to work without changes until individually migrated to shadcn Dialog.
+ *
+ * Internal implementation: uses Radix Dialog (via shadcn) which provides:
+ * - Focus trap and focus restoration
+ * - Escape key to close
+ * - Scroll lock while open
+ * - ARIA attributes (role="dialog", aria-modal="true")
+ * - 200ms entrance/exit animation via tailwindcss-animate
+ * - RTL support via DirectionProvider context from main.tsx
  */
 
-import React from 'react'
-import { X } from 'lucide-react'
+import React from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 interface ModalProps {
   isOpen: boolean
   onClose: () => void
   title?: string
   children: React.ReactNode
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl'
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "4xl"
   showCloseButton?: boolean
   closeOnBackdrop?: boolean
   darkBackdrop?: boolean
   className?: string
+}
+
+const maxWidthClasses: Record<NonNullable<ModalProps["maxWidth"]>, string> = {
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-xl",
+  "2xl": "max-w-2xl",
+  "4xl": "max-w-4xl",
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -26,59 +49,48 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
-  maxWidth = 'md',
+  maxWidth = "md",
   showCloseButton = true,
   closeOnBackdrop = true,
-  darkBackdrop = false,
-  className = ''
+  darkBackdrop: _darkBackdrop = false,
+  className = "",
 }) => {
-  if (!isOpen) return null
-
-  const maxWidthClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl',
-    '2xl': 'max-w-2xl',
-    '4xl': 'max-w-4xl'
-  }
-
-  const backdropOpacity = darkBackdrop ? 'bg-opacity-75' : 'bg-opacity-50'
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (closeOnBackdrop && e.target === e.currentTarget) {
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
       onClose()
     }
   }
 
   return (
-    <div 
-      className={`fixed inset-0 bg-black ${backdropOpacity} flex items-center justify-center z-50 p-4`}
-      onClick={handleBackdropClick}
-    >
-      <div className={`bg-white rounded-xl shadow-2xl w-full ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-hidden transform transition-all ${className}`}>
-        {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            {title && (
-              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-            )}
-            {showCloseButton && (
-              <button
-                onClick={onClose}
-                className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                type="button"
-              >
-                <X className="w-5 h-5 text-gray-500" />
-              </button>
-            )}
-          </div>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent
+        className={[
+          maxWidthClasses[maxWidth],
+          "duration-200",
+          !showCloseButton ? "[&>button]:hidden" : "",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        onInteractOutside={
+          closeOnBackdrop
+            ? undefined
+            : (e) => {
+                e.preventDefault()
+              }
+        }
+      >
+        {title && (
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
         )}
-        
-        <div className="overflow-y-auto max-h-[calc(90vh-140px)]">
+
+        <div className="overflow-y-auto max-h-[calc(85vh-140px)]">
           {children}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 

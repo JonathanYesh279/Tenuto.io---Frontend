@@ -1,14 +1,19 @@
 import { User, LogOut, Home } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 export default function Header() {
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
-  const profileDropdownRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
   const { user, logout } = useAuth()
   const { isDesktopOpen, isMobile } = useSidebar()
@@ -50,22 +55,8 @@ export default function Header() {
     user.conducting?.orchestraIds?.length > 0
   )
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
-        setIsProfileDropdownOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-
   const handleProfileClick = () => {
     navigate('/profile')
-    setIsProfileDropdownOpen(false)
   }
 
   const handleLogout = async () => {
@@ -75,7 +66,6 @@ export default function Header() {
     } catch (error) {
       console.error('Logout error:', error)
     }
-    setIsProfileDropdownOpen(false)
   }
 
   const handleDashboardClick = () => {
@@ -90,7 +80,7 @@ export default function Header() {
   const getUserFullName = () => {
     return getDisplayName(user?.personalInfo) || user?.fullName || user?.name || 'משתמש'
   }
-  
+
   const getUserRole = () => {
     const role = user?.role || user?.roles?.[0] || ''
     // Handle Hebrew role names from backend
@@ -138,64 +128,57 @@ export default function Header() {
             {!isAdmin && (
               <button
                 onClick={handleDashboardClick}
-                className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-150 ease-in-out cursor-pointer"
+                className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 title="לוח בקרה"
               >
                 <Home className="w-5 h-5 text-indigo-600" />
               </button>
             )}
-
           </>
         )}
 
+        {/* User Avatar with Profile Dropdown — shadcn DropdownMenu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center hover:bg-indigo-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              aria-label="תפריט פרופיל"
+            >
+              <span className="text-sm font-semibold text-white font-reisinger-yonatan">
+                {getInitials()}
+              </span>
+            </button>
+          </DropdownMenuTrigger>
 
-        {/* User Avatar with Profile Dropdown */}
-        <div className="relative" ref={profileDropdownRef}>
-          <div 
-            className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center cursor-pointer hover:bg-indigo-700 transition-colors"
-            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-          >
-            <span className="text-sm font-semibold text-white font-reisinger-yonatan">
-              {getInitials()}
-            </span>
-          </div>
-
-          {/* Profile Dropdown */}
-          {isProfileDropdownOpen && (
-            <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[70]">
-              <div className="px-4 py-3 border-b border-gray-100">
-                <div className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
-                  {getUserFullName()}
-                </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  {getUserRole()}
-                </div>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel className="font-normal">
+              <div className="font-medium text-sm text-gray-700 font-reisinger-yonatan">
+                {getUserFullName()}
               </div>
-              
-              <button
-                onClick={handleProfileClick}
-                className="w-full px-4 py-3 text-right hover:bg-gray-50 flex items-center justify-between transition-colors duration-150"
-                style={{ direction: 'rtl' }}
-              >
-                <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
-                  עמוד אישי
-                </span>
-                <User className="w-4 h-4 text-gray-500" />
-              </button>
-              
-              <button
-                onClick={handleLogout}
-                className="w-full px-4 py-3 text-right hover:bg-gray-50 flex items-center justify-between transition-colors duration-150 text-red-600 hover:bg-red-50"
-                style={{ direction: 'rtl' }}
-              >
-                <span className="text-sm font-medium font-reisinger-yonatan">
-                  יציאה
-                </span>
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          )}
-        </div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                {getUserRole()}
+              </div>
+            </DropdownMenuLabel>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              onClick={handleProfileClick}
+              className="flex items-center justify-between cursor-pointer"
+            >
+              <span className="font-reisinger-yonatan">עמוד אישי</span>
+              <User className="w-4 h-4 text-muted-foreground" />
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="flex items-center justify-between cursor-pointer text-destructive focus:text-destructive"
+            >
+              <span className="font-reisinger-yonatan">יציאה</span>
+              <LogOut className="w-4 h-4" />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )

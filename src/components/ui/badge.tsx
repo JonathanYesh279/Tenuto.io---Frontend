@@ -17,6 +17,11 @@ const badgeVariants = cva(
         outline: "text-foreground",
         success:
           "border-transparent bg-green-500 text-white hover:bg-green-600",
+        // Domain status variants — soft colors for list/detail page status display
+        active: "border-transparent bg-green-100 text-green-800",
+        inactive: "border-transparent bg-gray-100 text-gray-700",
+        graduated: "border-transparent bg-purple-100 text-purple-800",
+        pending: "border-transparent bg-orange-100 text-orange-800",
       },
     },
     defaultVariants: {

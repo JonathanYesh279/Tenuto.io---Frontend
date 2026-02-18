@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { Users, GraduationCap, Music, Calendar, BarChart3, Award, Clock, BookOpen, RefreshCw, AlertCircle } from 'lucide-react'
 import StatsCard from '../components/ui/StatsCard'
 import { Card } from '../components/ui/Card'
@@ -262,6 +263,23 @@ export default function Dashboard() {
     || getDisplayName(user?.personalInfo)?.split(' ')[0]
     || 'מנהל'
 
+  const cardRowVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.05 }
+    }
+  }
+
+  const cardItemVariants = {
+    hidden: { y: 16, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 400, damping: 25 }
+    }
+  }
+
   // Super admin gets a dedicated dashboard (can't use regular tenant-scoped APIs)
   if (user?.isSuperAdmin) {
     return <SuperAdminDashboard />
@@ -335,152 +353,159 @@ export default function Dashboard() {
 
       {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <>
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            <StatsCard
-              title="תלמידים פעילים"
-              value={loading ? "..." : stats.activeStudents.toString()}
-              subtitle="תלמידים רשומים"
-              icon={<Users />}
-              color="blue"
-              trend={stats.studentsTrend !== 0 ? {
-                value: Math.abs(stats.studentsTrend),
-                label: "מהחודש שעבר",
-                direction: stats.studentsTrend > 0 ? "up" : "down"
-              } : undefined}
-            />
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+          {/* Main content column */}
+          <div className="space-y-6">
+            {/* Stat cards row — staggered entrance */}
+            <motion.div
+              className="grid grid-cols-2 md:grid-cols-3 gap-4"
+              variants={cardRowVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div variants={cardItemVariants}>
+                <StatsCard
+                  title="תלמידים פעילים"
+                  value={loading ? "..." : stats.activeStudents.toString()}
+                  subtitle="תלמידים רשומים"
+                  icon={<Users />}
+                  color="students"
+                  coloredBg
+                  trend={stats.studentsTrend !== 0 ? {
+                    value: Math.abs(stats.studentsTrend),
+                    label: "מהחודש שעבר",
+                    direction: stats.studentsTrend > 0 ? "up" : "down"
+                  } : undefined}
+                />
+              </motion.div>
 
-            <StatsCard
-              title="חברי סגל"
-              value={loading ? "..." : stats.staffMembers.toString()}
-              subtitle="מורים ומדריכים"
-              icon={<GraduationCap />}
-              color="green"
-            />
+              <motion.div variants={cardItemVariants}>
+                <StatsCard
+                  title="חברי סגל"
+                  value={loading ? "..." : stats.staffMembers.toString()}
+                  subtitle="מורים ומדריכים"
+                  icon={<GraduationCap />}
+                  color="teachers"
+                  coloredBg
+                />
+              </motion.div>
 
-            <StatsCard
-              title="הרכבים פעילים"
-              value={loading ? "..." : stats.activeOrchestras.toString()}
-              subtitle="תזמורות וקבוצות"
-              icon={<Music />}
-              color="teal"
-            />
+              <motion.div variants={cardItemVariants}>
+                <StatsCard
+                  title="הרכבים פעילים"
+                  value={loading ? "..." : stats.activeOrchestras.toString()}
+                  subtitle="תזמורות וקבוצות"
+                  icon={<Music />}
+                  color="orchestras"
+                  coloredBg
+                />
+              </motion.div>
 
-            <StatsCard
-              title="חזרות השבוע"
-              value={loading ? "..." : stats.weeklyRehearsals.toString()}
-              subtitle="מפגשים מתוכננים"
-              icon={<Calendar />}
-              color="orange"
-            />
+              <motion.div variants={cardItemVariants}>
+                <StatsCard
+                  title="חזרות השבוע"
+                  value={loading ? "..." : stats.weeklyRehearsals.toString()}
+                  subtitle="מפגשים מתוכננים"
+                  icon={<Calendar />}
+                  color="rehearsals"
+                  coloredBg
+                />
+              </motion.div>
 
-            <StatsCard
-              title="שיעורי תאוריה"
-              value={loading ? "..." : stats.theoryLessonsThisWeek.toString()}
-              subtitle="השבוע"
-              icon={<BookOpen />}
-              color="teal"
-            />
+              <motion.div variants={cardItemVariants}>
+                <StatsCard
+                  title="שיעורי תאוריה"
+                  value={loading ? "..." : stats.theoryLessonsThisWeek.toString()}
+                  subtitle="השבוע"
+                  icon={<BookOpen />}
+                  color="theory"
+                  coloredBg
+                />
+              </motion.div>
 
-            <StatsCard
-              title="בגרויות פעילות"
-              value={loading ? "..." : stats.activeBagruts.toString()}
-              subtitle="תלמידים בתהליך"
-              icon={<Award />}
-              color="amber"
-            />
-          </div>
+              <motion.div variants={cardItemVariants}>
+                <StatsCard
+                  title="בגרויות פעילות"
+                  value={loading ? "..." : stats.activeBagruts.toString()}
+                  subtitle="תלמידים בתהליך"
+                  icon={<Award />}
+                  color="bagrut"
+                  coloredBg
+                />
+              </motion.div>
+            </motion.div>
 
-          {/* Teacher Room Schedule Table - Top Priority */}
-          <div className="mb-8">
+            {/* Teacher Room Schedule Table */}
             <DailyTeacherRoomTable />
-          </div>
 
-          {/* Charts Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Instrument Distribution */}
-            <InstrumentDistributionChart
-              schoolYearId={currentSchoolYear?._id}
-              maxItems={8}
-            />
-
-            {/* Class Distribution */}
-            <ClassDistributionChart
-              schoolYearId={currentSchoolYear?._id}
-            />
-          </div>
-
-          {/* Activity Feed and Events */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Activity Feed */}
-            <div className="lg:col-span-2">
-              <Card>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-foreground">פעילות אחרונה</h3>
-                  <button className="text-sm text-primary hover:text-primary/80 font-medium">
-                    צפה בהכל
-                  </button>
-                </div>
-                <div className="space-y-4">
-                  {loading ? (
-                    <div className="text-center py-8 text-muted-foreground">טוען...</div>
-                  ) : recentActivities.length > 0 ? (
-                    recentActivities.map((activity, index) => (
-                      <div key={index} className="flex items-start">
-                        <div className={`w-2 h-2 ${activity.color === 'primary' ? 'bg-primary' : activity.color === 'success' ? 'bg-success-500' : 'bg-accent'} rounded-full mt-2 ml-4`}></div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium text-foreground">{activity.title}</p>
-                            <span className="text-xs text-muted-foreground">{activity.time}</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground">{activity.description}</p>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-8 text-muted-foreground">אין פעילות אחרונה</div>
-                  )}
-                </div>
-              </Card>
-            </div>
-
-            {/* Upcoming Events */}
-            <div>
-              <Card>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-foreground">אירועים קרובים</h3>
-                </div>
-                <div className="space-y-4">
-                  {loading ? (
-                    <div className="text-center py-8 text-muted-foreground">טוען...</div>
-                  ) : upcomingEvents.length > 0 ? (
-                    upcomingEvents.map((event, index) => (
-                      <div
-                        key={index}
-                        className={`p-4 rounded-lg ${event.isPrimary ? 'bg-primary/10 border border-primary/20' : 'bg-muted/50'}`}
-                      >
-                        <div className="flex items-center justify-between mb-1">
-                          <p className={`text-sm font-medium ${event.isPrimary ? 'text-primary' : 'text-foreground'}`}>
-                            {event.title}
-                          </p>
-                          <span className={`text-xs ${event.isPrimary ? 'text-primary/80' : 'text-muted-foreground'}`}>
-                            {event.date}
-                          </span>
-                        </div>
-                        <p className={`text-sm ${event.isPrimary ? 'text-primary/90' : 'text-muted-foreground'}`}>
-                          {event.description}
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-8 text-muted-foreground">אין אירועים קרובים</div>
-                  )}
-                </div>
-              </Card>
+            {/* Charts Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <InstrumentDistributionChart
+                schoolYearId={currentSchoolYear?._id}
+                maxItems={8}
+              />
+              <ClassDistributionChart
+                schoolYearId={currentSchoolYear?._id}
+              />
             </div>
           </div>
-        </>
+
+          {/* Right widget column — populated in Plan 19-02 */}
+          <div className="space-y-4">
+            {/* Upcoming Events — inline for now, widget components come in 19-02 */}
+            <Card>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-foreground">אירועים קרובים</h3>
+              </div>
+              <div className="space-y-3">
+                {loading ? (
+                  <div className="text-xs text-muted-foreground text-center py-4">טוען...</div>
+                ) : upcomingEvents.length > 0 ? (
+                  upcomingEvents.map((event, index) => (
+                    <div key={index} className="flex items-start gap-3 p-2.5 rounded-lg bg-muted/40">
+                      <div className="w-7 h-7 rounded-md bg-orchestras-bg flex items-center justify-center flex-shrink-0">
+                        <Music className="w-3.5 h-3.5 text-orchestras-fg" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-foreground truncate">{event.title}</p>
+                        <p className="text-xs text-muted-foreground">{event.date} · {event.description}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-xs text-muted-foreground text-center py-4">אין אירועים קרובים</div>
+                )}
+              </div>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-foreground">פעילות אחרונה</h3>
+              </div>
+              <div className="space-y-3">
+                {loading ? (
+                  <div className="text-xs text-muted-foreground text-center py-4">טוען...</div>
+                ) : recentActivities.length > 0 ? (
+                  recentActivities.map((activity, index) => (
+                    <div key={index} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                        activity.color === 'primary' ? 'bg-students-fg' : 'bg-orchestras-fg'
+                      }`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-foreground truncate">{activity.title}</p>
+                        <p className="text-xs text-muted-foreground truncate">{activity.description}</p>
+                        <p className="text-xs text-muted-foreground/60 mt-0.5">{activity.time}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-xs text-muted-foreground text-center py-4">אין פעילות אחרונה</div>
+                )}
+              </div>
+            </Card>
+          </div>
+        </div>
       )}
 
       {/* Students Tab */}

@@ -30,11 +30,16 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 - ✓ **v2.0 Layout & Dashboard** — Dark warm sidebar, personalized greeting, warm StatsCards, music identity — v2.0
 - ✓ **v2.0 Special Pages** — Auth warm branding, StepProgress, print styles, RTL-correct toast system — v2.0
 
-### Active
+### Active — v2.1 Production-Grade Visual Identity
 
 <!-- Current scope. Building toward these. -->
 
-(None yet — planning next milestone)
+- [ ] Surface hierarchy rethink — distinct elevation zones for sidebar, header, and content areas
+- [ ] Evolved color system — coral as accent (not dominant), deeper neutrals, broader expressive palette
+- [ ] Confident typography scale — bold headings, tight UI text, deliberate spacing rhythm
+- [ ] Selective information density — dense data pages (tables/lists), breathing room on forms/details
+- [ ] Dynamic micro-interactions — spring-based animations, staggered lists, powerful modern SaaS feel
+- [ ] Stronger section contrast — clear visual separation between layout zones
 
 ### Out of Scope
 
@@ -83,4 +88,4 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 | Modal migration atomic (Phase 7) | All 4 custom modal variants replaced at once — clean transition | ✓ Good (v2.0) |
 
 ---
-*Last updated: 2026-02-18 after v2.0 milestone completion*
+*Last updated: 2026-02-18 after v2.1 milestone started*

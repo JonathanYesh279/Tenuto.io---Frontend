@@ -5,16 +5,20 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** Planning next milestone
+**Current focus:** v2.1 Production-Grade Visual Identity
+
+## Current Milestone: v2.1 Production-Grade Visual Identity
+
+**Goal:** Transform the UI from clean admin dashboard to confident, production-grade SaaS — stronger hierarchy, bolder identity, dynamic motion.
 
 ## Current Position
 
-Phase: —
+Phase: Not started (defining requirements)
 Plan: —
-Status: v2.0 milestone archived. Ready for next milestone.
-Last activity: 2026-02-18 — v2.0 UI/UX Redesign archived
+Status: Defining requirements
+Last activity: 2026-02-18 — Milestone v2.1 started
 
-Progress: [██████████] 100% (v2.0 complete) — [██████████] 100% (v1.1 complete)
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -42,5 +46,5 @@ Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for f
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: v2.0 milestone archived. Ready for /gsd:new-milestone.
+Stopped at: v2.1 milestone initialization — defining requirements
 Resume file: None

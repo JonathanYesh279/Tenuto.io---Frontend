@@ -137,8 +137,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 20-01: ListPageHero component and Table density — shared hero stats zone component with framer-motion stagger, Table.tsx padding reduction and maxHeight adjustment
-- [ ] 20-02: Page restructuring — Teachers, Students, Orchestras pages restructured with hero zone, compact filter toolbar, avatar-enhanced table columns
+- [x] 20-01: ListPageHero component and Table density — shared hero stats zone component with framer-motion stagger, Table.tsx padding reduction and maxHeight adjustment
+- [x] 20-02: Page restructuring — Teachers, Students, Orchestras pages restructured with hero zone, compact filter toolbar, avatar-enhanced table columns
 
 ---
 
@@ -184,9 +184,9 @@ Plans:
 | 17. Primitive Component Layer | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 18. Layout Shell and Color System Reset | v2.1 | 3/3 | Complete | 2026-02-18 |
 | 19. Dashboard Transformation | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 20. List Pages and Table System | v2.1 | 0/2 | Not started | — |
+| 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 21. Detail Pages and Forms | v2.1 | 0/2 | Not started | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 — Phase 19 complete (dashboard transformation)*
+*Last updated: 2026-02-18 — Phase 20 complete (list pages and table system)*

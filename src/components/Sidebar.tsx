@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
@@ -140,8 +140,6 @@ export default function Sidebar() {
   // Data for modals
   const [orchestras, setOrchestras] = useState<any[]>([])
   const [loadingOrchestras, setLoadingOrchestras] = useState(false)
-
-  const isActive = useCallback((path: string) => location.pathname === path, [location.pathname])
 
   // Get all user roles
   const getUserRoles = (): string[] => {
@@ -366,11 +364,11 @@ export default function Sidebar() {
 
   const getRoleBadgeColor = (role: string): string => {
     switch (role) {
-      case 'admin': return 'bg-red-100 text-red-700'
-      case 'teacher': return 'bg-blue-100 text-blue-700'
-      case 'conductor': return 'bg-green-100 text-green-700'
-      case 'theory-teacher': return 'bg-yellow-100 text-yellow-700'
-      default: return 'bg-gray-100 text-gray-700'
+      case 'admin': return 'bg-red-500/20 text-red-300'
+      case 'teacher': return 'bg-blue-500/20 text-blue-300'
+      case 'conductor': return 'bg-green-500/20 text-green-300'
+      case 'theory-teacher': return 'bg-yellow-500/20 text-yellow-300'
+      default: return 'bg-sidebar-foreground/15 text-sidebar-foreground/70'
     }
   }
 
@@ -440,13 +438,13 @@ export default function Sidebar() {
         <button
           id="hamburger-button"
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-[20px] right-4 z-[60] p-2 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200"
+          className="fixed top-[20px] right-4 z-[60] p-2 bg-white rounded-lg shadow-lg border border-border hover:bg-muted transition-colors duration-200"
           aria-label="Toggle menu"
         >
           {isOpen ? (
-            <X className="w-6 h-6 text-gray-600" />
+            <X className="w-6 h-6 text-foreground" />
           ) : (
-            <Menu className="w-6 h-6 text-gray-600" />
+            <Menu className="w-6 h-6 text-foreground" />
           )}
         </button>
       )}
@@ -455,10 +453,10 @@ export default function Sidebar() {
       {!isMobile && !isDesktopOpen && (
         <button
           onClick={() => setIsDesktopOpen(true)}
-          className="fixed top-[20px] right-4 z-[60] p-2 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-200"
+          className="fixed top-[20px] right-4 z-[60] p-2 bg-card rounded-lg shadow-lg border border-border hover:bg-primary/10 hover:border-primary/30 transition-all duration-200"
           aria-label="Open sidebar"
         >
-          <Menu className="w-5 h-5 text-indigo-600" />
+          <Menu className="w-5 h-5 text-primary" />
         </button>
       )}
 
@@ -473,7 +471,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <div
         id="sidebar"
-        className={`fixed top-0 right-0 w-[280px] h-screen bg-white border-l border-gray-200 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.1)] rtl z-[55] transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 w-[280px] h-screen bg-sidebar text-sidebar-foreground border-l border-sidebar-foreground/10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.2)] rtl z-[55] transition-transform duration-300 ease-in-out flex flex-col ${
           isMobile
             ? isOpen ? 'translate-x-0' : 'translate-x-full'
             : isDesktopOpen ? 'translate-x-0' : 'translate-x-full'
@@ -483,33 +481,33 @@ export default function Sidebar() {
         {!isMobile && (
           <button
             onClick={() => setIsDesktopOpen(!isDesktopOpen)}
-            className="absolute top-4 left-4 p-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 transition-all duration-200 z-10"
+            className="absolute top-4 left-4 p-2 bg-sidebar-foreground/10 rounded-lg border border-sidebar-foreground/20 hover:bg-sidebar-foreground/15 hover:border-sidebar-foreground/30 transition-all duration-200 z-10"
             aria-label="Toggle sidebar"
           >
             {isDesktopOpen ? (
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-sidebar-foreground/70" />
             ) : (
-              <Menu className="w-5 h-5 text-indigo-600" />
+              <Menu className="w-5 h-5 text-sidebar-foreground" />
             )}
           </button>
         )}
         {/* Search */}
-        <div className="p-4 border-b border-gray-100 flex-shrink-0">
+        <div className="p-4 border-b border-sidebar-foreground/10 flex-shrink-0">
           <div className="relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-sidebar-foreground/40" />
             <input
               type="text"
               placeholder="חיפוש..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 pl-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-reisinger-yonatan text-right rtl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pr-10 pl-3 py-2 bg-sidebar-foreground/10 border border-sidebar-foreground/20 rounded-lg text-sm font-reisinger-yonatan text-sidebar-foreground placeholder:text-sidebar-foreground/40 text-right rtl focus:outline-none focus:ring-2 focus:ring-sidebar-foreground/30 focus:border-sidebar-foreground/30"
             />
           </div>
         </div>
 
         {/* User Role Badges - Show when user has multiple roles */}
         {hasMultipleRoles && (
-          <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
+          <div className="px-4 py-3 border-b border-sidebar-foreground/10 flex-shrink-0">
             <div className="flex flex-wrap gap-2">
               {userRoles.map(role => (
                 <span
@@ -529,10 +527,10 @@ export default function Sidebar() {
           {isLoading ? (
             <div className="space-y-2 px-4 py-8">
               <div className="animate-pulse space-y-3">
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-sidebar-foreground/20 rounded w-1/2"></div>
+                <div className="h-8 bg-sidebar-foreground/20 rounded"></div>
+                <div className="h-8 bg-sidebar-foreground/20 rounded"></div>
+                <div className="h-8 bg-sidebar-foreground/20 rounded"></div>
               </div>
             </div>
           ) : (
@@ -543,7 +541,7 @@ export default function Sidebar() {
                   <div className="px-4 mb-2">
                     <button
                       onClick={() => toggleCategory(category.key)}
-                      className="flex items-center justify-between w-full text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700 transition-colors"
+                      className="flex items-center justify-between w-full text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider hover:text-sidebar-foreground/70 transition-colors"
                     >
                       <span>{category.label}</span>
                       <ChevronDown
@@ -558,18 +556,20 @@ export default function Sidebar() {
                     <div className="space-y-1">
                       {category.items.map((item) => {
                         const Icon = item.icon
-                        const active = isActive(item.href)
 
                         return (
-                          <Link
+                          <NavLink
                             key={`${category.key}-${item.href}-${item.name}`}
                             to={item.href}
+                            end={item.href === '/dashboard'}
                             onClick={closeMobileMenu}
-                            className={`flex items-center justify-between px-4 py-3 mx-3 rounded-lg text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan ${
-                              active
-                                ? 'bg-primary-50 text-primary-700 border border-primary-200'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-700'
-                            }`}
+                            className={({ isActive: active }) =>
+                              `flex items-center justify-between px-4 py-3 mx-3 rounded-xl text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan ${
+                                active
+                                  ? 'bg-sidebar-foreground/15 text-sidebar-foreground font-semibold border border-sidebar-foreground/20'
+                                  : 'text-sidebar-foreground/70 hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground'
+                              }`
+                            }
                           >
                             <div className="flex items-center gap-2">
                               <span className="text-right">{item.name}</span>
@@ -581,7 +581,7 @@ export default function Sidebar() {
                               )}
                             </div>
                             <Icon className="w-4 h-4 flex-shrink-0" />
-                          </Link>
+                          </NavLink>
                         )
                       })}
                     </div>
@@ -591,8 +591,8 @@ export default function Sidebar() {
 
               {/* Quick Actions */}
               {quickActions.length > 0 && (
-                <div className="space-y-1 border-t border-gray-200 pt-6 mt-6">
-                  <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                <div className="space-y-1 border-t border-sidebar-foreground/10 pt-6 mt-6">
+                  <h3 className="px-4 text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider mb-3">
                     פעולות מהירות
                   </h3>
                   {quickActions.map((action) => {
@@ -602,7 +602,7 @@ export default function Sidebar() {
                       <button
                         key={`${action.href}-${action.name}-${action.role}`}
                         onClick={() => handleQuickActionClick(action.name, action.href)}
-                        className="w-full flex items-center justify-between px-4 py-2 mx-3 rounded-lg text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan text-gray-600 hover:bg-green-50 hover:text-green-700 group"
+                        className="w-full flex items-center justify-between px-4 py-2 mx-3 rounded-xl text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan text-sidebar-foreground/70 hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground group"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-right">{action.name}</span>
@@ -614,7 +614,7 @@ export default function Sidebar() {
                           )}
                         </div>
                         <div className="flex items-center space-x-1 space-x-reverse">
-                          <Plus className="w-3 h-3 group-hover:text-green-500" />
+                          <Plus className="w-3 h-3 group-hover:text-sidebar-foreground" />
                           <Icon className="w-3.5 h-3.5" />
                         </div>
                       </button>

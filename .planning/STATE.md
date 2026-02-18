@@ -36,6 +36,9 @@ Progress: [████░░░░░░] 46% (v2.1, 6/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [18-02]: Active nav pill has no border — background fill only (bg-sidebar-active-bg). Soft colored fill provides sufficient visual affordance without border weight.
+- [18-02]: Logo zone positioned between desktop toggle and search with flex-shrink-0 to prevent collapse in full-height flex column
+- [18-02]: White-surface pattern — opacity-relative classes of near-black foreground (sidebar-foreground/10 etc.) produce unacceptable tints on white; use solid gray-NNN instead
 - [18-03]: Header uses bg-white (not bg-card) — bg-card has warm HSL tint that contrasts poorly with new cooler --background; white header creates clean visual zone separation
 - [18-03]: StatsCard coloredBg prop applies entity iconBg class to Card wrapper — Card uses cn() so it merges correctly; opt-in for full-card tinting
 - [18-03]: StatsCard entity color entries use Tailwind utility names (bg-students-bg, text-students-fg) not direct CSS var() — consistent token consumption pattern
@@ -78,10 +81,11 @@ Key decisions affecting v2.1:
 | 17    | 01   | 2 min    | 2     | 3     |
 | 17    | 02   | 2 min    | 2     | 2     |
 | 18    | 01   | 3 min    | 2     | 2     |
+| 18    | 02   | 2 min    | 2     | 1     |
 | 18    | 03   | 1 min    | 2     | 2     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 18-03-PLAN.md — layout shell + StatsCard entity colors
+Stopped at: Completed 18-02-PLAN.md — sidebar white restyle with violet active pill and logo zone
 Resume file: None

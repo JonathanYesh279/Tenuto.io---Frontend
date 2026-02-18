@@ -15,12 +15,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 19 complete (Dashboard Transformation)
-Plan: All 2 plans complete — verified 5/5 must-haves
-Status: Phase 19 verified and complete — ready for Phase 20 planning
-Last activity: 2026-02-18 — Phase 19 executed: 3-column dashboard, entity-colored stat cards, widget sidebar (calendar, events, activity)
+Phase: 20 in progress (List Pages and Table System)
+Plan: 1 of 3 complete — ListPageHero component + Table density upgrade
+Status: Plan 20-01 complete — ready for Plan 20-02 (wire hero into list pages)
+Last activity: 2026-02-18 — Plan 20-01 executed: ListPageHero shared component, Table.tsx density upgrade
 
-Progress: [██████░░░░] 69% (v2.1, 9/13 plans)
+Progress: [███████░░░] 77% (v2.1, 10/13 plans)
 
 ## Performance Metrics
 
@@ -36,6 +36,10 @@ Progress: [██████░░░░] 69% (v2.1, 9/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [20-01]: ListPageHero uses ENTITY_STYLES static const lookup (not string interpolation) — ensures Tailwind does not tree-shake entity color classes
+- [20-01]: Table maxHeight calc(100vh-380px) — accounts for hero zone (~180px) + filter bar + pagination; prevents table clip with hero zone present
+- [20-01]: Table action buttons icon-only (p-1.5, w-4 h-4) — text labels as title tooltip for accessibility, not rendered inline
+- [20-01]: Table hover changed from amber-50/60 to gray-50 — v2.1 uses neutral gray; warm amber was v2.0
 - [19-02]: MiniCalendarWidget renders Calendar.tsx directly without outer Card wrapper — Calendar.tsx already renders its own Card; double-wrapping creates nested cards
 - [19-02]: Widget components are pure props-down (no hooks, no data fetching) — Dashboard.tsx owns all state via loadDashboardData()
 - [19-02]: listVariants staggerChildren: 0.05 (50ms) for widget list items — shorter than stat card stagger (80ms) since list items are smaller UI targets
@@ -91,9 +95,10 @@ Key decisions affecting v2.1:
 | 18    | 03   | 1 min    | 2     | 2     |
 | 19    | 01   | 7 min    | 2     | 2     |
 | 19    | 02   | 5 min    | 2     | 5     |
+| 20    | 01   | 4 min    | 2     | 2     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 19 execution complete — all 2 plans verified
+Stopped at: Plan 20-01 complete — ListPageHero + Table density upgrade committed
 Resume file: None

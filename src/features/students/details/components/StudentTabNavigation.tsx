@@ -76,7 +76,7 @@ const StudentTabNavigation: React.FC<StudentTabNavigationProps> = ({
       {/* Mobile Tab Navigation */}
       <div className="md:hidden w-full overflow-hidden mobile-tab-nav">
         <div className="overflow-x-auto scrollbar-hide w-full">
-          <nav className="flex gap-3 px-4 py-3 min-w-max" aria-label="Tabs" style={{width: 'max-content'}}>
+          <nav className="flex gap-3 ps-4 pe-4 py-3 min-w-max" aria-label="Tabs" style={{width: 'max-content'}}>
             {tabs.map((tab, index) => {
               const config = tabConfig[tab.id]
               const Icon = config?.icon || User

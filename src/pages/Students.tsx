@@ -5,7 +5,7 @@ import { clsx } from 'clsx'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import { Badge } from '../components/ui/badge'
-import { StatusBadge } from '../components/domain'
+import { StatusBadge, InstrumentBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/forms/StudentForm'
@@ -693,7 +693,13 @@ export default function Students() {
       align: 'center' as const
     }] : []),
     { key: 'name', header: 'שם התלמיד' },
-    { key: 'instrument', header: 'כלי נגינה' },
+    {
+      key: 'instrument',
+      header: 'כלי נגינה',
+      render: (student: any) => student.instrument
+        ? <InstrumentBadge instrument={student.instrument} />
+        : <span className="text-muted-foreground">—</span>
+    },
     {
       key: 'teacherName',
       header: 'שם המורה',

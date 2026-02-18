@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus, Filter, Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
-import { StatusBadge } from '../components/domain'
+import { StatusBadge, InstrumentBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import TeacherCard from '../components/TeacherCard'
 import AddTeacherModal from '../components/modals/AddTeacherModal'
@@ -411,7 +411,13 @@ export default function Teachers() {
   // Table columns definition
   const columns = [
     { key: 'name', header: 'שם המורה' },
-    { key: 'specialization', header: 'התמחות' },
+    {
+      key: 'specialization',
+      header: 'התמחות',
+      render: (row: any) => row.specialization && row.specialization !== 'לא צוין'
+        ? <InstrumentBadge instrument={row.specialization} />
+        : <span className="text-muted-foreground">לא צוין</span>
+    },
     { key: 'rolesDisplay', header: 'תפקידים' },
     { key: 'studentCount', header: 'מס\' תלמידים', align: 'center' as const },
     { key: 'status', header: 'סטטוס', align: 'center' as const },

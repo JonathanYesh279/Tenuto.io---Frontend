@@ -5,19 +5,20 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.1 Production-Grade Visual Identity — Phase 17: Elevation
+**Current focus:** v2.1 Production-Grade Visual Identity — Phase 18: Layout Shell and Color System Reset
 
 ## Current Milestone: v2.1 Production-Grade Visual Identity
 
-**Goal:** Transform the UI from clean admin dashboard to confident, production-grade SaaS — stronger hierarchy, bolder identity, dynamic motion.
+**Goal:** Drastic visual redesign — transform from styled admin template to production-grade SaaS. Light sidebar, multi-color pastels, 3-column dashboard, hero stat zones, data-dominant tables. Style transplant from SchoolHub reference.
 **Phases:** 16-21 (6 phases, 13 plans)
+**Pivot:** Phases 18-21 rewritten on 2026-02-18 — from incremental polish to full structural redesign
 
 ## Current Position
 
-Phase: 17 complete (Primitive Component Layer)
-Plan: Phase 17 complete — ready for Phase 18
-Status: Phase 17 both plans complete — shadow tokens + spring interactions on all 6 primitives
-Last activity: 2026-02-18 — Phase 17 execution complete (Card/Button/Badge/Dialog/Tabs/Input primitives)
+Phase: 18 not started (Layout Shell and Color System Reset)
+Plan: Phase 18 context gathered — ready for planning
+Status: Phases 18-21 rewritten to deliver full structural redesign per SchoolHub reference
+Last activity: 2026-02-18 — Phase 18 context gathered, roadmap phases 18-21 rewritten
 
 Progress: [████░░░░░░] 31% (v2.1, 4/13 plans)
 

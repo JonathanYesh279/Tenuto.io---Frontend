@@ -43,7 +43,7 @@ Full details: `milestones/v2.0-ROADMAP.md`
 
 ### 🚧 v2.1 Production-Grade Visual Identity (In Progress)
 
-**Milestone Goal:** Transform Tenuto.io from a consistent design-system scaffold into a confident, authored product — with surface elevation hierarchy, bold typography, coral restraint, spring micro-interactions, and a strong visual identity that reads as production SaaS.
+**Milestone Goal:** Drastic visual redesign — transform Tenuto.io from a styled admin template into a production-grade SaaS product that is completely unrecognizable from the current version. Light sidebar, multi-color pastel palette, 3-column dashboard, hero stat zones on list pages, data-dominant tables with avatars and colored badges, and structured forms with visual sections. Style transplant from SchoolHub reference: visual language changes completely while all data entities, labels, and business logic stay untouched.
 
 ---
 
@@ -84,78 +84,80 @@ Plans:
 
 ---
 
-#### Phase 18: Typography Scale and Color Evolution
+#### Phase 18: Layout Shell and Color System Reset
 
-**Goal:** Page headings are bold and hierarchically confident; coral is restricted to three functional contexts; supporting surfaces use the warm neutral scale instead of coral tints.
-**Depends on:** Phase 16
-**Requirements:** TYPO-01, TYPO-02, TYPO-03, TYPO-04, COLOR-01, COLOR-02, COLOR-03, COLOR-04
-**Success Criteria** (what must be TRUE):
-  1. Page-level headings render at Heebo 700-800 weight with `text-3xl` or larger — the typographic hierarchy is immediately readable without scanning
-  2. UI body text and metadata use tighter sizing than v2.0 (reduced from the v2.0 defaults), creating a denser and more confident reading rhythm
-  3. Coral (`--primary` and `primary-NNN`) appears only on: primary CTA buttons, the active navigation indicator, and focus rings — it is absent from card backgrounds, hover states, and secondary surfaces
-  4. Badge components (StatusBadge, InstrumentBadge) use a multi-color palette with distinct hues per category — not uniformly coral-tinted
-  5. Vertical spacing between text blocks follows a consistent rhythm across all pages — no arbitrary gaps between headings, subheads, and body sections
-**Plans:** TBD
-
-Plans:
-- [ ] 18-01: Typography scale — token application to headings and body text across all pages
-- [ ] 18-02: Color audit — coral restriction, neutral surfaces, badge palette expansion, gradient headers deepened
-
----
-
-#### Phase 19: Motion System
-
-**Goal:** List pages have staggered entrance animations that communicate dynamism; all directional animations are RTL-safe throughout the application.
+**Goal:** The application's structural foundation is completely replaced — light sidebar, new multi-color pastel token system with per-entity color assignments, restructured layout shell with clear zoning, and updated header. Every subsequent phase builds on this new visual foundation.
 **Depends on:** Phase 17
-**Requirements:** MOTN-02, MOTN-04
+**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
 **Success Criteria** (what must be TRUE):
-  1. Teacher, Student, and Orchestra list pages animate rows in with staggered Y-axis + opacity — the first load of a list page feels noticeably more dynamic than a plain paint
-  2. No animation in the application uses a bare positive X-axis value — all directional motion is Y-axis + opacity, or uses a `-1` RTL multiplier
-  3. The stagger animation fires only on initial mount (not on re-filter or re-sort) and caps at 8 items — performance is not degraded on large lists
+  1. Sidebar is light/white with grouped navigation sections (category labels like MENU, OTHER), active item has a soft colored background pill — the dark warm sidebar from v2.0 is fully replaced
+  2. Multi-color pastel CSS tokens exist in `:root` — each entity type (teachers, students, orchestras) has its own assigned pastel color used consistently across stat cards, badges, and accents
+  3. Content area background is white or very light gray — the overall page feel is light and airy, not warm/dark
+  4. Layout shell has clear visual zoning — sidebar, header, and content area are distinct regions with intentional separation
+  5. The app is visually unrecognizable compared to v2.0 — the color system, sidebar, and overall feel have fundamentally changed
 **Plans:** TBD
 
 Plans:
-- [ ] 19-01: Staggered list entrance — TeacherList, StudentList, OrchestraList with Y+opacity stagger
-- [ ] 19-02: RTL animation audit — verify no bare X-axis values remain; add guards where needed
+- [ ] 18-01: Light sidebar — restyle Sidebar.tsx from dark warm to white/light, grouped nav sections, active pill, brand logo
+- [ ] 18-02: Multi-color pastel token system — entity color assignments in CSS vars, Tailwind mapping, replace coral-dominant palette
+- [ ] 18-03: Layout shell and header — content area zoning, header restyle, light backgrounds, overall structural separation
 
 ---
 
-#### Phase 20: Visual Personality and Layout Composition
+#### Phase 19: Dashboard Transformation
 
-**Goal:** Every page has recognizable visual landmarks — authored section headers, branded badges, distinctive empty states, and a consistent structural scaffolding — that together read as Tenuto identity rather than a generic admin template.
+**Goal:** The dashboard is a 3-column data-dominant layout with colorful pastel stat cards, a persistent right sidebar column (calendar, activity), and clean chart sections — it reads as a serious SaaS command center, not a card grid.
 **Depends on:** Phase 18
-**Requirements:** PERS-01, PERS-02, PERS-03, PERS-04, PERS-05, COMP-01, COMP-02, COMP-03, COMP-04, DATA-01, DATA-02
+**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
 **Success Criteria** (what must be TRUE):
-  1. Section headers across all entity pages share a distinctive treatment (accent mark, border, or background strip) — they are visually distinct from body text without relying on font size alone
-  2. Empty states have a branded visual treatment (illustration, icon, or decorative element) that feels authored — not a plain centered text block
-  3. All entity pages (list, detail, form) follow the same structural template: page header → toolbar zone → content — the scaffolding is predictable and consistent
-  4. Primary data values (names, titles, key numbers) use visibly stronger typographic weight than secondary metadata, which uses muted styling and smaller scale
-  5. Section dividers and card grid spacing follow defined rules that repeat consistently — the page has intentional visual rhythm
+  1. Dashboard uses a 3-column layout — main content area (left/center) and a persistent right sidebar column with calendar/upcoming/activity widgets
+  2. Top row shows pastel-colored stat cards (one per key metric) with large bold numbers, small labels, and trend badges — each card has a distinct entity color, not uniform styling
+  3. Charts and data visualizations are clean and prominent — data is the dominant visual element, not card surfaces or decorative elements
+  4. The right sidebar column contains contextual widgets relevant to Tenuto (upcoming lessons, recent activity, quick stats) — not empty space
+  5. The dashboard feels like a SchoolHub-level command center — structured, zoned, data-first, with clear visual landmarks
 **Plans:** TBD
 
 Plans:
-- [ ] 20-01: Section headers, dividers, and page scaffolding — COMP-01 through COMP-04, PERS-01, PERS-04, PERS-05
-- [ ] 20-02: Badge personality and empty states — PERS-02, PERS-03
-- [ ] 20-03: Data hierarchy styling — DATA-01, DATA-02 applied across list and detail pages
+- [ ] 19-01: 3-column dashboard layout — main grid restructure, right sidebar column, stat cards row with per-entity pastel colors
+- [ ] 19-02: Dashboard widgets and charts — right column widgets (upcoming lessons, activity), chart sections, data visualization cleanup
 
 ---
 
-#### Phase 21: Navigation and Surface Shell
+#### Phase 20: List Pages and Table System
 
-**Goal:** The layout shell (sidebar, header, content area) has distinct, perceptible elevation zones; the navigation makes the active page unmistakable; list pages are dense and tool-ready.
-**Depends on:** Phase 18, Phase 20
-**Requirements:** SURF-01, SURF-04, NAV-01, NAV-02, DENS-01, DENS-02, DENS-03, DENS-04
+**Goal:** Every list page (Teachers, Students, Orchestras) has a hero stats zone at top, a compact filter toolbar, and a data-dense table with avatars, colored status badges, and icon actions — the lists feel tool-ready and data-dominant.
+**Depends on:** Phase 18
+**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
 **Success Criteria** (what must be TRUE):
-  1. The sidebar, header, and content area are visually distinguishable at a glance through shadow and surface treatment — the layout zones feel layered, not flat
-  2. The active navigation item is unmistakable: it has a distinct background, coral accent, and bold weight that leaves no ambiguity about which page the user is on
-  3. Table rows on all list pages are 40-44px tall — noticeably more data is visible without scrolling compared to v2.0
-  4. Each list page has a unified toolbar zone (search + filters + primary CTA in one 48px band) — the controls are cohesive, not scattered
-  5. Form and detail pages retain generous padding and spacing — density is selective, not applied globally
+  1. Each list page has a hero stats zone at the top showing aggregate metrics for that entity (count, key stats) using the entity's pastel color — this is the first visual landmark
+  2. A compact filter toolbar sits below the hero zone — search input + dropdown filters in one row, cohesive and unified
+  3. Table rows show avatars alongside entity names (where applicable), colored status badges (distinct colors per status, not uniform), and icon-based action buttons (edit, delete) — not plain text links
+  4. Tables are data-dense with clean spacing — more data visible without scrolling compared to v2.0
+  5. The vertical flow on every list page is predictable: hero stats → filter toolbar → data table — clear zoning with no ambiguity
 **Plans:** TBD
 
 Plans:
-- [ ] 21-01: Shell elevation — Sidebar.tsx, Header.tsx, Layout.tsx surface separation and shadow
-- [ ] 21-02: Navigation active states and list page density + toolbar zone
+- [ ] 20-01: Hero stats zones — per-entity stat cards at top of TeacherList, StudentList, OrchestraList with entity pastel colors
+- [ ] 20-02: Filter toolbar and table redesign — compact filter bar, avatar+name columns, colored badges, icon actions across all list pages
+
+---
+
+#### Phase 21: Detail Pages and Forms
+
+**Goal:** Detail pages have a bold profile header zone with stronger tab hierarchy; forms are restructured with clear visual sections instead of stacked fields — every entity page feels intentionally designed, not template-generated.
+**Depends on:** Phase 18
+**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
+**Success Criteria** (what must be TRUE):
+  1. Detail page profile/header zone uses bolder visual treatment — stronger typography, clearer data hierarchy between primary info (name, role) and secondary metadata
+  2. Tab navigation is restyled with stronger visual weight — the active tab is unmistakable, tab content sections have clear visual separation
+  3. Forms are restructured with visual section grouping — section titles with dividers or background strips, not just stacked fields in a column
+  4. Form layout has intentional visual rhythm — section title → field group → section title → field group, with clear hierarchy between sections
+  5. Detail pages and forms feel consistent with the new dashboard and list page design language — same zoning principles, same color system, same confidence level
+**Plans:** TBD
+
+Plans:
+- [ ] 21-01: Detail page headers and tabs — bold profile zone, tab restyle, data hierarchy on teacher/student/orchestra detail pages
+- [ ] 21-02: Form restructuring — visual section grouping, dividers, structured layout for teacher/student/orchestra forms
 
 ---
 
@@ -180,11 +182,11 @@ Plans:
 | 15. Tech Debt Sweep | v2.0 | 1/1 | Complete | 2026-02-18 |
 | 16. Token Foundation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 17. Primitive Component Layer | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 18. Typography Scale and Color Evolution | v2.1 | 0/2 | Not started | — |
-| 19. Motion System | v2.1 | 0/2 | Not started | — |
-| 20. Visual Personality and Layout Composition | v2.1 | 0/3 | Not started | — |
-| 21. Navigation and Surface Shell | v2.1 | 0/2 | Not started | — |
+| 18. Layout Shell and Color System Reset | v2.1 | 0/3 | Not started | — |
+| 19. Dashboard Transformation | v2.1 | 0/2 | Not started | — |
+| 20. List Pages and Table System | v2.1 | 0/2 | Not started | — |
+| 21. Detail Pages and Forms | v2.1 | 0/2 | Not started | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 after Phase 17 execution complete*
+*Last updated: 2026-02-18 — Phases 18-21 rewritten for full structural redesign (SchoolHub reference)*

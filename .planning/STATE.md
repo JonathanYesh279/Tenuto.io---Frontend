@@ -14,12 +14,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 17 (Primitive Component Layer) — Plan 01 complete
-Plan: 17-01 complete — ready for 17-02 (Dialog/Sheet elevation)
-Status: Card, Button, Badge primitives upgraded with Phase 16 shadow tokens and Framer Motion spring press
-Last activity: 2026-02-18 — Phase 17 Plan 01 complete (Card shadow-1/2, Button motion.button, Badge shadow-1)
+Phase: 17 (Primitive Component Layer) — both plans complete
+Plan: 17-02 complete — Phase 17 done, ready for Phase 18 (Typography)
+Status: Dialog spring entrance + shadow-4, Tabs shadow-1, focus rings verified on Tabs and Input
+Last activity: 2026-02-18 — Phase 17 Plan 02 complete (Dialog FM spring, shadow-4, Tabs shadow-1, focus ring verification)
 
-Progress: [███░░░░░░░] 23% (v2.1, 3/13 plans)
+Progress: [████░░░░░░] 31% (v2.1, 4/13 plans)
 
 ## Performance Metrics
 
@@ -46,6 +46,9 @@ Key decisions affecting v2.1:
 - [17-01]: Button uses early-return if (!asChild) branch — motion.button and Slot paths cleanly separate, no conditional type casting in JSX
 - [17-01]: transition-shadow on Card base class (not hover conditional) so animation applies to any hover state, not just hover prop
 - [17-01]: active:scale-95 preserved alongside whileTap — provides instant feedback for reduced-motion users without JS
+- [17-02]: CSS exit hybrid pattern — Framer Motion owns entrance, CSS data-[state=closed] classes own exit, avoids hoisting Radix open state
+- [17-02]: motion(DialogPrimitive.Content) works directly in framer-motion v10 — single DOM element, no asChild workaround needed
+- [17-02]: input.tsx verified correct with zero changes — focus-visible:ring-ring already present, inputs remain flat
 
 ### Pending Todos
 
@@ -66,9 +69,10 @@ Key decisions affecting v2.1:
 | 16    | 01   | <1 min   | 1     | 1     |
 | 16    | 02   | 4 min    | 2     | 3     |
 | 17    | 01   | 2 min    | 2     | 3     |
+| 17    | 02   | 2 min    | 2     | 2     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 17-01-PLAN.md (Card shadow-1/2, Button motion.button spring press, Badge shadow-1)
+Stopped at: Completed 17-02-PLAN.md (Dialog FM spring entrance, shadow-4, Tabs shadow-1, focus ring verification)
 Resume file: None

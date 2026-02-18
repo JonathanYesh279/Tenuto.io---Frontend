@@ -15,12 +15,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 18 complete (Layout Shell and Color System Reset)
-Plan: All 3 plans complete — verified 5/5 must-haves
-Status: Phase 18 verified and complete — ready for Phase 19 planning
-Last activity: 2026-02-18 — Phase 18 executed: pastel tokens, light sidebar, layout shell, StatsCard entity colors
+Phase: 19 in progress (Dashboard Transformation)
+Plan: 19-01 complete — 2/N plans done
+Status: Plan 19-01 executed — 3-column grid layout + entity-colored stat cards + stagger animation done
+Last activity: 2026-02-18 — 19-01 executed: Dashboard 3-column grid, StatsCard enhancements, framer-motion stagger
 
-Progress: [█████░░░░░] 54% (v2.1, 7/13 plans)
+Progress: [█████░░░░░] 62% (v2.1, 8/13 plans)
 
 ## Performance Metrics
 
@@ -36,6 +36,9 @@ Progress: [█████░░░░░] 54% (v2.1, 7/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [19-01]: StatsCard trend pill uses colors.iconBg (entity pastel) as pill background — deeper-tint chip on colored surface without new color values
+- [19-01]: lg:grid-cols-[1fr_300px] not xl — content area ~1086px with sidebar open, lg triggers at correct width
+- [19-01]: DOM order places main content first (renders right in RTL), widgets second (renders left) — correct Hebrew reading flow, no CSS direction hacks
 - [18-02]: Active nav pill has no border — background fill only (bg-sidebar-active-bg). Soft colored fill provides sufficient visual affordance without border weight.
 - [18-02]: Logo zone positioned between desktop toggle and search with flex-shrink-0 to prevent collapse in full-height flex column
 - [18-02]: White-surface pattern — opacity-relative classes of near-black foreground (sidebar-foreground/10 etc.) produce unacceptable tints on white; use solid gray-NNN instead
@@ -83,9 +86,10 @@ Key decisions affecting v2.1:
 | 18    | 01   | 3 min    | 2     | 2     |
 | 18    | 02   | 2 min    | 2     | 1     |
 | 18    | 03   | 1 min    | 2     | 2     |
+| 19    | 01   | 7 min    | 2     | 2     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 18 execution complete — all 3 plans verified
+Stopped at: Completed 19-01-PLAN.md — Dashboard 3-column grid and StatsCard enhancements
 Resume file: None

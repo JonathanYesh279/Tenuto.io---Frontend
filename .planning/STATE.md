@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.0 Phase 12 — Layout & Dashboard (next)
+**Current focus:** v2.0 Phase 12 — Layout & Dashboard — COMPLETE
 
 ## Current Position
 
-Phase: 11 of 13 ([v2.0] Detail Pages) — COMPLETE (verified)
+Phase: 12 of 13 ([v2.0] Layout & Dashboard) — COMPLETE
 Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase 11 verified (15/15 must-haves passed). Ready for Phase 12.
-Last activity: 2026-02-18 — Phase 11 execution complete + verified
+Status: Phase 12 Plan 02 executed. Dashboard greeting + design token colors complete.
+Last activity: 2026-02-18 — Phase 12 Plan 02 execution complete
 
-Progress: [████████░░] 75% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [█████████░] 85% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
@@ -42,6 +42,8 @@ Progress: [████████░░] 75% (v2.0) — [███████
 | v2.0 Phase 10 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 11 Plan 1 | 1 | 4min | 4 min |
 | v2.0 Phase 11 Plan 2 | 1 | 2min | 2 min |
+| v2.0 Phase 12 Plan 1 | 1 | — | — |
+| v2.0 Phase 12 Plan 2 | 1 | 3min | 3 min |
 
 *Updated after each plan completion*
 
@@ -103,10 +105,14 @@ Progress: [████████░░] 75% (v2.0) — [███████
 - [11-02]: Bagrut action buttons preserved in separate row below header, not merged into header (matches StudentDetailsPage pattern)
 - [11-02]: BagrutDetails custom Tab component untouched — only tab content area wrapped with AnimatePresence
 - [11-02]: Teacher badge in Bagrut header conditionally rendered — prevents flash of undefined when teacher loads async
+- [12-02]: Dashboard greeting uses user.personalInfo.firstName with getDisplayName fallback — not user.firstName (which is undefined in auth context shape)
+- [12-02]: Orchestra StatsCard changed from purple to teal — warm palette only on dashboard (all 6 cards now warm)
+- [12-02]: StatsCard colorClasses mapping unchanged — intentional palette-scale variety (bg-primary-100, bg-success-100, etc.) not CSS tokens
+- [12-02]: text-muted-foreground/70 used for trend label — opacity modifier approach avoids defining new token
 
 ### Pending Todos
 
-None for Phase 11. Phase 12 is next: sidebar, header, and dashboard redesign.
+None for Phase 12. Phase 12 (Layout & Dashboard) is complete. Phase 13 (if any) is next.
 
 ### Blockers/Concerns
 
@@ -118,5 +124,5 @@ None for Phase 11. Phase 12 is next: sidebar, header, and dashboard redesign.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 11 complete + verified (15/15 must-haves). ROADMAP.md updated. Ready for Phase 12 planning.
+Stopped at: Phase 12 Plan 02 complete. Dashboard greeting + design token colors complete. Phase 12 done.
 Resume file: None

@@ -42,7 +42,7 @@ Progress: [█████████░] 85% (v2.0) — [███████
 | v2.0 Phase 10 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 11 Plan 1 | 1 | 4min | 4 min |
 | v2.0 Phase 11 Plan 2 | 1 | 2min | 2 min |
-| v2.0 Phase 12 Plan 1 | 1 | — | — |
+| v2.0 Phase 12 Plan 1 | 1 | 3min | 3 min |
 | v2.0 Phase 12 Plan 2 | 1 | 3min | 3 min |
 
 *Updated after each plan completion*
@@ -105,6 +105,10 @@ Progress: [█████████░] 85% (v2.0) — [███████
 - [11-02]: Bagrut action buttons preserved in separate row below header, not merged into header (matches StudentDetailsPage pattern)
 - [11-02]: BagrutDetails custom Tab component untouched — only tab content area wrapped with AnimatePresence
 - [11-02]: Teacher badge in Bagrut header conditionally rendered — prevents flash of undefined when teacher loads async
+- [12-01]: NavLink end prop on /dashboard nav item — prevents startsWith matching marking Home as always-active on all subroutes
+- [12-01]: Mobile hamburger button keeps bg-white — sits against page background, not sidebar dark surface (Pitfall 4 from research)
+- [12-01]: Sidebar modal overlays retain bg-white — they are overlay surfaces independent of sidebar surface
+- [12-01]: getRoleBadgeColor updated to dark-compatible opacity variants (red-300, blue-300, green-300, yellow-300) for legibility on dark sidebar
 - [12-02]: Dashboard greeting uses user.personalInfo.firstName with getDisplayName fallback — not user.firstName (which is undefined in auth context shape)
 - [12-02]: Orchestra StatsCard changed from purple to teal — warm palette only on dashboard (all 6 cards now warm)
 - [12-02]: StatsCard colorClasses mapping unchanged — intentional palette-scale variety (bg-primary-100, bg-success-100, etc.) not CSS tokens
@@ -124,5 +128,5 @@ None for Phase 12. Phase 12 (Layout & Dashboard) is complete. Phase 13 (if any) 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 12 Plan 02 complete. Dashboard greeting + design token colors complete. Phase 12 done.
+Stopped at: Phase 12 Plan 01 complete (sidebar/header/layout tokens). Phase 12 Plan 02 also complete (dashboard greeting + StatsCard colors). Phase 12 fully done.
 Resume file: None

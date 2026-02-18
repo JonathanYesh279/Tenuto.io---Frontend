@@ -60,8 +60,8 @@ Full details: `milestones/v2.0-ROADMAP.md`
 **Plans:** 2 plans
 
 Plans:
-- [ ] 16-01: CSS custom properties in :root (surface elevation scale, warm neutral scale, shadow scale)
-- [ ] 16-02: Tailwind shadow mapping, motionTokens.ts, dual color system inventory
+- [x] 16-01: CSS custom properties in :root (surface elevation scale, warm neutral scale, shadow scale)
+- [x] 16-02: Tailwind shadow mapping, motionTokens.ts, dual color system inventory
 
 ---
 
@@ -178,7 +178,7 @@ Plans:
 | 13. Special Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 14. Requirement Gap Closure | v2.0 | 3/3 | Complete | 2026-02-18 |
 | 15. Tech Debt Sweep | v2.0 | 1/1 | Complete | 2026-02-18 |
-| 16. Token Foundation | v2.1 | 0/2 | Not started | — |
+| 16. Token Foundation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 17. Primitive Component Layer | v2.1 | 0/2 | Not started | — |
 | 18. Typography Scale and Color Evolution | v2.1 | 0/2 | Not started | — |
 | 19. Motion System | v2.1 | 0/2 | Not started | — |
@@ -187,4 +187,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 after v2.1 roadmap created (Phases 16-21)*
+*Last updated: 2026-02-18 after Phase 16 execution complete*

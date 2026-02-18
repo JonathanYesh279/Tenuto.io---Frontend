@@ -5,6 +5,7 @@
 - ✅ **v1.1 Cleanup & Polish** — Phases 1-5 (shipped 2026-02-14)
 - ✅ **v2.0 UI/UX Redesign** — Phases 6-15 (shipped 2026-02-18)
 - ✅ **v2.1 Production-Grade Visual Identity** — Phases 16-21 (shipped 2026-02-18)
+- 🔨 **v3.0 Visual Architecture Rewrite** — Phase 22+ (active)
 
 ## Phases
 
@@ -161,6 +162,44 @@ Plans:
 
 ---
 
+### v3.0 Visual Architecture Rewrite
+
+**Milestone Goal:** Structural recomposition of the entire application. Not polish, not tokens, not incremental refinement — a visual architecture rewrite. The app must feel authored, not generated. Every page follows a defined archetype with clear dominant zones, intentional asymmetry, and data-first composition. Generic admin-template patterns are eliminated.
+
+**Architectural Foundation:** `.planning/ARCHETYPES.md`
+
+---
+
+#### Phase 22: Visual Architecture Rewrite
+
+**Goal:** Structural recomposition — strict shape language, unified button system, cohesive icon style, card wrapper removal, and page archetype implementation with asymmetry and dominance rules. The app stops looking like a styled template and starts looking like a product with authored identity.
+**Depends on:** Phase 21 (v2.1 complete)
+**Architectural reference:** `.planning/ARCHETYPES.md`
+**Scope:**
+  1. **Shape language:** Define and apply strict corner radius philosophy, border philosophy. No default rounding. Every radius is intentional.
+  2. **Button system:** One strong primary color (black, blue, or neutral — to be decided during planning). No mixed variant styles across pages. One system, applied everywhere.
+  3. **Icon system:** Replace default lucide scatter with a cohesive icon style. Consistent weight, consistent metaphors.
+  4. **Card wrapper removal:** Strip decorative card wrappers from page sections across all pages. Sections defined by spacing and typography.
+  5. **Dashboard archetype:** Command center — one dominant zone, asymmetric panels, no equal card grid, no pastel widget feel.
+  6. **List page archetype:** Table IS the page — no hero zone, no card-wrapped table, flat surface, edge-to-edge, strong row hover. Toolbar flush with table.
+  7. **Detail page archetype:** Structured dossier — identity block (not gradient card), attached tab bar, continuous document feel, no stacked card sections.
+  8. **Management page archetype:** Operations console — functional, dense, no decoration, whitespace as structure.
+  9. **Cross-cutting:** One dominant zone per page. Template grid symmetry eliminated. Sidebar feels architectural.
+**Success Criteria** (what must be TRUE):
+  1. Every page has exactly one identifiable dominant zone that is visually 3-4x more prominent than surrounding content
+  2. No page sections are wrapped in Card components (except modals/popovers/dropdowns)
+  3. Table containers have no rounded corners, no shadows, no card wrappers
+  4. A single, consistent button color system is used across all pages — no mixed primary colors
+  5. Icon usage follows a single cohesive style — no mixed icon weights or metaphor inconsistencies
+  6. Dashboard uses asymmetric layout with unequal column weights — no symmetric card grid
+  7. List pages: toolbar is flush with table, no gap, no hero zone above data
+  8. Detail pages: identity block + attached tab bar, not gradient banner + floating tabs + stacked cards
+  9. Sidebar is tonally distinct from content area and feels like a structural anchor
+  10. The app is not recognizable as a shadcn/ui admin template — shape, color, and composition are distinctive
+**Plans:** TBD (to be determined during `/gsd:plan-phase 22`)
+
+---
+
 ## Progress
 
 | Phase | Milestone | Plans | Status | Completed |
@@ -186,7 +225,8 @@ Plans:
 | 19. Dashboard Transformation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
+| 22. Visual Architecture Rewrite | v3.0 | 0/? | Pending | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 — Phase 21 complete, v2.1 milestone shipped*
+*Last updated: 2026-02-18 — Phase 22 inserted: Visual Architecture Rewrite (v3.0)*

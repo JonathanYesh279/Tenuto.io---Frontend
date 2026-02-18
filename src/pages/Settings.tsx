@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../services/authContext.jsx'
 import { tenantService, teacherService } from '../services/apiService'
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
+import { Input } from '../components/ui/input'
 import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
 import { Settings as SettingsIcon, Building2, User, Landmark, SlidersHorizontal, Save } from 'lucide-react'
@@ -138,7 +139,7 @@ export default function Settings() {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <div className="text-gray-600">טוען הגדרות...</div>
         </div>
       </div>
@@ -150,7 +151,7 @@ export default function Settings() {
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-          <SettingsIcon className="w-5 h-5 text-primary-600" />
+          <SettingsIcon className="w-5 h-5 text-primary" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">הגדרות קונסרבטוריון</h1>
@@ -171,21 +172,21 @@ export default function Settings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">שם המוסד</label>
-                <input
+                <Input
                   type="text"
                   value={formData.name}
                   onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right"
+                  className="text-right"
                   placeholder="שם הקונסרבטוריון"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">עיר</label>
-                <input
+                <Input
                   type="text"
                   value={formData.city}
                   onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right"
+                  className="text-right"
                   placeholder="עיר"
                 />
               </div>
@@ -205,14 +206,14 @@ export default function Settings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">שם המנהל/ת</label>
-                <input
+                <Input
                   type="text"
                   value={formData.director.name}
                   onChange={e => setFormData(prev => ({
                     ...prev,
                     director: { ...prev.director, name: e.target.value },
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right"
+                  className="text-right"
                   placeholder="שם מלא"
                 />
               </div>
@@ -224,7 +225,7 @@ export default function Settings() {
                     ...prev,
                     director: { ...prev.director, teacherId: e.target.value },
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-right"
                 >
                   <option value="">-- בחר מורה --</option>
                   {teachers.map(t => (
@@ -248,27 +249,27 @@ export default function Settings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">קוד מוסד</label>
-                <input
+                <Input
                   type="text"
                   value={formData.ministryInfo.institutionCode}
                   onChange={e => setFormData(prev => ({
                     ...prev,
                     ministryInfo: { ...prev.ministryInfo, institutionCode: e.target.value },
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right"
+                  className="text-right"
                   placeholder="קוד מוסד"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">שם מחוז</label>
-                <input
+                <Input
                   type="text"
                   value={formData.ministryInfo.districtName}
                   onChange={e => setFormData(prev => ({
                     ...prev,
                     ministryInfo: { ...prev.ministryInfo, districtName: e.target.value },
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right"
+                  className="text-right"
                   placeholder="שם המחוז"
                 />
               </div>
@@ -297,7 +298,7 @@ export default function Settings() {
                         type="checkbox"
                         checked={formData.settings.lessonDurations.includes(d)}
                         onChange={() => handleDurationToggle(d)}
-                        className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                       />
                       <span className="text-sm text-gray-700">{d} דקות</span>
                     </label>
@@ -314,7 +315,7 @@ export default function Settings() {
                     ...prev,
                     settings: { ...prev.settings, schoolStartMonth: Number(e.target.value) },
                   }))}
-                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right"
+                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-right"
                 >
                   {MONTHS.map(m => (
                     <option key={m.value} value={m.value}>{m.label}</option>
@@ -330,7 +331,7 @@ export default function Settings() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Save className="w-4 h-4" />
             {saving ? 'שומר...' : 'שמור הגדרות'}

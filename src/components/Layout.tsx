@@ -43,10 +43,10 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
       {/* Sidebar - Show for all users with roles */}
-      {shouldShowSidebar && <Sidebar />}
+      {shouldShowSidebar && <div className="no-print"><Sidebar /></div>}
 
       {/* Header */}
-      <Header />
+      <div className="no-print"><Header /></div>
 
       {/* Main Content - Adjust margin based on sidebar presence and state */}
       <main

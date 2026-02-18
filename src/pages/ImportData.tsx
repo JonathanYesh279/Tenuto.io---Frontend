@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { importService } from '../services/apiService'
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
+import { StepProgress } from '../components/feedback/ProgressIndicators'
 import toast from 'react-hot-toast'
 import {
   Upload,
@@ -45,6 +46,12 @@ interface ImportResult {
   errors: Array<{ row: number; message: string }>
 }
 
+const IMPORT_STEPS = [
+  { id: 'upload', label: 'העלאת קובץ' },
+  { id: 'preview', label: 'תצוגה מקדימה' },
+  { id: 'results', label: 'תוצאות' },
+] as const
+
 export default function ImportData() {
   const [activeTab, setActiveTab] = useState<ImportTab>('teachers')
   const [importState, setImportState] = useState<ImportState>('upload')
@@ -65,6 +72,16 @@ export default function ImportData() {
   const handleTabChange = (tab: ImportTab) => {
     setActiveTab(tab)
     resetState()
+  }
+
+  const getImportSteps = () => {
+    const order = ['upload', 'preview', 'results'] as const
+    const currentIdx = order.indexOf(importState)
+    return IMPORT_STEPS.map((step, idx) => ({
+      ...step,
+      description: undefined as string | undefined,
+      status: (idx < currentIdx ? 'completed' : idx === currentIdx ? 'current' : 'pending') as 'completed' | 'current' | 'pending',
+    }))
   }
 
   const handleFile = useCallback(async (file: File) => {
@@ -169,7 +186,7 @@ export default function ImportData() {
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-          <Upload className="w-5 h-5 text-primary-600" />
+          <Upload className="w-5 h-5 text-primary" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">ייבוא נתונים</h1>
@@ -183,7 +200,7 @@ export default function ImportData() {
           onClick={() => handleTabChange('teachers')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
             activeTab === 'teachers'
-              ? 'bg-primary-100 text-primary-700 border border-primary-200'
+              ? 'bg-primary-100 text-primary border border-primary-200'
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
@@ -194,7 +211,7 @@ export default function ImportData() {
           onClick={() => handleTabChange('students')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
             activeTab === 'students'
-              ? 'bg-primary-100 text-primary-700 border border-primary-200'
+              ? 'bg-primary-100 text-primary border border-primary-200'
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
@@ -203,13 +220,21 @@ export default function ImportData() {
         </button>
       </div>
 
+      {/* Step Progress Indicator */}
+      <div className="mb-6">
+        <StepProgress
+          steps={getImportSteps()}
+          direction="horizontal"
+        />
+      </div>
+
       {/* Upload State */}
       {importState === 'upload' && (
         <Card>
           <CardContent className="pt-6">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-16">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 mb-4"></div>
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mb-4"></div>
                 <p className="text-gray-600">מעבד את הקובץ...</p>
               </div>
             ) : (
@@ -359,7 +384,7 @@ export default function ImportData() {
             <button
               onClick={handleExecute}
               disabled={executing || previewData.preview.matched.length === 0}
-              className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {executing ? (
                 <>
@@ -434,7 +459,7 @@ export default function ImportData() {
           <div className="flex justify-center pt-4 pb-8">
             <button
               onClick={resetState}
-              className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
             >
               <Upload className="w-4 h-4" />
               ייבוא קובץ נוסף

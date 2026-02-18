@@ -261,6 +261,20 @@ body::-webkit-scrollbar-thumb:hover {
   .no-print {
     display: none !important; /* Legitimate: print media query !important per WAI-ARIA pattern */
   }
+  /* Override inline sidebar margin for print */
+  main {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+  /* Clean card borders for print — no shadows */
+  .rounded-lg, .rounded-xl {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  /* Avoid page breaks inside cards */
+  .break-inside-avoid, [class*="Card"] {
+    break-inside: avoid;
+  }
 }
 
 /* Reduced motion — WAI-ARIA accessibility pattern (A11Y-04) */

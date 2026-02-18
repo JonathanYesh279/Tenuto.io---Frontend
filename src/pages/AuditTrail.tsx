@@ -212,7 +212,7 @@ export default function AuditTrail() {
   return (
     <div className="p-6 max-w-7xl mx-auto" dir="rtl">
       <div className="flex items-center gap-3 mb-6">
-        <Shield className="w-8 h-8 text-blue-600" />
+        <Shield className="w-8 h-8 text-primary" />
         <h1 className="text-3xl font-bold text-gray-900">יומן ביקורת</h1>
       </div>
 
@@ -223,7 +223,7 @@ export default function AuditTrail() {
             onClick={() => setActiveTab('deletion-log')}
             className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'deletion-log'
-                ? 'border-blue-500 text-blue-600'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -233,7 +233,7 @@ export default function AuditTrail() {
             onClick={() => setActiveTab('past-activities')}
             className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'past-activities'
-                ? 'border-blue-500 text-blue-600'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -280,7 +280,7 @@ export default function AuditTrail() {
                       setStartDate(e.target.value)
                       setAuditPage(1)
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
                   />
                 </div>
                 <div>
@@ -294,7 +294,7 @@ export default function AuditTrail() {
                       setEndDate(e.target.value)
                       setAuditPage(1)
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
                   />
                 </div>
                 <div>
@@ -307,7 +307,7 @@ export default function AuditTrail() {
                       setEntityType(e.target.value as any)
                       setAuditPage(1)
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
                   >
                     <option value="all">כל הסוגים</option>
                     <option value="teacher">מורה</option>
@@ -376,7 +376,7 @@ export default function AuditTrail() {
                     setActivityType(e.target.value as any)
                     setActivitiesPage(1)
                   }}
-                  className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
                 >
                   <option value="all">הכל</option>
                   <option value="rehearsals">חזרות</option>

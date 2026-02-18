@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowRight, Edit, Edit2, Trash2, Download, Upload, Plus,
   User, Calendar, Music, FileText, Award, Clock,
   CheckCircle, XCircle, AlertCircle, Star, BookOpen,
   Users, File, Loader, ChevronRight, Save, X
 } from 'lucide-react'
+import { DetailPageHeader } from '../components/domain'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
@@ -737,79 +739,56 @@ export default function BagrutDetails() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between bg-white p-6 rounded-lg shadow-sm">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/bagruts')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ArrowRight className="w-5 h-5 text-gray-600" />
-          </button>
-          
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-gray-900">
-                בגרות - {getDisplayName(student?.personalInfo) || 'טוען...'}
-              </h1>
-              {bagrut.isCompleted ? (
-                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                  הושלם
-                </span>
-              ) : (
-                <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
-                  בתהליך
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-4 text-sm text-gray-800">
-              <span className="flex items-center gap-1">
-                <User className="w-4 h-4" />
-                מורה: {getDisplayName(teacher?.personalInfo) || 'טוען...'}
+      {/* Gradient header with breadcrumb */}
+      <DetailPageHeader
+        firstName={student?.personalInfo?.firstName}
+        lastName={student?.personalInfo?.lastName}
+        fullName={student?.personalInfo?.fullName || getDisplayName(student?.personalInfo)}
+        entityType="בגרות"
+        breadcrumbLabel="בגרויות"
+        breadcrumbHref="/bagruts"
+        updatedAt={bagrut?.updatedAt}
+        badges={
+          <>
+            {bagrut.isCompleted ? (
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">הושלם</span>
+            ) : (
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">בתהליך</span>
+            )}
+            {teacher && (
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+                מורה: {getDisplayName(teacher?.personalInfo)}
               </span>
-              {bagrut.conservatoryName && (
-                <span className="flex items-center gap-1">
-                  <Music className="w-4 h-4" />
-                  {bagrut.conservatoryName}
-                </span>
-              )}
-              {bagrut.testDate && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  {new Date(bagrut.testDate).toLocaleDateString('he-IL')}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex gap-2">
-          {!bagrut.isCompleted && (
-            <>
-              <button
-                onClick={() => setShowCompleteModal(true)}
-                className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded-lg hover:bg-green-50"
-              >
-                <CheckCircle className="w-4 h-4 ml-1" />
-                השלם בגרות
-              </button>
-            </>
-          )}
+            )}
+          </>
+        }
+      />
+
+      {/* Action buttons */}
+      <div className="flex justify-end gap-2">
+        {!bagrut.isCompleted && (
           <button
-            onClick={handleExportPDF}
-            className="flex items-center px-3 py-2 text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-50"
+            onClick={() => setShowCompleteModal(true)}
+            className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded-lg hover:bg-green-50"
           >
-            <Download className="w-4 h-4 ml-1" />
-            ייצא PDF
+            <CheckCircle className="w-4 h-4 ml-1" />
+            השלם בגרות
           </button>
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded-lg hover:bg-red-50"
-          >
-            <Trash2 className="w-4 h-4 ml-1" />
-            מחק
-          </button>
-        </div>
+        )}
+        <button
+          onClick={handleExportPDF}
+          className="flex items-center px-3 py-2 text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-50"
+        >
+          <Download className="w-4 h-4 ml-1" />
+          ייצא PDF
+        </button>
+        <button
+          onClick={() => setShowDeleteModal(true)}
+          className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded-lg hover:bg-red-50"
+        >
+          <Trash2 className="w-4 h-4 ml-1" />
+          מחק
+        </button>
       </div>
 
       {/* Statistics Cards */}
@@ -906,6 +885,14 @@ export default function BagrutDetails() {
 
         {/* Tab Content */}
         <div className="p-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
           {/* Overview Tab */}
           {activeTab === 'overview' && (
             <div>
@@ -1504,6 +1491,8 @@ export default function BagrutDetails() {
               readonly={bagrut.isCompleted}
             />
           )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 

@@ -175,7 +175,12 @@ Plans:
   1. Student detail page shows warm gradient header with avatar initials, breadcrumb, last-updated metadata, and tab fade animation — identical treatment to Teacher/Orchestra/Bagrut
   2. All list pages (Teachers, Students, Orchestras, Rehearsals, AuditTrail) import StatusBadge from domain/ barrel — Table.tsx StatusBadge removed
   3. Rehearsals page shows ErrorState component with retry button on network error — not inline text
-**Plans:** TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 14-01-PLAN.md — Student detail page: DetailPageHeader + AnimatePresence tab fade
+- [ ] 14-02-PLAN.md — StatusBadge wiring: extend variants, migrate Teachers/Students/Bagruts/AuditTrail
+- [ ] 14-03-PLAN.md — Rehearsals ErrorState: replace inline error with ErrorState + retry
 
 ### Phase 15: Tech Debt Sweep
 **Goal:** Eliminate accumulated tech debt from v2.0 — add missing ErrorState to AuditTrail, swap hardcoded Dashboard colors to design tokens, resolve orphaned InstrumentBadge, and fix RTL padding.
@@ -206,7 +211,7 @@ Plans:
 | 11. Detail Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 12. Layout & Dashboard | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 13. Special Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
-| 14. Requirement Gap Closure | v2.0 | 0/? | Pending | — |
+| 14. Requirement Gap Closure | v2.0 | 0/3 | Pending | — |
 | 15. Tech Debt Sweep | v2.0 | 0/? | Pending | — |
 
 ---

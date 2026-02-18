@@ -99,7 +99,7 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 h-16 bg-card border-b border-border flex items-center justify-between z-[45] transition-all duration-300"
+      className="fixed top-0 left-0 h-16 bg-white border-b border-border flex items-center justify-between z-[45] transition-all duration-300"
       style={{
         direction: 'rtl',
         width: hasSidebar && !isMobile && isDesktopOpen ? 'calc(100% - 280px)' : '100%',

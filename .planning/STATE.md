@@ -14,12 +14,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 16 complete (Token Foundation)
-Plan: Phase 16 complete — ready for Phase 17
-Status: Phase 16 both plans complete — CSS vars + Tailwind utilities + motion tokens done
-Last activity: 2026-02-18 — Phase 16 Plan 02 complete (Tailwind shadow utilities, motionTokens.ts, COLOR-INVENTORY.md)
+Phase: 17 (Primitive Component Layer) — Plan 01 complete
+Plan: 17-01 complete — ready for 17-02 (Dialog/Sheet elevation)
+Status: Card, Button, Badge primitives upgraded with Phase 16 shadow tokens and Framer Motion spring press
+Last activity: 2026-02-18 — Phase 17 Plan 01 complete (Card shadow-1/2, Button motion.button, Badge shadow-1)
 
-Progress: [██░░░░░░░░] 15% (v2.1, 2/13 plans)
+Progress: [███░░░░░░░] 23% (v2.1, 3/13 plans)
 
 ## Performance Metrics
 
@@ -43,6 +43,9 @@ Key decisions affecting v2.1:
 - [16-01]: Shadow warm tint rgba(120,60,20,...) approximates coral brand hue at low opacity for cohesive depth
 - [16-02]: Color migration deferred — 1,211 primary-NNN instances across 134 files requires dedicated phase; two options documented (palette alignment vs semantic aliases)
 - [16-02]: focus:ring-primary-500 (379 hits) flagged as WCAG AA risk for any future palette change — mandatory contrast verification required
+- [17-01]: Button uses early-return if (!asChild) branch — motion.button and Slot paths cleanly separate, no conditional type casting in JSX
+- [17-01]: transition-shadow on Card base class (not hover conditional) so animation applies to any hover state, not just hover prop
+- [17-01]: active:scale-95 preserved alongside whileTap — provides instant feedback for reduced-motion users without JS
 
 ### Pending Todos
 
@@ -62,9 +65,10 @@ Key decisions affecting v2.1:
 |-------|------|----------|-------|-------|
 | 16    | 01   | <1 min   | 1     | 1     |
 | 16    | 02   | 4 min    | 2     | 3     |
+| 17    | 01   | 2 min    | 2     | 3     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 16-02-PLAN.md (Tailwind shadow utilities, motionTokens.ts, COLOR-INVENTORY.md)
+Stopped at: Completed 17-01-PLAN.md (Card shadow-1/2, Button motion.button spring press, Badge shadow-1)
 Resume file: None

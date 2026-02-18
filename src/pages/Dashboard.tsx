@@ -11,6 +11,7 @@ import ConductorDashboard from '../components/dashboard/ConductorDashboard'
 import TeacherDashboard from '../components/dashboard/TeacherDashboard'
 import TheoryTeacherDashboard from '../components/dashboard/TheoryTeacherDashboard'
 import SuperAdminDashboard from '../components/dashboard/SuperAdminDashboard'
+import { MiniCalendarWidget, UpcomingEventsWidget, RecentActivityWidget } from '../components/dashboard/widgets'
 import {
   StudentActivityCharts,
   InstrumentDistributionChart,
@@ -450,60 +451,11 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Right widget column — populated in Plan 19-02 */}
+          {/* Right widget column */}
           <div className="space-y-4">
-            {/* Upcoming Events — inline for now, widget components come in 19-02 */}
-            <Card>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-foreground">אירועים קרובים</h3>
-              </div>
-              <div className="space-y-3">
-                {loading ? (
-                  <div className="text-xs text-muted-foreground text-center py-4">טוען...</div>
-                ) : upcomingEvents.length > 0 ? (
-                  upcomingEvents.map((event, index) => (
-                    <div key={index} className="flex items-start gap-3 p-2.5 rounded-lg bg-muted/40">
-                      <div className="w-7 h-7 rounded-md bg-orchestras-bg flex items-center justify-center flex-shrink-0">
-                        <Music className="w-3.5 h-3.5 text-orchestras-fg" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-foreground truncate">{event.title}</p>
-                        <p className="text-xs text-muted-foreground">{event.date} · {event.description}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-xs text-muted-foreground text-center py-4">אין אירועים קרובים</div>
-                )}
-              </div>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-foreground">פעילות אחרונה</h3>
-              </div>
-              <div className="space-y-3">
-                {loading ? (
-                  <div className="text-xs text-muted-foreground text-center py-4">טוען...</div>
-                ) : recentActivities.length > 0 ? (
-                  recentActivities.map((activity, index) => (
-                    <div key={index} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-muted/30 transition-colors">
-                      <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
-                        activity.color === 'primary' ? 'bg-students-fg' : 'bg-orchestras-fg'
-                      }`} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-foreground truncate">{activity.title}</p>
-                        <p className="text-xs text-muted-foreground truncate">{activity.description}</p>
-                        <p className="text-xs text-muted-foreground/60 mt-0.5">{activity.time}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-xs text-muted-foreground text-center py-4">אין פעילות אחרונה</div>
-                )}
-              </div>
-            </Card>
+            <MiniCalendarWidget />
+            <UpcomingEventsWidget events={upcomingEvents} loading={loading} />
+            <RecentActivityWidget activities={recentActivities} loading={loading} />
           </div>
         </div>
       )}

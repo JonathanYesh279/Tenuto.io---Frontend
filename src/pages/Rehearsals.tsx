@@ -12,7 +12,6 @@ import {
   MapPin,
   Eye,
   CheckCircle,
-  AlertTriangle,
   Download,
   Grid,
   List
@@ -22,6 +21,7 @@ import Table from '../components/ui/Table'
 import { SearchInput } from '../components/ui/SearchInput'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
+import { ErrorState } from '../components/feedback/ErrorState'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import Modal from '../components/ui/Modal'
 import RehearsalCalendar from '../components/RehearsalCalendar'
@@ -445,12 +445,10 @@ export default function Rehearsals() {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="flex items-center">
-            <AlertTriangle className="w-5 h-5 text-red-600 ml-2" />
-            <span className="text-red-800">{error}</span>
-          </div>
-        </div>
+        <ErrorState
+          message={error}
+          onRetry={loadData}
+        />
       )}
 
       {/* Filters */}

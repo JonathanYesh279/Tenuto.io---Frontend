@@ -112,51 +112,51 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOKEN-01 | — | Pending |
-| TOKEN-02 | — | Pending |
-| TOKEN-03 | — | Pending |
-| TOKEN-04 | — | Pending |
-| TOKEN-05 | — | Pending |
-| TYPO-01 | — | Pending |
-| TYPO-02 | — | Pending |
-| TYPO-03 | — | Pending |
-| TYPO-04 | — | Pending |
-| COLOR-01 | — | Pending |
-| COLOR-02 | — | Pending |
-| COLOR-03 | — | Pending |
-| COLOR-04 | — | Pending |
-| SURF-01 | — | Pending |
-| SURF-02 | — | Pending |
-| SURF-03 | — | Pending |
-| SURF-04 | — | Pending |
-| DENS-01 | — | Pending |
-| DENS-02 | — | Pending |
-| DENS-03 | — | Pending |
-| DENS-04 | — | Pending |
-| MOTN-01 | — | Pending |
-| MOTN-02 | — | Pending |
-| MOTN-03 | — | Pending |
-| MOTN-04 | — | Pending |
-| MOTN-05 | — | Pending |
-| PERS-01 | — | Pending |
-| PERS-02 | — | Pending |
-| PERS-03 | — | Pending |
-| PERS-04 | — | Pending |
-| PERS-05 | — | Pending |
-| COMP-01 | — | Pending |
-| COMP-02 | — | Pending |
-| COMP-03 | — | Pending |
-| COMP-04 | — | Pending |
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| DATA-01 | — | Pending |
-| DATA-02 | — | Pending |
+| TOKEN-01 | Phase 16 | Pending |
+| TOKEN-02 | Phase 16 | Pending |
+| TOKEN-03 | Phase 16 | Pending |
+| TOKEN-04 | Phase 16 | Pending |
+| TOKEN-05 | Phase 16 | Pending |
+| TYPO-01 | Phase 18 | Pending |
+| TYPO-02 | Phase 18 | Pending |
+| TYPO-03 | Phase 18 | Pending |
+| TYPO-04 | Phase 18 | Pending |
+| COLOR-01 | Phase 18 | Pending |
+| COLOR-02 | Phase 18 | Pending |
+| COLOR-03 | Phase 18 | Pending |
+| COLOR-04 | Phase 18 | Pending |
+| SURF-01 | Phase 21 | Pending |
+| SURF-02 | Phase 17 | Pending |
+| SURF-03 | Phase 17 | Pending |
+| SURF-04 | Phase 21 | Pending |
+| DENS-01 | Phase 21 | Pending |
+| DENS-02 | Phase 21 | Pending |
+| DENS-03 | Phase 21 | Pending |
+| DENS-04 | Phase 21 | Pending |
+| MOTN-01 | Phase 17 | Pending |
+| MOTN-02 | Phase 19 | Pending |
+| MOTN-03 | Phase 17 | Pending |
+| MOTN-04 | Phase 19 | Pending |
+| MOTN-05 | Phase 17 | Pending |
+| PERS-01 | Phase 20 | Pending |
+| PERS-02 | Phase 20 | Pending |
+| PERS-03 | Phase 20 | Pending |
+| PERS-04 | Phase 20 | Pending |
+| PERS-05 | Phase 20 | Pending |
+| COMP-01 | Phase 20 | Pending |
+| COMP-02 | Phase 20 | Pending |
+| COMP-03 | Phase 20 | Pending |
+| COMP-04 | Phase 20 | Pending |
+| NAV-01 | Phase 21 | Pending |
+| NAV-02 | Phase 21 | Pending |
+| DATA-01 | Phase 20 | Pending |
+| DATA-02 | Phase 20 | Pending |
 
 **Coverage:**
 - v2.1 requirements: 39 total
-- Mapped to phases: 0
-- Unmapped: 39 ⚠️
+- Mapped to phases: 39
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-18*
-*Last updated: 2026-02-18 after initial definition*
+*Last updated: 2026-02-18 after roadmap creation — all 39 requirements mapped to Phases 16-21*

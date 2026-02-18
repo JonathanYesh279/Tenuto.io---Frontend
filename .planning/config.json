@@ -1,7 +1,7 @@
 {
   "workflow": {
     "mode": "interactive",
-    "research": false,
+    "research": true,
     "plan_checker": true,
     "verifier": true
   },

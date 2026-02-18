@@ -260,7 +260,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center border-b border-gray-200 pb-4">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-foreground">
             {teacher ? 'עריכת מורה' : 'הוספת מורה חדש'}
           </h2>
           <button
@@ -273,8 +273,11 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
         </div>
 
         {/* Personal Information */}
-        <section>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">מידע אישי</h3>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1 h-6 bg-teachers-fg rounded-full" />
+            <h3 className="text-base font-semibold text-foreground">מידע אישי</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -404,11 +407,14 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               />
             </div>
           </div>
-        </section>
+        </div>
 
         {/* Roles */}
-        <section>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">תפקידים *</h3>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1 h-6 bg-teachers-fg rounded-full" />
+            <h3 className="text-base font-semibold text-foreground">תפקידים *</h3>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {VALID_ROLES.map((role) => (
               <label key={role} className="flex items-center space-x-3 cursor-pointer">
@@ -428,11 +434,14 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               {getFieldError('roles')}
             </div>
           )}
-        </section>
+        </div>
 
         {/* Professional Information */}
-        <section>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">מידע מקצועי</h3>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1 h-6 bg-teachers-fg rounded-full" />
+            <h3 className="text-base font-semibold text-foreground">מידע מקצועי</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -534,11 +543,14 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               </label>
             </div>
           </div>
-        </section>
+        </div>
 
         {/* Teaching Subjects */}
-        <section>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">מקצועות הוראה</h3>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1 h-6 bg-teachers-fg rounded-full" />
+            <h3 className="text-base font-semibold text-foreground">מקצועות הוראה</h3>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {TEACHING_SUBJECTS.map((subject) => (
               <label key={subject} className="flex items-center space-x-3 cursor-pointer">
@@ -557,11 +569,14 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               </label>
             ))}
           </div>
-        </section>
+        </div>
 
         {/* Credentials */}
-        <section>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטי התחברות</h3>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1 h-6 bg-teachers-fg rounded-full" />
+            <h3 className="text-base font-semibold text-foreground">פרטי התחברות</h3>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -607,11 +622,14 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               </div>
             )}
           </div>
-        </section>
+        </div>
 
         {/* Status */}
-        <section>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">סטטוס</h3>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1 h-6 bg-teachers-fg rounded-full" />
+            <h3 className="text-base font-semibold text-foreground">סטטוס</h3>
+          </div>
           <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
@@ -621,7 +639,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
             />
             <span className="text-sm text-gray-700">פעיל במערכת</span>
           </label>
-        </section>
+        </div>
 
         {/* Submit Buttons */}
         <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">

@@ -368,7 +368,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
         <form onSubmit={handleSubmit}>
           {/* Header */}
           <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-foreground">
               {studentId ? 'עריכת תלמיד' : 'הוספת תלמיד חדש'}
             </h2>
             <button 
@@ -389,8 +389,11 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
             )}
 
             {/* Personal Information */}
-            <Card padding="md">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטים אישיים</h3>
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-6 bg-students-fg rounded-full" />
+                <h3 className="text-base font-semibold text-foreground">פרטים אישיים</h3>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -567,12 +570,15 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   )}
                 </div>
               </div>
-            </Card>
+            </div>
 
             {/* Academic Information */}
-            <Card padding="md">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטים אקדמיים</h3>
-              
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-6 bg-students-fg rounded-full" />
+                <h3 className="text-base font-semibold text-foreground">פרטים אקדמיים</h3>
+              </div>
+
               {/* Class */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -898,11 +904,14 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   </p>
                 )}
               </div>
-            </Card>
+            </div>
 
             {/* Enrollments */}
-            <Card padding="md">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">הרשמות והשתייכויות</h3>
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-6 bg-students-fg rounded-full" />
+                <h3 className="text-base font-semibold text-foreground">הרשמות והשתייכויות</h3>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -936,11 +945,14 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
               <div className="mt-4 text-sm text-gray-600">
                 <p>הרשמות לתזמורות והרכבים יתווספו על ידי המנהל</p>
               </div>
-            </Card>
+            </div>
 
             {/* Status */}
-            <Card padding="md">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">סטטוס</h3>
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-6 bg-students-fg rounded-full" />
+                <h3 className="text-base font-semibold text-foreground">סטטוס</h3>
+              </div>
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -953,7 +965,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   תלמיד פעיל
                 </label>
               </div>
-            </Card>
+            </div>
           </div>
 
           {/* Footer */}

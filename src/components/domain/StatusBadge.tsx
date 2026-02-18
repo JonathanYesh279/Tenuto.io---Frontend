@@ -9,6 +9,10 @@ const STATUS_VARIANT_MAP: Record<string, BadgeVariant> = {
   'לא פעיל': 'inactive',
   'בוגר': 'graduated',
   'ממתין': 'pending',
+  'הושלם': 'completed',   // Bagruts — completed exam
+  'בתהליך': 'pending',    // Bagruts — in-progress (orange)
+  'הצלחה': 'active',      // AuditTrail — success (green)
+  'כשל': 'destructive',   // AuditTrail — failed (red)
 }
 
 interface StatusBadgeProps {

@@ -22,6 +22,7 @@ const badgeVariants = cva(
         inactive: "border-transparent bg-gray-100 text-gray-700",
         graduated: "border-transparent bg-purple-100 text-purple-800",
         pending: "border-transparent bg-orange-100 text-orange-800",
+        completed: "border-transparent bg-green-100 text-green-800",
       },
     },
     defaultVariants: {

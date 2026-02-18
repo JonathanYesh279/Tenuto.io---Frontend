@@ -57,11 +57,11 @@ Full details: `milestones/v2.0-ROADMAP.md`
   2. `tailwind.config.js` exposes `shadow-0` through `shadow-4` Tailwind utilities that map to the CSS shadow vars
   3. `src/lib/motionTokens.ts` exports named spring presets (`snappy`, `smooth`, `bouncy`) and duration/easing tokens usable by any animated component
   4. Every `primary-NNN` hardcoded hex class in TSX files is either migrated to the CSS var system or documented in a recorded inventory — no silent dual-system inconsistency remains
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 16-01: Token layer — CSS custom properties (surface scale, neutral scale, shadow scale, motion tokens)
-- [ ] 16-02: Tailwind mapping + motionTokens.ts + dual color system reconciliation
+- [ ] 16-01: CSS custom properties in :root (surface elevation scale, warm neutral scale, shadow scale)
+- [ ] 16-02: Tailwind shadow mapping, motionTokens.ts, dual color system inventory
 
 ---
 

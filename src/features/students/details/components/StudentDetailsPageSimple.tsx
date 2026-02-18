@@ -8,7 +8,9 @@ import { useState, useEffect } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
 import { ArrowRight, RefreshCw, User, GraduationCap, Calendar, CheckCircle, Music, BookOpen, FileText } from 'lucide-react'
 import { TabType } from '../types'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { DetailPageHeader } from '@/components/domain'
+import { AnimatePresence, motion } from 'framer-motion'
 import PersonalInfoTab from './tabs/PersonalInfoTabSimple'
 import AcademicInfoTab from './tabs/AcademicInfoTabSimple'
 import ScheduleTab from './tabs/ScheduleTab'
@@ -128,42 +130,28 @@ const StudentDetailsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600">
-        <button
-          onClick={() => navigate('/students')}
-          className="hover:text-primary-600 transition-colors"
-        >
-          תלמידים
-        </button>
-        <ArrowRight className="w-4 h-4 rotate-180" />
-        <span className="text-gray-900 font-medium">פרטי תלמיד</span>
-      </nav>
-
-      {/* Student Header - Simplified */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-start gap-6">
-          <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center">
-            <span className="text-2xl font-bold text-primary-600">
-              {getInitials(student.personalInfo) || '?'}
+      {/* Gradient header with breadcrumb, avatar, badges, updatedAt */}
+      <DetailPageHeader
+        firstName={student?.personalInfo?.firstName}
+        lastName={student?.personalInfo?.lastName}
+        fullName={student?.personalInfo?.fullName}
+        entityType="תלמיד"
+        breadcrumbLabel="תלמידים"
+        breadcrumbHref="/students"
+        updatedAt={student?.updatedAt}
+        badges={
+          <>
+            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              {student?.isActive ? 'פעיל' : 'לא פעיל'}
             </span>
-          </div>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              {getDisplayName(student.personalInfo) || 'שם לא זמין'}
-            </h1>
-            <div className="flex items-center gap-4 text-sm text-gray-600">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                student.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
-                {student.isActive ? 'פעיל' : 'לא פעיל'}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              כיתה {student?.academicInfo?.class || '-'}
+            </span>
+          </>
+        }
+      />
 
-      {/* Tab Navigation and Content — shadcn Tabs */}
+      {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
@@ -197,46 +185,33 @@ const StudentDetailsPage: React.FC = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="personal" className="mt-0">
-            <PersonalInfoTab
-              student={student}
-              studentId={studentId}
-              onStudentUpdate={handleStudentUpdate}
-            />
-          </TabsContent>
-          <TabsContent value="academic" className="mt-0">
-            <AcademicInfoTab
-              student={student}
-              studentId={studentId}
-              onStudentUpdate={handleStudentUpdate}
-            />
-          </TabsContent>
-          <TabsContent value="schedule" className="mt-0">
-            <ScheduleTab
-              student={student}
-              studentId={studentId}
-              isLoading={false}
-            />
-          </TabsContent>
-          <TabsContent value="attendance" className="mt-0">
-            <AttendanceTab student={student} />
-          </TabsContent>
-          <TabsContent value="orchestra" className="mt-0">
-            <OrchestraTab
-              student={student}
-              studentId={studentId}
-              isLoading={false}
-            />
-          </TabsContent>
-          <TabsContent value="theory" className="mt-0">
-            <TheoryTabOptimized
-              student={student}
-              studentId={studentId}
-            />
-          </TabsContent>
-          <TabsContent value="documents" className="mt-0">
-            <DocumentsTab student={student} />
-          </TabsContent>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {activeTab === 'personal' && (
+                <PersonalInfoTab student={student} studentId={studentId} onStudentUpdate={handleStudentUpdate} />
+              )}
+              {activeTab === 'academic' && (
+                <AcademicInfoTab student={student} studentId={studentId} onStudentUpdate={handleStudentUpdate} />
+              )}
+              {activeTab === 'schedule' && (
+                <ScheduleTab student={student} studentId={studentId} isLoading={false} />
+              )}
+              {activeTab === 'attendance' && <AttendanceTab student={student} />}
+              {activeTab === 'orchestra' && (
+                <OrchestraTab student={student} studentId={studentId} isLoading={false} />
+              )}
+              {activeTab === 'theory' && (
+                <TheoryTabOptimized student={student} studentId={studentId} />
+              )}
+              {activeTab === 'documents' && <DocumentsTab student={student} />}
+            </motion.div>
+          </AnimatePresence>
         </Tabs>
       </div>
     </div>

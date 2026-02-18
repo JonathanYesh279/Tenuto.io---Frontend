@@ -41,6 +41,31 @@
     --radius: 0.75rem;
     --sidebar: 220 25% 18%;
     --sidebar-foreground: 30 25% 97%;
+
+    /* Surface elevation scale (Phase 16 — TOKEN-01) */
+    --surface-base:     hsl(30 25% 97%);
+    --surface-raised:   hsl(30 20% 99%);
+    --surface-overlay:  hsl(0 0% 100%);
+    --surface-floating: hsl(0 0% 100%);
+
+    /* Warm neutral scale (Phase 16 — TOKEN-02) */
+    --neutral-50:  hsl(30 20% 98%);
+    --neutral-100: hsl(28 18% 95%);
+    --neutral-200: hsl(26 14% 90%);
+    --neutral-300: hsl(24 12% 82%);
+    --neutral-400: hsl(22 10% 68%);
+    --neutral-500: hsl(20 8% 52%);
+    --neutral-600: hsl(18 8% 40%);
+    --neutral-700: hsl(16 8% 30%);
+    --neutral-800: hsl(15 8% 20%);
+    --neutral-900: hsl(14 8% 12%);
+
+    /* Semantic shadow scale (Phase 16 — TOKEN-03) */
+    --shadow-0: none;
+    --shadow-1: 0 1px 2px 0 rgba(120, 60, 20, 0.06);
+    --shadow-2: 0 2px 6px -1px rgba(120, 60, 20, 0.10), 0 1px 4px -1px rgba(120, 60, 20, 0.06);
+    --shadow-3: 0 6px 16px -2px rgba(120, 60, 20, 0.12), 0 3px 8px -2px rgba(120, 60, 20, 0.08);
+    --shadow-4: 0 16px 40px -4px rgba(120, 60, 20, 0.16), 0 8px 16px -4px rgba(120, 60, 20, 0.10);
   }
 }
 

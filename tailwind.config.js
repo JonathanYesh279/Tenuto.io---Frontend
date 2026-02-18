@@ -36,6 +36,35 @@ export default {
         sidebar: {
           DEFAULT: "hsl(var(--sidebar))",
           foreground: "hsl(var(--sidebar-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          "active-bg": "hsl(var(--sidebar-active-bg))",
+          "active-fg": "hsl(var(--sidebar-active-fg))",
+          label: "hsl(var(--sidebar-label))",
+        },
+        // Entity color system (Phase 18 — multi-color pastel palette)
+        students: {
+          bg: "hsl(var(--color-students-bg))",
+          fg: "hsl(var(--color-students-fg))",
+        },
+        teachers: {
+          bg: "hsl(var(--color-teachers-bg))",
+          fg: "hsl(var(--color-teachers-fg))",
+        },
+        orchestras: {
+          bg: "hsl(var(--color-orchestras-bg))",
+          fg: "hsl(var(--color-orchestras-fg))",
+        },
+        rehearsals: {
+          bg: "hsl(var(--color-rehearsals-bg))",
+          fg: "hsl(var(--color-rehearsals-fg))",
+        },
+        bagrut: {
+          bg: "hsl(var(--color-bagrut-bg))",
+          fg: "hsl(var(--color-bagrut-fg))",
+        },
+        theory: {
+          bg: "hsl(var(--color-theory-bg))",
+          fg: "hsl(var(--color-theory-fg))",
         },
         // === Existing palettes with semantic tokens MERGED in ===
         // Modern professional blue theme (inspired by InsideBox design)

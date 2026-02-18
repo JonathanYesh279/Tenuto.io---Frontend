@@ -6,7 +6,8 @@ import {
   FileText, Calendar, User, Music, AlertCircle, XCircle
 } from 'lucide-react'
 import { Card } from '../components/ui/Card'
-import Table, { StatusBadge } from '../components/ui/Table'
+import Table from '../components/ui/Table'
+import { StatusBadge } from '../components/domain'
 import StatsCard from '../components/ui/StatsCard'
 import BagrutCard from '../components/BagrutCard'
 import SimplifiedBagrutForm from '../components/SimplifiedBagrutForm'
@@ -363,9 +364,9 @@ export default function Bagruts() {
       align: 'center' as const,
       render: (bagrut: any) => (
         bagrut.isCompleted ? (
-          <StatusBadge status="completed">הושלם</StatusBadge>
+          <StatusBadge status="הושלם" />
         ) : (
-          <StatusBadge status="pending">בתהליך</StatusBadge>
+          <StatusBadge status="בתהליך" />
         )
       )
     },

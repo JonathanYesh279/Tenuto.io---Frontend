@@ -3,7 +3,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus, Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users, GraduationCap } from 'lucide-react'
 import { clsx } from 'clsx'
 import { Card } from '../components/ui/Card'
-import Table, { StatusBadge } from '../components/ui/Table'
+import Table from '../components/ui/Table'
+import { Badge } from '../components/ui/badge'
+import { StatusBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/forms/StudentForm'
@@ -293,10 +295,8 @@ export default function Students() {
         instrument: student.primaryInstrument,
         stageLevel: student.currentStage,
         orchestra: student.orchestraIds?.length > 0 ? 'תזמורת' : 'ללא תזמורת',
-        grade: <StatusBadge status="completed">{student.class}</StatusBadge>,
-        status: <StatusBadge status={student.isActive ? "active" : "inactive"}>
-          {student.isActive ? 'פעיל' : 'לא פעיל'}
-        </StatusBadge>,
+        grade: <Badge variant="outline">{student.class}</Badge>,
+        status: <StatusBadge status={student.isActive ? 'פעיל' : 'לא פעיל'} />,
         teacherAssignments: student.teacherAssignments?.length || 0,
         rawData: {
           ...student,

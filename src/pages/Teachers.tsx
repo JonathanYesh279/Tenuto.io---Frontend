@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus, Filter, Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown } from 'lucide-react'
 import { Card } from '../components/ui/Card'
-import Table, { StatusBadge } from '../components/ui/Table'
+import Table from '../components/ui/Table'
+import { StatusBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import TeacherCard from '../components/TeacherCard'
 import AddTeacherModal from '../components/modals/AddTeacherModal'
@@ -194,9 +195,7 @@ export default function Teachers() {
         rawData: teacher, // Keep original data
         // Table display fields
         rolesDisplay: teacher.allRoles?.length > 0 ? teacher.allRoles.join(', ') : 'לא מוגדר',
-        status: <StatusBadge status={teacher.isTeacherActive ? "active" : "inactive"}>
-          {teacher.isTeacherActive ? 'פעיל' : 'לא פעיל'}
-        </StatusBadge>
+        status: <StatusBadge status={teacher.isTeacherActive ? 'פעיל' : 'לא פעיל'} />
       }))
 
       // Either append to existing teachers or replace them

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { adminAuditService } from '../services/apiService'
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import Table from '../components/ui/Table'
+import { StatusBadge } from '../components/domain'
 import Pagination from '../components/ui/Pagination'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import toast from 'react-hot-toast'
@@ -177,28 +178,13 @@ export default function AuditTrail() {
     return labels[type] || type
   }
 
-  const getStatusBadge = (status: string) => {
-    if (status === 'success') {
-      return (
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-          הצלחה
-        </span>
-      )
-    }
-    return (
-      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-        כשל
-      </span>
-    )
-  }
-
   const deletionLogColumns = [
     { key: 'timestamp', label: 'תאריך', render: (row: any) => formatDate(row.timestamp) },
     { key: 'action', label: 'פעולה' },
     { key: 'entityType', label: 'סוג', render: (row: any) => getEntityTypeLabel(row.entityType) },
     { key: 'entityName', label: 'שם' },
     { key: 'adminName', label: 'מנהל', render: (row: any) => row.performedBy?.adminName || '-' },
-    { key: 'status', label: 'סטטוס', render: (row: any) => getStatusBadge(row.status) },
+    { key: 'status', label: 'סטטוס', render: (row: any) => <StatusBadge status={row.status === 'success' ? 'הצלחה' : 'כשל'} /> },
   ]
 
   const pastActivitiesColumns = [

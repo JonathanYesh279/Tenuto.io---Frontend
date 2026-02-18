@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.1 Cleanup & Polish** — Phases 1-5 (shipped 2026-02-14)
-- 🔧 **v2.0 UI/UX Redesign** — Phases 6-15 (gap closure in progress)
+- ✅ **v2.0 UI/UX Redesign** — Phases 6-15 (shipped 2026-02-18)
 
 ## Phases
 
@@ -20,7 +20,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 
 </details>
 
-### 🔧 v2.0 UI/UX Redesign (Gap Closure)
+### ✅ v2.0 UI/UX Redesign
 
 **Milestone Goal:** Transform Tenuto from a generic admin template into a polished, premium music school management platform with warm Monday.com-inspired aesthetics, shadcn/ui components, and Hebrew RTL correctness throughout.
 
@@ -33,7 +33,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
 - [x] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
 - [x] **Phase 14: Requirement Gap Closure** — Student detail routing, StatusBadge wiring, Rehearsals ErrorState
-- [ ] **Phase 15: Tech Debt Sweep** — AuditTrail ErrorState, Dashboard tokens, InstrumentBadge, RTL padding
+- [x] **Phase 15: Tech Debt Sweep** — AuditTrail ErrorState, Dashboard tokens, InstrumentBadge, RTL padding
 
 ## Phase Details
 
@@ -195,7 +195,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 15-01-PLAN.md — AuditTrail ErrorState, Dashboard token verify, InstrumentBadge wiring, RTL logical padding
+- [x] 15-01-PLAN.md — AuditTrail ErrorState, Dashboard token verify, InstrumentBadge wiring, RTL logical padding
 
 ## Progress
 
@@ -215,8 +215,8 @@ Plans:
 | 12. Layout & Dashboard | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 13. Special Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 14. Requirement Gap Closure | v2.0 | 3/3 | Complete | 2026-02-18 |
-| 15. Tech Debt Sweep | v2.0 | 0/? | Pending | — |
+| 15. Tech Debt Sweep | v2.0 | 1/1 | Complete | 2026-02-18 |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 (Phase 14 complete — gap closure executed)*
+*Last updated: 2026-02-18 (Phase 15 complete — v2.0 milestone shipped)*

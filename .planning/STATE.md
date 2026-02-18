@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 ## Current Position
 
 Phase: 11 of 13 ([v2.0] Detail Pages) — IN PROGRESS
-Plan: 1 of 3 in current phase — COMPLETE
-Status: Phase 11 Plan 1 complete. Teacher and Student detail pages have gradient headers + tab fade. Ready for Plan 2 (Orchestra detail page).
-Last activity: 2026-02-18 — Phase 11 Plan 1 execution complete
+Plan: 2 of 3 in current phase — COMPLETE
+Status: Phase 11 Plan 2 complete. Orchestra and Bagrut detail pages now have gradient headers + tab fade. All 4 entity detail pages use DetailPageHeader. Ready for Plan 3.
+Last activity: 2026-02-18 — Phase 11 Plan 2 execution complete
 
 Progress: [███████░░░] 67% (v2.0) — [██████████] 100% (v1.1 complete)
 
@@ -41,6 +41,7 @@ Progress: [███████░░░] 67% (v2.0) — [███████
 | v2.0 Phase 10 Plan 1 | 1 | 8min | 8 min |
 | v2.0 Phase 10 Plan 2 | 1 | 3min | 3 min |
 | v2.0 Phase 11 Plan 1 | 1 | 4min | 4 min |
+| v2.0 Phase 11 Plan 2 | 1 | 2min | 2 min |
 
 *Updated after each plan completion*
 
@@ -98,10 +99,14 @@ Progress: [███████░░░] 67% (v2.0) — [███████
 - [11-01]: getAvatarColorClasses uses charcode sum modulo 8 — simple, deterministic, no external dependency
 - [11-01]: DetailPageHeader children slot for action buttons — keeps student delete buttons below header without coupling
 - [11-01]: AvatarInitials colorClassName prop is additive — fallback to bg-primary/10 text-primary when not provided
+- [11-02]: Orchestra passes fullName={orchestra?.name} only — DetailPageHeader getDisplayName handles single-name strings
+- [11-02]: Bagrut action buttons preserved in separate row below header, not merged into header (matches StudentDetailsPage pattern)
+- [11-02]: BagrutDetails custom Tab component untouched — only tab content area wrapped with AnimatePresence
+- [11-02]: Teacher badge in Bagrut header conditionally rendered — prevents flash of undefined when teacher loads async
 
 ### Pending Todos
 
-None for Phase 11 Plan 1. Phase 11 Plan 2 is next: Orchestra detail page upgrade.
+None for Phase 11 Plan 2. Phase 11 Plan 3 is next (if any) or Phase 12 (Layout Shell).
 
 ### Blockers/Concerns
 
@@ -113,5 +118,5 @@ None for Phase 11 Plan 1. Phase 11 Plan 2 is next: Orchestra detail page upgrade
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 11 Plan 1 complete. DetailPageHeader + tab fade wired into Teacher and Student detail pages.
+Stopped at: Phase 11 Plan 2 complete. DetailPageHeader + tab fade wired into Orchestra and Bagrut detail pages. All 4 entity detail pages now use consistent gradient headers.
 Resume file: None

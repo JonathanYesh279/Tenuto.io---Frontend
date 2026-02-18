@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 
 ## Current Position
 
-Phase: 14 of 15 ([v2.0] Requirement Gap Closure) — COMPLETE
-Plan: 3 of 3 in current phase — all plans complete
-Status: Phase 14 complete. All 3 gap closure plans executed: 14-01 (StudentDetailsPageSimple DetailPageHeader+AnimatePresence, closes DETAIL-01–05), 14-02 (StatusBadge Hebrew variants for all statuses), 14-03 (Rehearsals ErrorState with retry, closes LOAD-04). Phase 15 (tech debt) is next.
-Last activity: 2026-02-18 — Plan 14-03 executed
+Phase: 15 of 15 ([v2.0] Tech Debt Sweep) — IN PROGRESS
+Plan: 1 of ? in current phase — 15-01 complete
+Status: Phase 15 underway. 15-01 executed: AuditTrail ErrorState, Dashboard tokens confirmed, InstrumentBadge wired to Teachers/Students list columns, mobile tab nav ps-4 pe-4 RTL padding. 5 files modified, zero new files. v2.0 tech debt items closed.
+Last activity: 2026-02-18 — Plan 15-01 executed
 
-Progress: [█████████░] 93% (v2.0 — 14/15 phases) — [██████████] 100% (v1.1 complete)
+Progress: [██████████] 97% (v2.0 — 15/15 phases in progress) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Progress: [█████████░] 93% (v2.0 — 14/15 phases) — [█�
 | v2.0 Phase 14 Plan 1 | 1 | 2min | 2 min |
 | v2.0 Phase 14 Plan 2 | 1 | 4min | 4 min |
 | v2.0 Phase 14 Plan 3 | 1 | 2min | 2 min |
+| v2.0 Phase 15 Plan 1 | 1 | 12min | 12 min |
 
 *Updated after each plan completion*
 
@@ -130,10 +131,14 @@ Progress: [█████████░] 93% (v2.0 — 14/15 phases) — [█�
 - [14-02]: AuditTrail maps API English values ('success'/'failed') to Hebrew at call site — keeps STATUS_VARIANT_MAP Hebrew-only
 - [14-02]: Table.tsx StatusBadge preserved for PresentationTracker — migration deferred to Phase 15
 - [14-03]: AlertTriangle import removed when replacing inline error block — cleanup correct since it was exclusively used in that block; pre-existing TS errors in Table component usage are unrelated to change
+- [15-01]: AuditTrail AlertTriangle and RefreshCw removed from lucide imports as they were exclusively used in the replaced inline error block
+- [15-01]: SC2 Dashboard tokens confirmed already resolved in Phase 12-02 — no code change required for Weekly Summary area
+- [15-01]: InstrumentBadge render uses conditional — shows badge when instrument exists and is not 'לא צוין', otherwise shows muted fallback span
+- [15-01]: RTL padding — only mobile nav <nav> element changed to ps-4 pe-4; individual button px-4 inside nav left unchanged (symmetric button padding, correct as-is)
 
 ### Pending Todos
 
-Phase 15 (tech debt cleanup) is the final remaining phase of v2.0.
+Phase 15 Plan 01 complete. If additional plans exist in Phase 15, they are next. Otherwise v2.0 is complete.
 
 ### Blockers/Concerns
 
@@ -145,5 +150,5 @@ Phase 15 (tech debt cleanup) is the final remaining phase of v2.0.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 14-03-PLAN.md — Phase 14 fully complete. All 3 gap closure plans done. Next: Phase 15 (tech debt).
+Stopped at: Completed 15-01-PLAN.md — AuditTrail ErrorState, InstrumentBadge wired to list pages, RTL padding fixes. Phase 15 Plan 1 of ? done.
 Resume file: None

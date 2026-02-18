@@ -30,7 +30,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
 - [x] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
 - [x] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
-- [ ] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
+- [x] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
 - [ ] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
 
 ## Phase Details
@@ -145,8 +145,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Sidebar dark warm background + NavLink active state + Header/Layout design tokens
-- [ ] 12-02-PLAN.md — Dashboard personalized greeting + StatsCard warm palette + design token colors
+- [x] 12-01-PLAN.md — Sidebar dark warm background + NavLink active state + Header/Layout design tokens
+- [x] 12-02-PLAN.md — Dashboard personalized greeting + StatsCard warm palette + design token colors
 
 ### Phase 13: Special Pages
 **Goal:** Admin-only pages (MinistryReports, ImportData, Settings), auth pages (Login, ForgotPassword), and AuditTrail receive consistent design system application including step indicators, print styles, and any remaining polish.
@@ -179,9 +179,9 @@ Plans:
 | 9. Form System | v2.0 | 3/3 | Complete | 2026-02-18 |
 | 10. List Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 11. Detail Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
-| 12. Layout & Dashboard | v2.0 | 0/2 | Not started | - |
+| 12. Layout & Dashboard | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 13. Special Pages | v2.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 (Phase 11 Detail Pages complete)*
+*Last updated: 2026-02-18 (Phase 12 Layout & Dashboard complete)*

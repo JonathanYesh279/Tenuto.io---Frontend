@@ -142,11 +142,11 @@ Plans:
   3. The dashboard header reads "בוקר טוב, יונה" (personalized greeting using the logged-in user's name from auth context)
   4. Dashboard stat cards use warm design system colors with purposeful icons (GraduationCap for students, Music for orchestras, etc.) — not gray generic icons
   5. A first-time visitor to the dashboard immediately perceives this as a music school platform — not a generic business admin tool
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 12-01: Sidebar and header redesign
-- [ ] 12-02: Dashboard redesign
+- [ ] 12-01-PLAN.md — Sidebar dark warm background + NavLink active state + Header/Layout design tokens
+- [ ] 12-02-PLAN.md — Dashboard personalized greeting + StatsCard warm palette + design token colors
 
 ### Phase 13: Special Pages
 **Goal:** Admin-only pages (MinistryReports, ImportData, Settings), auth pages (Login, ForgotPassword), and AuditTrail receive consistent design system application including step indicators, print styles, and any remaining polish.

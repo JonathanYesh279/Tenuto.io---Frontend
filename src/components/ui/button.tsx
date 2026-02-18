@@ -1,8 +1,10 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import { motion, useReducedMotion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
+import { snappy } from "@/lib/motionTokens"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -41,9 +43,22 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+    const shouldReduceMotion = useReducedMotion() ?? false
+
+    if (!asChild) {
+      return (
+        <motion.button
+          ref={ref}
+          className={cn(buttonVariants({ variant, size, className }))}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+          transition={snappy}
+          {...(props as React.ComponentProps<"button">)}
+        />
+      )
+    }
+
     return (
-      <Comp
+      <Slot
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}

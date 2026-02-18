@@ -158,11 +158,11 @@ Plans:
   3. Navigating through ImportData shows the same step progress indicator pattern as MinistryReports — visually consistent between the two flows
   4. Printing a MinistryReports page hides the sidebar and header, shows clean report formatting with no navigation chrome
   5. The Settings page uses consistent card/form patterns matching the design system — no one-off layout
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 13-01: MinistryReports, ImportData step indicators and print styles
-- [ ] 13-02: Login, Settings, AuditTrail, final polish
+- [ ] 13-01-PLAN.md — Auth pages warm branding (Login/ForgotPassword/ResetPassword) + Settings shadcn Input + AuditTrail token swaps
+- [ ] 13-02-PLAN.md — MinistryReports step indicator + ImportData step indicator + print styles + Layout print wiring
 
 ## Progress
 

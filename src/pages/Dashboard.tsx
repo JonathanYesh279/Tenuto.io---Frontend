@@ -250,6 +250,18 @@ export default function Dashboard() {
 
   const userRole = getUserRole()
 
+  const getTimeGreeting = (): string => {
+    const hour = new Date().getHours()
+    if (hour >= 5 && hour < 12) return 'בוקר טוב'
+    if (hour >= 12 && hour < 17) return 'צהריים טובים'
+    if (hour >= 17 && hour < 21) return 'ערב טוב'
+    return 'לילה טוב'
+  }
+
+  const userFirstName = user?.personalInfo?.firstName
+    || getDisplayName(user?.personalInfo)?.split(' ')[0]
+    || 'מנהל'
+
   // Super admin gets a dedicated dashboard (can't use regular tenant-scoped APIs)
   if (user?.isSuperAdmin) {
     return <SuperAdminDashboard />
@@ -282,8 +294,10 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">לוח בקרה</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-foreground">
+            {getTimeGreeting()}, {userFirstName}
+          </h1>
+          <p className="text-sm text-muted-foreground">
             {currentSchoolYear?.name || 'שנת לימודים נוכחית'} |
             עדכון אחרון: {lastRefresh.toLocaleTimeString('he-IL')}
           </p>
@@ -291,7 +305,7 @@ export default function Dashboard() {
         <button
           onClick={handleRefresh}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 text-sm bg-card border border-border rounded-lg hover:bg-muted disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           רענן נתונים
@@ -299,7 +313,7 @@ export default function Dashboard() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white border border-gray-200 rounded-lg mb-6 p-1 flex overflow-x-auto">
+      <div className="bg-card border border-border rounded-lg mb-6 p-1 flex overflow-x-auto">
         {tabs.map(tab => {
           const Icon = tab.icon
           return (
@@ -308,8 +322,8 @@ export default function Dashboard() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -350,7 +364,7 @@ export default function Dashboard() {
               value={loading ? "..." : stats.activeOrchestras.toString()}
               subtitle="תזמורות וקבוצות"
               icon={<Music />}
-              color="purple"
+              color="teal"
             />
 
             <StatsCard
@@ -403,29 +417,29 @@ export default function Dashboard() {
             <div className="lg:col-span-2">
               <Card>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">פעילות אחרונה</h3>
-                  <button className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+                  <h3 className="text-lg font-semibold text-foreground">פעילות אחרונה</h3>
+                  <button className="text-sm text-primary hover:text-primary/80 font-medium">
                     צפה בהכל
                   </button>
                 </div>
                 <div className="space-y-4">
                   {loading ? (
-                    <div className="text-center py-8 text-gray-500">טוען...</div>
+                    <div className="text-center py-8 text-muted-foreground">טוען...</div>
                   ) : recentActivities.length > 0 ? (
                     recentActivities.map((activity, index) => (
                       <div key={index} className="flex items-start">
-                        <div className={`w-2 h-2 ${activity.color === 'primary' ? 'bg-blue-500' : activity.color === 'success' ? 'bg-green-500' : 'bg-orange-500'} rounded-full mt-2 ml-4`}></div>
+                        <div className={`w-2 h-2 ${activity.color === 'primary' ? 'bg-primary' : activity.color === 'success' ? 'bg-success-500' : 'bg-accent'} rounded-full mt-2 ml-4`}></div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-                            <span className="text-xs text-gray-500">{activity.time}</span>
+                            <p className="text-sm font-medium text-foreground">{activity.title}</p>
+                            <span className="text-xs text-muted-foreground">{activity.time}</span>
                           </div>
-                          <p className="text-sm text-gray-600">{activity.description}</p>
+                          <p className="text-sm text-muted-foreground">{activity.description}</p>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-8 text-gray-500">אין פעילות אחרונה</div>
+                    <div className="text-center py-8 text-muted-foreground">אין פעילות אחרונה</div>
                   )}
                 </div>
               </Card>
@@ -435,32 +449,32 @@ export default function Dashboard() {
             <div>
               <Card>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">אירועים קרובים</h3>
+                  <h3 className="text-lg font-semibold text-foreground">אירועים קרובים</h3>
                 </div>
                 <div className="space-y-4">
                   {loading ? (
-                    <div className="text-center py-8 text-gray-500">טוען...</div>
+                    <div className="text-center py-8 text-muted-foreground">טוען...</div>
                   ) : upcomingEvents.length > 0 ? (
                     upcomingEvents.map((event, index) => (
                       <div
                         key={index}
-                        className={`p-4 rounded-lg ${event.isPrimary ? 'bg-primary-50 border border-primary-100' : 'bg-gray-50'}`}
+                        className={`p-4 rounded-lg ${event.isPrimary ? 'bg-primary/10 border border-primary/20' : 'bg-muted/50'}`}
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <p className={`text-sm font-medium ${event.isPrimary ? 'text-primary-900' : 'text-gray-900'}`}>
+                          <p className={`text-sm font-medium ${event.isPrimary ? 'text-primary' : 'text-foreground'}`}>
                             {event.title}
                           </p>
-                          <span className={`text-xs ${event.isPrimary ? 'text-primary-600' : 'text-gray-500'}`}>
+                          <span className={`text-xs ${event.isPrimary ? 'text-primary/80' : 'text-muted-foreground'}`}>
                             {event.date}
                           </span>
                         </div>
-                        <p className={`text-sm ${event.isPrimary ? 'text-primary-700' : 'text-gray-600'}`}>
+                        <p className={`text-sm ${event.isPrimary ? 'text-primary/90' : 'text-muted-foreground'}`}>
                           {event.description}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-8 text-gray-500">אין אירועים קרובים</div>
+                    <div className="text-center py-8 text-muted-foreground">אין אירועים קרובים</div>
                   )}
                 </div>
               </Card>
@@ -488,14 +502,14 @@ export default function Dashboard() {
               schoolYearId={currentSchoolYear?._id}
             />
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">סיכום שבועי</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">סיכום שבועי</h3>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <Music className="w-5 h-5 text-blue-600" />
-                    <span className="text-gray-700">חזרות תזמורת</span>
+                    <Music className="w-5 h-5 text-primary" />
+                    <span className="text-foreground/80">חזרות תזמורת</span>
                   </div>
-                  <span className="text-xl font-bold text-blue-600">{stats.weeklyRehearsals}</span>
+                  <span className="text-xl font-bold text-primary">{stats.weeklyRehearsals}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
                   <div className="flex items-center gap-3">

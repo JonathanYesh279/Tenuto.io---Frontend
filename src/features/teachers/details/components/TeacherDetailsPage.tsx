@@ -167,16 +167,17 @@ const TeacherDetailsPage: React.FC = () => {
         lastName={teacher?.personalInfo?.lastName}
         fullName={teacher?.personalInfo?.fullName}
         entityType="מורה"
+        entityColor="teachers"
         breadcrumbLabel="מורים"
         breadcrumbHref="/teachers"
         updatedAt={teacher?.updatedAt}
         badges={
           <>
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+            <span className="px-3 py-1 bg-teachers-fg/10 text-teachers-fg rounded-full text-sm font-medium">
               {teacher?.professionalInfo?.instrument || 'ללא כלי'}
             </span>
             {teacher?.roles?.map((role: string) => (
-              <span key={role} className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              <span key={role} className="px-3 py-1 bg-teachers-fg/10 text-teachers-fg rounded-full text-sm font-medium">
                 {role}
               </span>
             ))}
@@ -188,25 +189,25 @@ const TeacherDetailsPage: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TeacherTabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto">
-            <TabsTrigger value="personal" className="gap-2 inline-flex items-center">
+            <TabsTrigger value="personal" className="gap-2 inline-flex items-center data-[state=active]:bg-teachers-bg data-[state=active]:text-teachers-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
               <User className="h-4 w-4" />
               מידע אישי
             </TabsTrigger>
-            <TabsTrigger value="students" className="gap-2 inline-flex items-center">
+            <TabsTrigger value="students" className="gap-2 inline-flex items-center data-[state=active]:bg-teachers-bg data-[state=active]:text-teachers-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
               <Users className="h-4 w-4" />
               ניהול תלמידים
             </TabsTrigger>
-            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center">
+            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center data-[state=active]:bg-teachers-bg data-[state=active]:text-teachers-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
               <Calendar className="h-4 w-4" />
               לוח זמנים
             </TabsTrigger>
             {showConductingTab && (
-              <TabsTrigger value="conducting" className="gap-2 inline-flex items-center">
+              <TabsTrigger value="conducting" className="gap-2 inline-flex items-center data-[state=active]:bg-teachers-bg data-[state=active]:text-teachers-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <Music className="h-4 w-4" />
                 ניצוח
               </TabsTrigger>
             )}
-            <TabsTrigger value="hours" className="gap-2 inline-flex items-center">
+            <TabsTrigger value="hours" className="gap-2 inline-flex items-center data-[state=active]:bg-teachers-bg data-[state=active]:text-teachers-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
               <Clock className="h-4 w-4" />
               שעות שבועיות
             </TabsTrigger>

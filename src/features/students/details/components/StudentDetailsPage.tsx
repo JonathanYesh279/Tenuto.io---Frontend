@@ -360,15 +360,16 @@ const StudentDetailsPage: React.FC = () => {
           lastName={student?.personalInfo?.lastName}
           fullName={student?.personalInfo?.fullName}
           entityType="תלמיד"
+          entityColor="students"
           breadcrumbLabel="תלמידים"
           breadcrumbHref="/students"
           updatedAt={student?.updatedAt}
           badges={
             <>
-              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              <span className="px-3 py-1 bg-students-fg/10 text-students-fg rounded-full text-sm font-medium">
                 כיתה {student?.academicInfo?.class || '-'}
               </span>
-              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              <span className="px-3 py-1 bg-students-fg/10 text-students-fg rounded-full text-sm font-medium">
                 {student?.primaryInstrument || 'ללא כלי'}
               </span>
             </>
@@ -437,35 +438,35 @@ const StudentDetailsPage: React.FC = () => {
             className="w-full"
           >
             <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
-              <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <User className="h-4 w-4" />
                 פרטים אישיים
               </TabsTrigger>
-              <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <GraduationCap className="h-4 w-4" />
                 מידע אקדמי
               </TabsTrigger>
-              <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <Calendar className="h-4 w-4" />
                 לוח זמנים
               </TabsTrigger>
-              <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <CheckCircle className="h-4 w-4" />
                 נוכחות
               </TabsTrigger>
-              <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <Music className="h-4 w-4" />
                 תזמורות
               </TabsTrigger>
-              <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <BookOpen className="h-4 w-4" />
                 תאוריה
               </TabsTrigger>
-              <TabsTrigger value="bagrut" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="bagrut" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <Award className="h-4 w-4" />
                 בגרות
               </TabsTrigger>
-              <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap">
+              <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
                 <FileText className="h-4 w-4" />
                 מסמכים
               </TabsTrigger>

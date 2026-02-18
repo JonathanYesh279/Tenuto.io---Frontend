@@ -155,15 +155,16 @@ const OrchestraDetailsPage: React.FC = () => {
       <DetailPageHeader
         fullName={orchestra?.name}
         entityType="תזמורת"
+        entityColor="orchestras"
         breadcrumbLabel="תזמורות"
         breadcrumbHref="/orchestras"
         updatedAt={orchestra?.updatedAt}
         badges={
           <>
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+            <span className="px-3 py-1 bg-orchestras-fg/10 text-orchestras-fg rounded-full text-sm font-medium">
               {orchestra?.type || 'תזמורת'}
             </span>
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+            <span className="px-3 py-1 bg-orchestras-fg/10 text-orchestras-fg rounded-full text-sm font-medium">
               {orchestra?.memberIds?.length || 0} חברים
             </span>
           </>
@@ -174,15 +175,15 @@ const OrchestraDetailsPage: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as OrchestraTabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6">
-            <TabsTrigger value="personal" className="gap-2 inline-flex items-center">
+            <TabsTrigger value="personal" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
               <Info className="h-4 w-4" />
               פרטי תזמורת
             </TabsTrigger>
-            <TabsTrigger value="members" className="gap-2 inline-flex items-center">
+            <TabsTrigger value="members" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
               <Users className="h-4 w-4" />
               חברי תזמורת
             </TabsTrigger>
-            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center">
+            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
               <Calendar className="h-4 w-4" />
               לוח זמנים
             </TabsTrigger>

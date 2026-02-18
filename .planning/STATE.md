@@ -16,18 +16,18 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 18 in progress (Layout Shell and Color System Reset)
-Plan: 18-01 complete — ready for 18-02 (Sidebar restyle)
-Status: Plan 18-01 executed — entity color tokens + white sidebar tokens in CSS vars + Tailwind
-Last activity: 2026-02-18 — 18-01 complete: 12 entity color vars, sidebar tokens, background update
+Plan: 18-03 complete — ready for next plan in Phase 18
+Status: Plan 18-03 executed — Header bg-white, StatsCard entity color system with coloredBg prop
+Last activity: 2026-02-18 — 18-03 complete: Header whitened, StatsCard entity colors + coloredBg
 
-Progress: [████░░░░░░] 38% (v2.1, 5/13 plans)
+Progress: [████░░░░░░] 46% (v2.1, 6/13 plans)
 
 ## Performance Metrics
 
 **Velocity (cumulative):**
 - v1.1: 5 phases, 7 plans, ~3.5 hours
 - v2.0: 10 phases, 22 plans, ~2.3 hours
-- Total: 15 phases, 29 plans
+- Total: 15 phases, 30 plans
 
 ## Accumulated Context
 
@@ -36,6 +36,9 @@ Progress: [████░░░░░░] 38% (v2.1, 5/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [18-03]: Header uses bg-white (not bg-card) — bg-card has warm HSL tint that contrasts poorly with new cooler --background; white header creates clean visual zone separation
+- [18-03]: StatsCard coloredBg prop applies entity iconBg class to Card wrapper — Card uses cn() so it merges correctly; opt-in for full-card tinting
+- [18-03]: StatsCard entity color entries use Tailwind utility names (bg-students-bg, text-students-fg) not direct CSS var() — consistent token consumption pattern
 - [18-01]: Entity color vars use raw HSL channel format (no hsl() wrapper) — consumed via hsl(var(--color-*)) in Tailwind, consistent with Phase 16 pattern
 - [18-01]: --sidebar-active-bg/fg intentionally mirrors students entity violet (252 80% 94%) as the visual anchor for active nav state
 - [18-01]: --background updated from warm 30 25% 97% to cooler 210 17% 98% — harmonizes with cool pastel entity palette
@@ -56,7 +59,7 @@ Key decisions affecting v2.1:
 
 ### Pending Todos
 
-(None — Phase 17 complete)
+(None)
 
 ### Blockers/Concerns
 
@@ -75,9 +78,10 @@ Key decisions affecting v2.1:
 | 17    | 01   | 2 min    | 2     | 3     |
 | 17    | 02   | 2 min    | 2     | 2     |
 | 18    | 01   | 3 min    | 2     | 2     |
+| 18    | 03   | 1 min    | 2     | 2     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 18-01 execution complete — entity color tokens + sidebar tokens defined
+Stopped at: Completed 18-03-PLAN.md — layout shell + StatsCard entity colors
 Resume file: None

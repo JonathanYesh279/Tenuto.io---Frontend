@@ -98,9 +98,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 18-01: Multi-color pastel token system — entity color CSS vars in :root, sidebar token updates, Tailwind config mapping
-- [ ] 18-02: Light sidebar — restyle Sidebar.tsx from dark to white, logo zone, active pill, white-surface-appropriate colors
-- [ ] 18-03: Layout shell, header, and StatsCard — content bg update, header restyle, entity color system for stat cards
+- [x] 18-01: Multi-color pastel token system — entity color CSS vars in :root, sidebar token updates, Tailwind config mapping
+- [x] 18-02: Light sidebar — restyle Sidebar.tsx from dark to white, logo zone, active pill, white-surface-appropriate colors
+- [x] 18-03: Layout shell, header, and StatsCard — content bg update, header restyle, entity color system for stat cards
 
 ---
 
@@ -182,11 +182,11 @@ Plans:
 | 15. Tech Debt Sweep | v2.0 | 1/1 | Complete | 2026-02-18 |
 | 16. Token Foundation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 17. Primitive Component Layer | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 18. Layout Shell and Color System Reset | v2.1 | 0/3 | Not started | — |
+| 18. Layout Shell and Color System Reset | v2.1 | 3/3 | Complete | 2026-02-18 |
 | 19. Dashboard Transformation | v2.1 | 0/2 | Not started | — |
 | 20. List Pages and Table System | v2.1 | 0/2 | Not started | — |
 | 21. Detail Pages and Forms | v2.1 | 0/2 | Not started | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 — Phases 18-21 rewritten for full structural redesign (SchoolHub reference)*
+*Last updated: 2026-02-18 — Phase 18 complete (layout shell and color system reset)*

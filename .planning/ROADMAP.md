@@ -76,11 +76,11 @@ Plans:
   3. Primary action buttons have spring-based press feedback (`whileTap` scale reduction) using the `snappy` preset from motionTokens.ts
   4. Modal open and close use spring physics (not linear fade) — the entrance feels physical
   5. All Framer Motion animations on these primitives are gated by `useReducedMotion()` — users with reduced motion preference see instant state changes
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 17-01: Card, button, badge — shadow tokens, spring press, density variants
-- [ ] 17-02: Dialog, tabs, input — modal spring entrance, focus ring standardization
+- [ ] 17-01: Card, button, badge — shadow tokens, spring press, badge shadow-1
+- [ ] 17-02: Dialog, tabs, input — spring entrance, shadow-4 elevation, focus ring verification
 
 ---
 

@@ -5,13 +5,12 @@ import Table from '../components/ui/Table'
 import { StatusBadge } from '../components/domain'
 import Pagination from '../components/ui/Pagination'
 import { TableSkeleton } from '../components/feedback/Skeleton'
+import { ErrorState } from '../components/feedback/ErrorState'
 import toast from 'react-hot-toast'
 import {
   Shield,
   Calendar,
-  AlertTriangle,
   FileText,
-  RefreshCw,
 } from 'lucide-react'
 
 type ActiveTab = 'deletion-log' | 'past-activities'
@@ -230,19 +229,10 @@ export default function AuditTrail() {
 
       {/* Error State */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-600" />
-            <p className="text-red-800">{error}</p>
-          </div>
-          <button
-            onClick={handleRetry}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-          >
-            <RefreshCw className="w-4 h-4" />
-            נסה שוב
-          </button>
-        </div>
+        <ErrorState
+          message={error}
+          onRetry={handleRetry}
+        />
       )}
 
       {/* Deletion Log Tab */}

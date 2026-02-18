@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 19 in progress (Dashboard Transformation)
-Plan: 19-01 complete — 2/N plans done
-Status: Plan 19-01 executed — 3-column grid layout + entity-colored stat cards + stagger animation done
-Last activity: 2026-02-18 — 19-01 executed: Dashboard 3-column grid, StatsCard enhancements, framer-motion stagger
+Plan: 19-02 complete — 3/N plans done
+Status: Plan 19-02 executed — widget components (MiniCalendarWidget, UpcomingEventsWidget, RecentActivityWidget) wired into Dashboard right column
+Last activity: 2026-02-18 — 19-02 executed: Dashboard widget components extracted, right column populated
 
-Progress: [█████░░░░░] 62% (v2.1, 8/13 plans)
+Progress: [█████░░░░░] 69% (v2.1, 9/13 plans)
 
 ## Performance Metrics
 
@@ -36,6 +36,9 @@ Progress: [█████░░░░░] 62% (v2.1, 8/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [19-02]: MiniCalendarWidget renders Calendar.tsx directly without outer Card wrapper — Calendar.tsx already renders its own Card; double-wrapping creates nested cards
+- [19-02]: Widget components are pure props-down (no hooks, no data fetching) — Dashboard.tsx owns all state via loadDashboardData()
+- [19-02]: listVariants staggerChildren: 0.05 (50ms) for widget list items — shorter than stat card stagger (80ms) since list items are smaller UI targets
 - [19-01]: StatsCard trend pill uses colors.iconBg (entity pastel) as pill background — deeper-tint chip on colored surface without new color values
 - [19-01]: lg:grid-cols-[1fr_300px] not xl — content area ~1086px with sidebar open, lg triggers at correct width
 - [19-01]: DOM order places main content first (renders right in RTL), widgets second (renders left) — correct Hebrew reading flow, no CSS direction hacks
@@ -87,9 +90,10 @@ Key decisions affecting v2.1:
 | 18    | 02   | 2 min    | 2     | 1     |
 | 18    | 03   | 1 min    | 2     | 2     |
 | 19    | 01   | 7 min    | 2     | 2     |
+| 19    | 02   | 5 min    | 2     | 5     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 19-01-PLAN.md — Dashboard 3-column grid and StatsCard enhancements
+Stopped at: Completed 19-02-PLAN.md — Dashboard widget components (MiniCalendarWidget, UpcomingEventsWidget, RecentActivityWidget)
 Resume file: None

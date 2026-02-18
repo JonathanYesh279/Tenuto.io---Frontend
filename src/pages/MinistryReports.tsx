@@ -3,6 +3,7 @@ import { exportService, schoolYearService } from '../services/apiService'
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import StatsCard from '../components/ui/StatsCard'
 import { Progress } from '../components/ui/progress'
+import { StepProgress } from '../components/feedback/ProgressIndicators'
 import toast from 'react-hot-toast'
 import {
   FileText,
@@ -163,6 +164,36 @@ export default function MinistryReports() {
     }
   }
 
+  const getMinistrySteps = () => {
+    const steps = [
+      {
+        id: 'year',
+        label: 'בחר שנה',
+        description: 'שנת לימודים',
+        status: selectedYear ? 'completed' as const : 'current' as const,
+      },
+      {
+        id: 'validate',
+        label: 'בדוק סטטוס',
+        description: 'נתונים ואימות',
+        status: (!selectedYear
+          ? 'pending' as const
+          : endpointsAvailable && (status?.preExportErrors?.length ?? 0) === 0
+            ? 'completed' as const
+            : 'current' as const),
+      },
+      {
+        id: 'download',
+        label: 'הורד דוח',
+        description: 'ייצוא למשרד',
+        status: (endpointsAvailable && (status?.missing?.length === 0) && validation?.isValid
+          ? 'current' as const
+          : 'pending' as const),
+      },
+    ]
+    return steps
+  }
+
   // Group missing items by type
   const groupedMissing = (status?.missing || []).reduce<Record<string, MissingItem[]>>((acc, item) => {
     const type = item.type || 'other'
@@ -187,7 +218,7 @@ export default function MinistryReports() {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <div className="text-gray-600">טוען נתוני דוחות...</div>
         </div>
       </div>
@@ -202,7 +233,7 @@ export default function MinistryReports() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-            <FileText className="w-5 h-5 text-primary-600" />
+            <FileText className="w-5 h-5 text-primary" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">דוחות משרד החינוך</h1>
@@ -234,7 +265,7 @@ export default function MinistryReports() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white"
+            className="w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-ring focus:border-ring bg-white"
           >
             {schoolYears.map((year) => (
               <option key={year._id} value={year._id}>
@@ -244,6 +275,14 @@ export default function MinistryReports() {
           </select>
         </div>
       )}
+
+      {/* Step Progress Indicator */}
+      <div className="mb-6">
+        <StepProgress
+          steps={getMinistrySteps()}
+          direction="horizontal"
+        />
+      </div>
 
       {/* Export Service Unavailable Banner */}
       {!endpointsAvailable && (
@@ -268,7 +307,7 @@ export default function MinistryReports() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-medium text-gray-700">אחוז השלמה כולל</span>
-              <span className="text-2xl font-bold text-primary-600">{completionPct}%</span>
+              <span className="text-2xl font-bold text-primary">{completionPct}%</span>
             </div>
             <Progress value={completionPct} />
             <p className="text-xs text-gray-500 mt-2">
@@ -463,7 +502,7 @@ export default function MinistryReports() {
         <button
           onClick={handleDownload}
           disabled={downloading || !endpointsAvailable || (status?.preExportErrors?.length ?? 0) > 0}
-          className="flex items-center gap-2 px-8 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium shadow-sm"
+          className="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium shadow-sm"
         >
           <Download className="w-5 h-5" />
           {downloading ? 'מוריד...' : 'הורד דוח מלא'}

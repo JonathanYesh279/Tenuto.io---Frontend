@@ -95,12 +95,12 @@ Plans:
   3. Content area background is white or very light gray — the overall page feel is light and airy, not warm/dark
   4. Layout shell has clear visual zoning — sidebar, header, and content area are distinct regions with intentional separation
   5. The app is visually unrecognizable compared to v2.0 — the color system, sidebar, and overall feel have fundamentally changed
-**Plans:** TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 18-01: Light sidebar — restyle Sidebar.tsx from dark warm to white/light, grouped nav sections, active pill, brand logo
-- [ ] 18-02: Multi-color pastel token system — entity color assignments in CSS vars, Tailwind mapping, replace coral-dominant palette
-- [ ] 18-03: Layout shell and header — content area zoning, header restyle, light backgrounds, overall structural separation
+- [ ] 18-01: Multi-color pastel token system — entity color CSS vars in :root, sidebar token updates, Tailwind config mapping
+- [ ] 18-02: Light sidebar — restyle Sidebar.tsx from dark to white, logo zone, active pill, white-surface-appropriate colors
+- [ ] 18-03: Layout shell, header, and StatsCard — content bg update, header restyle, entity color system for stat cards
 
 ---
 

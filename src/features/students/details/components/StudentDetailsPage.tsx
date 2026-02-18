@@ -12,7 +12,9 @@ import {
   User, GraduationCap, Calendar, CheckCircle, Music, BookOpen, Award, FileText
 } from 'lucide-react'
 import { TabType } from '../types'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { DetailPageHeader } from '@/components/domain'
+import { AnimatePresence, motion } from 'framer-motion'
 import PersonalInfoTab from './tabs/PersonalInfoTabSimple'
 import AcademicInfoTab from './tabs/AcademicInfoTabSimple'
 import ScheduleTab from './tabs/ScheduleTab'
@@ -352,75 +354,64 @@ const StudentDetailsPage: React.FC = () => {
           </div>
         )}
 
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-gray-600">
+        {/* Gradient header with breadcrumb, avatar, badges, updatedAt */}
+        <DetailPageHeader
+          firstName={student?.personalInfo?.firstName}
+          lastName={student?.personalInfo?.lastName}
+          fullName={student?.personalInfo?.fullName}
+          entityType="תלמיד"
+          breadcrumbLabel="תלמידים"
+          breadcrumbHref="/students"
+          updatedAt={student?.updatedAt}
+          badges={
+            <>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+                כיתה {student?.academicInfo?.class || '-'}
+              </span>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+                {student?.primaryInstrument || 'ללא כלי'}
+              </span>
+            </>
+          }
+        />
+
+        {/* Action buttons */}
+        <div className="flex items-center gap-2 justify-end">
           <button
-            onClick={() => navigate('/students')}
-            className="hover:text-primary-600 transition-colors"
+            onClick={handleToggleImpactSummary}
+            className={`p-2 rounded-lg transition-colors ${
+              showImpactSummary
+                ? 'bg-blue-100 text-blue-700'
+                : 'text-blue-600 hover:bg-blue-50'
+            }`}
+            title="הצג/הסתר השפעת מחיקה"
           >
-            תלמידים
+            <Database className="w-5 h-5" />
           </button>
-          <span>{'>'}</span>
-          <span className="text-gray-900">
-            {getDisplayName(student?.personalInfo) || 'פרטי תלמיד'}
-          </span>
-        </nav>
 
-        {/* Student Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                <span className="text-xl text-primary-600">👤</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {getDisplayName(student?.personalInfo) || 'טוען...'}
-                </h1>
-                <p className="text-gray-600">
-                  כיתה {student?.academicInfo?.class || '-'} | {student?.primaryInstrument || 'ללא כלי'}
-                </p>
-              </div>
-            </div>
-            {/* Action buttons */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleToggleImpactSummary}
-                className={`p-2 rounded-lg transition-colors ${
-                  showImpactSummary
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-blue-600 hover:bg-blue-50'
-                }`}
-                title="הצג/הסתר השפעת מחיקה"
-              >
-                <Database className="w-5 h-5" />
-              </button>
+          <button
+            onClick={handleCheckReferences}
+            className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+            title="בדוק תלויות ומחיקה"
+          >
+            <AlertTriangle className="w-5 h-5" />
+          </button>
 
-              <button
-                onClick={handleCheckReferences}
-                className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                title="בדוק תלויות ומחיקה"
-              >
-                <AlertTriangle className="w-5 h-5" />
-              </button>
+          <button
+            onClick={handleSafeDeleteClick}
+            className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+            title="מחיקה מאובטחת"
+          >
+            <Shield className="w-5 h-5" />
+          </button>
 
-              <button
-                onClick={handleSafeDeleteClick}
-                className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
-                title="מחיקה מאובטחת"
-              >
-                <Shield className="w-5 h-5" />
-              </button>
-
-              <button
-                onClick={handleDeleteClick}
-                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                title="מחיקה רגילה"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+          <button
+            onClick={handleDeleteClick}
+            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            title="מחיקה רגילה"
+          >
+            <Trash2 className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Deletion Impact Summary */}
@@ -431,7 +422,7 @@ const StudentDetailsPage: React.FC = () => {
           onClose={() => setShowImpactSummary(false)}
         />
 
-        {/* Tab Navigation and Content — shadcn Tabs with 8-tab overflow handling */}
+        {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
           <Tabs
             value={activeTab}
@@ -480,69 +471,79 @@ const StudentDetailsPage: React.FC = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="personal" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <PersonalInfoTab
-                  student={student}
-                  studentId={studentId}
-                  onStudentUpdate={handleStudentUpdate}
-                />
-              </Suspense>
-            </TabsContent>
-            <TabsContent value="academic" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <AcademicInfoTab
-                  student={student}
-                  studentId={studentId}
-                  onStudentUpdate={handleStudentUpdate}
-                />
-              </Suspense>
-            </TabsContent>
-            <TabsContent value="schedule" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <ScheduleTab
-                  student={student}
-                  studentId={studentId}
-                  isLoading={false}
-                />
-              </Suspense>
-            </TabsContent>
-            <TabsContent value="attendance" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <AttendanceTab student={student} />
-              </Suspense>
-            </TabsContent>
-            <TabsContent value="orchestra" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <OrchestraTab
-                  student={student}
-                  studentId={studentId}
-                  isLoading={false}
-                />
-              </Suspense>
-            </TabsContent>
-            <TabsContent value="theory" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <TheoryTabOptimized
-                  student={student}
-                  studentId={studentId}
-                />
-              </Suspense>
-            </TabsContent>
-            <TabsContent value="bagrut" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <BagrutTab
-                  student={student}
-                  studentId={studentId}
-                  onStudentUpdate={handleStudentUpdate}
-                />
-              </Suspense>
-            </TabsContent>
-            <TabsContent value="documents" className="mt-0 min-h-96">
-              <Suspense fallback={<TabLoadingFallback />}>
-                <DocumentsTab student={student} />
-              </Suspense>
-            </TabsContent>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {activeTab === 'personal' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <PersonalInfoTab
+                      student={student}
+                      studentId={studentId}
+                      onStudentUpdate={handleStudentUpdate}
+                    />
+                  </Suspense>
+                )}
+                {activeTab === 'academic' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <AcademicInfoTab
+                      student={student}
+                      studentId={studentId}
+                      onStudentUpdate={handleStudentUpdate}
+                    />
+                  </Suspense>
+                )}
+                {activeTab === 'schedule' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <ScheduleTab
+                      student={student}
+                      studentId={studentId}
+                      isLoading={false}
+                    />
+                  </Suspense>
+                )}
+                {activeTab === 'attendance' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <AttendanceTab student={student} />
+                  </Suspense>
+                )}
+                {activeTab === 'orchestra' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <OrchestraTab
+                      student={student}
+                      studentId={studentId}
+                      isLoading={false}
+                    />
+                  </Suspense>
+                )}
+                {activeTab === 'theory' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <TheoryTabOptimized
+                      student={student}
+                      studentId={studentId}
+                    />
+                  </Suspense>
+                )}
+                {activeTab === 'bagrut' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <BagrutTab
+                      student={student}
+                      studentId={studentId}
+                      onStudentUpdate={handleStudentUpdate}
+                    />
+                  </Suspense>
+                )}
+                {activeTab === 'documents' && (
+                  <Suspense fallback={<TabLoadingFallback />}>
+                    <DocumentsTab student={student} />
+                  </Suspense>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </Tabs>
         </div>
       </div>

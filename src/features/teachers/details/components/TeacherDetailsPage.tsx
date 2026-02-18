@@ -9,7 +9,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
 import { ArrowRight, RefreshCw, User, Users, Calendar, Music, Clock } from 'lucide-react'
 import { TeacherTabType } from '../types'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { DetailPageHeader } from '@/components/domain'
+import { AnimatePresence, motion } from 'framer-motion'
 import PersonalInfoTab from './tabs/PersonalInfoTab'
 import StudentManagementTab from './tabs/StudentManagementTab'
 import ScheduleTab from './tabs/ScheduleTab'
@@ -159,43 +161,30 @@ const TeacherDetailsPage: React.FC = () => {
   return (
     <div className="space-y-6 bg-white min-h-screen teacher-details-container teacher-content-area">
 
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600">
-        <button
-          onClick={() => navigate('/teachers')}
-          className="hover:text-primary-600 transition-colors"
-        >
-          מורים
-        </button>
-        <span>{'>'}</span>
-        <span className="text-gray-900">
-          {getDisplayName(teacher?.personalInfo) || 'פרטי מורה'}
-        </span>
-      </nav>
+      {/* Gradient header with breadcrumb, avatar, badges, updatedAt */}
+      <DetailPageHeader
+        firstName={teacher?.personalInfo?.firstName}
+        lastName={teacher?.personalInfo?.lastName}
+        fullName={teacher?.personalInfo?.fullName}
+        entityType="מורה"
+        breadcrumbLabel="מורים"
+        breadcrumbHref="/teachers"
+        updatedAt={teacher?.updatedAt}
+        badges={
+          <>
+            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              {teacher?.professionalInfo?.instrument || 'ללא כלי'}
+            </span>
+            {teacher?.roles?.map((role: string) => (
+              <span key={role} className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+                {role}
+              </span>
+            ))}
+          </>
+        }
+      />
 
-      {/* Teacher Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-            <span className="text-xl text-primary-600">👨‍🏫</span>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {getDisplayName(teacher?.personalInfo) || 'טוען...'}
-            </h1>
-            <p className="text-gray-600">
-              {teacher?.professionalInfo?.instrument || 'ללא כלי'} | {teacher?.roles?.join(', ') || 'מורה'}
-            </p>
-          </div>
-          {teacher?.conducting?.orchestraIds?.length > 0 && (
-            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-              מנצח
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Tab Navigation and Content — shadcn Tabs */}
+      {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TeacherTabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto">
@@ -223,23 +212,31 @@ const TeacherDetailsPage: React.FC = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="personal" className="mt-0">
-            <PersonalInfoTab teacher={teacher} teacherId={teacherId} />
-          </TabsContent>
-          <TabsContent value="students" className="mt-0">
-            <StudentManagementTab teacher={teacher} teacherId={teacherId} />
-          </TabsContent>
-          <TabsContent value="schedule" className="mt-0">
-            <ScheduleTab teacher={teacher} teacherId={teacherId} />
-          </TabsContent>
-          {showConductingTab && (
-            <TabsContent value="conducting" className="mt-0">
-              <ConductingTab teacher={teacher} teacherId={teacherId} />
-            </TabsContent>
-          )}
-          <TabsContent value="hours" className="mt-0">
-            <HoursSummaryTab teacher={teacher} teacherId={teacherId} />
-          </TabsContent>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {activeTab === 'personal' && (
+                <PersonalInfoTab teacher={teacher} teacherId={teacherId} />
+              )}
+              {activeTab === 'students' && (
+                <StudentManagementTab teacher={teacher} teacherId={teacherId} />
+              )}
+              {activeTab === 'schedule' && (
+                <ScheduleTab teacher={teacher} teacherId={teacherId} />
+              )}
+              {activeTab === 'conducting' && showConductingTab && (
+                <ConductingTab teacher={teacher} teacherId={teacherId} />
+              )}
+              {activeTab === 'hours' && (
+                <HoursSummaryTab teacher={teacher} teacherId={teacherId} />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </Tabs>
       </div>
     </div>

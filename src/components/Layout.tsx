@@ -41,7 +41,7 @@ export default function Layout({ children }: LayoutProps) {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen bg-background" dir="rtl">
       {/* Sidebar - Show for all users with roles */}
       {shouldShowSidebar && <Sidebar />}
 
@@ -50,12 +50,12 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main Content - Adjust margin based on sidebar presence and state */}
       <main
-        className="mt-16 ml-0 p-0 bg-gray-50 min-h-[calc(100vh-64px)] rtl transition-all duration-300"
+        className="mt-16 ml-0 p-0 bg-background min-h-[calc(100vh-64px)] rtl transition-all duration-300"
         style={{
           marginRight: shouldShowSidebar && !isMobile && isDesktopOpen ? '280px' : '0'
         }}
       >
-        <div className="p-6 bg-gray-50 animate-fade-in">
+        <div className="p-6 bg-background animate-fade-in">
           {children}
         </div>
       </main>

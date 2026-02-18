@@ -99,7 +99,7 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between z-[45] transition-all duration-300"
+      className="fixed top-0 left-0 h-16 bg-card border-b border-border flex items-center justify-between z-[45] transition-all duration-300"
       style={{
         direction: 'rtl',
         width: hasSidebar && !isMobile && isDesktopOpen ? 'calc(100% - 280px)' : '100%',
@@ -128,10 +128,10 @@ export default function Header() {
             {!isAdmin && (
               <button
                 onClick={handleDashboardClick}
-                className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center hover:bg-primary/15 hover:border-primary/30 transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 title="לוח בקרה"
               >
-                <Home className="w-5 h-5 text-indigo-600" />
+                <Home className="w-5 h-5 text-primary" />
               </button>
             )}
           </>
@@ -141,7 +141,7 @@ export default function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center hover:bg-indigo-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               aria-label="תפריט פרופיל"
             >
               <span className="text-sm font-semibold text-white font-reisinger-yonatan">
@@ -152,7 +152,7 @@ export default function Header() {
 
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuLabel className="font-normal">
-              <div className="font-medium text-sm text-gray-700 font-reisinger-yonatan">
+              <div className="font-medium text-sm text-foreground font-reisinger-yonatan">
                 {getUserFullName()}
               </div>
               <div className="text-xs text-muted-foreground mt-0.5">

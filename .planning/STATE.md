@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.0 Phase 11 — Detail Pages (next)
+**Current focus:** v2.0 Phase 11 — Detail Pages (in progress, Plan 1 complete)
 
 ## Current Position
 
-Phase: 10 of 13 ([v2.0] List Pages) — COMPLETE (verified)
-Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase 10 verified (10/10 must-haves passed). Ready for Phase 11.
-Last activity: 2026-02-18 — Phase 10 execution complete + verified
+Phase: 11 of 13 ([v2.0] Detail Pages) — IN PROGRESS
+Plan: 1 of 3 in current phase — COMPLETE
+Status: Phase 11 Plan 1 complete. Teacher and Student detail pages have gradient headers + tab fade. Ready for Plan 2 (Orchestra detail page).
+Last activity: 2026-02-18 — Phase 11 Plan 1 execution complete
 
-Progress: [██████░░░░] 63% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [███████░░░] 67% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 18 (7 v1.1 + 11 v2.0)
-- Average duration: ~18 min
+- Total plans completed: 19 (7 v1.1 + 12 v2.0)
+- Average duration: ~17 min
 - Total execution time: ~5.4 hours
 
 **By Phase:**
@@ -40,6 +40,7 @@ Progress: [██████░░░░] 63% (v2.0) — [███████
 | v2.0 Phase 9 Plan 3 | 1 | 6min | 6 min |
 | v2.0 Phase 10 Plan 1 | 1 | 8min | 8 min |
 | v2.0 Phase 10 Plan 2 | 1 | 3min | 3 min |
+| v2.0 Phase 11 Plan 1 | 1 | 4min | 4 min |
 
 *Updated after each plan completion*
 
@@ -93,10 +94,14 @@ Progress: [██████░░░░] 63% (v2.0) — [███████
 - [10-01]: SearchInput RTL positions: right-3 for search icon (visual start), left-2 for clear X (visual end)
 - [10-02]: AuditTrail column arrays defined inside component function (not module scope) — helpers are component-scoped methods
 - [10-02]: Rehearsals empty state IIFE pattern for hasActiveFilters — avoids variable declaration outside JSX
+- [11-01]: AnimatePresence + conditional rendering replaces Radix TabsContent — avoids hidden-panel DOM accumulation
+- [11-01]: getAvatarColorClasses uses charcode sum modulo 8 — simple, deterministic, no external dependency
+- [11-01]: DetailPageHeader children slot for action buttons — keeps student delete buttons below header without coupling
+- [11-01]: AvatarInitials colorClassName prop is additive — fallback to bg-primary/10 text-primary when not provided
 
 ### Pending Todos
 
-None for Phase 10. Phase 11 is next: detail pages with gradient headers, avatars, breadcrumbs.
+None for Phase 11 Plan 1. Phase 11 Plan 2 is next: Orchestra detail page upgrade.
 
 ### Blockers/Concerns
 
@@ -108,5 +113,5 @@ None for Phase 10. Phase 11 is next: detail pages with gradient headers, avatars
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 10 complete + verified (10/10 must-haves). ROADMAP.md updated. Ready for Phase 11 planning.
+Stopped at: Phase 11 Plan 1 complete. DetailPageHeader + tab fade wired into Teacher and Student detail pages.
 Resume file: None

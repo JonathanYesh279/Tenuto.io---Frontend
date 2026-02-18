@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 20 in progress (List Pages and Table System)
-Plan: 1 of 3 complete — ListPageHero component + Table density upgrade
-Status: Plan 20-01 complete — ready for Plan 20-02 (wire hero into list pages)
-Last activity: 2026-02-18 — Plan 20-01 executed: ListPageHero shared component, Table.tsx density upgrade
+Plan: 2 of 3 complete — ListPageHero wired into Teachers, Students, Orchestras pages
+Status: Plan 20-02 complete — ready for Plan 20-03 (if planned) or phase complete
+Last activity: 2026-02-18 — Plan 20-02 executed: Teachers/Students/Orchestras restructured with hero zone, compact toolbar, avatar columns
 
-Progress: [███████░░░] 77% (v2.1, 10/13 plans)
+Progress: [████████░░] 85% (v2.1, 11/13 plans)
 
 ## Performance Metrics
 
@@ -36,6 +36,9 @@ Progress: [███████░░░] 77% (v2.1, 10/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [20-02]: Add buttons moved from filter toolbars to ListPageHero action prop — hero zone owns primary action across all list pages
+- [20-02]: Orchestras view toggle uses bg-orchestras-fg active state (entity color, not primary-500) — aligns with entity-colored visual identity
+- [20-02]: Orchestras data area Card wrapper removed — hero zone provides visual anchor, table/grid renders directly
 - [20-01]: ListPageHero uses ENTITY_STYLES static const lookup (not string interpolation) — ensures Tailwind does not tree-shake entity color classes
 - [20-01]: Table maxHeight calc(100vh-380px) — accounts for hero zone (~180px) + filter bar + pagination; prevents table clip with hero zone present
 - [20-01]: Table action buttons icon-only (p-1.5, w-4 h-4) — text labels as title tooltip for accessibility, not rendered inline
@@ -96,9 +99,10 @@ Key decisions affecting v2.1:
 | 19    | 01   | 7 min    | 2     | 2     |
 | 19    | 02   | 5 min    | 2     | 5     |
 | 20    | 01   | 4 min    | 2     | 2     |
+| 20    | 02   | 6 min    | 3     | 3     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Plan 20-01 complete — ListPageHero + Table density upgrade committed
+Stopped at: Plan 20-02 complete — Teachers/Students/Orchestras pages restructured with hero zone
 Resume file: None

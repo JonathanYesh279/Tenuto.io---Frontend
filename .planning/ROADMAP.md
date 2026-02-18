@@ -32,7 +32,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
 - [x] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
 - [x] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
-- [ ] **Phase 14: Requirement Gap Closure** — Student detail routing, StatusBadge wiring, Rehearsals ErrorState
+- [x] **Phase 14: Requirement Gap Closure** — Student detail routing, StatusBadge wiring, Rehearsals ErrorState
 - [ ] **Phase 15: Tech Debt Sweep** — AuditTrail ErrorState, Dashboard tokens, InstrumentBadge, RTL padding
 
 ## Phase Details
@@ -211,9 +211,9 @@ Plans:
 | 11. Detail Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 12. Layout & Dashboard | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 13. Special Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
-| 14. Requirement Gap Closure | v2.0 | 0/3 | Pending | — |
+| 14. Requirement Gap Closure | v2.0 | 3/3 | Complete | 2026-02-18 |
 | 15. Tech Debt Sweep | v2.0 | 0/? | Pending | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 (Phases 14-15 added for gap closure after milestone audit)*
+*Last updated: 2026-02-18 (Phase 14 complete — gap closure executed)*

@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, Filter, Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown } from 'lucide-react'
+import { Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown, UserCheck, Clock, GraduationCap } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
-import { StatusBadge, InstrumentBadge } from '../components/domain'
+import { ListPageHero } from '../components/ui/ListPageHero'
+import { StatusBadge, InstrumentBadge, AvatarInitials } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import TeacherCard from '../components/TeacherCard'
 import AddTeacherModal from '../components/modals/AddTeacherModal'
@@ -220,16 +221,16 @@ export default function Teachers() {
       setScheduleLoading(true)
       const teacher = teachers.find(t => t.id === teacherId)
       setSelectedTeacher(teacher)
-      
+
       const response = await apiService.teachers.getTeacherWeeklySchedule(teacherId)
-      
+
       // Process response data
       const scheduleByDay = {}
       if (response.schedule) {
         response.schedule.forEach(lesson => {
           const day = lesson.day
           if (!scheduleByDay[day]) scheduleByDay[day] = []
-          
+
           scheduleByDay[day].push({
             lessonId: lesson.lessonId,
             studentId: lesson.studentId,
@@ -243,7 +244,7 @@ export default function Teachers() {
           })
         })
       }
-      
+
       setScheduleData(scheduleByDay)
     } catch (error) {
       console.error('Error loading teacher schedule:', error)
@@ -372,7 +373,7 @@ export default function Teachers() {
   const handleInstrumentSearchChange = (value: string) => {
     setInstrumentSearchTerm(value)
     setShowInstrumentDropdown(true)
-    
+
     // If the input is cleared, clear the filter
     if (value === '') {
       setFilters(prev => ({ ...prev, instrument: '' }))
@@ -401,16 +402,33 @@ export default function Teachers() {
   const totalTeachers = totalTeachersCount > 0 ? totalTeachersCount : teachers.length
   const activeTeachers = teachers.filter(t => t.isActive).length
   const totalStudents = teachers.reduce((sum, t) => sum + t.studentCount, 0)
-  const avgStudentsPerTeacher = totalTeachers > 0 ? (totalStudents / totalTeachers).toFixed(1) : 0
-
-  // Additional statistics from enhanced data (based on loaded teachers only)
   const teachersWithAvailability = teachers.filter(t => t.hasTimeBlocks).length
-  const totalTeachingHours = teachers.reduce((sum, t) => sum + t.totalTeachingHours, 0)
-  const teachersWithOrchestras = teachers.filter(t => t.orchestraCount > 0).length
+
+  // Hero metrics — 4 entity-colored stat cards
+  const heroMetrics = [
+    { title: 'סה״כ מורים', value: totalTeachers, icon: <Users className="w-5 h-5" /> },
+    { title: 'פעילים', value: activeTeachers, icon: <UserCheck className="w-5 h-5" /> },
+    { title: 'סה״כ תלמידים', value: totalStudents, icon: <GraduationCap className="w-5 h-5" /> },
+    { title: 'עם זמינות', value: teachersWithAvailability, icon: <Clock className="w-5 h-5" /> },
+  ]
 
   // Table columns definition
   const columns = [
-    { key: 'name', header: 'שם המורה' },
+    {
+      key: 'name',
+      header: 'שם המורה',
+      render: (row: any) => (
+        <div className="flex items-center gap-3">
+          <AvatarInitials
+            firstName={row.rawData?.personalInfo?.firstName}
+            lastName={row.rawData?.personalInfo?.lastName}
+            size="sm"
+            colorClassName="bg-teachers-bg text-teachers-fg"
+          />
+          <span className="font-medium text-gray-900">{row.name}</span>
+        </div>
+      )
+    },
     {
       key: 'specialization',
       header: 'התמחות',
@@ -470,7 +488,7 @@ export default function Teachers() {
     const hebrewDays = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי']
 
     return (
-      <div 
+      <div
         className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         style={{
           position: 'fixed !important',
@@ -490,7 +508,7 @@ export default function Teachers() {
               <h2 className="text-2xl font-bold text-gray-900">
                 לוח זמנים - {selectedTeacher.name}
               </h2>
-              <button 
+              <button
                 onClick={handleCloseSchedule}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -558,148 +576,94 @@ export default function Teachers() {
   return (
     <div>
       {renderSchedule()}
-      {/* Search and Filters Container */}
-      <Card className="mb-6" padding="md">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <SearchInput
-              value={searchTerm}
-              onChange={(value) => setSearchTerm(value)}
-              onClear={() => setSearchTerm('')}
-              placeholder="חיפוש מורים..."
-              isLoading={searchLoading}
-            />
-          </div>
-          <div className="flex gap-3">
-            {/* Instrument Filter - Searchable */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="חפש כלי נגינה..."
-                value={instrumentSearchTerm}
-                onChange={(e) => handleInstrumentSearchChange(e.target.value)}
-                onFocus={() => setShowInstrumentDropdown(true)}
-                onBlur={() => {
-                  // Delay hiding dropdown to allow click events
-                  setTimeout(() => setShowInstrumentDropdown(false), 200)
-                }}
-                className="w-48 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500"
-              />
-              
-              {/* Clear button */}
-              {instrumentSearchTerm && (
+
+      {/* Hero Stats Zone */}
+      <ListPageHero
+        title="מורים"
+        entityColor="teachers"
+        metrics={heroMetrics}
+        action={isUserAdmin(user) ? {
+          label: 'הוסף מורה',
+          onClick: handleAddTeacher
+        } : undefined}
+      />
+
+      {/* Compact Filter Toolbar */}
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <div className="w-64 flex-none">
+          <SearchInput
+            value={searchTerm}
+            onChange={(value) => setSearchTerm(value)}
+            onClear={() => setSearchTerm('')}
+            placeholder="חיפוש מורים..."
+            isLoading={searchLoading}
+          />
+        </div>
+        {/* Instrument searchable dropdown */}
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="כלי נגינה..."
+            value={instrumentSearchTerm}
+            onChange={(e) => handleInstrumentSearchChange(e.target.value)}
+            onFocus={() => setShowInstrumentDropdown(true)}
+            onBlur={() => setTimeout(() => setShowInstrumentDropdown(false), 200)}
+            className="w-40 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500"
+          />
+          {instrumentSearchTerm && (
+            <button
+              onClick={() => { setInstrumentSearchTerm(''); setFilters(prev => ({ ...prev, instrument: '' })); setShowInstrumentDropdown(false) }}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          )}
+          {showInstrumentDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50 direction-rtl">
+              {/* "All instruments" option */}
+              <button
+                onClick={() => handleInstrumentSelect('', 'כל הכלים')}
+                className={`w-full text-right px-3 py-2 hover:bg-gray-50 border-b border-gray-100 direction-rtl ${
+                  filters.instrument === '' ? 'bg-primary-50 text-primary-600' : 'text-gray-900'
+                }`}
+              >
+                כל הכלים
+              </button>
+              {filteredInstruments.map(instrument => (
                 <button
-                  onClick={() => {
-                    setInstrumentSearchTerm('')
-                    setFilters(prev => ({ ...prev, instrument: '' }))
-                    setShowInstrumentDropdown(false)
-                  }}
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  key={instrument}
+                  onClick={() => handleInstrumentSelect(instrument, instrument)}
+                  className={`w-full text-right px-3 py-2 hover:bg-gray-50 direction-rtl ${
+                    filters.instrument === instrument ? 'bg-primary-50 text-primary-600' : 'text-gray-900'
+                  }`}
                 >
-                  <X className="w-4 h-4" />
+                  {instrument}
                 </button>
-              )}
-              
-              {/* Dropdown */}
-              {showInstrumentDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50 direction-rtl">
-                  {/* "All instruments" option */}
-                  <button
-                    onClick={() => handleInstrumentSelect('', 'כל הכלים')}
-                    className={`w-full text-right px-3 py-2 hover:bg-gray-50 border-b border-gray-100 direction-rtl ${
-                      filters.instrument === '' ? 'bg-primary-50 text-primary-600' : 'text-gray-900'
-                    }`}
-                  >
-                    כל הכלים
-                  </button>
-                  
-                  {/* Instrument options */}
-                  {filteredInstruments.map(instrument => (
-                    <button
-                      key={instrument}
-                      onClick={() => handleInstrumentSelect(instrument, instrument)}
-                      className={`w-full text-right px-3 py-2 hover:bg-gray-50 direction-rtl ${
-                        filters.instrument === instrument ? 'bg-primary-50 text-primary-600' : 'text-gray-900'
-                      }`}
-                    >
-                      {instrument}
-                    </button>
-                  ))}
-                  
-                  {filteredInstruments.length === 0 && instrumentSearchTerm && (
-                    <div className="px-3 py-2 text-gray-500 text-center">
-                      לא נמצאו כלים
-                    </div>
-                  )}
+              ))}
+              {filteredInstruments.length === 0 && instrumentSearchTerm && (
+                <div className="px-3 py-2 text-gray-500 text-center">
+                  לא נמצאו כלים
                 </div>
               )}
             </div>
-            <select 
-              value={filters.role}
-              onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
-            >
-              <option value="">כל התפקידים</option>
-              <option value="מורה">מורה</option>
-              <option value="מנצח">מנצח</option>
-              <option value="מדריך הרכב">מדריך הרכב</option>
-              <option value="מנהל">מנהל</option>
-              <option value="מורה תאוריה">מורה תאוריה</option>
-              <option value="מגמה">מגמה</option>
-            </select>
-            {/* Show Add Teacher button for admins */}
-            {isUserAdmin(user) && (
-              <button
-                onClick={handleAddTeacher}
-                className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
-                title="Add Teacher"
-              >
-                <Plus className="w-4 h-4 ml-2" />
-                הוסף מורה
-              </button>
-            )}
-          </div>
+          )}
         </div>
-      </Card>
-
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-primary-600 mb-1">{totalTeachers}</div>
-            <div className="text-xs text-gray-600">סה״כ מורים</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-success-600 mb-1">{activeTeachers}</div>
-            <div className="text-xs text-gray-600">פעילים</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600 mb-1">{totalStudents}</div>
-            <div className="text-xs text-gray-600">סה״כ תלמידים</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600 mb-1">{avgStudentsPerTeacher}</div>
-            <div className="text-xs text-gray-600">ממוצע תלמידים</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600 mb-1">{teachersWithAvailability}</div>
-            <div className="text-xs text-gray-600">עם זמינות</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-teal-600 mb-1">{Math.round(totalTeachingHours)}</div>
-            <div className="text-xs text-gray-600">שעות זמינות</div>
-          </div>
-        </Card>
+        <select
+          value={filters.role}
+          onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
+          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+        >
+          <option value="">כל התפקידים</option>
+          <option value="מורה">מורה</option>
+          <option value="מנצח">מנצח</option>
+          <option value="מדריך הרכב">מדריך הרכב</option>
+          <option value="מנהל">מנהל</option>
+          <option value="מורה תאוריה">מורה תאוריה</option>
+          <option value="מגמה">מגמה</option>
+        </select>
+        <span className="text-sm text-muted-foreground mr-auto">
+          {totalTeachers} מורים
+        </span>
       </div>
 
       {/* Results Info and View Toggle */}
@@ -717,7 +681,7 @@ export default function Teachers() {
             </span>
           )}
         </div>
-        
+
         {/* View Mode Toggle */}
         <div className="flex items-center bg-gray-50 p-1 rounded-lg border border-gray-200 shadow-sm">
           <button
@@ -798,7 +762,7 @@ export default function Teachers() {
               },
               isActive: teacher.isActive
             }
-            
+
             return (
               <TeacherCard
                 key={teacher.id}

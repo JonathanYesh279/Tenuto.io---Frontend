@@ -15,12 +15,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 20 complete (List Pages and Table System)
-Plan: All 2 plans complete — verified 8/8 must-haves
-Status: Phase 20 verified and complete — ready for Phase 21 planning
-Last activity: 2026-02-18 — Phase 20 executed: ListPageHero component, Table density upgrade, all 3 list pages restructured with hero zones, compact toolbars, avatar columns
+Phase: 21-detail-pages-and-forms (in progress)
+Plan: 21-01 complete — detail page headers and entity-colored tab pills done
+Status: Phase 21, Plan 01 complete — ready for Plan 02
+Last activity: 2026-02-18 — Phase 21-01 executed: DetailPageHeader entityColor prop, entity-colored tab pills on all 3 detail pages
 
-Progress: [████████░░] 85% (v2.1, 11/13 plans)
+Progress: [████████░░] 92% (v2.1, 12/13 plans)
 
 ## Performance Metrics
 
@@ -36,6 +36,10 @@ Progress: [████████░░] 85% (v2.1, 11/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [21-01]: entityColor prop on DetailPageHeader is optional — gradient fallback preserved for backward compat
+- [21-01]: Tab active states overridden via className on each TabsTrigger, not by editing global tabs.tsx primitive
+- [21-01]: ENTITY_DETAIL_STYLES static const in DetailPageHeader mirrors ENTITY_STYLES in ListPageHero — Tailwind tree-shake safety
+- [21-01]: Badge pills use bg-{entity}-fg/10 on pastel backgrounds (not bg-white/20 which was for dark gradient)
 - [20-02]: Add buttons moved from filter toolbars to ListPageHero action prop — hero zone owns primary action across all list pages
 - [20-02]: Orchestras view toggle uses bg-orchestras-fg active state (entity color, not primary-500) — aligns with entity-colored visual identity
 - [20-02]: Orchestras data area Card wrapper removed — hero zone provides visual anchor, table/grid renders directly
@@ -100,9 +104,10 @@ Key decisions affecting v2.1:
 | 19    | 02   | 5 min    | 2     | 5     |
 | 20    | 01   | 4 min    | 2     | 2     |
 | 20    | 02   | 6 min    | 3     | 3     |
+| 21    | 01   | 2 min    | 2     | 4     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 20 execution complete — all 2 plans verified
+Stopped at: Completed 21-01-PLAN.md — detail page headers and entity-colored tab pills
 Resume file: None

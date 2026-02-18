@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-17)
 
 ## Current Position
 
-Phase: 12 of 13 ([v2.0] Layout & Dashboard) — COMPLETE (verified)
-Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase 12 verified (13/13 must-haves passed after gap fix). Ready for Phase 13.
-Last activity: 2026-02-18 — Phase 12 execution complete + verified
+Phase: 13 of 13 ([v2.0] Special Pages) — IN PROGRESS
+Plan: 2 of 4 in current phase — COMPLETE
+Status: Phase 13 Plan 02 complete. StepProgress indicators on MinistryReports and ImportData. Print styles wired. Proceeding to Plan 03 (Login page) and Plan 04 (Settings page).
+Last activity: 2026-02-18 — Phase 13 Plan 02 execution complete
 
-Progress: [█████████░] 88% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [█████████░] 91% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
@@ -44,6 +44,8 @@ Progress: [█████████░] 88% (v2.0) — [███████
 | v2.0 Phase 11 Plan 2 | 1 | 2min | 2 min |
 | v2.0 Phase 12 Plan 1 | 1 | 3min | 3 min |
 | v2.0 Phase 12 Plan 2 | 1 | 3min | 3 min |
+| v2.0 Phase 13 Plan 1 | 1 | ~5min | ~5 min |
+| v2.0 Phase 13 Plan 2 | 1 | 4min | 4 min |
 
 *Updated after each plan completion*
 
@@ -113,10 +115,13 @@ Progress: [█████████░] 88% (v2.0) — [███████
 - [12-02]: Orchestra StatsCard changed from purple to teal — warm palette only on dashboard (all 6 cards now warm)
 - [12-02]: StatsCard colorClasses mapping unchanged — intentional palette-scale variety (bg-primary-100, bg-success-100, etc.) not CSS tokens
 - [12-02]: text-muted-foreground/70 used for trend label — opacity modifier approach avoids defining new token
+- [13-02]: StepProgress is purely presentational — steps map existing state variables without restructuring pages into wizards
+- [13-02]: no-print wrapper divs in Layout.tsx — Sidebar/Header lack className prop; div wrapper is cleanest print isolation approach
+- [13-02]: Info banner semantic blue colors left untouched — border-blue-200/bg-blue-50 are semantic, not brand tokens
 
 ### Pending Todos
 
-None for Phase 12. Phase 13 is next: special pages (MinistryReports, ImportData, Login, Settings).
+Phase 13 in progress: Plans 01 and 02 complete. Remaining: Plan 03 (Login page branding) and Plan 04 (Settings page). Plan 02 done.
 
 ### Blockers/Concerns
 
@@ -128,5 +133,5 @@ None for Phase 12. Phase 13 is next: special pages (MinistryReports, ImportData,
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 12 complete + verified (13/13 must-haves). ROADMAP.md updated. Ready for Phase 13 planning.
+Stopped at: Completed 13-02-PLAN.md — StepProgress indicators and print styles on MinistryReports/ImportData. Ready for Phase 13 Plan 03 (Login) and Plan 04 (Settings).
 Resume file: None

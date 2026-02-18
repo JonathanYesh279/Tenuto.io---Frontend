@@ -77,7 +77,7 @@ export default function StatsCard({
           </div>
         </div>
         <div className="mr-4 flex-1">
-          <h3 className="text-sm font-medium text-gray-600 mb-1">{title}</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-1">{title}</h3>
           <div className="flex items-baseline">
             <p className={clsx('text-3xl font-bold', colors.valueColor)}>
               {value}
@@ -85,17 +85,17 @@ export default function StatsCard({
             {trend && (
               <span className={clsx('mr-2 text-sm font-medium', {
                 'text-success-600': trend.direction === 'up',
-                'text-red-600': trend.direction === 'down'
+                'text-destructive': trend.direction === 'down'
               })}>
                 {trend.direction === 'up' ? '+' : '-'}{trend.value}%
               </span>
             )}
           </div>
           {subtitle && (
-            <p className="text-sm text-gray-500">{subtitle}</p>
+            <p className="text-sm text-muted-foreground">{subtitle}</p>
           )}
           {trend && (
-            <p className="text-xs text-gray-400 mt-1">{trend.label}</p>
+            <p className="text-xs text-muted-foreground/70 mt-1">{trend.label}</p>
           )}
         </div>
       </div>

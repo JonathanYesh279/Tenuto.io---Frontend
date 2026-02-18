@@ -7,7 +7,8 @@ interface StatsCardProps {
   value: string | number
   subtitle?: string
   icon: ReactNode
-  color?: 'blue' | 'green' | 'orange' | 'purple' | 'red' | 'gray' | 'teal' | 'amber'
+  color?: 'students' | 'teachers' | 'orchestras' | 'rehearsals' | 'bagrut' | 'theory' | 'blue' | 'green' | 'orange' | 'purple' | 'red' | 'gray' | 'teal' | 'amber'
+  coloredBg?: boolean
   trend?: {
     value: number
     label: string
@@ -15,15 +16,48 @@ interface StatsCardProps {
   }
 }
 
-export default function StatsCard({ 
-  title, 
-  value, 
-  subtitle, 
-  icon, 
+export default function StatsCard({
+  title,
+  value,
+  subtitle,
+  icon,
   color = 'blue',
-  trend 
+  coloredBg,
+  trend
 }: StatsCardProps) {
   const colorClasses = {
+    // Entity color system (Phase 18)
+    students: {
+      iconBg: 'bg-students-bg',
+      iconColor: 'text-students-fg',
+      valueColor: 'text-students-fg',
+    },
+    teachers: {
+      iconBg: 'bg-teachers-bg',
+      iconColor: 'text-teachers-fg',
+      valueColor: 'text-teachers-fg',
+    },
+    orchestras: {
+      iconBg: 'bg-orchestras-bg',
+      iconColor: 'text-orchestras-fg',
+      valueColor: 'text-orchestras-fg',
+    },
+    rehearsals: {
+      iconBg: 'bg-rehearsals-bg',
+      iconColor: 'text-rehearsals-fg',
+      valueColor: 'text-rehearsals-fg',
+    },
+    bagrut: {
+      iconBg: 'bg-bagrut-bg',
+      iconColor: 'text-bagrut-fg',
+      valueColor: 'text-bagrut-fg',
+    },
+    theory: {
+      iconBg: 'bg-theory-bg',
+      iconColor: 'text-theory-fg',
+      valueColor: 'text-theory-fg',
+    },
+    // Legacy color system (backward compatible)
     blue: {
       iconBg: 'bg-primary-100',
       iconColor: 'text-primary-600',
@@ -69,7 +103,7 @@ export default function StatsCard({
   const colors = colorClasses[color] || colorClasses.blue
 
   return (
-    <Card hover>
+    <Card hover className={coloredBg && color && colorClasses[color] ? colorClasses[color].iconBg : undefined}>
       <div className="flex items-center">
         <div className={clsx('w-12 h-12 rounded-lg flex items-center justify-center', colors.iconBg)}>
           <div className={clsx('w-6 h-6', colors.iconColor)}>

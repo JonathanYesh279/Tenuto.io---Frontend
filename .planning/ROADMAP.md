@@ -4,7 +4,7 @@
 
 - ✅ **v1.1 Cleanup & Polish** — Phases 1-5 (shipped 2026-02-14)
 - ✅ **v2.0 UI/UX Redesign** — Phases 6-15 (shipped 2026-02-18)
-- 🚧 **v2.1 Production-Grade Visual Identity** — Phases 16-21 (in progress)
+- ✅ **v2.1 Production-Grade Visual Identity** — Phases 16-21 (shipped 2026-02-18)
 
 ## Phases
 
@@ -41,7 +41,7 @@ Full details: `milestones/v2.0-ROADMAP.md`
 
 ---
 
-### 🚧 v2.1 Production-Grade Visual Identity (In Progress)
+### ✅ v2.1 Production-Grade Visual Identity (Shipped 2026-02-18)
 
 **Milestone Goal:** Drastic visual redesign — transform Tenuto.io from a styled admin template into a production-grade SaaS product that is completely unrecognizable from the current version. Light sidebar, multi-color pastel palette, 3-column dashboard, hero stat zones on list pages, data-dominant tables with avatars and colored badges, and structured forms with visual sections. Style transplant from SchoolHub reference: visual language changes completely while all data entities, labels, and business logic stay untouched.
 
@@ -156,8 +156,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 21-01: Detail page headers and tabs — entity-colored pastel header zone (replacing coral gradient), entity-colored active tab pills on all 3 detail pages
-- [ ] 21-02: Form restructuring — entity-colored accent bar section grouping for TeacherForm (6 sections), StudentForm (4 sections), OrchestraForm (3 compact sections)
+- [x] 21-01: Detail page headers and tabs — entity-colored pastel header zone (replacing coral gradient), entity-colored active tab pills on all 3 detail pages
+- [x] 21-02: Form restructuring — entity-colored accent bar section grouping for TeacherForm (6 sections), StudentForm (4 sections), OrchestraForm (3 compact sections)
 
 ---
 
@@ -185,8 +185,8 @@ Plans:
 | 18. Layout Shell and Color System Reset | v2.1 | 3/3 | Complete | 2026-02-18 |
 | 19. Dashboard Transformation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 21. Detail Pages and Forms | v2.1 | 0/2 | Planned | — |
+| 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 — Phase 21 planned (detail pages and forms)*
+*Last updated: 2026-02-18 — Phase 21 complete, v2.1 milestone shipped*

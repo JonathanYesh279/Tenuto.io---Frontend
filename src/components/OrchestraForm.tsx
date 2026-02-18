@@ -151,6 +151,12 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
             </div>
           )}
 
+          {/* Ensemble Details */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-1 h-5 bg-orchestras-fg rounded-full" />
+              <h3 className="text-sm font-semibold text-foreground">פרטי הרכב</h3>
+            </div>
           {/* Basic Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Orchestra Name */}
@@ -232,7 +238,14 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
               </Select>
             </FormField>
           </div>
+          </div>
 
+          {/* Ministry & Classification */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-1 h-5 bg-orchestras-fg rounded-full" />
+              <h3 className="text-sm font-semibold text-foreground">פרטי משרד</h3>
+            </div>
           {/* Sub-Type, Performance Level, Coordination Hours */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Sub-Type */}
@@ -326,7 +339,14 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
               </p>
             )}
           </FormField>
+          </div>
 
+          {/* Members & Status */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-1 h-5 bg-orchestras-fg rounded-full" />
+              <h3 className="text-sm font-semibold text-foreground">חברים וסטטוס</h3>
+            </div>
           {/* Members Section - Read Only Display for Now */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
@@ -365,6 +385,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
             <p className="text-xs text-muted-foreground mt-1">
               תזמורות לא פעילות לא יוצגו ברשימות הראשיות
             </p>
+          </div>
           </div>
 
           {/* Form Actions */}

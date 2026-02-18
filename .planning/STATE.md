@@ -15,11 +15,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 16 of 21 (Token Foundation)
-Plan: — (not started)
-Status: Ready to plan
-Last activity: 2026-02-18 — v2.1 roadmap created (Phases 16-21)
+Plan: 01 complete (of 2)
+Status: Plan 16-01 complete — ready for 16-02
+Last activity: 2026-02-18 — Phase 16 Plan 01 complete (CSS token foundation)
 
-Progress: [░░░░░░░░░░] 0% (v2.1)
+Progress: [█░░░░░░░░░] 8% (v2.1, 1/13 plans)
 
 ## Performance Metrics
 
@@ -39,6 +39,8 @@ Key decisions affecting v2.1:
 - [Research]: Phase 21 (shell) is last — Sidebar/Header/Layout have all-pages blast radius
 - [Research]: Elevation via box-shadow only — never new z-index values (breaks Radix)
 - [Research]: Framer Motion layout prop must NOT be used on containers with Radix dropdown children
+- [16-01]: Surface vars use full hsl() syntax (not raw channels) — consumed via var() directly, not hsl(var(...))
+- [16-01]: Shadow warm tint rgba(120,60,20,...) approximates coral brand hue at low opacity for cohesive depth
 
 ### Pending Todos
 
@@ -52,8 +54,14 @@ Key decisions affecting v2.1:
 - [v2.1 risk]: 888 hardcoded `primary-NNN` hex classes exist alongside CSS `--primary` var — dual color system must be reconciled in Phase 16 before any color changes cascade.
 - [v2.1 risk]: Heebo 700-800 may cause Hebrew nav label wrapping in tight containers — browser test required in Phase 18 before expanding typography scope.
 
+## Performance Metrics (v2.1)
+
+| Phase | Plan | Duration | Tasks | Files |
+|-------|------|----------|-------|-------|
+| 16    | 01   | <1 min   | 1     | 1     |
+
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: v2.1 roadmap created — ready to plan Phase 16
+Stopped at: Completed 16-01-PLAN.md (CSS token foundation — 18 new :root vars)
 Resume file: None

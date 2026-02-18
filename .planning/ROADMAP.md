@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.1 Cleanup & Polish** — Phases 1-5 (shipped 2026-02-14)
-- 🚧 **v2.0 UI/UX Redesign** — Phases 6-13 (in progress)
+- ✅ **v2.0 UI/UX Redesign** — Phases 6-13 (shipped 2026-02-18)
 
 ## Phases
 
@@ -20,7 +20,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 
 </details>
 
-### 🚧 v2.0 UI/UX Redesign (In Progress)
+### ✅ v2.0 UI/UX Redesign (Shipped 2026-02-18)
 
 **Milestone Goal:** Transform Tenuto from a generic admin template into a polished, premium music school management platform with warm Monday.com-inspired aesthetics, shadcn/ui components, and Hebrew RTL correctness throughout.
 
@@ -31,7 +31,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
 - [x] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
 - [x] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
-- [ ] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
+- [x] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
 
 ## Phase Details
 
@@ -161,8 +161,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 13-01-PLAN.md — Auth pages warm branding (Login/ForgotPassword/ResetPassword) + Settings shadcn Input + AuditTrail token swaps
-- [ ] 13-02-PLAN.md — MinistryReports step indicator + ImportData step indicator + print styles + Layout print wiring
+- [x] 13-01-PLAN.md — Auth pages warm branding (Login/ForgotPassword/ResetPassword) + Settings shadcn Input + AuditTrail token swaps
+- [x] 13-02-PLAN.md — MinistryReports step indicator + ImportData step indicator + print styles + Layout print wiring
 
 ## Progress
 
@@ -180,8 +180,8 @@ Plans:
 | 10. List Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 11. Detail Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 12. Layout & Dashboard | v2.0 | 2/2 | Complete | 2026-02-18 |
-| 13. Special Pages | v2.0 | 0/2 | Not started | - |
+| 13. Special Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 (Phase 12 Layout & Dashboard complete)*
+*Last updated: 2026-02-18 (Phase 13 Special Pages complete — v2.0 milestone shipped)*

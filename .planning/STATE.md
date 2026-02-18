@@ -15,12 +15,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 18 not started (Layout Shell and Color System Reset)
-Plan: Phase 18 context gathered — ready for planning
-Status: Phases 18-21 rewritten to deliver full structural redesign per SchoolHub reference
-Last activity: 2026-02-18 — Phase 18 context gathered, roadmap phases 18-21 rewritten
+Phase: 18 in progress (Layout Shell and Color System Reset)
+Plan: 18-01 complete — ready for 18-02 (Sidebar restyle)
+Status: Plan 18-01 executed — entity color tokens + white sidebar tokens in CSS vars + Tailwind
+Last activity: 2026-02-18 — 18-01 complete: 12 entity color vars, sidebar tokens, background update
 
-Progress: [████░░░░░░] 31% (v2.1, 4/13 plans)
+Progress: [████░░░░░░] 38% (v2.1, 5/13 plans)
 
 ## Performance Metrics
 
@@ -36,6 +36,9 @@ Progress: [████░░░░░░] 31% (v2.1, 4/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [18-01]: Entity color vars use raw HSL channel format (no hsl() wrapper) — consumed via hsl(var(--color-*)) in Tailwind, consistent with Phase 16 pattern
+- [18-01]: --sidebar-active-bg/fg intentionally mirrors students entity violet (252 80% 94%) as the visual anchor for active nav state
+- [18-01]: --background updated from warm 30 25% 97% to cooler 210 17% 98% — harmonizes with cool pastel entity palette
 - [Research]: No new npm packages — framer-motion v10, Tailwind v3, CSS vars cover full scope
 - [Research]: Phase 21 (shell) is last — Sidebar/Header/Layout have all-pages blast radius
 - [Research]: Elevation via box-shadow only — never new z-index values (breaks Radix)
@@ -71,9 +74,10 @@ Key decisions affecting v2.1:
 | 16    | 02   | 4 min    | 2     | 3     |
 | 17    | 01   | 2 min    | 2     | 3     |
 | 17    | 02   | 2 min    | 2     | 2     |
+| 18    | 01   | 3 min    | 2     | 2     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 17 execution complete — all 6 primitives updated
+Stopped at: Phase 18-01 execution complete — entity color tokens + sidebar tokens defined
 Resume file: None

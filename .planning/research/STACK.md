@@ -1,361 +1,305 @@
 # Technology Stack
 
-**Project:** Tenuto.io v2.0 — UI/UX Redesign (shadcn/ui Migration)
-**Researched:** 2026-02-17
-**Scope:** Stack ADDITIONS only — existing React 18 + TypeScript + Vite + Tailwind CSS + React Hook Form + Zod + React Query stack is validated and unchanged.
+**Project:** Tenuto.io — Visual Identity Upgrade (v2.1 or equivalent milestone)
+**Researched:** 2026-02-18
+**Scope:** Stack changes ONLY for new visual capabilities — spring physics, surface elevation, typography scale, micro-interactions. The v2.0 STACK.md covered shadcn/ui + Radix + framer-motion installation. This document covers what's needed ON TOP of that shipped baseline.
+**Confidence:** HIGH (all claims verified against live codebase or official docs)
 
 ---
 
-## Current State (What Already Exists)
+## Existing Baseline (Already Shipped in v2.0 — Do Not Re-research)
 
-The project already has a partial shadcn/ui foundation that is NOT yet complete:
-
-| Already Installed | Version | Status |
-|-------------------|---------|--------|
-| `@radix-ui/react-slot` | 1.2.3 | Current |
-| `@radix-ui/react-select` | 2.2.6 | Current |
-| `@radix-ui/react-label` | 2.1.7 | Current |
-| `@radix-ui/react-dialog` | 1.0.0 | **OUTDATED** — installed as dep of old @headlessui |
-| `class-variance-authority` | 0.7.1 | Current |
-| `clsx` | 2.1.1 | Current |
-| `tailwind-merge` | 1.14.0 | Slightly old (1.x vs 2.x) |
-| `lucide-react` | 0.279.0 | **VERY OUTDATED** — missing hundreds of icons |
-| `framer-motion` | 10.18.0 | Working but old (v11 is current) |
-| `src/lib/utils.ts` | — | `cn()` helper exists |
-| `src/components/ui/button.tsx` | — | shadcn pattern, references undefined CSS vars |
-| `src/components/ui/select.tsx` | — | shadcn pattern, built |
-| `src/components/ui/badge.tsx` | — | shadcn pattern, built |
-| `src/components/ui/input.tsx` | — | exists |
-| `src/components/ui/label.tsx` | — | exists |
-| `src/components/ui/alert.tsx` | — | exists |
-
-**Critical gap:** shadcn/ui CSS custom properties (`--background`, `--foreground`, `--primary`, `--ring`, `--muted`, etc.) are referenced in components but NOT defined in `index.css`. The design tokens layer is missing.
+| Package | Version in package.json | Status |
+|---------|------------------------|--------|
+| `framer-motion` | `^10.16.4` | Working — used in 5 files for AnimatePresence/motion |
+| `tailwindcss` | `^3.4.19` | Working — full config in tailwind.config.js |
+| `tailwind-merge` | `^1.14.0` | Working (v2 upgrade deferred — see below) |
+| `class-variance-authority` | `^0.7.1` | Working |
+| `tailwindcss-animate` | `^1.0.7` | Working — Radix state animations |
+| CSS design tokens | `index.css :root {}` | Working — warm coral HSL palette shipped |
+| shadcn/ui components | Multiple Radix packages | Working — 9+ primitives installed |
 
 ---
 
-## Recommended Stack Additions
+## Verdict: What Actually Needs to Change
 
-### 1. shadcn/ui Component Infrastructure
+**The good news:** Framer Motion v10 already has `useSpring`, `useMotionValue`, `useMotionTemplate`, `staggerChildren`, and full spring physics. Zero new animation packages are required.
 
-shadcn/ui is not a package — it is a code generator that copies component source into your project. The infrastructure packages must be installed manually.
+**The work is configuration and component authoring — not package installation.**
 
-| Package | Version to Install | Purpose | Why |
-|---------|-------------------|---------|-----|
-| `tailwind-animate` | `^1.0.7` | Tailwind plugin for data-[state] keyframe animations | Required by shadcn/ui components (slide-in, fade-in, zoom-in on popovers/dialogs); the existing custom keyframes in tailwind.config.js do not cover the `animate-in`/`animate-out` utility classes used by Radix data attributes |
-| `tailwind-merge` | `^2.5.5` | Class deduplication | Upgrade from 1.x — v2 handles arbitrary values and group conflict resolution correctly; the existing 1.14.0 has known issues with Tailwind v3.4 arbitrary values |
+The one meaningful package decision is whether to upgrade `framer-motion` to the `motion` package (v12). See Section 1.
 
-**Confidence:** HIGH — verified against existing component code that references `data-[state=open]:animate-in` and `data-[state=closed]:animate-out` class patterns in select.tsx.
+---
 
-### 2. Radix UI Primitives (Missing Packages)
+## Section 1: Animation — Framer Motion v10 vs Upgrading to motion v12
 
-Install only what the design system needs. Radix packages are independent; install per component.
+### Recommendation: Stay on framer-motion v10 for this milestone
 
-| Package | Latest Version | Component Built From It | Why Needed |
-|---------|---------------|------------------------|------------|
-| `@radix-ui/react-dialog` | `^1.1.6` | Dialog, Sheet, AlertDialog | **Upgrade from broken 1.0.0** — current install is a transitive dep from old @headlessui, not the standalone package. All modals need this. |
-| `@radix-ui/react-tabs` | `^1.1.3` | Tabs | The app's core navigation pattern — teacher details, student details all use tabs. Need accessible tab implementation. |
-| `@radix-ui/react-tooltip` | `^1.1.8` | Tooltip | Monday.com aesthetic relies heavily on tooltips for icon-only sidebar items and data labels |
-| `@radix-ui/react-popover` | `^1.1.6` | Popover, DatePicker | Needed for any floating panel — calendar date pickers, filter panels |
-| `@radix-ui/react-dropdown-menu` | `^2.1.6` | DropdownMenu | Table row actions, user menu in header, bulk action menus |
-| `@radix-ui/react-switch` | `^1.1.3` | Switch (toggle) | Teacher form boolean fields (hasTeachingCertificate, isUnionMember, extraHour), Settings page toggles |
-| `@radix-ui/react-avatar` | `^1.1.3` | Avatar | Teacher/student initials avatars in headers and cards |
-| `@radix-ui/react-separator` | `^1.1.1` | Separator | Sidebar section dividers, form section dividers |
-| `@radix-ui/react-checkbox` | `^1.1.4` | Checkbox | Multi-instrument teacher selection (27 instruments grouped by department) |
-| `@radix-ui/react-toast` | `^1.2.6` | Toast | Replace react-hot-toast with shadcn/ui Toaster for design consistency |
-| `@radix-ui/react-accordion` | `^1.2.3` | Accordion | Collapsible FAQ/help sections, instrument department groups |
-| `@radix-ui/react-progress` | `^1.1.2` | Progress | Ministry report completion percentage bars |
-| `@radix-ui/react-scroll-area` | `^1.2.3` | ScrollArea | Sidebar nav list, modal content areas with custom scrollbar |
+**Rationale:**
+- The package was rebranded from `framer-motion` to `motion` (starting v11). v12 is the current latest. The upgrade involves uninstalling `framer-motion` and installing `motion`, then updating all 5 import sites from `'framer-motion'` to `'motion/react'`.
+- **Breaking changes for React are minimal** (v12 has no breaking changes in the React API), but the import rename across 5 files is churn with no feature benefit for this milestone's goals.
+- All spring capabilities needed — `useSpring`, `useMotionValue`, `staggerChildren`, `AnimatePresence`, spring transition objects — are fully available in v10.
 
-**Confidence:** HIGH for which packages are needed (derived from app features). Version numbers are MEDIUM confidence — based on training data. Verify with `npm show @radix-ui/react-tabs version` before installing.
+**What framer-motion v10 provides that we are NOT yet using (the actual gap):**
 
-**Do NOT install:**
-- `@radix-ui/react-navigation-menu` — overkill for a fixed sidebar; use plain nav items
-- `@radix-ui/react-menubar` — no menubar pattern in this app
-- `@radix-ui/react-context-menu` — no right-click UI needed
-- `@radix-ui/react-toggle` / `@radix-ui/react-toggle-group` — covered by Switch + Checkbox
+| API | What it enables | Currently used? |
+|-----|----------------|-----------------|
+| `useSpring(motionValue, springConfig)` | Physically-simulated spring that tracks another value — smooth cursor follow, dynamic number counts | No |
+| `useMotionValue(initial)` | Subscribable value that drives animation without re-renders — hover parallax, scroll-linked effects | No |
+| `useTransform(motionValue, input, output)` | Map one motion value to another — scale on scroll, color on hover progress | No |
+| `useMotionTemplate` | Compose motion values into CSS string — e.g. dynamic `box-shadow` tied to cursor position | No |
+| `staggerChildren` in `transition` | Delays child animations sequentially — list reveals, card grids entering | Used via variants but no spring type set |
+| `type: "spring"` in transition | Spring physics instead of ease curves — bouncier, more alive button presses | Not set explicitly; defaults to tween |
+| `layoutId` + `layout` prop | Shared element transitions between pages/states — active tab indicator sliding | No |
+| `whileHover`, `whileTap`, `whileFocus` | State-based animation shorthand — replace CSS hover transitions with spring-driven ones | Not used; current hovering is CSS only |
 
-### 3. Icons
+**Spring parameter reference for consistent system:**
 
-| Package | From | To | Rationale |
-|---------|------|----|-----------|
-| `lucide-react` | 0.279.0 | `^0.460.0` | **Upgrade required.** Music-relevant icons (Piano, Guitar, Music, Music2, Music3, Music4, Drum, Mic, Mic2, Radio, Volume, FileSpreadsheet, GraduationCap) were added after 0.279.0. Current version is missing icons needed for the music-school identity. |
+```typescript
+// Use these named spring presets as a shared constants file
+export const springs = {
+  // Snappy — button press, checkbox tick, badge appear
+  snappy: { type: "spring", stiffness: 500, damping: 30, mass: 0.5 },
+  // Smooth — panel slides, modal entrance, tab switch
+  smooth: { type: "spring", stiffness: 300, damping: 35, mass: 0.8 },
+  // Bouncy — list item reveal, card hover lift (subtle)
+  bouncy: { type: "spring", stiffness: 400, damping: 22, mass: 0.6 },
+  // Slow — page transitions, route changes
+  gentle: { type: "spring", stiffness: 150, damping: 20, mass: 1.0 },
+} as const;
+```
 
-**Confidence:** MEDIUM — icon names verified against training knowledge; exact version numbers need npm registry check. Run `npm show lucide-react version` to confirm current latest.
+**Confidence:** HIGH — verified framer-motion v10 API against npm package changelog and existing imports in codebase.
 
-**Do NOT add** a separate icon library (e.g., `react-icons`, `heroicons`). Lucide-react is already the standard and mixing icon libraries creates visual inconsistency.
+---
 
-### 4. RTL Support
+## Section 2: Surface Elevation System — Pure CSS, No New Packages
 
-**Current approach:** `direction: rtl` set on `html` in `index.css`. The tailwind.config.js has a custom RTL plugin that adds `.rtl`, `.ltr`, logical property utilities (`.border-start`, `.pl-start`, etc.).
+### Recommendation: Extend the existing CSS design token system in `index.css`
 
-**Assessment:** The current approach is sufficient and correct for a fully-Hebrew app where RTL is the only direction. Do NOT add:
-- `tailwindcss-rtl` plugin — adds `ps-*`, `pe-*`, `ms-*`, `me-*` logical property utilities, but Tailwind v3.3+ already has `ps-*`/`pe-*` built in. Adding the plugin creates conflicts.
-- `@radix-ui/react-direction` — Radix components respect CSS `dir` attribute automatically. No extra package needed.
+The current `tailwind.config.js` has 5 `boxShadow` tokens (`soft`, `card`, `card-hover`, `sidebar`, `header`) defined as static Tailwind values. These are single-purpose — they don't form a semantic elevation hierarchy.
 
-**What IS needed:** When installing Radix UI components, ensure `dir="rtl"` is set on the root container (already done via `html { direction: rtl }`). Radix Popper-based components (Popover, DropdownMenu, Tooltip, Select) compute anchor positioning based on the writing direction — this works correctly when `dir` is on the HTML element.
+**What to build:** A 5-level elevation system as CSS custom properties, then expose them as Tailwind utilities.
 
-**One RTL fix required for shadcn/ui selects:** The `SelectItem` in `select.tsx` uses `pl-8 pr-2` for the check indicator — these are LTR-specific. Must change to `ps-8 pe-2` (logical properties) during the redesign.
+**Implementation (pure CSS + tailwind.config.js — zero new packages):**
 
-**Confidence:** HIGH — verified by reading existing tailwind.config.js, index.css, and Radix documentation behavior.
+```css
+/* Add to :root in index.css */
+/* Elevation system — 5 levels matching surface depth roles */
+/* Uses layered shadows for natural depth (ambient + direct) */
+--shadow-0: none;
+--shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);                                          /* flat card on page */
+--shadow-2: 0 1px 3px 0 rgb(0 0 0 / 0.10), 0 1px 2px -1px rgb(0 0 0 / 0.10);       /* lifted card, table row hover */
+--shadow-3: 0 4px 6px -1px rgb(0 0 0 / 0.10), 0 2px 4px -2px rgb(0 0 0 / 0.10);    /* dropdown, popover */
+--shadow-4: 0 10px 15px -3px rgb(0 0 0 / 0.10), 0 4px 6px -4px rgb(0 0 0 / 0.10);  /* modal, dialog */
+--shadow-5: 0 25px 50px -12px rgb(0 0 0 / 0.25);                                     /* full-screen overlay */
+```
 
-### 5. Animation
+```javascript
+// tailwind.config.js — replace existing boxShadow block with semantic tokens
+boxShadow: {
+  'elevation-0': 'var(--shadow-0)',
+  'elevation-1': 'var(--shadow-1)',
+  'elevation-2': 'var(--shadow-2)',
+  'elevation-3': 'var(--shadow-3)',
+  'elevation-4': 'var(--shadow-4)',
+  'elevation-5': 'var(--shadow-5)',
+  // Keep old names as aliases during migration:
+  'soft': 'var(--shadow-1)',
+  'card': 'var(--shadow-1)',
+  'card-hover': 'var(--shadow-2)',
+},
+```
 
-| Package | Keep/Add | Version | Rationale |
-|---------|----------|---------|-----------|
-| `framer-motion` | Keep | 10.18.0 → consider upgrade to `^11.0.0` | Already used for card hover effects, slide animations. v11 reduces bundle size with motion components opt-in. Not a blocking upgrade — stay on v10 during redesign to avoid API changes, upgrade separately after. |
-| `tailwind-animate` | **ADD** | `^1.0.7` | Provides the CSS keyframe animations required by shadcn/ui data-attribute patterns (`animate-in`, `animate-out`, `fade-in-0`, `zoom-in-95`, `slide-in-from-top-2`, etc.) |
+**Semantic usage mapping:**
 
-**Confidence:** HIGH for tailwind-animate need (verified by reading select.tsx which uses these classes). MEDIUM for framer-motion upgrade recommendation.
+| Surface Role | Elevation Level | Tailwind Class |
+|-------------|-----------------|----------------|
+| Page background | 0 | no shadow |
+| Sidebar | 1 | `shadow-elevation-1` |
+| Cards (resting) | 1 | `shadow-elevation-1` |
+| Cards (hover) | 2 | `shadow-elevation-2` |
+| Dropdowns, Tooltips | 3 | `shadow-elevation-3` |
+| Modals, Dialogs | 4 | `shadow-elevation-4` |
+| Overlays (full sheet) | 5 | `shadow-elevation-5` |
 
-### 6. Typography & Fonts
+**Why CSS variables instead of hardcoded values:** The `--shadow-*` CSS vars can be overridden in a `.dark {}` selector later if dark mode is ever added, without touching Tailwind config. They also allow hover state transitions with Framer Motion by animating to a named level.
 
-**Current state:**
-- `Reisinger Yonatan` — custom Hebrew font, self-hosted via WOFF2/WOFF/TTF, loaded in `index.css`
-- `Inter` — loaded from Google Fonts
+**Confidence:** HIGH — pure CSS approach, no ecosystem dependencies.
 
-**Recommendation:** No new font packages needed. The existing setup is correct. For the Monday.com-inspired aesthetic:
-- Use `Reisinger Yonatan` weight 500 (currently the default) for body text
-- Add weight 700 for headings if the font files support it — check `/public/fonts/Reisinger-Yonatan-web/` for bold variants
-- Do NOT load additional Hebrew web fonts — adding Noto Sans Hebrew or Rubik would compete with the existing custom font
+---
 
-**Music identity typography:** The `tailwind.config.js` already defines a `music` font family (`Bravura`, `Dorico`) for music notation. These are specialty rendering fonts that should remain confined to musical notation contexts only — do not use them for general UI text.
+## Section 3: Typography Scale — No New Packages
 
-**Confidence:** HIGH — based on direct inspection of font files and CSS configuration.
+### Recommendation: Extend Tailwind's fontSize scale + expose as CSS custom properties
 
-### 7. Design Token Layer (CRITICAL MISSING PIECE)
+**Current state:** Tailwind default type scale is in use. No custom `fontSize` entries in `tailwind.config.js`. The font family is Heebo (self-hosted) loaded via `<link>` in index.html.
 
-The shadcn/ui components in `src/components/ui/` reference CSS custom properties that do not exist:
-- `--background`, `--foreground`
-- `--primary`, `--primary-foreground`
-- `--secondary`, `--secondary-foreground`
-- `--muted`, `--muted-foreground`
-- `--accent`, `--accent-foreground`
-- `--destructive`, `--destructive-foreground`
-- `--border`, `--input`, `--ring`
-- `--card`, `--card-foreground`
-- `--popover`, `--popover-foreground`
+**What's missing:**
+- No semantic type role names (heading, body-lg, caption, etc.)
+- No explicit leading (line-height) / tracking (letter-spacing) per role
+- No fluid/responsive type sizing (size is fixed, not viewport-relative)
 
-**These must be defined** in `index.css` inside `:root {}`. This is purely a CSS configuration task, no packages involved. The values should map to the warm Monday.com-inspired palette that will be defined during the redesign.
+**Implementation (tailwind.config.js extension — zero new packages):**
 
-The `tailwind.config.js` must also reference these CSS variables using `hsl(var(--primary))` syntax so Tailwind color utilities generate from the tokens.
+```javascript
+// tailwind.config.js — add to theme.extend
+fontSize: {
+  // Semantic type scale — [size, { lineHeight, letterSpacing, fontWeight }]
+  'display':  ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }], // 36px — page titles
+  'heading':  ['1.5rem',  { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }], // 24px — section headings
+  'subhead':  ['1.125rem',{ lineHeight: '1.4', letterSpacing: '-0.005em', fontWeight: '600' }], // 18px — card titles
+  'body-lg':  ['1rem',    { lineHeight: '1.6', letterSpacing: '0',        fontWeight: '500' }], // 16px — primary body
+  'body':     ['0.875rem',{ lineHeight: '1.6', letterSpacing: '0',        fontWeight: '500' }], // 14px — standard body (current default)
+  'body-sm':  ['0.8125rem',{ lineHeight: '1.5', letterSpacing: '0.005em', fontWeight: '400' }], // 13px — secondary text
+  'caption':  ['0.75rem', { lineHeight: '1.4', letterSpacing: '0.01em',  fontWeight: '400' }], // 12px — labels, meta
+  'overline': ['0.6875rem',{ lineHeight: '1.3', letterSpacing: '0.08em',  fontWeight: '600' }], // 11px — section labels ALL CAPS
+},
+```
 
-**Confidence:** HIGH — confirmed by reading button.tsx which uses `bg-primary text-primary-foreground` where `primary` must resolve to a CSS var.
+**Why set lineHeight and letterSpacing per size:** Hebrew typography (Heebo) benefits from tighter tracking at large sizes and looser at small sizes. Setting these per step ensures legibility without per-component overrides.
 
-### 8. What NOT to Add
+**Hebrew-specific note:** Heebo is a variable font (`@fontsource-variable/heebo` v5.2.6 exists). The current setup self-hosts from `/public/fonts/` — this already works. Switching to `@fontsource-variable/heebo` would allow fine-grained weight axes (e.g., `font-variation-settings: 'wght' 450`) but this is not necessary for this milestone. Stay with self-hosted Heebo.
+
+**Confidence:** HIGH for approach. MEDIUM for exact size values — these will need visual tuning during implementation.
+
+---
+
+## Section 4: Micro-Interactions — No New Packages
+
+### Recommendation: CSS transitions for hover states, Framer Motion whileHover/whileTap for interactive elements
+
+**The pattern split:**
+
+| Interaction Type | Approach | Why |
+|-----------------|----------|-----|
+| Button hover background/border color | CSS `transition` (Tailwind `transition-colors duration-150`) | Color transitions are GPU-friendly, instant feedback, no JS overhead |
+| Button press (scale down) | Framer Motion `whileTap={{ scale: 0.97 }}` | Spring physics makes the press feel physical |
+| Card hover (lift + shadow) | Framer Motion `whileHover={{ y: -2, boxShadow: "var(--shadow-3)" }}` | Spring gives natural settle vs CSS cubic-bezier |
+| Icon hover (rotate/scale) | Framer Motion `whileHover={{ rotate: 15, scale: 1.1 }}` | Expressive micro-movement |
+| List item entrance | Framer Motion `variants` + `staggerChildren` | Coordinated reveal |
+| Focus ring | CSS `focus-visible:ring-2` (Tailwind) | Accessibility pattern — must be pure CSS |
+| Skeleton loading | CSS `animate-pulse` (Tailwind) | No JS needed |
+| Page/route transitions | Framer Motion `AnimatePresence` (already used) | Smooth unmount/mount |
+
+**GPU performance rule:** Only animate `transform` and `opacity` with Framer Motion. Never animate `width`, `height`, `margin`, `padding`, or `background-color` through Framer Motion (Framer Motion handles these but they trigger layout — use CSS transitions instead).
+
+**`will-change` usage:** Add `will-change: transform` only to elements with persistent animation (sidebar, modal). Do NOT add it globally — memory cost exceeds benefit when applied broadly.
+
+**Confidence:** HIGH — standard production animation performance patterns.
+
+---
+
+## Section 5: Color System Evolution — No New Packages
+
+### Recommendation: Enrich existing HSL CSS token system in `index.css`
+
+**Current state (shipped):** The `:root {}` in `index.css` defines 15 HSL tokens matching the warm coral palette. This is correct and working.
+
+**What to add:** Surface-specific color tokens that support the elevation hierarchy and expressive palette use.
+
+```css
+/* Add to :root in index.css — surface and interactive color tokens */
+
+/* Surface hierarchy (lightness steps of the warm background) */
+--surface-base: 30 25% 97%;      /* page background — same as --background */
+--surface-raised: 30 20% 99%;    /* card on page */
+--surface-overlay: 0 0% 100%;    /* modal, popover (pure white for contrast) */
+--surface-sunken: 25 20% 94%;    /* inset area (table alt row, code block) */
+
+/* Interactive color states */
+--primary-hover: 15 85% 40%;     /* primary button hover (darker 5%) */
+--primary-active: 15 85% 35%;    /* primary button press (darker 10%) */
+--primary-subtle: 15 85% 95%;    /* primary ghost hover background */
+
+/* Accent (warm amber) — for highlights, badges, active indicators */
+--accent-strong: 35 90% 48%;     /* accent button / badge background */
+--accent-muted: 35 60% 92%;      /* accent subtle background */
+
+/* Semantic surface roles */
+--surface-success: 142 70% 95%;
+--surface-warning: 38 95% 94%;
+--surface-error: 0 85% 96%;
+--surface-info: 210 80% 95%;
+```
+
+**Why NOT OKLCH:** Tailwind v4 uses OKLCH natively, but this project is on Tailwind v3. Adding OKLCH in raw CSS would work in modern browsers (Safari 15.4+, Chrome 111+) but creates an inconsistency where CSS custom properties use OKLCH while Tailwind utilities use RGB/HSL. The HSL system already ships and works — enrich it, don't replace it mid-project.
+
+**Tailwind v4 upgrade:** Do NOT upgrade to Tailwind v4 during this milestone. The migration requires:
+- Converting `tailwind.config.js` to CSS-first `@theme` block
+- Updating all `tailwindcss-animate` imports (shadcn moved to `tw-animate-css`)
+- Verifying shadcn/ui v4 compatibility for all installed Radix components
+This is a full project-wide migration with risk, not a visual identity task.
+
+**Confidence:** HIGH for staying on v3. HIGH for token additions.
+
+---
+
+## Summary: Complete Package Change List
+
+### Install (new packages): NONE required
+
+All capabilities needed for spring physics, surface elevation, typography scale, and micro-interactions are available through:
+1. Existing `framer-motion` v10 APIs not yet used (`useSpring`, `whileHover`, `whileTap`, `staggerChildren` with `type:"spring"`)
+2. Tailwind config extensions (fontSize scale, elevation shadow tokens)
+3. CSS custom property additions to `index.css`
+
+### Upgrade Candidates (optional, lower priority):
+
+| Package | Current | Latest | Upgrade Benefit | Urgency |
+|---------|---------|--------|----------------|---------|
+| `framer-motion` | 10.16.4 | 12.x (`motion`) | Smaller bundle, new scroll-linked APIs | LOW — no API the milestone needs is missing from v10 |
+| `tailwind-merge` | 1.14.0 | 2.x | Better handling of arbitrary value conflicts | LOW — upgrade when convenient, not blocking |
+| `lucide-react` | 0.279.0 | 0.460+ | Additional music/UI icons | MEDIUM — needed for icon-only sidebar items |
+
+### Configuration Changes (no new packages):
+
+1. **`src/index.css`** — Add `--shadow-0` through `--shadow-5` and expanded surface/interactive color tokens to `:root {}`
+2. **`tailwind.config.js`** — Add semantic `fontSize` scale and `shadow-elevation-*` utilities
+3. **`src/lib/springs.ts`** (new file) — Named spring presets for consistent animation feel
+4. **`src/components/ui/*.tsx`** — Apply `whileHover`, `whileTap`, `motion.div` wrappers to interactive components
+
+### What NOT to Add:
 
 | Package | Why Not |
 |---------|---------|
-| `@headlessui/react` upgrade | Already installed at 1.7.19. Do not upgrade to v2 during redesign — it has breaking API changes for Dialog and Transition. Remove it gradually as components migrate to shadcn/ui Radix equivalents. |
-| `react-spring` | Framer Motion already covers animation. Two animation libraries = bundle bloat + inconsistency. |
-| `styled-components` / `emotion` | This project is Tailwind-first. CSS-in-JS would fight the utility class model. |
-| `@mui/material` | Radix + shadcn/ui IS the component system. MUI brings its own theming system incompatible with Tailwind. |
-| `@mantine/core` | Same issue as MUI. |
-| `react-icons` | Lucide-react covers all needs. Two icon libraries create visual inconsistency. |
-| `tailwindcss-rtl` (plugin) | Tailwind v3.3+ has built-in logical properties (`ps-*`, `pe-*`, `ms-*`, `me-*`). Plugin is redundant and conflicts. |
-| `next-themes` | This is a Vite app, not Next.js. Dark mode is not in scope for v2.0. |
-| `vaul` (drawer) | Not needed — Radix Dialog handles all modal/sheet use cases in this app. |
+| `react-spring` / `@react-spring/web` | Framer Motion v10 covers all spring physics needed; two animation systems = visual inconsistency + bundle bloat |
+| `gsap` / `@gsap/react` | Overkill for UI micro-interactions; adds 50kb+ for no incremental benefit over Framer Motion |
+| `motion` (v12 package) | No feature benefit this milestone; import rename churn across 5 files deferred |
+| `@fontsource-variable/heebo` | Self-hosted Heebo already works; adding the npm package creates a duplicate source |
+| Tailwind CSS v4 | Migration risk (CSS-first config rewrite, shadcn breaking changes) out of scope |
+| `tw-animate-css` | shadcn/ui deprecation of `tailwindcss-animate` only affects NEW shadcn projects; existing v3 config works |
+| `sonner` | `react-hot-toast` works and toast styling is cosmetic; not blocking visual identity work |
+| `@radix-ui/react-hover-card` | No hover card pattern in this app's design |
+| Any color palette library | The existing CSS token system is sufficient; palette-specific libs add complexity without value |
 
 ---
 
-## Complete Installation Command
+## Integration Points With Existing Stack
 
-```bash
-# 1. Upgrade existing packages with known issues
-npm install tailwind-merge@^2.5.5 lucide-react@^0.460.0
-
-# 2. Add tailwind-animate plugin
-npm install tailwind-animate@^1.0.7
-
-# 3. Install missing Radix UI primitives
-npm install \
-  @radix-ui/react-dialog@^1.1.6 \
-  @radix-ui/react-tabs@^1.1.3 \
-  @radix-ui/react-tooltip@^1.1.8 \
-  @radix-ui/react-popover@^1.1.6 \
-  @radix-ui/react-dropdown-menu@^2.1.6 \
-  @radix-ui/react-switch@^1.1.3 \
-  @radix-ui/react-avatar@^1.1.3 \
-  @radix-ui/react-separator@^1.1.1 \
-  @radix-ui/react-checkbox@^1.1.4 \
-  @radix-ui/react-toast@^1.2.6 \
-  @radix-ui/react-accordion@^1.2.3 \
-  @radix-ui/react-progress@^1.1.2 \
-  @radix-ui/react-scroll-area@^1.2.3
-```
-
-**Note on version numbers:** The Radix version numbers above are based on training data (knowledge cutoff January 2025). Verify current versions with `npm show @radix-ui/react-tabs version` before running. The install will pick the latest compatible version regardless when using `^` semver ranges.
-
----
-
-## Configuration Changes Required (No New Packages)
-
-### tailwind.config.js
-
-Add `tailwind-animate` plugin and update color tokens to use CSS variables:
-
-```javascript
-import tailwindAnimate from 'tailwind-animate'
-
-export default {
-  // ... existing content config
-  theme: {
-    extend: {
-      colors: {
-        // Replace hardcoded hex values with CSS var references
-        // so shadcn/ui components work correctly:
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-          // Keep numeric scale for backward compat with existing code:
-          50: '#eff6ff',
-          // ... rest of existing scale
-        },
-        // ... other shadcn/ui token additions
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-      },
-    },
-  },
-  plugins: [
-    tailwindAnimate,
-    // ... existing RTL utilities plugin
-  ],
-}
-```
-
-### index.css
-
-Add CSS custom properties for the warm music-school design tokens:
-
-```css
-:root {
-  /* Warm Monday.com-inspired palette — adjust during design phase */
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-
-  /* Primary: warm amber/golden — music warmth */
-  --primary: 38 92% 50%;
-  --primary-foreground: 0 0% 100%;
-
-  /* Secondary: soft slate */
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-
-  /* Muted: light warm gray */
-  --muted: 30 10% 96%;
-  --muted-foreground: 240 3.8% 46.1%;
-
-  /* Accent: Monday.com purple accent */
-  --accent: 258 90% 66%;
-  --accent-foreground: 0 0% 100%;
-
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 38 92% 50%;
-  --radius: 0.75rem;
-}
-```
-
-**Note:** These are placeholder values. The exact palette should be defined with a designer pass during Phase 1 of the redesign. The token names must match exactly — the components reference these names.
-
-### vite.config.ts
-
-Add Radix UI packages to `optimizeDeps.include` as they are installed:
-
-```typescript
-optimizeDeps: {
-  include: [
-    // ... existing includes
-    '@radix-ui/react-dialog',
-    '@radix-ui/react-tabs',
-    '@radix-ui/react-tooltip',
-    '@radix-ui/react-popover',
-    '@radix-ui/react-dropdown-menu',
-    '@radix-ui/react-switch',
-    '@radix-ui/react-avatar',
-    '@radix-ui/react-checkbox',
-    '@radix-ui/react-toast',
-    '@radix-ui/react-accordion',
-    '@radix-ui/react-scroll-area',
-  ],
-}
-```
-
----
-
-## Alternatives Considered
-
-| Category | Recommended | Alternative | Why Not |
-|----------|-------------|-------------|---------|
-| Component system | shadcn/ui (Radix) | Mantine, MUI, Ant Design | shadcn/ui is copy-paste code that we own and style; other libraries ship their own CSS that fights Tailwind |
-| Animation | tailwind-animate + framer-motion | CSS-only, react-spring | tailwind-animate covers Radix state animations; framer-motion covers complex page/card transitions already in use |
-| Icons | lucide-react (upgraded) | react-icons, phosphor-react | Lucide is already installed and the shadcn/ui standard; swapping creates churn |
-| RTL approach | HTML `dir=rtl` (current) | tailwindcss-rtl plugin | Built-in Tailwind logical properties cover all cases; plugin is deprecated behavior |
-| Toast notifications | @radix-ui/react-toast (shadcn/ui Toaster) | Keep react-hot-toast | react-hot-toast is a parallel system that won't inherit design tokens; shadcn/ui Toaster uses same CSS vars |
-
----
-
-## Summary: What Actually Changes
-
-**Install (npm packages):**
-- `tailwind-animate` (new)
-- `tailwind-merge` upgrade to v2
-- `lucide-react` upgrade to current
-- 13 `@radix-ui/*` packages (new installs)
-
-**Configure (no new packages):**
-- `tailwind.config.js` — add tailwind-animate plugin + CSS var-based color tokens
-- `src/index.css` — add `:root {}` CSS custom properties block
-- `vite.config.ts` — add new Radix packages to optimizeDeps
-
-**Remove (gradual migration):**
-- `@headlessui/react` — migrate usage to Radix equivalents component by component; remove when all consumers are migrated
-
-**Not changing:**
-- React 18, TypeScript, Vite, Tailwind CSS v3, React Hook Form, Zod, React Query, React Router v6 — all stay at current versions
+| New Capability | Integrates With | How |
+|---------------|----------------|-----|
+| Spring animations (`whileHover`, `whileTap`) | Existing `motion.div` + `AnimatePresence` | Same import from `'framer-motion'` — add props to existing wrappers |
+| Staggered list reveals | Existing feature list pages (`TeacherList`, `StudentList`, etc.) | Wrap list container in `motion.ul` with `staggerChildren` variant |
+| Surface elevation CSS vars | Existing Tailwind `boxShadow` config | Add new entries; existing `shadow-card`, `shadow-soft` classes continue to work |
+| Typography scale | Existing `font-sans` (Heebo) | Same font, new semantic size classes — backward compatible |
+| Color surface tokens | Existing `--background`, `--card`, `--primary` tokens in `:root {}` | Additive — no existing values change |
+| `will-change: transform` | Framer Motion animated elements | Add to `initial` prop or `style` prop on elements that animate persistently |
 
 ---
 
 ## Sources
 
-- Existing project: `package.json`, `tailwind.config.js`, `src/index.css`, `vite.config.ts`, `src/components/ui/*.tsx` (direct inspection, HIGH confidence)
-- Installed packages: `npm list --depth=0` output (HIGH confidence)
-- Radix UI `@radix-ui/react-dialog` installed version: node_modules direct inspection, v1.0.0 transitive (HIGH confidence)
-- Component CSS var references: `src/components/ui/button.tsx`, `src/components/ui/select.tsx` (HIGH confidence)
-- Package version numbers: training data, knowledge cutoff January 2025 (MEDIUM confidence — verify before install)
-- shadcn/ui architecture: training data verified against existing shadcn-pattern components in codebase (HIGH confidence)
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/package.json` — exact installed versions (HIGH confidence)
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/tailwind.config.js` — existing token and animation config (HIGH confidence)
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/src/index.css` — existing CSS token system and reduced-motion media query (HIGH confidence)
+- Framer Motion v10 API inventory: existing usage grep across 5 files (`grep -r "framer-motion"`) (HIGH confidence)
+- `framer-motion` npm latest: 12.x, rebranded as `motion` — WebSearch result (MEDIUM confidence — verify before any upgrade)
+- `@fontsource-variable/heebo` v5.2.6: npm registry — WebSearch result (MEDIUM confidence)
+- Tailwind v4 CSS-first migration risk: tailwindcss.com blog + shadcn/ui compatibility docs — WebSearch (MEDIUM confidence)
+- Motion v12 breaking changes (React only: none): WebSearch + GitHub changelog reference (MEDIUM confidence)
+- Spring animation performance (GPU, transform-only): Josh W. Comeau animation guides, Framer Motion docs — WebSearch (HIGH confidence — well-established pattern)
+
+---
+*Stack research for: Tenuto.io visual identity upgrade — spring animations, surface elevation, typography scale*
+*Researched: 2026-02-18*

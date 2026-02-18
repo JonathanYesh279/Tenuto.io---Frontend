@@ -1,417 +1,344 @@
-# Domain Pitfalls: UI/UX Redesign + shadcn/ui Migration
+# Pitfalls Research
 
-**Domain:** Full UI/UX redesign of production React + Tailwind app (Hebrew RTL, shadcn/ui migration)
-**Researched:** 2026-02-17
-**Confidence:** HIGH (based on direct codebase inspection + established knowledge of Radix/shadcn/Tailwind internals)
+**Domain:** Visual identity upgrade of an existing production React SaaS (Hebrew RTL, shadcn/ui + Tailwind + Framer Motion)
+**Researched:** 2026-02-18
+**Confidence:** HIGH — based on direct codebase inspection of v2.0 state + verified library behaviors
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, regressions, or major production incidents.
+Mistakes that cause functional regressions, layout breakage, or require rewrites of visual work just completed.
 
 ---
 
-### Pitfall 1: shadcn/ui CSS Variables Collide with Existing Tailwind Color System
+### Pitfall 1: CSS Token Changes Cascade to Hardcoded Color Classes (The Dual-System Trap)
 
 **What goes wrong:**
-shadcn/ui requires CSS custom properties on `:root` (`--primary`, `--background`, `--foreground`, `--muted`, `--accent`, `--card`, `--border`, `--ring`, `--input`, etc.) in HSL format. This project already has a Tailwind theme with `primary`, `secondary`, `success`, `gray` color scales defined in `tailwind.config.js`. When shadcn components are added, they render using their own CSS variable system, while existing components use Tailwind color utility classes (`bg-primary-500`, `text-gray-900`). The two systems coexist silently but produce inconsistent visual output — shadcn Buttons use `var(--primary)`, custom Buttons use `bg-primary-500`. They will not match unless explicitly bridged.
+The codebase has a split color system that was intentional in v2.0 but becomes dangerous in v2.1. The `tailwind.config.js` defines two parallel primary color systems: (1) hardcoded hex scale `primary-500 = #4F46E5` (blue) used by nearly all components, and (2) CSS variable `--primary: 15 85% 45%` (coral) consumed by shadcn/ui components via `bg-primary`. These two systems produce different colors from the same word "primary." There are 888+ occurrences of `primary-NNN` classes in TSX files referencing the blue hex scale, while shadcn buttons and inputs use the coral CSS variable.
+
+In v2.1, any change to "the primary brand color" risks affecting only one of these two systems, leaving the other unchanged. The result: some components get the new bold coral, others stay blue, with no error or warning anywhere.
 
 **Why it happens:**
-shadcn/ui's Tailwind config integration maps CSS variables (e.g., `primary: "hsl(var(--primary))"`) to Tailwind color names. This OVERRIDES or CONFLICTS with the existing `primary` scale in `tailwind.config.js` lines 9-24 when both configs exist. The existing `primary.500` (#4F46E5) becomes unreachable under the shadcn mapping because `primary` now resolves to `hsl(var(--primary))`.
+The v2.0 migration added the warm coral CSS vars to `index.css` but left the hardcoded hex scale in `tailwind.config.js` because changing 888 component usages was out of scope. This was a correct v2.0 tradeoff. In v2.1, editing `--primary` only changes shadcn components. Editing `primary-500` in tailwind.config.js requires Tailwind to recompile but affects ALL `primary-NNN` classes across the entire app.
 
-**Consequences:**
-- Buttons from different systems render different blues
-- Focus rings mismatch across old and new components
-- Production app has visually incoherent state during migration
-- TypeScript/Tailwind IntelliSense breaks for `primary-*` classes
+**How to avoid:**
+Before adding bolder colors, map which components use which system. Document this in the phase CONTEXT:
+- shadcn components (Button, Input, Select, Badge, Dialog): respond to `--primary` CSS var
+- Every other component (forms, tables, cards, nav): respond to `primary-500/600/700` hex scale
 
-**Prevention:**
-1. Define shadcn CSS variables to match the existing brand colors. In `index.css`, set `--primary: 243 75% 59%` (approximating #4F46E5) so both systems resolve to the same value.
-2. Do NOT add shadcn's default `tailwind.config.js` color mappings until all existing components have been migrated. Add them one phase at a time.
-3. Create a `design-tokens.css` file that defines ALL CSS variables first, then source shadcn's `globals.css` from those tokens rather than hardcoded HSL values.
+Make any color changes in BOTH systems simultaneously. Use the search command `grep -rh "primary-" src --include="*.tsx" | grep -oP "(bg|text|border|ring)-primary-\d+"` before and after each token change to verify the two systems stay in sync.
 
-**Detection:**
-- Render a shadcn `<Button>` and the existing `<ActionButton variant="primary">` side by side — they should be identical blue. If they differ, the color systems are not bridged.
-- Search for `hsl(var(--` in compiled CSS to verify tokens are being set.
+**Warning signs:**
+- You change the brand coral in `index.css` and the sidebar navigation links stay blue — the nav uses `text-primary-600` (hex), not the CSS var.
+- You add a gradient to `--primary` and it works on the login button (shadcn) but not the save buttons in forms (hex-based).
+- Chrome DevTools shows two different computed values for "primary" on different elements.
 
-**Phase to address:** Phase 1 (Design Token Foundation) — before any component migration begins.
+**Phase to address:** Phase 1 (Token foundation) — establish the reconciliation rule before any color changes.
 
 ---
 
-### Pitfall 2: Radix UI Primitives Have LTR-Hardcoded Positioning Logic
+### Pitfall 2: Adding Framer Motion Animations to Components That Already Have CSS Transitions
 
 **What goes wrong:**
-Several Radix UI primitives used by shadcn/ui have animation slide-in directions and positioning logic that assumes LTR. Specifically:
-- `Select.Content` uses `data-[side=left]:slide-in-from-right-2` — in RTL, "left" is the natural start side, so this produces a reversed animation direction that feels wrong.
-- `Dialog` and `Sheet` components animate from the wrong edge by default.
-- The `SelectItem` check indicator is positioned at `left-2` (hardcoded, not `inline-start`) — in an RTL context, the checkmark appears on the wrong side of the text.
-- `Tooltip` and `Popover` anchor positions computed by Floating UI respect `dir` attribute, but Radix's built-in viewport positioning for `Select.Content` does not.
+The codebase has CSS transitions on buttons (`transition-all 0.2s`), cards (`transition-all duration-200`), and tabs (`tailwindcss-animate` keyframes). When v2.1 adds Framer Motion `whileHover` or `animate` to these same elements, both systems fire simultaneously. A card with CSS `transition: box-shadow 0.2s` and Framer Motion `whileHover={{ y: -4, boxShadow: "..." }}` will produce a janky double-animation: CSS handles the shadow, Framer Motion handles the Y axis, and the two don't coordinate their timing or easing.
 
-**Observed in codebase:**
-`src/components/ui/select.tsx` line 119 uses `"absolute left-2 flex h-3.5 w-3.5 items-center justify-center"` for the check indicator — this is physically `left`, not logically `inline-start`. In RTL Hebrew, the check will appear on the wrong side (physically left = visually right edge in RTL context = correct position, but future Tailwind v4 with logical properties will break this). Also `SelectLabel` at line 103 uses `"pl-8 pr-2"` — physical padding values that are backwards for RTL (the indent should be on the right side to make room for the checkmark at the end, not the start).
+Currently, Framer Motion is used in only 5 files, all with identical patterns: `AnimatePresence` + `motion.div` with `opacity: 0 → 1`, `duration: 0.2`. This is safe. Adding `whileHover`, `whileTap`, `variants`, or spring physics anywhere else risks interaction with the existing CSS transition layer.
 
 **Why it happens:**
-shadcn/ui ships with LTR defaults. RTL support requires manual overrides. The project sets `dir="rtl"` on the root `<div>` in `App.tsx` line 178, which propagates, but Radix portals render OUTSIDE the `dir="rtl"` container into `document.body` which has no `dir` set unless explicitly added.
+The visual identity brief calls for "dynamic motion." Developers instinctively reach for Framer Motion `whileHover` for card hover effects, not realizing the element already has a CSS hover transition. The CSS transition and Framer Motion animation both claim the same CSS property and fight.
 
-**Consequences:**
-- Dropdown checkmarks on wrong side
-- Select dropdown slides in from wrong direction
-- Dialog overlays animate incorrectly
-- Toast notifications (react-hot-toast) may appear at wrong screen edge
+**How to avoid:**
+Choose one system per element, per property. The rule for v2.1:
+- Use Framer Motion ONLY for: page-level entry animations, modal presence animations (already in use), and choreographed multi-step sequences that CSS cannot do.
+- Use CSS transitions (Tailwind `transition-*`) for: hover states, focus rings, color shifts, shadow changes, single-property changes.
+- Never mix both on the same element for the same property.
+- Before wrapping any element in `motion.div`, check if it has `transition-*` in its class list. If yes, remove the Tailwind transition class or keep CSS-only.
 
-**Prevention:**
-1. Add `dir="rtl"` to `document.documentElement` in `main.tsx` or `index.html`, not just the app root. Radix portals will then inherit it: `document.documentElement.setAttribute('dir', 'rtl')`.
-2. Override all shadcn animation classes for RTL. In `globals.css`, reverse `slide-in-from-left`/`slide-in-from-right` using `[dir="rtl"]` selectors.
-3. Replace physical padding (`pl-8 pr-2`) in `SelectLabel` and `SelectItem` with logical properties (`ps-8 pe-2`) or override `left-2` with `start-2` using Tailwind's logical utilities.
-4. Test every Radix component in isolation against the RTL layout before considering it "migrated."
+**Warning signs:**
+- Card hover produces a "snap" — the shadow jumps while the card eases up, because CSS and Framer Motion aren't synchronized.
+- DevTools Performance panel shows "Recalculate Style" events firing at 120fps during hover (CSS transition triggering re-layout every frame).
+- `will-change: transform` created by Framer Motion promotes the element to its own compositor layer, breaking stacking context and causing z-index issues with dropdowns positioned inside.
 
-**Detection:**
-- Open any `<Select>` in the app and check: does the checkmark appear on the right side of selected item text? In Hebrew RTL it should appear on the left (inline-end).
-- Open browser DevTools, inspect portal elements, confirm they have `dir="rtl"` inherited or set.
-
-**Phase to address:** Phase 1 (Design Token Foundation) — set `dir` on document root. Each component migration phase must include RTL verification step.
+**Phase to address:** Phase for motion — establish the CSS vs. Framer Motion boundary rule before adding any new animations.
 
 ---
 
-### Pitfall 3: Tailwind CSS Class Merging Conflicts Accumulate Silently
+### Pitfall 3: Framer Motion `layout` Prop Creates Stacking Context and Breaks Dropdowns
 
 **What goes wrong:**
-The project uses both `clsx` (in custom components) and `cn = twMerge(clsx(...))` (in shadcn components). When custom components receive `className` props that are then passed through `clsx` without `twMerge`, conflicting Tailwind classes from the prop and the base styles both appear in the DOM. Tailwind's cascade does not guarantee the override wins — it depends on CSS specificity and class order in the generated stylesheet, which is determined by Tailwind's JIT order, not the order in `className` string.
+Framer Motion's `layout` prop uses `transform: scale()` or `transform: matrix()` internally to animate layout changes via FLIP. Any element with a Framer Motion transform applied — even at rest — creates a new CSS stacking context. Radix UI dropdowns, Headless UI Comboboxes, and `react-hot-toast` all render in portals that escape normal DOM positioning, but they use `z-index` to appear above the trigger element. If the trigger element has a transform (from Framer Motion), its stacking context isolates child z-index values — a dropdown with `z-index: 9999` inside a transformed card cannot escape that card's stacking context.
 
-**Observed in codebase:**
-`src/components/ui/Table.tsx` uses `clsx` directly (line 1 import). If a consumer passes `className="bg-blue-50"` while Table has `bg-white` in its base, both classes appear in the DOM. `twMerge` would resolve this correctly; `clsx` alone does not.
+In this codebase: teacher schedule cards, student list items, and orchestra cards all contain form controls and action dropdowns. If v2.1 wraps these in `motion.div` with `layout` or `whileHover={{ y: -4 }}`, their dropdowns will be clipped or appear behind sibling elements.
 
 **Why it happens:**
-During migration, some components get migrated to `cn()` and others stay on `clsx()`. Components that accept `className` props must use `twMerge` to be safely overridable. This is invisible — no TypeScript error, no runtime warning, just visual bugs that only appear with specific prop combinations.
+Framer Motion applies `transform: none` to motion elements even when not animating (to prepare for FLIP). This alone creates a stacking context. GitHub issue [#1313](https://github.com/framer/motion/issues/1313) documents that `Reorder.Item` has this behavior; the same applies to any `motion.div` with `layout` or active transform animation.
 
-**Consequences:**
-- Component overrides silently fail during redesign
-- Visual bugs appear only in specific page contexts
-- Debugging class conflicts is extremely time-consuming
-- Downstream Storybook-style testing produces different results than app usage
+**How to avoid:**
+Do not use `layout`, `layoutId`, or `whileHover={{ y: N }}` on containers that hold dropdown menus, select inputs, popovers, or tooltips. Use these animation props only on leaf-level decorative elements (icon backgrounds, badge pulses, hero section elements) that contain no overlapping UI.
 
-**Prevention:**
-1. Adopt `cn()` from `src/lib/utils.ts` universally. Replace all `clsx(...)` in components that accept `className` props.
-2. Add an ESLint rule or grep check to flag `import.*clsx` in component files that export a component with a `className` prop.
-3. In the redesign phase, audit every component that accepts `className` and ensure it passes through `cn(baseClasses, className)` not `clsx(baseClasses, className)`.
+If card-level hover animations are needed, use CSS `transform` via Tailwind (`hover:scale-[1.01]`, `hover:-translate-y-1`) instead of Framer Motion — CSS transforms do NOT create stacking contexts by themselves in the same way that Framer Motion's wrapper does (the stacking context issue is from Framer Motion's JavaScript applying style, not from CSS transforms per se; CSS `transform` via Tailwind does create stacking contexts but the portal escape mechanism still works because Radix portals are appended to `document.body`).
 
-**Detection:**
-- In DevTools, inspect any component rendered with a custom `className` override. If you see two conflicting background classes (e.g., `bg-white bg-blue-50`), `twMerge` is not being used.
-- Add test: render `<Table className="bg-red-50" />` and assert only `bg-red-50` appears in the class list.
+Actually, to be precise: both CSS and JS transforms create stacking contexts. The correct mitigation is to keep Radix portals on elements that are NOT inside transformed containers. For existing cards with select dropdowns inside, use CSS `transition: box-shadow` for hover glow instead of transform-based lift.
 
-**Phase to address:** Phase 1 (Foundation) — standardize on `cn()` before any component migration.
+**Warning signs:**
+- Dropdown in a card disappears or clips after adding `motion.div` to the card.
+- `z-index: 50` stops working for a popover after wrapping its parent in `motion.div`.
+- DevTools Layers panel shows new compositor layers created on every hover event.
+
+**Phase to address:** Motion phase — apply this rule before any `layout` or `whileHover` usage is introduced.
 
 ---
 
-### Pitfall 4: Component Name Collision Between Custom and shadcn Components
+### Pitfall 4: Typography Changes Breaking RTL Line Heights in Hebrew Text
 
 **What goes wrong:**
-This project already has custom UI components in `src/components/ui/` — `button.tsx`, `input.tsx`, `select.tsx`, `badge.tsx`, `alert.tsx`, `label.tsx`, `progress.tsx`, `textarea.tsx`. These filenames match the default shadcn/ui output paths exactly. When adding shadcn components via the CLI (`npx shadcn-ui@latest add button`), it OVERWRITES the existing files without warning if the paths match. The existing custom `button.tsx` is already shadcn-compatible (it uses `cva`, `Slot`, `cn`), but `select.tsx` has RTL-related issues that need fixing — if shadcn's stock `select.tsx` overwrites the current one, all existing RTL fixes and customizations are lost.
+Hebrew fonts (Heebo, Reisinger Yonatan) have different font metrics than Latin fonts. When visual identity changes include: increasing font weight (`font-medium` → `font-semibold`), changing font size scales, adjusting `letter-spacing`, or changing `line-height`, Hebrew text reflows unpredictably. Hebrew characters are typically taller in their descenders, and the Heebo font at weight 700 renders notably larger than at weight 400 — unlike Latin fonts where weight change is mostly horizontal.
 
-**Observed in codebase:**
-All shadcn components already exist at their default paths. This is partially good (shadcn is already bootstrapped) but means the CLI cannot be used blindly to "add" or "update" components — it will overwrite custom modifications.
+There are 786 occurrences of physical margin/padding classes (`space-x-`, `ml-`, `mr-`, `pl-`, `pr-`) across 165 files. Typography changes that change text height will cause line breaks to shift, which cascades into fixed-height containers overflowing and physical-pixel layouts misaligning.
 
 **Why it happens:**
-The shadcn CLI copies files from its registry into the configured `ui` directory. It does not diff — it replaces. Development teams often run `npx shadcn-ui add [component]` to get a new component and accidentally overwrite a neighbor file they had customized.
+Typography choices made for "bold and confident" look in design mockups are tested with Latin fonts in Figma. When applied to Hebrew text in the actual app, the metrics are different. Increasing `font-weight: 600 → 700` in Heebo adds about 8-12% more horizontal character width for Hebrew characters, causing single-line labels to wrap to two lines in tight Hebrew UI.
 
-**Consequences:**
-- Loss of RTL fixes in `select.tsx` (the LTR `pl-8 pr-2` issue returns)
-- Loss of custom variants in `button.tsx`
-- Silent regressions — the file compiles fine, TypeScript is happy, but behavior changes
+**How to avoid:**
+1. Test typography changes on actual Hebrew text in the browser, not in Figma. The label "מורה" in `font-semibold` vs `font-bold` will behave differently than "Teacher" in Latin.
+2. Make font weight changes incrementally: change one scope (headings only, or nav labels only) at a time and verify no wrapping occurs before moving to the next scope.
+3. For table column headers and tab labels (which are truncated in RTL, not LTR), use `truncate` class and test overflow at the smallest expected container width.
+4. When changing `text-sm` to `text-base`, verify that:
+   - All Tailwind card padding (`p-4`, `p-6`) still accommodates the taller line height without overflow.
+   - Tab bar items do not wrap — tab labels in Hebrew are already long words.
+   - Form labels in the 7-tab teacher form and student form still fit without wrapping.
 
-**Prevention:**
-1. Never run the shadcn CLI on components that have been customized. Instead, copy new components manually from the shadcn source or registry URL.
-2. Keep a `# CUSTOMIZED` comment at the top of each modified component file as a guard.
-3. Add a git pre-commit hook that warns when files in `src/components/ui/` are modified by any automated process (check `git diff --name-only` against a known list).
-4. Pin the shadcn component versions by copying them at a specific commit hash, not using the live CLI.
+**Warning signs:**
+- Tab navigation bar becomes two rows (tab labels wrapped).
+- Card titles in RTL overflow their containers on mobile widths.
+- Table header text truncates at a different threshold than expected.
+- Form field labels push input fields down, misaligning multi-column form layouts.
 
-**Detection:**
-- After running the shadcn CLI, always run `git diff src/components/ui/` to review changes before committing.
-- Add test coverage for RTL behavior of Select to catch regressions automatically.
-
-**Phase to address:** Throughout all phases — add the `# CUSTOMIZED` guard in Phase 1.
+**Phase to address:** Typography phase — changes scoped to specific components, tested in browser with Hebrew content before expanding.
 
 ---
 
-### Pitfall 5: framer-motion Animations Don't Respect `prefers-reduced-motion` and Cause Jank
+### Pitfall 5: Over-Layering Surfaces Creates Z-Index Conflicts with Existing Modals and Dropdowns
 
 **What goes wrong:**
-The project uses `framer-motion` 10.16.4 for animations. The existing `tailwind.config.js` defines custom animation keyframes (fade-in, slide-up, slide-down, scale-in). During a redesign that adds shadcn's built-in CSS animations (which use `tailwindcss-animate` plugin and `data-[state=open]` selectors) alongside existing framer-motion animations, two animation systems compete. The result: elements animate twice (once via CSS, once via JS), or animation state gets out of sync with Radix's `data-state` attribute. Also, framer-motion's default animations do not check `prefers-reduced-motion` unless explicitly configured with `useReducedMotion()`.
+The v2.1 "surface hierarchy" goal calls for distinguishable elevation levels: sidebar, header, card, elevated card, floating action, modal. Implementing this with `box-shadow` or `backdrop-filter: blur()` is safe. Implementing it with `position: relative` + `z-index` on multiple nesting levels is not — it creates stacking context proliferation that corrupts the existing z-index structure for Radix dropdowns, react-hot-toast, and the cascade deletion modal.
 
-**Observed in codebase:**
-The existing Tab navigation uses `animate-scale-in` (CSS) on the active indicator. shadcn components use `data-[state=open]:animate-in` (CSS from `tailwindcss-animate`). framer-motion is imported for modal animations. Three animation systems in one app is a performance and maintenance liability.
+Currently, there is no formal z-index system. The app uses ad-hoc z-index values: `z-10` for card actions, `z-50` for navigation, portal elements that need to appear above everything have their own Radix-managed z-indices. Adding intermediate z-index layers (e.g., `z-20` for "elevated cards", `z-30` for sidebar overlay) without a global z-index specification will cause existing `z-50` modals to appear behind the new `z-30` surface.
 
 **Why it happens:**
-shadcn's default setup installs `tailwindcss-animate` as a Tailwind plugin. The existing `tailwind.config.js` already has custom keyframes defined under `theme.extend.animation`. If `tailwindcss-animate` is added, it adds its own `animate-in`, `animate-out`, etc. — class name conflicts with existing custom animation classes that also start with `animate-`.
+Visual designers specify surface elevation in terms of "feels above" or "feels below" in mockups. Developers implement this as z-index without considering that z-index only works within the same stacking context, and that adding transforms or filter properties to parent elements creates new stacking contexts that isolate child z-indices.
 
-**Consequences:**
-- Existing `animate-fade-in` class may be overridden by `tailwindcss-animate`'s version with different timing
-- Users with vestibular disorders see excessive motion (accessibility violation)
-- Radix's CSS transitions and framer-motion's JS transitions fight each other on modals
-- Performance: framer-motion adds ~30KB to bundle; if shadcn's CSS animations do the same job, framer-motion can be removed
+**How to avoid:**
+1. Use `box-shadow` as the primary elevation signal, not z-index. Deeper shadow = higher elevation. Shadow does not create stacking contexts.
+2. Define a surface elevation system using only box-shadow tokens, not z-index levels:
+   - Level 0 (base): `shadow-none`
+   - Level 1 (card): `shadow-sm`
+   - Level 2 (raised card): `shadow-md`
+   - Level 3 (floating/sticky header): `shadow-lg`
+   - Level 4 (modal overlay): portal-managed, not z-index in component CSS
+3. Reserve z-index changes for: sidebar overlay on mobile, header stickiness, and portal-rendered components (Radix manages these).
+4. If `backdrop-filter: blur()` is used for the "glass" effect on the header or sidebar, be aware it creates a stacking context.
 
-**Prevention:**
-1. Before adding `tailwindcss-animate`, audit all existing custom animation class names for conflicts. Rename any conflicts (e.g., `animate-fade-in` → `animate-custom-fade-in`).
-2. Wrap all framer-motion usage with `useReducedMotion()` or migrate to pure CSS animations where possible.
-3. Establish a single animation system: either framer-motion for all transitions, or `tailwindcss-animate` + Radix `data-state` for all. Not both.
-4. The recommended choice is `tailwindcss-animate` (zero JS overhead, works natively with Radix `data-state`). Remove framer-motion unless a specific feature requires it.
+**Warning signs:**
+- After adding a new "elevated card" variant, the date picker or orchestra select dropdown appears behind it.
+- The react-hot-toast notification appears behind a newly elevated panel.
+- The cascade deletion modal is partially obscured by the sidebar on wide viewports.
 
-**Detection:**
-- Install `tailwindcss-animate` in a branch and search for any `animate-` class name collisions: `grep -r "animate-fade-in\|animate-scale-in\|animate-slide" src/`.
-- Use Chrome's "Rendering" panel to enable "Show composited layer borders" — if you see excessive layer creation during transitions, framer-motion and CSS animations are fighting.
-
-**Phase to address:** Phase 1 (Foundation) — resolve animation system conflict before component migration.
+**Phase to address:** Surface hierarchy phase — establish shadow-based elevation system before any z-index changes.
 
 ---
 
-### Pitfall 6: Custom CSS Files Create Specificity Landmines for the Redesign
+### Pitfall 6: RTL-Breaking Animation Directions in New Framer Motion Usage
 
 **What goes wrong:**
-The project has 8 custom CSS files: `components.css`, `fonts.css`, `globals.css`, `orchestra-enrollment.css`, `simple-weekly-grid.css`, `tab-navigation-fix.css`, `teacher-management.css`, `teacher-modal-fixes.css`. Several of these use `!important` overrides (e.g., `tab-navigation-fix.css` lines 7, 10, 13: `background: white !important`). These overrides were added to fix layout issues with the current design. During a full redesign, the new component styles from shadcn/ui will be blocked by these `!important` rules — the redesigned components will appear with the old forced-white backgrounds regardless of the new design.
+The existing Framer Motion animations use `opacity: 0 → 1` (neutral direction, safe in RTL). Any new animation added in v2.1 that uses directional movement (`x: -20`, `x: 20`, `translateX`, slide-in from left/right) will produce semantically wrong results in RTL. In RTL, "entrance from the right" should feel like content coming from the natural reading start. If you animate `x: -20 → 0` (coming from the left, which is the LTR natural start), in RTL it produces the opposite semantic — content appearing from the reading END, which feels wrong.
 
-**Observed in codebase:**
-`tab-navigation-fix.css` forces `body`, `html`, and `.student-details-container` to `background: white !important`. The new design may use a warm off-white or slight tint for the body background (Monday.com uses `#f6f7fb`). That change will be completely invisible — the `!important` will override it.
+This affects: page transition animations (if added), card stagger animations (if items slide in from one side), toast entrance animations (react-hot-toast uses CSS `slideFromRight` which in RTL comes from the wrong side), sidebar slide animations.
 
 **Why it happens:**
-`!important` overrides are added as quick fixes for layout bugs. They work immediately but create debt that blocks future changes. Because they're in separate CSS files loaded globally, they affect every component indiscriminately.
+Animation direction is specified in physical coordinates (positive/negative X), not logical coordinates. RTL-aware animation requires either: using logical CSS where available, or conditionally flipping the X direction based on document direction.
 
-**Consequences:**
-- New design tokens have no effect on affected elements
-- Debugging becomes deeply confusing ("my className is right but it's not showing")
-- Iterating on design is slow — must fight specificity wars for every change
+**How to avoid:**
+1. For any Framer Motion animation with a directional X component, add RTL detection:
+   ```tsx
+   const isRTL = document.documentElement.dir === 'rtl'
+   const slideIn = { x: isRTL ? 20 : -20 }  // enter from logical start
+   ```
+2. Prefer Y-axis animations (fade up, fade down) which have no RTL implications.
+3. For stagger entrance animations, stagger from logical end to logical start (rightmost item first in RTL, leftmost first in LTR).
+4. The existing `slideFromRight` CSS keyframe in tailwind.config.js uses `translateX(-100%)` — in RTL this is correct since physical left is visual right. Document this explicitly so future changes don't "fix" it backward.
 
-**Prevention:**
-1. Before the redesign begins, create a dedicated audit pass through all 8 custom CSS files and remove or scope every `!important` declaration.
-2. Fix the underlying layout bugs that caused the `!important` overrides in the first place (most are tab navigation overflow issues that can be fixed with proper Flexbox constraints or the new design's layout).
-3. Consolidate the 8 custom CSS files into a single `src/styles/app.css` to make specificity debugging tractable.
-4. Add a Stylelint rule that fails CI when `!important` appears outside of explicitly allowed utility contexts.
+**Warning signs:**
+- Cards or list items slide in from the wrong side when entering.
+- A "drawer opening from the right" feels like it's opening from the inside-out in RTL.
+- Staggered animations create a right-to-left visual sweep in LTR mode and left-to-right in RTL mode (both should feel like reading direction start).
 
-**Detection:**
-- `grep -r "!important" src/styles/` — count and triage each instance before starting the redesign.
-- During design implementation, if a Tailwind class appears in the DOM but has no visible effect, check for `!important` overrides in DevTools "Styles" panel.
-
-**Phase to address:** Phase 1 (Foundation) — CSS audit and cleanup must precede all component work.
-
----
-
-## Moderate Pitfalls
-
-Mistakes that cause significant rework but don't require full rewrites.
+**Phase to address:** Motion phase — every directional animation must be verified in RTL before shipping.
 
 ---
 
-### Pitfall 7: Hebrew Font Loading Race Creates FOUT During Page Transitions
+### Pitfall 7: Adding `will-change` or GPU Promotion Without Measurement Destroys Performance
 
 **What goes wrong:**
-The custom Hebrew font "Reisinger Yonatan" is loaded via `@font-face` in `index.css` using `font-display: swap`. During initial page load (and during Suspense lazy loading of route chunks), a Flash of Unstyled Text (FOUT) shows system sans-serif for ~500-1500ms. In Hebrew, system fonts (Arial Hebrew, Noto Sans Hebrew) have significantly different character spacing and line heights compared to "Reisinger Yonatan" — causing layout shift (CLS) when the font swaps in. The redesign will add more pages with text-heavy components (teacher details tabs, student forms) where CLS will be more visible.
+The codebase currently has no `will-change` or GPU promotion (`translateZ(0)`, `backface-visibility: hidden`) anywhere. This is correct — the app does not need GPU promotion because its animations are simple opacity fades. If v2.1 adds spring physics, parallax effects, or `layout` animations and simultaneously adds `will-change: transform` "for performance," it can actually degrade performance.
+
+`will-change: transform` causes the browser to keep a GPU texture for the element even when it is not animating. On a page with 20 cards each having `will-change: transform`, 20 GPU textures are allocated, consuming GPU memory. On lower-end devices or Windows with discrete GPU switching, this causes jank.
 
 **Why it happens:**
-`font-display: swap` correctly prioritizes readability over polish but allows visible text reflow. The font file is loaded from `/fonts/` at runtime, which means it's not preloaded in `<head>`.
+"Add `will-change: transform` for better animation performance" is cargo cult advice. It was valid when browsers first introduced compositor threads; modern browsers (Chrome 100+, Safari 16+) handle animation promotion automatically when needed. Adding `will-change` everywhere causes texture thrashing instead of preventing it.
 
-**Prevention:**
-1. Add `<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/Reisinger-Yonatan-web/Reisinger-Yonatan-Regular.woff2">` to `index.html`.
-2. Consider `font-display: optional` for secondary fonts and `font-display: block` for the primary Hebrew font (short block period, no swap flash).
-3. During the redesign, define component height constraints that don't change when the font loads (avoid `height: auto` on containers sized by text content at page load).
+**How to avoid:**
+Do not add `will-change` to any element as a "performance optimization" in v2.1. If a specific animation has measured jank (use Chrome DevTools Performance > check for green "Compositor" frames vs red "Main Thread" frames), then and only then add `will-change: transform` to that specific element and measure again.
 
-**Detection:**
-Open Chrome DevTools > Performance > record a page load. Look for "Font is blocked" or layout shifts in the Web Vitals section. CLS score above 0.1 indicates the font swap is causing problems.
+Framer Motion's `LazyMotion` component (with feature sets) can reduce the bundle weight of Framer Motion from ~30KB to ~6KB by loading only the animation features you actually use. If adding more Framer Motion usage, evaluate using `LazyMotion` at the same time.
 
-**Phase to address:** Phase 1 (Foundation) — add preload link before any other design work.
+**Warning signs:**
+- Chrome DevTools Memory tab shows GPU memory increasing as you scroll through a list.
+- The browser throttles animations after 10-30 seconds on a long session (texture limit hit).
+- Framer Motion `layout` animations cause a purple "Layout" bar in DevTools Performance panel on every mouse move (re-layout triggered by whileHover state change).
 
----
-
-### Pitfall 8: shadcn Dialog/Sheet Trap Focus in RTL Incorrectly
-
-**What goes wrong:**
-The project's custom `Modal.tsx` component handles focus trapping manually via the backdrop click handler. shadcn's `Dialog` component uses Radix `Dialog.Content` which includes built-in focus trapping (via `@radix-ui/react-focus-scope`). When both modal systems coexist during migration, pages with the old `Modal` and the new `Dialog` will have conflicting focus behavior. More critically: in Hebrew RTL, the Tab key focus order traverses elements from right to left visually but left to right in DOM order. If form fields in dialogs are arranged visually RTL but in DOM order LTR, Tab navigation goes "backwards" through the form from the user's perspective.
-
-**Observed in codebase:**
-`Modal.tsx`, `ConfirmDeleteModal.tsx`, `ConfirmationModal.tsx`, `InputModal.tsx` — four separate custom modal implementations. Each must be replaced by shadcn `Dialog` during redesign to avoid two focus trap systems running simultaneously.
-
-**Prevention:**
-1. Replace all 4 custom modal components with shadcn `Dialog` in a single dedicated phase. Do not have a partial migration state where some modals are new and some are old.
-2. Verify DOM order matches visual RTL order for all form fields inside dialogs. The `tabIndex` attribute should not be used to override natural order — fix the DOM order instead.
-3. Add keyboard navigation tests: Tab through every modal in the redesigned app to verify focus moves in the expected direction.
-
-**Detection:**
-Open any modal and Tab through it. Does focus move through fields in logical Hebrew RTL order (right-to-left for the user)? If Tab moves to what appears as the "end" of the form first, DOM order is wrong.
-
-**Phase to address:** Dedicated "Modals" phase — migrate all 4 at once.
+**Phase to address:** Motion phase — no `will-change` added without measurement. Include a Lighthouse performance run as a phase success criterion.
 
 ---
 
-### Pitfall 9: React Big Calendar RTL/Hebrew Month Names Not Handled by Design System
+### Pitfall 8: Bold Color Palette Changes That Break WCAG Contrast on Hebrew Labels
 
 **What goes wrong:**
-`react-big-calendar` 1.19.4 is used for scheduling views. It has partial RTL support — it does NOT automatically flip its layout when `dir="rtl"` is set. The calendar grid renders days left-to-right even in RTL context. Hebrew month/day names must be provided via a localizer. The project's custom `Calendar.tsx` component (in `src/components/ui/`) uses a manually-coded Hebrew month array and hardcoded DAYS array — this works currently but will break if shadcn's design system changes the container direction or if `react-big-calendar` is used for the teacher schedule views.
+The v2.1 "bold identity" direction typically increases use of saturated accent colors for badges, status indicators, and decorative elements. Hebrew text at small sizes (the app uses `text-sm` and `text-xs` extensively for status badges, table cell labels, and form hints) requires higher contrast ratios because Hebrew characters at small sizes have more complex strokes that are harder to read at borderline contrast.
+
+WCAG 2.1 Level AA requires 4.5:1 contrast for normal text and 3:1 for large text. The current warm coral `--primary: 15 85% 45%` on white passes at approximately 4.2:1 — borderline. Making the coral "bolder" (higher saturation or slightly lighter for vibrancy) can drop it below threshold.
 
 **Why it happens:**
-`react-big-calendar` relies on a `localizer` (usually `date-fns` or `moment`) for internationalization, but RTL layout must be handled separately via CSS and `dir` attribute on the calendar container element. The library's CSS was written assuming LTR.
+Design tools show colors looking great at large sizes on Retina displays. The app runs in Hebrew on standard 1080p displays where anti-aliasing of Hebrew characters is less precise, and low-contrast text is genuinely harder to read than English text at the same contrast ratio.
 
-**Prevention:**
-1. Always render `react-big-calendar` inside a `<div dir="rtl">` container AND add the RTL override CSS that flips its flex direction.
-2. Use the `date-fns` localizer (already installed) with Hebrew locale (`he-IL`) rather than hardcoded string arrays.
-3. During the redesign, budget time specifically for calendar RTL testing — it requires visual verification across month boundaries and week views.
+**How to avoid:**
+1. Run contrast checks on EVERY new color combination before adding it: `foreground on background`, `text on badge`, `label on input`.
+2. Test specifically with small Hebrew text (`text-xs` or `text-sm font-semibold`) not just Latin placeholder text.
+3. Keep status badge colors at WCAG AA minimum: use darker text on lighter backgrounds for badges rather than white text on medium-saturation backgrounds.
+4. The tool: https://webaim.org/resources/contrastchecker/ or browser DevTools Accessibility panel.
 
-**Detection:**
-Render `react-big-calendar` on the Teacher Schedule tab and check: does Sunday appear on the right side (standard for Hebrew calendars that start the week on Sunday)? Does the month name appear in Hebrew? Do navigation arrows point in the correct directions?
+**Warning signs:**
+- Lighthouse accessibility score drops after adding bold color to badges.
+- Status indicators look vivid in Figma mockups but muddy in the browser at normal viewing distance.
+- Users over 40 report difficulty reading colored labels (contrast is borderline).
 
-**Phase to address:** Teacher Schedule / Student Schedule redesign phase.
-
----
-
-### Pitfall 10: Tailwind Purge Removes RTL Variant Classes Used Only in CSS Files
-
-**What goes wrong:**
-The project defines RTL utilities in `tailwind.config.js` via a plugin (`.rtl`, `.ltr`, `.text-start`, `.text-end`, etc.). These are generated via `addUtilities`. If `tailwindcss-animate` or any new Tailwind plugin is added that changes the PostCSS processing order, or if the content purge configuration misses files that use these utilities, the RTL utilities may be purged from the production build. The `teacher-modal-fixes.css` uses `[dir="rtl"]` attribute selectors — these are in plain CSS files that Tailwind's JIT does not scan, so they will not be purged, but if they depend on CSS variable values set by Tailwind, those will be purged.
-
-**Prevention:**
-1. After installing any new Tailwind plugin, run `npm run build` and inspect the CSS output for `.rtl`, `.ltr`, `.text-start`, `.text-end` classes.
-2. Add RTL utility class names to the Tailwind `safelist` if they are ever generated programmatically (e.g., via a `cn()` call with string interpolation that Tailwind's scanner cannot see).
-3. Test production build in RTL: load the built app and verify layout direction is correct.
-
-**Detection:**
-`npm run build && grep -o "\.rtl\|\.ltr\|\.text-start\|\.text-end" dist/assets/*.css` — if these are absent from the production CSS, they're being purged.
-
-**Phase to address:** Phase 1 and then after every major dependency addition.
+**Phase to address:** Color evolution phase — contrast check is a hard gate before any new color combination ships.
 
 ---
 
-### Pitfall 11: Headless UI and Radix UI Are Installed Simultaneously — Redundant Primitives
+## Technical Debt Patterns
 
-**What goes wrong:**
-`@headlessui/react` 1.7.17 and several `@radix-ui/*` packages are both installed. Headless UI is used for some components, Radix for others (specifically `Select`, `Label`, `Slot`). shadcn/ui is Radix-based. After migrating to shadcn, all Headless UI usage becomes redundant — but it remains in the bundle. More critically, if both libraries provide a component for the same pattern (e.g., `Disclosure` in Headless UI, `Collapsible` in Radix via shadcn), the team may use both simultaneously, doubling the accessible semantics implementation and accessibility testing surface.
+Shortcuts that seem reasonable in v2.1 but create long-term problems.
 
-**Prevention:**
-1. After migrating a Headless UI component to its shadcn/Radix equivalent, remove the Headless UI import immediately in the same PR.
-2. Once all Headless UI components are migrated, remove `@headlessui/react` from `package.json` entirely.
-3. Track Headless UI usage: `grep -r "@headlessui/react" src/` and add to the migration checklist.
-
-**Detection:**
-`grep -r "@headlessui/react" src/` — any result after migration is a straggler import.
-
-**Phase to address:** Each component migration phase (remove as you go, then do a final cleanup sweep).
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| Add `motion.div` to every card for hover lift | Quick visual richness | 165 files with physical margin/spacing classes now inside stacking contexts; dropdown breakage | Never — use CSS `hover:-translate-y-1` instead |
+| Change `primary-500` hex value in tailwind.config.js directly | All 888 usages update at once | No gradual rollout possible; must test all 165+ affected files simultaneously | Only if doing a full visual audit pass |
+| Use `filter: blur()` for glass effects on more than one surface level | Modern glassmorphism look | Blur creates stacking contexts; multiplied GPU load; poor performance on Windows | One surface maximum (header or sidebar, not both) |
+| Hardcode new shadow values in individual components | Faster per-component iteration | Shadow values diverge; 12 different shadow values for "cards" with no shared token | Never — add to tailwind.config.js `boxShadow` first |
+| Animate `box-shadow` directly with Framer Motion | Smooth shadow transitions | `box-shadow` animation triggers GPU repaint on every frame; use `opacity` on a pseudo-element shadow instead | Never for lists; only for isolated hero elements |
+| Add `transition-all` for simplicity | No need to know which properties change | Animates ALL properties including layout-affecting ones; performance cost | Never — always specify exact properties: `transition-shadow`, `transition-transform` |
 
 ---
 
-### Pitfall 12: Visual Regression in Forms — React Hook Form + Zod Schema Still Expects Old Field Shapes
+## Integration Gotchas
 
-**What goes wrong:**
-Redesigning form components (7-tab teacher form, student forms, orchestra forms) requires touching JSX structure. If the outer form container or tab panels change their mounting/unmounting behavior (e.g., switching from `display: none` toggling to actual unmounting), React Hook Form's registered fields may be unregistered and re-registered, losing validation state. Zod schema shapes are tightly coupled to `register()` field names — any renaming of an `id` attribute or field key for design reasons breaks validation silently (field validates as if empty, passes, sends wrong data to API).
+Common mistakes specific to this codebase's integration points.
 
-**Observed in codebase:**
-The existing tab navigation mounts all tabs and uses CSS to show/hide them (`display: none`). If the redesign switches to conditional rendering (`{activeTab === 'personal' && <PersonalInfoTab />}`), all React Hook Form `register()` calls inside hidden tabs will unmount, clearing their values.
-
-**Prevention:**
-1. Keep the existing tab rendering strategy (CSS show/hide via conditional className, not conditional rendering) UNTIL the React Hook Form strategy is audited and confirmed compatible with unmounting.
-2. If tabs must unmount, use `shouldUnregister: false` in `useForm()` configuration so values persist when fields unmount.
-3. Never rename a `register()` field name for cosmetic reasons without updating the Zod schema and the API payload key simultaneously.
-4. Write form submission tests before redesigning any form tab to catch regressions.
-
-**Detection:**
-Fill in a form partially, switch tabs (which unmounts the tab with shadcn Tabs component), switch back — do the filled values persist? If not, `shouldUnregister` is defaulting to `true`.
-
-**Phase to address:** Every form redesign phase.
+| Integration | Common Mistake | Correct Approach |
+|-------------|----------------|------------------|
+| Framer Motion + shadcn/ui Radix portals | Wrapping Select trigger in `motion.div` with `layout` prop | Keep Select wrapper as plain div; animate only non-interactive decoration |
+| Tailwind `animate-*` + custom keyframes | Adding `tailwindcss-animate` plugin overwrites existing `animate-fade-in` timing | Namespace all existing custom animations with `animate-custom-*` prefix before installing |
+| CSS `--primary` var + Tailwind `primary-NNN` scale | Changing one leaves the other inconsistent | Every token change touches both `index.css` vars AND `tailwind.config.js` hex values in same commit |
+| Hebrew font (Heebo) + bold font weight | `font-bold` increases character width by ~10% in Hebrew, breaking truncation | Test all nav labels and tab labels in Hebrew at new weight before shipping |
+| react-hot-toast + RTL + new positioning | Adding a toast container position prop breaks the RTL-correct physical positioning | Verify toast appears at top/bottom-left (which is top/bottom-start in RTL = visual right) |
+| Framer Motion + `prefers-reduced-motion` | New animations added without checking reduced motion support | The global `@media (prefers-reduced-motion: reduce)` in index.css already handles CSS animations. Framer Motion animations need explicit `useReducedMotion()` or `transition={{ duration: 0 }}` when reduced |
+| Spring physics + tab switching | Adding spring to `AnimatePresence` tab transitions means fast tab clicks queue up and lag | Keep tab transitions as `duration: 0.2` linear — do not use spring for page-level transitions |
 
 ---
 
-## Minor Pitfalls
+## Performance Traps
+
+| Trap | Symptoms | Prevention | When It Breaks |
+|------|----------|------------|----------------|
+| Too many `motion.div` wrappers on list items | List of 50+ students/teachers scrolls at <30fps | Max 1 Framer Motion wrapper per page-level section; use CSS for list items | At 30+ animated items on screen simultaneously |
+| `AnimatePresence` with `mode="wait"` + slow components | Tab switch feels unresponsive (must wait for exit animation before entering) | Use `mode="sync"` or remove `mode` entirely — fade-out and fade-in overlap | When tab content is slow to render (>100ms) |
+| `backdrop-filter: blur()` on sidebar or header on Windows | GPU usage spikes, scroll jank appears | Use solid backgrounds with shadow instead of blur; or test on Windows specifically | On Windows with integrated Intel graphics, which handles backdrop-filter poorly |
+| Animating `border-radius` with Framer Motion layout | Corners snap during resize | Animate border-radius with CSS `transition-[border-radius]` instead | When element size changes simultaneously |
+| Multiple `useAnimation()` hooks on same page | Animation state desync when hooks update in different render cycles | Use single `AnimatePresence` at page level; declarative `animate` prop > imperative hooks | When 5+ hooks are active simultaneously |
 
 ---
 
-### Pitfall 13: Lucide React Icon Versions Drift Between shadcn Installs
+## "Looks Done But Isn't" Checklist
 
-**What goes wrong:**
-The project uses `lucide-react` 0.279.0. shadcn/ui components are generated with specific Lucide icon imports that exist in newer Lucide versions. If shadcn components are copied from the registry at the latest version, they may import icons that don't exist in 0.279.0 — TypeScript will error, and the icon will fail to render.
+Things that appear complete visually but are missing critical pieces.
 
-**Prevention:**
-After adding any shadcn component, check its imports against `lucide-react` 0.279.0 changelog. If an icon is missing, either upgrade Lucide or substitute with an available icon.
-
-**Detection:**
-TypeScript error: `Module '"lucide-react"' has no exported member 'X'` after adding a shadcn component.
-
-**Phase to address:** Each component migration phase.
-
----
-
-### Pitfall 14: react-hot-toast Styling Conflicts with shadcn Toaster
-
-**What goes wrong:**
-react-hot-toast is already configured in `App.tsx` with custom Hebrew RTL styling. shadcn/ui provides a `Sonner` toast component (via the `sonner` library) that conflicts with react-hot-toast. Using both simultaneously produces duplicate toast systems. The Monday.com-inspired design aesthetic may require switching to Sonner for better animation and stacking behavior, but migrating toast calls across the entire codebase (many `toast.success()`, `toast.error()` calls in the API service and feature components) is a cross-cutting concern.
-
-**Prevention:**
-1. Do not add the shadcn Sonner component until a deliberate decision is made to migrate off react-hot-toast.
-2. If staying with react-hot-toast, customize its appearance to match the new design system rather than adding Sonner.
-3. If migrating to Sonner: do it in a single dedicated phase, not incrementally — having two toast systems is worse than either alone.
-
-**Detection:**
-`grep -r "toast\." src/ | wc -l` — count total toast call sites before deciding whether migration effort is worth it.
-
-**Phase to address:** Late polish phase — after core component redesign is complete.
+- [ ] **New card shadow styles:** Verify shadows do not clip inside parent containers with `overflow: hidden`. Hebrew text components often have `overflow-hidden` for truncation. Shadow appears behind clipped boundary.
+- [ ] **Bold typography applied to nav labels:** Hebrew nav labels ("תלמידים", "מורים", "תזמורות") are longer than English equivalents. Verify no wrapping at 1280px viewport with the new font weight.
+- [ ] **Gradient or bold accent on CTA buttons:** Verify focus ring (currently `ring-primary-500`) remains visible after background change. Gradient buttons often lose accessible focus indicator.
+- [ ] **Animated card hover effects:** Verify with keyboard navigation — `Tab` focus on a card with hover animation should not trigger the hover animation. Check `@media (hover: none)` — on iPad the hover state sticks after tap.
+- [ ] **New color tokens in `index.css`:** Confirm the token appears in production CSS by running `npm run build && grep "15 85" dist/assets/*.css` (or whatever the new value is). CSS vars can be silently dropped if PostCSS processing order changes.
+- [ ] **Framer Motion spring animation:** Verify spring settles within 500ms. Framer Motion springs that do not have `clamp: true` or have very low damping can oscillate for 2+ seconds, which is distracting in business software.
+- [ ] **New icon sizes or weights:** If using heavier icon strokes (Lucide `strokeWidth={2.5}` instead of default `2`), verify the icons still display correctly at all used sizes (`h-4 w-4`, `h-5 w-5`). At 16px with high stroke weight, Hebrew context icons can look like blobs.
 
 ---
 
-### Pitfall 15: `tailwind-merge` Version 1.14.0 Does Not Know About Custom Tailwind Theme Colors
+## Recovery Strategies
 
-**What goes wrong:**
-`tailwind-merge` resolves conflicts between Tailwind utility classes. Version 1.14.0 knows about core Tailwind classes but not the project's custom color scale (`primary-*`, `success-*`). If two classes like `bg-primary-500 bg-primary-600` are passed to `cn()`, `twMerge` will NOT correctly identify them as conflicting background colors and will keep both. This is because `twMerge` requires explicit configuration for custom class groups.
-
-**Prevention:**
-Configure `tailwind-merge` with the custom theme extensions via `extendTailwindMerge()`:
-```ts
-import { extendTailwindMerge } from 'tailwind-merge'
-
-export const cn = extendTailwindMerge({
-  classGroups: {
-    'bg-color': [{ bg: ['primary', 'success', 'secondary', 'purple', 'orange'] }],
-    'text-color': [{ text: ['primary', 'success', 'secondary', 'purple', 'orange'] }],
-  }
-})
-```
-Also consider upgrading `tailwind-merge` to 2.x which has better handling of custom extensions.
-
-**Detection:**
-Call `cn('bg-primary-500', 'bg-primary-600')` and check the result. If both classes appear in the output (not just `bg-primary-600`), `twMerge` isn't resolving the conflict.
-
-**Phase to address:** Phase 1 (Foundation) — fix `cn()` utility before redesign begins.
+| Pitfall | Recovery Cost | Recovery Steps |
+|---------|---------------|----------------|
+| CSS token change broke 100+ components | HIGH | `git revert` the token change; establish component inventory first; make change again incrementally by scope |
+| Framer Motion wrapper broke dropdowns | LOW | Remove `motion.div` wrapper from affected component; replace with CSS transition class |
+| Typography change caused tab bar wrapping | MEDIUM | Scope `font-*` change to headings only; revert nav label changes; test Hebrew character widths at target weight before re-applying |
+| Added `will-change` everywhere causing GPU thrashing | LOW | Remove `will-change` from all but 1-2 specifically measured elements; check GPU memory in DevTools after |
+| Spring animation oscillates too long | LOW | Add `transition={{ type: "spring", damping: 30, stiffness: 300, clamp: true }}` or convert to `ease: "easeOut", duration: 0.2` |
+| RTL directional animation is backwards | LOW | Add `isRTL` check to flip X direction; or convert to Y-axis animation which is direction-neutral |
+| Z-index corruption after adding elevated surface | MEDIUM | Remove z-index from new surfaces; use shadow-only elevation; audit stacking contexts with DevTools Layers panel |
 
 ---
 
-## Phase-Specific Warnings
+## Pitfall-to-Phase Mapping
 
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| Design token setup | CSS variable collision with existing Tailwind colors | Bridge shadcn variables to match existing brand colors first (Pitfall 1) |
-| Document root `dir` | Radix portals escape RTL scope | Set `dir="rtl"` on `document.documentElement`, not just app root (Pitfall 2) |
-| CSS cleanup | `!important` overrides block new design tokens | Audit all 8 CSS files, remove `!important` before first component migration (Pitfall 6) |
-| shadcn CLI usage | Overwrites customized component files | Never use CLI on already-customized files; copy manually from registry (Pitfall 4) |
-| Animation system | `tailwindcss-animate` conflicts with existing animation class names | Audit for class name conflicts before installing plugin (Pitfall 5) |
-| Form redesign | React Hook Form unmounting clears field values | Keep CSS show/hide for tab content OR set `shouldUnregister: false` (Pitfall 12) |
-| Select/Dropdown redesign | Check indicator and padding wrong in RTL | Use logical properties (`start-2`, `ps-8`, `pe-2`) not physical (`left-2`, `pl-8`) (Pitfall 2) |
-| Modal migration | Multiple custom modal implementations + shadcn Dialog conflict | Replace all 4 custom modals in one phase, not incrementally (Pitfall 8) |
-| Calendar redesign | `react-big-calendar` LTR grid in RTL context | Use `date-fns` `he-IL` locale + explicit RTL CSS overrides on container (Pitfall 9) |
-| Production build | RTL utility classes purged | Build and grep for `.text-start`, `.text-end` in production CSS after each plugin addition (Pitfall 10) |
-| Font loading | FOUT causes CLS during Suspense route transitions | Add `<link rel="preload">` for Hebrew font woff2 in `index.html` (Pitfall 7) |
-| Icon imports | Lucide icon missing from v0.279.0 | Check icon exists in installed version after each shadcn component copy (Pitfall 13) |
-| Toast system | react-hot-toast + shadcn Sonner running simultaneously | Decide on one system; do not add Sonner until ready to fully migrate (Pitfall 14) |
-| Headless UI cleanup | `@headlessui/react` remains in bundle after Radix migration | Remove on a per-component basis as you migrate, not in a single cleanup at the end (Pitfall 11) |
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Dual color system (Pitfall 1) | Phase 1: Token Foundation | `grep -rh "primary-" src --include="*.tsx" | grep -oP "(bg|text|border|ring)-primary-\d+"` — count before and after each token change |
+| Framer Motion + CSS transition conflict (Pitfall 2) | Phase for Motion | Before committing any new `motion.*` usage, check the element for `transition-*` Tailwind classes |
+| Stacking context from layout animations (Pitfall 3) | Phase for Motion | After any new `motion.div` with `layout` or `whileHover`, test all dropdowns on that page |
+| Hebrew typography layout breakage (Pitfall 4) | Typography phase | Render key Hebrew labels ("תלמידים", "מורה ראשי", "מנצח") at new font weight; check for line breaks |
+| Z-index conflicts from surface layering (Pitfall 5) | Surface hierarchy phase | Test all Radix Select, Popover, and Dialog components after adding any new elevation layer |
+| RTL-backwards directional animations (Pitfall 6) | Motion phase | Every directional animation verified with `dir="rtl"` in browser |
+| `will-change` performance degradation (Pitfall 7) | Motion phase | Run Lighthouse Performance after adding animations; check GPU memory in DevTools Memory tab |
+| WCAG contrast failure on bold colors (Pitfall 8) | Color evolution phase | Run Lighthouse Accessibility after every new color combination; minimum score 95 |
 
 ---
 
 ## Sources
 
-Based on direct inspection of:
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/tailwind.config.js`
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/src/components/ui/` (all 19 files)
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/src/styles/` (all 8 CSS files)
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/src/index.css`
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/package.json`
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/src/App.tsx`
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/.planning/codebase/CONCERNS.md`
-- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/.planning/codebase/STACK.md`
-- Established knowledge of Radix UI, shadcn/ui, Tailwind CSS, and RTL behavior (HIGH confidence for all major claims — these are documented behaviors of the named libraries)
+**Direct codebase inspection (HIGH confidence):**
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/tailwind.config.js` — dual color system identified
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/src/index.css` — CSS var tokens, `prefers-reduced-motion` media query
+- Framer Motion usage: 5 files, all opacity-only patterns verified
+- Physical CSS property usage: 786 occurrences across 165 files (via grep)
+- `primary-NNN` usage: 888 occurrences in TSX files, split documented above
+
+**Verified against official documentation (HIGH confidence):**
+- Framer Motion stacking context issue: [GitHub issue #1313](https://github.com/framer/motion/issues/1313)
+- Framer Motion `layoutScroll` for scroll offset measurement: [Motion layout docs](https://motion.dev/docs/react-layout-animations)
+- CSS `transform` and stacking contexts: MDN Web Docs
+
+**WebSearch verified (MEDIUM confidence):**
+- Spring animation performance on mobile: `config: { clamp: true }` to end oscillation
+- `will-change` GPU texture thrashing at scale
+- Hebrew font metric behavior at higher weights (Heebo)
+- Framer Motion `LazyMotion` for 30KB → 6KB bundle size reduction
+
+**Domain knowledge from v2.0 pitfalls research (HIGH confidence for patterns that carried forward):**
+- RTL portal escape behavior (Radix renders to `document.body`, outside `dir="rtl"` scope)
+- Tailwind class merge conflicts with custom color scales
+- Animation system double-firing (CSS + JS on same element)
 
 ---
 
-*Pitfalls audit: 2026-02-17*
+*Pitfalls research for: visual identity upgrade of existing production React SaaS (Hebrew RTL)*
+*Researched: 2026-02-18*

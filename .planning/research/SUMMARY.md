@@ -1,355 +1,235 @@
 # Project Research Summary
 
-**Project:** Tenuto.io v2.0 — Full UI/UX Redesign (shadcn/ui Migration)
-**Domain:** Hebrew RTL SaaS admin dashboard — conservatory (music school) management
-**Researched:** 2026-02-17
+**Project:** Tenuto.io — v2.1 Production-Grade Visual Identity Upgrade
+**Domain:** Visual identity transformation of an existing production React SaaS (Hebrew RTL, shadcn/ui + Tailwind + Framer Motion)
+**Researched:** 2026-02-18
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Tenuto.io v2.0 is a purely visual redesign of a production-quality conservatory management app with a complete feature set. The app already has a partial shadcn/ui foundation — 10+ components in `src/components/ui/` follow the shadcn pattern, `@radix-ui/react-select`, `@radix-ui/react-label`, and `@radix-ui/react-slot` are installed, and the `cn()` utility exists — but the single most critical piece is missing: the CSS custom property token layer (`:root` block in `index.css`). Without it, every existing shadcn component silently renders with undefined color values. This must be fixed before any other work. The recommended approach is a strict layer-first, token-first migration: establish the design token foundation, migrate primitive components, rebuild domain-specific components on those primitives, then apply the visual overhaul to the layout shell last.
+Tenuto.io v2.0 shipped a complete design system: warm coral/amber CSS token palette, shadcn/ui primitives, Heebo Hebrew font, Framer Motion tab transitions, and an RTL-first layout. The system is "clean and consistent" but reads as a polished template rather than a confident product. Research across Linear, Atlassian, Vercel, Cloudscape, and Fluent 2 identifies six specific gaps that separate production SaaS from template scaffolds: surface elevation hierarchy, a wide neutral color scale, a confident typography scale, information density modes, spring micro-interactions on primary actions, and color scarcity (coral currently used too frequently across too many surfaces). None of these gaps require new npm packages — all capabilities are already present in framer-motion v10, Tailwind v3, and the existing CSS token system. The v2.1 work is entirely configuration and component authoring layered on top of the existing v2.0 foundation.
 
-The primary risk in this redesign is RTL correctness. Hebrew RTL is not just `direction: rtl` — it requires logical CSS properties throughout (`ps-*`, `pe-*`, `start-*`, `end-*` instead of `pl-*`, `pr-*`, `left-*`, `right-*`), and Radix UI portals (Dialog, Select, Tooltip, DropdownMenu) render outside the `dir="rtl"` app wrapper into `document.body`, which has no `dir` attribute set. This means checkmarks appear on the wrong side, animations slide in from the wrong direction, and toast notifications anchor at the wrong screen edge unless `dir="rtl"` is set on `document.documentElement` at startup. RTL verification must be a mandatory checklist item for every migrated component.
+The recommended approach is a strictly layered, token-first execution strategy. Layer 1 (CSS custom properties + tailwind.config.js) must be established and validated before touching Layer 2 (shadcn/ui primitive components), which must be stable before touching Layer 3 (Layout, Sidebar, Header). This ordering is non-negotiable: the shell (Sidebar, Layout, Header) is depended on by all 18+ pages — visual regressions there are maximally expensive. A 6-phase build order maps directly to this layered dependency chain and is the same order recommended by both the ARCHITECTURE.md and PITFALLS.md research independently.
 
-A secondary risk is the accumulation of CSS specificity landmines: 8 custom CSS files exist in `src/styles/`, several using `!important` overrides that will silently block the new design tokens. These must be audited and cleaned before any component-level redesign. The two animation systems (framer-motion + the new `tailwindcss-animate` plugin required by Radix `data-state` animations) must also be reconciled — running both simultaneously causes double-animation and `prefers-reduced-motion` accessibility violations. The safe path is a single, deliberate foundation phase that resolves all these systemic issues before touching any UI component.
-
----
+The primary risk is the codebase's dual color system: 888 component usages of `primary-NNN` Tailwind hex classes exist alongside the CSS variable `--primary` consumed by shadcn components. These produce different brand colors from the same word "primary." Any color evolution work that touches only one system will produce visually inconsistent results with no error or warning. This must be resolved in Phase 1 before any other visual changes cascade. Secondary risks include Framer Motion stacking-context breakage on Radix dropdowns (do not use `layout` or `whileHover={{ y: N }}` on containers that hold Select/Popover/Tooltip), RTL directional animation semantics (Y-axis + opacity only; never bare positive X values), and Hebrew font-weight metric shifts causing nav label wrapping when applying Heebo 700-800.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack (React 18, TypeScript, Vite, Tailwind CSS v3, React Hook Form, Zod, React Query, React Router v6) is solid and unchanged for v2.0. What's needed is a targeted set of additions and upgrades to complete the shadcn/ui infrastructure.
+No new packages are required for this milestone. All capabilities for spring physics, surface elevation, typography scale, and micro-interactions are available through libraries already installed. The framer-motion v10 APIs not yet used (`useSpring`, `whileHover`, `whileTap`, `staggerChildren` with `type:"spring"`) cover the full animation scope. One new file is required: `src/lib/motionTokens.ts` as a central motion constants module replacing raw inline Framer Motion values.
 
-**Packages to add or upgrade:**
-- `tailwind-animate@^1.0.7` (new) — required for Radix `data-[state=open]:animate-in` CSS animation patterns; existing components already reference these class names
-- `tailwind-merge@^2.5.5` (upgrade from 1.14.0) — v1.x does not resolve arbitrary value conflicts correctly with Tailwind v3.4+
-- `lucide-react@^0.460.0` (upgrade from 0.279.0) — music-relevant icons (Piano, Guitar, Music, GraduationCap, FileSpreadsheet) added after 0.279.0; required for music school identity
-- 13 `@radix-ui/*` packages (new) — Dialog, Tabs, Tooltip, Popover, DropdownMenu, Switch, Avatar, Separator, Checkbox, Toast, Accordion, Progress, ScrollArea
+**Core technologies and their v2.1 roles:**
+- `framer-motion` v10: Spring physics for primary action feedback and staggered list entrance — `whileHover`, `whileTap`, `useReducedMotion()`, and typed spring transition presets via `motionTokens.ts`
+- `tailwindcss` v3: Semantic shadow scale (`shadow-elevation-*` or `shadow-1` through `shadow-4`) and typography scale added via `tailwind.config.js` extension; no config-file format changes
+- CSS custom properties (`src/index.css :root {}`): Expanded with `--shadow-0` through `--shadow-4` (warm-tinted), `--duration-*` / `--ease-*` motion tokens, `--surface-*` hierarchy tokens, and a 9-step warm neutral scale
+- `src/lib/motionTokens.ts` (new file): Named spring presets (`snappy`, `smooth`, `bouncy`, `gentle`) and transition preset objects imported by animated components
 
-**Configuration changes (no packages):**
-- `src/index.css` — add `:root {}` CSS custom property block (the missing design token layer)
-- `tailwind.config.js` — add `tailwind-animate` plugin + map semantic color names to CSS variables
-- `vite.config.ts` — add new Radix packages to `optimizeDeps.include`
+**Deferred upgrades (out of scope):**
+- `motion` v12 package (formerly framer-motion): No API benefit this milestone; import rename across 5 files is pure churn
+- Tailwind v4: CSS-first config migration with shadcn breaking changes is a separate milestone-sized project
+- `lucide-react` upgrade (0.279.0 → 0.460+): MEDIUM urgency; useful for icon-only sidebar items but not blocking v2.1
 
-**Do not add:** `@headlessui/react` v2 (breaking changes), MUI/Mantine (incompatible theming), `tailwindcss-rtl` plugin (Tailwind v3.3+ has built-ins), `next-themes` (Vite app), `vaul`, `react-icons`, or `styled-components`.
-
-See `.planning/research/STACK.md` for complete installation commands and configuration code.
+**What not to add:** `react-spring`, `gsap`, `@radix-ui/react-hover-card`, any color palette library, `tw-animate-css`, `sonner`.
 
 ### Expected Features
 
-The redesign scope is visual only — zero functional regressions. All 18 pages need to inherit the new token system and layout shell, but intensity varies significantly.
+**Must have (table stakes — product reads as template without these):**
+- Surface elevation system — 4 distinct levels (page, card, overlay, modal) via shadow tokens; `--card: 0 0% 100%` (pure white) against `--background: 30 25% 97%` (warm off-white) creates readable depth
+- Neutral scale — 9-step warm neutral scale (`--neutral-50` through `--neutral-900`) at hue 20° to support hierarchy without reaching for gray
+- Confident typography scale — 7 semantic steps (display → caption) with explicit weight pairings; Heebo 700-800 for headings; current codebase uses weight 500 universally
+- Compact information density on list pages — 40-44px table rows (down from ~48px); compact toolbar zone (48px) above tables with unified search + filters + CTA
+- Bold page-level headings — `text-3xl`/`text-4xl` Heebo 800 for page titles; currently `text-2xl font-semibold`
+- Semantic shadow scale — warm-tinted shadows using `hsl(20 15% 15% / 0.08-0.16)` ambient layers; no shadow tokens currently defined
 
-**Must have (table stakes — makes the app feel finished):**
-- Skeleton loading screens — replace all current spinner patterns
-- Empty states with music-themed minimal SVG illustrations and CTAs
-- Inline form validation feedback — visual standardization of existing RHF+Zod logic
-- Toast notifications with RTL positioning and warm branded variants
-- Consistent button hierarchy (one primary per page, destructive = red)
-- Error states with human-readable message + retry button
-- Consistent spacing scale (4px grid throughout, replace ad-hoc spacing)
-- Active nav item highlighting in sidebar (complete what's already partially there)
-- Breadcrumbs on entity detail pages (teacher → name, student → name)
-- Badge/status chip standardization with instrument department color coding
-- Table row hover states + sticky headers + contextual pagination copy
-- Confirmation dialogs showing cascade consequences (already logical, needs visual upgrade)
+**Should have (competitive differentiators):**
+- Coral-as-accent audit — reduce coral from "everywhere" to three contexts: primary CTA buttons, active nav indicator, focus rings; deep neutrals carry all supporting surfaces
+- Staggered list entrance animations — Framer Motion `staggerChildren: 0.05`, Y+opacity only (RTL-safe), capped at 8 items, initial mount only
+- Spring micro-interactions on primary actions — `whileTap={{ scale: 0.97 }}` on buttons, spring modal entrance; primary actions only, not every element
+- Sidebar trailing edge separation — shadow-3 on sidebar's leading edge (RTL: visual right edge of sidebar)
+- Deepened gradient headers on detail pages — stronger saturation and drop shadow on header bottom edge
+- Toolbar zone on list pages — search + filters + CTA in unified 48px control surface
 
-**Should have (differentiators — make it feel music-school-specific):**
-- Instrument department color coding (6 color families from existing `validationUtils.ts` groupings)
-- Gradient header strips on entity detail pages tied to instrument family
-- Avatar initials with deterministic color hashing (eliminates the gray blob problem)
-- Warm dashboard greeting ("בוקר טוב, יונה") with school-year progress bar
-- Smooth tab transitions via existing framer-motion install
-- Print-optimized styles for MinistryReports (`@media print`)
-- "Last updated" metadata on detail pages (date-fns already in stack)
-- Progress step indicators on multi-step Import and Ministry Reports flows
-
-**Defer to next milestone:**
-- Visual schedule conflict detection (requires client-side logic change, not visual)
-- Collapsible sidebar to icon-only mode (medium complexity, medium value)
-- Keyboard shortcut discoverability modal
-- Inline stat callouts on list pages (requires aggregate queries)
-- Dark mode (Hebrew fonts untested for dark, school identity is warm)
-- Animated data visualizations (scope creep)
-
-The 5 highest-effort pages are: Dashboard, Students list, Teachers list, Teacher detail (7 tabs), and Student detail.
-
-See `.planning/research/FEATURES.md` for complete page-by-page surface area and feature dependency graph.
+**Defer to v2.2+:**
+- Density user preference toggle (requires persistent state; validate modes work first)
+- Custom RTL-aware spring variants library (validate v2.1 animation patterns first)
+- Tailwind v4 migration
+- Border radius tightening on data-dense components (`--radius-sm: 0.25rem` for badges/chips) — low visual impact, do after core system is validated
 
 ### Architecture Approach
 
-The migration follows a strict 5-layer model: CSS custom properties (token layer) → Tailwind config (maps tokens to class names) → `src/components/ui/` (shadcn primitives) → `src/components/[domain]/` (conservatory-specific composed components) → `src/features/[module]/` and `src/pages/` (consumers). Each layer depends on the one below it, which dictates an unambiguous build order: never touch a higher layer until the layers it depends on are stable.
+The architecture is a strict 3-layer system. Layer 1 (token layer: `index.css` + `tailwind.config.js`) is the single source of truth — changing a CSS var here cascades globally with zero component edits and minimal regression risk. Layer 2 (primitive and domain components: `src/components/ui/*`, `src/components/domain/*`) applies tokens to element structure with medium regression risk. Layer 3 (layout shell: `Layout.tsx`, `Sidebar.tsx`, `Header.tsx`) has high regression risk because every page depends on it — it must only be touched after Layers 1 and 2 are validated. A single new module `src/lib/motionTokens.ts` serves as the integration point for all Framer Motion values.
 
-**Major architectural components after migration:**
-1. **Token layer** (`src/index.css` `:root` block + `tailwind.config.js`) — single source of truth for all colors, radius, and shadow; theme changes happen here only
-2. **UI primitives** (`src/components/ui/`) — shadcn components owned by the project (Dialog replacing 4 custom modal variants, Tabs replacing custom tab navigation in 3 feature modules, DropdownMenu, Table, Tooltip, etc.)
-3. **Domain components** (`src/components/[domain]/`) — conservatory-specific: `InstrumentBadge`, `StatusBadge`, `StatsCard`, `DataTable`, `ConfirmDialog`, `AvatarInitials`
-4. **Layout shell** (`src/components/Layout.tsx`, `Sidebar.tsx`, `Header.tsx`) — redesigned last, after primitives are stable, because every page depends on it
-5. **Feature modules** (`src/features/[module]/details/`) — tab pages that consume primitives and domain components; structure unchanged, only visual content within
-
-**Migration pattern:** parallel existence (build new alongside old, test in isolation on one non-critical page, replace callsites page by page, delete old). No big-bang migration. CI catches regressions at each step.
-
-See `.planning/research/ARCHITECTURE.md` for full layer model, RTL audit checklist, and 5-phase build order.
+**Major components and v2.1 responsibilities:**
+1. `src/index.css :root {}` — Single source of truth for all visual values; receives shadow scale, motion tokens, surface hierarchy tokens, neutral scale
+2. `tailwind.config.js` — Maps CSS vars to Tailwind class names; receives `shadow-1` through `shadow-4` entries and semantic `fontSize` scale
+3. `src/lib/motionTokens.ts` (new) — Named spring presets and transition constants imported by all animated components
+4. `src/components/ui/*` (6 files: button, card, badge, tabs, dialog, input) — Apply shadow levels, density variants, standardized focus rings
+5. `src/components/domain/*` (4 files: DetailPageHeader, StatsCard, StatusBadge, InstrumentBadge) — Deeper gradient headers, bolder number typography, color saturation
+6. `src/features/*/details/` (3 files: Teacher, Student, Orchestra detail pages) — Wire motionTokens.ts, add Y-translation to tab transitions, add `useReducedMotion()` guards
+7. `src/components/Layout.tsx`, `Sidebar.tsx`, `Header.tsx` — Shell changes last; shadow-3 on sidebar, active indicator, content density finalized
 
 ### Critical Pitfalls
 
-1. **CSS variable collision with existing Tailwind color system** — shadcn's `primary` mapping (`hsl(var(--primary))`) overrides the existing `primary-500` Tailwind scale. Set `--primary` in `index.css` to match the existing brand color (#4F46E5 ≈ HSL 243 75% 59%) so both systems resolve identically. Bridge before migrating any component. (PITFALL 1)
+1. **Dual color system (888 hex `primary-NNN` usages + CSS `--primary` var)** — These produce different brand colors from the same word "primary." All color changes must touch BOTH systems in the same commit. Before any color change, grep to map which components use which system. Failure produces silent visual inconsistency.
 
-2. **Radix portals escape the RTL scope** — Radix Dialog, Select, Tooltip, DropdownMenu, Popover all render into `document.body` via portals. The app sets `dir="rtl"` on the app root `<div>`, not on `document.documentElement`. Portal content has no `dir` attribute and defaults to LTR — select checkmarks appear on the wrong side, dialogs animate from the wrong edge. Fix: `document.documentElement.setAttribute('dir', 'rtl')` in `main.tsx`. (PITFALL 2)
+2. **Framer Motion on Radix dropdown containers** — Using `layout`, `layoutId`, or `whileHover={{ y: N }}` on elements that hold Select, Popover, or Tooltip causes z-index isolation and dropdown clipping (documented in Framer Motion GitHub issue #1313). Use CSS `hover:-translate-y-1` (Tailwind) for card hover lift; reserve Framer Motion for leaf-level decorative elements and page/modal transitions.
 
-3. **`!important` overrides in 8 custom CSS files block new design tokens** — `tab-navigation-fix.css` forces `background: white !important` on `body`, `html`, and `.student-details-container`. The new warm background color will have zero effect on those elements. Audit and remove all `!important` declarations before any component migration begins. (PITFALL 6)
+3. **RTL directional animations** — Any Framer Motion X-axis animation produces semantically backwards results in RTL. The app is always `dir="rtl"`. All directional slides must use Y-axis + opacity (direction-neutral), or multiply X values by `-1`. Never use bare positive `x` values in animation props.
 
-4. **shadcn CLI overwrites customized component files** — the CLI does not diff; it replaces. All 10 existing `src/components/ui/` files would lose their RTL fixes and custom variants if the CLI is run. Never use `npx shadcn-ui add` on files that already exist. Copy new components manually from the registry. Add `# CUSTOMIZED` comment guards to modified files. (PITFALL 4)
+4. **Hebrew typography layout breakage** — Heebo 700 renders ~8-12% wider characters than 500, causing Hebrew nav labels and tab titles to wrap in tight containers. Test typography changes on actual Hebrew strings ("תלמידים", "מורה ראשי") in the browser before expanding scope. Reisinger Yonatan only has Regular (400) loaded — never apply `font-bold` to that font.
 
-5. **React Hook Form unmounts field values when tab rendering strategy changes** — existing forms use CSS show/hide (`display: none`) for tabs, keeping all fields mounted and registered. If the Tab redesign switches to conditional rendering (`{activeTab === 'personal' && ...}`), RHF fields unmount and lose values. Keep CSS show/hide strategy OR set `shouldUnregister: false` in `useForm()` before touching any form tab. (PITFALL 12)
-
-Additional moderate pitfalls: animation system conflict (`tailwindcss-animate` class name collisions with existing `animate-fade-in` and `animate-scale-in` custom keyframes), Hebrew font FOUT causing CLS (fix with `<link rel="preload">`), react-hot-toast vs. shadcn Sonner duplicate toast systems, and Headless UI bundle bloat during migration.
-
-See `.planning/research/PITFALLS.md` for all 15 pitfalls with detection steps and phase assignments.
-
----
+5. **Z-index corruption from surface layering** — Build elevation exclusively with `box-shadow` tokens, not z-index levels. Intermediate z-index values corrupt Radix modal/dropdown behavior. Shadow communicates elevation without creating stacking contexts.
 
 ## Implications for Roadmap
 
-The research is unambiguous about phase ordering. The dependency graph from FEATURES.md maps directly to an architectural phasing strategy. Each phase must be completed before the next — there are no parallel tracks until Phase 4.
+The build order is determined by three constraints that all point to the same 6-phase sequence: (1) token dependencies (surface tokens must exist before components can reference them), (2) regression risk (shell changes must be last because blast radius is all pages), and (3) pitfall prevention (dual color system resolved before any visual cascade). The 6-phase structure mirrors the architecture layer model exactly.
 
-### Phase 1: Foundation (Zero Visual Change)
+### Phase 1: Token Foundation and Dual-System Reconciliation
 
-**Rationale:** Every other phase depends on this. The existing shadcn components are currently broken (undefined CSS variables). CSS `!important` overrides will block any new design tokens. The Radix portal RTL gap will cause regressions in every migrated component. This phase has no UI output but makes every subsequent phase possible.
+**Rationale:** Every subsequent phase depends on correct token values. The dual color system (Pitfall 1) is the single highest-risk issue — resolving it first prevents all downstream inconsistency. Zero component changes in this phase means regression risk is near zero. The `motionTokens.ts` module belongs here so it is available to all subsequent phases.
 
-**Delivers:** A working, coherent design token system. Existing shadcn components (button, input, select, badge, alert) suddenly render correctly. No visible change to end users.
+**Delivers:** Complete CSS token system (shadow scale 0-4, motion duration/easing tokens, surface hierarchy tokens, 9-step neutral scale, typography semantic tokens), `src/lib/motionTokens.ts`, and a documented inventory of which components use `primary-NNN` hex vs `--primary` CSS var.
 
-**Addresses:**
-- Add `:root` CSS custom property block to `src/index.css` (bridges token layer)
-- Update `tailwind.config.js` to consume CSS variables (bridges Tailwind to tokens)
-- Set `document.documentElement` `dir="rtl"` in `main.tsx` (fixes Radix portal RTL)
-- Audit and remove `!important` from all 8 custom CSS files
-- Fix RTL in `select.tsx` (`left-2` → `start-2`, `pl-8 pr-2` → `ps-8 pe-2`)
-- Upgrade `tailwind-merge` to v2, add `tailwind-animate` plugin
-- Audit animation class name conflicts before installing `tailwindcss-animate`
-- Add Hebrew font preload link to `index.html`
-- Add `# CUSTOMIZED` guards to all modified shadcn component files
-- Upgrade `lucide-react` to current version
+**Addresses:** Surface elevation tokens, neutral scale, semantic shadow scale, motion token foundation (all are prerequisites for later features)
 
-**Avoids:** Pitfalls 1, 2, 4, 5, 6, 7, 15
+**Avoids:** Pitfall 1 (dual color system — reconciliation map created before any changes), Pitfall 5 (z-index — shadow-only elevation approach established here)
 
-**Research flag:** Standard patterns — no phase research needed. All tasks are precisely defined.
+**Files:** `src/index.css`, `tailwind.config.js`, `src/lib/motionTokens.ts` (new)
 
----
+**Research flag:** Standard. Well-documented CSS custom property and Tailwind config patterns. No research phase needed.
 
-### Phase 2: Missing shadcn Primitives
+### Phase 2: Primitive Component Density and Shadow
 
-**Rationale:** The most-used components that don't yet exist in shadcn form are Dialog, Tabs, and DropdownMenu. These are used across 15+ pages and 3+ feature modules. Until these primitives exist, domain components and page redesigns cannot be built. Also: replace 4 custom modal variants in one atomic phase to avoid conflicting focus trap systems.
+**Rationale:** The 6 shadcn primitive components (button, card, badge, tabs, dialog, input) are consumed across all pages. Updating them now means every page in Phases 5-6 benefits automatically. Changes are className edits only — no API or prop surface changes — so regression is recoverable.
 
-**Delivers:** Complete primitive component set. Modal, Tabs, DropdownMenu, Tooltip, Sheet — all built on Radix, all RTL-verified.
+**Delivers:** Cards with shadow-1/hover:shadow-2 transition, standardized focus rings (WCAG-compliant against warm backgrounds), compact density on badge/chip, dialog at shadow-4, button active state wired to spring presets from motionTokens.ts.
 
-**Addresses:**
-- Install the 13 missing `@radix-ui/*` packages
-- Add `dialog.tsx` (replaces `Modal.tsx`, `ConfirmDeleteModal.tsx`, `ConfirmationModal.tsx`, `InputModal.tsx` — all 4 in one phase)
-- Add `tabs.tsx` (replaces custom tab navigation in teachers, students, orchestras feature modules)
-- Add `dropdown-menu.tsx` (replaces inline dropdown patterns in table actions, header menu)
-- Add `tooltip.tsx`, `separator.tsx`, `scroll-area.tsx`, `avatar.tsx`, `switch.tsx`, `checkbox.tsx`, `accordion.tsx`, `progress.tsx`, `toast.tsx`
-- Remove `@headlessui/react` imports as each Headless UI usage is replaced
+**Addresses:** Semantic shadow scale (application), compact density (primitives layer), visible interactive layer (focus ring standardization)
 
-**Avoids:** Pitfalls 2, 8, 11, 13
+**Avoids:** Pitfall 2 (no Framer Motion on dropdown-containing components — CSS-only hover for these primitives), Pitfall 3 (no `layout` prop or `whileHover` on interactive containers), Pitfall 8 (WCAG contrast check gates each new color combination)
 
-**Research flag:** Standard patterns — shadcn component installation is documented and deterministic.
+**Files:** `src/components/ui/card.tsx`, `button.tsx`, `badge.tsx`, `tabs.tsx`, `dialog.tsx`, `input.tsx`
 
----
+**Research flag:** Standard. className edits against established shadcn/CVA patterns. No research phase needed.
 
-### Phase 3: Domain Components and Loading States
+### Phase 3: Typography Scale and Coral-as-Accent Audit
 
-**Rationale:** Once primitives are stable, build the conservatory-specific composed components that will be reused across every page: instrument badges, status badges, stats cards, avatar initials, skeleton loaders, empty states, error states. These are the building blocks that give every page its visual coherence and music-school identity.
+**Rationale:** Typography must follow Phase 1 (font scale tokens are already defined there). The coral-as-accent audit requires the neutral scale from Phase 1 to replace coral with warm neutrals rather than plain gray. This phase has the broadest visual impact per file changed — headings get bolder, the brand identity becomes more confident, and supporting surfaces shift to deep neutrals.
 
-**Delivers:** A complete domain component library. Every page can now display instrument colors, avatar initials, skeleton loading states, and music-themed empty states.
+**Delivers:** Bold headings (Heebo 700-800), confident page titles at text-3xl/4xl, semantic type scale applied to headings and section labels; coral reduced to 3 contexts (CTA, active nav, focus rings) with neutrals carrying everything else.
 
-**Addresses:**
-- `InstrumentBadge` on shadcn Badge — 6 department color families from `validationUtils.ts`
-- `StatusBadge` on shadcn Badge — active/inactive/graduated/suspended status colors
-- `StatsCard` on shadcn Card — warm greeting dashboard cards
-- `AvatarInitials` on shadcn Avatar — deterministic color hashing by name
-- `Skeleton` components — content-shaped, replace all spinners
-- `EmptyState` component with music-themed SVG illustrations
-- `ErrorState` component with retry button
-- Rebuild `Table.tsx` internals on shadcn table primitives (preserve existing props API exactly)
-- Rebuild `Pagination.tsx` with contextual copy ("מציג 21–40 מתוך 127")
-- `ConfirmDialog` on shadcn Dialog with itemized cascade consequence list
+**Addresses:** Confident typography scale, bold page-level headings, coral-as-accent (highest brand-identity impact feature)
 
-**Avoids:** Pitfalls 3, 4
+**Avoids:** Pitfall 4 (Hebrew font weight causing layout wrapping — incremental scope; test in browser on Hebrew strings before expanding to nav labels and tab bars), Pitfall 8 (WCAG contrast — hard gate before any new color combination ships)
 
-**Research flag:** May need phase research for instrument SVG icon sourcing — Lucide has basic music icons but supplemental SVGs for all 6 instrument families may need sourcing or creation.
+**Files:** Domain component classNames for headings; selective page-level heading classNames; typography token values already defined in Phase 1
 
----
+**Research flag:** Low-certainty area: Hebrew character widths at Heebo 700-800 in specific tight containers (tab bar labels, sidebar nav). This is a browser validation step, not a research gap. Test "תלמידים" and "מורה ראשי" at target weight before expanding scope.
 
-### Phase 4: Form System Redesign
+### Phase 4: Motion System Upgrade
 
-**Rationale:** The 7-tab teacher form is the most complex surface in the app and requires careful handling. React Hook Form's tab rendering strategy must be locked in before any form JSX is restructured. Separate phase from page redesign to contain regression risk.
+**Rationale:** Framer Motion changes are isolated to 3 feature detail pages plus list page entrance animations. These changes have zero layout or functional impact — visual only. Motion is placed here (after visual system is established) so spring feel can be tuned against proven surface and typography changes.
 
-**Delivers:** Redesigned form system — shadcn Form wrapper on React Hook Form, consistent field groupings with section labels, inline validation feedback, DatePicker, Switch for boolean fields.
+**Delivers:** Tab transitions in Teacher/Student/Orchestra detail pages upgraded with Y-translation for bolder feel; `useReducedMotion()` guards added throughout; staggered list entrance on TeacherList/StudentList/OrchestraList (Y+opacity, 8-item cap, mount-only); spring micro-interactions on primary action buttons.
 
-**Addresses:**
-- shadcn Form component (wraps existing React Hook Form — additive, not a replacement)
-- Keep CSS show/hide tab strategy OR audit and set `shouldUnregister: false` first
-- Consistent field grouping with subtle separators and section labels within each tab
-- DatePicker on shadcn Popover + Calendar (replaces any native date inputs)
-- Switch component for boolean fields (hasTeachingCertificate, isUnionMember, extraHour)
-- Checkbox group for multi-instrument selection (27 instruments, grouped by department)
-- Contextual help tooltips on admin-only settings fields
+**Addresses:** Spring micro-interactions, staggered list entrance, RTL-safe animation system, `prefers-reduced-motion` compliance
 
-**Avoids:** Pitfall 12 (critical — RHF field unmounting)
+**Avoids:** Pitfall 2 (CSS vs Framer Motion boundary — Framer Motion for state transitions only, CSS `transition-*` for hover color/shadow), Pitfall 3 (no `layout` or `whileHover` on dropdown-containing cards — leaf elements only), Pitfall 6 (RTL direction — Y+opacity only for list entrance; tab slide uses Y axis; no bare X values), Pitfall 7 (no `will-change` without measured jank — benchmark first)
 
-**Research flag:** Standard patterns — RHF + shadcn Form integration is well-documented. No phase research needed.
+**Files:** `src/features/teachers/details/components/TeacherDetailsPage.tsx`, `StudentDetailsPage.tsx`, `OrchestraDetailsPage.tsx`; list page container components for stagger entrance
 
----
+**Research flag:** Standard. `AnimatePresence` + spring on rapid tab switching can queue animations causing lag — use `duration: 0.2` linear for tab-level transitions; spring only for element-level interactions (buttons, cards). This is a well-documented constraint, not a research gap.
 
-### Phase 5: List Pages Redesign
+### Phase 5: Layout Shell
 
-**Rationale:** With domain components and form system complete, list pages can be fully redesigned without blocking anything. Students, Teachers, Orchestras, Rehearsals, and TheoryLessons all follow the same DataTable + search + filter + pagination pattern — work can be applied systematically.
+**Rationale:** Shell changes last, always. Sidebar, Header, and Layout.tsx are depended on by all 18+ pages. By Phase 5, the complete visual system is proven in primitive components and domain components. Shell changes are straightforward application of the established patterns — no new decisions required.
 
-**Delivers:** All list pages with new Table design, hover states, sticky headers, search with clear button, improved pagination, instrument/status badge standardization, skeleton loading and music-themed empty states.
+**Delivers:** Sidebar with shadow-3, trailing edge separation (RTL: visual right edge), tighter nav item density (py-2.5 vs py-3), active nav indicator using coral-as-accent pattern; Header with border/shadow finalized; Layout.tsx content wrapper density confirmed.
 
-**Addresses (per FEATURES.md page intensity — High priority first):**
-- Students list (highest usage, largest table)
-- Teachers list
-- Orchestras list
-- Rehearsals
-- TheoryLessons
-- AuditTrail (dense tabular data, Medium redesign intensity)
+**Addresses:** Sidebar vs content area separation, compact density on nav items
 
-**Avoids:** Pitfall 10 (RTL utility class purge — verify after each page is built)
+**Avoids:** Pitfall 5 (z-index — shadow-only elevation; no new z-index values), Anti-pattern of starting with the shell (all regression risk deferred until system is proven)
 
-**Research flag:** Standard patterns.
+**Files:** `src/components/Sidebar.tsx`, `src/components/Header.tsx`, `src/components/Layout.tsx`
 
----
+**Research flag:** Standard. Requires a full page tour across all 18+ pages as a completion gate. No research phase needed.
 
-### Phase 6: Detail Pages Redesign
+### Phase 6: Page-Level Density Pass
 
-**Rationale:** Detail pages (Teacher detail 7-tab, Student detail, Orchestra detail, Bagrut) have the most visual surface area but depend on all primitive and domain components being complete. The entity detail page header pattern (gradient strip, avatar initials, instrument badge, breadcrumb) is defined once and applied consistently.
+**Rationale:** After the shell is validated, page-level density adjustments are isolated changes with one-page blast radius each. This phase also covers domain components that affect multiple pages (DetailPageHeader, StatsCard).
 
-**Delivers:** All detail pages with gradient header strips tied to instrument family color, avatar initials, breadcrumbs, "last updated" metadata, smooth tab transitions via framer-motion, and redesigned tab content within each tab.
+**Delivers:** Dashboard stat card grid tightened (p-5 vs p-6), list pages with compact table density (px-4 py-3 rows, ~40px effective row height), toolbar zone on list pages (search + filters + CTA unified in 48px control surface), deepened gradient headers on detail pages (stronger saturation + shadow on bottom edge).
 
-**Addresses:**
-- Teacher detail (7 tabs) — highest complexity, most fields
-- Student detail (schedule, bagrut integration)
-- Orchestra detail
-- BagrutDetails
-- Tab transition animation (framer-motion, already installed)
-- "Last updated" metadata (date-fns, already installed)
+**Addresses:** Compact density on list pages (table rows), toolbar zone, deepened gradient headers, sidebar separation (secondary polish item)
 
-**Avoids:** Pitfall 12 (RHF tab strategy — validated in Phase 4)
+**Avoids:** No new pitfall risks at this phase — all systems are validated and patterns are proven
 
-**Research flag:** Standard patterns — gradient header and avatar pattern designed once in Phase 3 domain components; application here is systematic.
+**Files:** `src/pages/Dashboard.tsx`, list page components, `src/components/domain/DetailPageHeader.tsx`, `src/components/domain/StatsCard.tsx`, `src/components/domain/StatusBadge.tsx`
 
----
-
-### Phase 7: Layout Shell and Dashboard
-
-**Rationale:** The layout shell (sidebar, header, Layout.tsx) is deliberately last because every page depends on it. Redesigning it first creates a jarring mismatch where navigation looks new but all content looks old. Redesigning it last means the visual system is complete when the shell changes — the result is immediately coherent.
-
-**Delivers:** Redesigned sidebar (active highlighting, RTL-correct, icon spacing), header, and Dashboard with warm greeting, school-year progress bar, and styled stat cards with musical iconography.
-
-**Addresses:**
-- Sidebar redesign with proper active state via `useLocation`
-- Dashboard warm greeting using auth context user name
-- Styled stat cards on domain `StatsCard` components
-- Dashboard school-year progress bar
-
-**Avoids:** Pitfall 1 (ensure semantic tokens are correct before shell redesign — layout uses the most color classes)
-
-**Research flag:** Standard patterns — sidebar and dashboard are the highest-traffic visual surfaces but build on everything established in Phases 1–6.
-
----
-
-### Phase 8: Special Pages and Polish
-
-**Rationale:** Admin-only pages (MinistryReports, ImportData, Settings) and auth pages have lower traffic but are not exempt from the design system. Polish items deferred from earlier phases land here.
-
-**Delivers:** MinistryReports with progress step indicators and print-optimized `@media print` styles; ImportData with step progress indicator; Settings page with Switch toggles; Login with branded multi-tenant selector; toast notification system decision (stay with react-hot-toast styled to match tokens, or migrate to shadcn Sonner in a single atomic pass).
-
-**Addresses:**
-- MinistryReports (Medium redesign intensity)
-- ImportData (Medium)
-- Settings (Low)
-- Login / ForgotPassword / ResetPassword (Low–Medium)
-- Profile (Low)
-- Toast system decision and implementation
-- Print styles for MinistryReports
-
-**Avoids:** Pitfall 14 (toast system — decide once, migrate atomically)
-
-**Research flag:** MinistryReports and ImportData multi-step progress patterns are standard. Toast migration scope depends on `grep -r "toast\." src/ | wc -l` — check before committing to Sonner migration.
-
----
+**Research flag:** Standard. Low-risk page-specific work. No research phase needed.
 
 ### Phase Ordering Rationale
 
-- **Foundation must be Phase 1** — 10+ existing shadcn components are broken without it; all other phases are blocked
-- **Primitives before domain components** — domain components compose on primitives; cannot build InstrumentBadge before Badge is working correctly
-- **Domain components before pages** — pages need the building blocks
-- **Form system isolated** — RHF regression risk is contained; form concerns don't bleed into list or detail page phases
-- **List pages before detail pages** — list pages are simpler; the patterns validated there (table, skeleton, empty state) apply to detail pages
-- **Layout shell last** — highest dependency count; wait until visual system is proven in pages before touching the chrome
-- **Dashboard with layout shell** — dashboard is the first impression but depends on StatsCard domain components and layout context
-
-This order directly follows the feature dependency graph from FEATURES.md and the build order documented in ARCHITECTURE.md.
+- Phases 1-2 establish token foundation before any visual cascade — CSS var changes are simultaneously zero-regression and high-leverage; this is the only correct starting order
+- Phase 3 (typography + coral audit) requires the neutral scale from Phase 1; without warm neutrals as replacements, coral reduction has no valid substitute
+- Phase 4 (motion) is placed after the visual system is proven in a static context so spring feel can be evaluated accurately; motion is functionally isolated and can be paused without affecting other phases
+- Phase 5 (shell) is last because all-pages blast radius; by this point the visual system has been validated on primitives and domain components in lower-risk contexts
+- Phase 6 is page-level cleanup with one-page blast radius — iterative, low-risk, can be done page by page
 
 ### Research Flags
 
-Phases needing deeper research during planning:
-- **Phase 3:** Instrument icon SVG sourcing — Lucide has Piano, Guitar, Music, Drum, Mic but not all 27 instrument families. Research what icons exist vs. what needs custom SVG creation.
-- **Phase 8:** Toast migration scope — run `grep -r "toast\." src/ | wc -l` to count call sites before deciding whether Sonner migration is feasible in one phase.
+Phases that can proceed without additional research:
+- **Phase 1:** CSS custom property + Tailwind config patterns are thoroughly documented; motion token naming follows established design system conventions (ruixen.com, material design)
+- **Phase 2:** shadcn/CVA variant patterns are direct documentation; className edits are low-risk
+- **Phase 4:** Framer Motion spring API and `useReducedMotion()` are well-documented; existing AnimatePresence pattern is already proven in the codebase; CSS vs Framer Motion boundary rule is clear
+- **Phase 5:** Shell changes follow exact same patterns established in Phases 1-4
+- **Phase 6:** Page-level density is isolated, low-risk, no integration complexity
 
-Phases with standard patterns (skip research-phase):
-- **Phase 1:** Token layer configuration is precisely specified in STACK.md and ARCHITECTURE.md. No unknowns.
-- **Phase 2:** shadcn component installation is deterministic. Radix API is stable and well-documented.
-- **Phase 4:** RHF + shadcn Form integration is documented. The `shouldUnregister` decision is a one-line config choice.
-- **Phases 5–8:** All follow patterns established in earlier phases.
-
----
+Phases that require browser validation (not additional research):
+- **Phase 3:** Hebrew character widths at Heebo 700-800 in specific tight containers. Not a research gap — Heebo supports these weights and the pitfall is documented. Required action: browser test on real Hebrew strings before expanding scope to nav labels and tab bars.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Based on direct codebase inspection of `package.json`, `tailwind.config.js`, `src/components/ui/*`. Package versions are MEDIUM (verify before install). |
-| Features | HIGH | Codebase-derived — all 18 pages inventoried, feature dependencies confirmed against existing code. Music identity colors need a design decision (specific hue values). |
-| Architecture | HIGH | Directly derived from reading the existing component source files. Layer model matches how existing shadcn components are already structured. RTL behavior based on Tailwind v3.3 and Radix documented behavior. |
-| Pitfalls | HIGH | All 15 pitfalls sourced from direct codebase inspection with specific file/line citations. Not speculative — these are observed conditions in the current code. |
+| Stack | HIGH | Direct codebase inspection confirms all packages and versions; no new packages required; framer-motion v10 API surface verified against npm changelog and codebase grep |
+| Features | HIGH | Six-pillar framework verified against Atlassian, Cloudscape, Linear, Vercel design systems with specific documented examples. Exact tuning values (shadow opacity, coral frequency threshold) are implementation calibration, not research gaps |
+| Architecture | HIGH | Direct codebase inspection of all affected files; 3-layer model is established pattern; dual color system finding is concrete and grep-verified (888 occurrences of primary-NNN in TSX files) |
+| Pitfalls | HIGH | 8 critical pitfalls identified through direct codebase inspection; Framer Motion stacking context issue documented in official GitHub issue #1313; dual system count verified by grep; Hebrew font metric behavior confirmed by multiple sources |
 
-**Overall confidence: HIGH**
+**Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Exact CSS custom property values for the warm Monday.com-inspired palette** — STACK.md and ARCHITECTURE.md provide placeholder HSL values. The specific palette (primary amber vs. indigo, exact muted gray tint) needs a design decision before Phase 1 can be finalized. Acceptable approach: start with ARCHITECTURE.md's placeholder values, iterate in Phase 1 with visual feedback.
-- **Instrument SVG icon coverage** — Lucide covers major instrument families with basic icons. The extent of custom SVG work needed for 27-instrument coverage is unknown until the icon-to-instrument mapping is done in Phase 3. May be zero additional work if text + color department coding is sufficient.
-- **Toast system call-site count** — unknown without running the grep. If it's over 40 call sites, Sonner migration may not fit in Phase 8 and should be deferred to v3.0.
-- **Package version verification** — Radix UI version numbers in STACK.md are from training data (cutoff January 2025). Verify with `npm show @radix-ui/react-tabs version` before installing. Using `^` semver ranges means the latest compatible version installs regardless.
-
----
+- **Exact shadow opacity values**: The warm-tinted shadow recommendations (`hsl(20 15% 15% / 0.08)`) are directionally correct but need visual browser calibration. Start with recommended values and tune. Not a blocking gap.
+- **Coral frequency count**: The extent of current coral overuse requires a grep audit in Phase 3 before changes are made. Recommended: `grep -rh "primary" src --include="*.tsx" | grep -oP "(bg|text|border|ring)-primary[-/]" | sort | uniq -c` before the audit begins.
+- **Typography wrapping in tight containers**: Whether Heebo 700-800 causes Hebrew nav label wrapping depends on actual container widths. The pitfall is documented; mitigation is incremental scope + browser verification. Not a blocking gap.
 
 ## Sources
 
 ### Primary (HIGH confidence — direct codebase inspection)
-- `src/components/ui/` (all 19 files) — component status, RTL issues, shadcn pattern adherence
-- `tailwind.config.js` — existing color scale, animation keyframes, RTL plugin
-- `src/index.css` — missing `:root` token block confirmed
-- `src/styles/` (all 8 CSS files) — `!important` overrides catalogued
-- `package.json` — installed versions confirmed
-- `src/App.tsx` — `dir="rtl"` placement confirmed (app root, not `document.documentElement`)
-- `vite.config.ts` — `optimizeDeps` configuration
-- `.planning/codebase/CONCERNS.md` — existing known issues
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/package.json` — exact installed versions confirmed
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/tailwind.config.js` — dual color system identified, existing shadow/animation token inventory
+- `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Frontend/src/index.css` — existing CSS token system, prefers-reduced-motion media query, Reisinger Yonatan font-weight declaration (400 only)
+- Grep results: 888 `primary-NNN` occurrences in TSX files; 786 physical margin/padding occurrences across 165 files; Framer Motion usage confirmed in 5 files (opacity-only patterns, safe baseline)
+- Framer Motion GitHub issue #1313 — `layout` prop stacking context behavior documented
 
-### Secondary (MEDIUM confidence — established library knowledge + training data)
-- shadcn/ui component patterns — verified by reading installed component files
-- Tailwind CSS v3.3 logical properties (`ps-`, `pe-`, `start-`, `end-`) — confirmed available in Tailwind v3.3.3 (project version)
-- Radix UI RTL behavior (`dir` attribute propagation, Floating UI positioning) — documented behavior
-- Monday.com design aesthetic reference — training knowledge, visual direction only
+### Secondary (MEDIUM-HIGH confidence — verified design system documentation)
+- Atlassian Design elevation tokens: atlassian.design/foundations/elevation
+- Cloudscape content density (40-44px compact row height): cloudscape.design/foundation/visual-foundation/content-density
+- Framer Motion spring transition API: framer.com/motion/transition
+- Linear design system redesign analysis: linear.app/now/how-we-redesigned-the-linear-ui
+- RTL animation direction guidance: design.fusionfabric.cloud/foundations/rtl
+- Sara Soueidan focus indicators (WCAG 2.2 appearance criteria): sarasoueidan.com/blog/focus-indicators
+- Josh W. Comeau shadow design (warm-tinted shadow rationale): joshwcomeau.com/css/designing-shadows
+- Motion design token naming conventions: ruixen.com/blog/motion-design-tokens
 
-### Tertiary (LOW confidence — verify during implementation)
-- Radix UI package version numbers — training data, knowledge cutoff January 2025. Use `npm show` to verify before installing.
-- Lucide icon names for music instruments — verify exact export names against installed version after upgrade.
+### Tertiary (MEDIUM confidence — inferred or pattern-based)
+- Coral frequency threshold (<5% surface area): inferred from Linear/Vercel analysis; not a documented industry standard; use as directional guidance only
+- Hebrew character width increase at Heebo 700 (~8-12% wider): WebSearch-verified pattern; exact percentage requires browser measurement in this specific app context
+- Framer Motion LazyMotion bundle reduction (30KB → 6KB): STACK.md reference; verify before applying if bundle size becomes a concern
 
 ---
-
-*Research completed: 2026-02-17*
+*Research completed: 2026-02-18*
 *Ready for roadmap: yes*

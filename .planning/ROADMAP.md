@@ -153,11 +153,11 @@ Plans:
   3. Forms are restructured with visual section grouping — section titles with dividers or background strips, not just stacked fields in a column
   4. Form layout has intentional visual rhythm — section title → field group → section title → field group, with clear hierarchy between sections
   5. Detail pages and forms feel consistent with the new dashboard and list page design language — same zoning principles, same color system, same confidence level
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 21-01: Detail page headers and tabs — bold profile zone, tab restyle, data hierarchy on teacher/student/orchestra detail pages
-- [ ] 21-02: Form restructuring — visual section grouping, dividers, structured layout for teacher/student/orchestra forms
+- [ ] 21-01: Detail page headers and tabs — entity-colored pastel header zone (replacing coral gradient), entity-colored active tab pills on all 3 detail pages
+- [ ] 21-02: Form restructuring — entity-colored accent bar section grouping for TeacherForm (6 sections), StudentForm (4 sections), OrchestraForm (3 compact sections)
 
 ---
 
@@ -185,8 +185,8 @@ Plans:
 | 18. Layout Shell and Color System Reset | v2.1 | 3/3 | Complete | 2026-02-18 |
 | 19. Dashboard Transformation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 21. Detail Pages and Forms | v2.1 | 0/2 | Not started | — |
+| 21. Detail Pages and Forms | v2.1 | 0/2 | Planned | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 — Phase 20 complete (list pages and table system)*
+*Last updated: 2026-02-18 — Phase 21 planned (detail pages and forms)*

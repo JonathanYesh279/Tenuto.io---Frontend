@@ -192,7 +192,10 @@ Plans:
   2. Dashboard Schedule tab Weekly Summary uses design token classes — no bg-purple-50, text-purple-600, text-gray-700, or bg-green-50 hardcoded colors
   3. InstrumentBadge is either wired to list pages or removed as dead code
   4. .mobile-tab-nav uses logical padding properties (ps-/pe-) instead of physical padding-left/padding-right
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 15-01-PLAN.md — AuditTrail ErrorState, Dashboard token verify, InstrumentBadge wiring, RTL logical padding
 
 ## Progress
 

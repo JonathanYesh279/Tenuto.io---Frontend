@@ -9,7 +9,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
 import { ArrowRight, RefreshCw, Info, Users, Calendar } from 'lucide-react'
 import { OrchestraTabType } from '../types'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AnimatePresence, motion } from 'framer-motion'
+import { DetailPageHeader } from '@/components/domain'
 import PersonalInfoTab from './tabs/PersonalInfoTab'
 import MembersTab from './tabs/MembersTab'
 import ScheduleTab from './tabs/ScheduleTab'
@@ -149,41 +151,26 @@ const OrchestraDetailsPage: React.FC = () => {
   return (
     <div className="space-y-6 bg-white min-h-screen orchestra-details-container orchestra-content-area">
 
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600">
-        <button
-          onClick={() => navigate('/orchestras')}
-          className="hover:text-primary-600 transition-colors"
-        >
-          תזמורות
-        </button>
-        <span>{'>'}</span>
-        <span className="text-gray-900">
-          {orchestra?.name || 'פרטי תזמורת'}
-        </span>
-      </nav>
+      {/* Gradient header with breadcrumb */}
+      <DetailPageHeader
+        fullName={orchestra?.name}
+        entityType="תזמורת"
+        breadcrumbLabel="תזמורות"
+        breadcrumbHref="/orchestras"
+        updatedAt={orchestra?.updatedAt}
+        badges={
+          <>
+            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              {orchestra?.type || 'תזמורת'}
+            </span>
+            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+              {orchestra?.memberIds?.length || 0} חברים
+            </span>
+          </>
+        }
+      />
 
-      {/* Orchestra Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-            <span className="text-xl text-primary-600">🎼</span>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {orchestra?.name || 'טוען...'}
-            </h1>
-            <p className="text-gray-600">
-              {orchestra?.type || 'תזמורת'} | {orchestra?.location || 'לא צוין מיקום'}
-            </p>
-          </div>
-          <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-            {orchestra?.memberIds?.length || 0} חברים
-          </div>
-        </div>
-      </div>
-
-      {/* Tab Navigation and Content — shadcn Tabs */}
+      {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as OrchestraTabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6">
@@ -201,31 +188,41 @@ const OrchestraDetailsPage: React.FC = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="personal" className="mt-0">
-            <PersonalInfoTab
-              orchestraId={orchestraId}
-              orchestra={orchestra}
-              isLoading={false}
-              activeTab={activeTab}
-            />
-          </TabsContent>
-          <TabsContent value="members" className="mt-0">
-            <MembersTab
-              orchestraId={orchestraId}
-              orchestra={orchestra}
-              isLoading={false}
-              activeTab={activeTab}
-              onUpdate={fetchOrchestra}
-            />
-          </TabsContent>
-          <TabsContent value="schedule" className="mt-0">
-            <ScheduleTab
-              orchestraId={orchestraId}
-              orchestra={orchestra}
-              isLoading={false}
-              activeTab={activeTab}
-            />
-          </TabsContent>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {activeTab === 'personal' && (
+                <PersonalInfoTab
+                  orchestraId={orchestraId}
+                  orchestra={orchestra}
+                  isLoading={false}
+                  activeTab={activeTab}
+                />
+              )}
+              {activeTab === 'members' && (
+                <MembersTab
+                  orchestraId={orchestraId}
+                  orchestra={orchestra}
+                  isLoading={false}
+                  activeTab={activeTab}
+                  onUpdate={fetchOrchestra}
+                />
+              )}
+              {activeTab === 'schedule' && (
+                <ScheduleTab
+                  orchestraId={orchestraId}
+                  orchestra={orchestra}
+                  isLoading={false}
+                  activeTab={activeTab}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </Tabs>
       </div>
     </div>

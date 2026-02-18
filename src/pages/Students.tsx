@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users, GraduationCap } from 'lucide-react'
+import { Plus, Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users, GraduationCap, UserCheck, UserX, BookOpen } from 'lucide-react'
 import { clsx } from 'clsx'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
+import { ListPageHero } from '../components/ui/ListPageHero'
 import { Badge } from '../components/ui/badge'
-import { StatusBadge, InstrumentBadge } from '../components/domain'
+import { StatusBadge, InstrumentBadge, AvatarInitials } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/forms/StudentForm'
@@ -654,6 +655,14 @@ export default function Students() {
   const inactiveStudents = students.filter(s => !s.rawData?.isActive).length
   const studentsWithLessons = students.filter(s => s.teacherAssignments > 0).length
 
+  // Hero metrics — 4 entity-colored stat cards
+  const heroMetrics = [
+    { title: 'סה״כ תלמידים', value: totalStudents, icon: <Users className="w-5 h-5" /> },
+    { title: 'פעילים', value: activeStudents, icon: <UserCheck className="w-5 h-5" /> },
+    { title: 'לא פעילים', value: inactiveStudents, icon: <UserX className="w-5 h-5" /> },
+    { title: 'עם שיעורים', value: studentsWithLessons, icon: <BookOpen className="w-5 h-5" /> },
+  ]
+
   const columns = [
     ...(isSelectMode ? [{
       key: 'select',
@@ -692,7 +701,21 @@ export default function Students() {
       width: '60px',
       align: 'center' as const
     }] : []),
-    { key: 'name', header: 'שם התלמיד' },
+    {
+      key: 'name',
+      header: 'שם התלמיד',
+      render: (row: any) => (
+        <div className="flex items-center gap-3">
+          <AvatarInitials
+            firstName={row.rawData?.personalInfo?.firstName}
+            lastName={row.rawData?.personalInfo?.lastName}
+            size="sm"
+            colorClassName="bg-students-bg text-students-fg"
+          />
+          <span className="font-medium text-gray-900">{row.name}</span>
+        </div>
+      )
+    },
     {
       key: 'instrument',
       header: 'כלי נגינה',
@@ -836,105 +859,76 @@ export default function Students() {
           </div>
         </div>
       )}
-      {/* Filters and Search */}
-      <Card className="mb-6" padding="md">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <SearchInput
-              value={searchTerm}
-              onChange={(value) => setSearchTerm(value)}
-              onClear={() => setSearchTerm('')}
-              placeholder="חיפוש תלמידים..."
-              isLoading={searchLoading}
-            />
-          </div>
-          <div className="flex gap-3 flex-wrap">
-            <select 
-              value={filters.orchestra}
-              onChange={(e) => setFilters(prev => ({ ...prev, orchestra: e.target.value }))}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
-            >
-              <option value="">כל התזמורות</option>
-              <option value="תזמורת">תזמורת</option>
-              <option value="ללא תזמורת">ללא תזמורת</option>
-            </select>
-            
-            <select 
-              value={filters.instrument}
-              onChange={(e) => setFilters(prev => ({ ...prev, instrument: e.target.value }))}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
-            >
-              <option value="">כל הכלים</option>
-              <option value="חלילית">חלילית</option>
-              <option value="חליל צד">חליל צד</option>
-              <option value="אבוב">אבוב</option>
-              <option value="בסון">בסון</option>
-              <option value="סקסופון">סקסופון</option>
-              <option value="קלרינט">קלרינט</option>
-              <option value="חצוצרה">חצוצרה</option>
-              <option value="קרן יער">קרן יער</option>
-              <option value="טרומבון">טרומבון</option>
-              <option value="טובה/בריטון">טובה/בריטון</option>
-              <option value="שירה">שירה</option>
-              <option value="כינור">כינור</option>
-              <option value="ויולה">ויולה</option>
-              <option value="צ'לו">צ'לו</option>
-              <option value="קונטרבס">קונטרבס</option>
-              <option value="פסנתר">פסנתר</option>
-              <option value="גיטרה">גיטרה</option>
-              <option value="גיטרה בס">גיטרה בס</option>
-              <option value="תופים">תופים</option>
-            </select>
+      {/* Hero Stats Zone */}
+      <ListPageHero
+        title="תלמידים"
+        entityColor="students"
+        metrics={heroMetrics}
+        action={{
+          label: 'הוסף תלמיד',
+          onClick: handleAddStudent
+        }}
+      />
 
-            {/* Stage Level Filter */}
-            <select 
-              value={filters.stageLevel}
-              onChange={(e) => setFilters(prev => ({ ...prev, stageLevel: e.target.value }))}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
-            >
-              <option value="">כל השלבים</option>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
-                <option key={level} value={level}>שלב {level}</option>
-              ))}
-            </select>
-
-            <button 
-              onClick={handleAddStudent}
-              className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
-            >
-              <Plus className="w-4 h-4 ml-2" />
-              הוסף תלמיד
-            </button>
-          </div>
+      {/* Compact Filter Toolbar */}
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <div className="w-64 flex-none">
+          <SearchInput
+            value={searchTerm}
+            onChange={(value) => setSearchTerm(value)}
+            onClear={() => setSearchTerm('')}
+            placeholder="חיפוש תלמידים..."
+            isLoading={searchLoading}
+          />
         </div>
-      </Card>
-
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-primary-600 mb-1">{totalStudents}</div>
-            <div className="text-sm text-gray-600">סה״כ תלמידים</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-success-600 mb-1">{activeStudents}</div>
-            <div className="text-sm text-gray-600">פעילים</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-1">{inactiveStudents}</div>
-            <div className="text-sm text-gray-600">לא פעילים</div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-purple-600 mb-1">{studentsWithLessons}</div>
-            <div className="text-sm text-gray-600">עם שיעורים</div>
-          </div>
-        </Card>
+        <select
+          value={filters.orchestra}
+          onChange={(e) => setFilters(prev => ({ ...prev, orchestra: e.target.value }))}
+          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+        >
+          <option value="">כל התזמורות</option>
+          <option value="תזמורת">תזמורת</option>
+          <option value="ללא תזמורת">ללא תזמורת</option>
+        </select>
+        <select
+          value={filters.instrument}
+          onChange={(e) => setFilters(prev => ({ ...prev, instrument: e.target.value }))}
+          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+        >
+          <option value="">כל הכלים</option>
+          <option value="חלילית">חלילית</option>
+          <option value="חליל צד">חליל צד</option>
+          <option value="אבוב">אבוב</option>
+          <option value="בסון">בסון</option>
+          <option value="סקסופון">סקסופון</option>
+          <option value="קלרינט">קלרינט</option>
+          <option value="חצוצרה">חצוצרה</option>
+          <option value="קרן יער">קרן יער</option>
+          <option value="טרומבון">טרומבון</option>
+          <option value="טובה/בריטון">טובה/בריטון</option>
+          <option value="שירה">שירה</option>
+          <option value="כינור">כינור</option>
+          <option value="ויולה">ויולה</option>
+          <option value="צ'לו">צ'לו</option>
+          <option value="קונטרבס">קונטרבס</option>
+          <option value="פסנתר">פסנתר</option>
+          <option value="גיטרה">גיטרה</option>
+          <option value="גיטרה בס">גיטרה בס</option>
+          <option value="תופים">תופים</option>
+        </select>
+        <select
+          value={filters.stageLevel}
+          onChange={(e) => setFilters(prev => ({ ...prev, stageLevel: e.target.value }))}
+          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+        >
+          <option value="">כל השלבים</option>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
+            <option key={level} value={level}>שלב {level}</option>
+          ))}
+        </select>
+        <span className="text-sm text-muted-foreground mr-auto">
+          {totalStudents} תלמידים
+        </span>
       </div>
 
       {/* Results Info */}

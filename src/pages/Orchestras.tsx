@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings } from 'lucide-react'
+import { Plus, Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings, CheckCircle } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
+import { ListPageHero } from '../components/ui/ListPageHero'
 import { SearchInput } from '../components/ui/SearchInput'
-import StatsCard from '../components/ui/StatsCard'
 import OrchestraForm from '../components/OrchestraForm'
 import OrchestraCard from '../components/OrchestraCard'
 import OrchestraManagementDashboard from '../components/OrchestraManagementDashboard'
@@ -122,6 +122,14 @@ export default function Orchestras() {
     }
   }
 
+  // Hero metrics — 4 entity-colored stat cards
+  const heroMetrics = [
+    { title: 'סה״כ תזמורות', value: stats.totalOrchestras, icon: <Music className="w-5 h-5" /> },
+    { title: 'פעילות', value: stats.activeOrchestras, icon: <CheckCircle className="w-5 h-5" /> },
+    { title: 'סה״כ חברים', value: stats.totalMembers, icon: <Users className="w-5 h-5" /> },
+    { title: 'עם מנצח', value: stats.orchestrasWithConductor, icon: <UserCheck className="w-5 h-5" /> },
+  ]
+
   const handleCreateOrchestra = () => {
     setEditingOrchestra(null)
     setShowForm(true)
@@ -209,13 +217,13 @@ export default function Orchestras() {
       render: (orchestra: Orchestra) => {
         const typeInfo = getOrchestraTypeInfo(orchestra.type)
         return (
-          <div className="flex items-center">
-            <span className="text-lg ml-2">{typeInfo.icon}</span>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-orchestras-bg text-orchestras-fg flex items-center justify-center flex-shrink-0">
+              <Music className="w-4 h-4" />
+            </div>
             <div>
               <div className="font-medium text-gray-900">{orchestra.name}</div>
-              <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
-                {typeInfo.text}
-              </span>
+              <span className="text-xs text-muted-foreground">{typeInfo.text}</span>
             </div>
           </div>
         )
@@ -268,17 +276,17 @@ export default function Orchestras() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex justify-end items-center">
-        <button
-          onClick={handleCreateOrchestra}
-          className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-        >
-          <Plus className="w-4 h-4 ml-2" />
-          תזמורת חדשה
-        </button>
-      </div>
+    <div className="space-y-4">
+      {/* Hero Stats Zone — always visible */}
+      <ListPageHero
+        title="תזמורות והרכבים"
+        entityColor="orchestras"
+        metrics={heroMetrics}
+        action={{
+          label: 'תזמורת חדשה',
+          onClick: handleCreateOrchestra
+        }}
+      />
 
       {/* Error Display */}
       {error && (
@@ -287,156 +295,38 @@ export default function Orchestras() {
         </div>
       )}
 
-      {/* Filters and Search - Only show for grid and table views */}
-      {viewMode !== 'dashboard' && (
-      <Card>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1">
-              <SearchInput
-                value={searchQuery}
-                onChange={(value) => setSearchQuery(value)}
-                onClear={() => setSearchQuery('')}
-                placeholder="חיפוש תזמורות..."
-              />
-            </div>
-
-            {/* Type Filter */}
-            <div className="md:w-48">
-              <select
-                value={filters.type}
-                onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as OrchestraType | '' }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                <option value="">כל הסוגים</option>
-                {VALID_ORCHESTRA_TYPES.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Conductor Filter */}
-            <div className="md:w-48">
-              <select
-                value={filters.conductorId}
-                onChange={(e) => setFilters(prev => ({ ...prev, conductorId: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                <option value="">כל המנצחים</option>
-                {teachers.map((teacher: any) => (
-                  <option key={teacher._id} value={teacher._id}>
-                    {getDisplayName(teacher.personalInfo)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Location Filter */}
-            <div className="md:w-48">
-              <select
-                value={filters.location}
-                onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value as LocationType | '' }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                <option value="">כל המיקומים</option>
-                {VALID_LOCATIONS.map(location => (
-                  <option key={location} value={location}>{location}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Additional Filters */}
-          <div className="flex flex-wrap gap-4 items-center">
-            {/* Active Status */}
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.isActive === true}
-                onChange={(e) => setFilters(prev => ({ 
-                  ...prev, 
-                  isActive: e.target.checked ? true : undefined 
-                }))}
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
-              />
-              <span className="mr-2 text-sm text-gray-700">רק פעילות</span>
-            </label>
-
-            {/* Has Members */}
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.hasMembers === true}
-                onChange={(e) => setFilters(prev => ({ 
-                  ...prev, 
-                  hasMembers: e.target.checked ? true : undefined 
-                }))}
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
-              />
-              <span className="mr-2 text-sm text-gray-700">עם חברים</span>
-            </label>
-
-            {/* Clear Filters */}
-            <button
-              onClick={() => {
-                setFilters({ 
-                  type: '', 
-                  conductorId: '', 
-                  location: '', 
-                  isActive: undefined, 
-                  hasMembers: undefined 
-                })
-                setSearchQuery('')
-              }}
-              className="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <Filter className="w-4 h-4 inline ml-1" />
-              נקה מסננים
-            </button>
-          </div>
+      {/* View Mode Toggle + Sort Controls */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+          <button
+            onClick={() => setViewMode('dashboard')}
+            className={`p-2 text-sm ${viewMode === 'dashboard' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            title="לוח בקרה"
+          >
+            <BarChart3 className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`p-2 text-sm ${viewMode === 'grid' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            title="תצוגת כרטיסים"
+          >
+            <Grid className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setViewMode('table')}
+            className={`p-2 text-sm ${viewMode === 'table' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            title="תצוגת טבלה"
+          >
+            <List className="w-4 h-4" />
+          </button>
         </div>
-      </Card>
-      )}
 
-      {/* Orchestras List/Grid - Only show for grid and table views */}
-      {viewMode !== 'dashboard' && (
-      <Card>
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">
-            תזמורות והרכבים ({filteredAndSortedOrchestras.length})
-          </h3>
-          <div className="flex items-center gap-4">
-            {/* View Mode Toggle */}
-            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-              <button
-                onClick={() => setViewMode('dashboard')}
-                className={`p-2 ${viewMode === 'dashboard' ? 'bg-primary-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-                title="לוח בקרה"
-              >
-                <BarChart3 className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 ${viewMode === 'grid' ? 'bg-primary-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-                title="תצוגת כרטיסים"
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('table')}
-                className={`p-2 ${viewMode === 'table' ? 'bg-primary-500 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-                title="תצוגת טבלה"
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Sort Controls */}
+        {viewMode !== 'dashboard' && (
+          <div className="flex items-center gap-3">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
             >
               <option value="name">מיון לפי שם</option>
               <option value="type">מיון לפי סוג</option>
@@ -445,58 +335,109 @@ export default function Orchestras() {
               <option value="location">מיון לפי מיקום</option>
               <option value="rehearsalCount">מיון לפי חזרות</option>
             </select>
-
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
-              title={sortOrder === 'asc' ? 'מיון יורד' : 'מיון עולה'}
+              className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
             >
               {sortOrder === 'asc' ? '↑' : '↓'}
             </button>
-
-            <button
-              onClick={loadData}
-              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-            >
-              רענן
-            </button>
-          </div>
-        </div>
-
-        {filteredAndSortedOrchestras.length === 0 ? (
-          searchQuery || filters.type || filters.conductorId || filters.location ? (
-            <div className="text-center py-12 text-muted-foreground">לא נמצאו תזמורות התואמות לחיפוש</div>
-          ) : (
-            <EmptyState
-              title="אין תזמורות עדיין"
-              description="צור תזמורת חדשה כדי להתחיל"
-              icon={<Music className="w-12 h-12" />}
-              action={{ label: 'תזמורת חדשה', onClick: handleCreateOrchestra }}
-            />
-          )
-        ) : viewMode === 'table' ? (
-          <Table
-            data={filteredAndSortedOrchestras}
-            columns={columns}
-            onEdit={handleEditOrchestra}
-            onDelete={(orchestra) => handleDeleteOrchestra(orchestra._id)}
-            onView={(orchestra) => handleViewDetails(orchestra._id)}
-            actions={true}
-          />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSortedOrchestras.map(orchestra => (
-              <OrchestraCard
-                key={orchestra._id}
-                orchestra={orchestra}
-                onEdit={handleEditOrchestra}
-                onDelete={handleDeleteOrchestra}
-                onViewDetails={handleViewDetails}
-              />
-            ))}
           </div>
         )}
-      </Card>
+      </div>
+
+      {/* Compact Filter Toolbar — grid/table modes only */}
+      {viewMode !== 'dashboard' && (
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="w-64 flex-none">
+            <SearchInput
+              value={searchQuery}
+              onChange={(value) => setSearchQuery(value)}
+              onClear={() => setSearchQuery('')}
+              placeholder="חיפוש תזמורות..."
+            />
+          </div>
+          <select
+            value={filters.type}
+            onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as OrchestraType | '' }))}
+            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
+          >
+            <option value="">כל הסוגים</option>
+            {VALID_ORCHESTRA_TYPES.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+          <select
+            value={filters.conductorId}
+            onChange={(e) => setFilters(prev => ({ ...prev, conductorId: e.target.value }))}
+            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
+          >
+            <option value="">כל המנצחים</option>
+            {teachers.map((teacher: any) => (
+              <option key={teacher._id} value={teacher._id}>{getDisplayName(teacher.personalInfo)}</option>
+            ))}
+          </select>
+          <select
+            value={filters.location}
+            onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value as LocationType | '' }))}
+            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
+          >
+            <option value="">כל המיקומים</option>
+            {VALID_LOCATIONS.map(location => (
+              <option key={location} value={location}>{location}</option>
+            ))}
+          </select>
+          <label className="flex items-center text-sm">
+            <input
+              type="checkbox"
+              checked={filters.isActive === true}
+              onChange={(e) => setFilters(prev => ({ ...prev, isActive: e.target.checked ? true : undefined }))}
+              className="w-4 h-4 text-primary-600 border-gray-300 rounded ml-2"
+            />
+            רק פעילות
+          </label>
+          <span className="text-sm text-muted-foreground mr-auto">
+            {filteredAndSortedOrchestras.length} תזמורות
+          </span>
+        </div>
+      )}
+
+      {/* Data area — grid/table views */}
+      {viewMode !== 'dashboard' && (
+        <>
+          {filteredAndSortedOrchestras.length === 0 ? (
+            searchQuery || filters.type || filters.conductorId || filters.location ? (
+              <div className="text-center py-12 text-muted-foreground">לא נמצאו תזמורות התואמות לחיפוש</div>
+            ) : (
+              <EmptyState
+                title="אין תזמורות עדיין"
+                description="צור תזמורת חדשה כדי להתחיל"
+                icon={<Music className="w-12 h-12" />}
+                action={{ label: 'תזמורת חדשה', onClick: handleCreateOrchestra }}
+              />
+            )
+          ) : viewMode === 'table' ? (
+            <Table
+              data={filteredAndSortedOrchestras}
+              columns={columns}
+              onEdit={handleEditOrchestra}
+              onDelete={(orchestra) => handleDeleteOrchestra(orchestra._id)}
+              onView={(orchestra) => handleViewDetails(orchestra._id)}
+              actions={true}
+            />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAndSortedOrchestras.map(orchestra => (
+                <OrchestraCard
+                  key={orchestra._id}
+                  orchestra={orchestra}
+                  onEdit={handleEditOrchestra}
+                  onDelete={handleDeleteOrchestra}
+                  onViewDetails={handleViewDetails}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       {/* Dashboard View */}

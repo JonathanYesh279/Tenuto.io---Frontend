@@ -105,7 +105,7 @@ export default function StatsCard({
   return (
     <Card hover className={coloredBg && color && colorClasses[color] ? colorClasses[color].iconBg : undefined}>
       <div className="flex items-center">
-        <div className={clsx('w-12 h-12 rounded-lg flex items-center justify-center', colors.iconBg)}>
+        <div className={clsx('w-12 h-12 rounded-lg flex items-center justify-center', coloredBg ? 'bg-white/50' : colors.iconBg)}>
           <div className={clsx('w-6 h-6', colors.iconColor)}>
             {icon}
           </div>
@@ -113,16 +113,25 @@ export default function StatsCard({
         <div className="mr-4 flex-1">
           <h3 className="text-sm font-medium text-muted-foreground mb-1">{title}</h3>
           <div className="flex items-baseline">
-            <p className={clsx('text-3xl font-bold', colors.valueColor)}>
+            <p className={clsx(coloredBg ? 'text-4xl font-bold' : 'text-3xl font-bold', colors.valueColor)}>
               {value}
             </p>
             {trend && (
-              <span className={clsx('mr-2 text-sm font-medium', {
-                'text-success-600': trend.direction === 'up',
-                'text-destructive': trend.direction === 'down'
-              })}>
-                {trend.direction === 'up' ? '+' : '-'}{trend.value}%
-              </span>
+              coloredBg ? (
+                <span className={clsx('mr-2 rounded-full px-2 py-0.5 text-xs font-bold', colors.iconBg, {
+                  'text-success-600': trend.direction === 'up',
+                  'text-destructive': trend.direction === 'down'
+                })}>
+                  {trend.direction === 'up' ? '+' : '-'}{trend.value}%
+                </span>
+              ) : (
+                <span className={clsx('mr-2 text-sm font-medium', {
+                  'text-success-600': trend.direction === 'up',
+                  'text-destructive': trend.direction === 'down'
+                })}>
+                  {trend.direction === 'up' ? '+' : '-'}{trend.value}%
+                </span>
+              )
             )}
           </div>
           {subtitle && (

@@ -511,19 +511,19 @@ export default function Dashboard() {
                   </div>
                   <span className="text-xl font-bold text-primary">{stats.weeklyRehearsals}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <BookOpen className="w-5 h-5 text-purple-600" />
-                    <span className="text-gray-700">שיעורי תאוריה</span>
+                    <BookOpen className="w-5 h-5 text-muted-foreground" />
+                    <span className="text-foreground/80">שיעורי תאוריה</span>
                   </div>
-                  <span className="text-xl font-bold text-purple-600">{stats.theoryLessonsThisWeek}</span>
+                  <span className="text-xl font-bold text-muted-foreground">{stats.theoryLessonsThisWeek}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <GraduationCap className="w-5 h-5 text-green-600" />
-                    <span className="text-gray-700">מורים פעילים</span>
+                    <GraduationCap className="w-5 h-5 text-muted-foreground" />
+                    <span className="text-foreground/80">מורים פעילים</span>
                   </div>
-                  <span className="text-xl font-bold text-green-600">{stats.staffMembers}</span>
+                  <span className="text-xl font-bold text-muted-foreground">{stats.staffMembers}</span>
                 </div>
               </div>
             </Card>

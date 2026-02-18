@@ -115,11 +115,11 @@ Plans:
   3. Charts and data visualizations are clean and prominent — data is the dominant visual element, not card surfaces or decorative elements
   4. The right sidebar column contains contextual widgets relevant to Tenuto (upcoming lessons, recent activity, quick stats) — not empty space
   5. The dashboard feels like a SchoolHub-level command center — structured, zoned, data-first, with clear visual landmarks
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 19-01: 3-column dashboard layout — main grid restructure, right sidebar column, stat cards row with per-entity pastel colors
-- [ ] 19-02: Dashboard widgets and charts — right column widgets (upcoming lessons, activity), chart sections, data visualization cleanup
+- [ ] 19-01: 3-column dashboard layout — StatsCard coloredBg enhancements, overview tab grid restructure, entity-colored stat cards with stagger animation
+- [ ] 19-02: Dashboard widgets and charts — MiniCalendarWidget, UpcomingEventsWidget, RecentActivityWidget components, wire into right column
 
 ---
 

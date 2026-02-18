@@ -19,7 +19,7 @@
 /* bg-primary-500 (hardcoded hex) is unaffected — only bg-primary uses these CSS vars. */
 @layer base {
   :root {
-    --background: 30 25% 97%;
+    --background: 210 17% 98%;
     --foreground: 20 15% 15%;
     --card: 30 20% 99%;
     --card-foreground: 20 15% 15%;
@@ -39,8 +39,27 @@
     --input: 25 12% 88%;
     --ring: 15 85% 45%;
     --radius: 0.75rem;
-    --sidebar: 220 25% 18%;
-    --sidebar-foreground: 30 25% 97%;
+    --sidebar: 0 0% 100%;               /* white (was: 220 25% 18% dark navy) */
+    --sidebar-foreground: 220 15% 20%;  /* near-black text (was: 30 25% 97% light) */
+    --sidebar-border: 220 13% 91%;      /* subtle gray border */
+    --sidebar-active-bg: 252 80% 94%;   /* violet pill — matches students entity */
+    --sidebar-active-fg: 252 60% 45%;   /* violet text when active */
+    --sidebar-label: 220 10% 55%;       /* section label color (category headers) */
+
+    /* Entity color system (Phase 18 — multi-color pastel palette) */
+    /* Raw HSL channels — consumed via hsl(var(--color-*)) in Tailwind config */
+    --color-students-bg:      252 80% 94%;   /* violet pastel */
+    --color-students-fg:      252 60% 45%;   /* violet saturated */
+    --color-teachers-bg:      200 75% 92%;   /* sky blue pastel */
+    --color-teachers-fg:      200 70% 38%;   /* sky blue saturated */
+    --color-orchestras-bg:    45 90% 90%;    /* amber/yellow pastel */
+    --color-orchestras-fg:    38 80% 38%;    /* amber saturated */
+    --color-rehearsals-bg:    340 70% 92%;   /* rose pastel */
+    --color-rehearsals-fg:    340 60% 42%;   /* rose saturated */
+    --color-bagrut-bg:        145 60% 88%;   /* green pastel */
+    --color-bagrut-fg:        145 55% 32%;   /* green saturated */
+    --color-theory-bg:        170 65% 88%;   /* teal pastel */
+    --color-theory-fg:        170 60% 32%;   /* teal saturated */
 
     /* Surface elevation scale (Phase 16 — TOKEN-01) */
     --surface-base:     hsl(30 25% 97%);

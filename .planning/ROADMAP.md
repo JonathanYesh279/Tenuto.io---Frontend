@@ -126,11 +126,11 @@ Plans:
   3. The Teacher detail page shows a breadcrumb "מורים → יוני כהן" that links back to the Teachers list
   4. Switching tabs on any detail page shows a 200ms fade transition between tab content — not an instant content swap
   5. The detail page header shows "עודכן לאחרונה: 14 בפברואר 2026" beneath the entity name
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 11-01: Teacher detail and Student detail pages
-- [ ] 11-02: Orchestra detail, Bagrut detail pages
+- [ ] 11-01-PLAN.md — Avatar color hash, DetailPageHeader component, wire Teacher + Student detail pages
+- [ ] 11-02-PLAN.md — Wire Orchestra + Bagrut detail pages with DetailPageHeader and tab fade
 
 ### Phase 12: Layout & Dashboard
 **Goal:** The sidebar, header, and dashboard are redesigned with warm colors and music identity — completing the visual system when all other pages already look polished, so the result is immediately coherent.

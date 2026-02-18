@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Music } from 'lucide-react'
 import { authService } from '../services/apiService.js'
 
 export default function ForgotPassword() {
@@ -41,6 +42,12 @@ export default function ForgotPassword() {
         {/* Glassmorphism container */}
         <div className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl shadow-xl p-8">
           <div>
+            <div className="flex flex-col items-center gap-2 mb-4">
+              <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                <Music className="w-8 h-8 text-white" />
+              </div>
+              <p className="text-sm text-white/70 font-reisinger-yonatan">מערכת ניהול קונסרבטוריון</p>
+            </div>
             <h2
               className="mt-6 text-center text-3xl font-extrabold text-white drop-shadow-lg"
               style={{ fontFamily: "'Reisinger Yonatan', 'Arial Hebrew', 'Noto Sans Hebrew', Arial, sans-serif" }}
@@ -89,7 +96,7 @@ export default function ForgotPassword() {
                     type="email"
                     required
                     disabled={isLoading}
-                    className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="כתובת דוא״ל"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -103,7 +110,7 @@ export default function ForgotPassword() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600/90 hover:bg-blue-700/90 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <div className="flex items-center">

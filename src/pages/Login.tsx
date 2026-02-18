@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Building2, ArrowRight, Shield } from 'lucide-react'
+import { Building2, ArrowRight, Shield, Music } from 'lucide-react'
 import { useAuth } from '../services/authContext.jsx'
 
 interface Tenant {
@@ -127,11 +127,11 @@ export default function Login() {
                     disabled={isLoading}
                     className="w-full p-4 bg-white/15 border border-white/25 rounded-xl text-right
                       hover:bg-white/25 hover:border-white/40 focus:outline-none focus:ring-2
-                      focus:ring-blue-400 transition-all duration-200 backdrop-blur-sm
+                      focus:ring-ring transition-all duration-200 backdrop-blur-sm
                       disabled:opacity-50 disabled:cursor-not-allowed group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 bg-primary/30 rounded-lg flex items-center justify-center flex-shrink-0">
                         <Building2 className="w-5 h-5 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -163,6 +163,12 @@ export default function Login() {
             /* Login Form View */
             <>
               <div>
+                <div className="flex flex-col items-center gap-2 mb-4">
+                  <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                    <Music className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="text-sm text-white/70 font-reisinger-yonatan">מערכת ניהול קונסרבטוריון</p>
+                </div>
                 <h2
                   className="mt-6 text-center text-3xl font-extrabold text-white drop-shadow-lg"
                   style={{ fontFamily: "'Reisinger Yonatan', 'Arial Hebrew', 'Noto Sans Hebrew', Arial, sans-serif" }}
@@ -194,7 +200,7 @@ export default function Login() {
                       type="email"
                       required
                       disabled={isLoading}
-                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder='כתובת דוא״ל'
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -212,7 +218,7 @@ export default function Login() {
                       type="password"
                       required
                       disabled={isLoading}
-                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="סיסמה"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -226,7 +232,7 @@ export default function Login() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600/90 hover:bg-blue-700/90 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
                       <div className="flex items-center">

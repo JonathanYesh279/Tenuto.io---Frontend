@@ -64,7 +64,7 @@ export default function Table({
   return (
     <div className={clsx('overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200', className)}>
       <div className="overflow-x-auto">
-        <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
+        <div className="max-h-[calc(100vh-380px)] overflow-y-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50 sticky top-0 z-10 shadow-[0_1px_0_0_theme(colors.gray.200)]">
               <tr>
@@ -72,7 +72,7 @@ export default function Table({
                   <th
                     key={column.key}
                     className={clsx(
-                      'px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider',
+                      'px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider',
                       {
                         'text-start': column.align === 'left',
                         'text-center': column.align === 'center',
@@ -85,7 +85,7 @@ export default function Table({
                   </th>
                 ))}
                 {actions && (
-                  <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-end">
+                  <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-end">
                     פעולות
                   </th>
                 )}
@@ -104,8 +104,8 @@ export default function Table({
                     key={index}
                     className={clsx(
                       'transition-colors duration-150',
-                      isClickable && 'cursor-pointer hover:bg-amber-50/60',
-                      !isClickable && 'hover:bg-amber-50/60',
+                      isClickable && 'cursor-pointer hover:bg-gray-50',
+                      !isClickable && 'hover:bg-gray-50',
                       computedRowClassName
                     )}
                     onClick={isClickable ? () => onRowClick(row, index) : undefined}
@@ -123,7 +123,7 @@ export default function Table({
                       <td
                         key={column.key}
                         className={clsx(
-                          'px-6 py-4 whitespace-nowrap text-sm text-gray-900',
+                          'px-4 py-3 whitespace-nowrap text-sm text-gray-900',
                           {
                             'text-start': column.align === 'left',
                             'text-center': column.align === 'center',
@@ -135,7 +135,7 @@ export default function Table({
                       </td>
                     ))}
                     {actions && (
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-end">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-end">
                         <div className="flex items-center justify-end gap-2">
                           {onView && (
                             <button
@@ -143,11 +143,10 @@ export default function Table({
                                 e.stopPropagation()
                                 onView(row)
                               }}
-                              className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+                              className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                               title={actionLabels.view}
                             >
-                              <Eye className="w-3 h-3 ml-1" />
-                              {actionLabels.view}
+                              <Eye className="w-4 h-4" />
                             </button>
                           )}
                           {onDelete && (
@@ -156,11 +155,10 @@ export default function Table({
                                 e.stopPropagation()
                                 onDelete(row)
                               }}
-                              className="inline-flex items-center px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                              className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                               title={actionLabels.delete}
                             >
-                              <Trash2 className="w-3 h-3 ml-1" />
-                              {actionLabels.delete}
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           )}
                         </div>

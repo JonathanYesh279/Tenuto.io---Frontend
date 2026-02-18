@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.1 Cleanup & Polish** — Phases 1-5 (shipped 2026-02-14)
-- ✅ **v2.0 UI/UX Redesign** — Phases 6-13 (shipped 2026-02-18)
+- 🔧 **v2.0 UI/UX Redesign** — Phases 6-15 (gap closure in progress)
 
 ## Phases
 
@@ -20,7 +20,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 
 </details>
 
-### ✅ v2.0 UI/UX Redesign (Shipped 2026-02-18)
+### 🔧 v2.0 UI/UX Redesign (Gap Closure)
 
 **Milestone Goal:** Transform Tenuto from a generic admin template into a polished, premium music school management platform with warm Monday.com-inspired aesthetics, shadcn/ui components, and Hebrew RTL correctness throughout.
 
@@ -32,6 +32,8 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
 - [x] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
 - [x] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
+- [ ] **Phase 14: Requirement Gap Closure** — Student detail routing, StatusBadge wiring, Rehearsals ErrorState
+- [ ] **Phase 15: Tech Debt Sweep** — AuditTrail ErrorState, Dashboard tokens, InstrumentBadge, RTL padding
 
 ## Phase Details
 
@@ -164,6 +166,29 @@ Plans:
 - [x] 13-01-PLAN.md — Auth pages warm branding (Login/ForgotPassword/ResetPassword) + Settings shadcn Input + AuditTrail token swaps
 - [x] 13-02-PLAN.md — MinistryReports step indicator + ImportData step indicator + print styles + Layout print wiring
 
+### Phase 14: Requirement Gap Closure
+**Goal:** Close all 7 partially-satisfied requirements identified by the v2.0 milestone audit — fix student detail routing, wire domain StatusBadge to list pages, and add ErrorState to Rehearsals.
+**Depends on:** Phase 13
+**Requirements:** DETAIL-01, DETAIL-02, DETAIL-03, DETAIL-04, DETAIL-05, PRIM-05, LOAD-04
+**Gap Closure:** Closes gaps from v2.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. Student detail page shows warm gradient header with avatar initials, breadcrumb, last-updated metadata, and tab fade animation — identical treatment to Teacher/Orchestra/Bagrut
+  2. All list pages (Teachers, Students, Orchestras, Rehearsals, AuditTrail) import StatusBadge from domain/ barrel — Table.tsx StatusBadge removed
+  3. Rehearsals page shows ErrorState component with retry button on network error — not inline text
+**Plans:** TBD
+
+### Phase 15: Tech Debt Sweep
+**Goal:** Eliminate accumulated tech debt from v2.0 — add missing ErrorState to AuditTrail, swap hardcoded Dashboard colors to design tokens, resolve orphaned InstrumentBadge, and fix RTL padding.
+**Depends on:** Phase 14
+**Requirements:** None (tech debt closure)
+**Gap Closure:** Closes tech debt from v2.0-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. AuditTrail page shows ErrorState component with retry button on network error
+  2. Dashboard Schedule tab Weekly Summary uses design token classes — no bg-purple-50, text-purple-600, text-gray-700, or bg-green-50 hardcoded colors
+  3. InstrumentBadge is either wired to list pages or removed as dead code
+  4. .mobile-tab-nav uses logical padding properties (ps-/pe-) instead of physical padding-left/padding-right
+**Plans:** TBD
+
 ## Progress
 
 | Phase | Milestone | Plans | Status | Completed |
@@ -181,7 +206,9 @@ Plans:
 | 11. Detail Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 12. Layout & Dashboard | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 13. Special Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
+| 14. Requirement Gap Closure | v2.0 | 0/? | Pending | — |
+| 15. Tech Debt Sweep | v2.0 | 0/? | Pending | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 (Phase 13 Special Pages complete — v2.0 milestone shipped)*
+*Last updated: 2026-02-18 (Phases 14-15 added for gap closure after milestone audit)*

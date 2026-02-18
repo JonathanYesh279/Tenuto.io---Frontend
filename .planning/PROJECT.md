@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A React-based management application for conservatories (music schools) in Israel. Manages teachers, students, orchestras, lessons, and administrative workflows. Multi-tenant SaaS with Hebrew RTL interface. Frontend is feature-complete for v1.1; backend is complete.
+A React-based management application for conservatories (music schools) in Israel. Manages teachers, students, orchestras, lessons, and administrative workflows. Multi-tenant SaaS with Hebrew RTL interface. Features a warm, Monday.com-inspired design system built on shadcn/ui with music school branding. Frontend is feature-complete through v2.0; backend is complete.
 
 ## Core Value
 
@@ -21,56 +21,43 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 - ✓ **F5: New Pages** — Settings, MinistryReports, ImportData (3 admin-only pages) — v1.0
 - ✓ **F6: Polish** — Hours Summary tab, Dashboard hours cards, Admin hours overview, Super Admin toggle — v1.0
 - ✓ **v1.1 Cleanup** — Dead code removal, role mapping fix, instrument sync, audit trail UI, MinistryReports polish, .claude ecosystem cleanup — v1.1
+- ✓ **v2.0 Design System** — CSS design token system, warm coral palette, Heebo font, Radix DirectionProvider — v2.0
+- ✓ **v2.0 Component Library** — 9 shadcn/ui primitives (Dialog, Tabs, DropdownMenu, Badge, etc.) with RTL keyboard nav — v2.0
+- ✓ **v2.0 Domain Components** — InstrumentBadge, StatusBadge, AvatarInitials, EmptyState, ErrorState, Skeleton loaders — v2.0
+- ✓ **v2.0 Form Migration** — FormField wrapper, all 3 entity forms migrated to shadcn with RHF data persistence — v2.0
+- ✓ **v2.0 List Pages** — Sticky-header tables, warm hover, SearchInput, contextual Pagination, 5 pages redesigned — v2.0
+- ✓ **v2.0 Detail Pages** — Gradient headers, deterministic avatar colors, breadcrumbs, tab fade transitions — v2.0
+- ✓ **v2.0 Layout & Dashboard** — Dark warm sidebar, personalized greeting, warm StatsCards, music identity — v2.0
+- ✓ **v2.0 Special Pages** — Auth warm branding, StepProgress, print styles, RTL-correct toast system — v2.0
 
 ### Active
 
 <!-- Current scope. Building toward these. -->
 
-- [ ] Full UI/UX redesign — audit current state, define design system, redesign every page
-- [ ] Design system definition — color palette, typography, spacing, components, motion standards
-- [ ] shadcn/ui migration — replace generic components with polished Radix-based library
-- [ ] Music school identity — warm tones, musical accents woven into branding
-- [ ] Monday.com-inspired aesthetic — rounded shapes, intentional color, personality with precision
-- [ ] Accessibility improvements — contrast ratios, focus indicators, keyboard navigation
-- [ ] RTL/Hebrew quality pass — text alignment, layout mirroring, bidirectional handling
-- [ ] Loading/error/empty states — consistent feedback patterns across all pages
-- [ ] Micro-interactions — purposeful animations that provide user feedback
+(None yet — planning next milestone)
 
 ### Out of Scope
 
 <!-- Explicit boundaries. -->
 
-- New features or functionality — this milestone is visual-only, zero regressions
-- Multi-tenant admin features beyond current — defer to next milestone
 - i18n / English translation — Hebrew-only for now
 - Mobile app — web-first
 - Real-time notifications — not needed yet
 - Backend export endpoints — not yet implemented on backend side
-
-## Current Milestone: v2.0 UI/UX Redesign
-
-**Goal:** Transform Tenuto from a generic-looking admin template into a polished, distinctive music school management platform with warm, Monday.com-inspired aesthetics and a music identity.
-
-**Target features:**
-- Complete UI audit and design system definition
-- shadcn/ui component library migration
-- Music school branding (warm palette, musical accents)
-- Full page-by-page redesign (dashboard, lists, forms, detail views, admin pages)
-- Accessibility and RTL quality improvements
-- Consistent loading/error/empty states and micro-interactions
-
-**Design references:** Monday.com (warmth, color, rounded shapes), Linear (precision, whitespace)
-**Component library:** shadcn/ui (Radix-based, Tailwind-compatible)
+- Dark mode — Hebrew fonts not dark-mode tested, warm identity works against it
+- Animated charts/data viz — no active chart usage yet
 
 ## Context
 
 - **Backend:** Complete at `/mnt/c/Users/yona2/Documents/Tenuto.io/Tenuto.io-Backend` — all API endpoints live
 - **Tech stack:** React 18 + TypeScript + Vite + Tailwind CSS + React Hook Form + Zod + React Query
-- **Design stack (v2.0):** shadcn/ui + Radix UI primitives + Tailwind CSS
+- **Design stack:** shadcn/ui + Radix UI primitives + Tailwind CSS + Framer Motion (AnimatePresence)
 - **Patterns:** RTL-first, Hebrew hardcoded, feature modules at `src/features/[module]/details/`
 - **CI:** GitHub Actions pipeline with 6 progressive stages (Build -> TypeScript -> Lint -> Tests -> Deploy)
 - **Codebase map:** `.planning/codebase/` (7 documents)
-- **Shipped:** v1.1 (2026-02-14) — all features complete, audit trail added, docs cleaned
+- **Shipped:** v2.0 (2026-02-18) — full UI/UX redesign with warm music school identity
+- **Known tech debt:** Pre-existing TypeScript errors in 6 utility files (bagrutMigration, cascadeErrorHandler, errorRecovery, memoryManager, performanceEnhancements, securityUtils) — unrelated to UI, blocks CI typecheck stage
+- **WSL constraint:** npm install on NTFS mount causes EIO errors — build verification from Windows PowerShell or CI only
 
 ## Constraints
 
@@ -89,8 +76,11 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 | Backward-compat fullName fallbacks | Smooth transition, no data migration needed | ✓ Good |
 | Single source of truth for progress | STATE.md canonical, MEMORY.md references it | ✓ Good (v1.1) |
 | .claude/ARCHITECTURE.md for config map | Documents 13 configuration layers and skills | ✓ Good (v1.1) |
-
-| Design system: shadcn/ui + music identity | Monday.com warmth, polished components, RTL-native | — Pending |
+| shadcn/ui + warm coral identity | Monday.com warmth, polished components, RTL-native | ✓ Good (v2.0) |
+| shadcn primitives written manually (not CLI) | WSL2+NTFS EIO errors prevent CLI install; manual produces identical output | ✓ Good (v2.0) |
+| AnimatePresence + conditional render for tabs | Avoids hidden-panel DOM accumulation from Radix TabsContent | ✓ Good (v2.0) |
+| Layout/Dashboard redesigned last (Phase 12) | Highest regression risk — proved correct with proven visual system | ✓ Good (v2.0) |
+| Modal migration atomic (Phase 7) | All 4 custom modal variants replaced at once — clean transition | ✓ Good (v2.0) |
 
 ---
-*Last updated: 2026-02-17 after v2.0 milestone initialization*
+*Last updated: 2026-02-18 after v2.0 milestone completion*

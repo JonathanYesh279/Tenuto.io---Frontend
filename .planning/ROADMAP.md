@@ -134,11 +134,11 @@ Plans:
   3. Table rows show avatars alongside entity names (where applicable), colored status badges (distinct colors per status, not uniform), and icon-based action buttons (edit, delete) — not plain text links
   4. Tables are data-dense with clean spacing — more data visible without scrolling compared to v2.0
   5. The vertical flow on every list page is predictable: hero stats → filter toolbar → data table — clear zoning with no ambiguity
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 20-01: Hero stats zones — per-entity stat cards at top of TeacherList, StudentList, OrchestraList with entity pastel colors
-- [ ] 20-02: Filter toolbar and table redesign — compact filter bar, avatar+name columns, colored badges, icon actions across all list pages
+- [ ] 20-01: ListPageHero component and Table density — shared hero stats zone component with framer-motion stagger, Table.tsx padding reduction and maxHeight adjustment
+- [ ] 20-02: Page restructuring — Teachers, Students, Orchestras pages restructured with hero zone, compact filter toolbar, avatar-enhanced table columns
 
 ---
 

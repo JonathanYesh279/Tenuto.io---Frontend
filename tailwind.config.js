@@ -182,6 +182,13 @@ export default {
         'card-hover': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
         'sidebar': '2px 0 8px -2px rgb(0 0 0 / 0.1)',
         'header': '0 1px 3px 0 rgb(0 0 0 / 0.1)',
+
+        // Semantic shadow scale (Phase 16 — TOKEN-03, maps to CSS vars in :root)
+        '0': 'var(--shadow-0)',
+        '1': 'var(--shadow-1)',
+        '2': 'var(--shadow-2)',
+        '3': 'var(--shadow-3)',
+        '4': 'var(--shadow-4)',
       },
       animation: {
         // Page transitions: 150ms ease-out per user decision (purposeful-and-limited philosophy)

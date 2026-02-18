@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-18)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.1 Production-Grade Visual Identity — Phase 16: Token Foundation
+**Current focus:** v2.1 Production-Grade Visual Identity — Phase 17: Elevation
 
 ## Current Milestone: v2.1 Production-Grade Visual Identity
 
@@ -14,12 +14,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 16 of 21 (Token Foundation)
-Plan: 01 complete (of 2)
-Status: Plan 16-01 complete — ready for 16-02
-Last activity: 2026-02-18 — Phase 16 Plan 01 complete (CSS token foundation)
+Phase: 16 complete (Token Foundation)
+Plan: Phase 16 complete — ready for Phase 17
+Status: Phase 16 both plans complete — CSS vars + Tailwind utilities + motion tokens done
+Last activity: 2026-02-18 — Phase 16 Plan 02 complete (Tailwind shadow utilities, motionTokens.ts, COLOR-INVENTORY.md)
 
-Progress: [█░░░░░░░░░] 8% (v2.1, 1/13 plans)
+Progress: [██░░░░░░░░] 15% (v2.1, 2/13 plans)
 
 ## Performance Metrics
 
@@ -41,17 +41,19 @@ Key decisions affecting v2.1:
 - [Research]: Framer Motion layout prop must NOT be used on containers with Radix dropdown children
 - [16-01]: Surface vars use full hsl() syntax (not raw channels) — consumed via var() directly, not hsl(var(...))
 - [16-01]: Shadow warm tint rgba(120,60,20,...) approximates coral brand hue at low opacity for cohesive depth
+- [16-02]: Color migration deferred — 1,211 primary-NNN instances across 134 files requires dedicated phase; two options documented (palette alignment vs semantic aliases)
+- [16-02]: focus:ring-primary-500 (379 hits) flagged as WCAG AA risk for any future palette change — mandatory contrast verification required
 
 ### Pending Todos
 
-(None — starting fresh on v2.1)
+(None — Phase 16 complete)
 
 ### Blockers/Concerns
 
 - [Pre-existing]: TypeScript errors in 6 utility files (bagrutMigration, cascadeErrorHandler, errorRecovery, memoryManager, performanceEnhancements, securityUtils) — blocks CI typecheck stage. Unrelated to v2.1 visual work.
 - [Pre-existing]: Backend export endpoints (/api/export/status, /validate, /download) not implemented — MinistryReports info banner stays.
 - [WSL constraint]: npm install on /mnt/c/ NTFS mount causes EIO errors — build verification from Windows PowerShell or CI only.
-- [v2.1 risk]: 888 hardcoded `primary-NNN` hex classes exist alongside CSS `--primary` var — dual color system must be reconciled in Phase 16 before any color changes cascade.
+- [v2.1 documented]: 1,211 primary-NNN hex classes across 134 files alongside CSS --primary var — inventoried in COLOR-INVENTORY.md, migration deferred to dedicated phase.
 - [v2.1 risk]: Heebo 700-800 may cause Hebrew nav label wrapping in tight containers — browser test required in Phase 18 before expanding typography scope.
 
 ## Performance Metrics (v2.1)
@@ -59,9 +61,10 @@ Key decisions affecting v2.1:
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 16    | 01   | <1 min   | 1     | 1     |
+| 16    | 02   | 4 min    | 2     | 3     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 16-01-PLAN.md (CSS token foundation — 18 new :root vars)
+Stopped at: Completed 16-02-PLAN.md (Tailwind shadow utilities, motionTokens.ts, COLOR-INVENTORY.md)
 Resume file: None

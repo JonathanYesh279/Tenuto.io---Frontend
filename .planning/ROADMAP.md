@@ -29,7 +29,7 @@ Full details: `milestones/v1.1-ROADMAP.md`
 - [x] **Phase 8: Domain Components & Loading States** — Conservatory-specific components, skeletons, empty/error states, toast system
 - [x] **Phase 9: Form System** — shadcn Form wrapper, field grouping, inline validation, form accessibility
 - [x] **Phase 10: List Pages** — All 5 list pages redesigned with new table, search, pagination, and states
-- [ ] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
+- [x] **Phase 11: Detail Pages** — All detail pages with gradient headers, avatars, breadcrumbs, tab transitions
 - [ ] **Phase 12: Layout & Dashboard** — Sidebar, header, and dashboard redesigned last when visual system is proven
 - [ ] **Phase 13: Special Pages** — Admin pages, auth pages, print styles, toast system finalization
 
@@ -129,8 +129,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Avatar color hash, DetailPageHeader component, wire Teacher + Student detail pages
-- [ ] 11-02-PLAN.md — Wire Orchestra + Bagrut detail pages with DetailPageHeader and tab fade
+- [x] 11-01-PLAN.md — Avatar color hash, DetailPageHeader component, wire Teacher + Student detail pages
+- [x] 11-02-PLAN.md — Wire Orchestra + Bagrut detail pages with DetailPageHeader and tab fade
 
 ### Phase 12: Layout & Dashboard
 **Goal:** The sidebar, header, and dashboard are redesigned with warm colors and music identity — completing the visual system when all other pages already look polished, so the result is immediately coherent.
@@ -178,10 +178,10 @@ Plans:
 | 8. Domain Components & Loading | v2.0 | 3/3 | Complete | 2026-02-17 |
 | 9. Form System | v2.0 | 3/3 | Complete | 2026-02-18 |
 | 10. List Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
-| 11. Detail Pages | v2.0 | 0/2 | Not started | - |
+| 11. Detail Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
 | 12. Layout & Dashboard | v2.0 | 0/2 | Not started | - |
 | 13. Special Pages | v2.0 | 0/2 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 (Phase 10 List Pages complete)*
+*Last updated: 2026-02-18 (Phase 11 Detail Pages complete)*

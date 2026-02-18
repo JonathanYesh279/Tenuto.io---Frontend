@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-17)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v2.0 Phase 11 — Detail Pages (in progress, Plan 1 complete)
+**Current focus:** v2.0 Phase 12 — Layout & Dashboard (next)
 
 ## Current Position
 
-Phase: 11 of 13 ([v2.0] Detail Pages) — IN PROGRESS
-Plan: 2 of 3 in current phase — COMPLETE
-Status: Phase 11 Plan 2 complete. Orchestra and Bagrut detail pages now have gradient headers + tab fade. All 4 entity detail pages use DetailPageHeader. Ready for Plan 3.
-Last activity: 2026-02-18 — Phase 11 Plan 2 execution complete
+Phase: 11 of 13 ([v2.0] Detail Pages) — COMPLETE (verified)
+Plan: 2 of 2 in current phase — COMPLETE
+Status: Phase 11 verified (15/15 must-haves passed). Ready for Phase 12.
+Last activity: 2026-02-18 — Phase 11 execution complete + verified
 
-Progress: [███████░░░] 67% (v2.0) — [██████████] 100% (v1.1 complete)
+Progress: [████████░░] 75% (v2.0) — [██████████] 100% (v1.1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19 (7 v1.1 + 12 v2.0)
-- Average duration: ~17 min
-- Total execution time: ~5.4 hours
+- Total plans completed: 20 (7 v1.1 + 13 v2.0)
+- Average duration: ~16 min
+- Total execution time: ~5.5 hours
 
 **By Phase:**
 
@@ -106,7 +106,7 @@ Progress: [███████░░░] 67% (v2.0) — [███████
 
 ### Pending Todos
 
-None for Phase 11 Plan 2. Phase 11 Plan 3 is next (if any) or Phase 12 (Layout Shell).
+None for Phase 11. Phase 12 is next: sidebar, header, and dashboard redesign.
 
 ### Blockers/Concerns
 
@@ -118,5 +118,5 @@ None for Phase 11 Plan 2. Phase 11 Plan 3 is next (if any) or Phase 12 (Layout S
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 11 Plan 2 complete. DetailPageHeader + tab fade wired into Orchestra and Bagrut detail pages. All 4 entity detail pages now use consistent gradient headers.
+Stopped at: Phase 11 complete + verified (15/15 must-haves). ROADMAP.md updated. Ready for Phase 12 planning.
 Resume file: None

@@ -14,10 +14,10 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 17 (Primitive Component Layer) — both plans complete
-Plan: 17-02 complete — Phase 17 done, ready for Phase 18 (Typography)
-Status: Dialog spring entrance + shadow-4, Tabs shadow-1, focus rings verified on Tabs and Input
-Last activity: 2026-02-18 — Phase 17 Plan 02 complete (Dialog FM spring, shadow-4, Tabs shadow-1, focus ring verification)
+Phase: 17 complete (Primitive Component Layer)
+Plan: Phase 17 complete — ready for Phase 18
+Status: Phase 17 both plans complete — shadow tokens + spring interactions on all 6 primitives
+Last activity: 2026-02-18 — Phase 17 execution complete (Card/Button/Badge/Dialog/Tabs/Input primitives)
 
 Progress: [████░░░░░░] 31% (v2.1, 4/13 plans)
 
@@ -52,7 +52,7 @@ Key decisions affecting v2.1:
 
 ### Pending Todos
 
-(None — Phase 16 complete)
+(None — Phase 17 complete)
 
 ### Blockers/Concerns
 
@@ -74,5 +74,5 @@ Key decisions affecting v2.1:
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 17-02-PLAN.md (Dialog FM spring entrance, shadow-4, Tabs shadow-1, focus ring verification)
+Stopped at: Phase 17 execution complete — all 6 primitives updated
 Resume file: None

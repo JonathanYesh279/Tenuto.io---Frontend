@@ -79,8 +79,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 17-01: Card, button, badge — shadow tokens, spring press, badge shadow-1
-- [ ] 17-02: Dialog, tabs, input — spring entrance, shadow-4 elevation, focus ring verification
+- [x] 17-01: Card, button, badge — shadow tokens, spring press, badge shadow-1
+- [x] 17-02: Dialog, tabs, input — spring entrance, shadow-4 elevation, focus ring verification
 
 ---
 
@@ -179,7 +179,7 @@ Plans:
 | 14. Requirement Gap Closure | v2.0 | 3/3 | Complete | 2026-02-18 |
 | 15. Tech Debt Sweep | v2.0 | 1/1 | Complete | 2026-02-18 |
 | 16. Token Foundation | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 17. Primitive Component Layer | v2.1 | 0/2 | Not started | — |
+| 17. Primitive Component Layer | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 18. Typography Scale and Color Evolution | v2.1 | 0/2 | Not started | — |
 | 19. Motion System | v2.1 | 0/2 | Not started | — |
 | 20. Visual Personality and Layout Composition | v2.1 | 0/3 | Not started | — |
@@ -187,4 +187,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 after Phase 16 execution complete*
+*Last updated: 2026-02-18 after Phase 17 execution complete*

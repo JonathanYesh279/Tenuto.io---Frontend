@@ -15,12 +15,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 21-detail-pages-and-forms (in progress)
-Plan: 21-01 complete — detail page headers and entity-colored tab pills done
-Status: Phase 21, Plan 01 complete — ready for Plan 02
-Last activity: 2026-02-18 — Phase 21-01 executed: DetailPageHeader entityColor prop, entity-colored tab pills on all 3 detail pages
+Phase: 21-detail-pages-and-forms (complete)
+Plan: All 2 plans complete — 21-01 detail page headers/tab pills, 21-02 form section accent bars
+Status: Phase 21 complete — all 13/13 v2.1 plans done
+Last activity: 2026-02-18 — Phase 21-02 executed: TeacherForm (6 sections, bg-teachers-fg), StudentForm (4 sections, bg-students-fg), OrchestraForm (3 compact sections, bg-orchestras-fg)
 
-Progress: [████████░░] 92% (v2.1, 12/13 plans)
+Progress: [██████████] 100% (v2.1, 13/13 plans)
 
 ## Performance Metrics
 
@@ -36,6 +36,9 @@ Progress: [████████░░] 92% (v2.1, 12/13 plans)
 Archived to PROJECT.md Key Decisions table. See milestones/v2.0-ROADMAP.md for full v2.0 phase details.
 
 Key decisions affecting v2.1:
+- [21-02]: OrchestraForm compact sizing (h-5, text-sm, gap-2, mb-3, mb-6) — sized for modal max-h-[90vh] constraint; standard forms use h-6, text-base, gap-3, mb-4, mb-8
+- [21-02]: StudentForm Card wrappers replaced with plain divs — accent bars provide section identity; Card border added unnecessary visual weight
+- [21-02]: RTL accent bar: first DOM child in flex row renders on right (Hebrew visual start) — no RTL override needed
 - [21-01]: entityColor prop on DetailPageHeader is optional — gradient fallback preserved for backward compat
 - [21-01]: Tab active states overridden via className on each TabsTrigger, not by editing global tabs.tsx primitive
 - [21-01]: ENTITY_DETAIL_STYLES static const in DetailPageHeader mirrors ENTITY_STYLES in ListPageHero — Tailwind tree-shake safety
@@ -105,9 +108,10 @@ Key decisions affecting v2.1:
 | 20    | 01   | 4 min    | 2     | 2     |
 | 20    | 02   | 6 min    | 3     | 3     |
 | 21    | 01   | 2 min    | 2     | 4     |
+| 21    | 02   | 8 min    | 2     | 3     |
 
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 21-01-PLAN.md — detail page headers and entity-colored tab pills
+Stopped at: Completed 21-02-PLAN.md — form section accent bars (all 13/13 v2.1 plans done)
 Resume file: None

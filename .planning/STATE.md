@@ -47,7 +47,7 @@ Progress: [█████████░] 93% (v2.0 — 14/15 phases) — [█�
 | v2.0 Phase 13 Plan 1 | 1 | ~5min | ~5 min |
 | v2.0 Phase 13 Plan 2 | 1 | 4min | 4 min |
 | v2.0 Phase 14 Plan 1 | 1 | 2min | 2 min |
-| v2.0 Phase 14 Plan 2 | 1 | ~2min | ~2 min |
+| v2.0 Phase 14 Plan 2 | 1 | 4min | 4 min |
 | v2.0 Phase 14 Plan 3 | 1 | 2min | 2 min |
 
 *Updated after each plan completion*
@@ -125,7 +125,10 @@ Progress: [█████████░] 93% (v2.0 — 14/15 phases) — [█�
 - [13-01]: Settings native selects kept native (Phase 9 decision preserved) — only focus ring token swapped to focus:ring-ring
 - [13-01]: AuditTrail informational bg-blue-50/border-blue-200 preserved — semantic colors not brand interactive tokens
 - [14-01]: Student detail page uses same DetailPageHeader + AnimatePresence pattern as Teacher/Orchestra/Bagrut — closes DETAIL-01 through DETAIL-05 gap for Student entity
-- [14-02]: StatusBadge badge variants extended with 'warning' and 'info'; Hebrew status map covers all 9 statuses from backend (active, inactive, graduated, waitlist, suspended, cancelled, scheduled, in_progress, completed)
+- [14-02]: StatusBadge 'completed' variant added (green-100/green-800); STATUS_VARIANT_MAP extended to 8 Hebrew strings covering Teachers/Students/Bagruts/AuditTrail — all 4 list pages migrated from Table.tsx StatusBadge to domain/ barrel
+- [14-02]: grade field in Students.tsx uses plain Badge variant=outline — student class/grade is a label, not a status
+- [14-02]: AuditTrail maps API English values ('success'/'failed') to Hebrew at call site — keeps STATUS_VARIANT_MAP Hebrew-only
+- [14-02]: Table.tsx StatusBadge preserved for PresentationTracker — migration deferred to Phase 15
 - [14-03]: AlertTriangle import removed when replacing inline error block — cleanup correct since it was exclusively used in that block; pre-existing TS errors in Table component usage are unrelated to change
 
 ### Pending Todos

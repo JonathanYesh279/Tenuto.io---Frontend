@@ -207,6 +207,28 @@ export default function Dashboard() {
       }))
 
       setUpcomingEvents(events)
+
+      // Prepare teacher table data
+      const teacherTable = teachersData.slice(0, 6).map((t: any) => ({
+        id: t._id,
+        name: getDisplayName(t.personalInfo) || 'מורה',
+        department: t.professionalInfo?.instrument || t.teaching?.instruments?.[0] || '—',
+        studentCount: t.teaching?.studentIds?.length || 0,
+        rating: t.professionalInfo?.rating || null,
+        isActive: t.isActive !== false,
+        avatarUrl: t.personalInfo?.avatarUrl || null,
+      }))
+      setTeacherTableData(teacherTable)
+
+      // Prepare agenda data from upcoming events
+      const agenda = upcomingRehearsals.slice(0, 3).map((rehearsal: any) => ({
+        time: rehearsal.startTime || '09:00',
+        title: orchestraNameMap.get(rehearsal.groupId) || rehearsal.orchestraName || 'חזרת תזמורת',
+        location: rehearsal.location || 'אולם ראשי',
+        badge: rehearsal.type || 'חזרה',
+      }))
+      setAgendaData(agenda)
+
       setLastRefresh(new Date())
 
     } catch (error) {
@@ -357,26 +379,18 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Teacher performance table placeholder (Plan 05) */}
-          <div id="teacher-table-slot" className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
-            <span className="text-sm p-8">ביצועי מורים — טוען...</span>
-          </div>
+          {/* Teacher performance table */}
+          <TeacherPerformanceTable teachers={teacherTableData} loading={loading} />
         </div>
 
         {/* Right sidebar — 3 columns */}
         <div className="col-span-12 lg:col-span-3 space-y-8">
-          {/* Calendar widget placeholder (Plan 05) */}
-          <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
-            <span className="text-sm">לוח שנה</span>
-          </div>
-          {/* Agenda widget placeholder (Plan 05) */}
-          <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
-            <span className="text-sm">סדר יום</span>
-          </div>
-          {/* Messages widget placeholder (Plan 05) */}
-          <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
-            <span className="text-sm">הודעות</span>
-          </div>
+          {/* Calendar widget */}
+          <CalendarWidget />
+          {/* Agenda widget */}
+          <AgendaWidget events={agendaData} loading={loading} />
+          {/* Messages widget */}
+          <MessagesWidget />
         </div>
       </div>
 

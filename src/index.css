@@ -14,77 +14,79 @@
 /* Import simple weekly grid styles */
 @import './styles/simple-weekly-grid.css';
 
-/* === Design Token System (Phase 6: Foundation) === */
-/* Warm coral/amber palette per user decision (FNDTN-06). */
+/* === Design Token System (Phase 22: Visual Architecture Rewrite — cool neutral palette) === */
 /* bg-primary-500 (hardcoded hex) is unaffected — only bg-primary uses these CSS vars. */
 @layer base {
   :root {
-    --background: 210 17% 98%;
-    --foreground: 20 15% 15%;
-    --card: 30 20% 99%;
-    --card-foreground: 20 15% 15%;
-    --popover: 30 20% 99%;
-    --popover-foreground: 20 15% 15%;
-    --primary: 15 85% 45%;
+    /* Cool neutral palette */
+    --background: 0 0% 100%;           /* true white */
+    --foreground: 220 15% 11%;         /* near-black, cool */
+    --card: 0 0% 100%;                 /* white */
+    --card-foreground: 220 15% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 11%;
+    --primary: 0 0% 0%;               /* BLACK — locked decision */
     --primary-foreground: 0 0% 100%;
-    --secondary: 20 12% 45%;
-    --secondary-foreground: 30 20% 98%;
-    --muted: 25 15% 93%;
-    --muted-foreground: 20 10% 45%;
-    --accent: 35 90% 55%;
-    --accent-foreground: 25 60% 20%;
-    --destructive: 0 72% 50%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 15% 11%;
+    --muted: 220 14% 96%;             /* cool light gray */
+    --muted-foreground: 220 10% 46%;
+    --accent: 220 14% 96%;            /* neutral accent, not amber */
+    --accent-foreground: 220 15% 11%;
+    --destructive: 0 72% 50%;         /* keep red */
     --destructive-foreground: 0 0% 100%;
-    --border: 25 12% 88%;
-    --input: 25 12% 88%;
-    --ring: 15 85% 45%;
-    --radius: 0.75rem;
-    --sidebar: 0 0% 100%;               /* white (was: 220 25% 18% dark navy) */
-    --sidebar-foreground: 220 15% 20%;  /* near-black text (was: 30 25% 97% light) */
-    --sidebar-border: 220 13% 91%;      /* subtle gray border */
-    --sidebar-active-bg: 252 80% 94%;   /* violet pill — matches students entity */
-    --sidebar-active-fg: 252 60% 45%;   /* violet text when active */
-    --sidebar-label: 220 10% 55%;       /* section label color (category headers) */
+    --border: 220 13% 91%;            /* cool gray */
+    --input: 220 13% 91%;
+    --ring: 220 15% 11%;              /* dark ring, not coral */
+    --radius: 0.125rem;               /* 2px — locked: sharp 2-4px */
 
-    /* Entity color system (Phase 18 — multi-color pastel palette) */
+    /* Dark sidebar tokens */
+    --sidebar: 220 20% 13%;           /* deep charcoal */
+    --sidebar-foreground: 0 0% 94%;   /* near-white text */
+    --sidebar-border: 220 15% 20%;    /* subtle dark border */
+    --sidebar-active-bg: 220 15% 22%; /* slightly lighter pill */
+    --sidebar-active-fg: 0 0% 100%;   /* white active text */
+    --sidebar-label: 220 10% 55%;     /* muted section labels */
+
+    /* Entity color system (Phase 22 — subdued entity colors, thin accent use only) */
     /* Raw HSL channels — consumed via hsl(var(--color-*)) in Tailwind config */
-    --color-students-bg:      252 80% 94%;   /* violet pastel */
-    --color-students-fg:      252 60% 45%;   /* violet saturated */
-    --color-teachers-bg:      200 75% 92%;   /* sky blue pastel */
-    --color-teachers-fg:      200 70% 38%;   /* sky blue saturated */
-    --color-orchestras-bg:    45 90% 90%;    /* amber/yellow pastel */
-    --color-orchestras-fg:    38 80% 38%;    /* amber saturated */
-    --color-rehearsals-bg:    340 70% 92%;   /* rose pastel */
-    --color-rehearsals-fg:    340 60% 42%;   /* rose saturated */
-    --color-bagrut-bg:        145 60% 88%;   /* green pastel */
-    --color-bagrut-fg:        145 55% 32%;   /* green saturated */
-    --color-theory-bg:        170 65% 88%;   /* teal pastel */
-    --color-theory-fg:        170 60% 32%;   /* teal saturated */
+    --color-students-bg:   252 40% 96%;
+    --color-students-fg:   252 55% 40%;
+    --color-teachers-bg:   200 35% 95%;
+    --color-teachers-fg:   200 65% 35%;
+    --color-orchestras-bg: 45 40% 95%;
+    --color-orchestras-fg: 38 75% 35%;
+    --color-rehearsals-bg: 340 40% 95%;
+    --color-rehearsals-fg: 340 50% 38%;
+    --color-bagrut-bg:     145 40% 94%;
+    --color-bagrut-fg:     145 50% 30%;
+    --color-theory-bg:     170 40% 94%;
+    --color-theory-fg:     170 50% 30%;
 
-    /* Surface elevation scale (Phase 16 — TOKEN-01) */
-    --surface-base:     hsl(30 25% 97%);
-    --surface-raised:   hsl(30 20% 99%);
+    /* Surface elevation scale (cool tint) */
+    --surface-base:     hsl(220 14% 98%);
+    --surface-raised:   hsl(0 0% 100%);
     --surface-overlay:  hsl(0 0% 100%);
     --surface-floating: hsl(0 0% 100%);
 
-    /* Warm neutral scale (Phase 16 — TOKEN-02) */
-    --neutral-50:  hsl(30 20% 98%);
-    --neutral-100: hsl(28 18% 95%);
-    --neutral-200: hsl(26 14% 90%);
-    --neutral-300: hsl(24 12% 82%);
-    --neutral-400: hsl(22 10% 68%);
-    --neutral-500: hsl(20 8% 52%);
-    --neutral-600: hsl(18 8% 40%);
-    --neutral-700: hsl(16 8% 30%);
-    --neutral-800: hsl(15 8% 20%);
-    --neutral-900: hsl(14 8% 12%);
+    /* Cool neutral scale */
+    --neutral-50:  hsl(220 14% 98%);
+    --neutral-100: hsl(220 13% 95%);
+    --neutral-200: hsl(220 12% 91%);
+    --neutral-300: hsl(220 11% 82%);
+    --neutral-400: hsl(220 10% 68%);
+    --neutral-500: hsl(220 8% 52%);
+    --neutral-600: hsl(220 8% 40%);
+    --neutral-700: hsl(220 8% 30%);
+    --neutral-800: hsl(220 8% 20%);
+    --neutral-900: hsl(220 8% 12%);
 
-    /* Semantic shadow scale (Phase 16 — TOKEN-03) */
+    /* Semantic shadow scale — zero decorative shadow, interaction-only */
     --shadow-0: none;
-    --shadow-1: 0 1px 2px 0 rgba(120, 60, 20, 0.06);
-    --shadow-2: 0 2px 6px -1px rgba(120, 60, 20, 0.10), 0 1px 4px -1px rgba(120, 60, 20, 0.06);
-    --shadow-3: 0 6px 16px -2px rgba(120, 60, 20, 0.12), 0 3px 8px -2px rgba(120, 60, 20, 0.08);
-    --shadow-4: 0 16px 40px -4px rgba(120, 60, 20, 0.16), 0 8px 16px -4px rgba(120, 60, 20, 0.10);
+    --shadow-1: none;                  /* was decorative — now none */
+    --shadow-2: 0 2px 8px -2px rgba(0,0,0,0.12), 0 1px 4px -1px rgba(0,0,0,0.08);
+    --shadow-3: 0 8px 24px -4px rgba(0,0,0,0.16), 0 4px 12px -2px rgba(0,0,0,0.10);
+    --shadow-4: 0 16px 40px -4px rgba(0,0,0,0.20), 0 8px 16px -4px rgba(0,0,0,0.12);
   }
 }
 

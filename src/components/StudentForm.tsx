@@ -339,7 +339,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
   if (loading && studentId) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-8">
+        <div className="bg-white rounded p-8">
           <div className="flex items-center">
             <Loader className="w-6 h-6 animate-spin mr-3" />
             <span>טוען נתוני תלמיד...</span>
@@ -364,7 +364,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
         zIndex: 9999
       }}
     >
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           {/* Header */}
           <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
@@ -403,7 +403,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="text"
                     value={formData.personalInfo.firstName}
                     onChange={(e) => handlePersonalInfoChange('firstName', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                       errors.firstName ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="הכנס שם פרטי"
@@ -424,7 +424,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="text"
                     value={formData.personalInfo.lastName}
                     onChange={(e) => handlePersonalInfoChange('lastName', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                       errors.lastName ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="הכנס שם משפחה"
@@ -445,7 +445,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="tel"
                     value={formData.personalInfo.phone}
                     onChange={(e) => handlePersonalInfoChange('phone', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                       errors.phone ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="050-1234567"
@@ -468,7 +468,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     max="99"
                     value={formData.personalInfo.age}
                     onChange={(e) => handlePersonalInfoChange('age', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                       errors.age ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="16"
@@ -489,7 +489,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="text"
                     value={formData.personalInfo.address}
                     onChange={(e) => handlePersonalInfoChange('address', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="רחוב, עיר"
                   />
                 </div>
@@ -502,7 +502,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="text"
                     value={formData.personalInfo.parentName}
                     onChange={(e) => handlePersonalInfoChange('parentName', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="שם הורה"
                   />
                 </div>
@@ -515,7 +515,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="tel"
                     value={formData.personalInfo.parentPhone}
                     onChange={(e) => handlePersonalInfoChange('parentPhone', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                       errors.parentPhone ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="050-1234567"
@@ -536,7 +536,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="email"
                     value={formData.personalInfo.parentEmail}
                     onChange={(e) => handlePersonalInfoChange('parentEmail', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                       errors.parentEmail ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="parent@example.com"
@@ -557,7 +557,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     type="email"
                     value={formData.personalInfo.studentEmail}
                     onChange={(e) => handlePersonalInfoChange('studentEmail', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                       errors.studentEmail ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="student@example.com"
@@ -587,7 +587,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                 <select
                   value={formData.academicInfo.class}
                   onChange={(e) => handleClassChange(e.target.value)}
-                  className={`w-full md:w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                  className={`w-full md:w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                     errors.class ? 'border-red-300' : 'border-gray-300'
                   }`}
                 >
@@ -615,7 +615,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     max="20"
                     value={formData.academicInfo.studyYears ?? ''}
                     onChange={(e) => handleAcademicInfoChange('studyYears', e.target.value ? parseInt(e.target.value) : null)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="0-20"
                   />
                 </div>
@@ -630,7 +630,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     step="0.25"
                     value={formData.academicInfo.extraHour ?? ''}
                     onChange={(e) => handleAcademicInfoChange('extraHour', e.target.value ? parseFloat(e.target.value) : null)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="0-10"
                   />
                 </div>
@@ -645,7 +645,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   <button
                     type="button"
                     onClick={addInstrument}
-                    className="flex items-center px-3 py-1 bg-primary-500 text-white rounded-md hover:bg-primary-600 text-sm"
+                    className="flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-muted text-sm"
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     הוסף כלי
@@ -663,7 +663,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                           <select
                             value={instrument.instrumentName}
                             onChange={(e) => updateInstrument(index, 'instrumentName', e.target.value)}
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                               errors[`instrument_${index}`] ? 'border-red-300' : 'border-gray-300'
                             }`}
                           >
@@ -687,7 +687,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                             <select
                               value={instrument.currentStage}
                               onChange={(e) => updateInstrument(index, 'currentStage', parseInt(e.target.value))}
-                              className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                              className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring ${
                                 errors[`stage_${index}`] ? 'border-red-300' : 'border-gray-300'
                               }`}
                             >
@@ -728,7 +728,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                 }
                               }))
                             }}
-                            className="ml-2 w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                            className="ml-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                           />
                           <label htmlFor={`primary-${index}`} className="text-sm text-gray-700">
                             כלי ראשי
@@ -767,7 +767,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                   }
                                   updateInstrument(index, 'tests', newTests)
                                 }}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               >
                                 {TEST_STATUSES.map(status => (
                                   <option key={status} value={status}>{status}</option>
@@ -786,7 +786,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                   }
                                   updateInstrument(index, 'tests', newTests)
                                 }}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               />
                             </div>
                             <div>
@@ -801,7 +801,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                   }
                                   updateInstrument(index, 'tests', newTests)
                                 }}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               />
                             </div>
                           </div>
@@ -817,7 +817,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                 updateInstrument(index, 'tests', newTests)
                               }}
                               rows={2}
-                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               placeholder="הערות על בחינת השלב..."
                             />
                           </div>
@@ -838,7 +838,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                   }
                                   updateInstrument(index, 'tests', newTests)
                                 }}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               >
                                 {TEST_STATUSES.map(status => (
                                   <option key={status} value={status}>{status}</option>
@@ -857,7 +857,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                   }
                                   updateInstrument(index, 'tests', newTests)
                                 }}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               />
                             </div>
                             <div>
@@ -872,7 +872,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                   }
                                   updateInstrument(index, 'tests', newTests)
                                 }}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               />
                             </div>
                           </div>
@@ -888,7 +888,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                                 updateInstrument(index, 'tests', newTests)
                               }}
                               rows={2}
-                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-ring"
                               placeholder="הערות על הבחינה הטכנית..."
                             />
                           </div>
@@ -927,7 +927,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                         tests: { bagrutId: e.target.value || null }
                       }
                     }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="123456789"
                   />
                 </div>
@@ -937,7 +937,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   </label>
                   <textarea
                     rows={2}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="הערות כלליות על התלמיד..."
                   />
                 </div>
@@ -959,7 +959,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   id="isActive"
                   checked={formData.isActive}
                   onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-                  className="ml-2 w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                  className="ml-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                 />
                 <label htmlFor="isActive" className="text-sm text-gray-700">
                   תלמיד פעיל
@@ -980,7 +980,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 disabled:opacity-50"
+              className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-muted disabled:opacity-50"
             >
               {loading ? (
                 <Loader className="w-4 h-4 animate-spin mr-2" />

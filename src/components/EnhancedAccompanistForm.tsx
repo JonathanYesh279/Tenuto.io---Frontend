@@ -252,7 +252,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg max-w-2xl mx-auto">
+    <div className="bg-white rounded max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -265,7 +265,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -275,7 +275,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* General Error */}
         {errors.general && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -303,7 +303,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                     onChange={(e) => handleSearchChange(e.target.value)}
                     onFocus={() => setShowDropdown(true)}
                     placeholder="חפש לפי שם או כלי נגינה..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     disabled={loadingTeachers}
                   />
                 </div>
@@ -314,7 +314,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
 
                 {/* Dropdown */}
                 {showDropdown && !loadingTeachers && filteredTeachers.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-50 max-h-60 overflow-y-auto">
                     {filteredTeachers.map((teacher) => (
                       <div
                         key={teacher._id}
@@ -347,7 +347,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
 
               {/* Selected Teacher Display */}
               {selectedTeacher && (
-                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                <div className="p-3 bg-green-50 border border-green-200 rounded">
                   <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-green-600" />
                     <div className="flex-1">
@@ -369,7 +369,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                 <button
                   type="button"
                   onClick={handleUseCustomEntry}
-                  className="text-sm text-primary-600 hover:text-primary-700 underline"
+                  className="text-sm text-primary hover:text-primary underline"
                 >
                   לא מצאת את המורה? הזן פרטים באופן ידני
                 </button>
@@ -390,7 +390,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                 <button
                   type="button"
                   onClick={() => setUseCustomEntry(false)}
-                  className="text-sm text-primary-600 hover:text-primary-700 underline"
+                  className="text-sm text-primary hover:text-primary underline"
                 >
                   חזור לחיפוש מורים
                 </button>
@@ -408,7 +408,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="לדוגמה: יוסי כהן"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.name ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -429,7 +429,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     placeholder="0501234567"
-                    className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                    className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                       errors.phone ? 'border-red-300' : 'border-gray-300'
                     }`}
                     dir="ltr"
@@ -452,7 +452,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     placeholder="לדוגמה: yosi@example.com"
-                    className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                    className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                       errors.email ? 'border-red-300' : 'border-gray-300'
                     }`}
                     dir="ltr"
@@ -480,7 +480,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
             <select
               value={formData.instrument}
               onChange={(e) => handleInputChange('instrument', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+              className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                 errors.instrument ? 'border-red-300' : 'border-gray-300'
               }`}
             >
@@ -502,7 +502,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
                   type="text"
                   placeholder="הכנס את שם הכלי"
                   onChange={(e) => handleInputChange('instrument', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
             )}
@@ -510,7 +510,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
         </Card>
 
         {/* Info Box */}
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded">
           <div className="flex items-start gap-3">
             <Users className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-blue-800">
@@ -529,7 +529,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             ביטול
           </button>
@@ -537,7 +537,7 @@ const EnhancedAccompanistForm: React.FC<EnhancedAccompanistFormProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>

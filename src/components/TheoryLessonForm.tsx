@@ -434,7 +434,7 @@ export default function TheoryLessonForm({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Form Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
@@ -445,7 +445,7 @@ export default function TheoryLessonForm({
             </h2>
             <button
               onClick={onCancel}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded transition-colors"
             >
               <X className="w-5 h-5 text-gray-500" />
             </button>
@@ -457,9 +457,9 @@ export default function TheoryLessonForm({
               <button
                 type="button"
                 onClick={() => setActiveTab('single')}
-                className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex items-center px-4 py-2 rounded font-medium transition-colors ${
                   activeTab === 'single'
-                    ? 'bg-primary-100 text-primary-700'
+                    ? 'bg-muted text-primary'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -469,9 +469,9 @@ export default function TheoryLessonForm({
               <button
                 type="button"
                 onClick={() => setActiveTab('bulk')}
-                className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex items-center px-4 py-2 rounded font-medium transition-colors ${
                   activeTab === 'bulk'
-                    ? 'bg-primary-100 text-primary-700'
+                    ? 'bg-muted text-primary'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -483,7 +483,7 @@ export default function TheoryLessonForm({
           
           {/* Bulk Edit Info */}
           {mode === 'bulk-edit' && theoryLessons && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-blue-50 border border-blue-200 rounded p-4">
               <div className="flex items-center">
                 <Users className="w-5 h-5 text-blue-600 ml-2" />
                 <p className="text-blue-800">
@@ -501,7 +501,7 @@ export default function TheoryLessonForm({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Loading State */}
           {dataLoading && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-blue-50 border border-blue-200 rounded p-4">
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 ml-2"></div>
                 <p className="text-blue-800 text-sm">טוען נתוני שיעור...</p>
@@ -511,14 +511,14 @@ export default function TheoryLessonForm({
           
           {/* Success Display */}
           {success && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="bg-green-50 border border-green-200 rounded p-4">
               <p className="text-green-800 text-sm">{success}</p>
             </div>
           )}
           
           {/* Error Display */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="bg-red-50 border border-red-200 rounded p-4">
               <p className="text-red-800 text-sm">{error}</p>
             </div>
           )}
@@ -534,7 +534,7 @@ export default function TheoryLessonForm({
               <select
                 value={mode === 'edit' || (mode === 'create' && activeTab === 'single') ? formData.category : bulkFormData.category}
                 onChange={(e) => handleInputChange('category', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                 required={mode !== 'bulk-edit'}
               >
                 {mode === 'bulk-edit' && <option value="">השאר ללא שינוי</option>}
@@ -552,7 +552,7 @@ export default function TheoryLessonForm({
               <select
                 value={mode === 'edit' || (mode === 'create' && activeTab === 'single') ? formData.teacherId : bulkFormData.teacherId}
                 onChange={(e) => handleInputChange('teacherId', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                 required={mode !== 'bulk-edit'}
               >
                 <option value="">{mode === 'bulk-edit' ? 'השאר ללא שינוי' : 'בחר מורה'}</option>
@@ -574,7 +574,7 @@ export default function TheoryLessonForm({
             <select
               value={mode === 'edit' || (mode === 'create' && activeTab === 'single') ? formData.location : bulkFormData.location}
               onChange={(e) => handleInputChange('location', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
               required={mode !== 'bulk-edit'}
             >
               {mode === 'bulk-edit' && <option value="">השאר ללא שינוי</option>}
@@ -596,7 +596,7 @@ export default function TheoryLessonForm({
                   type="date"
                   value={formData.date}
                   onChange={(e) => handleInputChange('date', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                   required
                 />
               </div>
@@ -609,7 +609,7 @@ export default function TheoryLessonForm({
                 <input
                   type="text"
                   value={DAYS_OF_WEEK[formData.dayOfWeek as keyof typeof DAYS_OF_WEEK] || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
+                  className="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 text-gray-700"
                   disabled
                 />
               </div>
@@ -624,7 +624,7 @@ export default function TheoryLessonForm({
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => handleInputChange('startTime', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                   required
                 />
               </div>
@@ -638,7 +638,7 @@ export default function TheoryLessonForm({
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => handleInputChange('endTime', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                   required
                 />
               </div>
@@ -656,7 +656,7 @@ export default function TheoryLessonForm({
                   type="time"
                   value={bulkFormData.startTime}
                   onChange={(e) => handleInputChange('startTime', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                   placeholder="השאר ללא שינוי"
                 />
               </div>
@@ -670,7 +670,7 @@ export default function TheoryLessonForm({
                   type="time"
                   value={bulkFormData.endTime}
                   onChange={(e) => handleInputChange('endTime', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                   placeholder="השאר ללא שינוי"
                 />
               </div>
@@ -688,7 +688,7 @@ export default function TheoryLessonForm({
                     type="date"
                     value={bulkFormData.startDate}
                     onChange={(e) => handleInputChange('startDate', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                     required
                   />
                 </div>
@@ -702,7 +702,7 @@ export default function TheoryLessonForm({
                     type="date"
                     value={bulkFormData.endDate}
                     onChange={(e) => handleInputChange('endDate', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                     required
                   />
                 </div>
@@ -715,7 +715,7 @@ export default function TheoryLessonForm({
                   <select
                     value={bulkFormData.dayOfWeek}
                     onChange={(e) => handleInputChange('dayOfWeek', parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                     required
                   >
                     {Object.entries(DAYS_OF_WEEK).map(([value, label]) => (
@@ -736,7 +736,7 @@ export default function TheoryLessonForm({
                     type="time"
                     value={bulkFormData.startTime}
                     onChange={(e) => handleInputChange('startTime', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                     required
                   />
                 </div>
@@ -750,7 +750,7 @@ export default function TheoryLessonForm({
                     type="time"
                     value={bulkFormData.endTime}
                     onChange={(e) => handleInputChange('endTime', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                     required
                   />
                 </div>
@@ -769,7 +769,7 @@ export default function TheoryLessonForm({
                 value={mode === 'edit' || (mode === 'create' && activeTab === 'single') ? formData.syllabus : bulkFormData.syllabus}
                 onChange={(e) => handleInputChange('syllabus', e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                 placeholder={mode === 'bulk-edit' ? "השאר ללא שינוי - נושאי השיעור..." : mode === 'edit' ? "נושאי השיעור..." : activeTab === 'single' ? "נושאי השיעור..." : "נושאי השיעורים..."}
               />
             </div>
@@ -784,7 +784,7 @@ export default function TheoryLessonForm({
                   value={formData.homework}
                   onChange={(e) => handleInputChange('homework', e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                   placeholder="משימות לבית..."
                 />
               </div>
@@ -799,7 +799,7 @@ export default function TheoryLessonForm({
                 value={mode === 'edit' || (mode === 'create' && activeTab === 'single') ? formData.notes : bulkFormData.notes}
                 onChange={(e) => handleInputChange('notes', e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900"
                 placeholder={mode === 'bulk-edit' ? "השאר ללא שינוי - הערות כלליות..." : "הערות כלליות..."}
               />
             </div>
@@ -810,7 +810,7 @@ export default function TheoryLessonForm({
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
               disabled={loading}
             >
               ביטול
@@ -818,7 +818,7 @@ export default function TheoryLessonForm({
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+              className="flex items-center px-4 py-2 bg-muted text-white rounded hover:bg-muted transition-colors disabled:opacity-50"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>

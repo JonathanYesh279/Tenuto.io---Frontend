@@ -313,13 +313,13 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 setShowStudentDropdown(true)
               }}
               onFocus={() => setShowStudentDropdown(true)}
-              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
           {/* Selected Student Display */}
           {selectedStudent && (
-            <div className="p-4 bg-primary-50 border border-primary-200 rounded-lg">
+            <div className="p-4 bg-muted/50 border border-border rounded">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
@@ -337,7 +337,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
 
           {/* Student List */}
           {showStudentDropdown && (
-            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded">
               {filteredStudents.length > 0 ? (
                 filteredStudents.map(student => (
                   <button
@@ -349,7 +349,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       setShowStudentDropdown(false)
                     }}
                     className={`w-full p-3 text-right hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                      formData.studentId === student._id ? 'bg-primary-50' : ''
+                      formData.studentId === student._id ? 'bg-muted/50' : ''
                     }`}
                   >
                   <div className="font-medium text-gray-900">
@@ -394,13 +394,13 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 setShowTeacherDropdown(true)
               }}
               onFocus={() => setShowTeacherDropdown(true)}
-              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
           {/* Selected Teacher Display */}
           {selectedTeacher && (
-            <div className="p-4 bg-primary-50 border border-primary-200 rounded-lg">
+            <div className="p-4 bg-muted/50 border border-border rounded">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
@@ -418,7 +418,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
 
           {/* Teacher List */}
           {showTeacherDropdown && (
-            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded">
               {filteredTeachers.length > 0 ? (
                 filteredTeachers.map(teacher => (
                   <button
@@ -430,7 +430,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       setShowTeacherDropdown(false)
                     }}
                   className={`w-full p-3 text-right hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                    formData.teacherId === teacher._id ? 'bg-primary-50' : ''
+                    formData.teacherId === teacher._id ? 'bg-muted/50' : ''
                   }`}
                 >
                   <div className="font-medium text-gray-900">
@@ -470,7 +470,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               value={formData.conservatoryName || ''}
               onChange={(e) => handleInputChange('conservatoryName', e.target.value)}
               placeholder="לדוגמה: קונסרבטוריון ירושלים"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
@@ -483,7 +483,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               type="date"
               value={formData.testDate ? formData.testDate.toISOString().split('T')[0] : ''}
               onChange={(e) => handleInputChange('testDate', e.target.value ? new Date(e.target.value) : undefined)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
         </div>
@@ -498,7 +498,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             onChange={(e) => handleInputChange('notes', e.target.value)}
             placeholder="הערות נוספות על הבגרות..."
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
           />
         </div>
       </Card>
@@ -522,7 +522,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             <select
               value={formData.recitalUnits || 5}
               onChange={(e) => handleInputChange('recitalUnits', Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             >
               <option value={3}>3 יחידות</option>
               <option value={5}>5 יחידות</option>
@@ -537,7 +537,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             <select
               value={formData.recitalField || 'קלאסי'}
               onChange={(e) => handleInputChange('recitalField', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             >
               <option value="קלאסי">קלאסי</option>
               <option value="ג'אז">ג'אז</option>
@@ -566,7 +566,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
 
         <div className="space-y-6">
           {formData.program?.map((piece, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
+            <div key={index} className="border border-gray-200 rounded p-4">
               <h4 className="font-medium text-gray-900 mb-3">יצירה {index + 1}</h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -579,7 +579,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     value={piece.pieceTitle}
                     onChange={(e) => updateProgramPiece(index, 'pieceTitle', e.target.value)}
                     placeholder="לדוגמה: סונטה למשל..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
 
@@ -592,7 +592,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     value={piece.composer}
                     onChange={(e) => updateProgramPiece(index, 'composer', e.target.value)}
                     placeholder="לדוגמה: בטהובן"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
 
@@ -605,7 +605,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     value={piece.duration}
                     onChange={(e) => updateProgramPiece(index, 'duration', e.target.value)}
                     placeholder="לדוגמה: 8 דקות"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
 
@@ -618,7 +618,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     value={piece.movement || ''}
                     onChange={(e) => updateProgramPiece(index, 'movement', e.target.value)}
                     placeholder="לדוגמה: פרק 1"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
 
@@ -633,7 +633,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={piece.youtubeLink || ''}
                       onChange={(e) => updateProgramPiece(index, 'youtubeLink', e.target.value)}
                       placeholder="https://www.youtube.com/watch?v=..."
-                      className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -661,7 +661,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 ...formData.accompaniment!,
                 type: e.target.value as 'נגן מלווה' | 'הרכב'
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             >
               <option value="נגן מלווה">נגן מלווה</option>
               <option value="הרכב">הרכב</option>
@@ -674,7 +674,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               <button
                 type="button"
                 onClick={addAccompanist}
-                className="flex items-center px-3 py-1 text-sm bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors"
+                className="flex items-center px-3 py-1 text-sm bg-muted text-primary rounded hover:bg-muted transition-colors"
               >
                 <Plus className="w-4 h-4 ml-1" />
                 הוסף מלווה
@@ -682,7 +682,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             </div>
 
             {formData.accompaniment?.accompanists.map((accompanist, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-4">
+              <div key={index} className="border border-gray-200 rounded p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h5 className="font-medium text-gray-900">מלווה {index + 1}</h5>
                   {formData.accompaniment!.accompanists.length > 1 && (
@@ -714,7 +714,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                                 setCustomAccompanistMode(prev => ({ ...prev, [index]: false }))
                                 updateAccompanist(index, 'name', '')
                               }}
-                              className="ml-2 text-primary-600 focus:ring-primary-500"
+                              className="ml-2 text-primary focus:ring-ring"
                             />
                             <span className="text-sm text-gray-700">בחר מרשימת המורים</span>
                           </label>
@@ -727,7 +727,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                                 setCustomAccompanistMode(prev => ({ ...prev, [index]: true }))
                                 updateAccompanist(index, 'name', '')
                               }}
-                              className="ml-2 text-primary-600 focus:ring-primary-500"
+                              className="ml-2 text-primary focus:ring-ring"
                             />
                             <span className="text-sm text-gray-700">הזן שם מלווה חדש</span>
                           </label>
@@ -741,14 +741,14 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                             value={accompanist.name}
                             onChange={(e) => updateAccompanist(index, 'name', e.target.value)}
                             placeholder="הזן שם מלא של המלווה"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                             autoFocus
                           />
                         ) : (
                           <select
                             value={accompanist.name}
                             onChange={(e) => updateAccompanist(index, 'name', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                           >
                             <option value="">בחר מורה מהרשימה</option>
                             {teachers
@@ -768,7 +768,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                         value={accompanist.name}
                         onChange={(e) => updateAccompanist(index, 'name', e.target.value)}
                         placeholder="שם מלא"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                     )}
                   </div>
@@ -782,7 +782,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={accompanist.instrument}
                       onChange={(e) => updateAccompanist(index, 'instrument', e.target.value)}
                       placeholder="לדוגמה: פסנתר"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
 
@@ -795,7 +795,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={accompanist.phone || ''}
                       onChange={(e) => updateAccompanist(index, 'phone', e.target.value)}
                       placeholder="050-1234567"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
 
@@ -808,7 +808,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={accompanist.email || ''}
                       onChange={(e) => updateAccompanist(index, 'email', e.target.value)}
                       placeholder="example@email.com"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -838,7 +838,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 id={`presentation-${index}-completed`}
                 checked={presentation.completed || false}
                 onChange={(e) => updatePresentation(index, 'completed', e.target.checked)}
-                className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
+                className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-ring"
               />
               <label htmlFor={`presentation-${index}-completed`} className="mr-2 text-sm font-medium text-gray-700">
                 הושלמה
@@ -852,7 +852,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               <select
                 value={presentation.status || ''}
                 onChange={(e) => updatePresentation(index, 'status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               >
                 <option value="">בחר סטטוס</option>
                 <option value="ממתין">ממתין</option>
@@ -870,7 +870,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 type="date"
                 value={presentation.date ? new Date(presentation.date).toISOString().split('T')[0] : ''}
                 onChange={(e) => updatePresentation(index, 'date', e.target.value ? new Date(e.target.value) : undefined)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
 
@@ -883,7 +883,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 value={presentation.reviewedBy || ''}
                 onChange={(e) => updatePresentation(index, 'reviewedBy', e.target.value)}
                 placeholder="שם הבוחן"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -897,7 +897,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               onChange={(e) => updatePresentation(index, 'notes', e.target.value)}
               placeholder="הערות על המצגת..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
             />
           </div>
 
@@ -914,7 +914,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 updatePresentation(index, 'recordingLinks', links)
               }}
               placeholder="קישור להקלטה"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
         </Card>
@@ -936,7 +936,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 id="final-presentation-completed"
                 checked={formData.presentations?.[3]?.completed || false}
                 onChange={(e) => updatePresentation(3, 'completed', e.target.checked)}
-                className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
+                className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-ring"
               />
               <label htmlFor="final-presentation-completed" className="mr-2 text-sm font-medium text-gray-700">
                 הושלמה
@@ -951,7 +951,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 type="date"
                 value={formData.presentations?.[3]?.date ? new Date(formData.presentations[3].date).toISOString().split('T')[0] : ''}
                 onChange={(e) => updatePresentation(3, 'date', e.target.value ? new Date(e.target.value) : undefined)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
 
@@ -964,7 +964,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 value={formData.presentations?.[3]?.reviewedBy || ''}
                 onChange={(e) => updatePresentation(3, 'reviewedBy', e.target.value)}
                 placeholder="שם הבוחן"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -975,7 +975,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             
             <div className="space-y-4">
               {/* Playing Skills - 40 points */}
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-gray-200 rounded p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-medium text-gray-900">כישורי נגינה</h5>
                   <span className="text-sm text-gray-500">מקסימום 40 נקודות</span>
@@ -989,7 +989,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       max="40"
                       value={formData.gradingDetails?.detailedGrading?.playingSkills.points || ''}
                       onChange={(e) => updateDetailedGrading('playingSkills', 'points', e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -999,14 +999,14 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={formData.gradingDetails?.detailedGrading?.playingSkills.comments || ''}
                       onChange={(e) => updateDetailedGrading('playingSkills', 'comments', e.target.value)}
                       placeholder="הערות על כישורי הנגינה"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Musical Understanding - 30 points */}
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-gray-200 rounded p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-medium text-gray-900">הבנה מוזיקלית</h5>
                   <span className="text-sm text-gray-500">מקסימום 30 נקודות</span>
@@ -1020,7 +1020,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       max="30"
                       value={formData.gradingDetails?.detailedGrading?.musicalUnderstanding.points || ''}
                       onChange={(e) => updateDetailedGrading('musicalUnderstanding', 'points', e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -1030,14 +1030,14 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={formData.gradingDetails?.detailedGrading?.musicalUnderstanding.comments || ''}
                       onChange={(e) => updateDetailedGrading('musicalUnderstanding', 'comments', e.target.value)}
                       placeholder="הערות על ההבנה המוזיקלית"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Text Knowledge - 20 points */}
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-gray-200 rounded p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-medium text-gray-900">ידע בטקסט</h5>
                   <span className="text-sm text-gray-500">מקסימום 20 נקודות</span>
@@ -1051,7 +1051,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       max="20"
                       value={formData.gradingDetails?.detailedGrading?.textKnowledge.points || ''}
                       onChange={(e) => updateDetailedGrading('textKnowledge', 'points', e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -1061,14 +1061,14 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={formData.gradingDetails?.detailedGrading?.textKnowledge.comments || ''}
                       onChange={(e) => updateDetailedGrading('textKnowledge', 'comments', e.target.value)}
                       placeholder="הערות על הידע בטקסט"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Playing by Heart - 10 points */}
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-gray-200 rounded p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-medium text-gray-900">נגינה בעל פה</h5>
                   <span className="text-sm text-gray-500">מקסימום 10 נקודות</span>
@@ -1082,7 +1082,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       max="10"
                       value={formData.gradingDetails?.detailedGrading?.playingByHeart.points || ''}
                       onChange={(e) => updateDetailedGrading('playingByHeart', 'points', e.target.value ? Number(e.target.value) : undefined)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -1092,7 +1092,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       value={formData.gradingDetails?.detailedGrading?.playingByHeart.comments || ''}
                       onChange={(e) => updateDetailedGrading('playingByHeart', 'comments', e.target.value)}
                       placeholder="הערות על הנגינה בעל פה"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -1113,7 +1113,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
           הערכת מנהל
         </h3>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6">
           <p className="text-blue-800 text-sm">
             הערכת המנהל מהווה 10% מהציון הסופי. טווח הנקודות הוא 0-10.
           </p>
@@ -1131,7 +1131,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               step="0.1"
               value={formData.directorEvaluation?.points || ''}
               onChange={(e) => updateDirectorEvaluation('points', e.target.value ? Number(e.target.value) : undefined)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               placeholder="0-10"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1148,7 +1148,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               onChange={(e) => updateDirectorEvaluation('comments', e.target.value)}
               placeholder="הערות המנהל על ביצועי הסטודנט..."
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
             />
           </div>
         </div>
@@ -1172,7 +1172,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
           </h3>
 
           {/* Final Grade Display */}
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-6 mb-6">
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded p-6 mb-6">
             <div className="text-center">
               <h4 className="text-2xl font-bold text-gray-900 mb-2">
                 ציון סופי: {finalGrade}
@@ -1192,7 +1192,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
 
           {/* Grade Breakdown */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="border border-gray-200 rounded-lg p-4">
+            <div className="border border-gray-200 rounded p-4">
               <h5 className="font-medium text-gray-900 mb-3">פירוט ציונים (90%)</h5>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -1222,7 +1222,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               </div>
             </div>
 
-            <div className="border border-gray-200 rounded-lg p-4">
+            <div className="border border-gray-200 rounded p-4">
               <h5 className="font-medium text-gray-900 mb-3">הערכת מנהל (10%)</h5>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -1304,7 +1304,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg">
+    <div className="bg-white rounded">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -1317,7 +1317,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -1330,7 +1330,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
       <form onSubmit={handleSubmit} className="p-6">
         {/* General Error */}
         {errors.general && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -1347,7 +1347,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             type="button"
             onClick={previousStep}
             disabled={!canGoBack()}
-            className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronRight className="w-4 h-4 ml-2" />
             הקודם
@@ -1357,7 +1357,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? (
                 <>
@@ -1376,7 +1376,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               type="button"
               onClick={nextStep}
               disabled={!canProceedToNext()}
-              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               הבא
               <ChevronLeft className="w-4 h-4 mr-2" />

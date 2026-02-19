@@ -94,7 +94,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg max-w-2xl mx-auto">
+    <div className="bg-white rounded max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -107,7 +107,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -117,7 +117,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* General Error */}
         {errors.general && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -141,7 +141,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                 value={formData.topic}
                 onChange={(e) => handleInputChange('topic', e.target.value)}
                 placeholder="לדוגמה: מוזיקה בארוקית"
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                   errors.topic ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -160,7 +160,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="תיאור מפורט של תוכן המצגת..."
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
               />
             </div>
 
@@ -176,7 +176,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                   value={formData.duration}
                   onChange={(e) => handleInputChange('duration', e.target.value)}
                   placeholder="MM:SS (לדוגמה: 15:30)"
-                  className={`px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.duration ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -205,7 +205,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                   type="date"
                   value={formData.presentationDate ? formData.presentationDate.toISOString().split('T')[0] : ''}
                   onChange={(e) => handleInputChange('presentationDate', e.target.value ? new Date(e.target.value) : undefined)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
             </div>
@@ -215,12 +215,12 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 סטטוס השלמה
               </label>
-              <label className="flex items-center space-x-3 space-x-reverse p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center space-x-3 space-x-reverse p-3 border border-gray-300 rounded cursor-pointer hover:bg-gray-50">
                 <input
                   type="checkbox"
                   checked={formData.isCompleted || false}
                   onChange={(e) => handleInputChange('isCompleted', e.target.checked)}
-                  className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                 />
                 <span className="text-sm text-gray-700">המצגת הושלמה</span>
               </label>
@@ -245,7 +245,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                 value={formData.grade || ''}
                 onChange={(e) => handleInputChange('grade', e.target.value ? parseInt(e.target.value) : undefined)}
                 placeholder="0-100"
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                   errors.grade ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -264,7 +264,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                 onChange={(e) => handleInputChange('teacherNotes', e.target.value)}
                 placeholder="הערות על הביצוע, איכות המצגת, נקודות לשיפור..."
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
               />
             </div>
           </div>
@@ -276,7 +276,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             ביטול
           </button>
@@ -284,7 +284,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>

@@ -128,7 +128,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-background rounded shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Form Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-semibold text-foreground">
@@ -136,7 +136,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
           </h2>
           <button
             onClick={onCancel}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded transition-colors"
           >
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
@@ -146,7 +146,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Error Display */}
           {errors.general && (
-            <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4">
+            <div className="bg-destructive/10 border border-destructive/30 rounded p-4">
               <p className="text-destructive text-sm">{errors.general}</p>
             </div>
           )}
@@ -355,7 +355,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
             </label>
 
             {formData.memberIds.length > 0 ? (
-              <div className="bg-muted border border-border rounded-lg p-4">
+              <div className="bg-muted border border-border rounded p-4">
                 <p className="text-sm text-muted-foreground mb-2">
                   {formData.memberIds.length} חברים בתזמורת
                 </p>
@@ -364,7 +364,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
                 </p>
               </div>
             ) : (
-              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+              <div className="bg-primary/5 border border-primary/20 rounded p-4">
                 <p className="text-foreground text-sm">
                   לאחר יצירת התזמורת, תוכל להוסיף חברים בעמוד הפרטים
                 </p>
@@ -403,7 +403,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
               disabled={loading}
             >
               {loading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground ms-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-borderforeground ms-2"></div>
               ) : (
                 <Save className="w-4 h-4 ms-2" />
               )}

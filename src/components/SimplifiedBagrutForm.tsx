@@ -483,7 +483,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
-            className="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-500 ease-out"
+            className="bg-primary h-2 rounded-full transition-all duration-500 ease-out"
             style={{ 
               width: `${((currentStep + (stepStates[currentStep]?.isValid ? 1 : 0)) / STEPS.length) * 100}%` 
             }}
@@ -508,8 +508,8 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     ? 'bg-success-500 border-success-500 text-white shadow-lg scale-105'
                     : isCurrent
                     ? isValid
-                      ? 'bg-primary-500 border-primary-500 text-white shadow-md'
-                      : 'bg-white border-primary-500 text-primary-500 shadow-md'
+                      ? 'bg-muted border-border text-white shadow-md'
+                      : 'bg-white border-border text-primary shadow-md'
                     : isValid
                     ? 'bg-success-100 border-success-300 text-success-600'
                     : 'bg-gray-100 border-gray-300 text-gray-400'
@@ -534,7 +534,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                 
                 <div className="mt-2 text-center">
                   <p className={`text-xs font-medium transition-colors ${
-                    isCurrent ? 'text-primary-600' : isCompleted ? 'text-success-600' : 'text-gray-500'
+                    isCurrent ? 'text-primary' : isCompleted ? 'text-success-600' : 'text-gray-500'
                   }`}>
                     {step.name}
                   </p>
@@ -590,12 +590,12 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                 setShowStudentDropdown(true)
               }}
               onFocus={() => setShowStudentDropdown(true)}
-              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
           {selectedStudent && (
-            <div className="p-4 bg-primary-50 border border-primary-200 rounded-lg">
+            <div className="p-4 bg-muted/50 border border-border rounded">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
@@ -612,7 +612,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
           )}
 
           {showStudentDropdown && !selectedStudent && (
-            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded">
               {filteredStudents.length > 0 ? (
                 filteredStudents.map(student => (
                   <button
@@ -624,7 +624,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                       setShowStudentDropdown(false)
                     }}
                     className={`w-full p-3 text-right hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                      formData.studentId === student._id ? 'bg-primary-50' : ''
+                      formData.studentId === student._id ? 'bg-muted/50' : ''
                     }`}
                   >
                     <div className="font-medium text-gray-900">
@@ -668,12 +668,12 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                 setShowTeacherDropdown(true)
               }}
               onFocus={() => setShowTeacherDropdown(true)}
-              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
           {selectedTeacher && (
-            <div className="p-4 bg-primary-50 border border-primary-200 rounded-lg">
+            <div className="p-4 bg-muted/50 border border-border rounded">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-gray-900">
@@ -690,7 +690,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
           )}
 
           {showTeacherDropdown && !selectedTeacher && (
-            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded">
               {filteredTeachers.length > 0 ? (
                 filteredTeachers.map(teacher => (
                   <button
@@ -702,7 +702,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                       setShowTeacherDropdown(false)
                     }}
                     className={`w-full p-3 text-right hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                      formData.teacherId === teacher._id ? 'bg-primary-50' : ''
+                      formData.teacherId === teacher._id ? 'bg-muted/50' : ''
                     }`}
                   >
                     <div className="font-medium text-gray-900">
@@ -741,7 +741,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               value={formData.conservatoryName || ''}
               onChange={(e) => handleInputChange('conservatoryName', e.target.value)}
               placeholder="לדוגמה: קונסרבטוריון ירושלים"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
@@ -753,7 +753,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               type="date"
               value={formData.testDate ? formData.testDate.toISOString().split('T')[0] : ''}
               onChange={(e) => handleInputChange('testDate', e.target.value ? new Date(e.target.value) : undefined)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
         </div>
@@ -767,7 +767,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             onChange={(e) => handleInputChange('notes', e.target.value)}
             placeholder="הערות כלליות על התלמיד או הבגרות..."
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
           />
         </div>
       </Card>
@@ -790,7 +790,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             <select
               value={formData.recitalUnits || 5}
               onChange={(e) => handleInputChange('recitalUnits', Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             >
               <option value={3}>3 יחידות</option>
               <option value={5}>5 יחידות</option>
@@ -804,7 +804,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             <select
               value={formData.recitalField || 'קלאסי'}
               onChange={(e) => handleInputChange('recitalField', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             >
               <option value="קלאסי">קלאסי</option>
               <option value="ג'אז">ג'אז</option>
@@ -827,7 +827,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                 value={formData.accompaniment?.accompanists[0]?.name || ''}
                 onChange={(e) => updateAccompanist('name', e.target.value)}
                 placeholder="שם המלווה (אופציונלי)"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
             <div>
@@ -839,7 +839,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                 value={formData.accompaniment?.accompanists[0]?.instrument || ''}
                 onChange={(e) => updateAccompanist('instrument', e.target.value)}
                 placeholder="לדוגמה: פסנתר"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -864,7 +864,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
 
         <div className="space-y-4">
           {formData.program?.map((piece, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
+            <div key={index} className="border border-gray-200 rounded p-4">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="font-medium text-gray-900">יצירה {index + 1}</h4>
                 {formData.program && formData.program.length > 1 && (
@@ -888,7 +888,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     value={piece.pieceTitle}
                     onChange={(e) => updateProgramPiece(index, 'pieceTitle', e.target.value)}
                     placeholder="לדוגמה: סונטה מס' 14"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
 
@@ -901,7 +901,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     value={piece.composer}
                     onChange={(e) => updateProgramPiece(index, 'composer', e.target.value)}
                     placeholder="לדוגמה: בטהובן"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
 
@@ -914,7 +914,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     value={piece.duration || ''}
                     onChange={(e) => updateProgramPiece(index, 'duration', e.target.value)}
                     placeholder="לדוגמה: 8 דקות"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
               </div>
@@ -925,7 +925,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             <button
               type="button"
               onClick={addProgramPiece}
-              className="flex items-center px-4 py-2 text-primary-600 border border-primary-300 rounded-lg hover:bg-primary-50 transition-colors"
+              className="flex items-center px-4 py-2 text-primary border border-border rounded hover:bg-muted/50 transition-colors"
             >
               <Plus className="w-4 h-4 ml-1" />
               הוסף יצירה
@@ -933,7 +933,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
           </div>
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
           <p className="text-sm text-blue-800">
             <strong>שים לב:</strong> לאחר יצירת הבגרות, תוכל להוסיף בדף הפרטים:
           </p>
@@ -974,7 +974,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
         aria-modal="true"
         aria-labelledby="success-title"
       >
-        <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl animate-scale-in">
+        <div className="bg-white rounded max-w-md w-full p-6 shadow-2xl animate-scale-in">
           <div className="text-center">
             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-success-100 mb-4">
               <CheckCircle2 className="w-8 h-8 text-success-600" aria-hidden="true" />
@@ -995,7 +995,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                   setShowSuccessModal(false)
                   onCancel() // Close the form
                 }}
-                className="w-full px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                className="w-full px-4 py-3 bg-primary text-primary-foreground rounded hover:bg-muted transition-colors font-medium"
               >
                 <div className="flex items-center justify-center gap-2">
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -1031,7 +1031,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                   setStudentSearch('')
                   setTeacherSearch('')
                 }}
-                className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
               >
                 צור בגרות אחרת
               </button>
@@ -1043,7 +1043,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg">
+    <div className="bg-white rounded shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -1056,7 +1056,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -1069,7 +1069,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
       <form onSubmit={handleSubmit} className="p-6">
         {/* General Error */}
         {errors.general && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -1086,7 +1086,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             type="button"
             onClick={previousStep}
             disabled={!canGoBack() || loading}
-            className="flex items-center px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 min-w-[120px] justify-center"
+            className="flex items-center px-4 py-3 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 min-w-[120px] justify-center"
             aria-label="חזר לשלב הקודם"
           >
             <ChevronRight className="w-4 h-4 ml-2" aria-hidden="true" />
@@ -1099,7 +1099,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               <div
                 key={index}
                 className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                  index <= currentStep ? 'bg-primary-500' : 'bg-gray-300'
+                  index <= currentStep ? 'bg-muted' : 'bg-gray-300'
                 }`}
                 aria-hidden="true"
               />
@@ -1110,10 +1110,10 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             <button
               type="submit"
               disabled={loading || !validateStep(currentStep)}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 min-w-[160px] justify-center ${
+              className={`flex items-center px-6 py-3 rounded font-medium transition-all duration-200 min-w-[160px] justify-center ${
                 loading || !validateStep(currentStep)
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-primary-600 text-white hover:bg-primary-700 hover:shadow-md'
+                  : 'bg-primary text-primary-foreground hover:bg-muted hover:shadow-md'
               }`}
               aria-label={isEdit ? 'עדכן בגרות' : 'צור בגרות חדשה'}
             >
@@ -1134,10 +1134,10 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               type="button"
               onClick={nextStep}
               disabled={!canProceedToNext() || isValidatingStep}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 min-w-[120px] justify-center ${
+              className={`flex items-center px-6 py-3 rounded font-medium transition-all duration-200 min-w-[120px] justify-center ${
                 !canProceedToNext() || isValidatingStep
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-primary-600 text-white hover:bg-primary-700 hover:shadow-md'
+                  : 'bg-primary text-primary-foreground hover:bg-muted hover:shadow-md'
               }`}
               aria-label="עבור לשלב הבא"
             >

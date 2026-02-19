@@ -203,7 +203,7 @@ export default function RehearsalForm({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onCancel}>
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all" onClick={(e) => e.stopPropagation()}>
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -221,7 +221,7 @@ export default function RehearsalForm({
               
               {!initialData && (
                 <div className="flex justify-center mt-3">
-                  <div className="flex bg-gray-100 rounded-lg p-1">
+                  <div className="flex bg-gray-100 rounded p-1">
                     <button
                       type="button"
                       onClick={() => setMode('single')}
@@ -266,7 +266,7 @@ export default function RehearsalForm({
                   <select
                     value={singleForm.groupId || ''}
                     onChange={(e) => handleSingleFormChange('groupId', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.groupId ? 'border-red-300' : 'border-gray-300'
                     }`}
                     disabled={!!initialData}
@@ -293,7 +293,7 @@ export default function RehearsalForm({
                     type="date"
                     value={singleForm.date || ''}
                     onChange={(e) => handleSingleFormChange('date', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.date ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -313,7 +313,7 @@ export default function RehearsalForm({
                       type="time"
                       value={singleForm.startTime || ''}
                       onChange={(e) => handleSingleFormChange('startTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                         errors.startTime ? 'border-red-300' : 'border-gray-300'
                       }`}
                     />
@@ -328,7 +328,7 @@ export default function RehearsalForm({
                       type="time"
                       value={singleForm.endTime || ''}
                       onChange={(e) => handleSingleFormChange('endTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                         errors.endTime ? 'border-red-300' : 'border-gray-300'
                       }`}
                     />
@@ -349,7 +349,7 @@ export default function RehearsalForm({
                     value={singleForm.location || ''}
                     onChange={(e) => handleSingleFormChange('location', e.target.value)}
                     placeholder="כגון: אולם ערן, סטודיו קאמרי 1"
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.location ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -366,7 +366,7 @@ export default function RehearsalForm({
                     onChange={(e) => handleSingleFormChange('notes', e.target.value)}
                     rows={3}
                     placeholder="הערות נוספות עבור החזרה..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
               </div>
@@ -382,7 +382,7 @@ export default function RehearsalForm({
                   <select
                     value={bulkForm.orchestraId || ''}
                     onChange={(e) => handleBulkFormChange('orchestraId', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.orchestraId ? 'border-red-300' : 'border-gray-300'
                     }`}
                   >
@@ -409,7 +409,7 @@ export default function RehearsalForm({
                       type="date"
                       value={bulkForm.startDate || ''}
                       onChange={(e) => handleBulkFormChange('startDate', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                         errors.startDate ? 'border-red-300' : 'border-gray-300'
                       }`}
                     />
@@ -424,7 +424,7 @@ export default function RehearsalForm({
                       type="date"
                       value={bulkForm.endDate || ''}
                       onChange={(e) => handleBulkFormChange('endDate', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                         errors.endDate ? 'border-red-300' : 'border-gray-300'
                       }`}
                     />
@@ -440,7 +440,7 @@ export default function RehearsalForm({
                   <select
                     value={bulkForm.dayOfWeek || 0}
                     onChange={(e) => handleBulkFormChange('dayOfWeek', parseInt(e.target.value))}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.dayOfWeek ? 'border-red-300' : 'border-gray-300'
                     }`}
                   >
@@ -466,7 +466,7 @@ export default function RehearsalForm({
                       type="time"
                       value={bulkForm.startTime || ''}
                       onChange={(e) => handleBulkFormChange('startTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                         errors.startTime ? 'border-red-300' : 'border-gray-300'
                       }`}
                     />
@@ -481,7 +481,7 @@ export default function RehearsalForm({
                       type="time"
                       value={bulkForm.endTime || ''}
                       onChange={(e) => handleBulkFormChange('endTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                         errors.endTime ? 'border-red-300' : 'border-gray-300'
                       }`}
                     />
@@ -502,7 +502,7 @@ export default function RehearsalForm({
                     value={bulkForm.location || ''}
                     onChange={(e) => handleBulkFormChange('location', e.target.value)}
                     placeholder="כגון: אולם ערן, סטודיו קאמרי 1"
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.location ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -519,14 +519,14 @@ export default function RehearsalForm({
                       type="date"
                       value={excludeDateInput}
                       onChange={(e) => setExcludeDateInput(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                       placeholder="בחר תאריך לדילוג"
                     />
                     <button
                       type="button"
                       onClick={handleAddExcludeDate}
                       disabled={!excludeDateInput}
-                      className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -535,7 +535,7 @@ export default function RehearsalForm({
                   {bulkForm.excludeDates && bulkForm.excludeDates.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {bulkForm.excludeDates.map(date => (
-                        <div key={date} className="flex items-center bg-gray-100 rounded-lg px-2 py-1">
+                        <div key={date} className="flex items-center bg-gray-100 rounded px-2 py-1">
                           <span className="text-sm text-gray-700">
                             {new Date(date).toLocaleDateString('he-IL')}
                           </span>
@@ -560,13 +560,13 @@ export default function RehearsalForm({
                     onChange={(e) => handleBulkFormChange('notes', e.target.value)}
                     rows={3}
                     placeholder="הערות נוספות עבור כל החזרות..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
 
                 {/* Preview Dates */}
                 {previewDates.length > 0 && (
-                  <div className="bg-blue-50 rounded-lg p-4">
+                  <div className="bg-blue-50 rounded p-4">
                     <div className="flex items-center mb-2">
                       <AlertCircle className="w-4 h-4 text-blue-600 ml-1" />
                       <span className="text-sm font-medium text-blue-900">
@@ -599,7 +599,7 @@ export default function RehearsalForm({
 
             {/* Error Display */}
             {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="bg-red-50 border border-red-200 rounded p-4">
                 <p className="text-red-800 text-sm">{errors.submit}</p>
               </div>
             )}
@@ -609,14 +609,14 @@ export default function RehearsalForm({
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
               >
                 ביטול
               </button>
               <button
                 type="submit"
                 disabled={loading || hasCriticalConflicts}
-                className={`px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors ${
+                className={`px-6 py-2 bg-muted text-white rounded hover:bg-muted transition-colors ${
                   loading || hasCriticalConflicts ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >

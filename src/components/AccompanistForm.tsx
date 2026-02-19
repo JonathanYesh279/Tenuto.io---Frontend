@@ -147,7 +147,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg max-w-2xl mx-auto">
+    <div className="bg-white rounded max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -160,7 +160,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -170,7 +170,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* General Error */}
         {errors.general && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -194,7 +194,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 placeholder="לדוגמה: יוסי כהן"
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                   errors.name ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -213,7 +213,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
                 <select
                   value={formData.instrument}
                   onChange={(e) => handleInputChange('instrument', e.target.value)}
-                  className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.instrument ? 'border-red-300' : 'border-gray-300'
                   }`}
                 >
@@ -236,7 +236,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
                     type="text"
                     placeholder="הכנס את שם הכלי"
                     onChange={(e) => handleInputChange('instrument', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
                 </div>
               )}
@@ -261,7 +261,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="0501234567"
-                  className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.phone ? 'border-red-300' : 'border-gray-300'
                   }`}
                   dir="ltr"
@@ -284,7 +284,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="לדוגמה: yosi@example.com"
-                  className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   }`}
                   dir="ltr"
@@ -298,7 +298,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
         </Card>
 
         {/* Info Box */}
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded">
           <div className="flex items-start gap-3">
             <Users className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-blue-800">
@@ -317,7 +317,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             ביטול
           </button>
@@ -325,7 +325,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>

@@ -180,7 +180,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg max-w-4xl mx-auto">
+    <div className="bg-white rounded max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -193,7 +193,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -203,7 +203,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* General Error */}
         {errors.general && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -232,7 +232,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
                   value={formData.performanceGrade || ''}
                   onChange={(e) => handleInputChange('performanceGrade', e.target.value ? parseFloat(e.target.value) : undefined)}
                   placeholder="0-100"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.performanceGrade ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -254,7 +254,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
                   value={formData.presentationsAverage || ''}
                   onChange={(e) => handleInputChange('presentationsAverage', e.target.value ? parseFloat(e.target.value) : undefined)}
                   placeholder="0-100"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.presentationsAverage ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -276,7 +276,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
                   value={formData.magenBagrutGrade || ''}
                   onChange={(e) => handleInputChange('magenBagrutGrade', e.target.value ? parseFloat(e.target.value) : undefined)}
                   placeholder="0-100"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.magenBagrutGrade ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -308,7 +308,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
                   value={formData.teacherEvaluation || ''}
                   onChange={(e) => handleInputChange('teacherEvaluation', e.target.value ? parseFloat(e.target.value) : undefined)}
                   placeholder="0-100"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.teacherEvaluation ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -330,7 +330,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
                   value={formData.juryGrade || ''}
                   onChange={(e) => handleInputChange('juryGrade', e.target.value ? parseFloat(e.target.value) : undefined)}
                   placeholder="0-100"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.juryGrade ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -341,10 +341,10 @@ const GradingForm: React.FC<GradingFormProps> = ({
 
               {/* Calculated Final Grade Preview */}
               {calculatedFinal !== null && (
-                <div className="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
+                <div className="mt-6 p-4 bg-muted/50 border border-border rounded">
                   <div className="flex items-center gap-2 mb-2">
-                    <Calculator className="w-5 h-5 text-primary-600" />
-                    <span className="font-medium text-primary-900">ציון סופי משוער</span>
+                    <Calculator className="w-5 h-5 text-primary" />
+                    <span className="font-medium text-primary">ציון סופי משוער</span>
                   </div>
                   <div className={`text-3xl font-bold ${getGradeColor(calculatedFinal)}`}>
                     {calculatedFinal}
@@ -366,12 +366,12 @@ const GradingForm: React.FC<GradingFormProps> = ({
             onChange={(e) => handleInputChange('notes', e.target.value)}
             placeholder="הערות נוספות על הציונים, הביצוע, או המלצות..."
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
           />
         </Card>
 
         {/* Grading Scale Info */}
-        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className="p-4 bg-gray-50 border border-gray-200 rounded">
           <h4 className="font-medium text-gray-900 mb-3">סולם ציונים</h4>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
             <div className="flex flex-col items-center">
@@ -403,7 +403,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             ביטול
           </button>
@@ -411,7 +411,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>

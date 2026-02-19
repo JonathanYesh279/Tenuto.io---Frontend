@@ -287,7 +287,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 type="text"
                 value={formData.personalInfo.firstName}
                 onChange={(e) => handleInputChange('personalInfo.firstName', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                   getFieldError('personalInfo.firstName') ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="הזן שם פרטי"
@@ -308,7 +308,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 type="text"
                 value={formData.personalInfo.lastName}
                 onChange={(e) => handleInputChange('personalInfo.lastName', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                   getFieldError('personalInfo.lastName') ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="הזן שם משפחה"
@@ -329,7 +329,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 type="tel"
                 value={formData.personalInfo.phone}
                 onChange={(e) => handleInputChange('personalInfo.phone', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                   getFieldError('personalInfo.phone') ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="05XXXXXXXX"
@@ -350,7 +350,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 type="email"
                 value={formData.personalInfo.email}
                 onChange={(e) => handleInputChange('personalInfo.email', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                   getFieldError('personalInfo.email') ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="example@email.com"
@@ -371,7 +371,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 type="text"
                 value={formData.personalInfo.address}
                 onChange={(e) => handleInputChange('personalInfo.address', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
                 placeholder="הזן כתובת"
               />
             </div>
@@ -385,7 +385,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 type="text"
                 value={formData.personalInfo.idNumber}
                 onChange={(e) => handleInputChange('personalInfo.idNumber', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
                 placeholder="9 ספרות"
                 maxLength={9}
               />
@@ -402,7 +402,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 max={2010}
                 value={formData.personalInfo.birthYear ?? ''}
                 onChange={(e) => handleInputChange('personalInfo.birthYear', e.target.value ? parseInt(e.target.value) : null)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
                 placeholder="1940-2010"
               />
             </div>
@@ -422,7 +422,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                   type="checkbox"
                   checked={formData.roles.includes(role)}
                   onChange={(e) => handleRoleChange(role, e.target.checked)}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-ring"
                 />
                 <span className="text-sm text-gray-700">{role}</span>
               </label>
@@ -450,7 +450,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               <select
                 value={formData.professionalInfo.instrument}
                 onChange={(e) => handleInputChange('professionalInfo.instrument', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                   getFieldError('professionalInfo.instrument') ? 'border-red-500' : 'border-gray-300'
                 }`}
                 disabled={formData.roles.includes('מורה תאוריה')}
@@ -478,7 +478,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               <select
                 value={formData.professionalInfo.classification}
                 onChange={(e) => handleInputChange('professionalInfo.classification', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
               >
                 <option value="">בחר סיווג</option>
                 {CLASSIFICATIONS.map(c => <option key={c} value={c}>{c}</option>)}
@@ -491,7 +491,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               <select
                 value={formData.professionalInfo.degree}
                 onChange={(e) => handleInputChange('professionalInfo.degree', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
               >
                 <option value="">בחר תואר</option>
                 {DEGREES.map(d => <option key={d} value={d}>{d}</option>)}
@@ -507,7 +507,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 max={50}
                 value={formData.professionalInfo.teachingExperienceYears ?? ''}
                 onChange={(e) => handleInputChange('professionalInfo.teachingExperienceYears', e.target.value ? parseInt(e.target.value) : null)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
                 placeholder="0-50"
               />
             </div>
@@ -519,7 +519,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                   type="checkbox"
                   checked={formData.professionalInfo.hasTeachingCertificate}
                   onChange={(e) => handleInputChange('professionalInfo.hasTeachingCertificate', e.target.checked)}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-ring"
                 />
                 <span className="text-sm text-gray-700">תעודת הוראה</span>
               </label>
@@ -528,7 +528,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                   type="checkbox"
                   checked={formData.professionalInfo.isUnionMember}
                   onChange={(e) => handleInputChange('professionalInfo.isUnionMember', e.target.checked)}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-ring"
                 />
                 <span className="text-sm text-gray-700">חבר ארגון מורים</span>
               </label>
@@ -537,7 +537,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                   type="checkbox"
                   checked={formData.professionalInfo.isActive}
                   onChange={(e) => handleInputChange('professionalInfo.isActive', e.target.checked)}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-ring"
                 />
                 <span className="text-sm text-gray-700">פעיל מקצועית</span>
               </label>
@@ -563,7 +563,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                       : formData.professionalInfo.teachingSubjects.filter(s => s !== subject);
                     handleInputChange('professionalInfo.teachingSubjects', newSubjects);
                   }}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-ring"
                 />
                 <span className="text-sm text-gray-700">{subject}</span>
               </label>
@@ -586,7 +586,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 type="email"
                 value={formData.credentials.email}
                 onChange={(e) => handleInputChange('credentials.email', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                   getFieldError('credentials.email') ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="example@email.com"
@@ -608,7 +608,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                   type="password"
                   value={formData.credentials.password}
                   onChange={(e) => handleInputChange('credentials.password', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                     getFieldError('credentials.password') ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="הזן סיסמה"
@@ -635,7 +635,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               type="checkbox"
               checked={formData.isActive}
               onChange={(e) => handleInputChange('isActive', e.target.checked)}
-              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-gray-300 text-primary focus:ring-ring"
             />
             <span className="text-sm text-gray-700">פעיל במערכת</span>
           </label>
@@ -646,14 +646,14 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="px-6 py-2 border border-input text-foreground rounded hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
           >
             ביטול
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>

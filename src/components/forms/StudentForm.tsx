@@ -796,21 +796,21 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </div>
 
       {errors.submit && (
-        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex items-center gap-2">
+        <div className="bg-destructive/10 border border-destructive/30 rounded p-4 flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-destructive" />
           <span className="text-destructive">{errors.submit}</span>
         </div>
       )}
 
       {/* Personal Information Section */}
-      <div className="bg-card rounded-lg border border-border">
+      <div className="bg-card rounded border border-border">
         <button
           type="button"
           onClick={() => toggleSection('personal')}
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <User className="w-5 h-5 text-primary-600" />
+            <User className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">פרטים אישיים</h3>
           </div>
           {expandedSections.personal ? <ChevronUp /> : <ChevronDown />}
@@ -953,14 +953,14 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </div>
 
       {/* Academic Information Section */}
-      <div className="bg-card rounded-lg border border-border">
+      <div className="bg-card rounded border border-border">
         <button
           type="button"
           onClick={() => toggleSection('academic')}
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-primary-600" />
+            <BookOpen className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">פרטים אקדמיים</h3>
           </div>
           {expandedSections.academic ? <ChevronUp /> : <ChevronDown />}
@@ -996,14 +996,14 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </div>
 
       {/* Instruments Section */}
-      <div className="bg-card rounded-lg border border-border">
+      <div className="bg-card rounded border border-border">
         <button
           type="button"
           onClick={() => toggleSection('instruments')}
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Music className="w-5 h-5 text-primary-600" />
+            <Music className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">כלי נגינה</h3>
           </div>
           {expandedSections.instruments ? <ChevronUp /> : <ChevronDown />}
@@ -1012,20 +1012,20 @@ const StudentForm: React.FC<StudentFormProps> = ({
         {expandedSections.instruments && (
           <div className="p-6 border-t border-border">
             {errors['academicInfo.instruments'] && (
-              <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded-lg">
+              <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded">
                 <p className="text-destructive text-sm">{errors['academicInfo.instruments']}</p>
               </div>
             )}
 
             {errors['academicInfo.primaryInstrument'] && (
-              <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded">
                 <p className="text-amber-700 text-sm">{errors['academicInfo.primaryInstrument']}</p>
               </div>
             )}
 
             <div className="space-y-4">
               {formData.academicInfo.instrumentProgress.map((instrument, index) => (
-                <div key={index} className="p-4 bg-muted/50 rounded-lg border border-border">
+                <div key={index} className="p-4 bg-muted/50 rounded border border-border">
                   <div className="flex items-start justify-between mb-3">
                     <h4 className="font-medium text-foreground">כלי נגינה {index + 1}</h4>
                     {formData.academicInfo.instrumentProgress.length > 1 && (
@@ -1155,17 +1155,17 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </div>
 
       {/* Teacher & Schedule Section */}
-      <div className="bg-card rounded-lg border border-border">
+      <div className="bg-card rounded border border-border">
         <button
           type="button"
           onClick={() => toggleSection('teachers')}
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary-600" />
+            <Calendar className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">מורים ושיעורים</h3>
             {formData.teacherAssignments.length > 0 && (
-              <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded-full text-xs">
+              <span className="px-2 py-1 bg-muted text-primary rounded-full text-xs">
                 {formData.teacherAssignments.length} שיבוצים
               </span>
             )}
@@ -1181,7 +1181,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                 <h4 className="text-sm font-medium text-muted-foreground mb-3">שיעורים מתוכננים</h4>
                 <div className="space-y-2">
                   {formData.teacherAssignments.map((assignment, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                    <div key={index} className="flex items-center justify-between p-3 bg-green-50 rounded border border-green-200">
                       <div className="flex items-center gap-4">
                         <CheckCircle className="w-5 h-5 text-green-600" />
                         <div>
@@ -1239,7 +1239,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
               {/* Dropdown menu - Fixed positioning to escape modal overflow */}
               {isTeacherDropdownOpen && (
                 <div
-                  className="fixed z-[9999] bg-popover border border-border rounded-lg shadow-xl overflow-hidden"
+                  className="fixed z-[9999] bg-popover border border-border rounded shadow-xl overflow-hidden"
                   style={{
                     top: dropdownPosition.top,
                     left: dropdownPosition.left,
@@ -1331,7 +1331,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
                 {/* Filters Section - only show when slots menu is open */}
                 {showSlotsMenu && !loadingSlots && availableSlots.length > 0 && (
-                  <div className="mb-4 p-4 bg-muted/50 rounded-lg border border-border">
+                  <div className="mb-4 p-4 bg-muted/50 rounded border border-border">
                     <div className="flex items-center justify-between mb-3">
                       <h5 className="text-sm font-medium text-foreground flex items-center gap-2">
                         <Filter className="w-4 h-4" />
@@ -1493,7 +1493,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
                       if (filteredSlots.length === 0) {
                         return (
-                          <div className="text-center py-8 bg-muted/50 rounded-lg">
+                          <div className="text-center py-8 bg-muted/50 rounded">
                             <Filter className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
                             <p className="text-muted-foreground text-sm mb-2">אין זמנים התואמים לסינון שבחרת</p>
                             <button
@@ -1532,7 +1532,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                 key={slot._id}
                                 type="button"
                                 onClick={() => handleSlotSelection(slot)}
-                                className={`p-3 border rounded-lg hover:border-primary hover:bg-primary/5 transition-colors text-right ${
+                                className={`p-3 border rounded hover:border-primary hover:bg-primary/5 transition-colors text-right ${
                                   slot.duration === 30 ? 'border-green-300 bg-green-50' :
                                   slot.duration === 45 ? 'border-blue-300 bg-blue-50' :
                                   'border-purple-300 bg-purple-50'
@@ -1572,7 +1572,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                     })()}
                   </div>
                 ) : selectedTeacherId && !loadingSlots && showSlotsMenu && availableSlots.length === 0 ? (
-                  <div className="text-center py-6 bg-muted/50 rounded-lg">
+                  <div className="text-center py-6 bg-muted/50 rounded">
                     <Clock className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
                     <p className="text-muted-foreground text-sm mb-2">אין זמנים פנויים למורה זה</p>
                     <p className="text-xs text-muted-foreground/70">
@@ -1587,14 +1587,14 @@ const StudentForm: React.FC<StudentFormProps> = ({
       </div>
 
       {/* Enrollments Section (Optional) */}
-      <div className="bg-card rounded-lg border border-border">
+      <div className="bg-card rounded border border-border">
         <button
           type="button"
           onClick={() => toggleSection('enrollments')}
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary-600" />
+            <Users className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">הרשמות</h3>
           </div>
           {expandedSections.enrollments ? <ChevronUp /> : <ChevronDown />}
@@ -1659,7 +1659,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
               {/* Orchestra Preview */}
               {formData.enrollments.orchestraIds[0] && (
-                <div className="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                <div className="mt-2 p-3 bg-purple-50 rounded border border-purple-200">
                   {(() => {
                     const selectedOrchestra = orchestras.find(o => o._id === formData.enrollments.orchestraIds[0])
                     if (!selectedOrchestra) return null
@@ -1731,7 +1731,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
               {/* Theory Lesson Preview */}
               {formData.enrollments.theoryLessonIds[0] && (
-                <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="mt-2 p-3 bg-blue-50 rounded border border-blue-200">
                   {(() => {
                     const selectedLesson = theoryLessons.find(l => l._id === formData.enrollments.theoryLessonIds[0])
                     if (!selectedLesson) return null

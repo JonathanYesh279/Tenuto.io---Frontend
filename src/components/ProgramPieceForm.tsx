@@ -123,7 +123,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg max-w-2xl mx-auto">
+    <div className="bg-white rounded max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -136,7 +136,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
         </div>
         <button
           onClick={onCancel}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -146,7 +146,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* General Error */}
         {errors.general && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -168,7 +168,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
               <select
                 value={formData.pieceNumber}
                 onChange={(e) => handleInputChange('pieceNumber', parseInt(e.target.value))}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                   errors.pieceNumber ? 'border-red-300' : 'border-gray-300'
                 }`}
               >
@@ -199,7 +199,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
                   value={formData.duration}
                   onChange={(e) => handleInputChange('duration', e.target.value)}
                   placeholder="MM:SS (לדוגמה: 04:30)"
-                  className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.duration ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -224,7 +224,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
                   value={formData.composerName}
                   onChange={(e) => handleInputChange('composerName', e.target.value)}
                   placeholder="לדוגמה: יוהאן סבסטיאן באך"
-                  className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                     errors.composerName ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -242,7 +242,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
               <select
                 value={formData.period}
                 onChange={(e) => handleInputChange('period', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               >
                 <option value="">בחר תקופה</option>
                 {musicalPeriods.map(period => (
@@ -262,7 +262,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
               value={formData.pieceName}
               onChange={(e) => handleInputChange('pieceName', e.target.value)}
               placeholder="לדוגמה: קונצ'רטו לכינור במי מינור"
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+              className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent ${
                 errors.pieceName ? 'border-red-300' : 'border-gray-300'
               }`}
             />
@@ -281,7 +281,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
               onChange={(e) => handleInputChange('notes', e.target.value)}
               placeholder="הערות נוספות על היצירה, דרישות מיוחדות, עיבודים..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent resize-vertical"
             />
           </div>
         </Card>
@@ -292,7 +292,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             ביטול
           </button>
@@ -300,7 +300,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>

@@ -92,15 +92,15 @@ const DurationSelect: React.FC<DurationSelectProps> = ({
 
   const getSelectClasses = () => {
     const baseClasses = `
-      w-full pl-10 pr-4 py-2 border rounded-lg 
-      focus:outline-none focus:ring-2 focus:ring-primary-500 
+      w-full pl-10 pr-4 py-2 border rounded 
+      focus:outline-none focus:ring-2 focus:ring-ring 
       transition-colors duration-200
       text-right bg-white
       appearance-none cursor-pointer
     `
     
     if (disabled) {
-      return `${baseClasses} bg-gray-100 cursor-not-allowed opacity-60 border-gray-300`
+      return `${baseClasses} bg-gray-100 cursor-not-allowed opacity-60 border-input`
     }
     
     if (validationResult.isValid && isTouched && value) {
@@ -111,7 +111,7 @@ const DurationSelect: React.FC<DurationSelectProps> = ({
       return `${baseClasses} border-red-300 focus:border-red-500 bg-red-50`
     }
     
-    return `${baseClasses} border-gray-300 focus:border-primary-500`
+    return `${baseClasses} border-input focus:border-ring`
   }
 
   const inputId = `duration-select-${Math.random().toString(36).substr(2, 9)}`
@@ -193,7 +193,7 @@ const DurationSelect: React.FC<DurationSelectProps> = ({
       <div className="text-xs text-gray-500 mt-1">
         בחר את משך השיעור בדקות
         {value && (
-          <span className="block text-primary-600 mt-1">
+          <span className="block text-primary mt-1">
             נבחר: {formatDuration(Number(value))}
           </span>
         )}

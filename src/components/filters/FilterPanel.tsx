@@ -91,7 +91,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     <select
       value={values[filter.key] || ''}
       onChange={(e) => handleFilterChange(filter.key, e.target.value)}
-      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-right font-reisinger-yonatan"
+      className="w-full px-3 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring bg-white text-right font-reisinger-yonatan"
       dir="rtl"
     >
       <option value="">הכל</option>
@@ -119,7 +119,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   : selectedValues.filter((v: string) => v !== option.value)
                 handleFilterChange(filter.key, newSelected)
               }}
-              className="ml-2 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+              className="ml-2 text-primary border-gray-300 rounded focus:ring-ring"
             />
             <span className="flex-1 text-right font-reisinger-yonatan">
               {option.label}
@@ -142,7 +142,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             placeholder="מ"
             value={value.min || ''}
             onChange={(e) => handleFilterChange(filter.key, { ...value, min: Number(e.target.value) })}
-            className="w-full px-2 py-1 text-sm border border-gray-200 rounded text-right"
+            className="w-full px-2 py-1 text-sm border border-border rounded text-right"
             min={filter.min}
             max={filter.max}
           />
@@ -152,7 +152,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             placeholder="עד"
             value={value.max || ''}
             onChange={(e) => handleFilterChange(filter.key, { ...value, max: Number(e.target.value) })}
-            className="w-full px-2 py-1 text-sm border border-gray-200 rounded text-right"
+            className="w-full px-2 py-1 text-sm border border-border rounded text-right"
             min={filter.min}
             max={filter.max}
           />
@@ -166,7 +166,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       type="date"
       value={values[filter.key] || ''}
       onChange={(e) => handleFilterChange(filter.key, e.target.value)}
-      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+      className="w-full px-3 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
     />
   )
 
@@ -176,7 +176,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         type="checkbox"
         checked={values[filter.key] || false}
         onChange={(e) => handleFilterChange(filter.key, e.target.checked)}
-        className="ml-2 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
+        className="ml-2 text-primary border-gray-300 rounded focus:ring-ring"
       />
       <span className="font-reisinger-yonatan">{filter.label}</span>
     </label>
@@ -186,7 +186,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     const isExpanded = expandedGroups.has(filter.key)
     
     return (
-      <div key={filter.key} className="border-b border-gray-200 last:border-b-0">
+      <div key={filter.key} className="border-b border-border last:border-b-0">
         <button
           onClick={() => toggleGroup(filter.key)}
           className="w-full flex items-center justify-between py-3 text-right hover:bg-gray-50 transition-colors"
@@ -194,7 +194,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           <div className="flex items-center text-sm font-medium text-gray-900 font-reisinger-yonatan">
             {filter.label}
             {values[filter.key] && (
-              <span className="mr-2 px-2 py-1 text-xs bg-primary-100 text-primary-700 rounded-full">
+              <span className="mr-2 px-2 py-1 text-xs bg-muted text-primary rounded-full">
                 {Array.isArray(values[filter.key]) ? values[filter.key].length : '1'}
               </span>
             )}
@@ -223,13 +223,13 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
   if (variant === 'horizontal') {
     return (
-      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`} dir="rtl">
+      <div className={`bg-white border border-border rounded p-4 ${className}`} dir="rtl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2 space-x-reverse">
             <Filter className="w-5 h-5 text-gray-600" />
             <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">מסננים</h3>
             {activeFilterCount > 0 && (
-              <span className="px-2 py-1 text-xs bg-primary-100 text-primary-700 rounded-full">
+              <span className="px-2 py-1 text-xs bg-muted text-primary rounded-full">
                 {activeFilterCount}
               </span>
             )}
@@ -269,14 +269,14 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   }
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg ${className}`} dir="rtl">
+    <div className={`bg-white border border-border rounded ${className}`} dir="rtl">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center space-x-2 space-x-reverse">
           <Filter className="w-5 h-5 text-gray-600" />
           <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">מסננים</h3>
           {activeFilterCount > 0 && (
-            <span className="px-2 py-1 text-xs bg-primary-100 text-primary-700 rounded-full">
+            <span className="px-2 py-1 text-xs bg-muted text-primary rounded-full">
               {activeFilterCount}
             </span>
           )}

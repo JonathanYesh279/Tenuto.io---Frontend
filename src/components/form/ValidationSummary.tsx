@@ -31,7 +31,7 @@ const ValidationSummary: React.FC<ValidationSummaryProps> = ({
   }
 
   return (
-    <div className={`bg-red-50 border border-red-200 rounded-lg p-4 ${className}`}>
+    <div className={`bg-red-50 border border-red-200 rounded p-4 ${className}`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <AlertTriangle className="w-5 h-5 text-red-400" />
@@ -81,7 +81,7 @@ export const ValidationSuccess: React.FC<ValidationSuccessProps> = ({
   className = ''
 }) => {
   return (
-    <div className={`bg-green-50 border border-green-200 rounded-lg p-4 ${className}`}>
+    <div className={`bg-green-50 border border-green-200 rounded p-4 ${className}`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <CheckCircle className="w-5 h-5 text-green-400" />

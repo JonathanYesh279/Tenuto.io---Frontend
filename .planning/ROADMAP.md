@@ -5,7 +5,8 @@
 - ✅ **v1.1 Cleanup & Polish** — Phases 1-5 (shipped 2026-02-14)
 - ✅ **v2.0 UI/UX Redesign** — Phases 6-15 (shipped 2026-02-18)
 - ✅ **v2.1 Production-Grade Visual Identity** — Phases 16-21 (shipped 2026-02-18)
-- 🔨 **v3.0 Visual Architecture Rewrite** — Phase 22+ (active)
+- ✅ **v3.0 Visual Architecture Rewrite** — Phase 22 (shipped 2026-02-20)
+- 🔨 **v4.0 Visual Redesign** — Phase 23+ (active)
 
 ## Phases
 
@@ -40,180 +41,57 @@ Full details: `milestones/v2.0-ROADMAP.md`
 
 </details>
 
+<details>
+<summary>✅ v2.1 Production-Grade Visual Identity (Phases 16-21) — SHIPPED 2026-02-18</summary>
+
+- [x] Phase 16: Token Foundation (2 plans) — CSS custom properties, surface/neutral/shadow scales, motionTokens.ts
+- [x] Phase 17: Primitive Component Layer (2 plans) — Card shadow depth, button spring press, dialog spring entrance
+- [x] Phase 18: Layout Shell and Color System Reset (3 plans) — light sidebar, multi-color pastels, layout shell restructure
+- [x] Phase 19: Dashboard Transformation (2 plans) — 3-column layout, entity-colored stat cards, calendar/activity widgets
+- [x] Phase 20: List Pages and Table System (2 plans) — hero stats zones, compact filter toolbar, avatar table columns
+- [x] Phase 21: Detail Pages and Forms (2 plans) — entity-colored headers, tab pills, form section grouping
+
+Full details: `milestones/v2.1-ROADMAP.md`
+
+</details>
+
+<details>
+<summary>✅ v3.0 Visual Architecture Rewrite (Phase 22) — SHIPPED 2026-02-20</summary>
+
+- [x] Phase 22: Visual Architecture Rewrite (15 plans) — token reset (black primary, 2px radius, dark sidebar), Phosphor Icons migration (217 files), mechanical style sweep, list/detail/dashboard archetypes
+
+Full details: `milestones/v3.0-ROADMAP.md`
+
+</details>
+
 ---
 
-### ✅ v2.1 Production-Grade Visual Identity (Shipped 2026-02-18)
+### v4.0 Visual Redesign
 
-**Milestone Goal:** Drastic visual redesign — transform Tenuto.io from a styled admin template into a production-grade SaaS product that is completely unrecognizable from the current version. Light sidebar, multi-color pastel palette, 3-column dashboard, hero stat zones on list pages, data-dominant tables with avatars and colored badges, and structured forms with visual sections. Style transplant from SchoolHub reference: visual language changes completely while all data entities, labels, and business logic stay untouched.
+**Milestone Goal:** Complete visual redesign matching reference UI mockups. New indigo primary color, rounded surfaces (12-32px), card-based layouts with shadows, Assistant font, light sidebar, implemented charts with real data. Dashboard redesigned first, then other pages as references are provided.
+
+**Reference:** `.planning/phases/22-visual-architecture-rewrite/22-REFERENCE-UI.md`
 
 ---
 
-#### Phase 16: Token Foundation
+#### Phase 23: Dashboard Visual Redesign
 
-**Goal:** The complete token layer exists as CSS custom properties and a TypeScript motion module — all subsequent phases draw from this single source of truth.
-**Depends on:** Phase 15 (v2.0 complete)
-**Requirements:** TOKEN-01, TOKEN-02, TOKEN-03, TOKEN-04, TOKEN-05
+**Goal:** Complete visual redesign of the dashboard page and underlying token system to match the reference UI. New indigo primary, rounded cards with shadows, Assistant font, light sidebar, 12-col grid with 9:3 split, entity-colored stat cards, implemented charts (financial, attendance, demographics), and right sidebar widgets (calendar, agenda, messages).
+**Depends on:** Phase 22 (v3.0 complete)
+**Context:** `.planning/phases/23-dashboard-visual-redesign/23-CONTEXT.md`
 **Success Criteria** (what must be TRUE):
-  1. `src/index.css :root {}` contains a 4-level surface elevation scale (`--surface-base`, `--surface-raised`, `--surface-overlay`, `--surface-floating`), a 9-step warm neutral scale (`--neutral-50` through `--neutral-900`), and a 5-level shadow scale (`--shadow-0` through `--shadow-4`) with warm-tinted values
-  2. `tailwind.config.js` exposes `shadow-0` through `shadow-4` Tailwind utilities that map to the CSS shadow vars
-  3. `src/lib/motionTokens.ts` exports named spring presets (`snappy`, `smooth`, `bouncy`) and duration/easing tokens usable by any animated component
-  4. Every `primary-NNN` hardcoded hex class in TSX files is either migrated to the CSS var system or documented in a recorded inventory — no silent dual-system inconsistency remains
-**Plans:** 2 plans
-
-Plans:
-- [x] 16-01: CSS custom properties in :root (surface elevation scale, warm neutral scale, shadow scale)
-- [x] 16-02: Tailwind shadow mapping, motionTokens.ts, dual color system inventory
-
----
-
-#### Phase 17: Primitive Component Layer
-
-**Goal:** The six core shadcn/ui primitives (card, button, badge, tabs, dialog, input) express the new token system with depth, spring interactions, and standardized focus rings — every page inherits improvements automatically.
-**Depends on:** Phase 16
-**Requirements:** SURF-02, SURF-03, MOTN-01, MOTN-03, MOTN-05
-**Success Criteria** (what must be TRUE):
-  1. Card components display warm-tinted box-shadows (`shadow-1`) that deepen on hover (`shadow-2`) — depth is visible without flat borders carrying all the work
-  2. Dialog/modal surfaces sit visually above page content with `shadow-4` — the elevation difference is perceptible at a glance
-  3. Primary action buttons have spring-based press feedback (`whileTap` scale reduction) using the `snappy` preset from motionTokens.ts
-  4. Modal open and close use spring physics (not linear fade) — the entrance feels physical
-  5. All Framer Motion animations on these primitives are gated by `useReducedMotion()` — users with reduced motion preference see instant state changes
-**Plans:** 2 plans
-
-Plans:
-- [x] 17-01: Card, button, badge — shadow tokens, spring press, badge shadow-1
-- [x] 17-02: Dialog, tabs, input — spring entrance, shadow-4 elevation, focus ring verification
-
----
-
-#### Phase 18: Layout Shell and Color System Reset
-
-**Goal:** The application's structural foundation is completely replaced — light sidebar, new multi-color pastel token system with per-entity color assignments, restructured layout shell with clear zoning, and updated header. Every subsequent phase builds on this new visual foundation.
-**Depends on:** Phase 17
-**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
-**Success Criteria** (what must be TRUE):
-  1. Sidebar is light/white with grouped navigation sections (category labels like MENU, OTHER), active item has a soft colored background pill — the dark warm sidebar from v2.0 is fully replaced
-  2. Multi-color pastel CSS tokens exist in `:root` — each entity type (teachers, students, orchestras) has its own assigned pastel color used consistently across stat cards, badges, and accents
-  3. Content area background is white or very light gray — the overall page feel is light and airy, not warm/dark
-  4. Layout shell has clear visual zoning — sidebar, header, and content area are distinct regions with intentional separation
-  5. The app is visually unrecognizable compared to v2.0 — the color system, sidebar, and overall feel have fundamentally changed
-**Plans:** 3 plans
-
-Plans:
-- [x] 18-01: Multi-color pastel token system — entity color CSS vars in :root, sidebar token updates, Tailwind config mapping
-- [x] 18-02: Light sidebar — restyle Sidebar.tsx from dark to white, logo zone, active pill, white-surface-appropriate colors
-- [x] 18-03: Layout shell, header, and StatsCard — content bg update, header restyle, entity color system for stat cards
-
----
-
-#### Phase 19: Dashboard Transformation
-
-**Goal:** The dashboard is a 3-column data-dominant layout with colorful pastel stat cards, a persistent right sidebar column (calendar, activity), and clean chart sections — it reads as a serious SaaS command center, not a card grid.
-**Depends on:** Phase 18
-**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
-**Success Criteria** (what must be TRUE):
-  1. Dashboard uses a 3-column layout — main content area (left/center) and a persistent right sidebar column with calendar/upcoming/activity widgets
-  2. Top row shows pastel-colored stat cards (one per key metric) with large bold numbers, small labels, and trend badges — each card has a distinct entity color, not uniform styling
-  3. Charts and data visualizations are clean and prominent — data is the dominant visual element, not card surfaces or decorative elements
-  4. The right sidebar column contains contextual widgets relevant to Tenuto (upcoming lessons, recent activity, quick stats) — not empty space
-  5. The dashboard feels like a SchoolHub-level command center — structured, zoned, data-first, with clear visual landmarks
-**Plans:** 2 plans
-
-Plans:
-- [x] 19-01: 3-column dashboard layout — StatsCard coloredBg enhancements, overview tab grid restructure, entity-colored stat cards with stagger animation
-- [x] 19-02: Dashboard widgets and charts — MiniCalendarWidget, UpcomingEventsWidget, RecentActivityWidget components, wire into right column
-
----
-
-#### Phase 20: List Pages and Table System
-
-**Goal:** Every list page (Teachers, Students, Orchestras) has a hero stats zone at top, a compact filter toolbar, and a data-dense table with avatars, colored status badges, and icon actions — the lists feel tool-ready and data-dominant.
-**Depends on:** Phase 18
-**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
-**Success Criteria** (what must be TRUE):
-  1. Each list page has a hero stats zone at the top showing aggregate metrics for that entity (count, key stats) using the entity's pastel color — this is the first visual landmark
-  2. A compact filter toolbar sits below the hero zone — search input + dropdown filters in one row, cohesive and unified
-  3. Table rows show avatars alongside entity names (where applicable), colored status badges (distinct colors per status, not uniform), and icon-based action buttons (edit, delete) — not plain text links
-  4. Tables are data-dense with clean spacing — more data visible without scrolling compared to v2.0
-  5. The vertical flow on every list page is predictable: hero stats → filter toolbar → data table — clear zoning with no ambiguity
-**Plans:** 2 plans
-
-Plans:
-- [x] 20-01: ListPageHero component and Table density — shared hero stats zone component with framer-motion stagger, Table.tsx padding reduction and maxHeight adjustment
-- [x] 20-02: Page restructuring — Teachers, Students, Orchestras pages restructured with hero zone, compact filter toolbar, avatar-enhanced table columns
-
----
-
-#### Phase 21: Detail Pages and Forms
-
-**Goal:** Detail pages have a bold profile header zone with stronger tab hierarchy; forms are restructured with clear visual sections instead of stacked fields — every entity page feels intentionally designed, not template-generated.
-**Depends on:** Phase 18
-**Context:** `.planning/phases/18-typography-scale-and-color-evolution/18-CONTEXT.md`
-**Success Criteria** (what must be TRUE):
-  1. Detail page profile/header zone uses bolder visual treatment — stronger typography, clearer data hierarchy between primary info (name, role) and secondary metadata
-  2. Tab navigation is restyled with stronger visual weight — the active tab is unmistakable, tab content sections have clear visual separation
-  3. Forms are restructured with visual section grouping — section titles with dividers or background strips, not just stacked fields in a column
-  4. Form layout has intentional visual rhythm — section title → field group → section title → field group, with clear hierarchy between sections
-  5. Detail pages and forms feel consistent with the new dashboard and list page design language — same zoning principles, same color system, same confidence level
-**Plans:** 2 plans
-
-Plans:
-- [x] 21-01: Detail page headers and tabs — entity-colored pastel header zone (replacing coral gradient), entity-colored active tab pills on all 3 detail pages
-- [x] 21-02: Form restructuring — entity-colored accent bar section grouping for TeacherForm (6 sections), StudentForm (4 sections), OrchestraForm (3 compact sections)
-
----
-
-### v3.0 Visual Architecture Rewrite
-
-**Milestone Goal:** Structural recomposition of the entire application. Not polish, not tokens, not incremental refinement — a visual architecture rewrite. The app must feel authored, not generated. Every page follows a defined archetype with clear dominant zones, intentional asymmetry, and data-first composition. Generic admin-template patterns are eliminated.
-
-**Architectural Foundation:** `.planning/ARCHETYPES.md`
-
----
-
-#### Phase 22: Visual Architecture Rewrite
-
-**Goal:** Structural recomposition — strict shape language, unified button system, cohesive icon style, card wrapper removal, and page archetype implementation with asymmetry and dominance rules. The app stops looking like a styled template and starts looking like a product with authored identity.
-**Depends on:** Phase 21 (v2.1 complete)
-**Architectural reference:** `.planning/ARCHETYPES.md`
-**Scope:**
-  1. **Shape language:** Define and apply strict corner radius philosophy, border philosophy. No default rounding. Every radius is intentional.
-  2. **Button system:** One strong primary color (black, blue, or neutral — to be decided during planning). No mixed variant styles across pages. One system, applied everywhere.
-  3. **Icon system:** Replace default lucide scatter with a cohesive icon style. Consistent weight, consistent metaphors.
-  4. **Card wrapper removal:** Strip decorative card wrappers from page sections across all pages. Sections defined by spacing and typography.
-  5. **Dashboard archetype:** Command center — one dominant zone, asymmetric panels, no equal card grid, no pastel widget feel.
-  6. **List page archetype:** Table IS the page — no hero zone, no card-wrapped table, flat surface, edge-to-edge, strong row hover. Toolbar flush with table.
-  7. **Detail page archetype:** Structured dossier — identity block (not gradient card), attached tab bar, continuous document feel, no stacked card sections.
-  8. **Management page archetype:** Operations console — functional, dense, no decoration, whitespace as structure.
-  9. **Cross-cutting:** One dominant zone per page. Template grid symmetry eliminated. Sidebar feels architectural.
-**Success Criteria** (what must be TRUE):
-  1. Every page has exactly one identifiable dominant zone that is visually 3-4x more prominent than surrounding content
-  2. No page sections are wrapped in Card components (except modals/popovers/dropdowns)
-  3. Table containers have no rounded corners, no shadows, no card wrappers
-  4. A single, consistent button color system is used across all pages — no mixed primary colors
-  5. Icon usage follows a single cohesive style — no mixed icon weights or metaphor inconsistencies
-  6. Dashboard uses asymmetric layout with unequal column weights — no symmetric card grid
-  7. List pages: toolbar is flush with table, no gap, no hero zone above data
-  8. Detail pages: identity block + attached tab bar, not gradient banner + floating tabs + stacked cards
-  9. Sidebar is tonally distinct from content area and feels like a structural anchor
-  10. The app is not recognizable as a shadcn/ui admin template — shape, color, and composition are distinctive
-**Plans:** 15 plans
-
-Plans:
-- [ ] 22-01-PLAN.md — Token reset: cool neutral palette, black primary, 2px radius, dark sidebar tokens, subdued entity colors
-- [ ] 22-02-PLAN.md — Phosphor Icons install + Sidebar dark theme rewrite
-- [ ] 22-03-PLAN.md — Mechanical sweep: pages (hardcoded primary-NNN colors + excessive rounding)
-- [ ] 22-04-PLAN.md — Mechanical sweep: shared UI/domain components (Table flat, StatsCard subdued, DetailPageHeader clean)
-- [ ] 22-05-PLAN.md — Mechanical sweep: form components + form field primitives
-- [ ] 22-06-PLAN.md — Mechanical sweep: dashboard components (stat cards, charts, widgets)
-- [ ] 22-07-PLAN.md — Mechanical sweep: bagrut components (24 files)
-- [ ] 22-08-PLAN.md — Mechanical sweep: feature detail components (teacher/student/orchestra details + tabs)
-- [ ] 22-09-PLAN.md — Mechanical sweep: remaining components (deletion, cards, schedule, misc)
-- [ ] 22-10-PLAN.md — List Page archetype: Teachers, Students, Orchestras (eliminate ListPageHero, flush toolbar)
-- [ ] 22-11-PLAN.md — Detail Page archetype: identity block + attached tab bar on all entity detail pages
-- [ ] 22-12-PLAN.md — Dashboard archetype: asymmetric command center with dominant metric zone
-- [ ] 22-13-PLAN.md — Remaining pages: Phosphor migration + archetype application (secondary lists, management, auth)
-- [ ] 22-14-PLAN.md — Final sweep: Phosphor migration for ALL remaining components (schedule, nav, teacher, profile, feedback, etc.)
-- [ ] 22-15-PLAN.md — Build verification + visual checkpoint (human-verify all 10 success criteria)
+  1. Token system reset: indigo primary (#6366f1), 12-32px radius scale, decorative shadows, Assistant + Plus Jakarta Sans fonts
+  2. Dashboard layout: 12-col grid with 9:3 split — main content area + right sidebar column
+  3. Stat cards: 4 entity-colored pastel cards (indigo/amber/sky/emerald) with rounded-3xl, trend badges
+  4. Financial trends chart: SVG line chart with real monthly income/expenses data
+  5. Attendance chart: bar chart with real daily present/absent data
+  6. Student demographics chart: donut chart with real category data
+  7. Teacher performance table: avatars, departments, student counts, star ratings, status badges
+  8. Right sidebar: functional calendar widget, agenda with upcoming events, messages panel
+  9. Sidebar: white/light with indigo active state pill, category labels, Phosphor icons
+  10. Header: search input, notification bell, user profile section
+  11. Dark mode support with toggle button
+**Plans:** TBD
 
 ---
 
@@ -242,8 +120,9 @@ Plans:
 | 19. Dashboard Transformation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 22. Visual Architecture Rewrite | v3.0 | 0/15 | Planned | — |
+| 22. Visual Architecture Rewrite | v3.0 | 15/15 | Complete | 2026-02-20 |
+| 23. Dashboard Visual Redesign | v4.0 | 0/? | Planned | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-18 — Phase 22 inserted: Visual Architecture Rewrite (v3.0)*
+*Last updated: 2026-02-20 — v2.1 and v3.0 archived, v4.0 started with Phase 23*

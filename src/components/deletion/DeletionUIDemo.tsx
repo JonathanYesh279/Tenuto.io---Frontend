@@ -203,7 +203,7 @@ const DeletionUIDemo: React.FC = () => {
                 </h3>
                 <button
                   onClick={() => setShowStudentModal(true)}
-                  className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-reisinger-yonatan"
+                  className="px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors font-reisinger-yonatan"
                 >
                   פתח מחיקת תלמיד
                 </button>
@@ -280,7 +280,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('dashboard')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
                 ${activeDemo === 'dashboard' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -294,7 +294,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('modal')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
                 ${activeDemo === 'modal' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -308,7 +308,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('progress')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
                 ${activeDemo === 'progress' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -322,7 +322,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('timeline')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
                 ${activeDemo === 'timeline' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -336,7 +336,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('audit')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
                 ${activeDemo === 'audit' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'

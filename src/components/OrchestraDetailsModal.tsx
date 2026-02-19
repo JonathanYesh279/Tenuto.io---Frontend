@@ -161,9 +161,9 @@ export default function OrchestraDetailsModal({
   if (loading) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
-        <div className="bg-white rounded-lg p-8">
+        <div className="bg-white rounded p-8">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 ml-2"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary ml-2"></div>
             <span className="text-gray-700">טוען פרטי תזמורת...</span>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function OrchestraDetailsModal({
   if (error || !orchestra) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div className="bg-white rounded p-8 max-w-md w-full mx-4">
           <div className="flex items-center mb-4">
             <AlertCircle className="w-6 h-6 text-red-600 ml-2" />
             <h3 className="text-lg font-semibold text-gray-900">שגיאה</h3>
@@ -182,7 +182,7 @@ export default function OrchestraDetailsModal({
           <p className="text-gray-600 mb-6">{error || 'תזמורת לא נמצאה'}</p>
           <button
             onClick={onClose}
-            className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            className="w-full px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
           >
             סגור
           </button>
@@ -213,11 +213,11 @@ export default function OrchestraDetailsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
-      <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] m-4 flex flex-col">
+      <div className="bg-white rounded w-full max-w-6xl max-h-[90vh] m-4 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-4">
-            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600">
+            <div className="flex items-center justify-center w-12 h-12 rounded bg-gradient-to-br from-primary-500 to-primary-600">
               <span className="text-xl text-white">{typeInfo.icon}</span>
             </div>
             <div>
@@ -240,7 +240,7 @@ export default function OrchestraDetailsModal({
             {onEdit && (
               <button
                 onClick={() => onEdit(orchestra)}
-                className="flex items-center gap-2 px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
               >
                 <Edit className="w-4 h-4" />
                 עריכה
@@ -249,7 +249,7 @@ export default function OrchestraDetailsModal({
             {onDelete && (
               <button
                 onClick={() => onDelete(orchestra._id)}
-                className="flex items-center gap-2 px-3 py-2 text-red-700 border border-red-300 rounded-lg hover:bg-red-50 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-red-700 border border-red-300 rounded hover:bg-red-50 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
                 מחיקה
@@ -277,7 +277,7 @@ export default function OrchestraDetailsModal({
               onClick={() => setActiveTab(tab.key as any)}
               className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.key
-                  ? 'border-primary-500 text-primary-600'
+                  ? 'border-primary text-primary'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -435,7 +435,7 @@ export default function OrchestraDetailsModal({
                           <div className="flex items-center gap-2">
                             <span className="text-sm text-gray-600">{count} נגנים</span>
                             {isPrimary && (
-                              <span className="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded-full">
+                              <span className="text-xs bg-primary text-primary px-2 py-1 rounded-full">
                                 ראשי
                               </span>
                             )}
@@ -458,7 +458,7 @@ export default function OrchestraDetailsModal({
                 {onManageMembers && (
                   <button
                     onClick={() => onManageMembers(orchestra._id)}
-                    className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
                   >
                     <UserPlus className="w-4 h-4" />
                     ניהול חברים
@@ -483,7 +483,7 @@ export default function OrchestraDetailsModal({
                               {member.academicInfo?.class && `כיתה ${member.academicInfo.class}`}
                             </div>
                             {primaryInstrument && (
-                              <div className="text-xs text-primary-600 mt-1">
+                              <div className="text-xs text-primary mt-1">
                                 {primaryInstrument.instrumentName} • שלב {primaryInstrument.currentStage}
                               </div>
                             )}
@@ -501,7 +501,7 @@ export default function OrchestraDetailsModal({
                   {onManageMembers && (
                     <button
                       onClick={() => onManageMembers(orchestra._id)}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
                     >
                       <UserPlus className="w-4 h-4" />
                       הוסף חברים

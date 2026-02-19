@@ -277,7 +277,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
               {!impact && !isAnalyzing && (
                 <button
                   onClick={analyzeImpact}
-                  className="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto font-reisinger-yonatan"
+                  className="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors mx-auto font-reisinger-yonatan"
                   aria-describedby="analysis-description"
                 >
                   <Loader2 className="w-5 h-5" />
@@ -331,7 +331,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                         ...prev, 
                         confirmationText: e.target.value 
                       }))}
-                      className="w-full px-4 py-2 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono"
+                      className="w-full px-4 py-2 border border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono"
                       placeholder={`DELETE ${entityName}`}
                       aria-describedby="confirmation-help"
                       aria-required="true"
@@ -351,7 +351,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                         ...prev, 
                         reason: e.target.value 
                       }))}
-                      className="w-full px-4 py-2 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 font-reisinger-yonatan"
+                      className="w-full px-4 py-2 border border-red-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500 font-reisinger-yonatan"
                       rows={3}
                       placeholder="תאר את הסיבה למחיקת הרשומה..."
                     />
@@ -504,7 +504,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
         {error && (
           <div 
             ref={errorRef}
-            className="mx-6 mt-6 bg-red-50 border border-red-200 rounded-lg p-4"
+            className="mx-6 mt-6 bg-red-50 border border-red-200 rounded p-4"
             role="alert"
             tabIndex={-1}
           >
@@ -528,7 +528,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
           <div className="flex justify-between p-6 border-t border-gray-100">
             <button
               onClick={handleCancel}
-              className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors font-reisinger-yonatan"
+              className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors font-reisinger-yonatan"
             >
               <ArrowRight className="w-4 h-4" />
               ביטול
@@ -538,7 +538,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
               {currentStep > 0 && (
                 <button
                   onClick={() => setCurrentStep(prev => prev - 1)}
-                  className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors font-reisinger-yonatan"
+                  className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors font-reisinger-yonatan"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   חזרה
@@ -549,7 +549,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                 <button
                   onClick={() => setCurrentStep(1)}
                   disabled={!canProceed()}
-                  className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
+                  className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
                 >
                   המשך
                   <ArrowRight className="w-4 h-4 scale-x-[-1]" />
@@ -560,7 +560,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                 <button
                   onClick={handleConfirm}
                   disabled={!canProceed()}
-                  className="flex items-center gap-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
+                  className="flex items-center gap-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
                 >
                   <Trash2 className="w-4 h-4" />
                   מחק כעת

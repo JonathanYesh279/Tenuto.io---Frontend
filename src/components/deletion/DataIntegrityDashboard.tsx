@@ -125,7 +125,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
             <button
               onClick={onRefresh}
               disabled={isLoading}
-              className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+              className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               <span className="font-reisinger-yonatan">רענון</span>
@@ -135,7 +135,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
           {onRunIntegrityCheck && (
             <button
               onClick={onRunIntegrityCheck}
-              className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
             >
               <Activity className="w-4 h-4" />
               <span className="font-reisinger-yonatan">בדיקת שלמות</span>
@@ -245,7 +245,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                 {autoFixableIssues.length > 0 && onAutoFixIssues && (
                   <button
                     onClick={() => onAutoFixIssues(autoFixableIssues)}
-                    className="flex items-center gap-1 px-3 py-2 text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
+                    className="flex items-center gap-1 px-3 py-2 text-sm text-green-600 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors"
                   >
                     <Zap className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">תקן אוטומטית</span>
@@ -254,7 +254,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
 
                 <button
                   onClick={() => setShowIssueDetails(!showIssueDetails)}
-                  className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
+                  className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span className="font-reisinger-yonatan">צפה בפרטים</span>
@@ -291,7 +291,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                   <div 
                     key={issue.id} 
                     className={`
-                      flex items-center justify-between p-3 rounded-lg border
+                      flex items-center justify-between p-3 rounded border
                       ${getSeverityColor(issue.severity)}
                     `}
                   >
@@ -350,7 +350,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
 
             <div className="space-y-3">
               {recentOperations.slice(0, 5).map((operation) => (
-                <div key={operation.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={operation.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <div className="flex items-center gap-3">
                     <div className={`
                       w-3 h-3 rounded-full
@@ -417,21 +417,21 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <button className="flex items-center gap-2 p-3 bg-white rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">
+            <button className="flex items-center gap-2 p-3 bg-white rounded border border-blue-200 hover:bg-blue-50 transition-colors">
               <Database className="w-5 h-5 text-blue-600" />
               <span className="font-medium text-blue-900 font-reisinger-yonatan">
                 ניקוי הפניות יתומות
               </span>
             </button>
 
-            <button className="flex items-center gap-2 p-3 bg-white rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">
+            <button className="flex items-center gap-2 p-3 bg-white rounded border border-blue-200 hover:bg-blue-50 transition-colors">
               <Shield className="w-5 h-5 text-blue-600" />
               <span className="font-medium text-blue-900 font-reisinger-yonatan">
                 בדיקת אילוצים
               </span>
             </button>
 
-            <button className="flex items-center gap-2 p-3 bg-white rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">
+            <button className="flex items-center gap-2 p-3 bg-white rounded border border-blue-200 hover:bg-blue-50 transition-colors">
               <FileText className="w-5 h-5 text-blue-600" />
               <span className="font-medium text-blue-900 font-reisinger-yonatan">
                 דוח שלמות מלא

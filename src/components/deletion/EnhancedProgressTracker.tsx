@@ -244,7 +244,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
         <h4 className="text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
           גרף התקדמות
         </h4>
-        <div className="bg-gray-50 rounded-lg p-3">
+        <div className="bg-gray-50 rounded p-3">
           <svg viewBox="0 0 100 60" className="w-full h-16">
             <defs>
               <linearGradient id="progressGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -325,7 +325,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                 {onPause && (
                   <button
                     onClick={onPause}
-                    className="flex items-center gap-1 px-3 py-1 text-sm text-yellow-600 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
+                    className="flex items-center gap-1 px-3 py-1 text-sm text-yellow-600 bg-yellow-50 border border-yellow-200 rounded hover:bg-yellow-100 transition-colors"
                   >
                     <Pause className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">השהה</span>
@@ -334,7 +334,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                 {onCancel && (
                   <button
                     onClick={onCancel}
-                    className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors"
+                    className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 bg-red-50 border border-red-200 rounded hover:bg-red-100 transition-colors"
                   >
                     <Square className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">ביטול</span>
@@ -346,7 +346,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
             {operation.status === 'pending' && onResume && (
               <button
                 onClick={onResume}
-                className="flex items-center gap-1 px-3 py-1 text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 text-sm text-green-600 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors"
               >
                 <Play className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">המשך</span>
@@ -356,7 +356,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
             {operation.status === 'failed' && onRetry && (
               <button
                 onClick={onRetry}
-                className="flex items-center gap-1 px-3 py-1 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">נסה שוב</span>
@@ -365,7 +365,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
 
             <button
               onClick={() => setShowMetrics(!showMetrics)}
-              className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
             >
               <Activity className="w-4 h-4" />
               <span className="font-reisinger-yonatan">מטריקות</span>
@@ -479,7 +479,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={onRetry}
-                    className="flex items-center gap-1 px-3 py-1 text-sm text-red-700 bg-red-100 border border-red-300 rounded-lg hover:bg-red-200 transition-colors"
+                    className="flex items-center gap-1 px-3 py-1 text-sm text-red-700 bg-red-100 border border-red-300 rounded hover:bg-red-200 transition-colors"
                   >
                     <RefreshCw className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">נסה שוב</span>
@@ -488,7 +488,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                   {onCancel && (
                     <button
                       onClick={onCancel}
-                      className="flex items-center gap-1 px-3 py-1 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="flex items-center gap-1 px-3 py-1 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition-colors"
                     >
                       <Square className="w-4 h-4" />
                       <span className="font-reisinger-yonatan">בטל תהליך</span>

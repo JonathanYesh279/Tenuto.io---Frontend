@@ -162,7 +162,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
 
           {/* Deletion Status */}
           {!impact.canDelete && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="bg-red-50 border border-red-200 rounded p-4">
               <div className="flex items-center gap-2 text-red-700">
                 <XCircle className="w-5 h-5" />
                 <span className="font-semibold font-reisinger-yonatan">
@@ -178,7 +178,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
           )}
 
           {impact.warnings.length > 0 && impact.canDelete && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
               <div className="flex items-center gap-2 text-yellow-700 mb-2">
                 <AlertTriangle className="w-5 h-5" />
                 <span className="font-semibold font-reisinger-yonatan">אזהרות</span>
@@ -216,7 +216,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             {expandedSections.has('related') && (
               <div className="space-y-3 pt-2 border-t border-gray-100">
                 {impact.relatedRecords.map((record, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                     <div className="flex items-center gap-3">
                       {getRecordTypeIcon(record.type)}
                       <div>
@@ -270,7 +270,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             {expandedSections.has('orphaned') && (
               <div className="space-y-3 pt-2 border-t border-gray-100">
                 {impact.orphanedReferences.map((orphan, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div key={index} className="flex items-center justify-between p-3 bg-yellow-50 rounded border border-yellow-200">
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-gray-900 font-reisinger-yonatan">

@@ -264,7 +264,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
         
         <div 
           className={`
-            relative flex items-start gap-4 p-4 rounded-lg border cursor-pointer transition-all hover:shadow-card-hover
+            relative flex items-start gap-4 p-4 rounded border cursor-pointer transition-all hover:shadow-card-hover
             ${colorClasses.bg} ${colorClasses.border}
             ${selectedEvent?.id === event.id ? 'ring-2 ring-blue-500' : ''}
           `}
@@ -364,7 +364,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
             <div className="flex gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
+                className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
                 <Filter className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">סינון</span>
@@ -380,7 +380,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
               placeholder="חיפוש באירועים..."
               value={filters.searchQuery}
               onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
-              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-reisinger-yonatan"
+              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-reisinger-yonatan"
             />
           </div>
 
@@ -402,7 +402,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                         start: e.target.value ? new Date(e.target.value) : null 
                       }
                     }))}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
                   />
                 </div>
 
@@ -420,7 +420,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                         end: e.target.value ? new Date(e.target.value) : null 
                       }
                     }))}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
                   />
                 </div>
               </div>
@@ -486,7 +486,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
               {/* Date Header */}
               <div className="sticky top-0 bg-white z-10 pb-4 mb-4 border-b border-gray-100">
                 <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-primary-500" />
+                  <Calendar className="w-5 h-5 text-primary" />
                   <h4 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                     {formatDate(dateKey)}
                   </h4>

@@ -258,7 +258,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
           </p>
           <button
             onClick={loadDeletionImpact}
-            className="mt-4 px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors font-reisinger-yonatan"
+            className="mt-4 px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded hover:bg-blue-100 transition-colors font-reisinger-yonatan"
           >
             נסה שוב
           </button>
@@ -305,7 +305,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
             value={formData.reason}
             onChange={(e) => setFormData(prev => ({ ...prev, reason: e.target.value }))}
             placeholder="הזן את הסיבה למחיקת התלמיד..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-reisinger-yonatan"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-reisinger-yonatan"
             rows={3}
             required
           />
@@ -382,7 +382,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
             onChange={(e) => setFormData(prev => ({ ...prev, confirmationText: e.target.value }))}
             placeholder={studentName}
             className={`
-              w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-reisinger-yonatan
+              w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent font-reisinger-yonatan
               ${formData.confirmationText === studentName 
                 ? 'border-green-300 bg-green-50' 
                 : 'border-gray-300'
@@ -493,7 +493,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
           {showPrevious && (
             <button
               onClick={handlePrevious}
-              className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
               <span className="font-reisinger-yonatan">הקודם</span>
@@ -505,7 +505,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
           {currentStep !== 'progress' && (
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors font-reisinger-yonatan"
+              className="px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors font-reisinger-yonatan"
             >
               ביטול
             </button>
@@ -520,7 +520,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
                 isProcessing
               }
               className={`
-                flex items-center gap-1 px-4 py-2 text-sm rounded-lg transition-colors
+                flex items-center gap-1 px-4 py-2 text-sm rounded transition-colors
                 ${(currentStep === 'impact' && canProceedFromImpact()) || 
                   (currentStep === 'confirmation' && canProceedToConfirmation())
                   ? 'text-white bg-red-600 hover:bg-red-700' 
@@ -538,7 +538,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
           {showClose && (
             <button
               onClick={onClose}
-              className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+              className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
             >
               <CheckCircle className="w-4 h-4" />
               <span className="font-reisinger-yonatan">סגור</span>

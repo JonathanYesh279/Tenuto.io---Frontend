@@ -89,17 +89,17 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <Play className="w-6 h-6 text-primary-600" />
+            <Play className="w-6 h-6 text-primary" />
             {isEditing ? (
               <input
                 type="text"
                 value={editData.title}
                 onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                className="text-2xl font-bold text-gray-900 bg-transparent border-b-2 border-gray-300 focus:border-primary-500 outline-none"
+                className="text-2xl font-bold text-gray-900 bg-transparent border-b-2 border-gray-300 focus:border-primary outline-none"
               />
             ) : (
               <h2 className="text-2xl font-bold text-gray-900">{performance.title}</h2>
@@ -109,7 +109,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
             {!isEditing ? (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50"
+                className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
               >
                 <Edit3 className="w-4 h-4" />
                 ערוך
@@ -118,14 +118,14 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               <div className="flex gap-2">
                 <button
                   onClick={handleSave}
-                  className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
                   <Save className="w-4 h-4" />
                   שמור
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
                 >
                   <X className="w-4 h-4" />
                   ביטול
@@ -134,7 +134,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
             )}
             <button
               onClick={onClose}
-              className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
             >
               <X className="w-5 h-5" />
             </button>
@@ -158,7 +158,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                         ...editData, 
                         date: e.target.value ? new Date(e.target.value) : undefined 
                       })}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                     />
                   ) : (
                     <p className="text-gray-900">
@@ -183,7 +183,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                       type="text"
                       value={editData.location || ''}
                       onChange={(e) => setEditData({ ...editData, location: e.target.value })}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                       placeholder="מקום הביצוע"
                     />
                   ) : (
@@ -201,7 +201,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                       type="text"
                       value={editData.duration || ''}
                       onChange={(e) => setEditData({ ...editData, duration: e.target.value })}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                       placeholder="לדוגמה: 45 דקות"
                     />
                   ) : (
@@ -221,7 +221,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                         ...editData, 
                         status: e.target.value as Performance['status']
                       })}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                     >
                       <option value="scheduled">מתוזמן</option>
                       <option value="completed">הושלם</option>
@@ -249,8 +249,8 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                   (p.pieceName === pieceTitle)
                 );
                 return (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                    <Music className="w-4 h-4 text-primary-600" />
+                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
+                    <Music className="w-4 h-4 text-primary" />
                     <div className="flex-1">
                       <div className="font-medium text-gray-900">{pieceTitle}</div>
                       {piece && (
@@ -292,10 +292,10 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                             key as keyof NonNullable<Performance['evaluation']>, 
                             parseInt(e.target.value) || 0
                           )}
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                         />
                       ) : (
-                        <div className="text-2xl font-bold text-primary-600">
+                        <div className="text-2xl font-bold text-primary">
                           {performance.evaluation?.[key as keyof NonNullable<Performance['evaluation']>] || 0}/100
                         </div>
                       )}
@@ -309,12 +309,12 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                     <textarea
                       value={editData.evaluation?.comments || ''}
                       onChange={(e) => updateEvaluation('comments', e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                       rows={4}
                       placeholder="הערות על הביצוע..."
                     />
                   ) : (
-                    <p className="text-gray-900 bg-gray-50 p-3 rounded-lg">
+                    <p className="text-gray-900 bg-gray-50 p-3 rounded">
                       {performance.evaluation?.comments || 'אין הערות'}
                     </p>
                   )}
@@ -328,7 +328,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                         type="text"
                         value={editData.evaluation?.evaluator || ''}
                         onChange={(e) => updateEvaluation('evaluator', e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                         placeholder="שם המעריך"
                       />
                     ) : (
@@ -348,7 +348,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                           'evaluationDate', 
                           e.target.value ? new Date(e.target.value) : undefined
                         )}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                       />
                     ) : (
                       <p className="text-gray-900">
@@ -373,7 +373,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               {isEditing && (
                 <button
                   onClick={addRecordingLink}
-                  className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50"
+                  className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
                 >
                   <Link2 className="w-4 h-4" />
                   הוסף קישור
@@ -383,7 +383,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
             {editData.recordingLinks && editData.recordingLinks.length > 0 ? (
               <div className="space-y-2">
                 {editData.recordingLinks.map((link, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
                     <Play className="w-4 h-4 text-blue-600" />
                     <a 
                       href={link}
@@ -416,7 +416,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               <textarea
                 value={editData.notes || ''}
                 onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                 rows={4}
                 placeholder="הערות נוספות על הביצוע..."
               />

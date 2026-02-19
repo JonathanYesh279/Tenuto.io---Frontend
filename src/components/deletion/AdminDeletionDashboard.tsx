@@ -231,7 +231,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
                       setIsMobileMenuOpen(false)
                     }}
                     className={`
-                      flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap
+                      flex items-center gap-2 px-3 py-2 rounded text-sm font-medium whitespace-nowrap
                       ${activeTab === tab.id 
                         ? 'bg-blue-100 text-blue-700' 
                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -266,11 +266,11 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
           </div>
 
           <div className="flex gap-2">
-            <button className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
+            <button className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors">
               <Download className="w-4 h-4" />
               <span className="font-reisinger-yonatan">יצוא דוחות</span>
             </button>
-            <button className="flex items-center gap-1 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+            <button className="flex items-center gap-1 px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors">
               <RefreshCw className="w-4 h-4" />
               <span className="font-reisinger-yonatan">רענון נתונים</span>
             </button>
@@ -397,13 +397,13 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                    className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-reisinger-yonatan"
+                    className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-reisinger-yonatan"
                   />
                 </div>
                 <button
                   onClick={handleSearch}
                   disabled={isSearching || !searchQuery.trim()}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
                 >
                   {isSearching ? (
                     <RefreshCw className="w-4 h-4 animate-spin" />
@@ -417,7 +417,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
               {searchResults.length > 0 && (
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {searchResults.map((result) => (
-                    <div key={result.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={result.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                       <div className="flex items-center gap-3">
                         {getEntityIcon(result.type)}
                         <div>
@@ -442,13 +442,13 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
                       </div>
 
                       <div className="flex gap-2">
-                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteEntity(result)}
                           disabled={!result.canDelete}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -476,7 +476,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
             <div className="space-y-3">
               {recentOperations.slice(0, 3).map((operation) => (
-                <div key={operation.id} className="p-3 border border-gray-200 rounded-lg">
+                <div key={operation.id} className="p-3 border border-gray-200 rounded">
                   <DeletionProgressTracker 
                     operation={operation}
                     className="border-none shadow-none p-0"
@@ -515,21 +515,21 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors">
+                <button className="p-4 border-2 border-dashed border-gray-300 rounded hover:border-blue-400 hover:bg-blue-50 transition-colors">
                   <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <span className="block text-sm font-medium text-gray-600 font-reisinger-yonatan">
                     מחיקה מרובה
                   </span>
                 </button>
                 
-                <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors">
+                <button className="p-4 border-2 border-dashed border-gray-300 rounded hover:border-blue-400 hover:bg-blue-50 transition-colors">
                   <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <span className="block text-sm font-medium text-gray-600 font-reisinger-yonatan">
                     בדיקת שלמות
                   </span>
                 </button>
                 
-                <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors">
+                <button className="p-4 border-2 border-dashed border-gray-300 rounded hover:border-blue-400 hover:bg-blue-50 transition-colors">
                   <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <span className="block text-sm font-medium text-gray-600 font-reisinger-yonatan">
                     תחזוקת מערכת

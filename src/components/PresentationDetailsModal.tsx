@@ -122,14 +122,14 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             {isMagen ? (
               <Star className="w-6 h-6 text-yellow-500" />
             ) : (
-              <Play className="w-6 h-6 text-primary-600" />
+              <Play className="w-6 h-6 text-primary" />
             )}
             <h2 className="text-2xl font-bold text-gray-900">{presentation.title}</h2>
           </div>
@@ -137,7 +137,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
             {!isEditing ? (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50"
+                className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
               >
                 <Edit3 className="w-4 h-4" />
                 ערוך
@@ -146,14 +146,14 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
               <div className="flex gap-2">
                 <button
                   onClick={handleSave}
-                  className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
                   <Save className="w-4 h-4" />
                   שמור
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
                 >
                   <X className="w-4 h-4" />
                   ביטול
@@ -162,7 +162,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
             )}
             <button
               onClick={onClose}
-              className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
             >
               <X className="w-5 h-5" />
             </button>
@@ -186,7 +186,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                         ...editData, 
                         date: e.target.value ? new Date(e.target.value) : undefined 
                       })}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                     />
                   ) : (
                     <p className="text-gray-900">
@@ -208,7 +208,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                       type="text"
                       value={editData.reviewedBy || ''}
                       onChange={(e) => setEditData({ ...editData, reviewedBy: e.target.value })}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                       placeholder="שמות הבוחנים"
                     />
                   ) : (
@@ -229,7 +229,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                         status: e.target.value as any,
                         completed: e.target.value === 'עבר/ה'
                       })}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                     >
                       <option value="לא נבחן">לא נבחן</option>
                       <option value="עבר/ה">עבר/ה</option>
@@ -273,7 +273,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                               className="w-16 px-2 py-1 border border-gray-300 rounded text-center"
                             />
                           ) : (
-                            <span className="font-semibold text-primary-600">
+                            <span className="font-semibold text-primary">
                               {editData.detailedGrading?.playingSkills?.points || 0}
                             </span>
                           )}
@@ -308,7 +308,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                               className="w-16 px-2 py-1 border border-gray-300 rounded text-center"
                             />
                           ) : (
-                            <span className="font-semibold text-primary-600">
+                            <span className="font-semibold text-primary">
                               {editData.detailedGrading?.musicalUnderstanding?.points || 0}
                             </span>
                           )}
@@ -343,7 +343,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                               className="w-16 px-2 py-1 border border-gray-300 rounded text-center"
                             />
                           ) : (
-                            <span className="font-semibold text-primary-600">
+                            <span className="font-semibold text-primary">
                               {editData.detailedGrading?.textKnowledge?.points || 0}
                             </span>
                           )}
@@ -378,7 +378,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                               className="w-16 px-2 py-1 border border-gray-300 rounded text-center"
                             />
                           ) : (
-                            <span className="font-semibold text-primary-600">
+                            <span className="font-semibold text-primary">
                               {editData.detailedGrading?.playingByHeart?.points || 0}
                             </span>
                           )}
@@ -400,13 +400,13 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                           )}
                         </td>
                       </tr>
-                      <tr className="bg-primary-50 font-semibold">
+                      <tr className="bg-primary font-semibold">
                         <td className="px-4 py-3">סה"כ</td>
-                        <td className="text-center px-4 py-3 text-primary-600 text-lg">
+                        <td className="text-center px-4 py-3 text-primary text-lg">
                           {calculateDetailedGradingTotal(editData.detailedGrading)}
                         </td>
                         <td className="text-center px-4 py-3">100</td>
-                        <td className="px-4 py-3 text-primary-600">
+                        <td className="px-4 py-3 text-primary">
                           {getGradeLevelFromScore(calculateDetailedGradingTotal(editData.detailedGrading))}
                         </td>
                       </tr>
@@ -424,7 +424,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
               {isEditing && (
                 <button
                   onClick={() => setShowLinkModal(true)}
-                  className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50"
+                  className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
                 >
                   <Link2 className="w-4 h-4" />
                   הוסף קישור
@@ -434,7 +434,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
             {editData.recordingLinks && editData.recordingLinks.length > 0 ? (
               <div className="space-y-2">
                 {editData.recordingLinks.map((link, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
                     <Play className="w-4 h-4 text-blue-600" />
                     <a 
                       href={link}
@@ -467,7 +467,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
               <textarea
                 value={editData.notes || ''}
                 onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary"
                 rows={4}
                 placeholder="הערות כלליות על ההשמעה..."
               />

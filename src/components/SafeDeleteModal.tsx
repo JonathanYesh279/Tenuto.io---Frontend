@@ -56,7 +56,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded max-w-2xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
 
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
           {/* Student Info */}
-          <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+          <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-5 h-5 text-orange-600" />
               <span className="font-medium text-orange-900">
@@ -84,13 +84,13 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
 
           {loading && (
             <div className="flex items-center justify-center py-8">
-              <Loader className="w-6 h-6 animate-spin text-primary-600" />
+              <Loader className="w-6 h-6 animate-spin text-primary" />
               <span className="ml-2 text-gray-600">טוען תצוגה מקדימה...</span>
             </div>
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded">
               <div className="flex items-center gap-2">
                 <XCircle className="w-5 h-5 text-red-600" />
                 <span className="font-medium text-red-900">שגיאה</span>
@@ -105,13 +105,13 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
               <div className="mb-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-3">סיכום השפעה</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="p-3 bg-gray-50 rounded">
                     <div className="text-sm text-gray-600">סה"כ רשומות</div>
                     <div className="text-xl font-bold text-gray-900">
                       {preview.summary?.totalRecords || 0}
                     </div>
                   </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="p-3 bg-gray-50 rounded">
                     <div className="text-sm text-gray-600">זמן משוער</div>
                     <div className="text-xl font-bold text-gray-900">
                       {preview.summary?.estimatedDuration || 0} שניות
@@ -122,7 +122,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
 
               {/* Risk Level */}
               <div className="mb-6">
-                <div className={`p-4 rounded-lg border ${
+                <div className={`p-4 rounded border ${
                   preview.summary?.riskLevel === 'high' ? 'bg-red-50 border-red-200' :
                   preview.summary?.riskLevel === 'medium' ? 'bg-yellow-50 border-yellow-200' :
                   'bg-green-50 border-green-200'
@@ -188,7 +188,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                     ...prev, 
                     createSnapshot: e.target.checked 
                   }))}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <span className="text-sm text-gray-700">צור גיבוי לפני המחיקה (מומלץ)</span>
               </label>
@@ -201,7 +201,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                     ...prev, 
                     deleteDocuments: e.target.checked 
                   }))}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <span className="text-sm text-gray-700">מחק גם קבצים ומסמכים</span>
               </label>
@@ -214,7 +214,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                     ...prev, 
                     notifyUsers: e.target.checked 
                   }))}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <span className="text-sm text-gray-700">שלח התראות למורים קשורים</span>
               </label>
@@ -227,7 +227,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                     ...prev, 
                     skipValidation: e.target.checked 
                   }))}
-                  className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <span className="text-sm text-gray-700">דלג על בדיקות תקינות (לא מומלץ)</span>
               </label>
@@ -246,7 +246,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                 reason: e.target.value 
               }))}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="הזן סיבה למחיקה..."
             />
           </div>
@@ -262,7 +262,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 border border-gray-200 text-gray-700 rounded hover:bg-gray-50 transition-colors"
             >
               ביטול
             </button>
@@ -270,7 +270,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
             <button
               onClick={handleConfirm}
               disabled={loading || !preview?.canProceed}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Shield className="w-4 h-4" />
               מחק באופן מאובטח

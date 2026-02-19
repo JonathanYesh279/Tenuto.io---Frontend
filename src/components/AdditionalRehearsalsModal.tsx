@@ -37,7 +37,7 @@ export default function AdditionalRehearsalsModal({
         zIndex: 9999
       }}
     >
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden">
+      <div className="bg-white rounded shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div>
@@ -46,7 +46,7 @@ export default function AdditionalRehearsalsModal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded transition-colors"
           >
             <X className="w-5 h-5 text-gray-500" />
           </button>
@@ -58,7 +58,7 @@ export default function AdditionalRehearsalsModal({
             {rehearsals.map((rehearsal, index) => (
               <div
                 key={rehearsal._id}
-                className="cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors"
+                className="cursor-pointer hover:bg-gray-50 rounded p-2 transition-colors"
                 onClick={() => onRehearsalClick(rehearsal)}
               >
                 <RehearsalCard

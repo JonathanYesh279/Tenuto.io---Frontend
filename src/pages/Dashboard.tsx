@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Users, GraduationCap, Music, Calendar, BarChart3, Award, Clock, BookOpen, RefreshCw, AlertCircle } from 'lucide-react'
-import StatsCard from '../components/ui/StatsCard'
-import { Card } from '../components/ui/Card'
+import { Clock, RefreshCw, AlertCircle } from 'lucide-react'
 import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
@@ -19,8 +16,6 @@ import {
   BagrutProgressDashboard,
   DailyTeacherRoomTable
 } from '../components/dashboard/charts'
-
-type DashboardTab = 'overview' | 'students' | 'schedule' | 'bagrut' | 'hours';
 
 interface TeacherHoursSummary {
   teacherId: string
@@ -39,10 +34,10 @@ export default function Dashboard() {
   const { user } = useAuth()
   const { currentSchoolYear } = useSchoolYear()
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<DashboardTab>('overview')
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
   const [stats, setStats] = useState({
     activeStudents: 0,
+    totalStudents: 0,
     staffMembers: 0,
     activeOrchestras: 0,
     weeklyRehearsals: 0,
@@ -84,7 +79,7 @@ export default function Dashboard() {
       const theoryData = theoryLessons.status === 'fulfilled' ? (Array.isArray(theoryLessons.value) ? theoryLessons.value : []) : []
       const bagrutsData = bagruts.status === 'fulfilled' ? (Array.isArray(bagruts.value) ? bagruts.value : []) : []
 
-      console.log('📊 Dashboard data loaded:', {
+      console.log('Dashboard data loaded:', {
         students: studentsData.length,
         teachers: teachersData.length,
         orchestras: orchestrasData.length,
@@ -95,6 +90,7 @@ export default function Dashboard() {
 
       // Calculate stats
       const activeStudents = studentsData.filter((s: any) => s.isActive !== false).length
+      const totalStudents = studentsData.length
       const activeTeachers = teachersData.filter((t: any) => t.isActive !== false).length
       const activeOrchestras = orchestrasData.filter((o: any) => o.isActive !== false).length
 
@@ -130,6 +126,7 @@ export default function Dashboard() {
 
       setStats({
         activeStudents,
+        totalStudents,
         staffMembers: activeTeachers,
         activeOrchestras,
         weeklyRehearsals,
@@ -264,23 +261,6 @@ export default function Dashboard() {
     || getDisplayName(user?.personalInfo)?.split(' ')[0]
     || 'מנהל'
 
-  const cardRowVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.08, delayChildren: 0.05 }
-    }
-  }
-
-  const cardItemVariants = {
-    hidden: { y: 16, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: 'spring', stiffness: 400, damping: 25 }
-    }
-  }
-
   // Super admin gets a dedicated dashboard (can't use regular tenant-scoped APIs)
   if (user?.isSuperAdmin) {
     return <SuperAdminDashboard />
@@ -299,19 +279,11 @@ export default function Dashboard() {
     return <TeacherDashboard />
   }
 
-  // Admin Dashboard with tabs
-  const tabs = [
-    { id: 'overview' as const, label: 'סקירה כללית', icon: BarChart3 },
-    { id: 'students' as const, label: 'תלמידים', icon: Users },
-    { id: 'schedule' as const, label: 'לוח זמנים', icon: Calendar },
-    { id: 'bagrut' as const, label: 'בגרויות', icon: Award },
-    { id: 'hours' as const, label: 'שעות מורים', icon: Clock }
-  ]
-
+  // Admin — Command Center Dashboard
   return (
     <div dir="rtl">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
             {getTimeGreeting()}, {userFirstName}
@@ -331,192 +303,102 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="bg-card border border-border rounded mb-6 p-1 flex overflow-x-auto">
-        {tabs.map(tab => {
-          const Icon = tab.icon
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded transition-colors whitespace-nowrap ${
-                activeTab === tab.id
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          )
-        })}
-      </div>
+      {/* DOMINANT ZONE — primary metric 2fr, secondary stack 1fr */}
+      <div className="grid grid-cols-[2fr_1fr] gap-8 mb-10 pb-10 border-b border-border">
+        {/* PRIMARY metric — the ONE number that matters most */}
+        <div className="py-4">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">תלמידים פעילים</span>
+          <div className="text-7xl font-bold text-foreground mt-2 tabular-nums leading-none">
+            {loading ? '—' : stats.activeStudents}
+          </div>
+          <span className="text-sm text-muted-foreground mt-3 block">
+            מתוך {loading ? '—' : stats.totalStudents} רשומים
+            {stats.studentsTrend > 0 && !loading && (
+              <span className="mr-2 text-xs text-foreground/60">+{stats.studentsTrend}% החודש</span>
+            )}
+          </span>
+        </div>
 
-      {/* Overview Tab */}
-      {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
-          {/* Main content column */}
-          <div className="space-y-6">
-            {/* Stat cards row — staggered entrance */}
-            <motion.div
-              className="grid grid-cols-2 md:grid-cols-3 gap-4"
-              variants={cardRowVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.div variants={cardItemVariants}>
-                <StatsCard
-                  title="תלמידים פעילים"
-                  value={loading ? "..." : stats.activeStudents.toString()}
-                  subtitle="תלמידים רשומים"
-                  icon={<Users />}
-                  color="students"
-                  coloredBg
-                  trend={stats.studentsTrend !== 0 ? {
-                    value: Math.abs(stats.studentsTrend),
-                    label: "מהחודש שעבר",
-                    direction: stats.studentsTrend > 0 ? "up" : "down"
-                  } : undefined}
-                />
-              </motion.div>
-
-              <motion.div variants={cardItemVariants}>
-                <StatsCard
-                  title="חברי סגל"
-                  value={loading ? "..." : stats.staffMembers.toString()}
-                  subtitle="מורים ומדריכים"
-                  icon={<GraduationCap />}
-                  color="teachers"
-                  coloredBg
-                />
-              </motion.div>
-
-              <motion.div variants={cardItemVariants}>
-                <StatsCard
-                  title="הרכבים פעילים"
-                  value={loading ? "..." : stats.activeOrchestras.toString()}
-                  subtitle="תזמורות וקבוצות"
-                  icon={<Music />}
-                  color="orchestras"
-                  coloredBg
-                />
-              </motion.div>
-
-              <motion.div variants={cardItemVariants}>
-                <StatsCard
-                  title="חזרות השבוע"
-                  value={loading ? "..." : stats.weeklyRehearsals.toString()}
-                  subtitle="מפגשים מתוכננים"
-                  icon={<Calendar />}
-                  color="rehearsals"
-                  coloredBg
-                />
-              </motion.div>
-
-              <motion.div variants={cardItemVariants}>
-                <StatsCard
-                  title="שיעורי תאוריה"
-                  value={loading ? "..." : stats.theoryLessonsThisWeek.toString()}
-                  subtitle="השבוע"
-                  icon={<BookOpen />}
-                  color="theory"
-                  coloredBg
-                />
-              </motion.div>
-
-              <motion.div variants={cardItemVariants}>
-                <StatsCard
-                  title="בגרויות פעילות"
-                  value={loading ? "..." : stats.activeBagruts.toString()}
-                  subtitle="תלמידים בתהליך"
-                  icon={<Award />}
-                  color="bagrut"
-                  coloredBg
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* Teacher Room Schedule Table */}
-            <DailyTeacherRoomTable />
-
-            {/* Charts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InstrumentDistributionChart
-                schoolYearId={currentSchoolYear?._id}
-                maxItems={8}
-              />
-              <ClassDistributionChart
-                schoolYearId={currentSchoolYear?._id}
-              />
+        {/* SECONDARY metrics — stacked, clearly smaller */}
+        <div className="flex flex-col justify-center gap-5 py-4 border-r border-border pr-8">
+          <div>
+            <span className="text-xs text-muted-foreground block mb-0.5">מורים פעילים</span>
+            <div className="text-3xl font-semibold text-foreground tabular-nums">
+              {loading ? '—' : stats.staffMembers}
             </div>
           </div>
+          <div>
+            <span className="text-xs text-muted-foreground block mb-0.5">הרכבים פעילים</span>
+            <div className="text-3xl font-semibold text-foreground tabular-nums">
+              {loading ? '—' : stats.activeOrchestras}
+            </div>
+          </div>
+          <div>
+            <span className="text-xs text-muted-foreground block mb-0.5">חזרות השבוע</span>
+            <div className="text-3xl font-semibold text-foreground tabular-nums">
+              {loading ? '—' : stats.weeklyRehearsals}
+            </div>
+          </div>
+          <div>
+            <span className="text-xs text-muted-foreground block mb-0.5">בגרויות פעילות</span>
+            <div className="text-3xl font-semibold text-foreground tabular-nums">
+              {loading ? '—' : stats.activeBagruts}
+            </div>
+          </div>
+        </div>
+      </div>
 
-          {/* Right widget column */}
-          <div className="space-y-4">
-            <MiniCalendarWidget />
+      {/* OPERATIONAL PANELS — 3:2 asymmetric split */}
+      <div className="grid grid-cols-[3fr_2fr] gap-8 mb-10">
+        {/* Primary operational panel: daily schedule table */}
+        <div>
+          <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wider">מערכת יומית</h2>
+          <DailyTeacherRoomTable />
+        </div>
+
+        {/* Secondary panel: widgets stack */}
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">אירועים קרובים</h2>
             <UpcomingEventsWidget events={upcomingEvents} loading={loading} />
+          </div>
+          <div>
+            <h2 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">פעילות אחרונה</h2>
             <RecentActivityWidget activities={recentActivities} loading={loading} />
           </div>
-        </div>
-      )}
-
-      {/* Students Tab */}
-      {activeTab === 'students' && (
-        <StudentActivityCharts
-          schoolYearId={currentSchoolYear?._id}
-        />
-      )}
-
-      {/* Schedule Tab */}
-      {activeTab === 'schedule' && (
-        <div className="space-y-6">
-          {/* Daily Teacher Room Table - Main Feature */}
-          <DailyTeacherRoomTable />
-
-          {/* Additional schedule info */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ClassDistributionChart
-              schoolYearId={currentSchoolYear?._id}
-            />
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">סיכום שבועי</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-primary/10 rounded">
-                  <div className="flex items-center gap-3">
-                    <Music className="w-5 h-5 text-primary" />
-                    <span className="text-foreground/80">חזרות תזמורת</span>
-                  </div>
-                  <span className="text-xl font-bold text-primary">{stats.weeklyRehearsals}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded">
-                  <div className="flex items-center gap-3">
-                    <BookOpen className="w-5 h-5 text-muted-foreground" />
-                    <span className="text-foreground/80">שיעורי תאוריה</span>
-                  </div>
-                  <span className="text-xl font-bold text-muted-foreground">{stats.theoryLessonsThisWeek}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded">
-                  <div className="flex items-center gap-3">
-                    <GraduationCap className="w-5 h-5 text-muted-foreground" />
-                    <span className="text-foreground/80">מורים פעילים</span>
-                  </div>
-                  <span className="text-xl font-bold text-muted-foreground">{stats.staffMembers}</span>
-                </div>
-              </div>
-            </Card>
+          <div>
+            <MiniCalendarWidget />
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Bagrut Tab */}
-      {activeTab === 'bagrut' && (
-        <BagrutProgressDashboard
-          schoolYearId={currentSchoolYear?._id}
-        />
-      )}
+      {/* TERTIARY — charts at bottom, lower visual weight */}
+      <div className="border-t border-border pt-8 mb-10">
+        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">נתונים וניתוח</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <InstrumentDistributionChart
+            schoolYearId={currentSchoolYear?._id}
+            maxItems={8}
+          />
+          <ClassDistributionChart
+            schoolYearId={currentSchoolYear?._id}
+          />
+        </div>
+      </div>
 
-      {/* Hours Tab */}
-      {activeTab === 'hours' && (
+      {/* SECONDARY SECTIONS — below-fold content, accessible without tabs */}
+      <div className="border-t border-border pt-8 mb-10">
+        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">ניתוח תלמידים</h2>
+        <StudentActivityCharts schoolYearId={currentSchoolYear?._id} />
+      </div>
+
+      <div className="border-t border-border pt-8 mb-10">
+        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">בגרויות</h2>
+        <BagrutProgressDashboard schoolYearId={currentSchoolYear?._id} />
+      </div>
+
+      <div className="border-t border-border pt-8">
+        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">שעות מורים</h2>
         <AdminHoursOverview
           hoursSummaries={hoursSummaries}
           loading={hoursLoading}
@@ -548,7 +430,7 @@ export default function Dashboard() {
             }
           }}
         />
-      )}
+      </div>
     </div>
   )
 }
@@ -576,7 +458,7 @@ function AdminHoursOverview({
 
   if (loading) {
     return (
-      <div className="text-center py-12 text-gray-500">
+      <div className="text-center py-12 text-muted-foreground">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
         טוען נתוני שעות...
       </div>
@@ -585,27 +467,25 @@ function AdminHoursOverview({
 
   if (error) {
     return (
-      <Card>
-        <div className="flex flex-col items-center py-12 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">שגיאה בטעינת נתוני שעות</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={onLoad}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
-          >
-            <RefreshCw className="w-4 h-4" />
-            נסה שוב
-          </button>
-        </div>
-      </Card>
+      <div className="flex flex-col items-center py-12 text-center">
+        <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
+        <h3 className="text-lg font-medium text-foreground mb-2">שגיאה בטעינת נתוני שעות</h3>
+        <p className="text-muted-foreground mb-4">{error}</p>
+        <button
+          onClick={onLoad}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
+        >
+          <RefreshCw className="w-4 h-4" />
+          נסה שוב
+        </button>
+      </div>
     )
   }
 
   return (
-    <Card>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">שעות שבועיות — כל המורים</h3>
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-sm text-muted-foreground">שעות שבועיות — כל המורים</span>
         <button
           onClick={onRecalculateAll}
           disabled={isRecalculating}
@@ -617,42 +497,42 @@ function AdminHoursOverview({
       </div>
 
       {hoursSummaries.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <Clock className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+        <div className="text-center py-12 text-muted-foreground">
+          <Clock className="w-12 h-12 mx-auto mb-3 text-muted-foreground/40" />
           <p>לא נמצאו נתוני שעות. לחץ "חשב מחדש הכל" ליצירת חישוב ראשוני.</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="border-b border-border">
               <tr>
-                <th className="text-right px-4 py-3 font-medium text-gray-700">מורה</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-700">סה"כ ש"ש</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-700">פרטניים</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-700">תזמורות</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-700">תיאוריה</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-700">ניהול</th>
+                <th className="text-right px-4 py-3 font-medium text-muted-foreground">מורה</th>
+                <th className="text-right px-4 py-3 font-medium text-muted-foreground">סה"כ ש"ש</th>
+                <th className="text-right px-4 py-3 font-medium text-muted-foreground">פרטניים</th>
+                <th className="text-right px-4 py-3 font-medium text-muted-foreground">תזמורות</th>
+                <th className="text-right px-4 py-3 font-medium text-muted-foreground">תיאוריה</th>
+                <th className="text-right px-4 py-3 font-medium text-muted-foreground">ניהול</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-border">
               {hoursSummaries.map((summary) => (
-                <tr key={summary.teacherId} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-900 font-medium">{summary.teacherName}</td>
+                <tr key={summary.teacherId} className="hover:bg-muted/50">
+                  <td className="px-4 py-3 text-foreground font-medium">{summary.teacherName}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-muted text-foreground">
+                    <span className="inline-flex items-center px-2.5 py-0.5 text-sm font-bold bg-muted text-foreground">
                       {summary.totals.totalWeeklyHours}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{summary.totals.individualLessons}</td>
-                  <td className="px-4 py-3 text-gray-600">{summary.totals.orchestraConducting}</td>
-                  <td className="px-4 py-3 text-gray-600">{summary.totals.theoryTeaching}</td>
-                  <td className="px-4 py-3 text-gray-600">{summary.totals.management}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.individualLessons}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.orchestraConducting}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.theoryTeaching}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.management}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
-    </Card>
+    </div>
   )
 }

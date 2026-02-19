@@ -66,6 +66,12 @@ Key decisions for v3.0:
 - [22-09 Components]: Modal Card wrappers preserved — DeletionImpactModal, BatchDeletionModal, SafeDeleteModal, PresentationDetailsModal, PerformanceDetailsModal, AdditionalRehearsalsModal, OrchestraDetailsModal all keep Card for floating overlay context
 - [22-09 Components]: hover:bg-primary → hover:bg-neutral-800 for primary action buttons — visible lighter shift on black buttons
 - [22-09 Components]: The full deletion module (12 files) is now semantically clean — primary-NNN purged
+- [22-08 Detail]: HoursSummaryTab total hours banner: flat bg-primary (black) replaces gradient primary-500→600 — elevation-as-interaction-only principle applied
+- [22-08 Detail]: StudentDetailsHeader: gradient primary header replaced with flat bg-primary — dossier archetype restructuring (Plan 10) will recompose this properly
+- [22-08 Detail]: Tab trigger rounding: rounded-lg → rounded (2px sharp) in TeacherDetailsPage, OrchestraDetailsPage, StudentDetailsPage
+- [22-08 Detail]: Teacher/orchestra overview section cards: gradient colored backgrounds → bg-muted/30 (neutral, subdued)
+- [22-08 Detail]: Student files verified clean — prior plans (22-04/05/06/09) had already swept them
+- [22-08 Detail]: Zero bg-primary-NNN, zero text-primary-NNN, zero rounded-xl/2xl confirmed across entire src/features/ directory
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -85,5 +91,5 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-09-PLAN.md — Final bulk component sweep (37 files, deletion module + entity cards + modals + schedule + misc)
+Stopped at: Completed 22-08-PLAN.md — Feature detail components sweep (teacher/orchestra/student detail pages, tabs, modals)
 Resume file: None

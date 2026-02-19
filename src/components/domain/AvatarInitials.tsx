@@ -20,6 +20,7 @@ interface AvatarInitialsProps {
   size?: AvatarSize
   className?: string
   colorClassName?: string
+  style?: React.CSSProperties
 }
 
 export function AvatarInitials({
@@ -30,11 +31,12 @@ export function AvatarInitials({
   size = 'md',
   className,
   colorClassName,
+  style,
 }: AvatarInitialsProps) {
   const initials = getInitials({ firstName, lastName, fullName })
 
   return (
-    <Avatar className={cn(SIZE_CLASSES[size], className)}>
+    <Avatar className={cn(SIZE_CLASSES[size], className)} style={style}>
       {src && <AvatarImage src={src} />}
       <AvatarFallback className={cn(colorClassName || 'bg-primary/10 text-primary', 'font-semibold')}>
         {initials}

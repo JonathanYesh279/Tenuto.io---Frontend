@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ClockIcon, ArrowsClockwiseIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import { ClockIcon, ArrowsClockwiseIcon, WarningCircleIcon, MoonIcon, UsersIcon, GraduationCapIcon, MusicNotesIcon, CalendarCheckIcon } from '@phosphor-icons/react'
 import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
@@ -8,14 +8,7 @@ import ConductorDashboard from '../components/dashboard/ConductorDashboard'
 import TeacherDashboard from '../components/dashboard/TeacherDashboard'
 import TheoryTeacherDashboard from '../components/dashboard/TheoryTeacherDashboard'
 import SuperAdminDashboard from '../components/dashboard/SuperAdminDashboard'
-import { MiniCalendarWidget, UpcomingEventsWidget, RecentActivityWidget } from '../components/dashboard/widgets'
-import {
-  StudentActivityCharts,
-  InstrumentDistributionChart,
-  ClassDistributionChart,
-  BagrutProgressDashboard,
-  DailyTeacherRoomTable
-} from '../components/dashboard/charts'
+import { StatCard } from '../components/dashboard/v4/StatCard'
 
 interface TeacherHoursSummary {
   teacherId: string
@@ -51,6 +44,14 @@ export default function Dashboard() {
   const [hoursLoading, setHoursLoading] = useState(false)
   const [hoursError, setHoursError] = useState<string | null>(null)
   const [isRecalculating, setIsRecalculating] = useState(false)
+
+  // Dark mode initialization
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark')
+    }
+  }, [])
 
   useEffect(() => {
     loadDashboardData()
@@ -279,158 +280,101 @@ export default function Dashboard() {
     return <TeacherDashboard />
   }
 
-  // Admin — Command Center Dashboard
+  // Admin Dashboard — v4.0 Visual Redesign
   return (
     <div dir="rtl">
-      {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            {getTimeGreeting()}, {userFirstName}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {currentSchoolYear?.name || 'שנת לימודים נוכחית'} |
-            עדכון אחרון: {lastRefresh.toLocaleTimeString('he-IL')}
-          </p>
-        </div>
-        <button
-          onClick={handleRefresh}
-          disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-card border border-border rounded hover:bg-muted disabled:opacity-50"
-        >
-          <ArrowsClockwiseIcon size={16} weight="regular" className={loading ? 'animate-spin' : ''} />
-          רענן נתונים
-        </button>
-      </div>
+      <div className="grid grid-cols-12 gap-8">
+        {/* Main content — 9 columns */}
+        <div className="col-span-12 lg:col-span-9 space-y-8">
 
-      {/* DOMINANT ZONE — primary metric 2fr, secondary stack 1fr */}
-      <div className="grid grid-cols-[2fr_1fr] gap-8 mb-10 pb-10 border-b border-border">
-        {/* PRIMARY metric — the ONE number that matters most */}
-        <div className="py-4">
-          <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">תלמידים פעילים</span>
-          <div className="text-7xl font-bold text-foreground mt-2 tabular-nums leading-none">
-            {loading ? '—' : stats.activeStudents}
+          {/* Stat cards row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+            <StatCard
+              entity="students"
+              value={stats.activeStudents}
+              label="תלמידים פעילים"
+              trend={stats.studentsTrend > 0 ? `+${stats.studentsTrend}%` : undefined}
+              icon={<UsersIcon size={28} weight="duotone" />}
+              loading={loading}
+            />
+            <StatCard
+              entity="teachers"
+              value={stats.staffMembers}
+              label="סגל הוראה"
+              icon={<GraduationCapIcon size={28} weight="duotone" />}
+              loading={loading}
+            />
+            <StatCard
+              entity="orchestras"
+              value={stats.activeOrchestras}
+              label="הרכבים פעילים"
+              icon={<MusicNotesIcon size={28} weight="duotone" />}
+              loading={loading}
+            />
+            <StatCard
+              entity="rehearsals"
+              value={stats.weeklyRehearsals}
+              label="חזרות שבועיות"
+              trend="שבועי"
+              icon={<CalendarCheckIcon size={28} weight="duotone" />}
+              loading={loading}
+            />
           </div>
-          <span className="text-sm text-muted-foreground mt-3 block">
-            מתוך {loading ? '—' : stats.totalStudents} רשומים
-            {stats.studentsTrend > 0 && !loading && (
-              <span className="mr-2 text-xs text-foreground/60">+{stats.studentsTrend}% החודש</span>
-            )}
-          </span>
-        </div>
 
-        {/* SECONDARY metrics — stacked, clearly smaller */}
-        <div className="flex flex-col justify-center gap-5 py-4 border-r border-border pr-8">
-          <div>
-            <span className="text-xs text-muted-foreground block mb-0.5">מורים פעילים</span>
-            <div className="text-3xl font-semibold text-foreground tabular-nums">
-              {loading ? '—' : stats.staffMembers}
+          {/* Financial trends chart — full width (placeholder for Plan 04) */}
+          <div id="financial-chart-slot" className="bg-white dark:bg-sidebar-dark p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[320px] flex items-center justify-center text-slate-400">
+            {/* FinancialTrendsChart will be placed here in Plan 04 */}
+            <span className="text-sm">מגמות פיננסיות — טוען...</span>
+          </div>
+
+          {/* Charts section — 2 columns */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            {/* Attendance chart placeholder (Plan 04) */}
+            <div id="attendance-chart-slot" className="bg-white dark:bg-sidebar-dark p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[280px] flex items-center justify-center text-slate-400">
+              <span className="text-sm">נוכחות — טוען...</span>
+            </div>
+            {/* Demographics chart placeholder (Plan 04) */}
+            <div id="demographics-chart-slot" className="bg-white dark:bg-sidebar-dark p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[280px] flex items-center justify-center text-slate-400">
+              <span className="text-sm">תלמידים — טוען...</span>
             </div>
           </div>
-          <div>
-            <span className="text-xs text-muted-foreground block mb-0.5">הרכבים פעילים</span>
-            <div className="text-3xl font-semibold text-foreground tabular-nums">
-              {loading ? '—' : stats.activeOrchestras}
-            </div>
+
+          {/* Teacher performance table placeholder (Plan 05) */}
+          <div id="teacher-table-slot" className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
+            <span className="text-sm p-8">ביצועי מורים — טוען...</span>
           </div>
-          <div>
-            <span className="text-xs text-muted-foreground block mb-0.5">חזרות השבוע</span>
-            <div className="text-3xl font-semibold text-foreground tabular-nums">
-              {loading ? '—' : stats.weeklyRehearsals}
-            </div>
+        </div>
+
+        {/* Right sidebar — 3 columns */}
+        <div className="col-span-12 lg:col-span-3 space-y-8">
+          {/* Calendar widget placeholder (Plan 05) */}
+          <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
+            <span className="text-sm">לוח שנה</span>
           </div>
-          <div>
-            <span className="text-xs text-muted-foreground block mb-0.5">בגרויות פעילות</span>
-            <div className="text-3xl font-semibold text-foreground tabular-nums">
-              {loading ? '—' : stats.activeBagruts}
-            </div>
+          {/* Agenda widget placeholder (Plan 05) */}
+          <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
+            <span className="text-sm">סדר יום</span>
+          </div>
+          {/* Messages widget placeholder (Plan 05) */}
+          <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[200px] flex items-center justify-center text-slate-400">
+            <span className="text-sm">הודעות</span>
           </div>
         </div>
       </div>
 
-      {/* OPERATIONAL PANELS — 3:2 asymmetric split */}
-      <div className="grid grid-cols-[3fr_2fr] gap-8 mb-10">
-        {/* Primary operational panel: daily schedule table */}
-        <div>
-          <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wider">מערכת יומית</h2>
-          <DailyTeacherRoomTable />
-        </div>
-
-        {/* Secondary panel: widgets stack */}
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">אירועים קרובים</h2>
-            <UpcomingEventsWidget events={upcomingEvents} loading={loading} />
-          </div>
-          <div>
-            <h2 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">פעילות אחרונה</h2>
-            <RecentActivityWidget activities={recentActivities} loading={loading} />
-          </div>
-          <div>
-            <MiniCalendarWidget />
-          </div>
-        </div>
-      </div>
-
-      {/* TERTIARY — charts at bottom, lower visual weight */}
-      <div className="border-t border-border pt-8 mb-10">
-        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">נתונים וניתוח</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InstrumentDistributionChart
-            schoolYearId={currentSchoolYear?._id}
-            maxItems={8}
-          />
-          <ClassDistributionChart
-            schoolYearId={currentSchoolYear?._id}
-          />
-        </div>
-      </div>
-
-      {/* SECONDARY SECTIONS — below-fold content, accessible without tabs */}
-      <div className="border-t border-border pt-8 mb-10">
-        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">ניתוח תלמידים</h2>
-        <StudentActivityCharts schoolYearId={currentSchoolYear?._id} />
-      </div>
-
-      <div className="border-t border-border pt-8 mb-10">
-        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">בגרויות</h2>
-        <BagrutProgressDashboard schoolYearId={currentSchoolYear?._id} />
-      </div>
-
-      <div className="border-t border-border pt-8">
-        <h2 className="text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-wider">שעות מורים</h2>
-        <AdminHoursOverview
-          hoursSummaries={hoursSummaries}
-          loading={hoursLoading}
-          error={hoursError}
-          isRecalculating={isRecalculating}
-          onLoad={async () => {
-            try {
-              setHoursLoading(true)
-              setHoursError(null)
-              const data = await hoursSummaryService.getAllSummaries()
-              setHoursSummaries(Array.isArray(data) ? data : data?.data || [])
-            } catch (err: any) {
-              setHoursError(err.message || 'שגיאה בטעינת נתוני שעות')
-            } finally {
-              setHoursLoading(false)
-            }
-          }}
-          onRecalculateAll={async () => {
-            if (!window.confirm('האם לחשב מחדש את השעות עבור כל המורים? פעולה זו עשויה לקחת מספר שניות.')) return
-            try {
-              setIsRecalculating(true)
-              await hoursSummaryService.calculateAll()
-              const data = await hoursSummaryService.getAllSummaries()
-              setHoursSummaries(Array.isArray(data) ? data : data?.data || [])
-            } catch (err: any) {
-              setHoursError(err.message || 'שגיאה בחישוב מחדש')
-            } finally {
-              setIsRecalculating(false)
-            }
-          }}
-        />
-      </div>
+      {/* Dark mode FAB toggle */}
+      <button
+        onClick={() => {
+          document.documentElement.classList.toggle('dark')
+          localStorage.setItem('theme',
+            document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+          )
+        }}
+        className="fixed bottom-6 left-6 w-12 h-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-50"
+        aria-label="Toggle dark mode"
+      >
+        <MoonIcon weight="fill" className="text-primary dark:text-amber-400" size={20} />
+      </button>
     </div>
   )
 }

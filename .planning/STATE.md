@@ -55,6 +55,9 @@ Key decisions for v3.0:
 - [22-02 Icons]: @phosphor-icons/react installed; Sidebar.tsx is the first Phosphor-migrated component — fill/regular weight toggle for active/inactive nav items
 - [22-02 Icons]: ListIcon is the Phosphor equivalent of Lucide Menu icon — no MenuIcon exists in Phosphor
 - [22-02 Icons]: Role badges in dark sidebar need inverted colors (bg-red-900/40 text-red-300, not bg-red-100 text-red-700)
+- [22-04 UI]: Table.tsx is now a flat data surface — no rounded container, no shadow, semantic tokens throughout, Phosphor icons
+- [22-04 UI]: Entity accent pattern: inline borderRight with hsl(var(--color-*-fg)) replaces full pastel background fills in DetailPageHeader and ListPageHero
+- [22-04 UI]: StatsCard legacy 'blue' → bg-muted/text-foreground; ConfirmDeleteModal rounded-2xl shadow-2xl → rounded (flat modal)
 - [22-07 Bagrut]: rounded-lg removed throughout bagrut module — all container rounding reduced to rounded (2px sharp identity)
 - [22-07 Bagrut]: Modal Card wrappers preserved (ConflictResolutionModal, MigrationWarningModal) — floating content keeps Card
 - [22-07 Bagrut]: bg-primary-50/100 backgrounds replaced with bg-muted — tonal neutral, not warm tint
@@ -72,6 +75,11 @@ Key decisions for v3.0:
 - [22-08 Detail]: Teacher/orchestra overview section cards: gradient colored backgrounds → bg-muted/30 (neutral, subdued)
 - [22-08 Detail]: Student files verified clean — prior plans (22-04/05/06/09) had already swept them
 - [22-08 Detail]: Zero bg-primary-NNN, zero text-primary-NNN, zero rounded-xl/2xl confirmed across entire src/features/ directory
+- [22-06 Dashboard]: Card on dashboard page sections → div/section with spacing; Card kept only for popover/modal/dropdown content
+- [22-06 Dashboard]: StatCard is a flat data surface — no hover:shadow-md, no decorative border-primary-NNN hover
+- [22-06 Dashboard]: StatCard actions dropdown retains shadow-md (genuine interaction layer / popover)
+- [22-06 Dashboard]: DashboardRefresh toggle uses semantic bg-primary/peer-checked:bg-primary; countdown ring uses text-primary
+- [22-06 Dashboard]: Zero bg-primary-NNN, zero rounded-xl/2xl confirmed across all 24 dashboard component files
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -86,10 +94,10 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 - [WSL constraint]: npm install on /mnt/c/ NTFS mount causes EIO errors — build verification from Windows PowerShell or CI only.
 - [v2.1 carryover]: 1,211 primary-NNN hex classes across 134 files — migration deferred, may be addressed in v3.0.
 - [v2.1 audit]: TeacherForm.tsx and StudentForm.tsx accent bars orphaned — form routing doesn't reach them. Will be addressed or superseded by Phase 22 restructuring.
-- [22-09 Remaining]: ~152 bg-primary-NNN, ~140 text-primary-NNN, ~94 rounded-xl remain in OTHER src/ files (dashboard/charts, feedback, analytics, schedule, accessibility, OrchestraEnrollmentManager root-level) — outside plan 22-09 scope. May need follow-up plan.
+- [22-09 Remaining]: ~152 bg-primary-NNN, ~140 text-primary-NNN, ~94 rounded-xl remain in OTHER src/ files (feedback, analytics, schedule, accessibility, OrchestraEnrollmentManager root-level) — outside plan 22-09 scope. May need follow-up plan. NOTE: dashboard/charts resolved by 22-06.
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-08-PLAN.md — Feature detail components sweep (teacher/orchestra/student detail pages, tabs, modals)
+Stopped at: Completed 22-06-PLAN.md — Dashboard component style cleanup (24 files: stat cards, charts, widgets, role dashboards)
 Resume file: None

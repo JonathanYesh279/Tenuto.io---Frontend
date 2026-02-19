@@ -10,8 +10,8 @@
 
 import React, { useState } from 'react'
 
-import { 
 import { CalendarIcon, CheckCircleIcon, ClockIcon, CurrencyDollarIcon, MapPinIcon, MinusIcon, MusicNotesIcon, PlusIcon, StarIcon, UsersIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
+import {
   useEnrollmentManager,
   useStudentOrchestraEnrollments,
   useStudentEnsembleEnrollments 

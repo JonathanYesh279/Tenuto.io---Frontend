@@ -1,6 +1,6 @@
 
-import { 
 import { ClockIcon, MapPinIcon, UsersIcon } from '@phosphor-icons/react'
+import {
   formatRehearsalDateTime, 
   getRehearsalColor,
   calculateAttendanceStats,

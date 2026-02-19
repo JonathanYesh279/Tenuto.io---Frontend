@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
 import ConflictDetector from './ConflictDetector'
-import {
 import { CalendarIcon, ClockIcon, MapPinIcon, MinusIcon, PlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import {
   validateRehearsalForm,
   validateBulkRehearsalForm,
   generateRehearsalDates,

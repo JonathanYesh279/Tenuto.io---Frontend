@@ -19,8 +19,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import {
 import { ActivityIcon, CheckCircle2Icon, ClockIcon, DatabaseIcon, LightningIcon, MemoryStickIcon, MonitorIcon, PlayIcon, SquareIcon, TrashIcon, WarningIcon } from '@phosphor-icons/react'
+import {
   Select,
   SelectContent,
   SelectItem,

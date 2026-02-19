@@ -8,8 +8,8 @@
 import React, { Suspense } from 'react'
 
 import { StudentTabContentProps } from '../types'
-import { 
 import { CircleNotchIcon } from '@phosphor-icons/react'
+import {
   SmartLoadingState, 
   SkeletonComponents 
 } from '@/services/performanceOptimizations'

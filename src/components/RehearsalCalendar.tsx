@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 
 import AdditionalRehearsalsModal from './AdditionalRehearsalsModal'
-import {
 import { CalendarIcon, CaretLeftIcon, CaretRightIcon, ClockIcon, EyeIcon, MapPinIcon, PencilIcon, TrashIcon, UsersIcon } from '@phosphor-icons/react'
+import {
   formatRehearsalDateTime,
   getRehearsalStatus,
   calculateAttendanceStats,

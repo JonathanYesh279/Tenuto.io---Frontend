@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
-import {
 import { CheckCircleIcon, ClockIcon, MapPinIcon, UserIcon, UsersIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
+import {
   checkRehearsalConflict,
   formatRehearsalDateTime,
   type Rehearsal,

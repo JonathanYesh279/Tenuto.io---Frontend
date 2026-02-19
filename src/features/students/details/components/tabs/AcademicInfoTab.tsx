@@ -9,8 +9,8 @@ import { useState, useMemo, useEffect } from 'react'
 
 import { StudentDetails } from '../../types'
 import { Doughnut, Line, Bar } from 'react-chartjs-2'
-import {
 import { BookOpenIcon, CalendarIcon, CheckCircleIcon, ClipboardCheckIcon, ClockIcon, FloppyDiskIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilSimpleIcon, SchoolIcon, StarIcon, TargetIcon, TrendUpIcon, TrophyIcon, UserIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
+import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,

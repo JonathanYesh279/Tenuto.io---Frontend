@@ -16,8 +16,8 @@
 
 import * as React from "react"
 
-import {
 import { WarningIcon } from '@phosphor-icons/react'
+import {
   Dialog,
   DialogContent,
   DialogDescription,

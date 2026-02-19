@@ -17,8 +17,8 @@ import OrchestraTab from './tabs/OrchestraTab'
 import TheoryTabOptimized from './tabs/TheoryTabOptimized'
 import { useStudent } from '../../../../services/apiCache'
 import { getDisplayName, getInitials } from '../../../../utils/nameUtils'
-import {
 import { ArrowRightIcon, ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, FileTextIcon, GraduationCapIcon, MusicNotesIcon, UserIcon } from '@phosphor-icons/react'
+import {
   SkeletonComponents,
   usePerformanceOptimizations
 } from '../../../../services/performanceOptimizations'

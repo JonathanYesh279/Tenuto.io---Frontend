@@ -8,8 +8,8 @@
 import React, { useState, useMemo, memo } from 'react'
 
 import TeacherNameDisplay from '../../../../../components/TeacherNameDisplay'
-import { 
 import { ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, InfoIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrashIcon, TrendUpIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import {
   useStudent,
   useStudentTheoryLessons,
   useAvailableTheoryLessons,

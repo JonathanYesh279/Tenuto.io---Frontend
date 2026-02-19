@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
-import {
 import { ArrowCounterClockwiseIcon, CalendarIcon, CheckCircleIcon, CheckIcon, ClockIcon, FloppyDiskIcon, MagnifyingGlassIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import {
   formatRehearsalDateTime,
   calculateAttendanceStats,
   formatAttendanceList,

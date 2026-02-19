@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 import { Card } from './ui/Card'
 import StatsCard from './ui/StatsCard'
 import { orchestraService, studentService, teacherService, rehearsalService } from '../services/apiService'
-import {
 import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, MusicNotesIcon, PencilIcon, TrashIcon, UserIcon, UserPlusIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import {
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,

@@ -4,8 +4,8 @@ import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
-import {
 import { HouseIcon, LogOutIcon, UserIcon } from '@phosphor-icons/react'
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,

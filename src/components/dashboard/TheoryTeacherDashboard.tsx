@@ -573,7 +573,7 @@ interface TheoryStatCardProps {
 
 function TheoryStatCard({ icon, title, value, suffix, bgColor, iconColor, borderColor }: TheoryStatCardProps) {
   return (
-    <div className={`${bgColor} border ${borderColor} rounded-lg p-4`}>
+    <div className={`${bgColor} border ${borderColor} rounded p-4`}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>
@@ -608,7 +608,7 @@ function TheoryQuickActionButton({ icon, label, onClick, color }: TheoryQuickAct
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center p-4 rounded-lg border transition-colors ${colorClasses[color]}`}
+      className={`flex flex-col items-center justify-center p-4 rounded border transition-colors ${colorClasses[color]}`}
     >
       {icon}
       <span className="mt-2 text-sm font-medium font-reisinger-yonatan text-center">{label}</span>

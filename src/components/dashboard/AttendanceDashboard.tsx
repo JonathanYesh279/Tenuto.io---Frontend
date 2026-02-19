@@ -368,7 +368,7 @@ export default function AttendanceDashboard() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="bg-white border border-gray-200 rounded-lg mb-8">
+        <div className="bg-white border border-gray-200 rounded mb-8">
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8 px-6" dir="rtl">
               {[
@@ -738,7 +738,7 @@ interface AttendanceStatCardProps {
 
 function AttendanceStatCard({ icon, title, value, suffix, bgColor, iconColor, borderColor }: AttendanceStatCardProps) {
   return (
-    <div className={`${bgColor} border ${borderColor} rounded-lg p-4`}>
+    <div className={`${bgColor} border ${borderColor} rounded p-4`}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>

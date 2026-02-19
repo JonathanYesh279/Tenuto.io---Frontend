@@ -232,7 +232,7 @@ const StudentStatistics: React.FC<StudentStatisticsProps> = ({
                         <div className="flex-1 mx-3">
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-primary-500 h-2 rounded-full"
+                              className="bg-primary h-2 rounded-full"
                               style={{ width: `${percentage}%` }}
                             />
                           </div>
@@ -271,7 +271,7 @@ const StudentStatistics: React.FC<StudentStatisticsProps> = ({
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
                             className={`h-2 rounded-full ${
-                              index === 0 ? 'bg-primary-500' :
+                              index === 0 ? 'bg-primary' :
                               index === 1 ? 'bg-blue-500' :
                               'bg-green-500'
                             }`}

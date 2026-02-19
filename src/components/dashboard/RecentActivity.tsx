@@ -219,7 +219,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
 
   if (loading && activities.length === 0) {
     return (
-      <div className={`bg-white rounded-lg border border-gray-200 p-6 ${className}`} dir="rtl">
+      <div className={`bg-white rounded border border-gray-200 p-6 ${className}`} dir="rtl">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-gray-200 rounded w-1/3"></div>
           {Array.from({ length: 5 }).map((_, i) => (
@@ -254,7 +254,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
   }
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 ${className}`} dir="rtl">
+    <div className={`bg-white rounded border border-gray-200 ${className}`} dir="rtl">
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -269,7 +269,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
             )}
             <button
               onClick={fetchActivities}
-              className="text-sm text-primary-600 hover:text-primary-800 font-reisinger-yonatan"
+              className="text-sm text-primary hover:opacity-80 font-reisinger-yonatan"
               disabled={loading}
             >
               {loading ? 'מעדכן...' : 'רענן'}
@@ -292,7 +292,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
                 onClick={() => setFilter(filterOption.key)}
                 className={`px-3 py-1 text-xs rounded-full transition-colors font-reisinger-yonatan ${
                   filter === filterOption.key
-                    ? 'bg-primary-100 text-primary-700'
+                    ? 'bg-muted text-foreground'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >

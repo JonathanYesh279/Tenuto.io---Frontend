@@ -94,7 +94,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
           <div className="flex items-center justify-between h-16">
             {/* Title */}
             <div className="flex items-center">
-              <Music className="w-8 h-8 text-primary-600 ml-3" />
+              <Music className="w-8 h-8 text-primary ml-3" />
               <div>
                 <h1 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
                   לוח הבקרה
@@ -124,7 +124,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
                   onClick={() => setActiveTab(tab.id)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors font-reisinger-yonatan ${
                     activeTab === tab.id
-                      ? 'border-primary-500 text-primary-600'
+                      ? 'border-primary text-primary'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
@@ -199,7 +199,7 @@ const OverviewDashboard: React.FC<{
     <div className="space-y-8" key={refreshTrigger}>
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">סך הכל תלמידים</p>
@@ -209,7 +209,7 @@ const OverviewDashboard: React.FC<{
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">סך הכל מורים</p>
@@ -219,7 +219,7 @@ const OverviewDashboard: React.FC<{
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">שיעורים השבוע</p>
@@ -229,7 +229,7 @@ const OverviewDashboard: React.FC<{
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">נוכחות ממוצעת</p>
@@ -243,7 +243,7 @@ const OverviewDashboard: React.FC<{
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Class Distribution */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <DonutChart
             data={classDistribution}
             title="התפלגות תלמידים לפי כיתות"
@@ -252,7 +252,7 @@ const OverviewDashboard: React.FC<{
         </div>
 
         {/* Instrument Popularity */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <BarChart
             data={instrumentDistribution}
             title="כלי נגינה פופולריים"
@@ -261,7 +261,7 @@ const OverviewDashboard: React.FC<{
         </div>
 
         {/* Weekly Attendance Trend */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <LineChart
             data={weeklyTrend}
             title="נוכחות שבועית"
@@ -275,7 +275,7 @@ const OverviewDashboard: React.FC<{
       {/* Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Attendance Rate */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <ProgressRingChart
             value={data.attendanceRate}
             max={100}
@@ -287,7 +287,7 @@ const OverviewDashboard: React.FC<{
         </div>
 
         {/* Capacity Utilization */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <GaugeChart
             value={data.capacityUtilization}
             max={100}
@@ -302,7 +302,7 @@ const OverviewDashboard: React.FC<{
         </div>
 
         {/* Growth Ring */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <div className="bg-white p-6 rounded border border-gray-200">
           <ProgressRingChart
             value={data.monthlyGrowth}
             max={10}
@@ -325,12 +325,12 @@ const OverviewDashboard: React.FC<{
         </div>
         
         {/* Quick Actions */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 font-reisinger-yonatan">
             פעולות מהירות
           </h3>
           <div className="space-y-3">
-            <button className="w-full text-right p-3 bg-primary-50 text-primary-700 rounded-lg hover:bg-primary-100 transition-colors font-reisinger-yonatan">
+            <button className="w-full text-right p-3 bg-muted text-foreground rounded hover:bg-muted/80 transition-colors font-reisinger-yonatan">
               הוסף תלמיד חדש
             </button>
             <button className="w-full text-right p-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors font-reisinger-yonatan">

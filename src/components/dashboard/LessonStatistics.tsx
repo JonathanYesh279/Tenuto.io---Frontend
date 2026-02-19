@@ -254,7 +254,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
                     <div className="flex space-x-1 space-x-reverse">
                       <div className="flex-1 bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-primary-500 h-2 rounded-full"
+                          className="bg-primary h-2 rounded-full"
                           style={{ width: `${scheduledPercentage}%` }}
                         />
                       </div>
@@ -294,7 +294,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
                               className={`h-2 rounded-full ${
-                                index === 0 ? 'bg-primary-500' :
+                                index === 0 ? 'bg-primary' :
                                 index === 1 ? 'bg-blue-500' :
                                 index === 2 ? 'bg-green-500' :
                                 index === 3 ? 'bg-orange-500' :

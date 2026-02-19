@@ -104,7 +104,7 @@ const DashboardMetrics: React.FC = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white p-6 rounded-lg border border-gray-200 animate-pulse">
+          <div key={i} className="bg-white p-6 rounded border border-gray-200 animate-pulse">
             <div className="h-4 bg-gray-200 rounded mb-4"></div>
             <div className="h-8 bg-gray-200 rounded mb-2"></div>
             <div className="h-3 bg-gray-200 rounded w-3/4"></div>
@@ -228,7 +228,7 @@ const RecentActivities: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white rounded border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">פעילות אחרונה</h3>
         <div className="space-y-4">
           {[...Array(4)].map((_, i) => (
@@ -243,7 +243,7 @@ const RecentActivities: React.FC = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white rounded border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">פעילות אחרונה</h3>
         <span className="text-sm text-gray-500">
@@ -257,7 +257,7 @@ const RecentActivities: React.FC = () => {
         ) : (
           activities.map((activity, index) => (
             <div key={index} className="flex items-start">
-              <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center ml-3">
+              <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center ml-3">
                 <span>{activity.icon}</span>
               </div>
               <div className="flex-1">
@@ -360,7 +360,7 @@ const UpcomingEvents: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white rounded border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">אירועים קרובים</h3>
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
@@ -375,7 +375,7 @@ const UpcomingEvents: React.FC = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white rounded border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">אירועים קרובים</h3>
       </div>
@@ -385,7 +385,7 @@ const UpcomingEvents: React.FC = () => {
           <p className="text-gray-500 text-center py-4">אין אירועים קרובים</p>
         ) : (
           events.map((event, index) => (
-            <div key={index} className="p-4 bg-gray-50 rounded-lg">
+            <div key={index} className="p-4 bg-gray-50 rounded">
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center">
                   <span className="ml-2">{event.icon}</span>
@@ -423,14 +423,14 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, subtitle, icon, c
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+    <div className="bg-white p-6 rounded border border-gray-200 transition-colors">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
           <p className="text-sm text-gray-500">{subtitle}</p>
         </div>
-        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colorClasses[color]}`}>
+        <div className={`w-12 h-12 rounded flex items-center justify-center ${colorClasses[color]}`}>
           {icon}
         </div>
       </div>

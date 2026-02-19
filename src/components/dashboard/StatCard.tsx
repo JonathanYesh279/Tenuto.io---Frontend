@@ -70,7 +70,7 @@ const StatCard: React.FC<StatCardProps> = ({
 
   if (loading) {
     return (
-      <div className={`bg-white rounded-lg border border-gray-200 p-6 ${className}`} dir="rtl">
+      <div className={`bg-white rounded border border-gray-200 p-6 ${className}`} dir="rtl">
         <div className="animate-pulse">
           <div className="flex items-center justify-between mb-4">
             <div className="h-4 bg-gray-200 rounded w-1/2"></div>
@@ -170,8 +170,8 @@ const StatCard: React.FC<StatCardProps> = ({
       <button
         onClick={onClick}
         className={`
-          bg-white rounded-lg border border-gray-200 p-6 
-          hover:border-primary-300 hover:shadow-md 
+          bg-white rounded border border-gray-200 p-6 
+          hover:border-border
           transition-all duration-200 
           text-right w-full
           ${className}
@@ -185,7 +185,7 @@ const StatCard: React.FC<StatCardProps> = ({
 
   return (
     <div 
-      className={`bg-white rounded-lg border border-gray-200 p-6 ${className}`}
+      className={`bg-white rounded border border-gray-200 p-6 ${className}`}
       dir="rtl"
     >
       {cardContent}
@@ -228,7 +228,7 @@ export const ProgressStatCard: React.FC<StatCardProps & {
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-primary-500 h-2 rounded-full transition-all duration-300"
+              className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{ width: `${percentage}%` }}
             />
           </div>

@@ -1014,7 +1014,7 @@ interface StatCardProps {
 
 function StatCard({ icon, title, value, suffix, bgColor, iconColor, borderColor }: StatCardProps) {
   return (
-    <div className={`${bgColor} border ${borderColor} rounded-lg p-6`}>
+    <div className={`${bgColor} border ${borderColor} rounded p-6`}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>
@@ -1055,7 +1055,7 @@ function QuickActionButton({ icon, label, onClick, color }: QuickActionButtonPro
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center p-4 rounded-lg border transition-colors ${colorClasses[color]}`}
+      className={`flex flex-col items-center justify-center p-4 rounded border transition-colors ${colorClasses[color]}`}
     >
       {icon}
       <span className="mt-2 text-sm font-medium font-reisinger-yonatan text-center">{label}</span>

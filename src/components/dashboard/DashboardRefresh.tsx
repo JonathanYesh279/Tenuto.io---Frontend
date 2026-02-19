@@ -173,7 +173,7 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
                 fill="none"
                 strokeDasharray="87.96"
                 strokeDashoffset={87.96 - (87.96 * (settings.interval - timeLeft) / settings.interval)}
-                className="text-primary-500 transition-all duration-1000 ease-linear"
+                className="text-primary transition-all duration-1000 ease-linear"
               />
             </svg>
             <span className="absolute inset-0 flex items-center justify-center text-xs font-medium">
@@ -188,7 +188,7 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
       <button
         onClick={handleManualRefresh}
         disabled={loading}
-        className={`p-2 rounded-lg transition-colors ${
+        className={`p-2 rounded transition-colors ${
           loading
             ? 'text-gray-400 cursor-not-allowed'
             : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
@@ -201,9 +201,9 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
       {/* Auto-refresh toggle */}
       <button
         onClick={toggleAutoRefresh}
-        className={`p-2 rounded-lg transition-colors ${
+        className={`p-2 rounded transition-colors ${
           isAutoRefresh
-            ? 'text-primary-600 bg-primary-50 hover:bg-primary-100'
+            ? 'text-primary bg-muted hover:bg-muted/80'
             : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
         }`}
         title={isAutoRefresh ? 'השבת רענון אוטומטי' : 'הפעל רענון אוטומטי'}
@@ -219,7 +219,7 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
       <div className="relative">
         <button
           onClick={() => setShowSettings(!showSettings)}
-          className="p-2 rounded-lg text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+          className="p-2 rounded text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
           title="הגדרות רענון"
         >
           <Settings className="w-5 h-5" />
@@ -241,7 +241,7 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
                 <select
                   value={settings.interval}
                   onChange={(e) => updateSettings({ interval: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-reisinger-yonatan"
+                  className="w-full px-3 py-2 border border-gray-300 rounded text-sm font-reisinger-yonatan"
                 >
                   <option value={30}>30 שניות</option>
                   <option value={60}>דקה</option>
@@ -264,7 +264,7 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
                     onChange={(e) => updateSettings({ autoRefresh: e.target.checked })}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                 </label>
               </div>
 
@@ -280,14 +280,14 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
                     onChange={(e) => updateSettings({ showNotifications: e.target.checked })}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                 </label>
               </div>
 
               {/* Close button */}
               <button
                 onClick={() => setShowSettings(false)}
-                className="w-full px-4 py-2 bg-primary-500 text-white rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors font-reisinger-yonatan"
+                className="w-full px-4 py-2 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-neutral-800 transition-colors font-reisinger-yonatan"
               >
                 שמור הגדרות
               </button>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Clock, RefreshCw, AlertCircle } from 'lucide-react'
+import { ClockIcon, ArrowsClockwiseIcon, WarningCircleIcon } from '@phosphor-icons/react'
 import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
@@ -298,7 +298,7 @@ export default function Dashboard() {
           disabled={loading}
           className="flex items-center gap-2 px-4 py-2 text-sm bg-card border border-border rounded hover:bg-muted disabled:opacity-50"
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <ArrowsClockwiseIcon size={16} weight="regular" className={loading ? 'animate-spin' : ''} />
           רענן נתונים
         </button>
       </div>
@@ -468,14 +468,14 @@ function AdminHoursOverview({
   if (error) {
     return (
       <div className="flex flex-col items-center py-12 text-center">
-        <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
+        <WarningCircleIcon size={48} weight="fill" className="text-red-400 mb-4" />
         <h3 className="text-lg font-medium text-foreground mb-2">שגיאה בטעינת נתוני שעות</h3>
         <p className="text-muted-foreground mb-4">{error}</p>
         <button
           onClick={onLoad}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
-          <RefreshCw className="w-4 h-4" />
+          <ArrowsClockwiseIcon size={16} weight="regular" />
           נסה שוב
         </button>
       </div>
@@ -491,14 +491,14 @@ function AdminHoursOverview({
           disabled={isRecalculating}
           className="flex items-center gap-2 px-4 py-2 text-sm bg-muted text-foreground border border-border rounded hover:bg-muted/80 disabled:opacity-50"
         >
-          <RefreshCw className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
+          <ArrowsClockwiseIcon size={16} weight="regular" className={isRecalculating ? 'animate-spin' : ''} />
           {isRecalculating ? 'מחשב...' : 'חשב מחדש הכל'}
         </button>
       </div>
 
       {hoursSummaries.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground">
-          <Clock className="w-12 h-12 mx-auto mb-3 text-muted-foreground/40" />
+          <ClockIcon size={48} weight="regular" className="mx-auto mb-3 text-muted-foreground/40" />
           <p>לא נמצאו נתוני שעות. לחץ "חשב מחדש הכל" ליצירת חישוב ראשוני.</p>
         </div>
       ) : (

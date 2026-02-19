@@ -6,20 +6,20 @@ import { Progress } from '../components/ui/progress'
 import { StepProgress } from '../components/feedback/ProgressIndicators'
 import toast from 'react-hot-toast'
 import {
-  FileText,
-  Download,
-  Users,
-  GraduationCap,
-  Music,
-  BookOpen,
-  Calendar,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
-  RefreshCw,
-  Clock,
-  Info,
-} from 'lucide-react'
+  FileTextIcon,
+  DownloadIcon,
+  UsersIcon,
+  GraduationCapIcon,
+  MusicNoteIcon,
+  BookOpenIcon,
+  CalendarIcon,
+  WarningIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ArrowsClockwiseIcon,
+  ClockIcon,
+  InfoIcon,
+} from '@phosphor-icons/react'
 
 interface MissingItem {
   type: string
@@ -233,7 +233,7 @@ export default function MinistryReports() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
-            <FileText className="w-5 h-5 text-primary" />
+            <FileTextIcon size={20} weight="regular" className="text-primary" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">דוחות משרד החינוך</h1>
@@ -243,7 +243,7 @@ export default function MinistryReports() {
         <div className="flex items-center gap-3">
           {lastUpdated && (
             <span className="flex items-center gap-1 text-xs text-gray-400">
-              <Clock className="w-3 h-3" />
+              <ClockIcon size={12} weight="regular" />
               עודכן {formatTime(lastUpdated)}
             </span>
           )}
@@ -252,7 +252,7 @@ export default function MinistryReports() {
             disabled={refreshing}
             className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition-colors"
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            <ArrowsClockwiseIcon size={16} weight="regular" className={refreshing ? 'animate-spin' : ''} />
             רענן
           </button>
         </div>
@@ -289,7 +289,7 @@ export default function MinistryReports() {
         <Card className="mb-6 border-blue-200 bg-blue-50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <Info className="w-6 h-6 text-blue-600 flex-shrink-0" />
+              <InfoIcon size={24} weight="fill" className="text-blue-600 flex-shrink-0" />
               <div>
                 <h3 className="font-medium text-blue-800">שירות ייצוא אינו זמין עדיין</h3>
                 <p className="text-sm text-blue-600 mt-1">
@@ -325,25 +325,25 @@ export default function MinistryReports() {
           <StatsCard
             title="מורים"
             value={status.counts.teachers}
-            icon={<GraduationCap className="w-6 h-6" />}
+            icon={<GraduationCapIcon size={24} weight="regular" />}
             color="blue"
           />
           <StatsCard
             title="תלמידים"
             value={status.counts.students}
-            icon={<Users className="w-6 h-6" />}
+            icon={<UsersIcon size={24} weight="regular" />}
             color="green"
           />
           <StatsCard
             title="תזמורות"
             value={status.counts.orchestras}
-            icon={<Music className="w-6 h-6" />}
+            icon={<MusicNoteIcon size={24} weight="regular" />}
             color="purple"
           />
           <StatsCard
             title="שיעורי תיאוריה"
             value={status.counts.theoryLessons}
-            icon={<BookOpen className="w-6 h-6" />}
+            icon={<BookOpenIcon size={24} weight="regular" />}
             color="orange"
           />
         </div>
@@ -376,7 +376,7 @@ export default function MinistryReports() {
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              <WarningIcon size={20} weight="fill" className="text-amber-500" />
               <CardTitle className="text-lg">נתונים חסרים</CardTitle>
             </div>
           </CardHeader>
@@ -390,7 +390,7 @@ export default function MinistryReports() {
                   <ul className="space-y-1">
                     {items.slice(0, 10).map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
-                        <XCircle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+                        <XCircleIcon size={16} weight="fill" className="text-red-400 mt-0.5 flex-shrink-0" />
                         <span>
                           <span className="font-medium">{item.name}</span>
                           {item.field && <span className="text-gray-400"> — חסר: {item.field}</span>}
@@ -415,7 +415,7 @@ export default function MinistryReports() {
         <Card className="mb-6 border-red-200 bg-red-50">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <XCircle className="w-5 h-5 text-red-600" />
+              <XCircleIcon size={20} weight="fill" className="text-red-600" />
               <CardTitle className="text-lg text-red-800">שגיאות חוסמות ייצוא</CardTitle>
             </div>
           </CardHeader>
@@ -423,7 +423,7 @@ export default function MinistryReports() {
             <div className="space-y-3">
               {status!.preExportErrors.map((err, idx) => (
                 <div key={`pre-err-${idx}`} className="flex items-start gap-2 text-sm">
-                  <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                  <XCircleIcon size={16} weight="fill" className="text-red-500 mt-0.5 flex-shrink-0" />
                   <span className="text-red-700">{err.message}</span>
                 </div>
               ))}
@@ -437,7 +437,7 @@ export default function MinistryReports() {
         <Card className="mb-6 border-amber-200 bg-amber-50">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
+              <WarningIcon size={20} weight="fill" className="text-amber-600" />
               <CardTitle className="text-lg text-amber-800">אזהרות</CardTitle>
             </div>
           </CardHeader>
@@ -445,7 +445,7 @@ export default function MinistryReports() {
             <div className="space-y-3">
               {status!.preExportWarnings.map((warn, idx) => (
                 <div key={`pre-warn-${idx}`} className="flex items-start gap-2 text-sm">
-                  <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <WarningIcon size={16} weight="fill" className="text-amber-500 mt-0.5 flex-shrink-0" />
                   <span className="text-amber-700">{warn.message}</span>
                 </div>
               ))}
@@ -459,7 +459,7 @@ export default function MinistryReports() {
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-yellow-500" />
+              <WarningIcon size={20} weight="fill" className="text-yellow-500" />
               <CardTitle className="text-lg">אימות צולב</CardTitle>
             </div>
           </CardHeader>
@@ -467,13 +467,13 @@ export default function MinistryReports() {
             <div className="space-y-3">
               {validation.errors.map((err, idx) => (
                 <div key={`err-${idx}`} className="flex items-start gap-2 text-sm">
-                  <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                  <XCircleIcon size={16} weight="fill" className="text-red-500 mt-0.5 flex-shrink-0" />
                   <span className="text-red-700">{err.message}</span>
                 </div>
               ))}
               {validation.warnings.map((warn, idx) => (
                 <div key={`warn-${idx}`} className="flex items-start gap-2 text-sm">
-                  <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                  <WarningIcon size={16} weight="fill" className="text-amber-500 mt-0.5 flex-shrink-0" />
                   <span className="text-amber-700">{warn.message}</span>
                 </div>
               ))}
@@ -487,7 +487,7 @@ export default function MinistryReports() {
         <Card className="mb-6 border-green-200 bg-green-50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-6 h-6 text-green-600" />
+              <CheckCircleIcon size={24} weight="fill" className="text-green-600" />
               <div>
                 <h3 className="font-medium text-green-800">כל הנתונים תקינים</h3>
                 <p className="text-sm text-green-600">ניתן להוריד את הדוח למשרד החינוך</p>
@@ -504,7 +504,7 @@ export default function MinistryReports() {
           disabled={downloading || !endpointsAvailable || (status?.preExportErrors?.length ?? 0) > 0}
           className="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium"
         >
-          <Download className="w-5 h-5" />
+          <DownloadIcon size={20} weight="regular" />
           {downloading ? 'מוריד...' : 'הורד דוח מלא'}
         </button>
         {!endpointsAvailable && (

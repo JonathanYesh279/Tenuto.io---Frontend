@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users, GraduationCap, UserCheck, UserX, BookOpen } from 'lucide-react'
+import { EyeIcon, PencilSimpleIcon, FunnelIcon, CircleNotchIcon, XIcon, SquaresFourIcon, ListIcon, TrashIcon, CaretUpIcon, CaretDownIcon, WarningIcon, ShieldIcon, ArchiveIcon, ClockIcon, UsersIcon, GraduationCapIcon, UserCheckIcon, UserCircleMinusIcon, BookOpenIcon } from '@phosphor-icons/react'
 import { PlusIcon } from '@phosphor-icons/react'
 import { clsx } from 'clsx'
 import { Card } from '../components/ui/Card'
@@ -338,7 +338,7 @@ export default function Students() {
               }}
               title="צפה בפרטי התלמיד"
             >
-              <Eye className="w-4 h-4" />
+              <EyeIcon size={16} weight="regular" />
             </button>
             <button
               className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
@@ -348,7 +348,7 @@ export default function Students() {
               }}
               title="ערוך פרטי התלמיד"
             >
-              <Edit className="w-4 h-4" />
+              <PencilSimpleIcon size={16} weight="regular" />
             </button>
             {(student.referenceCount || student.rawData?.referenceCount || 0) > 0 ? (
               <button 
@@ -359,7 +359,7 @@ export default function Students() {
                 }}
                 title="מחיקה מאובטחת"
               >
-                <Shield className="w-4 h-4" />
+                <ShieldIcon size={16} weight="regular" />
               </button>
             ) : (
               <button 
@@ -370,7 +370,7 @@ export default function Students() {
                 }}
                 title="מחק תלמיד"
               >
-                <Trash2 className="w-4 h-4" />
+                <TrashIcon size={16} weight="fill" />
               </button>
             )}
           </div>
@@ -952,7 +952,7 @@ export default function Students() {
             }`}
             title={isSelectMode ? 'בטל בחירה מרובה' : 'הפעל בחירה מרובה'}
           >
-            <Users className="w-3 h-3 ml-1" />
+            <UsersIcon size={12} weight="regular" className="ml-1" />
             {isSelectMode ? 'בטל בחירה' : 'בחירה מרובה'}
           </button>
           
@@ -961,7 +961,7 @@ export default function Students() {
               onClick={handleBatchDelete}
               className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs"
             >
-              <Trash2 className="w-3 h-3 ml-1" />
+              <TrashIcon size={12} weight="fill" className="ml-1" />
               מחק נבחרים ({selectedStudents.size})
             </button>
           )}
@@ -977,7 +977,7 @@ export default function Students() {
             aria-pressed={viewMode === 'table'}
             aria-label="תצוגת טבלה"
           >
-            <List className="w-4 h-4" />
+            <ListIcon size={16} weight="regular" />
             <span className="hidden sm:inline">טבלה</span>
             {viewMode === 'table' && (
               <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
@@ -993,7 +993,7 @@ export default function Students() {
             aria-pressed={viewMode === 'grid'}
             aria-label="תצוגת רשת"
           >
-            <Grid className="w-4 h-4" />
+            <SquaresFourIcon size={16} weight="regular" />
             <span className="hidden sm:inline">רשת</span>
             {viewMode === 'grid' && (
               <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
@@ -1008,7 +1008,7 @@ export default function Students() {
         {searchLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded">
             <div className="text-center">
-              <Loader className="w-6 h-6 animate-spin mx-auto mb-2 text-primary" />
+              <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto mb-2 text-primary" />
               <div className="text-sm text-gray-600">מחפש תלמידים...</div>
             </div>
           </div>
@@ -1114,7 +1114,7 @@ export default function Students() {
           <EmptyState
             title="אין תלמידים עדיין"
             description="הוסף תלמידים לקונסרבטוריון כדי להתחיל"
-            icon={<GraduationCap className="w-12 h-12" />}
+            icon={<GraduationCapIcon size={48} weight="regular" />}
             action={{ label: 'הוסף תלמיד', onClick: () => setShowForm(true) }}
           />
         )
@@ -1131,12 +1131,12 @@ export default function Students() {
           >
             {loadingMore ? (
               <>
-                <Loader className="w-5 h-5 animate-spin" />
+                <CircleNotchIcon size={20} weight="regular" className="animate-spin" />
                 <span>טוען עוד תלמידים...</span>
               </>
             ) : (
               <>
-                <ChevronDown className="w-5 h-5" />
+                <CaretDownIcon size={20} weight="regular" />
                 <span>טען עוד תלמידים</span>
               </>
             )}

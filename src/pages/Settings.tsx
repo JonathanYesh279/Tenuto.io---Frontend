@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { Input } from '../components/ui/input'
 import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
-import { Settings as SettingsIcon, Building2, User, Landmark, SlidersHorizontal, Save } from 'lucide-react'
+import { GearIcon, BuildingIcon, UserIcon, BankIcon, SlidersHorizontalIcon, FloppyDiskIcon } from '@phosphor-icons/react'
 
 interface TenantData {
   _id: string
@@ -151,7 +151,7 @@ export default function Settings() {
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
-          <SettingsIcon className="w-5 h-5 text-primary" />
+          <GearIcon size={20} weight="regular" className="text-primary" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">הגדרות קונסרבטוריון</h1>
@@ -164,7 +164,7 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-gray-500" />
+              <BuildingIcon size={20} weight="regular" className="text-gray-500" />
               <CardTitle className="text-lg">פרטים כלליים</CardTitle>
             </div>
           </CardHeader>
@@ -198,7 +198,7 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <User className="w-5 h-5 text-gray-500" />
+              <UserIcon size={20} weight="regular" className="text-gray-500" />
               <CardTitle className="text-lg">מנהל/ת</CardTitle>
             </div>
           </CardHeader>
@@ -241,7 +241,7 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Landmark className="w-5 h-5 text-gray-500" />
+              <BankIcon size={20} weight="regular" className="text-gray-500" />
               <CardTitle className="text-lg">פרטי משרד החינוך</CardTitle>
             </div>
           </CardHeader>
@@ -281,7 +281,7 @@ export default function Settings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-5 h-5 text-gray-500" />
+              <SlidersHorizontalIcon size={20} weight="regular" className="text-gray-500" />
               <CardTitle className="text-lg">ברירות מחדל</CardTitle>
             </div>
           </CardHeader>
@@ -333,7 +333,7 @@ export default function Settings() {
             disabled={saving}
             className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <Save className="w-4 h-4" />
+            <FloppyDiskIcon size={16} weight="regular" />
             {saving ? 'שומר...' : 'שמור הגדרות'}
           </button>
         </div>

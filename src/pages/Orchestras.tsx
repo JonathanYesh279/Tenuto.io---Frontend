@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings, CheckCircle } from 'lucide-react'
+import { FunnelIcon, MusicNoteIcon, UsersIcon, UserCheckIcon, CalendarIcon, SquaresFourIcon, ListIcon, MapPinIcon, ChartBarIcon, GearIcon, CheckCircleIcon } from '@phosphor-icons/react'
 import { PlusIcon } from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
@@ -211,7 +211,7 @@ export default function Orchestras() {
         return (
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-orchestras-bg text-orchestras-fg flex items-center justify-center flex-shrink-0">
-              <Music className="w-4 h-4" />
+              <MusicNoteIcon size={16} weight="regular" />
             </div>
             <div>
               <div className="font-medium text-gray-900">{orchestra.name}</div>
@@ -299,21 +299,21 @@ export default function Orchestras() {
             className={`p-2 text-sm ${viewMode === 'dashboard' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
             title="לוח בקרה"
           >
-            <BarChart3 className="w-4 h-4" />
+            <ChartBarIcon size={16} weight="regular" />
           </button>
           <button
             onClick={() => setViewMode('grid')}
             className={`p-2 text-sm ${viewMode === 'grid' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
             title="תצוגת כרטיסים"
           >
-            <Grid className="w-4 h-4" />
+            <SquaresFourIcon size={16} weight="regular" />
           </button>
           <button
             onClick={() => setViewMode('table')}
             className={`p-2 text-sm ${viewMode === 'table' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
             title="תצוגת טבלה"
           >
-            <List className="w-4 h-4" />
+            <ListIcon size={16} weight="regular" />
           </button>
         </div>
 
@@ -407,7 +407,7 @@ export default function Orchestras() {
               <EmptyState
                 title="אין תזמורות עדיין"
                 description="צור תזמורת חדשה כדי להתחיל"
-                icon={<Music className="w-12 h-12" />}
+                icon={<MusicNoteIcon size={48} weight="regular" />}
                 action={{ label: 'תזמורת חדשה', onClick: handleCreateOrchestra }}
               />
             )

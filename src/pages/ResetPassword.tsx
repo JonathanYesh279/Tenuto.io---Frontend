@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Music } from 'lucide-react'
+import { MusicNoteIcon } from '@phosphor-icons/react'
 import { authService } from '../services/apiService.js'
 
 export default function ResetPassword() {
@@ -91,7 +91,7 @@ export default function ResetPassword() {
           <div>
             <div className="flex flex-col items-center gap-2 mb-4">
               <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
-                <Music className="w-8 h-8 text-white" />
+                <MusicNoteIcon size={32} weight="regular" className="text-white" />
               </div>
               <p className="text-sm text-white/70 font-reisinger-yonatan">מערכת ניהול קונסרבטוריון</p>
             </div>

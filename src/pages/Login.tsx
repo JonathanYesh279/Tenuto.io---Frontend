@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Building2, ArrowRight, Shield, Music } from 'lucide-react'
+import { BuildingIcon, ArrowRightIcon, ShieldIcon, MusicNoteIcon } from '@phosphor-icons/react'
 import { useAuth } from '../services/authContext.jsx'
 
 interface Tenant {
@@ -132,7 +132,7 @@ export default function Login() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-primary/30 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Building2 className="w-5 h-5 text-white" />
+                        <BuildingIcon size={20} weight="regular" className="text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-white text-base font-reisinger-yonatan truncate">
@@ -142,7 +142,7 @@ export default function Login() {
                           {tenant.roles.join(' · ')}
                         </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-white/40 group-hover:text-white/70 transition-colors rotate-180" />
+                      <ArrowRightIcon size={16} weight="regular" className="text-white/40 group-hover:text-white/70 transition-colors" mirrored />
                     </div>
                   </button>
                 ))}
@@ -165,7 +165,7 @@ export default function Login() {
               <div>
                 <div className="flex flex-col items-center gap-2 mb-4">
                   <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
-                    <Music className="w-8 h-8 text-white" />
+                    <MusicNoteIcon size={32} weight="regular" className="text-white" />
                   </div>
                   <p className="text-sm text-white/70 font-reisinger-yonatan">מערכת ניהול קונסרבטוריון</p>
                 </div>
@@ -177,7 +177,7 @@ export default function Login() {
                 </h2>
                 {isSuperAdmin && (
                   <div className="flex items-center justify-center gap-1.5 mt-2">
-                    <Shield className="w-4 h-4 text-amber-300" />
+                    <ShieldIcon size={16} weight="fill" className="text-amber-300" />
                     <p className="text-sm text-amber-200 font-reisinger-yonatan">ממשק ניהול מערכת</p>
                   </div>
                 )}

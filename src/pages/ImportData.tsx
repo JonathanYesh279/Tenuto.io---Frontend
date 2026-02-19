@@ -4,16 +4,16 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { StepProgress } from '../components/feedback/ProgressIndicators'
 import toast from 'react-hot-toast'
 import {
-  Upload,
-  FileSpreadsheet,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Users,
-  GraduationCap,
-  RefreshCw,
-  ArrowLeft,
-} from 'lucide-react'
+  UploadIcon,
+  FileXlsIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  WarningIcon,
+  UsersIcon,
+  GraduationCapIcon,
+  ArrowsClockwiseIcon,
+  ArrowLeftIcon,
+} from '@phosphor-icons/react'
 
 type ImportTab = 'teachers' | 'students'
 type ImportState = 'upload' | 'preview' | 'results'
@@ -169,9 +169,9 @@ export default function ImportData() {
 
   const getRowStatusIcon = (status: string) => {
     switch (status) {
-      case 'matched': return <CheckCircle2 className="w-4 h-4 text-green-600" />
-      case 'not_found': return <AlertTriangle className="w-4 h-4 text-yellow-600" />
-      case 'error': return <XCircle className="w-4 h-4 text-red-600" />
+      case 'matched': return <CheckCircleIcon size={16} weight="fill" className="text-green-600" />
+      case 'not_found': return <WarningIcon size={16} weight="fill" className="text-yellow-600" />
+      case 'error': return <XCircleIcon size={16} weight="fill" className="text-red-600" />
       default: return null
     }
   }
@@ -186,7 +186,7 @@ export default function ImportData() {
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
-          <Upload className="w-5 h-5 text-primary" />
+          <UploadIcon size={20} weight="regular" className="text-primary" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">ייבוא נתונים</h1>
@@ -204,7 +204,7 @@ export default function ImportData() {
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
-          <GraduationCap className="w-4 h-4" />
+          <GraduationCapIcon size={16} weight="regular" />
           ייבוא מורים
         </button>
         <button
@@ -215,7 +215,7 @@ export default function ImportData() {
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
-          <Users className="w-4 h-4" />
+          <UsersIcon size={16} weight="regular" />
           ייבוא תלמידים
         </button>
       </div>
@@ -249,7 +249,7 @@ export default function ImportData() {
                     : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                 }`}
               >
-                <FileSpreadsheet className={`w-12 h-12 mb-4 ${dragActive ? 'text-primary' : 'text-gray-400'}`} />
+                <FileXlsIcon size={48} weight="regular" className={`mb-4 ${dragActive ? 'text-primary' : 'text-gray-400'}`} />
                 <p className="text-lg font-medium text-gray-700 mb-1">
                   גרור קובץ לכאן או לחץ לבחירה
                 </p>
@@ -313,7 +313,7 @@ export default function ImportData() {
             <Card className="border-amber-200 bg-amber-50">
               <CardContent className="pt-4 pb-4">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <WarningIcon size={20} weight="fill" className="text-amber-600 mt-0.5 flex-shrink-0" />
                   <div className="space-y-1">
                     {previewData.preview.warnings.map((w, i) => (
                       <p key={i} className="text-sm text-amber-700">{w}</p>
@@ -378,7 +378,7 @@ export default function ImportData() {
               onClick={resetState}
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeftIcon size={16} weight="regular" />
               ביטול
             </button>
             <button
@@ -388,12 +388,12 @@ export default function ImportData() {
             >
               {executing ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <ArrowsClockwiseIcon size={16} weight="regular" className="animate-spin" />
                   מבצע ייבוא...
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircleIcon size={16} weight="fill" />
                   אשר ייבוא ({previewData.preview.matched.length} שורות)
                 </>
               )}
@@ -409,7 +409,7 @@ export default function ImportData() {
           <Card className="border-green-200 bg-green-50">
             <CardContent className="pt-6">
               <div className="flex items-center gap-3 mb-4">
-                <CheckCircle2 className="w-8 h-8 text-green-600" />
+                <CheckCircleIcon size={32} weight="fill" className="text-green-600" />
                 <h2 className="text-xl font-bold text-green-800">הייבוא הושלם</h2>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -438,7 +438,7 @@ export default function ImportData() {
             <Card className="border-red-200">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <XCircle className="w-5 h-5 text-red-500" />
+                  <XCircleIcon size={20} weight="fill" className="text-red-500" />
                   <CardTitle className="text-lg">פרטי שגיאות</CardTitle>
                 </div>
               </CardHeader>
@@ -461,7 +461,7 @@ export default function ImportData() {
               onClick={resetState}
               className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded hover:bg-primary/90 transition-colors font-medium"
             >
-              <Upload className="w-4 h-4" />
+              <UploadIcon size={16} weight="regular" />
               ייבוא קובץ נוסף
             </button>
           </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown } from 'lucide-react'
-import { PlusIcon } from '@phosphor-icons/react'
+import { PlusIcon, CircleNotchIcon, UsersIcon, XIcon, SquaresFourIcon, ListIcon, EyeIcon, PencilSimpleIcon, TrashIcon, CaretDownIcon } from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import { StatusBadge, InstrumentBadge, AvatarInitials } from '../components/domain'
@@ -444,7 +443,7 @@ export default function Teachers() {
             }}
             title="צפה בפרטי המורה"
           >
-            <Eye className="w-4 h-4" />
+            <EyeIcon size={16} weight="regular" />
           </button>
           <button
             className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
@@ -454,7 +453,7 @@ export default function Teachers() {
             }}
             title="ערוך פרטי המורה"
           >
-            <Edit className="w-4 h-4" />
+            <PencilSimpleIcon size={16} weight="regular" />
           </button>
           <button
             className="p-1.5 text-red-600 hover:text-red-900 hover:bg-red-100 rounded transition-colors"
@@ -464,7 +463,7 @@ export default function Teachers() {
             }}
             title="מחק מורה"
           >
-            <Trash2 className="w-4 h-4" />
+            <TrashIcon size={16} weight="regular" />
           </button>
         </div>
       )
@@ -508,7 +507,7 @@ export default function Teachers() {
 
             {scheduleLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader className="w-8 h-8 animate-spin text-primary" />
+                <CircleNotchIcon size={32} weight="regular" className="animate-spin text-primary" />
                 <span className="mr-3 text-gray-600">טוען לוח זמנים...</span>
               </div>
             ) : (
@@ -611,7 +610,7 @@ export default function Teachers() {
               onClick={() => { setInstrumentSearchTerm(''); setFilters(prev => ({ ...prev, instrument: '' })); setShowInstrumentDropdown(false) }}
               className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              <X className="w-3 h-3" />
+              <XIcon size={12} weight="regular" />
             </button>
           )}
           {showInstrumentDropdown && (
@@ -690,7 +689,7 @@ export default function Teachers() {
             aria-pressed={viewMode === 'table'}
             aria-label="תצוגת טבלה"
           >
-            <List className="w-4 h-4" />
+            <ListIcon size={16} weight="regular" />
             <span className="hidden sm:inline">טבלה</span>
             {viewMode === 'table' && (
               <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
@@ -706,7 +705,7 @@ export default function Teachers() {
             aria-pressed={viewMode === 'grid'}
             aria-label="תצוגת רשת"
           >
-            <Grid className="w-4 h-4" />
+            <SquaresFourIcon size={16} weight="regular" />
             <span className="hidden sm:inline">רשת</span>
             {viewMode === 'grid' && (
               <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
@@ -720,7 +719,7 @@ export default function Teachers() {
         {searchLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded">
             <div className="text-center">
-              <Loader className="w-6 h-6 animate-spin mx-auto mb-2 text-primary" />
+              <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto mb-2 text-primary" />
               <div className="text-sm text-gray-600">מחפש מורים...</div>
             </div>
           </div>
@@ -781,7 +780,7 @@ export default function Teachers() {
           <EmptyState
             title="אין מורים עדיין"
             description="הוסף מורים לקונסרבטוריון כדי להתחיל"
-            icon={<Users className="w-12 h-12" />}
+            icon={<UsersIcon size={48} weight="regular" />}
             action={{ label: 'הוסף מורה', onClick: () => setShowAddTeacherModal(true) }}
           />
         )
@@ -798,12 +797,12 @@ export default function Teachers() {
           >
             {loadingMore ? (
               <>
-                <Loader className="w-5 h-5 animate-spin" />
+                <CircleNotchIcon size={20} weight="regular" className="animate-spin" />
                 <span>טוען עוד מורים...</span>
               </>
             ) : (
               <>
-                <ChevronDown className="w-5 h-5" />
+                <CaretDownIcon size={20} weight="regular" />
                 <span>טען עוד מורים</span>
               </>
             )}

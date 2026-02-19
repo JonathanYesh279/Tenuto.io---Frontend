@@ -15,12 +15,12 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 
 ## Current Position
 
-Phase: 22-visual-architecture-rewrite (pending — not yet planned)
-Plan: None yet — run `/gsd:plan-phase 22`
-Status: Phase inserted, archetype framework defined, awaiting planning
-Last activity: 2026-02-18 — Phase 22 inserted, ARCHETYPES.md written
+Phase: 22-visual-architecture-rewrite
+Plan: 22-02 (1/15 complete)
+Status: In progress
+Last activity: 2026-02-19 — 22-01 token foundation complete
 
-Progress: [░░░░░░░░░░] 0% (v3.0)
+Progress: [█░░░░░░░░░] 7% (v3.0)
 
 ## Performance Metrics
 
@@ -28,7 +28,8 @@ Progress: [░░░░░░░░░░] 0% (v3.0)
 - v1.1: 5 phases, 7 plans, ~3.5 hours
 - v2.0: 10 phases, 22 plans, ~2.3 hours
 - v2.1: 6 phases, 13 plans
-- Total: 21 phases, 42 plans
+- v3.0: 1 phase in progress, 1 plan complete (22-01: 2 min)
+- Total: 21+ phases, 43 plans
 
 ## Accumulated Context
 
@@ -46,6 +47,11 @@ Key decisions for v3.0:
 - [Direction]: This is NOT polish or token refinement — it's structural recomposition
 - [Direction]: Shape language, button system, icon system must all be redefined as a unit
 - [Direction]: Template grid symmetry must be eliminated
+- [22-01 Token]: --primary: 0 0% 0% — black is locked, not a variable choice
+- [22-01 Token]: --radius: 0.125rem (2px) — sharp corners locked for architectural identity
+- [22-01 Token]: --sidebar: 220 20% 13% — deep charcoal, tonally distinct, structurally anchoring
+- [22-01 Token]: --shadow-1: none — decorative elevation eliminated, shadows reserved for interaction layers
+- [22-01 Token]: primary-NNN hex classes (1,211 across 134 files) deferred to 22-03
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -63,6 +69,6 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 
 ## Session Continuity
 
-Last session: 2026-02-18
-Stopped at: Phase 22 inserted, ARCHETYPES.md written — ready for `/gsd:plan-phase 22`
+Last session: 2026-02-19
+Stopped at: Completed 22-01-PLAN.md — token foundation (black primary, 2px radius, charcoal sidebar)
 Resume file: None

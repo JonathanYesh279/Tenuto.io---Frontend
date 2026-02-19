@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 22-visual-architecture-rewrite
-Plan: 22-14 (13/15 complete)
+Plan: 22-15 (14/15 complete)
 Status: In progress
-Last activity: 2026-02-19 — 22-13 Phosphor Icons full-pages migration: zero lucide-react imports across all 18 src/pages/ files
+Last activity: 2026-02-19 — 22-14 Final comprehensive Phosphor sweep: zero lucide-react, zero primary-NNN, zero rounded-xl/2xl/3xl across entire src/ (217 files using Phosphor)
 
-Progress: [████████░░] 87% (v3.0)
+Progress: [█████████░] 93% (v3.0)
 
 ## Performance Metrics
 
@@ -102,6 +102,11 @@ Key decisions for v3.0:
 - [22-11 Dossier]: Native button nav replaces shadcn Tabs/TabsList in all three detail pages — direct control over tab bar placement needed
 - [22-11 Dossier]: Award icon absent from Phosphor — CertificateIcon used for Bagrut tab (semantically appropriate for exam certification)
 - [22-11 Dossier]: AvatarInitials extended with style prop to support entity accent borderRight without wrapper div
+- [22-14 Icons]: Zero lucide-react — entire src/ directory clean; 175 files migrated in plan 22-14; 217 files now use @phosphor-icons/react
+- [22-14 Icons]: Lucide-to-Phosphor mapping finalized: Users→UsersIcon, Calendar→CalendarIcon, AlertCircle→WarningCircleIcon, Loader2→CircleNotchIcon, TrendingUp→TrendUpIcon, BarChart3→ChartBarIcon
+- [22-14 Style]: bg-primary-NNN mapping: 500-900→bg-primary, 50-200→bg-muted/bg-muted/50; hover-NNN→hover:bg-neutral-800 (visible shift on black buttons)
+- [22-14 Style]: Auth pages excluded (Login, ForgotPassword, ResetPassword) — glassmorphism rounded-2xl preserved per 22-03 decision
+- [22-14 Style]: rounded-xl/2xl/3xl → rounded throughout entire codebase; rounded-full preserved on avatars/spinners
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -114,12 +119,12 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 - [Pre-existing]: TypeScript errors in 6 utility files — blocks CI typecheck stage. Unrelated to visual work.
 - [Pre-existing]: Backend export endpoints not implemented — MinistryReports info banner stays.
 - [WSL constraint]: npm install on /mnt/c/ NTFS mount causes EIO errors — build verification from Windows PowerShell or CI only.
-- [v2.1 carryover]: 1,211 primary-NNN hex classes across 134 files — migration deferred. src/pages/ (15 files) RESOLVED by 22-03. src/features/ RESOLVED by 22-08/09. Remaining: src/components/ and src/services/ files.
+- [v2.1 carryover]: 1,211 primary-NNN hex classes — FULLY RESOLVED by 22-14. Zero bg/text-primary-NNN remain in entire codebase.
 - [v2.1 audit]: TeacherForm.tsx and StudentForm.tsx accent bars orphaned — form routing doesn't reach them. Will be addressed or superseded by Phase 22 restructuring.
-- [22-09 Remaining]: ~152 bg-primary-NNN, ~140 text-primary-NNN, ~94 rounded-xl remain in OTHER src/ files (feedback, analytics, schedule, accessibility, OrchestraEnrollmentManager root-level) — outside plan 22-09 scope. May need follow-up plan. NOTE: dashboard/charts resolved by 22-06.
+- [22-09 Remaining]: RESOLVED by 22-14 — all bg-primary-NNN, text-primary-NNN, rounded-xl/2xl/3xl cleaned across entire src/.
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-13-PLAN.md — Phosphor Icons full-pages migration (zero lucide-react across all src/pages/)
+Stopped at: Completed 22-14-PLAN.md — Final comprehensive Phosphor sweep (zero lucide-react, zero primary-NNN, zero excessive rounding in entire src/)
 Resume file: None

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users, GraduationCap, UserCheck, UserX, BookOpen } from 'lucide-react'
+import { Eye, Edit, Filter, Loader, X, Grid, List, Trash2, ChevronUp, ChevronDown, AlertTriangle, Shield, Archive, Clock, Users, GraduationCap, UserCheck, UserX, BookOpen } from 'lucide-react'
+import { PlusIcon } from '@phosphor-icons/react'
 import { clsx } from 'clsx'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
-import { ListPageHero } from '../components/ui/ListPageHero'
 import { Badge } from '../components/ui/badge'
 import { StatusBadge, InstrumentBadge, AvatarInitials } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
@@ -652,16 +652,6 @@ export default function Students() {
   // Use totalStudentsCount from pagination when available, otherwise use loaded students length
   const totalStudents = totalStudentsCount > 0 ? totalStudentsCount : students.length
   const activeStudents = students.filter(s => s.rawData?.isActive).length
-  const inactiveStudents = students.filter(s => !s.rawData?.isActive).length
-  const studentsWithLessons = students.filter(s => s.teacherAssignments > 0).length
-
-  // Hero metrics — 4 entity-colored stat cards
-  const heroMetrics = [
-    { title: 'סה״כ תלמידים', value: totalStudents, icon: <Users className="w-5 h-5" /> },
-    { title: 'פעילים', value: activeStudents, icon: <UserCheck className="w-5 h-5" /> },
-    { title: 'לא פעילים', value: inactiveStudents, icon: <UserX className="w-5 h-5" /> },
-    { title: 'עם שיעורים', value: studentsWithLessons, icon: <BookOpen className="w-5 h-5" /> },
-  ]
 
   const columns = [
     ...(isSelectMode ? [{
@@ -859,19 +849,23 @@ export default function Students() {
           </div>
         </div>
       )}
-      {/* Hero Stats Zone */}
-      <ListPageHero
-        title="תלמידים"
-        entityColor="students"
-        metrics={heroMetrics}
-        action={{
-          label: 'הוסף תלמיד',
-          onClick: handleAddStudent
-        }}
-      />
+      {/* Compact identity strip */}
+      <div className="flex items-center justify-between py-3 border-b border-border">
+        <div className="flex items-center gap-3">
+          <h1 className="text-lg font-semibold text-foreground">תלמידים</h1>
+          <span className="text-sm text-muted-foreground">{activeStudents} פעילים</span>
+        </div>
+        <button
+          onClick={handleAddStudent}
+          className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-neutral-800 transition-colors"
+        >
+          <PlusIcon size={14} weight="fill" />
+          הוסף תלמיד
+        </button>
+      </div>
 
-      {/* Compact Filter Toolbar */}
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
+      {/* Compact Filter Toolbar — flush with table, no gap below */}
+      <div className="flex items-center gap-3 pt-2 pb-2 border-b border-border flex-wrap">
         <div className="w-64 flex-none">
           <SearchInput
             value={searchTerm}
@@ -932,7 +926,7 @@ export default function Students() {
       </div>
 
       {/* Results Info */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="py-2 flex items-center justify-between">
         <div className="text-sm text-gray-600">
           {searchTerm || filters.orchestra || filters.instrument || filters.stageLevel ? (
             <span>
@@ -1045,7 +1039,7 @@ export default function Students() {
               'cursor-pointer transition-all duration-150',
               isSelected
                 ? 'bg-blue-50 hover:bg-blue-100 border-l-4 border-blue-500'
-                : 'hover:bg-gray-50'
+                : 'hover:bg-muted'
             )
           }}
         />

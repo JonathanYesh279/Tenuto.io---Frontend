@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown, UserCheck, Clock, GraduationCap } from 'lucide-react'
+import { Loader, Calendar, Users, X, Grid, List, Eye, Edit, Trash2, ChevronDown } from 'lucide-react'
+import { PlusIcon } from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
-import { ListPageHero } from '../components/ui/ListPageHero'
 import { StatusBadge, InstrumentBadge, AvatarInitials } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import TeacherCard from '../components/TeacherCard'
@@ -401,16 +401,6 @@ export default function Teachers() {
   // Use totalTeachersCount from pagination when available, otherwise use loaded teachers length
   const totalTeachers = totalTeachersCount > 0 ? totalTeachersCount : teachers.length
   const activeTeachers = teachers.filter(t => t.isActive).length
-  const totalStudents = teachers.reduce((sum, t) => sum + t.studentCount, 0)
-  const teachersWithAvailability = teachers.filter(t => t.hasTimeBlocks).length
-
-  // Hero metrics — 4 entity-colored stat cards
-  const heroMetrics = [
-    { title: 'סה״כ מורים', value: totalTeachers, icon: <Users className="w-5 h-5" /> },
-    { title: 'פעילים', value: activeTeachers, icon: <UserCheck className="w-5 h-5" /> },
-    { title: 'סה״כ תלמידים', value: totalStudents, icon: <GraduationCap className="w-5 h-5" /> },
-    { title: 'עם זמינות', value: teachersWithAvailability, icon: <Clock className="w-5 h-5" /> },
-  ]
 
   // Table columns definition
   const columns = [
@@ -577,19 +567,25 @@ export default function Teachers() {
     <div>
       {renderSchedule()}
 
-      {/* Hero Stats Zone */}
-      <ListPageHero
-        title="מורים"
-        entityColor="teachers"
-        metrics={heroMetrics}
-        action={isUserAdmin(user) ? {
-          label: 'הוסף מורה',
-          onClick: handleAddTeacher
-        } : undefined}
-      />
+      {/* Compact identity strip */}
+      <div className="flex items-center justify-between py-3 border-b border-border">
+        <div className="flex items-center gap-3">
+          <h1 className="text-lg font-semibold text-foreground">מורים</h1>
+          <span className="text-sm text-muted-foreground">{activeTeachers} פעילים</span>
+        </div>
+        {isUserAdmin(user) && (
+          <button
+            onClick={handleAddTeacher}
+            className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-neutral-800 transition-colors"
+          >
+            <PlusIcon size={14} weight="fill" />
+            הוסף מורה
+          </button>
+        )}
+      </div>
 
-      {/* Compact Filter Toolbar */}
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
+      {/* Compact Filter Toolbar — flush with table, no gap below */}
+      <div className="flex items-center gap-3 pt-2 pb-2 border-b border-border flex-wrap">
         <div className="w-64 flex-none">
           <SearchInput
             value={searchTerm}
@@ -667,7 +663,7 @@ export default function Teachers() {
       </div>
 
       {/* Results Info and View Toggle */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="py-2 flex items-center justify-between">
         <div className="text-sm text-gray-600">
           {searchTerm || filters.instrument || filters.role ? (
             <span>
@@ -737,7 +733,7 @@ export default function Teachers() {
           onRowClick={(row) => {
             handleViewTeacher(row.id)
           }}
-          rowClassName="hover:bg-gray-50 cursor-pointer transition-colors"
+          rowClassName="hover:bg-muted cursor-pointer transition-colors"
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">

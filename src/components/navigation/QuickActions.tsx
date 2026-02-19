@@ -1,21 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { 
-  Plus, 
-  Users, 
-  GraduationCap, 
-  BookOpen, 
-  Calendar, 
-  Music, 
-  FileText, 
-  Clock,
-  MapPin,
-  UserCheck,
-  Settings,
-  Zap,
-  ChevronDown,
-  ChevronUp
-} from 'lucide-react'
+import { BookOpenIcon, CalendarIcon, CaretDownIcon, CaretUpIcon, ClockIcon, FileTextIcon, GearIcon, GraduationCapIcon, LightningIcon, MapPinIcon, MusicNotesIcon, PlusIcon, UserCircleCheckIcon, UsersIcon } from '@phosphor-icons/react'
+
 
 interface QuickAction {
   id: string
@@ -42,7 +28,7 @@ const allQuickActions: QuickAction[] = [
     id: 'add-student',
     label: 'הוסף תלמיד חדש',
     href: '/students/new',
-    icon: Users,
+    icon: UsersIcon,
     description: 'רישום תלמיד חדש במערכת',
     category: 'ניהול תלמידים',
     shortcut: 'Ctrl+N',
@@ -52,7 +38,7 @@ const allQuickActions: QuickAction[] = [
     id: 'student-attendance',
     label: 'רישום נוכחות תלמידים',
     href: '/profile?tab=attendance',
-    icon: UserCheck,
+    icon: UserCircleCheckIcon,
     description: 'רישום נוכחות לשיעור או חזרה',
     category: 'ניהול תלמידים',
     color: 'green'
@@ -63,7 +49,7 @@ const allQuickActions: QuickAction[] = [
     id: 'add-teacher',
     label: 'הוסף מורה חדש',
     href: '/teachers/new',
-    icon: GraduationCap,
+    icon: GraduationCapIcon,
     description: 'הוספת מורה חדש לצוות',
     category: 'ניהול מורים',
     color: 'blue'
@@ -74,7 +60,7 @@ const allQuickActions: QuickAction[] = [
     id: 'create-theory-lesson',
     label: 'צור שיעור תיאוריה',
     href: '/theory-lessons/new',
-    icon: BookOpen,
+    icon: BookOpenIcon,
     description: 'יצירת שיעור תיאוריה חדש',
     category: 'ניהול שיעורים',
     color: 'purple'
@@ -83,7 +69,7 @@ const allQuickActions: QuickAction[] = [
     id: 'schedule-individual-lesson',
     label: 'תזמן שיעור פרטי',
     href: '/lessons/individual/new',
-    icon: Clock,
+    icon: ClockIcon,
     description: 'תזמון שיעור פרטי לתלמיד',
     category: 'ניהול שיעורים',
     color: 'orange'
@@ -94,7 +80,7 @@ const allQuickActions: QuickAction[] = [
     id: 'create-orchestra',
     label: 'צור תזמורת חדשה',
     href: '/orchestras/new',
-    icon: Music,
+    icon: MusicNotesIcon,
     description: 'יצירת תזמורת או קבוצת נגינה',
     category: 'ניהול תזמורות',
     color: 'purple'
@@ -103,7 +89,7 @@ const allQuickActions: QuickAction[] = [
     id: 'schedule-rehearsal',
     label: 'תזמן חזרה',
     href: '/rehearsals/new',
-    icon: Calendar,
+    icon: CalendarIcon,
     description: 'תזמון חזרה לתזמורת',
     category: 'ניהול תזמורות',
     color: 'blue'
@@ -114,7 +100,7 @@ const allQuickActions: QuickAction[] = [
     id: 'book-practice-room',
     label: 'הזמן חדר תרגול',
     href: '/rooms/book',
-    icon: MapPin,
+    icon: MapPinIcon,
     description: 'הזמנת חדר תרגול פנוי',
     category: 'ניהול משאבים',
     color: 'green'
@@ -125,7 +111,7 @@ const allQuickActions: QuickAction[] = [
     id: 'generate-report',
     label: 'צור דוח',
     href: '/reports/new',
-    icon: FileText,
+    icon: FileTextIcon,
     description: 'יצירת דוח נוכחות או התקדמות',
     category: 'דוחות',
     color: 'red'
@@ -136,7 +122,7 @@ const allQuickActions: QuickAction[] = [
     id: 'system-settings',
     label: 'הגדרות מערכת',
     href: '/settings',
-    icon: Settings,
+    icon: GearIcon,
     description: 'ניהול הגדרות כלליות',
     category: 'ניהול מערכת',
     color: 'primary'
@@ -145,7 +131,7 @@ const allQuickActions: QuickAction[] = [
 
 // Color mapping for action buttons
 const colorClasses = {
-  primary: 'bg-primary-50 text-primary-700 hover:bg-primary-100 border-primary-200',
+  primary: 'bg-muted/50 text-primary hover:bg-muted border-border',
   green: 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200',
   blue: 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200',
   purple: 'bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-200',
@@ -188,7 +174,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
           >
             <span className="text-right">{action.label}</span>
             <div className="flex items-center space-x-1 space-x-reverse">
-              <Plus className="w-3 h-3 group-hover:text-green-500" />
+              <PlusIcon className="w-3 h-3 group-hover:text-green-500" />
               <Icon className="w-4 h-4" />
             </div>
           </Link>
@@ -202,12 +188,12 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         >
           {showAll ? (
             <>
-              <ChevronUp className="w-4 h-4 inline ml-1" />
+              <CaretUpIcon className="w-4 h-4 inline ml-1" />
               הצג פחות
             </>
           ) : (
             <>
-              <ChevronDown className="w-4 h-4 inline ml-1" />
+              <CaretDownIcon className="w-4 h-4 inline ml-1" />
               הצג עוד ({filteredActions.length - maxVisible})
             </>
           )}
@@ -227,7 +213,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
               onClick={() => setSelectedCategory(category)}
               className={`px-3 py-1 text-xs rounded-full transition-colors ${
                 selectedCategory === category
-                  ? 'bg-primary-100 text-primary-700'
+                  ? 'bg-muted text-primary'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -252,7 +238,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             >
               <div className="flex items-center justify-between mb-2">
                 <Icon className="w-6 h-6" />
-                <Zap className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <LightningIcon className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               
               <h3 className="font-semibold text-sm mb-1 font-reisinger-yonatan text-right">
@@ -280,16 +266,16 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         <div className="text-center">
           <button
             onClick={() => setShowAll(!showAll)}
-            className="px-4 py-2 text-sm text-primary-600 hover:text-primary-700 transition-colors"
+            className="px-4 py-2 text-sm text-primary hover:text-primary transition-colors"
           >
             {showAll ? (
               <>
-                <ChevronUp className="w-4 h-4 inline ml-1" />
+                <CaretUpIcon className="w-4 h-4 inline ml-1" />
                 הצג פחות פעולות
               </>
             ) : (
               <>
-                <ChevronDown className="w-4 h-4 inline ml-1" />
+                <CaretDownIcon className="w-4 h-4 inline ml-1" />
                 הצג עוד פעולות ({filteredActions.length - maxVisible})
               </>
             )}
@@ -319,7 +305,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       {filteredActions.length > 3 && (
         <div className="relative">
           <button className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            <Plus className="w-4 h-4 ml-2" />
+            <PlusIcon className="w-4 h-4 ml-2" />
             עוד ({filteredActions.length - 3})
           </button>
         </div>
@@ -336,7 +322,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             <Link
               key={action.id}
               to={action.href}
-              className="w-12 h-12 bg-primary-500 text-white rounded-full shadow-lg hover:bg-primary-600 transition-all duration-200 flex items-center justify-center group"
+              className="w-12 h-12 bg-primary text-white rounded-full shadow-lg hover:bg-primary transition-all duration-200 flex items-center justify-center group"
               style={{ 
                 transform: showAll ? `translateY(${-60 * (index + 1)}px)` : 'translateY(0)',
                 opacity: showAll ? 1 : index === 0 ? 1 : 0
@@ -350,9 +336,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         
         <button
           onClick={() => setShowAll(!showAll)}
-          className="w-12 h-12 bg-primary-500 text-white rounded-full shadow-lg hover:bg-primary-600 transition-all duration-200 flex items-center justify-center"
+          className="w-12 h-12 bg-primary text-white rounded-full shadow-lg hover:bg-primary transition-all duration-200 flex items-center justify-center"
         >
-          {showAll ? <ChevronDown className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+          {showAll ? <CaretDownIcon className="w-5 h-5" /> : <PlusIcon className="w-5 h-5" />}
         </button>
       </div>
     </div>

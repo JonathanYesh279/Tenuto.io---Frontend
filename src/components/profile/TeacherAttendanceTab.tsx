@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { CheckCircle2, XCircle, Calendar, Users, Clock, TrendingUp, Loader2 } from 'lucide-react'
+
 import { useAuth } from '../../services/authContext'
 import apiService from '../../services/apiService'
 import { getDisplayName, getInitials as getNameInitials } from '../../utils/nameUtils'
 import { toast } from 'react-hot-toast'
+import { CalendarIcon, CheckCircle2Icon, CircleNotchIcon, ClockIcon, TrendUpIcon, UsersIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface Student {
   _id: string
@@ -232,7 +233,7 @@ export default function TeacherAttendanceTab() {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-indigo-600 animate-spin mx-auto mb-4" />
+          <CircleNotchIcon className="w-8 h-8 text-indigo-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">טוען נתוני נוכחות...</p>
         </div>
       </div>
@@ -242,7 +243,7 @@ export default function TeacherAttendanceTab() {
   if (students.length === 0) {
     return (
       <div className="text-center py-12">
-        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">אין תלמידים</h3>
         <p className="text-gray-600">טרם הוקצו לך תלמידים</p>
       </div>
@@ -255,7 +256,7 @@ export default function TeacherAttendanceTab() {
       <div className="bg-white rounded-lg border border-gray-200 p-4">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <Calendar className="w-5 h-5 text-indigo-600" />
+            <CalendarIcon className="w-5 h-5 text-indigo-600" />
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 תאריך
@@ -286,7 +287,7 @@ export default function TeacherAttendanceTab() {
               <p className="text-sm font-medium text-blue-600">סה״כ תלמידים</p>
               <p className="text-2xl font-bold text-blue-700 mt-1">{stats.totalStudents}</p>
             </div>
-            <Users className="w-8 h-8 text-blue-400" />
+            <UsersIcon className="w-8 h-8 text-blue-400" />
           </div>
         </div>
 
@@ -296,7 +297,7 @@ export default function TeacherAttendanceTab() {
               <p className="text-sm font-medium text-green-600">נוכחים</p>
               <p className="text-2xl font-bold text-green-700 mt-1">{stats.presentToday}</p>
             </div>
-            <CheckCircle2 className="w-8 h-8 text-green-400" />
+            <CheckCircle2Icon className="w-8 h-8 text-green-400" />
           </div>
         </div>
 
@@ -306,7 +307,7 @@ export default function TeacherAttendanceTab() {
               <p className="text-sm font-medium text-red-600">נעדרים</p>
               <p className="text-2xl font-bold text-red-700 mt-1">{stats.absentToday}</p>
             </div>
-            <XCircle className="w-8 h-8 text-red-400" />
+            <XCircleIcon className="w-8 h-8 text-red-400" />
           </div>
         </div>
 
@@ -320,7 +321,7 @@ export default function TeacherAttendanceTab() {
                   : 0}%
               </p>
             </div>
-            <TrendingUp className="w-8 h-8 text-purple-400" />
+            <TrendUpIcon className="w-8 h-8 text-purple-400" />
           </div>
         </div>
       </div>
@@ -330,7 +331,7 @@ export default function TeacherAttendanceTab() {
         <div className="bg-indigo-50 rounded-lg border border-indigo-200 p-4">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-indigo-600" />
+              <ClockIcon className="w-5 h-5 text-indigo-600" />
               <span className="text-sm font-medium text-indigo-900">
                 סמן את כל התלמידים שטרם סומנו:
               </span>
@@ -340,14 +341,14 @@ export default function TeacherAttendanceTab() {
                 onClick={() => markAllAs('present')}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
               >
-                <CheckCircle2 className="w-4 h-4" />
+                <CheckCircle2Icon className="w-4 h-4" />
                 סמן הכל כנוכחים
               </button>
               <button
                 onClick={() => markAllAs('absent')}
                 className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
               >
-                <XCircle className="w-4 h-4" />
+                <XCircleIcon className="w-4 h-4" />
                 סמן הכל כנעדרים
               </button>
             </div>
@@ -403,13 +404,13 @@ export default function TeacherAttendanceTab() {
                   <div className="flex-shrink-0">
                     {student.attendanceStatus === 'present' && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-medium">
-                        <CheckCircle2 className="w-4 h-4" />
+                        <CheckCircle2Icon className="w-4 h-4" />
                         נוכח
                       </span>
                     )}
                     {student.attendanceStatus === 'absent' && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-800 text-sm font-medium">
-                        <XCircle className="w-4 h-4" />
+                        <XCircleIcon className="w-4 h-4" />
                         נעדר
                       </span>
                     )}
@@ -432,9 +433,9 @@ export default function TeacherAttendanceTab() {
                       } disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       {student.isMarking ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <CircleNotchIcon className="w-4 h-4 animate-spin" />
                       ) : (
-                        <CheckCircle2 className="w-4 h-4" />
+                        <CheckCircle2Icon className="w-4 h-4" />
                       )}
                       נוכח
                     </button>
@@ -448,9 +449,9 @@ export default function TeacherAttendanceTab() {
                       } disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       {student.isMarking ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <CircleNotchIcon className="w-4 h-4 animate-spin" />
                       ) : (
-                        <XCircle className="w-4 h-4" />
+                        <XCircleIcon className="w-4 h-4" />
                       )}
                       נעדר
                     </button>
@@ -466,7 +467,7 @@ export default function TeacherAttendanceTab() {
       {stats.markedToday === stats.totalStudents && stats.totalStudents > 0 && (
         <div className="bg-green-50 rounded-lg border border-green-200 p-4">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
+            <CheckCircle2Icon className="w-6 h-6 text-green-600 flex-shrink-0" />
             <div>
               <p className="font-medium text-green-900">
                 כל התלמידים סומנו! ✓

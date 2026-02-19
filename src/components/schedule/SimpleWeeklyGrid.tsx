@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Clock, MapPin, Music, User } from 'lucide-react'
+import { ClockIcon, MapPinIcon, MusicNotesIcon, UserIcon } from '@phosphor-icons/react'
+
 
 interface CalendarLesson {
   id: string
@@ -128,7 +129,7 @@ const SimpleWeeklyGrid: React.FC<SimpleWeeklyGridProps> = ({ lessons, className 
                   // Empty day - Much smaller
                   <div className="p-3 text-center">
                     <div className="text-gray-300 mb-1">
-                      <Music className="w-5 h-5 mx-auto" />
+                      <MusicNotesIcon className="w-5 h-5 mx-auto" />
                     </div>
                     <p className="text-gray-400 text-xs">אין</p>
                   </div>
@@ -150,7 +151,7 @@ const SimpleWeeklyGrid: React.FC<SimpleWeeklyGridProps> = ({ lessons, className 
 
                         {/* Time - Compact */}
                         <div className="flex items-center gap-1 mb-1">
-                          <Clock className="w-3 h-3" />
+                          <ClockIcon className="w-3 h-3" />
                           <span className="text-xs font-medium">
                             {lesson.startTime}-{lesson.endTime}
                           </span>
@@ -161,14 +162,14 @@ const SimpleWeeklyGrid: React.FC<SimpleWeeklyGridProps> = ({ lessons, className 
 
                         {/* Teacher - Compact */}
                         <div className="flex items-center gap-1 mb-1">
-                          <User className="w-3 h-3" />
+                          <UserIcon className="w-3 h-3" />
                           <span className="text-xs truncate">{lesson.teacherName}</span>
                         </div>
 
                         {/* Location - Compact */}
                         {(lesson.roomNumber || lesson.location) && (
                           <div className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
+                            <MapPinIcon className="w-3 h-3" />
                             <span className="text-xs truncate">
                               {lesson.roomNumber ? `חדר ${lesson.roomNumber}` : lesson.location}
                             </span>

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { X, Clock, MapPin, Calendar, Save } from 'lucide-react';
+
 import { Card } from '../ui/Card';
 import apiService from '../../services/apiService';
 import { VALID_LOCATIONS } from '../../constants/locations';
 import { handleServerValidationError } from '../../utils/validationUtils';
+import { CalendarIcon, ClockIcon, FloppyDiskIcon, MapPinIcon, XIcon } from '@phosphor-icons/react'
 
 interface TimeBlock {
   _id?: string;
@@ -167,7 +168,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-200">
+      <div className="bg-white rounded shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-200">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">
@@ -178,7 +179,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
             onClick={onCancel}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -193,13 +194,13 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
           {/* Day Selection */}
           <div>
             <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-              <Calendar className="w-4 h-4 mr-2" />
+              <CalendarIcon className="w-4 h-4 mr-2" />
               יום בשבוע <span className="text-red-500">*</span>
             </label>
             <select
               value={formData.day}
               onChange={(e) => handleInputChange('day', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
               required
             >
               {daysOfWeek.map(day => (
@@ -212,14 +213,14 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <Clock className="w-4 h-4 mr-2" />
+                <ClockIcon className="w-4 h-4 mr-2" />
                 שעת התחלה <span className="text-red-500">*</span>
               </label>
               <input
                 type="time"
                 value={formData.startTime}
                 onChange={(e) => handleInputChange('startTime', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
                 required
               />
             </div>
@@ -232,7 +233,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
                 type="time"
                 value={formData.endTime}
                 onChange={(e) => handleInputChange('endTime', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
                 required
               />
             </div>
@@ -242,7 +243,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
           {duration > 0 && (
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-center text-blue-700">
-                <Clock className="w-4 h-4 mr-2" />
+                <ClockIcon className="w-4 h-4 mr-2" />
                 <span className="font-medium">משך זמן: {formatDuration(duration)}</span>
               </div>
             </div>
@@ -251,13 +252,13 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
           {/* Location */}
           <div>
             <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-              <MapPin className="w-4 h-4 mr-2" />
+              <MapPinIcon className="w-4 h-4 mr-2" />
               מיקום <span className="text-red-500">*</span>
             </label>
             <select
               value={formData.location}
               onChange={(e) => handleInputChange('location', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-gray-900"
               required
             >
               {VALID_LOCATIONS.map(location => (
@@ -276,7 +277,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
               onChange={(e) => handleInputChange('notes', e.target.value)}
               placeholder="הערות אופציונליות..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
 
@@ -287,7 +288,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
                 type="checkbox"
                 checked={formData.isRecurring}
                 onChange={(e) => handleInputChange('isRecurring', e.target.checked)}
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-gray-300 text-primary focus:ring-ring"
               />
               <span className="text-sm text-gray-700 mr-3">חוזר שבועית</span>
             </label>
@@ -297,7 +298,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
                 type="checkbox"
                 checked={formData.isActive}
                 onChange={(e) => handleInputChange('isActive', e.target.checked)}
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-gray-300 text-primary focus:ring-ring"
               />
               <span className="text-sm text-gray-700 mr-3">פעיל</span>
             </label>
@@ -308,7 +309,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 flex items-center justify-center px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="flex-1 flex items-center justify-center px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               {isLoading ? (
                 <>
@@ -317,7 +318,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
+                  <FloppyDiskIcon className="w-4 h-4 mr-2" />
                   {timeBlock ? 'עדכן' : 'צור'} זמינות
                 </>
               )}
@@ -325,7 +326,7 @@ const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 font-medium"
+              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-ring font-medium"
             >
               ביטול
             </button>

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Calendar, Users, Plus, Settings, ChevronLeft, ChevronRight,
-  Clock, MapPin, User, Phone, Mail
-} from 'lucide-react';
+
 import { Card } from '../ui/Card';
 import apiService from '../../services/apiService';
 import { getDisplayName } from '@/utils/nameUtils';
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, ClockIcon, EnvelopeIcon, GearIcon, MapPinIcon, PhoneIcon, PlusIcon, UserIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface Student {
   _id: string;
@@ -245,7 +243,7 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
         {selectedSlot && (
           <div className="p-4 space-y-4">
             <div className="flex items-center space-x-3">
-              <User className="w-5 h-5 text-gray-400" />
+              <UserIcon className="w-5 h-5 text-gray-400" />
               <div>
                 <p className="font-medium text-gray-900">{selectedSlot.studentName}</p>
                 <p className="text-sm text-gray-600">{selectedSlot.instrument}</p>
@@ -253,14 +251,14 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
             </div>
             
             <div className="flex items-center space-x-3">
-              <Clock className="w-5 h-5 text-gray-400" />
+              <ClockIcon className="w-5 h-5 text-gray-400" />
               <p className="text-gray-700">
                 {selectedSlot.startTime}-{selectedSlot.endTime}
               </p>
             </div>
             
             <div className="flex items-center space-x-3">
-              <MapPin className="w-5 h-5 text-gray-400" />
+              <MapPinIcon className="w-5 h-5 text-gray-400" />
               <p className="text-gray-700">{selectedSlot.location}</p>
             </div>
             
@@ -296,12 +294,12 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
       <div className="sticky top-0 bg-white border-b border-gray-200 z-10">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-3">
-            <Calendar className="w-6 h-6 text-primary-600" />
+            <CalendarIcon className="w-6 h-6 text-primary" />
             <h1 className="text-xl font-bold text-gray-900">לוח זמנים</h1>
           </div>
           
           <button className="p-2 text-gray-600 hover:text-gray-800">
-            <Settings className="w-6 h-6" />
+            <GearIcon className="w-6 h-6" />
           </button>
         </div>
         
@@ -311,7 +309,7 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
             onClick={() => navigateDay('prev')}
             className="p-2 text-gray-600 active:bg-gray-200 rounded-lg"
           >
-            <ChevronRight className="w-5 h-5" />
+            <CaretRightIcon className="w-5 h-5" />
           </button>
           
           <h2 className="text-lg font-semibold text-gray-900">
@@ -322,7 +320,7 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
             onClick={() => navigateDay('next')}
             className="p-2 text-gray-600 active:bg-gray-200 rounded-lg"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <CaretLeftIcon className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -331,7 +329,7 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
       <div className="p-4 space-y-3">
         {loading ? (
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600 mx-auto mb-2"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-2"></div>
             <p className="text-sm text-gray-600">טוען...</p>
           </div>
         ) : daySchedule.length > 0 ? (
@@ -351,7 +349,7 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
                 
                 {slot.location && (
                   <span className="text-sm text-gray-600 flex items-center">
-                    <MapPin className="w-3 h-3 mr-1" />
+                    <MapPinIcon className="w-3 h-3 mr-1" />
                     {slot.location}
                   </span>
                 )}
@@ -368,7 +366,7 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
                 </div>
               ) : slot.isAvailable ? (
                 <div className="flex items-center justify-center py-2">
-                  <Plus className="w-4 h-4 text-green-600 mr-1" />
+                  <PlusIcon className="w-4 h-4 text-green-600 mr-1" />
                   <span className="text-sm text-green-700 font-medium">
                     הוסף תלמיד
                   </span>
@@ -388,14 +386,14 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
           ))
         ) : (
           <div className="text-center py-12">
-            <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               אין שיעורים היום
             </h3>
             <p className="text-gray-600 mb-4">
               תוכל ליצור יום לימוד חדש בהגדרות
             </p>
-            <button className="px-6 py-2 bg-primary-600 text-white rounded-lg">
+            <button className="px-6 py-2 bg-primary text-white rounded-lg">
               צור יום לימוד
             </button>
           </div>
@@ -407,13 +405,13 @@ const MobileScheduleInterface: React.FC<MobileScheduleInterfaceProps> = ({
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => setShowStudentList(true)}
-            className="flex items-center justify-center py-3 bg-primary-600 text-white rounded-lg font-medium active:bg-primary-700"
+            className="flex items-center justify-center py-3 bg-primary text-white rounded-lg font-medium active:bg-primary"
           >
-            <Users className="w-5 h-5 mr-2" />
+            <UsersIcon className="w-5 h-5 mr-2" />
             תלמידים
           </button>
           <button className="flex items-center justify-center py-3 border border-gray-300 text-gray-700 rounded-lg font-medium active:bg-gray-50">
-            <Settings className="w-5 h-5 mr-2" />
+            <GearIcon className="w-5 h-5 mr-2" />
             הגדרות
           </button>
         </div>

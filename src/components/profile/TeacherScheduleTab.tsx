@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Calendar, ChevronLeft, ChevronRight, Plus, Clock, User,
-  Edit, Trash2, Music, Eye, Star, Save, X, Settings,
-  MapPin, Users, BookOpen, AlertCircle, Check, Search
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
 import { VALID_LOCATIONS } from '../../constants/locations'
+import { BookOpenIcon, CalendarIcon, CaretLeftIcon, CaretRightIcon, CheckIcon, ClockIcon, EyeIcon, FloppyDiskIcon, GearIcon, MagnifyingGlassIcon, MapPinIcon, MusicNotesIcon, PencilIcon, PlusIcon, StarIcon, TrashIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface LessonDay {
   id: string
@@ -144,7 +141,7 @@ export default function TeacherScheduleTab() {
 
       const convertedLessons = []
 
-      // Check each student's assignments and create lesson blocks
+      // CheckIcon each student's assignments and create lesson blocks
       students.forEach(student => {
         console.log('Processing student:', getDisplayName(student.personalInfo))
         console.log('Student assignments:', student.teacherAssignments)
@@ -242,7 +239,7 @@ export default function TeacherScheduleTab() {
       const days = generateWeekWithLessons(weekStart, mappedLessonDays)
 
       console.log('Generated calendar days:', days)
-      console.log('Calendar week range:', { weekStart, weekEnd })
+      console.log('CalendarIcon week range:', { weekStart, weekEnd })
       console.log('Mapped lesson days for calendar:', mappedLessonDays)
 
       setWeekSchedule({
@@ -498,7 +495,7 @@ export default function TeacherScheduleTab() {
   }
 
   const isLessonStart = (lesson: LessonDay, time: string) => {
-    // Check if this is the first time slot that contains the lesson
+    // CheckIcon if this is the first time slot that contains the lesson
     // Since time slots are every 30 minutes, we need to find the slot that the lesson start time falls into
     const lessonStartTime = lesson.startTime
     const currentTimeSlot = time
@@ -518,7 +515,7 @@ export default function TeacherScheduleTab() {
   }
 
   const isTimeSlotAvailableForLesson = (dayName: string, time: string) => {
-    // Check if this time slot is within any יום לימוד (teaching day) availability
+    // CheckIcon if this time slot is within any יום לימוד (teaching day) availability
     const timeToMinutes = (timeStr: string) => {
       const [hours, minutes] = timeStr.split(':').map(Number)
       return hours * 60 + minutes
@@ -534,7 +531,7 @@ export default function TeacherScheduleTab() {
       const blockStartMinutes = timeToMinutes(block.startTime)
       const blockEndMinutes = timeToMinutes(block.endTime)
 
-      // Check if current time slot is within this availability block
+      // CheckIcon if current time slot is within this availability block
       return currentTimeMinutes >= blockStartMinutes && nextSlotMinutes <= blockEndMinutes
     })
 
@@ -547,7 +544,7 @@ export default function TeacherScheduleTab() {
       const lessonStartMinutes = timeToMinutes(lesson.startTime)
       const lessonEndMinutes = timeToMinutes(lesson.endTime)
 
-      // Check if this time slot overlaps with any existing lesson
+      // CheckIcon if this time slot overlaps with any existing lesson
       return (currentTimeMinutes < lessonEndMinutes && nextSlotMinutes > lessonStartMinutes)
     })
 
@@ -610,7 +607,7 @@ export default function TeacherScheduleTab() {
             onClick={() => navigateWeek('prev')}
             className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <ChevronRight className="w-5 h-5" />
+            <CaretRightIcon className="w-5 h-5" />
           </button>
           <button
             onClick={() => setCurrentWeek(new Date())}
@@ -622,12 +619,12 @@ export default function TeacherScheduleTab() {
             onClick={() => navigateWeek('next')}
             className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <CaretLeftIcon className="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      {/* Clean Calendar View */}
+      {/* Clean CalendarIcon View */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         {/* Days Header */}
         <div className="grid grid-cols-8 border-b border-gray-200">
@@ -669,11 +666,11 @@ export default function TeacherScheduleTab() {
                     onClick={() => !lesson && handleTimeSlotClick(day.date, time, day.dayName)}
                     title={isAvailable ? 'לחץ להוספת שיעור חדש' : ''}
                   >
-                    {/* Plus icon and label for available slots */}
+                    {/* PlusIcon icon and label for available slots */}
                     {isAvailable && (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="flex flex-col items-center opacity-30 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110">
-                          <Plus className="w-6 h-6 text-blue-500" />
+                          <PlusIcon className="w-6 h-6 text-blue-500" />
                           <span className="text-[10px] text-blue-600 font-medium mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             הוסף שיעור
                           </span>
@@ -694,7 +691,7 @@ export default function TeacherScheduleTab() {
                         <div className="flex flex-col h-full justify-between">
                           <div className="flex-shrink-0 space-y-1">
                             <div className="font-medium truncate flex items-center gap-1">
-                              <User className="w-3 h-3 opacity-60" />
+                              <UserIcon className="w-3 h-3 opacity-60" />
                               {lesson.studentName || 'תלמיד'}
                             </div>
                             <div className="text-[10px] opacity-75">
@@ -703,7 +700,7 @@ export default function TeacherScheduleTab() {
                             <div className="flex items-center gap-1 text-[10px] opacity-80 h-4">
                               {lesson.instrument ? (
                                 <>
-                                  <Music className="w-2.5 h-2.5" />
+                                  <MusicNotesIcon className="w-2.5 h-2.5" />
                                   <span className="truncate">{lesson.instrument}</span>
                                 </>
                               ) : (
@@ -713,7 +710,7 @@ export default function TeacherScheduleTab() {
                             <div className="flex items-center gap-1 text-[10px] opacity-70 h-4">
                               {lesson.location ? (
                                 <>
-                                  <MapPin className="w-2.5 h-2.5" />
+                                  <MapPinIcon className="w-2.5 h-2.5" />
                                   <span className="truncate">{lesson.location}</span>
                                 </>
                               ) : (
@@ -749,7 +746,7 @@ export default function TeacherScheduleTab() {
               onClick={handleAddLessonDay}
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">הוסף יום לימוד</span>
             </button>
           </div>
@@ -758,7 +755,7 @@ export default function TeacherScheduleTab() {
         {/* Teaching Days Cards */}
         {teachingDays.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-lg">
-            <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <BookOpenIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500 font-reisinger-yonatan text-lg">
               אין ימי לימוד מוגדרים
             </p>
@@ -787,7 +784,7 @@ export default function TeacherScheduleTab() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-blue-600" />
+            <CalendarIcon className="w-5 h-5 text-blue-600" />
             <span className="font-medium text-blue-900 font-reisinger-yonatan">
               ימי לימוד
             </span>
@@ -802,7 +799,7 @@ export default function TeacherScheduleTab() {
 
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-green-600" />
+            <ClockIcon className="w-5 h-5 text-green-600" />
             <span className="font-medium text-green-900 font-reisinger-yonatan">
               שעות זמינות
             </span>
@@ -820,7 +817,7 @@ export default function TeacherScheduleTab() {
 
         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <User className="w-5 h-5 text-purple-600" />
+            <UserIcon className="w-5 h-5 text-purple-600" />
             <span className="font-medium text-purple-900 font-reisinger-yonatan">
               תלמידים
             </span>
@@ -835,7 +832,7 @@ export default function TeacherScheduleTab() {
 
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-orange-600" />
+            <MapPinIcon className="w-5 h-5 text-orange-600" />
             <span className="font-medium text-orange-900 font-reisinger-yonatan">
               שיעורים
             </span>
@@ -886,7 +883,7 @@ export default function TeacherScheduleTab() {
         />
       )}
 
-      {/* Edit Lesson Modal */}
+      {/* PencilIcon Lesson Modal */}
       {showEditLessonModal && editingLesson && (
         <EditLessonModal
           lesson={editingLesson}
@@ -949,7 +946,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="p-2 bg-green-100 rounded-lg">
-            <Calendar className="w-4 h-4 text-green-600" />
+            <CalendarIcon className="w-4 h-4 text-green-600" />
           </div>
           <div>
             <h5 className="font-bold text-gray-900 font-reisinger-yonatan">
@@ -970,7 +967,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
       {/* Time Range */}
       <div className="mb-3 pb-3 border-b border-gray-100">
         <div className="flex items-center gap-2 text-sm text-gray-700">
-          <Clock className="w-4 h-4 text-gray-400" />
+          <ClockIcon className="w-4 h-4 text-gray-400" />
           <span className="font-medium">
             {teachingDay.startTime} - {teachingDay.endTime}
           </span>
@@ -980,7 +977,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
       {/* Location */}
       {teachingDay.location && (
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-          <MapPin className="w-3.5 h-3.5 text-gray-400" />
+          <MapPinIcon className="w-3.5 h-3.5 text-gray-400" />
           <span>{teachingDay.location}</span>
         </div>
       )}
@@ -988,7 +985,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
       {/* Available Slots Info */}
       <div className="p-2 bg-gray-50 rounded text-xs text-gray-600 mb-3">
         <div className="flex items-center gap-1">
-          <Users className="w-3 h-3" />
+          <UsersIcon className="w-3 h-3" />
           <span>זמין לקביעת שיעורים בזמן זה</span>
         </div>
       </div>
@@ -1006,7 +1003,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
           onClick={onEdit}
           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors text-sm"
         >
-          <Edit className="w-3.5 h-3.5" />
+          <PencilIcon className="w-3.5 h-3.5" />
           <span className="font-reisinger-yonatan">ערוך</span>
         </button>
         <button
@@ -1014,7 +1011,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
           className="flex items-center justify-center p-1.5 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
           title="מחק יום לימוד"
         >
-          <Trash2 className="w-3.5 h-3.5" />
+          <TrashIcon className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
@@ -1043,7 +1040,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="p-2 bg-indigo-100 rounded-lg">
-            <Calendar className="w-4 h-4 text-indigo-600" />
+            <CalendarIcon className="w-4 h-4 text-indigo-600" />
           </div>
           <div>
             <h5 className="font-bold text-gray-900 font-reisinger-yonatan">
@@ -1065,7 +1062,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
       {lessonDay.studentName && (
         <div className="mb-3 pb-3 border-b border-gray-100">
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <User className="w-4 h-4 text-gray-400" />
+            <UserIcon className="w-4 h-4 text-gray-400" />
             <span className="font-medium">{lessonDay.studentName}</span>
           </div>
           {lessonDay.studentClass && (
@@ -1080,7 +1077,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
       <div className="space-y-2 mb-3">
         {lessonDay.instrument && (
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Music className="w-3.5 h-3.5 text-gray-400" />
+            <MusicNotesIcon className="w-3.5 h-3.5 text-gray-400" />
             <span>{lessonDay.instrument}</span>
             {lessonDay.studentStage && (
               <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">
@@ -1091,7 +1088,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
         )}
         {lessonDay.location && (
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <MapPin className="w-3.5 h-3.5 text-gray-400" />
+            <MapPinIcon className="w-3.5 h-3.5 text-gray-400" />
             <span>{lessonDay.location}</span>
           </div>
         )}
@@ -1099,7 +1096,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
 
       {/* Duration */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-        <Clock className="w-3.5 h-3.5 text-gray-400" />
+        <ClockIcon className="w-3.5 h-3.5 text-gray-400" />
         <span>{lessonDay.totalDuration || 0} דקות</span>
       </div>
 
@@ -1118,7 +1115,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
             className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm"
             title="צפה בפרטי התלמיד"
           >
-            <Eye className="w-3.5 h-3.5" />
+            <EyeIcon className="w-3.5 h-3.5" />
             <span className="font-reisinger-yonatan">צפה</span>
           </button>
         )}
@@ -1126,7 +1123,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
           onClick={onEdit}
           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors text-sm"
         >
-          <Edit className="w-3.5 h-3.5" />
+          <PencilIcon className="w-3.5 h-3.5" />
           <span className="font-reisinger-yonatan">ערוך</span>
         </button>
         <button
@@ -1134,7 +1131,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
           className="flex items-center justify-center p-1.5 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
           title="מחק יום לימוד"
         >
-          <Trash2 className="w-3.5 h-3.5" />
+          <TrashIcon className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
@@ -1187,7 +1184,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
         recurring: formData.recurring || { isRecurring: true, excludeDates: [] }
       }
 
-      // Check if this is a real time block (has valid MongoDB ID, not composite ID from student assignment)
+      // CheckIcon if this is a real time block (has valid MongoDB ID, not composite ID from student assignment)
       const isRealTimeBlock = lessonDay?.id && /^[0-9a-fA-F]{24}$/.test(lessonDay.id)
 
       if (isRealTimeBlock) {
@@ -1231,7 +1228,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600"
           >
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -1312,7 +1309,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
             />
           </div>
 
-          {/* Recurring Settings */}
+          {/* Recurring GearIcon */}
           <div className="bg-gray-50 rounded-lg p-4">
             <label className="flex items-center gap-2">
               <input
@@ -1352,12 +1349,12 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
                 <>
                   {lessonDay ? (
                     <>
-                      <Check className="w-4 h-4" />
+                      <CheckIcon className="w-4 h-4" />
                       עדכן יום לימוד
                     </>
                   ) : (
                     <>
-                      <Plus className="w-4 h-4" />
+                      <PlusIcon className="w-4 h-4" />
                       הוסף יום לימוד
                     </>
                   )}
@@ -1581,17 +1578,17 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600"
           >
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
         <div className="mb-4 p-3 bg-blue-50 rounded-lg">
           <div className="flex items-center gap-2 text-blue-800 mb-2">
-            <Calendar className="w-4 h-4" />
+            <CalendarIcon className="w-4 h-4" />
             <span className="font-medium">שיעור קבוע שבועי - יום {timeSlot.dayName}</span>
           </div>
           <div className="flex items-center gap-2 text-blue-700">
-            <Clock className="w-4 h-4" />
+            <ClockIcon className="w-4 h-4" />
             <span>{formatTime(getActualStartTime())} - {formatTime(calculateEndTime(getActualStartTime(), duration))} ({duration} דקות)</span>
           </div>
           <div className="text-xs text-blue-600 mt-1">
@@ -1600,7 +1597,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Student Selection with Search */}
+          {/* Student Selection with MagnifyingGlassIcon */}
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
               בחר תלמיד *
@@ -1610,7 +1607,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
             ) : (
               <div className="relative student-search-dropdown">
                 <div className="relative">
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
                     value={searchQuery}
@@ -1645,7 +1642,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
                         }}
                         className="text-indigo-600 hover:text-indigo-800"
                       >
-                        <X className="w-4 h-4" />
+                        <XIcon className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -1746,7 +1743,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
                 </>
               ) : (
                 <>
-                  <Check className="w-4 h-4" />
+                  <CheckIcon className="w-4 h-4" />
                   צור שיעור שבועי
                 </>
               )}
@@ -1779,7 +1776,7 @@ function ConfirmModal({ message, onConfirm, onCancel }: ConfirmModalProps) {
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
         <div className="flex items-center justify-center mb-6">
           <div className="p-3 bg-orange-100 rounded-full">
-            <AlertCircle className="w-8 h-8 text-orange-600" />
+            <WarningCircleIcon className="w-8 h-8 text-orange-600" />
           </div>
         </div>
 
@@ -1818,7 +1815,7 @@ function AlertModal({ message, onClose }: AlertModalProps) {
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
         <div className="flex items-center justify-center mb-6">
           <div className="p-3 bg-blue-100 rounded-full">
-            <AlertCircle className="w-8 h-8 text-blue-600" />
+            <WarningCircleIcon className="w-8 h-8 text-blue-600" />
           </div>
         </div>
 
@@ -1837,7 +1834,7 @@ function AlertModal({ message, onClose }: AlertModalProps) {
   )
 }
 
-// Edit Lesson Modal Component - for editing individual lessons
+// PencilIcon Lesson Modal Component - for editing individual lessons
 interface EditLessonModalProps {
   lesson: LessonDay
   teacherId: string
@@ -2014,7 +2011,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600"
           >
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -2023,12 +2020,12 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
           <h4 className="font-medium text-blue-900 mb-2 font-reisinger-yonatan">פרטי התלמיד</h4>
           <div className="space-y-1 text-sm text-blue-800">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
+              <UserIcon className="w-4 h-4" />
               <strong>תלמיד:</strong> {lesson.studentName || 'לא צוין'}
             </div>
             {lesson.instrument && (
               <div className="flex items-center gap-2">
-                <Music className="w-4 h-4" />
+                <MusicNotesIcon className="w-4 h-4" />
                 <strong>כלי נגינה:</strong> {lesson.instrument}
               </div>
             )}
@@ -2100,7 +2097,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
             </label>
             {availableSlots.length === 0 ? (
               <div className="text-center py-6 bg-gray-50 rounded-lg border border-gray-200">
-                <Clock className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                <ClockIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
                 <p className="text-sm text-gray-500">
                   אין זמנים זמינים ליום ומשך שיעור שנבחרו
                 </p>
@@ -2125,7 +2122,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
                       }`}
                     >
                       <div className="flex items-center justify-center gap-1">
-                        <Clock className="w-3 h-3" />
+                        <ClockIcon className="w-3 h-3" />
                         <span className="font-medium">
                           {slot.startTime}-{slot.endTime}
                         </span>
@@ -2144,7 +2141,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
           {formData.startTime && formData.endTime && (
             <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
               <div className="flex items-center gap-2 text-indigo-800">
-                <Clock className="w-4 h-4" />
+                <ClockIcon className="w-4 h-4" />
                 <span className="font-reisinger-yonatan font-medium">
                   זמן שיעור נבחר: {formData.startTime} - {formData.endTime} ({calculateDuration(formData.startTime, formData.endTime)} דקות)
                 </span>
@@ -2197,7 +2194,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
                 </>
               ) : (
                 <>
-                  <Check className="w-4 h-4" />
+                  <CheckIcon className="w-4 h-4" />
                   עדכן שיעור
                 </>
               )}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Copy, Clock, MapPin, Calendar } from 'lucide-react';
+
 import { Card } from '../ui/Card';
 import apiService from '../../services/apiService';
+import { CalendarIcon, ClockIcon, CopyIcon, FloppyDiskIcon, MapPinIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
 
 const HEBREW_DAYS = [
   { value: 0, label: 'ראשון' },
@@ -219,7 +220,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
         {/* Header */}
         <div className="flex justify-between items-center border-b border-gray-200 pb-4">
           <div className="flex items-center space-x-3">
-            <Calendar className="w-6 h-6 text-primary-600" />
+            <CalendarIcon className="w-6 h-6 text-primary" />
             <h2 className="text-2xl font-bold text-gray-900">
               {existingTemplate ? 'עריכת יום לימוד' : 'יצירת יום לימוד חדש'}
             </h2>
@@ -230,7 +231,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
               className="flex items-center px-3 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
               title="שכפל ליום הבא"
             >
-              <Copy className="w-4 h-4 mr-1" />
+              <CopyIcon className="w-4 h-4 mr-1" />
               שכפל
             </button>
           </div>
@@ -251,7 +252,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
             <select
               value={studyDay.dayOfWeek}
               onChange={(e) => setStudyDay(prev => ({ ...prev, dayOfWeek: parseInt(e.target.value) }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
             >
               {HEBREW_DAYS.map((day) => (
                 <option key={day.value} value={day.value}>
@@ -267,7 +268,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                 type="checkbox"
                 checked={studyDay.recurring}
                 onChange={(e) => setStudyDay(prev => ({ ...prev, recurring: e.target.checked }))}
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-gray-300 text-primary focus:ring-ring"
               />
               <span className="text-sm text-gray-700">חזרה שבועית</span>
             </label>
@@ -296,7 +297,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                 type="time"
                 value={newTimeSlot.startTime}
                 onChange={(e) => setNewTimeSlot(prev => ({ ...prev, startTime: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
@@ -311,7 +312,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                   const timeSlot = generateTimeSlot(newTimeSlot.startTime, duration);
                   setNewTimeSlot(prev => ({ ...prev, duration, endTime: timeSlot.endTime }));
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 {VALID_DURATIONS.map((duration) => (
                   <option key={duration} value={duration}>
@@ -330,16 +331,16 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                 value={newTimeSlot.location}
                 onChange={(e) => setNewTimeSlot(prev => ({ ...prev, location: e.target.value }))}
                 placeholder="חדר 5"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <div className="flex items-end">
               <button
                 onClick={handleAddTimeSlot}
-                className="w-full flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                className="w-full flex items-center justify-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary"
               >
-                <Plus className="w-4 h-4 mr-1" />
+                <PlusIcon className="w-4 h-4 mr-1" />
                 הוסף
               </button>
             </div>
@@ -363,7 +364,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4 flex-1">
                       <div className="flex items-center text-gray-700">
-                        <Clock className="w-4 h-4 mr-1" />
+                        <ClockIcon className="w-4 h-4 mr-1" />
                         <span className="font-medium">
                           {slot.startTime}-{slot.endTime}
                         </span>
@@ -373,7 +374,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                       </div>
                       
                       <div className="flex items-center text-gray-600">
-                        <MapPin className="w-4 h-4 mr-1" />
+                        <MapPinIcon className="w-4 h-4 mr-1" />
                         <input
                           type="text"
                           value={slot.location}
@@ -388,7 +389,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                           type="checkbox"
                           checked={slot.isAvailable}
                           onChange={(e) => handleTimeSlotChange(index, 'isAvailable', e.target.checked)}
-                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                          className="rounded border-gray-300 text-primary focus:ring-ring"
                         />
                         <span className="text-sm text-gray-700 mr-2">זמין</span>
                       </label>
@@ -398,7 +399,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
                       onClick={() => handleRemoveTimeSlot(index)}
                       className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </Card>
@@ -420,7 +421,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
           <button
             onClick={handleSave}
             disabled={isLoading || studyDay.timeSlots.length === 0}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
@@ -429,7 +430,7 @@ const StudyDayTemplateManager: React.FC<StudyDayTemplateManagerProps> = ({
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" />
+                <FloppyDiskIcon className="w-4 h-4 mr-2" />
                 {existingTemplate ? 'עדכן יום לימוד' : 'צור יום לימוד'}
               </>
             )}

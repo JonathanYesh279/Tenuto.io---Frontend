@@ -1,5 +1,5 @@
 /**
- * Teacher Weekly Calendar Component
+ * Teacher Weekly CalendarIcon Component
  * 
  * Displays a comprehensive weekly calendar showing all teacher activities:
  * - Individual lessons with students
@@ -9,9 +9,10 @@
  */
 
 import React, { useState, useMemo } from 'react'
-import { ChevronLeft, ChevronRight, Clock, MapPin, Users, Music, User, Calendar, BookOpen, Edit, X, Trash2, AlertCircle } from 'lucide-react'
+
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, addDays, subDays, isToday, isSameDay } from 'date-fns'
 import { he } from 'date-fns/locale'
+import { BookOpenIcon, CalendarIcon, CaretLeftIcon, CaretRightIcon, ClockIcon, MapPinIcon, MusicNotesIcon, PencilIcon, TrashIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface TimeBlock {
   _id: string
@@ -223,13 +224,13 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'lesson':
-        return <User className="w-4 h-4" />
+        return <UserIcon className="w-4 h-4" />
       case 'orchestra':
-        return <Music className="w-4 h-4" />
+        return <MusicNotesIcon className="w-4 h-4" />
       case 'ensemble':
-        return <Users className="w-4 h-4" />
+        return <UsersIcon className="w-4 h-4" />
       default:
-        return <BookOpen className="w-4 h-4" />
+        return <BookOpenIcon className="w-4 h-4" />
     }
   }
 
@@ -313,7 +314,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                 onClick={goToPreviousWeek}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <ChevronRight className="w-5 h-5" />
+                <CaretRightIcon className="w-5 h-5" />
               </button>
               
               <div className="text-center">
@@ -329,13 +330,13 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                 onClick={goToNextWeek}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <CaretLeftIcon className="w-5 h-5" />
               </button>
             </div>
             
             <button
               onClick={goToCurrentWeek}
-              className="px-3 py-1 text-sm bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+              className="px-3 py-1 text-sm bg-primary text-white rounded-lg hover:bg-primary transition-colors"
             >
               השבוע הנוכחי
             </button>
@@ -343,7 +344,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
         </div>
       )}
 
-      {/* Calendar Grid - Days Only */}
+      {/* CalendarIcon Grid - Days Only */}
       <div className="p-4">
         {/* Desktop View */}
         <div className="hidden lg:block">
@@ -359,14 +360,14 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                   key={dayKey}
                   className={`border rounded-lg ${
                     isCurrentDay 
-                      ? 'border-primary-400 bg-primary-50/30' 
+                      ? 'border-border bg-muted/50/30' 
                       : 'border-gray-200 bg-white'
                   }`}
                 >
                   {/* Day Header */}
                   <div className={`p-3 text-center border-b ${
                     isCurrentDay
-                      ? 'bg-primary-100 text-primary-800 border-primary-200'
+                      ? 'bg-muted text-primary border-border'
                       : dayActivities.length > 0
                       ? 'bg-blue-50 text-blue-700 border-blue-100'
                       : 'bg-gray-50 text-gray-600 border-gray-200'
@@ -406,13 +407,13 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                               </span>
                             </div>
                             {activity.type === 'lesson' && (
-                              <Edit className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
+                              <PencilIcon className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
                             )}
                           </div>
 
                           {/* Time */}
                           <div className="flex items-center gap-1 text-xs mb-1">
-                            <Clock className="w-3 h-3" />
+                            <ClockIcon className="w-3 h-3" />
                             <span className="font-medium">
                               {activity.startTime} - {activity.endTime}
                             </span>
@@ -440,7 +441,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                           {/* Location */}
                           {activity.location && (
                             <div className="flex items-center gap-1 text-xs opacity-75">
-                              <MapPin className="w-3 h-3" />
+                              <MapPinIcon className="w-3 h-3" />
                               <span>{activity.location}</span>
                             </div>
                           )}
@@ -448,7 +449,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                           {/* Participants for orchestras/ensembles */}
                           {activity.participants && (
                             <div className="flex items-center gap-1 text-xs opacity-75 mt-1">
-                              <Users className="w-3 h-3" />
+                              <UsersIcon className="w-3 h-3" />
                               <span>{activity.participants.join(', ')}</span>
                             </div>
                           )}
@@ -472,11 +473,11 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
               
               return (
                 <div key={dayKey} className={`border rounded-lg overflow-hidden ${
-                  isCurrentDay ? 'border-primary-400' : 'border-gray-200'
+                  isCurrentDay ? 'border-border' : 'border-gray-200'
                 }`}>
                   <div className={`p-3 font-semibold ${
                     isCurrentDay
-                      ? 'bg-primary-100 text-primary-800'
+                      ? 'bg-muted text-primary'
                       : dayActivities.length > 0
                       ? 'bg-blue-50 text-blue-700'
                       : 'bg-gray-50 text-gray-700'
@@ -522,13 +523,13 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                                 <h4 className="font-semibold text-sm">{activity.title}</h4>
                               </div>
                               {activity.type === 'lesson' && (
-                                <Edit className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
+                                <PencilIcon className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
                               )}
                             </div>
                             
                             <div className="space-y-1 text-xs">
                               <div className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                                <ClockIcon className="w-3 h-3" />
                                 <span className="font-medium">{activity.startTime} - {activity.endTime}</span>
                               </div>
                               
@@ -542,14 +543,14 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                               
                               {activity.location && (
                                 <div className="flex items-center gap-1">
-                                  <MapPin className="w-3 h-3" />
+                                  <MapPinIcon className="w-3 h-3" />
                                   <span>{activity.location}</span>
                                 </div>
                               )}
                               
                               {activity.participants && (
                                 <div className="flex items-center gap-1">
-                                  <Users className="w-3 h-3" />
+                                  <UsersIcon className="w-3 h-3" />
                                   <span>{activity.participants.join(', ')}</span>
                                 </div>
                               )}
@@ -603,9 +604,9 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
 
         {/* Teaching Time Blocks Preview - יום לימוד */}
         {timeBlocks.length > 0 && (
-          <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm">
+          <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded border border-blue-200 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
-              <Calendar className="w-5 h-5 text-blue-600" />
+              <CalendarIcon className="w-5 h-5 text-blue-600" />
               <h3 className="text-lg font-bold text-gray-900">ימי לימוד - זמינות למערכת</h3>
               <span className="text-sm text-gray-600 bg-white px-2 py-1 rounded-full">
                 {timeBlocks.length} בלוקי זמן
@@ -626,7 +627,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                       </div>
                       
                       <div className="flex items-center gap-2 text-gray-700 mb-2">
-                        <Clock className="w-4 h-4 text-blue-500" />
+                        <ClockIcon className="w-4 h-4 text-blue-500" />
                         <span className="font-medium">
                           {block.startTime} - {block.endTime}
                         </span>
@@ -634,7 +635,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                       
                       {block.location && (
                         <div className="flex items-center gap-2 text-gray-600 mb-2">
-                          <MapPin className="w-4 h-4 text-gray-400" />
+                          <MapPinIcon className="w-4 h-4 text-gray-400" />
                           <span className="text-sm">{block.location}</span>
                         </div>
                       )}
@@ -693,7 +694,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                 onClick={() => setEditingLesson(null)}
                 className="text-gray-400 hover:text-gray-600 p-1"
               >
-                <X className="w-6 h-6" />
+                <XIcon className="w-6 h-6" />
               </button>
             </div>
 
@@ -737,7 +738,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                 <select
                   name="day"
                   defaultValue={editingLesson.day}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                   required
                 >
                   <option value="">בחר יום</option>
@@ -761,7 +762,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                     type="time"
                     name="startTime"
                     defaultValue={editingLesson.startTime || editingLesson.time}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                     required
                   />
                 </div>
@@ -776,7 +777,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                       editingLesson.startTime || editingLesson.time || '00:00',
                       editingLesson.duration || 45
                     )}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                     required
                   />
                 </div>
@@ -801,7 +802,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-medium disabled:opacity-50"
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors font-medium disabled:opacity-50"
                 >
                   {isUpdating ? 'שומר...' : 'שמור שינויים'}
                 </button>
@@ -822,7 +823,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                     onClick={() => setShowDeleteConfirm(true)}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors font-medium border border-red-200"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                     מחק שיעור
                   </button>
                 </div>
@@ -835,9 +836,9 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && editingLesson && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6">
+          <div className="bg-white rounded shadow-2xl max-w-md w-full mx-4 p-6">
             <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
-              <AlertCircle className="w-6 h-6 text-red-600" />
+              <WarningCircleIcon className="w-6 h-6 text-red-600" />
             </div>
             <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
               מחיקת שיעור

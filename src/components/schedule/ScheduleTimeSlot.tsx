@@ -1,5 +1,6 @@
 import React from 'react';
-import { Clock, User, MapPin, AlertTriangle } from 'lucide-react';
+import { ClockIcon, MapPinIcon, UserIcon, WarningIcon } from '@phosphor-icons/react'
+
 
 interface TimeSlot {
   _id?: string;
@@ -58,9 +59,9 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({
   };
 
   const getSlotIcon = () => {
-    if (timeSlot.hasConflict) return <AlertTriangle className="w-4 h-4 text-red-500" />;
-    if (timeSlot.studentId) return <User className="w-4 h-4" />;
-    if (timeSlot.isAvailable) return <Clock className="w-4 h-4" />;
+    if (timeSlot.hasConflict) return <WarningIcon className="w-4 h-4 text-red-500" />;
+    if (timeSlot.studentId) return <UserIcon className="w-4 h-4" />;
+    if (timeSlot.isAvailable) return <ClockIcon className="w-4 h-4" />;
     return null;
   };
 
@@ -101,8 +102,8 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({
   const isDropTarget = timeSlot.isAvailable && !timeSlot.studentId;
   const slotClasses = `
     ${getSlotStatusColor()}
-    ${dragOver ? 'ring-2 ring-primary-300 bg-primary-50' : ''}
-    ${isDragOver ? 'ring-2 ring-primary-300' : ''}
+    ${dragOver ? 'ring-2 ring-ring bg-muted/50' : ''}
+    ${isDragOver ? 'ring-2 ring-ring' : ''}
     ${isDropTarget ? 'cursor-pointer' : ''}
     ${timeSlot.studentId ? 'cursor-pointer' : ''}
     ${className}
@@ -128,7 +129,7 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({
         </div>
         
         {timeSlot.hasConflict && (
-          <AlertTriangle className="w-4 h-4 text-red-500" />
+          <WarningIcon className="w-4 h-4 text-red-500" />
         )}
       </div>
 
@@ -149,7 +150,7 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({
       {/* Location */}
       {timeSlot.location && (
         <div className="flex items-center text-xs text-gray-600 mb-1">
-          <MapPin className="w-3 h-3 mr-1" />
+          <MapPinIcon className="w-3 h-3 mr-1" />
           {timeSlot.location}
         </div>
       )}
@@ -170,8 +171,8 @@ const ScheduleTimeSlot: React.FC<ScheduleTimeSlotProps> = ({
 
         {/* Drag Drop Indicator */}
         {dragOver && isDropTarget && (
-          <div className="absolute inset-0 border-2 border-dashed border-primary-400 rounded-lg bg-primary-50 bg-opacity-50 flex items-center justify-center">
-            <span className="text-primary-600 text-sm font-medium">שחרר כאן</span>
+          <div className="absolute inset-0 border-2 border-dashed border-border rounded-lg bg-muted/50 bg-opacity-50 flex items-center justify-center">
+            <span className="text-primary text-sm font-medium">שחרר כאן</span>
           </div>
         )}
       </div>

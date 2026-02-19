@@ -1,5 +1,6 @@
 import React from 'react';
-import { Edit2, Trash2, Clock, MapPin, MessageSquare, Users } from 'lucide-react';
+import { ChatSquareIcon, ClockIcon, MapPinIcon, PencilSimpleIcon, TrashIcon, UsersIcon } from '@phosphor-icons/react'
+
 
 interface TimeBlock {
   _id: string;
@@ -46,12 +47,12 @@ const TimeBlockCard: React.FC<TimeBlockCardProps> = ({ block, onEdit, onDelete }
     <div className={`border rounded-lg p-4 mb-3 transition-all duration-200 ${
       !block.isActive 
         ? 'bg-gray-50 border-gray-300 opacity-60' 
-        : 'bg-white border-gray-200 hover:border-primary-300 hover:shadow-md'
+        : 'bg-white border-gray-200 hover:border-border hover:shadow-md'
     }`}>
       {/* Time Range Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
-          <Clock className="w-4 h-4 text-primary-600" />
+          <ClockIcon className="w-4 h-4 text-primary" />
           <span className="font-semibold text-gray-900">
             {formatTimeRange(block.startTime, block.endTime)}
           </span>
@@ -63,14 +64,14 @@ const TimeBlockCard: React.FC<TimeBlockCardProps> = ({ block, onEdit, onDelete }
       
       {/* Location */}
       <div className="flex items-center space-x-2 mb-2">
-        <MapPin className="w-4 h-4 text-gray-500" />
+        <MapPinIcon className="w-4 h-4 text-gray-500" />
         <span className="text-gray-700">{block.location}</span>
       </div>
       
       {/* Notes */}
       {block.notes && (
         <div className="flex items-start space-x-2 mb-3">
-          <MessageSquare className="w-4 h-4 text-gray-500 mt-0.5" />
+          <ChatSquareIcon className="w-4 h-4 text-gray-500 mt-0.5" />
           <span className="text-sm text-gray-600">{block.notes}</span>
         </div>
       )}
@@ -78,7 +79,7 @@ const TimeBlockCard: React.FC<TimeBlockCardProps> = ({ block, onEdit, onDelete }
       {/* Assigned Lessons */}
       {block.assignedLessons && block.assignedLessons.length > 0 && (
         <div className="flex items-center space-x-2 mb-3 p-2 bg-blue-50 rounded">
-          <Users className="w-4 h-4 text-blue-600" />
+          <UsersIcon className="w-4 h-4 text-blue-600" />
           <span className="text-sm text-blue-700">
             {block.assignedLessons.length} שיעורים מתוכננים
           </span>
@@ -112,14 +113,14 @@ const TimeBlockCard: React.FC<TimeBlockCardProps> = ({ block, onEdit, onDelete }
           className="flex items-center px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
           onClick={onEdit}
         >
-          <Edit2 className="w-3 h-3 mr-1" />
+          <PencilSimpleIcon className="w-3 h-3 mr-1" />
           עריכה
         </button>
         <button 
           className="flex items-center px-3 py-1.5 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
           onClick={handleDeleteClick}
         >
-          <Trash2 className="w-3 h-3 mr-1" />
+          <TrashIcon className="w-3 h-3 mr-1" />
           מחיקה
         </button>
       </div>

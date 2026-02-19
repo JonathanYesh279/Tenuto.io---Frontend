@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Plus, Clock, Calendar as CalendarIcon, Users, TrendingUp } from 'lucide-react';
+
 import { Card } from '../ui/Card';
 import TimeBlockCard from './TimeBlockCard';
 import TimeBlockForm from './TimeBlockForm';
 import apiService from '../../services/apiService';
+import { CalendarIcon, ClockIcon, PlusIcon, TrendUpIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface TimeBlock {
   _id: string;
@@ -109,18 +110,18 @@ const TeacherTimeBlocks: React.FC<TeacherTimeBlocksProps> = ({
           </div>
           <button
             onClick={() => setIsCreating(true)}
-            className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <PlusIcon className="w-4 h-4 mr-2" />
             הוסף זמן זמין
           </button>
         </div>
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="text-center p-4 bg-primary-50 rounded-lg">
-            <div className="text-2xl font-bold text-primary-600">{stats.totalBlocks}</div>
-            <div className="text-sm text-primary-700">סה"כ זמינות</div>
+          <div className="text-center p-4 bg-muted/50 rounded-lg">
+            <div className="text-2xl font-bold text-primary">{stats.totalBlocks}</div>
+            <div className="text-sm text-primary">סה"כ זמינות</div>
           </div>
           <div className="text-center p-4 bg-green-50 rounded-lg">
             <div className="text-2xl font-bold text-green-600">{stats.activeBlocks}</div>
@@ -155,10 +156,10 @@ const TeacherTimeBlocks: React.FC<TeacherTimeBlocksProps> = ({
                 <h4 className="font-semibold text-gray-900">{day}</h4>
                 <button
                   onClick={() => setIsCreating(true)}
-                  className="text-primary-600 hover:text-primary-800 text-sm"
+                  className="text-primary hover:text-primary text-sm"
                   title="הוסף זמינות ליום זה"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                 </button>
               </div>
               
@@ -175,10 +176,10 @@ const TeacherTimeBlocks: React.FC<TeacherTimeBlocksProps> = ({
                 </div>
               ) : (
                 <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                  <Clock className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                  <ClockIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <div className="text-gray-500 text-sm mb-2">לא זמין</div>
                   <button 
-                    className="text-primary-600 hover:text-primary-800 text-sm font-medium"
+                    className="text-primary hover:text-primary text-sm font-medium"
                     onClick={() => setIsCreating(true)}
                   >
                     הוסף זמינות
@@ -194,7 +195,7 @@ const TeacherTimeBlocks: React.FC<TeacherTimeBlocksProps> = ({
       {timeBlocks.length > 0 && (
         <Card padding="lg">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <TrendingUp className="w-5 h-5 mr-2" />
+            <TrendUpIcon className="w-5 h-5 mr-2" />
             סיכום שבועי
           </h3>
           
@@ -203,7 +204,7 @@ const TeacherTimeBlocks: React.FC<TeacherTimeBlocksProps> = ({
               <h4 className="font-medium text-gray-900 mb-2">ימים עם זמינות</h4>
               <div className="flex flex-wrap gap-2">
                 {Array.from(new Set(timeBlocks.filter(b => b.isActive).map(b => b.day))).map(day => (
-                  <span key={day} className="px-2 py-1 bg-primary-100 text-primary-800 text-xs rounded">
+                  <span key={day} className="px-2 py-1 bg-muted text-primary text-xs rounded">
                     {day}
                   </span>
                 ))}
@@ -236,7 +237,7 @@ const TeacherTimeBlocks: React.FC<TeacherTimeBlocksProps> = ({
       {timeBlocks.length === 0 && (
         <Card padding="lg">
           <div className="text-center py-12">
-            <Clock className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <ClockIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               טרם הוגדרה זמינות
             </h3>
@@ -245,9 +246,9 @@ const TeacherTimeBlocks: React.FC<TeacherTimeBlocksProps> = ({
             </p>
             <button
               onClick={() => setIsCreating(true)}
-              className="flex items-center justify-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors mx-auto"
+              className="flex items-center justify-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary transition-colors mx-auto"
             >
-              <Plus className="w-5 h-5 mr-2" />
+              <PlusIcon className="w-5 h-5 mr-2" />
               הוסף זמינות ראשונה
             </button>
           </div>

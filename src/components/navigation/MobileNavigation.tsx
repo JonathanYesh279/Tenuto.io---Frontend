@@ -1,23 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { 
-  Home, 
-  Users, 
-  GraduationCap, 
-  BookOpen, 
-  Music, 
-  Calendar,
-  UserCheck,
-  BarChart3,
-  Settings,
-  Search,
-  Menu,
-  X,
-  Plus,
-  ChevronDown,
-  ChevronUp
-} from 'lucide-react'
+
 import GlobalSearch from '../search/GlobalSearch'
+import { BookOpenIcon, CalendarIcon, CaretDownIcon, CaretUpIcon, ChartBarIcon, GearIcon, GraduationCapIcon, HouseIcon, ListIcon, MagnifyingGlassIcon, MusicNotesIcon, PlusIcon, UserCircleCheckIcon, UsersIcon, XIcon } from '@phosphor-icons/react'
 
 interface NavigationItem {
   name: string
@@ -32,22 +17,22 @@ interface MobileNavigationProps {
 
 // Main navigation items with Hebrew labels
 const mainNavigation: NavigationItem[] = [
-  { name: 'מידע כללי', href: '/dashboard', icon: Home },
-  { name: 'תלמידים', href: '/students', icon: Users, badge: 156 },
-  { name: 'מורים', href: '/teachers', icon: GraduationCap, badge: 48 },
-  { name: 'שיעורי תיאוריה', href: '/theory-lessons', icon: BookOpen },
-  { name: 'תזמורות', href: '/orchestras', icon: Music, badge: 5 },
-  { name: 'חזרות', href: '/rehearsals', icon: Calendar },
-  { name: 'דוחות', href: '/reports', icon: BarChart3 },
-  { name: 'הגדרות', href: '/settings', icon: Settings }
+  { name: 'מידע כללי', href: '/dashboard', icon: HouseIcon },
+  { name: 'תלמידים', href: '/students', icon: UsersIcon, badge: 156 },
+  { name: 'מורים', href: '/teachers', icon: GraduationCapIcon, badge: 48 },
+  { name: 'שיעורי תיאוריה', href: '/theory-lessons', icon: BookOpenIcon },
+  { name: 'תזמורות', href: '/orchestras', icon: MusicNotesIcon, badge: 5 },
+  { name: 'חזרות', href: '/rehearsals', icon: CalendarIcon },
+  { name: 'דוחות', href: '/reports', icon: ChartBarIcon },
+  { name: 'הגדרות', href: '/settings', icon: GearIcon }
 ]
 
 // Quick actions for mobile
 const quickActions: NavigationItem[] = [
-  { name: 'הוסף תלמיד', href: '/students/new', icon: Users },
-  { name: 'הוסף מורה', href: '/teachers/new', icon: GraduationCap },
-  { name: 'צור שיעור', href: '/theory-lessons/new', icon: BookOpen },
-  { name: 'תזמן חזרה', href: '/rehearsals/new', icon: Calendar }
+  { name: 'הוסף תלמיד', href: '/students/new', icon: UsersIcon },
+  { name: 'הוסף מורה', href: '/teachers/new', icon: GraduationCapIcon },
+  { name: 'צור שיעור', href: '/theory-lessons/new', icon: BookOpenIcon },
+  { name: 'תזמן חזרה', href: '/rehearsals/new', icon: CalendarIcon }
 ]
 
 const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) => {
@@ -134,7 +119,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
         <div className="flex items-center justify-between h-full px-4" dir="rtl">
           {/* Logo/Title */}
           <div className="flex items-center">
-            <Music className="w-8 h-8 text-primary-600 ml-2" />
+            <MusicNotesIcon className="w-8 h-8 text-primary ml-2" />
             <h1 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
               קונסרבטוריון
             </h1>
@@ -142,17 +127,17 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-2 space-x-reverse">
-            {/* Search Button */}
+            {/* MagnifyingGlassIcon Button */}
             <button
               onClick={() => setShowSearch(!showSearch)}
               className={`p-2 rounded-lg transition-colors ${
                 showSearch 
-                  ? 'bg-primary-100 text-primary-600' 
+                  ? 'bg-muted text-primary' 
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
               aria-label="חיפוש"
             >
-              <Search className="w-5 h-5" />
+              <MagnifyingGlassIcon className="w-5 h-5" />
             </button>
 
             {/* Quick Actions Button */}
@@ -165,10 +150,10 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
               }`}
               aria-label="פעולות מהירות"
             >
-              <Plus className="w-5 h-5" />
+              <PlusIcon className="w-5 h-5" />
             </button>
 
-            {/* Hamburger Menu */}
+            {/* Hamburger ListIcon */}
             <button
               id="mobile-hamburger"
               onClick={() => setIsOpen(!isOpen)}
@@ -179,12 +164,12 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
               }`}
               aria-label="תפריט"
             >
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isOpen ? <XIcon className="w-5 h-5" /> : <ListIcon className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {/* Search Bar (Expandable) */}
+        {/* MagnifyingGlassIcon Bar (Expandable) */}
         {showSearch && (
           <div className="border-t border-gray-200 p-4 bg-white">
             <GlobalSearch 
@@ -229,7 +214,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
         />
       )}
 
-      {/* Side Navigation Menu */}
+      {/* Side Navigation ListIcon */}
       <div
         id="mobile-navigation"
         className={`fixed top-16 right-0 h-screen w-80 max-w-[85vw] bg-white border-l border-gray-200 shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
@@ -243,8 +228,8 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
           {/* User Info (if available) */}
           <div className="p-4 border-b border-gray-200 bg-gray-50">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                <span className="text-primary-600 font-semibold text-sm">מ</span>
+              <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
+                <span className="text-primary font-semibold text-sm">מ</span>
               </div>
               <div className="mr-3">
                 <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">
@@ -272,7 +257,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
                     to={item.href}
                     className={`flex items-center justify-between px-3 py-3 mx-2 rounded-lg text-sm font-medium transition-colors font-reisinger-yonatan ${
                       active
-                        ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                        ? 'bg-muted/50 text-primary border border-border'
                         : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import { Plus, Search, Edit, Trash2, Music, Users, UserPlus, UserMinus, Calendar, Clock, MapPin, Settings, Star, Filter, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '@/utils/nameUtils'
 import RehearsalScheduleModal from '../rehearsal/RehearsalScheduleModal'
 import ConfirmationModal from '../ui/ConfirmationModal'
+import { CalendarIcon, CheckCircleIcon, ClockIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MapPinIcon, MusicNotesIcon, PencilIcon, PlusIcon, StarIcon, TrashIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface Orchestra {
   id: string
@@ -231,7 +232,7 @@ export default function ConductorOrchestrasTab() {
 
       console.log('👥 Current orchestra members:', currentMemberIds.length)
 
-      // Filter out students already in the selected orchestra
+      // FunnelIcon out students already in the selected orchestra
       const available = allStudents.filter(student =>
         !currentMemberIds.includes(student._id) && student.isActive !== false
       )
@@ -626,14 +627,14 @@ export default function ConductorOrchestrasTab() {
           onClick={() => setShowAddModal(true)}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
         >
-          <Plus className="w-4 h-4" />
+          <PlusIcon className="w-4 h-4" />
           <span className="font-reisinger-yonatan">הוסף תזמורת</span>
         </button>
       </div>
 
-      {/* Search */}
+      {/* MagnifyingGlassIcon */}
       <div className="relative">
-        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           type="text"
           placeholder="חיפוש תזמורות..."
@@ -649,7 +650,7 @@ export default function ConductorOrchestrasTab() {
         <div className="space-y-4">
           {filteredOrchestras.length === 0 ? (
             <div className="text-center py-12">
-              <Music className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <MusicNotesIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">
                 {searchTerm ? 'לא נמצאו תזמורות' : 'אין תזמורות רשומות'}
               </h3>
@@ -695,7 +696,7 @@ export default function ConductorOrchestrasTab() {
                       className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200"
                       title="עריכת תזמורת"
                     >
-                      <Edit className="w-4 h-4" />
+                      <PencilIcon className="w-4 h-4" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -705,7 +706,7 @@ export default function ConductorOrchestrasTab() {
                       className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
                       title="מחיקת תזמורת"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -713,7 +714,7 @@ export default function ConductorOrchestrasTab() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
+                      <UsersIcon className="w-4 h-4" />
                       <span>{orchestra.memberCount || 0} חברים</span>
                     </div>
                     {orchestra.rehearsalDay && (
@@ -748,7 +749,7 @@ export default function ConductorOrchestrasTab() {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <Users className="w-4 h-4 inline mr-2" />
+                  <UsersIcon className="w-4 h-4 inline mr-2" />
                   חברי התזמורת
                 </button>
                 <button
@@ -762,7 +763,7 @@ export default function ConductorOrchestrasTab() {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <UserPlus className="w-4 h-4 inline mr-2" />
+                  <UserPlusIcon className="w-4 h-4 inline mr-2" />
                   רישום חברים
                 </button>
                 <button
@@ -773,7 +774,7 @@ export default function ConductorOrchestrasTab() {
                       : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <Calendar className="w-4 h-4 inline mr-2" />
+                  <CalendarIcon className="w-4 h-4 inline mr-2" />
                   חזרות
                 </button>
               </nav>
@@ -789,7 +790,7 @@ export default function ConductorOrchestrasTab() {
                     </h4>
                     <div className="flex gap-2">
                       <div className="relative">
-                        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
                           type="text"
                           placeholder="חיפוש חברים..."
@@ -808,7 +809,7 @@ export default function ConductorOrchestrasTab() {
                     member.instrument.toLowerCase().includes(memberFilter.toLowerCase())
                   ).length === 0 ? (
                     <div className="text-center py-8">
-                      <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                       <p className="text-gray-500 font-reisinger-yonatan">
                         {memberFilter ? 'לא נמצאו חברים' : 'אין חברים רשומים בתזמורת'}
                       </p>
@@ -847,7 +848,7 @@ export default function ConductorOrchestrasTab() {
                               className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                               title="הסר מהתזמורת"
                             >
-                              <UserMinus className="w-4 h-4" />
+                              <UserMinusIcon className="w-4 h-4" />
                             </button>
                           </div>
                         </div>
@@ -864,7 +865,7 @@ export default function ConductorOrchestrasTab() {
                       רישום חברים {!loadingStudents && `(${availableStudents.length} זמינים)`}
                     </h4>
                     <div className="relative">
-                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                       <input
                         type="text"
                         placeholder="חיפוש תלמידים..."
@@ -885,7 +886,7 @@ export default function ConductorOrchestrasTab() {
                     </div>
                   ) : availableStudents.length === 0 ? (
                     <div className="text-center py-8">
-                      <UserPlus className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <UserPlusIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                       <p className="text-gray-500 font-reisinger-yonatan">
                         כל התלמידים כבר רשומים לתזמורת
                       </p>
@@ -898,7 +899,7 @@ export default function ConductorOrchestrasTab() {
                         student.academicInfo?.primaryInstrument?.toLowerCase().includes(enrollmentFilter.toLowerCase())
                       ).length === 0 ? (
                         <div className="text-center py-8">
-                          <UserPlus className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                          <UserPlusIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                           <p className="text-gray-500 font-reisinger-yonatan">
                             לא נמצאו תלמידים תואמים
                           </p>
@@ -930,7 +931,7 @@ export default function ConductorOrchestrasTab() {
                                 onClick={() => handleAddMember(student._id)}
                                 className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition-colors"
                               >
-                                <UserPlus className="w-4 h-4" />
+                                <UserPlusIcon className="w-4 h-4" />
                                 הוסף
                               </button>
                             </div>
@@ -953,14 +954,14 @@ export default function ConductorOrchestrasTab() {
                       onClick={() => setShowRehearsalModal(true)}
                       className="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition-colors"
                     >
-                      <Plus className="w-4 h-4" />
+                      <PlusIcon className="w-4 h-4" />
                       קבע חזרה
                     </button>
                   </div>
 
                   {orchestraRehearsals.length === 0 ? (
                     <div className="text-center py-8">
-                      <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                       <p className="text-gray-500 font-reisinger-yonatan">אין חזרות מתוכננות</p>
                     </div>
                   ) : (
@@ -972,9 +973,9 @@ export default function ConductorOrchestrasTab() {
                               {rehearsal.date} • {rehearsal.time}
                             </div>
                             <div className="text-xs text-gray-500 font-reisinger-yonatan flex items-center gap-2 mt-1">
-                              <MapPin className="w-3 h-3" />
+                              <MapPinIcon className="w-3 h-3" />
                               {rehearsal.location}
-                              <Clock className="w-3 h-3 mr-1" />
+                              <ClockIcon className="w-3 h-3 mr-1" />
                               {rehearsal.duration} דקות
                             </div>
                           </div>
@@ -1039,9 +1040,9 @@ export default function ConductorOrchestrasTab() {
               : 'bg-red-50 border border-red-200'
           }`}>
             {notification.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <CheckCircleIcon className="w-5 h-5 text-green-600 flex-shrink-0" />
             ) : (
-              <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <XCircleIcon className="w-5 h-5 text-red-600 flex-shrink-0" />
             )}
             <span className={`font-medium font-reisinger-yonatan ${
               notification.type === 'success' ? 'text-green-800' : 'text-red-800'

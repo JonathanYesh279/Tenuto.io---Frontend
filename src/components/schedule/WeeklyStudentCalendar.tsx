@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
-import { Clock, MapPin, User, Music, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react'
+
 import { Card } from '../ui/Card'
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, ClockIcon, MapPinIcon, MusicNotesIcon, UserIcon } from '@phosphor-icons/react'
 
 interface StudentLesson {
   id: string
@@ -62,7 +63,7 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
   const getLessonStyle = (lessonType: string) => {
     switch (lessonType) {
       case 'individual':
-        return 'bg-primary-100 border-primary-300 text-primary-800 shadow-primary-100'
+        return 'bg-muted border-border text-primary '
       case 'group':
         return 'bg-success-100 border-success-300 text-success-800 shadow-success-100'
       case 'orchestra':
@@ -130,12 +131,12 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
             return (
               <div 
                 key={lesson.id} 
-                className={`rounded-xl p-5 border-2 transition-all hover:shadow-lg ${getLessonStyle(lesson.lessonType)}`}
+                className={`rounded p-5 border-2 transition-all hover:shadow-lg ${getLessonStyle(lesson.lessonType)}`}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-white/60 rounded-lg">
-                      <Music className="w-5 h-5" />
+                      <MusicNotesIcon className="w-5 h-5" />
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">{lesson.instrumentName}</h3>
@@ -150,12 +151,12 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
                 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
-                    <User className="w-4 h-4" />
+                    <UserIcon className="w-4 h-4" />
                     <span className="font-medium">{lesson.teacherName}</span>
                   </div>
                   {(lesson.roomNumber || lesson.location) && (
                     <div className="flex items-center gap-2 text-sm">
-                      <MapPin className="w-4 h-4" />
+                      <MapPinIcon className="w-4 h-4" />
                       <span>{lesson.roomNumber ? `חדר ${lesson.roomNumber}` : lesson.location}</span>
                     </div>
                   )}
@@ -169,7 +170,7 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
           <div className="mt-6 pt-4 border-t border-gray-200">
             <button
               onClick={() => setViewMode('week')}
-              className="w-full px-4 py-2 text-sm text-primary-600 hover:text-primary-800 hover:bg-primary-50 rounded-lg transition-colors"
+              className="w-full px-4 py-2 text-sm text-primary hover:text-primary hover:bg-muted/50 rounded-lg transition-colors"
             >
               הצג לוח זמנים שבועי מלא
             </button>
@@ -218,7 +219,7 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
                     key={day} 
                     className={`p-3 text-center text-sm font-medium ${
                       hasLessons 
-                        ? 'bg-primary-50 text-primary-700 border-b-2 border-primary-200' 
+                        ? 'bg-muted/50 text-primary border-b-2 border-border' 
                         : 'bg-gray-50 text-gray-600'
                     }`}
                   >
@@ -262,7 +263,7 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
                       <div 
                         key={`${dayIndex}-${timeSlot}`} 
                         className={`bg-white p-1 min-h-[2.5rem] border-b border-gray-100 relative ${
-                          dayLessons.length > 0 ? 'border-l border-primary-100' : ''
+                          dayLessons.length > 0 ? 'border-l border-border' : ''
                         } ${
                           lessonAtTime ? 'bg-gradient-to-r from-primary-50 to-primary-25' : ''
                         }`}
@@ -274,7 +275,7 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
                           `}>
                             <div className="font-bold mb-1">{lessonStartsAtTime.instrumentName}</div>
                             <div className="flex items-center gap-1 mb-1">
-                              <Clock className="w-3 h-3" />
+                              <ClockIcon className="w-3 h-3" />
                               {lessonStartsAtTime.startTime}-{lessonStartsAtTime.endTime}
                             </div>
                             <div className="text-xs opacity-75">{lessonStartsAtTime.teacherName}</div>
@@ -314,7 +315,7 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
                   
                   return (
                     <div key={day} className="bg-gray-50 rounded-lg p-3">
-                      <h3 className="font-semibold text-primary-700 mb-2 text-center">{day}</h3>
+                      <h3 className="font-semibold text-primary mb-2 text-center">{day}</h3>
                       <div className="space-y-2">
                         {dayLessons.map(lesson => (
                           <div 
@@ -324,16 +325,16 @@ const WeeklyStudentCalendar: React.FC<WeeklyStudentCalendarProps> = ({
                             <div className="font-bold text-sm mb-1">{lesson.instrumentName}</div>
                             <div className="text-xs space-y-1">
                               <div className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                                <ClockIcon className="w-3 h-3" />
                                 {lesson.startTime} - {lesson.endTime}
                               </div>
                               <div className="flex items-center gap-1">
-                                <User className="w-3 h-3" />
+                                <UserIcon className="w-3 h-3" />
                                 {lesson.teacherName}
                               </div>
                               {(lesson.roomNumber || lesson.location) && (
                                 <div className="flex items-center gap-1">
-                                  <MapPin className="w-3 h-3" />
+                                  <MapPinIcon className="w-3 h-3" />
                                   {lesson.roomNumber ? `חדר ${lesson.roomNumber}` : lesson.location}
                                 </div>
                               )}

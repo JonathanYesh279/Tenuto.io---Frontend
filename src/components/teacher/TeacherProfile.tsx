@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User, Phone, Mail, MapPin, Clock, Users, 
-  Calendar as CalendarIcon, Settings, ArrowLeft 
-} from 'lucide-react';
+
 import { Card } from '../ui/Card';
 import TeacherTimeBlocks from './TeacherTimeBlocks';
 import apiService from '../../services/apiService';
 import { getDisplayName, getInitials as getNameInitials, formatAddress } from '../../utils/nameUtils';
+import { ArrowLeftIcon, CalendarIcon, ClockIcon, EnvelopeIcon, GearIcon, MapPinIcon, PhoneIcon, UserIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface Teacher {
   _id: string;
@@ -85,8 +83,8 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
     <Card padding="lg">
       <div className="flex items-start space-x-6">
         {/* Avatar */}
-        <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-primary-600 font-semibold text-2xl">
+        <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-primary font-semibold text-2xl">
             {getNameInitials(teacher.personalInfo)}
           </span>
         </div>
@@ -121,7 +119,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
                   key={index}
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
                     index === 0 
-                      ? 'bg-primary-100 text-primary-800' 
+                      ? 'bg-muted text-primary' 
                       : 'bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -134,16 +132,16 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
           {/* Contact Info */}
           <div className="space-y-2 text-sm text-gray-600">
             <div className="flex items-center">
-              <Phone className="w-4 h-4 mr-2" />
+              <PhoneIcon className="w-4 h-4 mr-2" />
               {teacher.personalInfo.phone}
             </div>
             <div className="flex items-center">
-              <Mail className="w-4 h-4 mr-2" />
+              <EnvelopeIcon className="w-4 h-4 mr-2" />
               {teacher.personalInfo.email}
             </div>
             {teacher.personalInfo.address && (
               <div className="flex items-center">
-                <MapPin className="w-4 h-4 mr-2" />
+                <MapPinIcon className="w-4 h-4 mr-2" />
                 {formatAddress(teacher.personalInfo.address)}
               </div>
             )}
@@ -186,16 +184,16 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
     <Card padding="md">
       <div className="flex space-x-1">
         {[
-          { key: 'overview', label: 'סקירה כללית', icon: User },
+          { key: 'overview', label: 'סקירה כללית', icon: UserIcon },
           { key: 'schedule', label: 'יום לימוד', icon: CalendarIcon },
-          { key: 'students', label: 'תלמידים', icon: Users }
+          { key: 'students', label: 'תלמידים', icon: UsersIcon }
         ].map(tab => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key as any)}
             className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeTab === tab.key
-                ? 'bg-primary-100 text-primary-700'
+                ? 'bg-muted text-primary'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             }`}
           >
@@ -216,7 +214,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
             onClick={onBack}
             className="flex items-center text-gray-600 hover:text-gray-900"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
+            <ArrowLeftIcon className="w-5 h-5 mr-2" />
             חזור
           </button>
         )}
@@ -281,7 +279,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
           {loading ? (
             <Card padding="lg">
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
                 <p className="text-gray-600">טוען זמינות...</p>
               </div>
             </Card>
@@ -291,7 +289,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
                 <div className="text-red-600 text-lg mb-4">❌ {error}</div>
                 <button 
                   onClick={loadTimeBlocks}
-                  className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+                  className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary"
                 >
                   נסה שוב
                 </button>
@@ -310,7 +308,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacher, onBack }) => {
       {activeTab === 'students' && (
         <Card padding="lg">
           <div className="text-center py-12">
-            <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               רשימת תלמידים
             </h3>

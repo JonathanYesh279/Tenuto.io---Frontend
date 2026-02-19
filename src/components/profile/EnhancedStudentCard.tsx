@@ -1,20 +1,7 @@
 import React from 'react'
-import {
-  Edit,
-  Trash2,
-  Eye,
-  Phone,
-  Clock,
-  Music,
-  Calendar,
-  User,
-  MapPin,
-  CheckCircle,
-  AlertCircle,
-  CheckSquare,
-  FileText
-} from 'lucide-react'
+
 import { getDisplayName } from '@/utils/nameUtils'
+import { CalendarIcon, CheckCircleIcon, CheckSquareIcon, ClockIcon, EyeIcon, FileTextIcon, MapPinIcon, MusicNotesIcon, PencilIcon, PhoneIcon, TrashIcon, UserIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface Student {
   id: string
@@ -90,7 +77,7 @@ export default function EnhancedStudentCard({
   const isActive = student.academicInfo?.isActive !== false && student.status !== 'inactive'
   const statusColor = isActive ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'
   const statusText = isActive ? 'פעיל' : 'לא פעיל'
-  const statusIcon = isActive ? CheckCircle : AlertCircle
+  const statusIcon = isActive ? CheckCircleIcon : WarningCircleIcon
 
   // Border styling based on lesson schedule
   const borderClass = hasScheduledLesson
@@ -116,7 +103,7 @@ export default function EnhancedStudentCard({
 
             {/* Primary Instrument with Icon */}
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Music className="w-4 h-4 text-indigo-500" />
+              <MusicNotesIcon className="w-4 h-4 text-indigo-500" />
               <span className="font-reisinger-yonatan font-medium">{instrumentName}</span>
               {currentStage > 0 && (
                 <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-reisinger-yonatan">
@@ -133,21 +120,21 @@ export default function EnhancedStudentCard({
               className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200"
               title="צפה בפרטים מלאים"
             >
-              <Eye className="w-4 h-4" />
+              <EyeIcon className="w-4 h-4" />
             </button>
             <button
               onClick={() => onEdit(student)}
               className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
               title="עריכת תלמיד"
             >
-              <Edit className="w-4 h-4" />
+              <PencilIcon className="w-4 h-4" />
             </button>
             <button
               onClick={() => onDelete(student.id)}
               className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
               title="מחיקת תלמיד"
             >
-              <Trash2 className="w-4 h-4" />
+              <TrashIcon className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -162,13 +149,13 @@ export default function EnhancedStudentCard({
           <div className="space-y-1">
             {student.personalInfo.age && (
               <div className="flex items-center gap-2 text-gray-600">
-                <User className="w-3 h-3" />
+                <UserIcon className="w-3 h-3" />
                 <span className="font-reisinger-yonatan">גיל: {student.personalInfo.age}</span>
               </div>
             )}
             {student.personalInfo.class && (
               <div className="flex items-center gap-2 text-gray-600">
-                <MapPin className="w-3 h-3" />
+                <MapPinIcon className="w-3 h-3" />
                 <span className="font-reisinger-yonatan">כיתה: {student.personalInfo.class}</span>
               </div>
             )}
@@ -178,7 +165,7 @@ export default function EnhancedStudentCard({
           <div className="space-y-1">
             {student.personalInfo.phone && (
               <div className="flex items-center gap-2 text-gray-600" dir="ltr">
-                <Phone className="w-3 h-3" />
+                <PhoneIcon className="w-3 h-3" />
                 <span className="font-mono text-xs">{student.personalInfo.phone}</span>
               </div>
             )}
@@ -189,7 +176,7 @@ export default function EnhancedStudentCard({
         {lessonTime && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-2">
             <div className="flex items-center gap-2 text-sm text-blue-800 font-reisinger-yonatan">
-              <Calendar className="w-4 h-4" />
+              <CalendarIcon className="w-4 h-4" />
               <span className="font-medium">שיעור קבוע:</span>
             </div>
             <div className="flex items-center justify-between mt-1">
@@ -197,7 +184,7 @@ export default function EnhancedStudentCard({
                 {lessonTime}
               </span>
               <div className="flex items-center gap-1 text-xs text-blue-600">
-                <Clock className="w-3 h-3" />
+                <ClockIcon className="w-3 h-3" />
                 <span>{lessonDuration} דק'</span>
               </div>
             </div>
@@ -213,7 +200,7 @@ export default function EnhancedStudentCard({
             onClick={() => onViewDetails(student.id)}
             className="text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
           >
-            <Eye className="w-4 h-4" />
+            <EyeIcon className="w-4 h-4" />
             פרטים מלאים
           </button>
 
@@ -223,7 +210,7 @@ export default function EnhancedStudentCard({
               onClick={() => onUpdateLesson(student)}
               className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
             >
-              <Calendar className="w-4 h-4" />
+              <CalendarIcon className="w-4 h-4" />
               עדכן שיעור קבוע
             </button>
           ) : onScheduleLesson && !hasScheduledLesson ? (
@@ -231,7 +218,7 @@ export default function EnhancedStudentCard({
               onClick={() => onScheduleLesson(student.id)}
               className="text-green-600 hover:text-green-800 hover:bg-green-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
             >
-              <Calendar className="w-4 h-4" />
+              <CalendarIcon className="w-4 h-4" />
               תזמן שיעור
             </button>
           ) : null}
@@ -242,7 +229,7 @@ export default function EnhancedStudentCard({
               onClick={() => onMarkAttendance(student.id)}
               className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
             >
-              <CheckSquare className="w-4 h-4" />
+              <CheckSquareIcon className="w-4 h-4" />
               נוכחות
             </button>
           )}
@@ -253,7 +240,7 @@ export default function EnhancedStudentCard({
               onClick={() => onAddNote(student.id)}
               className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
             >
-              <FileText className="w-4 h-4" />
+              <FileTextIcon className="w-4 h-4" />
               הערה
             </button>
           )}

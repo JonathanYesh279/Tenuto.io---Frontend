@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import { Plus, Search, Edit, Trash2, UserPlus, BookOpen, Eye, Calendar, AlertTriangle, Filter, X, CheckSquare, Clock, Music, Star, Phone, Mail, Award, MapPin } from 'lucide-react'
+
 import apiService from '../../services/apiService.js'
 import { getDisplayName } from '../../utils/nameUtils'
 import EnhancedStudentCard from './EnhancedStudentCard'
 import { VALID_LOCATIONS } from '../../constants/locations'
 import IndividualLessonAttendance from '../attendance/IndividualLessonAttendance'
+import { BookOpenIcon, CalendarIcon, CheckSquareIcon, ClockIcon, EnvelopeIcon, EyeIcon, FunnelIcon, MagnifyingGlassIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PencilIcon, PhoneIcon, PlusIcon, StarIcon, TrashIcon, UserPlusIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
 
 // Constants for slot generation
 const VALID_DURATIONS = [30, 45, 60]
@@ -212,7 +213,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       const assignedStudents = await apiService.teachers.getTeacherStudents(teacherId)
       const assignedStudentIds = assignedStudents.map((s: any) => s._id || s.id)
 
-      // Filter out students that are already assigned to this teacher
+      // FunnelIcon out students that are already assigned to this teacher
       const availableStudents = response.filter(student =>
         !assignedStudentIds.includes(student._id) && !assignedStudentIds.includes(student.id)
       )
@@ -227,7 +228,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
   }
 
   const filteredStudents = students.filter(student => {
-    // Search filter
+    // MagnifyingGlassIcon filter
     const matchesSearch = searchTerm === '' ||
       `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.instrument?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -508,14 +509,14 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
           }}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
         >
-          <UserPlus className="w-4 h-4" />
+          <UserPlusIcon className="w-4 h-4" />
           <span className="font-reisinger-yonatan">הוסף תלמיד</span>
         </button>
       </div>
 
-      {/* Search */}
+      {/* MagnifyingGlassIcon */}
       <div className="relative">
-        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           type="text"
           placeholder="חיפוש תלמידים..."
@@ -529,7 +530,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       {/* Students List */}
       {filteredStudents.length === 0 ? (
         <div className="text-center py-12">
-          <UserPlus className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <UserPlusIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">
             {searchTerm ? 'לא נמצאו תלמידים' : 'אין תלמידים רשומים'}
           </h3>
@@ -544,7 +545,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
               }}
               className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-reisinger-yonatan"
             >
-              <UserPlus className="w-4 h-4" />
+              <UserPlusIcon className="w-4 h-4" />
               הוסף תלמיד ראשון
             </button>
           )}
@@ -555,14 +556,14 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-blue-600" />
+                <UserPlusIcon className="w-5 h-5 text-blue-600" />
                 <span className="font-medium text-blue-900 font-reisinger-yonatan">סה״כ תלמידים</span>
               </div>
               <div className="text-2xl font-bold text-blue-900 mt-1">{students.length}</div>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <div className="flex items-center gap-2">
-                <Eye className="w-5 h-5 text-green-600" />
+                <EyeIcon className="w-5 h-5 text-green-600" />
                 <span className="font-medium text-green-900 font-reisinger-yonatan">פעילים</span>
               </div>
               <div className="text-2xl font-bold text-green-900 mt-1">
@@ -571,7 +572,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
             </div>
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
               <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-purple-600" />
+                <CalendarIcon className="w-5 h-5 text-purple-600" />
                 <span className="font-medium text-purple-900 font-reisinger-yonatan">עם שיעורים</span>
               </div>
               <div className="text-2xl font-bold text-purple-900 mt-1">
@@ -705,7 +706,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
   const [loadingSlots, setLoadingSlots] = useState(false)
   const [selectedSlot, setSelectedSlot] = useState<TeacherScheduleSlot | null>(null)
 
-  // Filter students based on search query - enhanced for flexible word matching
+  // FunnelIcon students based on search query - enhanced for flexible word matching
   const filteredStudents = allStudents.filter(student => {
     const searchLower = searchQuery.toLowerCase().trim()
 
@@ -872,13 +873,13 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
-            {/* Search Input */}
+            {/* MagnifyingGlassIcon Input */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
                 חפש תלמיד במערכת
               </label>
               <div className="relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="חפש לפי שם, כיתה או כלי נגינה..."
@@ -929,7 +930,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                           </div>
                           {isSelected && (
                             <div className="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center">
-                              <CheckSquare className="w-4 h-4 text-white" />
+                              <CheckSquareIcon className="w-4 h-4 text-white" />
                             </div>
                           )}
                         </div>
@@ -949,7 +950,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                   </h4>
                   {selectedSlot && (
                     <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-1 rounded-lg">
-                      <CheckSquare className="w-4 h-4" />
+                      <CheckSquareIcon className="w-4 h-4" />
                       <span>נבחר: {selectedSlot.day} {selectedSlot.startTime}</span>
                     </div>
                   )}
@@ -977,7 +978,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                       return Object.entries(slotsByDay).map(([day, daySlots]) => (
                         <div key={day} className="mb-4">
                           <h5 className="text-sm font-medium text-gray-600 mb-2 flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
+                            <CalendarIcon className="w-4 h-4" />
                             יום {day}
                           </h5>
                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pr-1">
@@ -1003,7 +1004,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                                     <div className="space-y-1">
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-1">
-                                          <Clock className="w-3 h-3" />
+                                          <ClockIcon className="w-3 h-3" />
                                           <span className="text-sm font-medium text-gray-900">
                                             {slot.startTime}-{slot.endTime}
                                           </span>
@@ -1018,19 +1019,19 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                                       </div>
                                       {slot.location && (
                                         <div className="flex items-center gap-1 text-xs text-gray-500">
-                                          <MapPin className="w-3 h-3" />
+                                          <MapPinIcon className="w-3 h-3" />
                                           {slot.location}
                                         </div>
                                       )}
                                       {slot.instrument && (
                                         <div className="flex items-center gap-1 text-xs text-gray-600">
-                                          <Music className="w-3 h-3" />
+                                          <MusicNotesIcon className="w-3 h-3" />
                                           {slot.instrument}
                                         </div>
                                       )}
                                       {isSelected && (
                                         <div className="flex justify-center mt-2">
-                                          <CheckSquare className="w-5 h-5 text-indigo-600" />
+                                          <CheckSquareIcon className="w-5 h-5 text-indigo-600" />
                                         </div>
                                       )}
                                     </div>
@@ -1044,7 +1045,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                   </div>
                 ) : (
                   <div className="text-center py-6 bg-gray-50 rounded-lg">
-                    <Clock className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <ClockIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                     <p className="text-gray-500 text-sm mb-2">אין זמנים פנויים</p>
                     <p className="text-xs text-gray-400">
                       ייתכן שכל הזמנים הפנויים כבר תפוסים או שלא הוגדרו זמני הוראה
@@ -1068,7 +1069,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                   </>
                 ) : (
                   <>
-                    <UserPlus className="w-4 h-4" />
+                    <UserPlusIcon className="w-4 h-4" />
                     הוסף תלמיד
                   </>
                 )}
@@ -1079,7 +1080,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                 disabled={submitting}
                 className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-reisinger-yonatan flex items-center justify-center gap-2"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
                 ביטול
               </button>
             </div>

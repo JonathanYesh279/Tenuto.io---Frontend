@@ -11,13 +11,14 @@
 
 import React, { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { X, Plus, Trash2, Clock, MapPin, Save, AlertCircle, User, Briefcase, Calendar, Settings, Music2, BookOpen } from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { useSchoolYear } from '../../services/schoolYearContext'
 import { VALID_LOCATIONS } from '../../constants/locations'
 import { handleServerValidationError, VALID_INSTRUMENTS } from '../../utils/validationUtils'
 import { formatAddress } from '../../utils/nameUtils'
 import {
+import { BookOpenIcon, BriefcaseIcon, CalendarIcon, ClockIcon, FloppyDiskIcon, GearIcon, MapPinIcon, Music2Icon, PlusIcon, TrashIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
   CLASSIFICATIONS, DEGREES, MANAGEMENT_ROLES, TEACHING_SUBJECTS,
   INSTRUMENT_DEPARTMENTS
 } from '../../constants/enums'
@@ -377,18 +378,18 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
   if (!isOpen) return null
 
   const tabs = [
-    { id: 'personal', label: 'מידע אישי', icon: User },
-    { id: 'professional', label: 'נתונים מקצועיים', icon: Briefcase },
-    { id: 'instruments', label: 'כלי נגינה', icon: Music2 },
-    { id: 'subjects', label: 'מקצועות הוראה', icon: BookOpen },
-    { id: 'management', label: 'שעות ניהול', icon: Clock },
-    { id: 'schedule', label: 'לוח זמנים', icon: Calendar },
-    { id: 'conducting', label: 'ניצוח', icon: Settings }
+    { id: 'personal', label: 'מידע אישי', icon: UserIcon },
+    { id: 'professional', label: 'נתונים מקצועיים', icon: BriefcaseIcon },
+    { id: 'instruments', label: 'כלי נגינה', icon: Music2Icon },
+    { id: 'subjects', label: 'מקצועות הוראה', icon: BookOpenIcon },
+    { id: 'management', label: 'שעות ניהול', icon: ClockIcon },
+    { id: 'schedule', label: 'לוח זמנים', icon: CalendarIcon },
+    { id: 'conducting', label: 'ניצוח', icon: GearIcon }
   ]
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-card rounded-xl shadow-2xl w-full max-w-4xl h-[85vh] overflow-hidden border border-border">
+      <div className="bg-card rounded shadow-2xl w-full max-w-4xl h-[85vh] overflow-hidden border border-border">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">
@@ -399,7 +400,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
             onClick={handleClose}
             className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -595,7 +596,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                         </div>
                         {fieldState.error && (
                           <p className="mt-1 text-sm text-destructive flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3" />{fieldState.error.message}
+                            <WarningCircleIcon className="w-3 h-3" />{fieldState.error.message}
                           </p>
                         )}
                       </>
@@ -778,7 +779,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                           ))}
                           {fieldState.error && (
                             <p className="text-sm text-destructive flex items-center gap-1">
-                              <AlertCircle className="w-3 h-3" />{fieldState.error.message}
+                              <WarningCircleIcon className="w-3 h-3" />{fieldState.error.message}
                             </p>
                           )}
                         </>
@@ -943,14 +944,14 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                     size="sm"
                     onClick={addScheduleSlot}
                   >
-                    <Plus className="w-4 h-4 ml-2" />
+                    <PlusIcon className="w-4 h-4 ml-2" />
                     הוסף בלוק זמן
                   </Button>
                 </div>
 
                 {(!scheduleSlots || scheduleSlots.length === 0) ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    <Calendar className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+                    <CalendarIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
                     <p>לא הוגדרו בלוקי זמן</p>
                     <p className="text-sm">הוסף בלוק זמן כדי לקבוע מתי המורה זמין להוראה</p>
                   </div>
@@ -1069,7 +1070,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                             onClick={() => removeScheduleSlot(index)}
                             className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
-                            <Trash2 className="w-4 h-4 ml-1" />
+                            <TrashIcon className="w-4 h-4 ml-1" />
                             הסר
                           </Button>
                         </div>
@@ -1084,10 +1085,10 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
             {activeTab === 'conducting' && (
               <div className="space-y-8">
                 {/* Orchestra Section */}
-                <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded p-6 border border-purple-200">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                      <Settings className="w-5 h-5 text-purple-600" />
+                      <GearIcon className="w-5 h-5 text-purple-600" />
                     </div>
                     <div>
                       <Label className="block text-lg font-semibold text-foreground">
@@ -1102,7 +1103,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                     render={({ field }) => (
                       <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
                         {orchestras.map(orchestra => (
-                          <div key={orchestra._id} className="flex items-center p-4 bg-card border-2 border-border rounded-xl hover:border-purple-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                          <div key={orchestra._id} className="flex items-center p-4 bg-card border-2 border-border rounded hover:border-purple-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
                             <Checkbox
                               id={`orch-${orchestra._id}`}
                               checked={field.value.includes(orchestra._id)}
@@ -1129,10 +1130,10 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                 </div>
 
                 {/* Ensemble Section */}
-                <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-6 border border-green-200">
+                <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded p-6 border border-green-200">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <User className="w-5 h-5 text-green-600" />
+                      <UserIcon className="w-5 h-5 text-green-600" />
                     </div>
                     <div>
                       <Label className="block text-lg font-semibold text-foreground">
@@ -1147,7 +1148,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                     render={({ field }) => (
                       <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto">
                         {ensembles.map(ensemble => (
-                          <div key={ensemble._id} className="flex items-center p-4 bg-card border-2 border-border rounded-xl hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                          <div key={ensemble._id} className="flex items-center p-4 bg-card border-2 border-border rounded hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer group">
                             <Checkbox
                               id={`ens-${ensemble._id}`}
                               checked={field.value.includes(ensemble._id)}
@@ -1180,7 +1181,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
           <div className="px-6 py-4 border-t border-border">
             {submitError && (
               <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded-lg flex items-start gap-2">
-                <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                <WarningCircleIcon className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
                 <span className="text-sm text-destructive">{submitError}</span>
               </div>
             )}
@@ -1201,7 +1202,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
                 {isSubmitting ? (
                   <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin ml-2" />
                 ) : (
-                  <Save className="w-4 h-4 ml-2" />
+                  <FloppyDiskIcon className="w-4 h-4 ml-2" />
                 )}
                 {isSubmitting ? 'שומר...' : (mode === 'edit' ? 'עדכן מורה' : 'שמור מורה')}
               </Button>

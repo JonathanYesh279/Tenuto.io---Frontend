@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ChevronLeft, Home } from 'lucide-react'
+
 import { getDisplayName } from '@/utils/nameUtils'
+import { CaretLeftIcon, HouseIcon } from '@phosphor-icons/react'
 
 interface BreadcrumbItem {
   label: string
@@ -111,7 +112,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         {items.map((item, index) => (
           <li key={index} className="flex items-center">
             {index > 0 && (
-              <ChevronLeft 
+              <CaretLeftIcon 
                 className="w-4 h-4 text-gray-400 mx-2" 
                 aria-hidden="true"
               />
@@ -124,7 +125,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 title={item.label}
               >
                 {index === 0 && (
-                  <Home className="w-4 h-4 inline ml-1" aria-hidden="true" />
+                  <HouseIcon className="w-4 h-4 inline ml-1" aria-hidden="true" />
                 )}
                 {item.label}
               </Link>
@@ -132,13 +133,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               <span 
                 className={`font-reisinger-yonatan ${
                   item.isActive 
-                    ? 'text-primary-600 font-semibold' 
+                    ? 'text-primary font-semibold' 
                     : 'text-gray-900'
                 }`}
                 aria-current={item.isActive ? 'page' : undefined}
               >
                 {index === 0 && (
-                  <Home className="w-4 h-4 inline ml-1" aria-hidden="true" />
+                  <HouseIcon className="w-4 h-4 inline ml-1" aria-hidden="true" />
                 )}
                 {item.label}
               </span>

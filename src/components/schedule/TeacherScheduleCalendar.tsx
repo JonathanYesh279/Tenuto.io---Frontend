@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Settings, Users, Calendar as CalendarIcon } from 'lucide-react';
+
 import { Card } from '../ui/Card';
 import ScheduleTimeSlot from './ScheduleTimeSlot';
 import StudyDayTemplateManager from './StudyDayTemplateManager';
 import apiService from '../../services/apiService';
 import { getDisplayName } from '@/utils/nameUtils';
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, GearIcon, PlusIcon, UsersIcon } from '@phosphor-icons/react'
 
 const HEBREW_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'];
 const HEBREW_MONTHS = [
@@ -264,7 +265,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">טוען לוח זמנים...</p>
         </div>
       </div>
@@ -277,7 +278,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
       <Card padding="md">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <CalendarIcon className="w-6 h-6 text-primary-600" />
+            <CalendarIcon className="w-6 h-6 text-primary" />
             <h1 className="text-2xl font-bold text-gray-900">לוח זמנים שבועי</h1>
           </div>
           
@@ -286,7 +287,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
               onClick={() => setShowStudyDayManager(true)}
               className="flex items-center px-3 py-2 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100"
             >
-              <Settings className="w-4 h-4 mr-1" />
+              <GearIcon className="w-4 h-4 mr-1" />
               נהל ימי לימוד
             </button>
             
@@ -295,7 +296,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
                 onClick={() => navigateWeek('prev')}
                 className="p-2 hover:bg-gray-100 rounded-lg"
               >
-                <ChevronRight className="w-5 h-5" />
+                <CaretRightIcon className="w-5 h-5" />
               </button>
               
               <span className="text-lg font-semibold text-gray-900 px-4">
@@ -306,7 +307,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
                 onClick={() => navigateWeek('next')}
                 className="p-2 hover:bg-gray-100 rounded-lg"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <CaretLeftIcon className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -323,7 +324,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
         {/* Students Sidebar */}
         <Card padding="md" className="lg:sticky lg:top-4 lg:self-start">
           <div className="flex items-center mb-4">
-            <Users className="w-5 h-5 text-primary-600 mr-2" />
+            <UsersIcon className="w-5 h-5 text-primary mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">
               תלמידים ({availableStudents.length})
             </h3>
@@ -372,7 +373,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
                 <Card
                   key={day.date}
                   padding="md"
-                  className={`${isToday ? 'ring-2 ring-primary-300 bg-primary-50' : ''}`}
+                  className={`${isToday ? 'ring-2 ring-ring bg-muted/50' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">
@@ -407,7 +408,7 @@ const TeacherScheduleCalendar: React.FC<TeacherScheduleCalendarProps> = ({
                         <br />
                         <button
                           onClick={() => setShowStudyDayManager(true)}
-                          className="text-primary-600 hover:text-primary-800 text-sm mt-2"
+                          className="text-primary hover:text-primary text-sm mt-2"
                         >
                           צור יום לימוד
                         </button>

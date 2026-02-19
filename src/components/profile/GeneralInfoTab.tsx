@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import { Edit2, Save, X, Mail, Phone, MapPin, Calendar, AlertCircle, CheckCircle } from 'lucide-react'
+
 import { teacherService } from '../../services/apiService.js'
 import type { TeacherProfile, TeacherProfileUpdateData } from '../../types/teacher.types'
 import { getDisplayName, formatAddress } from '../../utils/nameUtils'
+import { CalendarIcon, CheckCircleIcon, EnvelopeIcon, FloppyDiskIcon, MapPinIcon, PencilSimpleIcon, PhoneIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 export default function GeneralInfoTab() {
   const { user, checkAuthStatus } = useAuth()
@@ -140,9 +141,9 @@ export default function GeneralInfoTab() {
             : 'bg-red-50 text-red-800 border border-red-200'
         }`}>
           {saveStatus.type === 'success' ? (
-            <CheckCircle className="w-5 h-5" />
+            <CheckCircleIcon className="w-5 h-5" />
           ) : (
-            <AlertCircle className="w-5 h-5" />
+            <WarningCircleIcon className="w-5 h-5" />
           )}
           <span className="font-reisinger-yonatan">{saveStatus.message}</span>
         </div>
@@ -159,7 +160,7 @@ export default function GeneralInfoTab() {
             disabled={isLoading}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Edit2 className="w-4 h-4" />
+            <PencilSimpleIcon className="w-4 h-4" />
             <span className="font-reisinger-yonatan">עריכה</span>
           </button>
         ) : (
@@ -172,7 +173,7 @@ export default function GeneralInfoTab() {
               {isLoading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
               ) : (
-                <Save className="w-4 h-4" />
+                <FloppyDiskIcon className="w-4 h-4" />
               )}
               <span className="font-reisinger-yonatan">שמירה</span>
             </button>
@@ -181,7 +182,7 @@ export default function GeneralInfoTab() {
               disabled={isLoading}
               className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <X className="w-4 h-4" />
+              <XIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">ביטול</span>
             </button>
           </div>
@@ -248,13 +249,13 @@ export default function GeneralInfoTab() {
             />
           ) : (
             <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Mail className="w-4 h-4 text-gray-500" />
+              <EnvelopeIcon className="w-4 h-4 text-gray-500" />
               <span className="font-reisinger-yonatan" dir="ltr">{editedUser.email || 'לא צוין'}</span>
             </div>
           )}
         </div>
 
-        {/* Phone */}
+        {/* PhoneIcon */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
             טלפון
@@ -270,7 +271,7 @@ export default function GeneralInfoTab() {
             />
           ) : (
             <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Phone className="w-4 h-4 text-gray-500" />
+              <PhoneIcon className="w-4 h-4 text-gray-500" />
               <span className="font-reisinger-yonatan" dir="ltr">{editedUser.phone || 'לא צוין'}</span>
             </div>
           )}
@@ -292,7 +293,7 @@ export default function GeneralInfoTab() {
             />
           ) : (
             <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <MapPin className="w-4 h-4 text-gray-500" />
+              <MapPinIcon className="w-4 h-4 text-gray-500" />
               <span className="font-reisinger-yonatan">{editedUser.address || 'לא צוין'}</span>
             </div>
           )}
@@ -312,7 +313,7 @@ export default function GeneralInfoTab() {
             />
           ) : (
             <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Calendar className="w-4 h-4 text-gray-500" />
+              <CalendarIcon className="w-4 h-4 text-gray-500" />
               <span className="font-reisinger-yonatan">{formatDate(editedUser.birthDate) || 'לא צוין'}</span>
             </div>
           )}

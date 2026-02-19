@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import { Plus, Search, Edit, Trash2, BookOpen, Calendar, Clock, Users, UserPlus, UserMinus, AlertTriangle, BookOpenCheck, GraduationCap, Settings, Copy } from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import theoryEnrollmentService from '../../services/theoryEnrollmentService'
+import { BookOpenCheckIcon, BookOpenIcon, CalendarIcon, ClockIcon, CopyIcon, GearIcon, GraduationCapIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface TheoryLesson {
   id: string
@@ -445,14 +446,14 @@ export default function TheoryTeacherLessonsTab() {
             onClick={() => setShowGroupManager(true)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            <Settings className="w-4 h-4" />
+            <GearIcon className="w-4 h-4" />
             <span className="font-reisinger-yonatan">נהל קבוצות</span>
           </button>
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             <span className="font-reisinger-yonatan">הוסף שיעור</span>
           </button>
         </div>
@@ -463,10 +464,10 @@ export default function TheoryTeacherLessonsTab() {
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8 px-6" dir="rtl">
             {[
-              { id: 'lessons', label: 'שיעורים', icon: BookOpen },
-              { id: 'groups', label: 'קבוצות', icon: Users },
-              { id: 'curriculum', label: 'תכנית לימודים', icon: GraduationCap },
-              { id: 'grades', label: 'ציונים', icon: BookOpenCheck }
+              { id: 'lessons', label: 'שיעורים', icon: BookOpenIcon },
+              { id: 'groups', label: 'קבוצות', icon: UsersIcon },
+              { id: 'curriculum', label: 'תכנית לימודים', icon: GraduationCapIcon },
+              { id: 'grades', label: 'ציונים', icon: BookOpenCheckIcon }
             ].map((tab) => {
               const Icon = tab.icon
               return (
@@ -491,9 +492,9 @@ export default function TheoryTeacherLessonsTab() {
         <div className="p-6">
           {activeTab === 'lessons' && (
             <>
-              {/* Search */}
+              {/* MagnifyingGlassIcon */}
               <div className="relative mb-6">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="חיפוש שיעורים..."
@@ -509,7 +510,7 @@ export default function TheoryTeacherLessonsTab() {
         <div className="space-y-4">
           {filteredLessons.length === 0 ? (
             <div className="text-center py-12">
-              <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <BookOpenIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">
                 {searchTerm ? 'לא נמצאו שיעורים' : 'אין שיעורים רשומים'}
               </h3>
@@ -552,7 +553,7 @@ export default function TheoryTeacherLessonsTab() {
                       className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
                       title="שכפל שיעור"
                     >
-                      <Copy className="w-4 h-4" />
+                      <CopyIcon className="w-4 h-4" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -563,7 +564,7 @@ export default function TheoryTeacherLessonsTab() {
                       className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
                       title="ערוך שיעור"
                     >
-                      <Edit className="w-4 h-4" />
+                      <PencilIcon className="w-4 h-4" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -573,18 +574,18 @@ export default function TheoryTeacherLessonsTab() {
                       className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                       title="מחק שיעור"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-3">
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
+                    <CalendarIcon className="w-4 h-4" />
                     <span>{getDayLabel(lesson.schedule.dayOfWeek)}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
+                    <ClockIcon className="w-4 h-4" />
                     <span>
                       {formatTime(lesson.schedule.startTime)} - {formatTime(lesson.schedule.endTime)}
                     </span>
@@ -594,7 +595,7 @@ export default function TheoryTeacherLessonsTab() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
+                      <UsersIcon className="w-4 h-4" />
                       <span>{lesson.enrolledCount || 0}/{lesson.capacity}</span>
                     </div>
                     {lesson.venue && (
@@ -630,7 +631,7 @@ export default function TheoryTeacherLessonsTab() {
                   }}
                   className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 text-sm font-medium font-reisinger-yonatan"
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlusIcon className="w-4 h-4" />
                   הוסף תלמיד
                 </button>
               </div>
@@ -638,7 +639,7 @@ export default function TheoryTeacherLessonsTab() {
             
             {lessonStudents.length === 0 ? (
               <div className="text-center py-8">
-                <Users className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                <UsersIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-500 text-sm font-reisinger-yonatan">אין תלמידים רשומים לשיעור</p>
               </div>
             ) : (
@@ -672,7 +673,7 @@ export default function TheoryTeacherLessonsTab() {
                       className="text-red-600 hover:text-red-800 p-1"
                       title="הסר תלמיד"
                     >
-                      <UserMinus className="w-4 h-4" />
+                      <UserMinusIcon className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
@@ -687,7 +688,7 @@ export default function TheoryTeacherLessonsTab() {
             {/* Other tabs content */}
             {activeTab === 'groups' && (
               <div className="text-center py-12">
-                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">ניהול קבוצות תיאוריה</h3>
                 <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
               </div>
@@ -695,7 +696,7 @@ export default function TheoryTeacherLessonsTab() {
 
             {activeTab === 'curriculum' && (
               <div className="text-center py-12">
-                <GraduationCap className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <GraduationCapIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">תכנית לימודים</h3>
                 <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
               </div>
@@ -703,7 +704,7 @@ export default function TheoryTeacherLessonsTab() {
 
             {activeTab === 'grades' && (
               <div className="text-center py-12">
-                <BookOpenCheck className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <BookOpenCheckIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">ניהול ציונים</h3>
                 <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
               </div>
@@ -987,7 +988,7 @@ function StudentEnrollmentModal({ availableStudents, onClose, onEnroll }: Studen
         </h3>
 
         <div className="relative mb-4">
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
             placeholder="חיפוש תלמידים..."
@@ -1000,7 +1001,7 @@ function StudentEnrollmentModal({ availableStudents, onClose, onEnroll }: Studen
         <div className="space-y-2 max-h-60 overflow-y-auto">
           {filteredStudents.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-              <Users className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+              <UsersIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
               <p className="font-reisinger-yonatan">אין תלמידים זמינים</p>
             </div>
           ) : (
@@ -1019,7 +1020,7 @@ function StudentEnrollmentModal({ availableStudents, onClose, onEnroll }: Studen
                   onClick={() => onEnroll(student.id)}
                   className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-reisinger-yonatan"
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlusIcon className="w-4 h-4" />
                   הוסף
                 </button>
               </div>
@@ -1052,7 +1053,7 @@ function ConflictCheckerModal({ conflict, onClose, onResolve }: ConflictCheckerM
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
         <div className="flex items-center gap-3 mb-4">
-          <AlertTriangle className="w-8 h-8 text-yellow-600" />
+          <WarningIcon className="w-8 h-8 text-yellow-600" />
           <h3 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
             התנגשות בלוח הזמנים
           </h3>

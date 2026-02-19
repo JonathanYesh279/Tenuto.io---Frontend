@@ -143,7 +143,7 @@ export default function AccompanistManager({
                       type="text"
                       value={editData?.name || ''}
                       onChange={(e) => setEditData(prev => prev ? { ...prev, name: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="שם מלא"
                     />
                   </div>
@@ -155,7 +155,7 @@ export default function AccompanistManager({
                     <select
                       value={editData?.instrument || ''}
                       onChange={(e) => setEditData(prev => prev ? { ...prev, instrument: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">בחר כלי נגינה</option>
                       {COMMON_INSTRUMENTS.map(instrument => (
@@ -167,7 +167,7 @@ export default function AccompanistManager({
                         type="text"
                         value={editData?.instrument || ''}
                         onChange={(e) => setEditData(prev => prev ? { ...prev, instrument: e.target.value } : null)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 mt-2"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary mt-2"
                         placeholder="ציין כלי נגינה"
                       />
                     )}
@@ -182,7 +182,7 @@ export default function AccompanistManager({
                     type="tel"
                     value={editData?.phone || ''}
                     onChange={(e) => setEditData(prev => prev ? { ...prev, phone: e.target.value || null } : null)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                       editData?.phone && !validatePhone(editData.phone)
                         ? 'border-red-300 focus:ring-red-500'
                         : 'border-gray-300'
@@ -197,7 +197,7 @@ export default function AccompanistManager({
             ) : (
               <div>
                 <div className="flex items-center mb-2">
-                  <UserCheck className="w-5 h-5 text-primary-600 mr-2" />
+                  <UserCheck className="w-5 h-5 text-primary mr-2" />
                   <h3 className="text-lg font-semibold text-gray-900">
                     {accompanist.name}
                   </h3>
@@ -213,7 +213,7 @@ export default function AccompanistManager({
                     <Phone className="w-4 h-4 mr-2" />
                     <a 
                       href={`tel:${accompanist.phone}`}
-                      className="text-sm text-primary-600 hover:text-primary-800"
+                      className="text-sm text-primary hover:text-foreground"
                     >
                       {accompanist.phone}
                     </a>
@@ -245,7 +245,7 @@ export default function AccompanistManager({
                 <>
                   <button
                     onClick={() => startEdit(index)}
-                    className="p-2 text-primary-600 hover:text-primary-800"
+                    className="p-2 text-primary hover:text-foreground"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
@@ -268,7 +268,7 @@ export default function AccompanistManager({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <Users className="w-6 h-6 mr-3 text-primary-600" />
+          <Users className="w-6 h-6 mr-3 text-primary" />
           ליווי מוזיקלי
         </h2>
         
@@ -280,7 +280,7 @@ export default function AccompanistManager({
           {!readonly && (
             <button
               onClick={() => setShowAddForm(true)}
-              className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+              className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 mr-2" />
               הוסף נגן
@@ -298,7 +298,7 @@ export default function AccompanistManager({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {ACCOMPANIMENT_TYPES.map(type => (
             <div key={type}>
-              <label className="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+              <label className="flex items-center p-4 border-2 rounded cursor-pointer hover:bg-gray-50 transition-colors">
                 <input
                   type="radio"
                   name="accompanimentType"
@@ -306,7 +306,7 @@ export default function AccompanistManager({
                   checked={accompaniment.type === type}
                   onChange={(e) => !readonly && updateAccompanimentType(e.target.value as 'נגן מלווה' | 'הרכב')}
                   disabled={readonly}
-                  className="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500"
+                  className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
                 />
                 <div className="mr-3">
                   <div className="font-medium text-gray-900">{type}</div>
@@ -351,7 +351,7 @@ export default function AccompanistManager({
             {!readonly && (
               <button
                 onClick={() => setShowAddForm(true)}
-                className="inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 הוסף נגן ראשון

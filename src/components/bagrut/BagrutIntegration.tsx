@@ -224,7 +224,7 @@ export default function BagrutIntegration({
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Navigation */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+          <div className="bg-white rounded shadow-sm border border-gray-200 mb-8">
             <div className="border-b border-gray-200">
               <nav className="flex flex-wrap gap-2 p-4" aria-label="Tabs">
                 {getNavigationItems().map((item) => (
@@ -247,7 +247,7 @@ export default function BagrutIntegration({
 
           {/* Student/Bagrut Selection */}
           {(activeComponent.includes('student') || activeComponent.includes('bagrut') || activeComponent.includes('form')) && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-8">
+            <div className="bg-white rounded shadow-sm border border-gray-200 p-4 mb-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -256,7 +256,7 @@ export default function BagrutIntegration({
                   <select
                     value={selectedStudent || ''}
                     onChange={(e) => setSelectedStudent(e.target.value || undefined)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-gray-300 rounded"
                   >
                     <option value="">-- בחר תלמיד --</option>
                     {/* This would be populated with actual student data */}
@@ -269,7 +269,7 @@ export default function BagrutIntegration({
                   <select
                     value={selectedBagrut || ''}
                     onChange={(e) => setSelectedBagrut(e.target.value || undefined)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-gray-300 rounded"
                   >
                     <option value="">-- בחר בגרות --</option>
                     {/* This would be populated with actual Bagrut data */}

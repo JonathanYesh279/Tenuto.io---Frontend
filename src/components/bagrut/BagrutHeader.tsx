@@ -117,7 +117,7 @@ export const BagrutHeader: React.FC<BagrutHeaderProps> = ({
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+      <div className="mt-6 p-4 bg-blue-50 rounded">
         <div className="text-sm text-gray-600 text-center">
           <p className="font-semibold mb-1">הערות חשובות:</p>
           <p>• הרסיטל יכלול 5 יצירות מתקופות שונות</p>

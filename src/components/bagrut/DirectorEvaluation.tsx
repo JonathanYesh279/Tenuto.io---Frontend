@@ -70,7 +70,7 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
         </div>
       </div>
 
-      <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+      <div className="mb-6 p-4 bg-blue-50 rounded">
         <div className="flex items-start">
           <Star className="w-5 h-5 text-blue-600 ml-3 mt-0.5" />
           <div>
@@ -175,7 +175,7 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded">
         <h4 className="font-semibold text-yellow-800 mb-2">חישוב במסגרת הציון הסופי:</h4>
         <div className="text-sm text-yellow-700">
           <p>• ציון מגן הבגרות: 90% מהציון הסופי</p>
@@ -188,7 +188,7 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
         </div>
       </div>
 
-      <div className="mt-6 p-4 border-2 border-gray-300 rounded-lg">
+      <div className="mt-6 p-4 border-2 border-gray-300 rounded">
         <h4 className="font-bold text-gray-900 mb-3">סולם הערכה</h4>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
           <div className="flex justify-between p-2 bg-green-100 rounded">

@@ -264,7 +264,7 @@ export default function DocumentManager({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <FileText className="w-6 h-6 mr-3 text-primary-600" />
+          <FileText className="w-6 h-6 mr-3 text-primary" />
           ניהול מסמכים
         </h2>
         
@@ -284,7 +284,7 @@ export default function DocumentManager({
           padding="md"
           className={`border-2 border-dashed transition-colors ${
             dragOver 
-              ? 'border-primary-400 bg-primary-50' 
+              ? 'border-primary bg-muted' 
               : uploading
               ? 'border-blue-400 bg-blue-50'
               : 'border-gray-300 hover:border-gray-400'
@@ -295,7 +295,7 @@ export default function DocumentManager({
         >
           <div className="text-center py-8">
             <Upload className={`w-12 h-12 mx-auto mb-4 ${
-              dragOver ? 'text-primary-600' : uploading ? 'text-blue-600' : 'text-gray-400'
+              dragOver ? 'text-primary' : uploading ? 'text-blue-600' : 'text-gray-400'
             }`} />
             
             {uploading ? (
@@ -328,7 +328,7 @@ export default function DocumentManager({
                 />
                 <label
                   htmlFor="fileInput"
-                  className="inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 cursor-pointer transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 cursor-pointer transition-colors"
                 >
                   <Upload className="w-4 h-4 mr-2" />
                   בחר קבצים
@@ -349,7 +349,7 @@ export default function DocumentManager({
             <Card key={category.key} padding="md">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center">
-                  <Icon className="w-5 h-5 text-primary-600 mr-2" />
+                  <Icon className="w-5 h-5 text-primary mr-2" />
                   <h3 className="text-lg font-semibold text-gray-900">
                     {category.label}
                   </h3>
@@ -368,7 +368,7 @@ export default function DocumentManager({
                   {categoryDocs.map((doc, index) => (
                     <div 
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded"
                     >
                       <div className="flex items-center flex-1">
                         {getFileIcon(doc.title)}

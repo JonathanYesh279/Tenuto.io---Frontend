@@ -139,7 +139,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                       type="text"
                       value={editData?.pieceTitle || ''}
                       onChange={(e) => setEditData(prev => prev ? { ...prev, pieceTitle: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="שם היצירה"
                     />
                   </div>
@@ -152,7 +152,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                       type="text"
                       value={editData?.composer || ''}
                       onChange={(e) => setEditData(prev => prev ? { ...prev, composer: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="שם המלחין"
                     />
                   </div>
@@ -167,7 +167,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                       type="text"
                       value={editData?.duration || ''}
                       onChange={(e) => setEditData(prev => prev ? { ...prev, duration: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="5:30"
                       pattern="[0-9]+:[0-9]{2}"
                     />
@@ -181,7 +181,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                       type="text"
                       value={editData?.movement || ''}
                       onChange={(e) => setEditData(prev => prev ? { ...prev, movement: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="פרק ראשון"
                     />
                   </div>
@@ -195,7 +195,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                     type="url"
                     value={editData?.youtubeLink || ''}
                     onChange={(e) => setEditData(prev => prev ? { ...prev, youtubeLink: e.target.value || null } : null)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                       editData?.youtubeLink && !validateYouTubeUrl(editData.youtubeLink)
                         ? 'border-red-300 focus:ring-red-500'
                         : 'border-gray-300'
@@ -267,7 +267,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                 <>
                   <button
                     onClick={() => startEdit(index)}
-                    className="p-2 text-primary-600 hover:text-primary-800"
+                    className="p-2 text-primary hover:text-foreground"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
@@ -290,7 +290,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <Music className="w-6 h-6 mr-3 text-primary-600" />
+          <Music className="w-6 h-6 mr-3 text-primary" />
           תוכנית הבגרות
         </h2>
         
@@ -306,7 +306,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
           {!readonly && (
             <button
               onClick={() => setShowAddForm(true)}
-              className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+              className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 mr-2" />
               הוסף יצירה
@@ -351,7 +351,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
 
       {/* Add New Piece Form */}
       {showAddForm && !readonly && (
-        <Card padding="md" className="border-2 border-primary-200">
+        <Card padding="md" className="border-2 border-border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">הוספת יצירה חדשה</h3>
             <button
@@ -372,7 +372,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                   type="text"
                   value={newPiece.pieceTitle}
                   onChange={(e) => setNewPiece(prev => ({ ...prev, pieceTitle: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="שם היצירה"
                 />
               </div>
@@ -385,7 +385,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                   type="text"
                   value={newPiece.composer}
                   onChange={(e) => setNewPiece(prev => ({ ...prev, composer: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="שם המלחין"
                 />
               </div>
@@ -400,7 +400,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                   type="text"
                   value={newPiece.duration}
                   onChange={(e) => setNewPiece(prev => ({ ...prev, duration: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="5:30"
                   pattern="[0-9]+:[0-9]{2}"
                 />
@@ -414,7 +414,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                   type="text"
                   value={newPiece.movement || ''}
                   onChange={(e) => setNewPiece(prev => ({ ...prev, movement: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="פרק ראשון"
                 />
               </div>
@@ -428,7 +428,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                 type="url"
                 value={newPiece.youtubeLink || ''}
                 onChange={(e) => setNewPiece(prev => ({ ...prev, youtubeLink: e.target.value || null }))}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
                   newPiece.youtubeLink && !validateYouTubeUrl(newPiece.youtubeLink)
                     ? 'border-red-300 focus:ring-red-500'
                     : 'border-gray-300'
@@ -450,7 +450,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
               <button
                 onClick={addPiece}
                 disabled={!newPiece.pieceTitle || !newPiece.composer || !newPiece.duration}
-                className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 הוסף יצירה
               </button>
@@ -473,7 +473,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
             {!readonly && (
               <button
                 onClick={() => setShowAddForm(true)}
-                className="inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 הוסף יצירה ראשונה

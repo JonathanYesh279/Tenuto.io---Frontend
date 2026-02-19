@@ -404,7 +404,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                             <User className="w-4 h-4 text-blue-500" />
                             הגרסה שלך
                           </Label>
-                          <div className="p-3 bg-blue-50 rounded-lg">
+                          <div className="p-3 bg-blue-50 rounded">
                             {renderValue(conflict.localValue, conflict.type)}
                           </div>
                         </div>
@@ -413,7 +413,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                             <RefreshCw className="w-4 h-4 text-orange-500" />
                             גרסת השרת
                           </Label>
-                          <div className="p-3 bg-orange-50 rounded-lg">
+                          <div className="p-3 bg-orange-50 rounded">
                             {renderValue(conflict.serverValue, conflict.type)}
                           </div>
                         </div>
@@ -456,7 +456,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                     <div className="grid grid-cols-3 gap-4">
                       {/* Local Option */}
                       <div 
-                        className={`p-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                        className={`p-3 border-2 rounded cursor-pointer transition-colors ${
                           fieldResolutions[conflict.field] === 'local' 
                             ? 'border-blue-500 bg-blue-50' 
                             : 'border-gray-200 hover:border-blue-300'
@@ -477,7 +477,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
 
                       {/* Server Option */}
                       <div 
-                        className={`p-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                        className={`p-3 border-2 rounded cursor-pointer transition-colors ${
                           fieldResolutions[conflict.field] === 'server' 
                             ? 'border-orange-500 bg-orange-50' 
                             : 'border-gray-200 hover:border-orange-300'
@@ -498,7 +498,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
 
                       {/* Custom Option */}
                       <div 
-                        className={`p-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                        className={`p-3 border-2 rounded cursor-pointer transition-colors ${
                           fieldResolutions[conflict.field] === 'custom' 
                             ? 'border-green-500 bg-green-50' 
                             : 'border-gray-200 hover:border-green-300'
@@ -567,7 +567,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                 }
 
                 return (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                     <div>
                       <span className="font-medium">{conflict.displayName}:</span>
                       <div className="mt-1">

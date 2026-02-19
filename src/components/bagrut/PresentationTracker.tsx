@@ -178,7 +178,7 @@ export default function PresentationTracker({
             {userRole === 'teacher' && !readonly && (
               <button
                 onClick={() => isEditing ? saveEdit() : startEdit(index)}
-                className="p-2 text-primary-600 hover:text-primary-800"
+                className="p-2 text-primary hover:text-foreground"
               >
                 {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
               </button>
@@ -205,7 +205,7 @@ export default function PresentationTracker({
                 <select
                   value={editData.status}
                   onChange={(e) => setEditData(prev => ({ ...prev, status: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   {STATUS_OPTIONS.map(status => (
                     <option key={status} value={status}>{status}</option>
@@ -225,7 +225,7 @@ export default function PresentationTracker({
                     date: e.target.value,
                     completed: e.target.value ? true : prev.completed
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
             </div>
@@ -238,7 +238,7 @@ export default function PresentationTracker({
                 value={editData.notes || ''}
                 onChange={(e) => setEditData(prev => ({ ...prev, notes: e.target.value }))}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הערות על ההשמעה..."
               />
             </div>
@@ -273,7 +273,7 @@ export default function PresentationTracker({
             {!readonly && (
               <button
                 onClick={() => addRecordingLink(index)}
-                className="text-xs text-primary-600 hover:text-primary-800 flex items-center"
+                className="text-xs text-primary hover:text-foreground flex items-center"
               >
                 <Plus className="w-3 h-3 mr-1" />
                 הוסף קישור
@@ -326,7 +326,7 @@ export default function PresentationTracker({
           
           <div className="flex items-center gap-3">
             {presentation.grade && (
-              <div className="text-2xl font-bold text-primary-600">
+              <div className="text-2xl font-bold text-primary">
                 {presentation.grade}
               </div>
             )}
@@ -342,7 +342,7 @@ export default function PresentationTracker({
             {userRole === 'teacher' && !readonly && (
               <button
                 onClick={() => isEditing ? saveEdit() : startEdit(index)}
-                className="p-2 text-primary-600 hover:text-primary-800"
+                className="p-2 text-primary hover:text-foreground"
               >
                 {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
               </button>
@@ -375,7 +375,7 @@ export default function PresentationTracker({
                     date: e.target.value,
                     completed: e.target.value ? true : prev.completed
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
               
@@ -386,7 +386,7 @@ export default function PresentationTracker({
                 <select
                   value={editData.status}
                   onChange={(e) => setEditData(prev => ({ ...prev, status: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   {STATUS_OPTIONS.map(status => (
                     <option key={status} value={status}>{status}</option>
@@ -401,7 +401,7 @@ export default function PresentationTracker({
               
               <div className="space-y-4">
                 {Object.entries(GRADING_CRITERIA).map(([key, criteria]) => (
-                  <div key={key} className="bg-gray-50 p-4 rounded-lg">
+                  <div key={key} className="bg-gray-50 p-4 rounded">
                     <div className="flex items-center justify-between mb-3">
                       <h5 className="font-medium text-gray-900">{criteria.label}</h5>
                       <span className="text-sm text-gray-600">מתוך {criteria.maxPoints} נקודות</span>
@@ -413,7 +413,7 @@ export default function PresentationTracker({
                         <select
                           value={editData.detailedGrading?.[key]?.grade || 'לא הוערך'}
                           onChange={(e) => updateDetailedGrading(key, 'grade', e.target.value)}
-                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary"
                         >
                           {DETAIL_GRADE_OPTIONS.map(grade => (
                             <option key={grade} value={grade}>{grade}</option>
@@ -429,7 +429,7 @@ export default function PresentationTracker({
                           max={criteria.maxPoints}
                           value={editData.detailedGrading?.[key]?.points || ''}
                           onChange={(e) => updateDetailedGrading(key, 'points', parseInt(e.target.value) || null)}
-                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary"
                         />
                       </div>
                       
@@ -439,7 +439,7 @@ export default function PresentationTracker({
                           type="text"
                           value={editData.detailedGrading?.[key]?.comments || ''}
                           onChange={(e) => updateDetailedGrading(key, 'comments', e.target.value)}
-                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary"
                           placeholder="הערות..."
                         />
                       </div>
@@ -450,10 +450,10 @@ export default function PresentationTracker({
 
               {/* Calculated Grade Display */}
               {editData.detailedGrading && (
-                <div className="mt-4 p-4 bg-primary-50 rounded-lg">
+                <div className="mt-4 p-4 bg-muted rounded">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-primary-900">ציון מחושב:</span>
-                    <div className="text-xl font-bold text-primary-600">
+                    <span className="font-medium text-foreground">ציון מחושב:</span>
+                    <div className="text-xl font-bold text-primary">
                       {calculateFinalGrade(editData.detailedGrading) || 'לא זמין'}
                     </div>
                   </div>
@@ -484,10 +484,10 @@ export default function PresentationTracker({
                   {Object.entries(GRADING_CRITERIA).map(([key, criteria]) => {
                     const grading = presentation.detailedGrading[key]
                     return (
-                      <div key={key} className="bg-gray-50 p-3 rounded-lg">
+                      <div key={key} className="bg-gray-50 p-3 rounded">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium text-sm">{criteria.label}</span>
-                          <span className="text-sm font-bold text-primary-600">
+                          <span className="text-sm font-bold text-primary">
                             {grading.points || 0}/{criteria.maxPoints}
                           </span>
                         </div>
@@ -521,7 +521,7 @@ export default function PresentationTracker({
             {!readonly && (
               <button
                 onClick={() => addRecordingLink(index)}
-                className="text-xs text-primary-600 hover:text-primary-800 flex items-center"
+                className="text-xs text-primary hover:text-foreground flex items-center"
               >
                 <Plus className="w-3 h-3 mr-1" />
                 הוסף הקלטה
@@ -565,7 +565,7 @@ export default function PresentationTracker({
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <PlayCircle className="w-6 h-6 mr-3 text-primary-600" />
+          <PlayCircle className="w-6 h-6 mr-3 text-primary" />
           מעקב השמעות
         </h2>
         

@@ -144,7 +144,7 @@ export const PresentationForm: React.FC<PresentationFormProps> = ({
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+      <div className="mt-6 p-4 bg-gray-50 rounded">
         <h4 className="font-semibold text-gray-900 mb-2">מטרות השמעה {presentationNumber}:</h4>
         <div className="text-sm text-gray-700 space-y-1">
           {presentationNumber === 1 && (

@@ -350,13 +350,13 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
+        <div className="bg-red-50 border border-red-200 rounded p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
             <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadBagrutStudents}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             >
               נסה שוב
             </button>
@@ -383,7 +383,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowAddModal(true)}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+                className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 הוסף תלמיד בגרות
@@ -391,7 +391,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <button
                 onClick={() => handleBulkAction('export')}
                 disabled={selectedStudents.length === 0}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 ייצא
@@ -402,7 +402,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
 
         {/* Statistics Summary */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">סה״כ תלמידי בגרות</p>
@@ -411,7 +411,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <GraduationCap className="w-6 h-6 text-indigo-600" />
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">פעילים</p>
@@ -422,7 +422,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <Clock className="w-6 h-6 text-blue-600" />
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">הושלמו</p>
@@ -433,7 +433,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <CheckCircle className="w-6 h-6 text-green-600" />
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">אחוז הצלחה</p>
@@ -450,7 +450,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="bg-white rounded shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4 flex-1">
               <div className="relative flex-1 max-w-md">
@@ -460,12 +460,12 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                   placeholder="חיפוש תלמידים..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full"
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded w-full"
                 />
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
               >
                 <Filter className="w-4 h-4" />
                 מסננים
@@ -476,7 +476,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="px-3 py-2 border border-gray-300 rounded text-sm"
               >
                 <option value="name">מיון לפי שם</option>
                 <option value="progress">מיון לפי התקדמות</option>
@@ -485,7 +485,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               </select>
               <button
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-50"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </button>
@@ -497,7 +497,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <select
                 value={filters.status}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="px-3 py-2 border border-gray-300 rounded text-sm"
               >
                 <option value="all">כל הסטטוסים</option>
                 <option value="active">פעיל</option>
@@ -508,7 +508,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <select
                 value={filters.stage}
                 onChange={(e) => setFilters({ ...filters, stage: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="px-3 py-2 border border-gray-300 rounded text-sm"
               >
                 <option value="all">כל השלבים</option>
                 <option value="1">השמעה 1</option>
@@ -519,7 +519,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <select
                 value={filters.instrument}
                 onChange={(e) => setFilters({ ...filters, instrument: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="px-3 py-2 border border-gray-300 rounded text-sm"
               >
                 <option value="all">כל הכלים</option>
                 {getUniqueValues('instrument').map(instrument => (
@@ -529,7 +529,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <select
                 value={filters.teacher}
                 onChange={(e) => setFilters({ ...filters, teacher: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="px-3 py-2 border border-gray-300 rounded text-sm"
               >
                 <option value="all">כל המורים</option>
                 {getUniqueValues('teacherName').map(teacher => (
@@ -539,7 +539,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
               <select
                 value={filters.recitalUnits}
                 onChange={(e) => setFilters({ ...filters, recitalUnits: e.target.value })}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="px-3 py-2 border border-gray-300 rounded text-sm"
               >
                 <option value="all">כל יחידות הרסיטל</option>
                 <option value="3">3 יחידות</option>
@@ -578,7 +578,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
         </div>
 
         {/* Students List */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">

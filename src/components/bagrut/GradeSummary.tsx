@@ -109,7 +109,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Performance Grade */}
           <div className="text-center">
-            <div className="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
+            <div className="bg-blue-50 rounded p-4 border-2 border-blue-200">
               <Award className="w-8 h-8 mx-auto text-blue-600 mb-2" />
               <h4 className="font-semibold text-gray-900 mb-1">ציון מגן בגרות</h4>
               <div className="text-3xl font-bold text-blue-800">
@@ -128,7 +128,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
 
           {/* Director Evaluation */}
           <div className="text-center">
-            <div className="bg-green-50 rounded-lg p-4 border-2 border-green-200">
+            <div className="bg-green-50 rounded p-4 border-2 border-green-200">
               <Star className="w-8 h-8 mx-auto text-green-600 mb-2" />
               <h4 className="font-semibold text-gray-900 mb-1">הערכת המנהל/ת</h4>
               <div className="text-3xl font-bold text-green-800">
@@ -147,7 +147,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
 
           {/* Final Grade */}
           <div className="text-center">
-            <div className={`rounded-lg p-4 border-2 ${
+            <div className={`rounded p-4 border-2 ${
               isComplete ? `${gradeInfo.color} text-white` : 'bg-gray-50 border-gray-200'
             }`}>
               <Trophy className="w-8 h-8 mx-auto mb-2" />
@@ -165,7 +165,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
         </div>
 
         {/* Calculation Formula */}
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        <div className="mt-8 p-4 bg-gray-50 rounded">
           <h4 className="font-semibold text-gray-900 mb-3 text-center">נוסחת החישוב</h4>
           <div className="text-center">
             <div className="inline-flex items-center gap-4 text-lg">
@@ -200,7 +200,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
           {validationErrors.length > 0 && (
             <div className="mt-4 space-y-2">
               {validationErrors.map((error, index) => (
-                <div key={index} className={`flex items-center p-3 rounded-lg ${
+                <div key={index} className={`flex items-center p-3 rounded ${
                   error.type === 'error' 
                     ? 'bg-red-50 border border-red-200 text-red-800' 
                     : 'bg-yellow-50 border border-yellow-200 text-yellow-800'
@@ -214,7 +214,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
           
           {/* Completion Status */}
           {completionStatus && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <div className="mt-4 p-4 bg-gray-50 rounded">
               <h4 className="font-semibold text-gray-900 mb-3">סטטוס השלמה</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="text-center">
@@ -242,7 +242,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
 
         {isComplete && (
           <div className="mt-6 text-center">
-            <div className="inline-block p-6 rounded-lg border-2 border-blue-200 bg-blue-50">
+            <div className="inline-block p-6 rounded border-2 border-blue-200 bg-blue-50">
               <h4 className="text-xl font-bold text-blue-900 mb-2">
                 תוצאה סופית
               </h4>
@@ -269,7 +269,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
           {getAllGradeCategories().map((category, index) => (
             <div
               key={index}
-              className={`p-3 rounded-lg border-2 ${
+              className={`p-3 rounded border-2 ${
                 isComplete && finalGrade >= (category.range.split('-')[0] as any)
                   ? `${category.color} text-white border-transparent`
                   : 'bg-white border-gray-200 text-gray-700'

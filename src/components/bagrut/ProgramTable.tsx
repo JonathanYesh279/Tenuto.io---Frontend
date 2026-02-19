@@ -195,7 +195,7 @@ export const ProgramTable: React.FC<ProgramTableProps> = ({
         </table>
       </div>
 
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+      <div className="mt-6 p-4 bg-blue-50 rounded">
         <h3 className="font-semibold text-blue-900 mb-2">הנחיות לתוכנית הרסיטל:</h3>
         <ul className="text-sm text-blue-800 space-y-1">
           <li>• יש למלא בדיוק 5 יצירות</li>

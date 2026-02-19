@@ -224,14 +224,14 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
       <Card padding="md">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold text-gray-900 flex items-center">
-            <Download className="w-6 h-6 mr-3 text-primary-600" />
+            <Download className="w-6 h-6 mr-3 text-primary" />
             ייצוא ושיתוף
           </h3>
           
           <div className="flex items-center gap-3">
             <button
               onClick={shareProgress}
-              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
             >
               <Share2 className="w-4 h-4 mr-2" />
               שתף
@@ -239,7 +239,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
             
             <button
               onClick={printReport}
-              className="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+              className="flex items-center px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
             >
               <Printer className="w-4 h-4 mr-2" />
               הדפס
@@ -254,9 +254,9 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
             return (
               <div
                 key={type.key}
-                className={`p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                className={`p-4 border-2 rounded cursor-pointer transition-colors ${
                   exportType === type.key
-                    ? 'border-primary-500 bg-primary-50'
+                    ? 'border-primary bg-muted'
                     : type.available
                     ? 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                     : 'border-gray-200 bg-gray-100 cursor-not-allowed'
@@ -265,7 +265,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
               >
                 <div className="flex items-start">
                   <Icon className={`w-5 h-5 mr-3 mt-0.5 ${
-                    type.available ? 'text-primary-600' : 'text-gray-400'
+                    type.available ? 'text-primary' : 'text-gray-400'
                   }`} />
                   <div className="flex-1">
                     <div className="flex items-center mb-1">
@@ -297,7 +297,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
           <button
             onClick={() => exportData(exportType, 'pdf')}
             disabled={exporting || !EXPORT_TYPES.find(t => t.key === exportType)?.available}
-            className="flex items-center justify-center px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center justify-center px-6 py-3 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {exporting ? (
               <>
@@ -315,7 +315,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
           <button
             onClick={() => exportData(exportType, 'excel')}
             disabled={exporting || !EXPORT_TYPES.find(t => t.key === exportType)?.available || exportType === 'certificate'}
-            className="flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Download className="w-4 h-4 mr-2" />
             ייצא כ-Excel
@@ -324,7 +324,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
           <button
             onClick={() => sendByEmail(exportType)}
             disabled={exporting || !EXPORT_TYPES.find(t => t.key === exportType)?.available}
-            className="flex items-center justify-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center justify-center px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Mail className="w-4 h-4 mr-2" />
             שלח במייל
@@ -377,7 +377,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
         </div>
 
         {bagrut.testDate && (
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+          <div className="mt-4 p-3 bg-blue-50 rounded">
             <div className="flex items-center text-blue-800">
               <Calendar className="w-4 h-4 mr-2" />
               <span className="font-medium">תאריך בחינה:</span>
@@ -396,8 +396,8 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
             <p className="text-yellow-800 mb-4">
               מוענקת בזה ל{getDisplayName(student?.personalInfo)}
             </p>
-            <div className="bg-white p-6 rounded-lg max-w-md mx-auto">
-              <div className="text-3xl font-bold text-primary-600 mb-2">
+            <div className="bg-white p-6 rounded max-w-md mx-auto">
+              <div className="text-3xl font-bold text-primary mb-2">
                 {bagrut.finalGrade}
               </div>
               <div className="text-lg font-semibold text-gray-900">

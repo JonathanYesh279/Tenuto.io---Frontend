@@ -266,7 +266,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                 <CardContent>
                   <div className="space-y-3">
                     {migrationStatus.issues.map((issue, index) => (
-                      <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+                      <div key={index} className="flex items-start gap-3 p-3 border rounded">
                         <AlertTriangle 
                           className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
                             issue.severity === 'critical' ? 'text-red-500' :
@@ -374,7 +374,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                   <CardContent>
                     <div className="space-y-3 max-h-60 overflow-y-auto">
                       {migrationResult.changes.map((change, index) => (
-                        <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
+                        <div key={index} className="flex items-center gap-3 p-3 border rounded">
                           <ArrowRight className="w-4 h-4 text-blue-500" />
                           <div className="flex-1">
                             <div className="font-medium">{change.field}</div>
@@ -462,7 +462,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
 
                   <div className="space-y-3">
                     {steps.map((step, index) => (
-                      <div key={step.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                      <div key={step.id} className="flex items-center gap-3 p-3 border rounded">
                         {renderStatusIcon(step.status)}
                         <div className="flex-1">
                           <div className="font-medium">{step.title}</div>

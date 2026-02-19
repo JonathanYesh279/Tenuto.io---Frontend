@@ -308,8 +308,8 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
     } ${isExpanded ? 'ring-2 ring-blue-200' : ''}`}>
       {/* Locked Overlay */}
       {!isAccessible && (
-        <div className="absolute inset-0 bg-gray-100/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center">
+        <div className="absolute inset-0 bg-gray-100/80 backdrop-blur-sm flex items-center justify-center z-10 rounded">
+          <div className="bg-white p-4 rounded shadow-lg flex items-center">
             <Lock className="w-5 h-5 ml-2 text-gray-500" />
             <span className="text-gray-600">השלם את השמעה {index} תחילה</span>
           </div>

@@ -391,7 +391,7 @@ export const MagenBagrutForm: React.FC<MagenBagrutFormProps> = ({
         </div>
       </div>
 
-      <div className="mb-6 p-4 border-2 border-gray-300 rounded-lg">
+      <div className="mb-6 p-4 border-2 border-gray-300 rounded">
         <h4 className="font-bold text-gray-900 mb-3">חתימות ועדת הבוחנים</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>

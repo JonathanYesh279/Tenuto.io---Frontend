@@ -31,9 +31,9 @@ const GradeSummary = lazy(() => import('@/components/bagrut/GradeSummary'))
 // Lightweight placeholder components for immediate loading
 const BagrutSkeleton: React.FC = () => (
   <div className="space-y-6 animate-pulse">
-    <div className="h-32 bg-gray-200 rounded-lg" />
-    <div className="h-24 bg-gray-200 rounded-lg" />
-    <div className="h-48 bg-gray-200 rounded-lg" />
+    <div className="h-32 bg-gray-200 rounded" />
+    <div className="h-24 bg-gray-200 rounded" />
+    <div className="h-48 bg-gray-200 rounded" />
   </div>
 )
 
@@ -271,7 +271,7 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Music className="w-6 h-6 text-primary-600 animate-pulse" />
+              <Music className="w-6 h-6 text-primary animate-pulse" />
               <h2 className="text-xl font-bold">Loading Bagrut Information...</h2>
             </div>
             <Badge variant="secondary">
@@ -320,7 +320,7 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
       <div data-section="header">
         <CollapsibleSection
           title="Recital Configuration"
-          icon={<Music className="w-5 h-5 text-primary-600" />}
+          icon={<Music className="w-5 h-5 text-primary" />}
           defaultOpen={true}
           isLoaded={loadingState.header}
           onToggle={(isOpen) => handleSectionToggle('header', isOpen)}

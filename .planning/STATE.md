@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 22-visual-architecture-rewrite
-Plan: 22-10 (9/15 complete)
+Plan: 22-11 (10/15 complete)
 Status: In progress
-Last activity: 2026-02-19 — 22-03 Page color and radius mechanical sweep complete (15 pages: zero primary-NNN, zero rounded-xl/2xl/3xl)
+Last activity: 2026-02-19 — 22-10 List page archetype applied to Teachers, Students, Orchestras (hero zones eliminated, compact identity strips, flush toolbar, flat table)
 
-Progress: [█████░░░░░] 60% (v3.0)
+Progress: [██████░░░░] 67% (v3.0)
 
 ## Performance Metrics
 
@@ -84,6 +84,11 @@ Key decisions for v3.0:
 - [22-06 Dashboard]: StatCard actions dropdown retains shadow-md (genuine interaction layer / popover)
 - [22-06 Dashboard]: DashboardRefresh toggle uses semantic bg-primary/peer-checked:bg-primary; countdown ring uses text-primary
 - [22-06 Dashboard]: Zero bg-primary-NNN, zero rounded-xl/2xl confirmed across all 24 dashboard component files
+- [22-10 List]: Identity strip replaces ListPageHero hero zone — title + active count + add button in one flex row (py-3 border-b border-border)
+- [22-10 List]: Toolbar flush with table — border-b dividers, no mb-4 gap between toolbar and table header
+- [22-10 List]: hover:bg-muted replaces hover:bg-gray-50 — semantic token, visibly stronger row hover
+- [22-10 List]: ListPageHero deprecated (not deleted) — secondary list pages (TheoryLessons, Rehearsals, Bagruts) still reference it; will be removed in Plan 12
+- [22-10 List]: PlusIcon from Phosphor (size=14, weight=fill) used for all add buttons in list pages
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -103,5 +108,5 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-03-PLAN.md — Page color and radius mechanical sweep (15 pages: primary-NNN → semantic tokens, rounded-lg/xl → rounded)
+Stopped at: Completed 22-10-PLAN.md — List page archetype applied to Teachers, Students, Orchestras (hero zones eliminated, identity strips, flush toolbar, flat table)
 Resume file: None

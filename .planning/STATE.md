@@ -94,6 +94,11 @@ Key decisions for v3.0:
 - [22-12 Dashboard]: Secondary metrics (teachers, orchestras, rehearsals, bagruts) stacked at text-3xl in the 1fr column — same heading, clearly subordinate by scale
 - [22-12 Dashboard]: Operational panels at grid-cols-[3fr_2fr] — DailyTeacherRoomTable (60%) vs widget stack (40%)
 - [22-12 Dashboard]: AdminHoursOverview Card wrapper removed — flat div, semantic border-border/hover:bg-muted/50 table tokens
+- [22-11 Dossier]: bg-muted/40 border-b border-border replaces entity-colored pastel header + outer border/rounded container in DetailPageHeader
+- [22-11 Dossier]: children prop in DetailPageHeader renders tab bar INSIDE the tonal block — no gap between identity and tabs (dossier archetype)
+- [22-11 Dossier]: Native button nav replaces shadcn Tabs/TabsList in all three detail pages — direct control over tab bar placement needed
+- [22-11 Dossier]: Award icon absent from Phosphor — CertificateIcon used for Bagrut tab (semantically appropriate for exam certification)
+- [22-11 Dossier]: AvatarInitials extended with style prop to support entity accent borderRight without wrapper div
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -113,5 +118,5 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-12-PLAN.md — Dashboard command center archetype (text-7xl primary metric, tab bar removed, StatsCard grid eliminated, asymmetric dominant zone)
+Stopped at: Completed 22-11-PLAN.md — Detail page dossier archetype (bg-muted/40 identity block, tab bar attached inside header, native button nav, all three entity detail pages)
 Resume file: None

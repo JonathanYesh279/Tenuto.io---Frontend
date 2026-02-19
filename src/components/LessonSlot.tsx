@@ -86,7 +86,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
     return (
       <div 
         className={`
-          p-2 rounded-lg border transition-colors duration-200
+          p-2 rounded border transition-colors duration-200
           ${isAvailable ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50'}
           ${onClick ? 'cursor-pointer hover:bg-gray-50' : ''}
           ${className}

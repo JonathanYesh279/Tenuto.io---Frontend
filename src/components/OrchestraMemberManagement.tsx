@@ -188,9 +188,9 @@ export default function OrchestraMemberManagement({
   if (loading) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
-        <div className="bg-white rounded-lg p-8">
+        <div className="bg-white rounded p-8">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 ml-2"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary ml-2"></div>
             <span className="text-gray-700">טוען נתוני חברים...</span>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function OrchestraMemberManagement({
   if (error || !orchestra) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div className="bg-white rounded p-8 max-w-md w-full mx-4">
           <div className="flex items-center mb-4">
             <AlertCircle className="w-6 h-6 text-red-600 ml-2" />
             <h3 className="text-lg font-semibold text-gray-900">שגיאה</h3>
@@ -209,7 +209,7 @@ export default function OrchestraMemberManagement({
           <p className="text-gray-600 mb-6">{error || 'לא ניתן לטעון נתוני התזמורת'}</p>
           <button
             onClick={onClose}
-            className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            className="w-full px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
           >
             סגור
           </button>
@@ -276,7 +276,7 @@ export default function OrchestraMemberManagement({
               <button
                 onClick={() => handleRemoveMember(student._id)}
                 disabled={isLoading}
-                className={`flex items-center gap-1 px-3 py-2 text-xs rounded-lg transition-colors ${
+                className={`flex items-center gap-1 px-3 py-2 text-xs rounded transition-colors ${
                   isLoading 
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-red-50 text-red-700 hover:bg-red-100'
@@ -293,7 +293,7 @@ export default function OrchestraMemberManagement({
               <button
                 onClick={() => handleAddMember(student._id)}
                 disabled={isLoading}
-                className={`flex items-center gap-1 px-3 py-2 text-xs rounded-lg transition-colors ${
+                className={`flex items-center gap-1 px-3 py-2 text-xs rounded transition-colors ${
                   isLoading 
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-green-50 text-green-700 hover:bg-green-100'
@@ -315,7 +315,7 @@ export default function OrchestraMemberManagement({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
-      <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] m-4 flex flex-col">
+      <div className="bg-white rounded w-full max-w-6xl max-h-[90vh] m-4 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div>
@@ -342,7 +342,7 @@ export default function OrchestraMemberManagement({
                   placeholder="חיפוש תלמידים..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
             </div>
@@ -352,7 +352,7 @@ export default function OrchestraMemberManagement({
               <select
                 value={classFilter}
                 onChange={(e) => setClassFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">כל הכיתות</option>
                 {uniqueClasses.map(cls => (
@@ -366,7 +366,7 @@ export default function OrchestraMemberManagement({
               <select
                 value={instrumentFilter}
                 onChange={(e) => setInstrumentFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">כל הכלים</option>
                 {uniqueInstruments.map(instrument => (
@@ -382,7 +382,7 @@ export default function OrchestraMemberManagement({
                 setClassFilter('')
                 setInstrumentFilter('')
               }}
-              className="px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+              className="px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
             >
               <Filter className="w-4 h-4" />
             </button>
@@ -480,7 +480,7 @@ export default function OrchestraMemberManagement({
             </div>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
             >
               סגור
             </button>

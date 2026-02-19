@@ -86,7 +86,7 @@ export const VirtualizedStudentList: React.FC<VirtualizedStudentListProps> = Rea
   }
   
   return (
-    <div className="h-[600px] border rounded-lg bg-white">
+    <div className="h-[600px] border rounded bg-white">
       {viewMode === 'table' && (
         <div className="flex items-center bg-gray-50 px-4 py-2 border-b font-medium text-sm text-gray-700">
           <div className="w-1/4">שם התלמיד</div>

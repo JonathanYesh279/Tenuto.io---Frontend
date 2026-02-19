@@ -74,13 +74,13 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <Play className="w-5 h-5 text-primary-600" />
+              <Play className="w-5 h-5 text-primary" />
               {isEditing ? (
                 <input
                   type="text"
                   value={editData.title}
                   onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                  className="text-lg font-semibold text-gray-900 bg-transparent border-b border-gray-300 focus:border-primary-500 outline-none"
+                  className="text-lg font-semibold text-gray-900 bg-transparent border-b border-gray-300 focus:border-primary outline-none"
                   placeholder="כותרת הביצוע"
                 />
               ) : (
@@ -142,7 +142,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
                   ...editData, 
                   date: e.target.value ? new Date(e.target.value) : undefined 
                 })}
-                className="bg-transparent border-b border-gray-300 focus:border-primary-500 outline-none text-sm"
+                className="bg-transparent border-b border-gray-300 focus:border-primary outline-none text-sm"
               />
             ) : (
               <span>
@@ -167,7 +167,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
                 type="text"
                 value={editData.location || ''}
                 onChange={(e) => setEditData({ ...editData, location: e.target.value })}
-                className="bg-transparent border-b border-gray-300 focus:border-primary-500 outline-none text-sm flex-1"
+                className="bg-transparent border-b border-gray-300 focus:border-primary outline-none text-sm flex-1"
                 placeholder="מקום הביצוע"
               />
             ) : (
@@ -182,7 +182,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
                 type="text"
                 value={editData.duration || ''}
                 onChange={(e) => setEditData({ ...editData, duration: e.target.value })}
-                className="bg-transparent border-b border-gray-300 focus:border-primary-500 outline-none text-sm"
+                className="bg-transparent border-b border-gray-300 focus:border-primary outline-none text-sm"
                 placeholder="משך זמן"
               />
             ) : (
@@ -206,25 +206,25 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
               <div className="bg-gray-50 p-2 rounded">
                 <div className="font-medium text-gray-600">טכניקה</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {performance.evaluation.technique}/100
                 </div>
               </div>
               <div className="bg-gray-50 p-2 rounded">
                 <div className="font-medium text-gray-600">פרשנות</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {performance.evaluation.interpretation}/100
                 </div>
               </div>
               <div className="bg-gray-50 p-2 rounded">
                 <div className="font-medium text-gray-600">נוכחות במה</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {performance.evaluation.stage_presence}/100
                 </div>
               </div>
               <div className="bg-gray-50 p-2 rounded">
                 <div className="font-medium text-gray-600">רושם כללי</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {performance.evaluation.overall_impression}/100
                 </div>
               </div>
@@ -250,7 +250,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
               value={editData.notes || ''}
               onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
               placeholder="הערות נוספות..."
-              className="w-full p-2 text-sm border border-gray-300 rounded focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none"
+              className="w-full p-2 text-sm border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none"
               rows={3}
             />
           </div>

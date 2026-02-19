@@ -196,7 +196,7 @@ export default function OrchestraManagementDashboard({
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center">
+        <div className="bg-red-50 border border-red-200 rounded p-4 flex items-center">
           <AlertCircle className="w-5 h-5 text-red-600 ml-2" />
           <span className="text-red-800">{error}</span>
         </div>
@@ -251,7 +251,7 @@ export default function OrchestraManagementDashboard({
             onClick={() => setSelectedFilter(filter.key as any)}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               selectedFilter === filter.key
-                ? 'border-primary-500 text-primary-600'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -271,7 +271,7 @@ export default function OrchestraManagementDashboard({
           return (
             <Card
               key={orchestra._id}
-              className="hover:shadow-lg transition-shadow cursor-pointer hover:border-primary-300 p-5"
+              className="hover:shadow-lg transition-shadow cursor-pointer hover:border-primary p-5"
               onClick={() => onViewDetails?.(orchestra._id)}
             >
               <div className="space-y-4">
@@ -368,7 +368,7 @@ export default function OrchestraManagementDashboard({
                       e.stopPropagation()
                       onManageMembers?.(orchestra._id)
                     }}
-                    className="flex items-center gap-1 px-3 py-2 text-xs bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
+                    className="flex items-center gap-1 px-3 py-2 text-xs bg-green-50 text-green-700 rounded hover:bg-green-100 transition-colors"
                   >
                     <UserPlus className="w-3 h-3" />
                     חברים
@@ -378,7 +378,7 @@ export default function OrchestraManagementDashboard({
                       e.stopPropagation()
                       onEditOrchestra?.(orchestra)
                     }}
-                    className="flex items-center gap-1 px-3 py-2 text-xs bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-1 px-3 py-2 text-xs bg-gray-50 text-gray-700 rounded hover:bg-gray-100 transition-colors"
                   >
                     <Edit className="w-3 h-3" />
                     עריכה
@@ -388,7 +388,7 @@ export default function OrchestraManagementDashboard({
                       e.stopPropagation()
                       onDeleteOrchestra?.(orchestra._id)
                     }}
-                    className="flex items-center gap-1 px-3 py-2 text-xs bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
+                    className="flex items-center gap-1 px-3 py-2 text-xs bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors"
                   >
                     <Trash2 className="w-3 h-3" />
                   </button>

@@ -210,7 +210,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              {isMagen ? <Star className="w-5 h-5 text-yellow-500" /> : <Play className="w-5 h-5 text-primary-600" />}
+              {isMagen ? <Star className="w-5 h-5 text-yellow-500" /> : <Play className="w-5 h-5 text-primary" />}
               <h3 className="text-lg font-semibold text-gray-900">{presentation.title}</h3>
             </div>
           </div>
@@ -324,7 +324,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                   ...editData, 
                   date: e.target.value ? new Date(e.target.value) : undefined 
                 })}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-sm"
               />
             </div>
 
@@ -341,7 +341,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                     value={examiner}
                     onChange={(e) => updateExaminer(index, e.target.value)}
                     placeholder="שם הבוחן"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-sm"
                   />
                   {examiners.length > 1 && (
                     <button
@@ -356,7 +356,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
               ))}
               <button
                 onClick={addExaminer}
-                className="flex items-center gap-2 px-3 py-2 text-primary-600 hover:bg-primary-50 rounded transition-colors text-sm mr-6"
+                className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-neutral-800 rounded transition-colors text-sm mr-6"
                 type="button"
               >
                 <Plus className="w-4 h-4" />
@@ -377,7 +377,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                     value={link}
                     onChange={(e) => updateRecordingLink(index, e.target.value)}
                     placeholder="https://example.com/recording"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-sm"
                   />
                   {recordingLinks.length > 1 && (
                     <button
@@ -392,7 +392,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
               ))}
               <button
                 onClick={addRecordingLink}
-                className="flex items-center gap-2 px-3 py-2 text-primary-600 hover:bg-primary-50 rounded transition-colors text-sm mr-6"
+                className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-neutral-800 rounded transition-colors text-sm mr-6"
                 type="button"
               >
                 <Plus className="w-4 h-4" />
@@ -410,7 +410,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                 value={editData.notes || ''}
                 onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
                 placeholder="הערות כלליות על הביצוע..."
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none text-sm resize-vertical"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-sm resize-vertical"
                 rows={3}
               />
             </div>
@@ -424,25 +424,25 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="bg-white p-2 rounded border border-blue-200">
                 <div className="font-medium text-gray-600">מיומנות נגינה</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {presentation.detailedGrading.playingSkills?.points || 0}/40
                 </div>
               </div>
               <div className="bg-white p-2 rounded border border-blue-200">
                 <div className="font-medium text-gray-600">הבנה מוסיקלית</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {presentation.detailedGrading.musicalUnderstanding?.points || 0}/30
                 </div>
               </div>
               <div className="bg-white p-2 rounded border border-blue-200">
                 <div className="font-medium text-gray-600">ידיעת הטקסט</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {presentation.detailedGrading.textKnowledge?.points || 0}/20
                 </div>
               </div>
               <div className="bg-white p-2 rounded border border-blue-200">
                 <div className="font-medium text-gray-600">נוגן בע"פ</div>
-                <div className="text-primary-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {presentation.detailedGrading.playingByHeart?.points || 0}/10
                 </div>
               </div>
@@ -488,7 +488,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="bg-white rounded p-6 max-w-md w-full mx-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-red-100 rounded-full">
                 <Trash2 className="w-6 h-6 text-red-600" />
@@ -504,13 +504,13 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
               >
                 ביטול
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               >
                 מחק
               </button>

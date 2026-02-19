@@ -117,19 +117,19 @@ export default function RehearsalCalendar({
   }, [currentDate, viewMode])
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 ${className}`}>
+    <div className={`bg-white rounded border border-gray-200 ${className}`}>
       {/* Calendar Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <div className="flex items-center gap-2">
           <button
             onClick={navigatePrevious}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded transition-colors"
           >
             <ChevronRight className="w-5 h-5 text-gray-600" />
           </button>
           <button
             onClick={navigateNext}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded transition-colors"
           >
             <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
@@ -141,7 +141,7 @@ export default function RehearsalCalendar({
         
         <button
           onClick={goToToday}
-          className="px-3 py-1 text-sm text-primary-600 border border-primary-300 rounded-lg hover:bg-primary-50 transition-colors"
+          className="px-3 py-1 text-sm text-primary border border-primary rounded hover:bg-neutral-800 transition-colors"
         >
           היום
         </button>
@@ -201,7 +201,7 @@ function WeekView({ weekData, onRehearsalClick, onEditRehearsal, onDeleteRehears
         <div key={index} className="p-2 text-center">
           <div className="text-sm font-medium text-gray-900">{getDayName(day.dayOfWeek)}</div>
           <div className={`text-lg font-semibold mt-1 ${
-            day.isToday ? 'text-primary-600' : 'text-gray-700'
+            day.isToday ? 'text-primary' : 'text-gray-700'
           }`}>
             {day.date.getDate()}
           </div>
@@ -210,7 +210,7 @@ function WeekView({ weekData, onRehearsalClick, onEditRehearsal, onDeleteRehears
       
       {/* Day cells */}
       {weekData.days.map((day, index) => (
-        <div key={index} className="min-h-[250px] border border-gray-200 rounded-lg p-3">
+        <div key={index} className="min-h-[250px] border border-gray-200 rounded p-3">
           <div className="space-y-2">
             {day.rehearsals.map(rehearsal => (
               <RehearsalCard
@@ -257,13 +257,13 @@ function MonthView({ monthData, currentDate, onRehearsalClick, onEditRehearsal, 
         week.map((day, dayIndex) => (
           <div 
             key={`${weekIndex}-${dayIndex}`} 
-            className={`min-h-[120px] border border-gray-200 rounded-lg p-2 ${
+            className={`min-h-[120px] border border-gray-200 rounded p-2 ${
               !day.isCurrentMonth ? 'bg-gray-50' : ''
-            } ${day.isToday ? 'bg-primary-50 border-primary-200' : ''}`}
+            } ${day.isToday ? 'bg-primary border-primary' : ''}`}
           >
             <div className={`text-sm font-semibold mb-2 ${
               !day.isCurrentMonth ? 'text-gray-400' :
-              day.isToday ? 'text-primary-600' : 'text-gray-900'
+              day.isToday ? 'text-primary' : 'text-gray-900'
             }`}>
               {day.date.getDate()}
             </div>
@@ -345,7 +345,7 @@ function RehearsalCard({
 
   return (
     <div 
-      className={`${color} rounded-lg p-3 text-white cursor-pointer hover:shadow-lg transition-all duration-200 shadow-md ${
+      className={`${color} rounded p-3 text-white cursor-pointer hover:shadow-lg transition-all duration-200 shadow-md ${
         compact ? 'text-sm' : ''
       }`}
       onClick={() => onRehearsalClick?.(rehearsal)}

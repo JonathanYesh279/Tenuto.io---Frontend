@@ -25,8 +25,8 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
   const lessonStatus = getLessonStatus(lesson)
 
   return (
-    <div className={`bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 ${
-      selected ? 'border-primary-400 ring-2 ring-primary-100' : 'border-gray-200'
+    <div className={`bg-white rounded border shadow-sm hover:shadow-md transition-all duration-200 ${
+      selected ? 'border-primary ring-2 ring-primary' : 'border-gray-200'
     }`}>
       {/* Card Header */}
       <div className="p-4 border-b border-gray-100">
@@ -37,14 +37,14 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
                 type="checkbox"
                 checked={selected}
                 onChange={() => onSelect?.(lesson._id)}
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-gray-300 text-primary focus:ring-primary"
               />
             </div>
           )}
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <BookOpen className="w-4 h-4 text-primary-600" />
-              <span className="text-xs font-medium text-primary-600 bg-primary-50 px-2 py-1 rounded-full">
+              <BookOpen className="w-4 h-4 text-primary" />
+              <span className="text-xs font-medium text-primary bg-primary px-2 py-1 rounded-full">
                 {lesson.category}
               </span>
               <span className={`text-xs font-medium px-2 py-1 rounded-full ${lessonStatus.colorClass}`}>
@@ -68,7 +68,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
             {onView && (
               <button
                 onClick={() => onView(lesson)}
-                className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:text-primary hover:bg-neutral-800 rounded transition-colors"
                 title="צפה בפרטים"
               >
                 <Eye className="w-4 h-4" />
@@ -77,7 +77,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
             {onViewAttendance && (
               <button
                 onClick={() => onViewAttendance(lesson)}
-                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                 title="צפה בנוכחות"
               >
                 <UserCheck className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
             {onEdit && (
               <button
                 onClick={() => onEdit(lesson)}
-                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                 title="ערוך שיעור"
               >
                 <Edit className="w-4 h-4" />
@@ -95,7 +95,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
             {onDelete && (
               <button
                 onClick={() => onDelete(lesson)}
-                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                 title="מחק שיעור"
               >
                 <Trash2 className="w-4 h-4" />

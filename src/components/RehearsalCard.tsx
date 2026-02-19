@@ -23,7 +23,7 @@ export default function RehearsalCard({
 
   return (
     <div 
-      className={`${color} rounded-lg p-3 text-white cursor-pointer hover:shadow-lg transition-all duration-200 shadow-md ${
+      className={`${color} rounded p-3 text-white cursor-pointer hover:shadow-lg transition-all duration-200 shadow-md ${
         compact ? 'text-sm' : ''
       }`}
       onClick={() => onRehearsalClick?.(rehearsal)}

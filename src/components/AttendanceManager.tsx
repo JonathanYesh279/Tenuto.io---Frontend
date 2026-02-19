@@ -197,7 +197,7 @@ export default function AttendanceManager({
   if (success) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center">
+        <div className="bg-white rounded shadow-2xl p-8 max-w-md w-full text-center">
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
               <CheckCircle className="h-6 w-6 text-green-600" />
             </div>
@@ -210,7 +210,7 @@ export default function AttendanceManager({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all" onClick={(e) => e.stopPropagation()}>
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -239,7 +239,7 @@ export default function AttendanceManager({
           </div>
 
           {/* Statistics */}
-          <div className="grid grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="grid grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">{currentStats.presentCount}</div>
               <div className="text-sm text-gray-600">נוכחים</div>
@@ -263,14 +263,14 @@ export default function AttendanceManager({
             <div className="flex gap-2">
               <button
                 onClick={() => handleQuickMarkAll('present')}
-                className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
+                className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
               >
                 <Check className="w-4 h-4 ml-1" />
                 סמן הכל כנוכח
               </button>
               <button
                 onClick={() => handleQuickMarkAll('absent')}
-                className="flex items-center px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
+                className="flex items-center px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
               >
                 <X className="w-4 h-4 ml-1" />
                 סמן הכל כנעדר
@@ -285,21 +285,21 @@ export default function AttendanceManager({
                 placeholder="חיפוש חבר..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="pr-10 pl-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
 
           {/* Error Display */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-center">
+            <div className="bg-red-50 border border-red-200 rounded p-4 mb-6 flex items-center">
               <AlertCircle className="w-5 h-5 text-red-600 ml-2" />
               <span className="text-red-800">{error}</span>
             </div>
           )}
 
           {/* Members List */}
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
+          <div className="bg-white border border-gray-200 rounded overflow-hidden mb-6">
             <div className="max-h-96 overflow-y-auto">
               <div className="grid grid-cols-1 gap-1 p-2">
                 {filteredMembers.map(member => {
@@ -309,7 +309,7 @@ export default function AttendanceManager({
                   return (
                     <div
                       key={member._id}
-                      className={`flex items-center justify-between p-3 rounded-lg border ${getStatusColor(status)} transition-colors`}
+                      className={`flex items-center justify-between p-3 rounded border ${getStatusColor(status)} transition-colors`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-8 h-8">
@@ -327,7 +327,7 @@ export default function AttendanceManager({
                       <div className="flex gap-1">
                         <button
                           onClick={() => handleAttendanceChange(member._id, 'present')}
-                          className={`p-2 rounded-lg transition-colors ${
+                          className={`p-2 rounded transition-colors ${
                             status === 'present'
                               ? 'bg-green-200 text-green-800'
                               : 'bg-white hover:bg-green-50 text-gray-600 hover:text-green-600'
@@ -338,7 +338,7 @@ export default function AttendanceManager({
                         </button>
                         <button
                           onClick={() => handleAttendanceChange(member._id, 'absent')}
-                          className={`p-2 rounded-lg transition-colors ${
+                          className={`p-2 rounded transition-colors ${
                             status === 'absent'
                               ? 'bg-red-200 text-red-800'
                               : 'bg-white hover:bg-red-50 text-gray-600 hover:text-red-600'
@@ -349,7 +349,7 @@ export default function AttendanceManager({
                         </button>
                         <button
                           onClick={() => handleAttendanceChange(member._id, 'unmarked')}
-                          className={`p-2 rounded-lg transition-colors ${
+                          className={`p-2 rounded transition-colors ${
                             status === 'unmarked'
                               ? 'bg-gray-200 text-gray-800'
                               : 'bg-white hover:bg-gray-50 text-gray-600'
@@ -379,7 +379,7 @@ export default function AttendanceManager({
             <button
               onClick={handleReset}
               disabled={!hasChanges || loading}
-              className="flex items-center px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <RotateCcw className="w-4 h-4 ml-1" />
               איפוס
@@ -388,14 +388,14 @@ export default function AttendanceManager({
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
               >
                 ביטול
               </button>
               <button
                 onClick={handleSave}
                 disabled={!hasChanges || loading}
-                className={`flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+                className={`flex items-center px-6 py-2 bg-primary text-white rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
                   loading ? 'cursor-wait' : ''
                 }`}
               >

@@ -233,9 +233,9 @@ export default function ConflictDetector({
 
   if (loading) {
     return (
-      <div className="bg-gray-50 rounded-lg p-4">
+      <div className="bg-gray-50 rounded p-4">
         <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600 ml-2"></div>
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary ml-2"></div>
           <span className="text-sm text-gray-600">בודק התנגשויות...</span>
         </div>
       </div>
@@ -244,7 +244,7 @@ export default function ConflictDetector({
 
   if (conflicts.length === 0 && (newRehearsal || bulkData)) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+      <div className="bg-green-50 border border-green-200 rounded p-4">
         <div className="flex items-center">
           <CheckCircle className="w-5 h-5 text-green-600 ml-2" />
           <span className="text-sm text-green-800">
@@ -262,7 +262,7 @@ export default function ConflictDetector({
   return (
     <div className="space-y-4">
       {/* Summary */}
-      <div className="bg-gray-50 rounded-lg p-4">
+      <div className="bg-gray-50 rounded p-4">
         <div className="flex items-center justify-between mb-2">
           <h4 className="font-medium text-gray-900">סיכום התנגשויות</h4>
           <div className="flex items-center gap-4 text-sm">
@@ -298,7 +298,7 @@ export default function ConflictDetector({
         {conflicts.map((conflict, index) => (
           <div
             key={index}
-            className={`border rounded-lg p-3 ${getConflictColor(conflict.severity)}`}
+            className={`border rounded p-3 ${getConflictColor(conflict.severity)}`}
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-2">
@@ -341,7 +341,7 @@ export default function ConflictDetector({
 
       {/* Action Recommendations */}
       {criticalConflicts.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-50 border border-red-200 rounded p-4">
           <h4 className="font-medium text-red-900 mb-2">פעולות מומלצות לפתרון:</h4>
           <ul className="text-sm text-red-800 space-y-1 list-disc list-inside">
             {criticalConflicts.some(c => c.conflictType === 'location') && (

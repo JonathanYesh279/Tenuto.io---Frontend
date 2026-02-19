@@ -87,7 +87,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
     return (
       <div className={`space-y-2 ${className}`}>
         {instruments.map((instrument, index) => (
-          <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+          <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
             <div className="flex items-center space-x-2 space-x-reverse">
               {instrument.isPrimary && (
                 <Star className="w-4 h-4 text-yellow-500" />
@@ -156,7 +156,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                   {onEdit && (
                     <button
                       onClick={() => onEdit(index)}
-                      className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50"
+                      className="p-2 text-gray-400 hover:text-blue-600 rounded hover:bg-blue-50"
                     >
                       <Edit className="w-4 h-4" />
                     </button>
@@ -164,7 +164,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                   {onDelete && instruments.length > 1 && (
                     <button
                       onClick={() => onDelete(index)}
-                      className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
+                      className="p-2 text-gray-400 hover:text-red-600 rounded hover:bg-red-50"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -209,7 +209,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {/* Stage Test */}
-                  <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="p-3 bg-gray-50 rounded">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-gray-700">בחינת שלב</span>
                       <span className={`
@@ -240,7 +240,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                   </div>
 
                   {/* Technical Test */}
-                  <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="p-3 bg-gray-50 rounded">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-gray-700">בחינה טכנית</span>
                       <span className={`

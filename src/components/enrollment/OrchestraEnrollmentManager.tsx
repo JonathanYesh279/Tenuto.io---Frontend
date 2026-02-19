@@ -367,7 +367,7 @@ export default function OrchestraEnrollmentManager() {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div className="bg-red-50 border border-red-200 rounded p-4">
         <div className="flex items-center gap-2 text-red-800">
           <AlertCircle className="w-5 h-5" />
           <div className="font-reisinger-yonatan">{error}</div>
@@ -393,7 +393,7 @@ export default function OrchestraEnrollmentManager() {
         </div>
         <button
           onClick={exportEnrollmentData}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
         >
           <Download className="w-4 h-4" />
           ייצא נתונים
@@ -402,7 +402,7 @@ export default function OrchestraEnrollmentManager() {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="bg-white p-4 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
@@ -411,7 +411,7 @@ export default function OrchestraEnrollmentManager() {
             <Users className="w-8 h-8 text-blue-600" />
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="bg-white p-4 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-green-600">{stats.enrolled}</div>
@@ -420,7 +420,7 @@ export default function OrchestraEnrollmentManager() {
             <CheckCircle className="w-8 h-8 text-green-600" />
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="bg-white p-4 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
@@ -429,7 +429,7 @@ export default function OrchestraEnrollmentManager() {
             <Clock className="w-8 h-8 text-yellow-600" />
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="bg-white p-4 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-purple-600">{Math.round(stats.averageAttendance)}%</div>
@@ -441,7 +441,7 @@ export default function OrchestraEnrollmentManager() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200">
+      <div className="bg-white p-4 rounded border border-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="relative">
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -450,14 +450,14 @@ export default function OrchestraEnrollmentManager() {
               placeholder="חיפוש תלמידים..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
               dir="rtl"
             />
           </div>
           <select
             value={filterOrchestra}
             onChange={(e) => setFilterOrchestra(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
           >
             <option value="all">כל התזמורות</option>
             <option value="none">ללא תזמורת</option>
@@ -468,7 +468,7 @@ export default function OrchestraEnrollmentManager() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
           >
             <option value="all">כל הסטטוסים</option>
             <option value="enrolled">רשומים</option>
@@ -479,7 +479,7 @@ export default function OrchestraEnrollmentManager() {
           <select
             value={filterInstrument}
             onChange={(e) => setFilterInstrument(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            className="px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
           >
             <option value="all">כל הכלים</option>
             {getUniqueInstruments().map(instrument => (
@@ -488,7 +488,7 @@ export default function OrchestraEnrollmentManager() {
           </select>
           <button
             onClick={() => setShowBulkActions(!showBulkActions)}
-            className={`px-3 py-2 rounded-lg border transition-colors ${
+            className={`px-3 py-2 rounded border transition-colors ${
               showBulkActions
                 ? 'bg-indigo-100 text-indigo-700 border-indigo-300'
                 : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
@@ -501,7 +501,7 @@ export default function OrchestraEnrollmentManager() {
 
       {/* Bulk Actions */}
       {showBulkActions && selectedStudents.length > 0 && (
-        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+        <div className="bg-indigo-50 border border-indigo-200 rounded p-4">
           <div className="flex items-center justify-between">
             <div className="text-indigo-800 font-medium">
               נבחרו {selectedStudents.length} תלמידים
@@ -531,7 +531,7 @@ export default function OrchestraEnrollmentManager() {
       )}
 
       {/* Students Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded border border-gray-200 overflow-hidden">
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">

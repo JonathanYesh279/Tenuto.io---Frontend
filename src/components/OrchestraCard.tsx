@@ -43,7 +43,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
 
   return (
     <div 
-      className={`bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group hover:border-blue-300 ${onViewDetails ? 'cursor-pointer' : ''}`}
+      className={`bg-white rounded border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group hover:border-blue-300 ${onViewDetails ? 'cursor-pointer' : ''}`}
       onClick={onViewDetails ? handleViewDetails : undefined}
     >
       {/* Card Header */}
@@ -75,7 +75,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
                   e.stopPropagation()
                   handleEdit()
                 }}
-                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors opacity-0 group-hover:opacity-100"
                 title="ערוך תזמורת"
               >
                 <Edit className="w-4 h-4" />
@@ -87,7 +87,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
                   e.stopPropagation()
                   handleDelete()
                 }}
-                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-0 group-hover:opacity-100"
                 title="מחק תזמורת"
               >
                 <Trash2 className="w-4 h-4" />
@@ -122,7 +122,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
 
         {/* Instruments Summary */}
         {instrumentsSummary.totalInstruments > 0 && (
-          <div className="bg-gray-50 rounded-lg p-3">
+          <div className="bg-gray-50 rounded p-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-900">
                 <Music className="w-4 h-4 inline ml-1" />
@@ -158,7 +158,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
 
         {/* Attendance Rate */}
         {stats.averageAttendance > 0 && (
-          <div className="flex items-center bg-gray-50 rounded-lg p-3">
+          <div className="flex items-center bg-gray-50 rounded p-3">
             <div className="flex items-center text-sm">
               <Clock className="w-4 h-4 ml-2 text-gray-400" />
               <span className="font-medium text-gray-900 ml-1">נוכחות ממוצעת:</span>

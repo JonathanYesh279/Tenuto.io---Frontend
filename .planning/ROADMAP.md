@@ -196,7 +196,24 @@ Plans:
   8. Detail pages: identity block + attached tab bar, not gradient banner + floating tabs + stacked cards
   9. Sidebar is tonally distinct from content area and feels like a structural anchor
   10. The app is not recognizable as a shadcn/ui admin template — shape, color, and composition are distinctive
-**Plans:** TBD (to be determined during `/gsd:plan-phase 22`)
+**Plans:** 15 plans
+
+Plans:
+- [ ] 22-01-PLAN.md — Token reset: cool neutral palette, black primary, 2px radius, dark sidebar tokens, subdued entity colors
+- [ ] 22-02-PLAN.md — Phosphor Icons install + Sidebar dark theme rewrite
+- [ ] 22-03-PLAN.md — Mechanical sweep: pages (hardcoded primary-NNN colors + excessive rounding)
+- [ ] 22-04-PLAN.md — Mechanical sweep: shared UI/domain components (Table flat, StatsCard subdued, DetailPageHeader clean)
+- [ ] 22-05-PLAN.md — Mechanical sweep: form components + form field primitives
+- [ ] 22-06-PLAN.md — Mechanical sweep: dashboard components (stat cards, charts, widgets)
+- [ ] 22-07-PLAN.md — Mechanical sweep: bagrut components (24 files)
+- [ ] 22-08-PLAN.md — Mechanical sweep: feature detail components (teacher/student/orchestra details + tabs)
+- [ ] 22-09-PLAN.md — Mechanical sweep: remaining components (deletion, cards, schedule, misc)
+- [ ] 22-10-PLAN.md — List Page archetype: Teachers, Students, Orchestras (eliminate ListPageHero, flush toolbar)
+- [ ] 22-11-PLAN.md — Detail Page archetype: identity block + attached tab bar on all entity detail pages
+- [ ] 22-12-PLAN.md — Dashboard archetype: asymmetric command center with dominant metric zone
+- [ ] 22-13-PLAN.md — Remaining pages: Phosphor migration + archetype application (secondary lists, management, auth)
+- [ ] 22-14-PLAN.md — Final sweep: Phosphor migration for ALL remaining components (schedule, nav, teacher, profile, feedback, etc.)
+- [ ] 22-15-PLAN.md — Build verification + visual checkpoint (human-verify all 10 success criteria)
 
 ---
 
@@ -225,7 +242,7 @@ Plans:
 | 19. Dashboard Transformation | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
-| 22. Visual Architecture Rewrite | v3.0 | 0/? | Pending | — |
+| 22. Visual Architecture Rewrite | v3.0 | 0/15 | Planned | — |
 
 ---
 *Roadmap created: 2026-02-13*

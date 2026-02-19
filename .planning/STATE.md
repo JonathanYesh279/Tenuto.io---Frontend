@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 22-visual-architecture-rewrite
-Plan: 22-02 (1/15 complete)
+Plan: 22-03 (2/15 complete)
 Status: In progress
-Last activity: 2026-02-19 — 22-01 token foundation complete
+Last activity: 2026-02-19 — 22-02 Phosphor Icons install + Sidebar dark theme rewrite complete
 
-Progress: [█░░░░░░░░░] 7% (v3.0)
+Progress: [██░░░░░░░░] 13% (v3.0)
 
 ## Performance Metrics
 
@@ -28,8 +28,8 @@ Progress: [█░░░░░░░░░] 7% (v3.0)
 - v1.1: 5 phases, 7 plans, ~3.5 hours
 - v2.0: 10 phases, 22 plans, ~2.3 hours
 - v2.1: 6 phases, 13 plans
-- v3.0: 1 phase in progress, 1 plan complete (22-01: 2 min)
-- Total: 21+ phases, 43 plans
+- v3.0: 1 phase in progress, 2 plans complete (22-01: 2 min, 22-02: 2 min)
+- Total: 21+ phases, 44 plans
 
 ## Accumulated Context
 
@@ -52,6 +52,9 @@ Key decisions for v3.0:
 - [22-01 Token]: --sidebar: 220 20% 13% — deep charcoal, tonally distinct, structurally anchoring
 - [22-01 Token]: --shadow-1: none — decorative elevation eliminated, shadows reserved for interaction layers
 - [22-01 Token]: primary-NNN hex classes (1,211 across 134 files) deferred to 22-03
+- [22-02 Icons]: @phosphor-icons/react installed; Sidebar.tsx is the first Phosphor-migrated component — fill/regular weight toggle for active/inactive nav items
+- [22-02 Icons]: ListIcon is the Phosphor equivalent of Lucide Menu icon — no MenuIcon exists in Phosphor
+- [22-02 Icons]: Role badges in dark sidebar need inverted colors (bg-red-900/40 text-red-300, not bg-red-100 text-red-700)
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -70,5 +73,5 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-01-PLAN.md — token foundation (black primary, 2px radius, charcoal sidebar)
+Stopped at: Completed 22-02-PLAN.md — Phosphor Icons install + Sidebar dark theme rewrite
 Resume file: None

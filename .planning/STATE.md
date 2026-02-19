@@ -49,7 +49,10 @@ Key decisions for v4.0:
 - [23-01 Token strategy]: HSL for CSS vars, hex for named colors — enables both hsl(var(--token)) and bg-chart-blue patterns
 - [23-01 Dark mode prep]: Implemented .dark tokens in advance — enables incremental dark mode feature addition
 - [23-01 Font stack]: Assistant primary, Plus Jakarta Sans secondary, Reisinger Yonatan tertiary — graceful degradation
-- [23-02 Sidebar v4.0]: Light theme with indigo accents, active pills, icon-first layout, hidden on mobile
+- [23-02 Icon weight pattern]: fill for active nav items, regular for inactive — Phosphor icon weights create clear visual distinction
+- [23-02 Search/notifications placeholders]: Header shows search input and bell with TODO comments — functionality deferred to future feature phases
+- [23-02 Category labels]: Tiny uppercase tracking-widest labels create strong visual hierarchy in navigation
+- [23-02 Avatar shape]: Changed from rounded-full to rounded-xl to match v4.0 12-32px shape language
 - [23-03 Dashboard grid]: 12-col grid with 9:3 split establishes main content and sidebar zones
 - [23-03 Entity colors]: Stat cards use entity color coding (students=indigo, teachers=amber, orchestras=sky, rehearsals=emerald)
 - [23-03 Dark mode toggle]: FAB toggle with localStorage persistence enables immediate dark mode testing
@@ -69,6 +72,6 @@ Archived v3.0 decisions: see milestones/ or git history for STATE.md prior versi
 
 ## Session Continuity
 
-Last session: 2026-02-19T23:13:19Z
-Stopped at: Completed 23-03-PLAN.md — Admin dashboard rebuilt with v4.0 grid layout and stat cards
+Last session: 2026-02-19T23:14:08Z
+Stopped at: Completed 23-02-PLAN.md — Sidebar and Header redesigned for v4.0 (white/light sidebar, indigo active pills, search bar, notification bell)
 Resume file: None

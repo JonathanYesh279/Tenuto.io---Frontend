@@ -316,7 +316,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
           {enrolledTheoryLessons.map((lesson) => (
             <div 
               key={lesson._id}
-              className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow"
+              className="bg-white rounded border border-gray-200 p-6 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -450,7 +450,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
               return (
                 <div 
                   key={lesson._id}
-                  className={`bg-white rounded-xl border p-6 hover:shadow-md transition-shadow ${
+                  className={`bg-white rounded border p-6 hover:shadow-md transition-shadow ${
                     !canEnroll ? 'border-gray-200 opacity-75' : 'border-gray-200'
                   }`}
                 >

@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '../../ui/Card';
 import { LineChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type AttendanceTrendData } from '../../../services/enhancedDashboardAnalytics';
 import { TrendingUp, TrendingDown, Minus, Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react';
@@ -90,18 +89,18 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
 
   if (loading) {
     return (
-      <Card className={`p-6 ${className}`}>
+      <div className={`p-6 ${className}`}>
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
           <div className="h-48 bg-gray-100 rounded"></div>
         </div>
-      </Card>
+      </div>
     );
   }
 
   if (compact) {
     return (
-      <Card className={`p-4 ${className}`} dir="rtl">
+      <div className={`p-4 ${className}`} dir="rtl">
         <div className="flex items-center justify-between mb-3">
           <h4 className="text-sm font-medium text-gray-900">מגמת נוכחות</h4>
           <div className="flex items-center gap-1">
@@ -129,16 +128,16 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
           <span className="text-2xl font-bold text-gray-900">{stats.average}%</span>
           <span className="text-sm text-gray-600 mr-2">ממוצע</span>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className={`p-6 ${className}`} dir="rtl">
+    <div className={`p-6 ${className}`} dir="rtl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 rounded">
             <Calendar className="w-5 h-5 text-blue-600" />
           </div>
           <div>
@@ -148,7 +147,7 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
         </div>
 
         {/* Type Selector */}
-        <div className="flex bg-gray-100 rounded-lg p-1">
+        <div className="flex bg-gray-100 rounded p-1">
           {(['overall', 'orchestraRehearsals', 'theoryLessons'] as const).map(type => (
             <button
               key={type}
@@ -167,12 +166,12 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
 
       {/* Trend Summary Cards */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-gray-50 rounded-lg p-3 text-center">
+        <div className="bg-gray-50 rounded p-3 text-center">
           <p className="text-2xl font-bold text-gray-900">{stats.average}%</p>
           <p className="text-xs text-gray-600">ממוצע התקופה</p>
         </div>
 
-        <div className={`rounded-lg p-3 text-center ${
+        <div className={`rounded p-3 text-center ${
           stats.direction === 'up' ? 'bg-green-50' :
           stats.direction === 'down' ? 'bg-red-50' : 'bg-gray-50'
         }`}>
@@ -189,7 +188,7 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
           <p className="text-xs text-gray-600">שינוי מתחילת התקופה</p>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-3 text-center">
+        <div className="bg-gray-50 rounded p-3 text-center">
           <p className="text-2xl font-bold text-gray-900">
             {chartData.length > 0 ? chartData[chartData.length - 1].value : 0}%
           </p>
@@ -227,7 +226,7 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
               return (
                 <div
                   key={week.weekStartDate}
-                  className="flex-shrink-0 w-24 p-2 bg-gray-50 rounded-lg text-center"
+                  className="flex-shrink-0 w-24 p-2 bg-gray-50 rounded text-center"
                 >
                   <p className="text-xs text-gray-600 truncate">{week.weekLabel.split(' - ')[0]}</p>
                   <div className="flex items-center justify-center gap-1 mt-1">
@@ -278,7 +277,7 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
           })}
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

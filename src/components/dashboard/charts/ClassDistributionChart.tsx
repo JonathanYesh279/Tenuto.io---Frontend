@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card } from '../../ui/Card';
 import { BarChart, DonutChart, ProgressRingChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type ClassDistribution } from '../../../services/enhancedDashboardAnalytics';
 import { GraduationCap, BarChart3, PieChart, Grid3X3, Layers } from 'lucide-react';
@@ -130,21 +129,21 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
 
   if (loading) {
     return (
-      <Card className={`p-6 ${className}`}>
+      <div className={`p-6 ${className}`}>
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
           <div className="h-64 bg-gray-100 rounded"></div>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className={`p-6 ${className}`} dir="rtl">
+    <div className={`p-6 ${className}`} dir="rtl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-green-100 rounded-lg">
+          <div className="p-2 bg-green-100 rounded">
             <GraduationCap className="w-5 h-5 text-green-600" />
           </div>
           <div>
@@ -156,7 +155,7 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
         </div>
 
         {/* View Tabs */}
-        <div className="flex bg-gray-100 rounded-lg p-1">
+        <div className="flex bg-gray-100 rounded p-1">
           {viewTabs.map(tab => {
             const Icon = tab.icon;
             return (
@@ -180,21 +179,21 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
 
       {/* Summary Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div className="bg-blue-50 rounded-lg p-3 text-center">
+        <div className="bg-blue-50 rounded p-3 text-center">
           <p className="text-2xl font-bold text-blue-600">{totalActive}</p>
           <p className="text-xs text-gray-600">תלמידים פעילים</p>
         </div>
-        <div className="bg-green-50 rounded-lg p-3 text-center">
+        <div className="bg-green-50 rounded p-3 text-center">
           <p className="text-2xl font-bold text-green-600">{avgPerClass}</p>
           <p className="text-xs text-gray-600">ממוצע לכיתה</p>
         </div>
-        <div className="bg-purple-50 rounded-lg p-3 text-center">
+        <div className="bg-purple-50 rounded p-3 text-center">
           <p className="text-lg font-bold text-purple-600">
             {largestClass ? `${largestClass.className}` : '-'}
           </p>
           <p className="text-xs text-gray-600">כיתה גדולה ({largestClass?.activeCount || 0})</p>
         </div>
-        <div className="bg-gray-50 rounded-lg p-3 text-center">
+        <div className="bg-gray-50 rounded p-3 text-center">
           <p className="text-2xl font-bold text-gray-600">{data.length}</p>
           <p className="text-xs text-gray-600">כיתות פעילות</p>
         </div>
@@ -243,7 +242,7 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
             return (
               <div
                 key={cls.className}
-                className="relative p-4 rounded-xl text-center transition-all hover:shadow-lg hover:scale-105 cursor-pointer"
+                className="relative p-4 rounded text-center transition-all hover:shadow-lg hover:scale-105 cursor-pointer"
                 style={{ backgroundColor: `${getClassColor(cls.className)}15` }}
               >
                 <p className="text-lg font-bold text-gray-800">{cls.className}</p>
@@ -279,7 +278,7 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
             const percentage = totalActive > 0 ? Math.round((level.count / totalActive) * 100) : 0;
 
             return (
-              <div key={key} className="bg-gray-50 rounded-xl p-4">
+              <div key={key} className="bg-gray-50 rounded p-4">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div
@@ -312,7 +311,7 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
                   {level.classes.map(cls => (
                     <div
                       key={cls.className}
-                      className="px-3 py-1.5 bg-white rounded-lg shadow-sm flex items-center gap-2"
+                      className="px-3 py-1.5 bg-white rounded shadow-sm flex items-center gap-2"
                     >
                       <span className="font-medium text-gray-700">כיתה {cls.className}</span>
                       <span
@@ -329,7 +328,7 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
           })}
 
           {/* Visual comparison */}
-          <div className="bg-gradient-to-l from-gray-50 to-white rounded-xl p-4">
+          <div className="bg-gradient-to-l from-gray-50 to-white rounded p-4">
             <h4 className="text-sm font-semibold text-gray-700 mb-4">השוואה חזותית</h4>
             <div className="flex items-end justify-center gap-4 h-32">
               {Object.entries(levelData).map(([key, level]) => {
@@ -360,7 +359,7 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 

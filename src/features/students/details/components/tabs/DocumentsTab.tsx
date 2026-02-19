@@ -132,7 +132,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
       </div>
       
       {/* Controls */}
-      <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+      <div className="bg-white rounded p-4 border border-gray-200 shadow-sm">
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
           {/* Search and Filters */}
           <div className="flex flex-col sm:flex-row gap-3 flex-1">
@@ -143,7 +143,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                 placeholder="חפש מסמכים..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pr-10 pl-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
             
@@ -152,7 +152,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="all">כל הקטגוריות</option>
                 <option value="registration">רישום</option>
@@ -203,7 +203,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
             
             <button 
               onClick={() => setShowUploadModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
             >
               <Upload className="w-4 h-4" />
               העלה מסמך
@@ -241,7 +241,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
       {/* Upload Modal */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+          <div className="bg-white rounded p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">העלאת מסמכים</h3>
               <button onClick={() => setShowUploadModal(false)}>
@@ -249,8 +249,8 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
               </button>
             </div>
             
-            <div {...getRootProps()} className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
-              isDragActive ? 'border-primary-400 bg-primary-50' : 'border-gray-300 hover:border-primary-400'
+            <div {...getRootProps()} className={`border-2 border-dashed rounded p-8 text-center transition-colors ${
+              isDragActive ? 'border-border bg-muted/50' : 'border-gray-300 hover:border-border'
             }`}>
               <input {...getInputProps()} />
               <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -312,7 +312,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
             viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'
           }`}>
             {filteredDocuments.map((document, index) => (
-              <div key={index} className={`bg-white rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 ${
+              <div key={index} className={`bg-white rounded border border-gray-200 hover:shadow-md transition-all duration-200 ${
                 viewMode === 'grid' ? 'p-4' : 'p-4'
               }`}>
                 <div className={`flex items-start ${
@@ -332,7 +332,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                           setSelectedDocuments(prev => prev.filter(id => id !== document._id))
                         }
                       }}
-                      className="mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                      className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
                     />
                     
                     {/* File Icon */}
@@ -406,7 +406,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                         <Eye className="w-4 h-4" />
                       </button>
                       <button 
-                        className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+                        className="p-2 text-gray-400 hover:text-primary hover:bg-muted/50 rounded transition-colors"
                         title="הורדה"
                       >
                         <Download className="w-4 h-4" />
@@ -431,7 +431,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+          <div className="bg-white rounded p-6 border border-gray-200 shadow-sm">
             <h3 className="font-semibold text-gray-900 mb-4">פעילות אחרונה</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
@@ -459,7 +459,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
           </div>
         </div>
       ) : (
-        <div className="text-center py-16 text-gray-500 bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="text-center py-16 text-gray-500 bg-white rounded shadow-sm border border-gray-200">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <FileText className="w-8 h-8 text-gray-300" />
           </div>
@@ -467,7 +467,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
           <p className="text-sm text-gray-500 mb-6">העלה מסמכים כדי להתחיל לנהל את תיק התלמיד</p>
           <button 
             onClick={() => setShowUploadModal(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors mx-auto"
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors mx-auto"
           >
             <Upload className="w-5 h-5" />
             העלה מסמך ראשון
@@ -478,7 +478,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
       {/* Document Preview Modal */}
       {showPreview && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl max-w-4xl max-h-[90vh] w-full mx-4 overflow-hidden">
+          <div className="bg-white rounded max-w-4xl max-h-[90vh] w-full mx-4 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">{showPreview.originalName}</h3>
               <button onClick={() => setShowPreview(null)}>
@@ -494,7 +494,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                 <div className="text-center py-12">
                   <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-600">תצוגה מקדימה אינה זמינה עבור סוג קובץ זה</p>
-                  <button className="mt-4 flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors mx-auto">
+                  <button className="mt-4 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors mx-auto">
                     <Download className="w-4 h-4" />
                     הורד קובץ
                   </button>

@@ -42,7 +42,7 @@ const DocumentsTab = ({ student }: { student: any }) => (
 const TabLoadingFallback: React.FC = () => (
   <div className="flex items-center justify-center py-12">
     <div className="text-center">
-      <Loader className="w-6 h-6 animate-spin mx-auto mb-3 text-primary-600" />
+      <Loader className="w-6 h-6 animate-spin mx-auto mb-3 text-foreground" />
       <div className="text-sm text-gray-600">טוען נתונים...</div>
     </div>
   </div>
@@ -59,7 +59,7 @@ const TabErrorFallback: React.FC<{ error: Error; resetError: () => void; tabName
     <div className="text-gray-600 mb-4 text-sm">{error.message}</div>
     <button
       onClick={resetError}
-      className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-sm"
+      className="px-4 py-2 bg-muted text-white rounded hover:bg-muted transition-colors text-sm"
     >
       נסה שוב
     </button>

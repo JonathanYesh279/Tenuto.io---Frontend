@@ -112,10 +112,10 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-24 bg-gray-200 rounded-xl animate-pulse"></div>
+            <div key={i} className="h-24 bg-gray-200 rounded animate-pulse"></div>
           ))}
         </div>
-        <div className="h-64 bg-gray-200 rounded-xl animate-pulse"></div>
+        <div className="h-64 bg-gray-200 rounded animate-pulse"></div>
       </div>
     )
   }
@@ -142,7 +142,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
     bgColor: string;
     change?: string;
   }> = ({ title, value, icon: Icon, color, bgColor, change }) => (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white rounded p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="flex items-center justify-between mb-3">
         <div className={`p-3 rounded-lg ${bgColor}`}>
           <Icon className={`w-6 h-6 ${color}`} />
@@ -339,7 +339,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setShowExportModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
         >
           <Download className="w-4 h-4" />
           ייצא דוח
@@ -349,7 +349,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       {/* Export Modal */}
       {showExportModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+          <div className="bg-white rounded p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">ייצא דוח נוכחות</h3>
             <div className="space-y-3">
               <button
@@ -402,7 +402,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       )}
 
       {/* Attendance Trends Chart */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">מתח נוכחות חודשי</h3>
         <div className="h-64">
           <Line data={trendsData} options={{ responsive: true, maintainAspectRatio: false }} />
@@ -411,7 +411,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
 
       {/* Absence Reasons Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">סיבות העדרות</h3>
           {absenceChartData ? (
             <div className="h-64">
@@ -442,7 +442,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           )}
         </div>
         
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">סטטיסטיקות מתקדמות</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
@@ -478,14 +478,14 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       </div>
 
       {/* Calendar Heatmap */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">לוח נוכחות חודשי</h3>
           <div className="flex gap-3">
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-              className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             >
               {monthNames.map((month, index) => (
                 <option key={index} value={index}>{month}</option>
@@ -494,7 +494,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             >
               {[2023, 2024, 2025].map(year => (
                 <option key={year} value={year}>{year}</option>
@@ -549,7 +549,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       </div>
 
       {/* Attendance by Lesson Type */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">נוכחות לפי סוג שיעור</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {attendanceStats?.byLessonType && Object.entries(attendanceStats.byLessonType).map(([type, stats]) => {
@@ -570,7 +570,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
             const percentage = stats.total > 0 ? Math.round((stats.attended / stats.total) * 100) : 0
             
             return (
-              <div key={type} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+              <div key={type} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded p-6 border border-gray-200">
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${typeColors[type as keyof typeof typeColors] || 'from-gray-400 to-gray-500'}`}></div>
                   <h4 className="font-semibold text-gray-900">
@@ -610,7 +610,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
 
       {/* Recent Attendance Records */}
       {attendanceRecords && attendanceRecords.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white rounded shadow-sm border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">רשומות נוכחות אחרונות</h3>
@@ -669,7 +669,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           </div>
         </div>
       ) : (
-        <div className="text-center py-16 text-gray-500 bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="text-center py-16 text-gray-500 bg-white rounded shadow-sm border border-gray-200">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <TrendingUp className="w-8 h-8 text-gray-300" />
           </div>

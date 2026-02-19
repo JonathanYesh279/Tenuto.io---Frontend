@@ -85,7 +85,7 @@ const StudentDetailsPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-primary-600" />
+          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
           <div className="text-lg text-gray-600">טוען פרטי תלמיד...</div>
         </div>
       </div>
@@ -101,7 +101,7 @@ const StudentDetailsPage: React.FC = () => {
         <p className="text-gray-600 mb-6">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
           <RefreshCw className="w-4 h-4" />
           נסה שוב
@@ -119,7 +119,7 @@ const StudentDetailsPage: React.FC = () => {
         <p className="text-gray-600 mb-6">לא נמצאו פרטים עבור התלמיד המבוקש</p>
         <button
           onClick={() => navigate('/students')}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
           <ArrowRight className="w-4 h-4" />
           חזור לרשימת התלמידים
@@ -152,7 +152,7 @@ const StudentDetailsPage: React.FC = () => {
       />
 
       {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
+      <div className="bg-white rounded border border-border w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
             <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap">

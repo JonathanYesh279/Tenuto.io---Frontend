@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card } from '../../ui/Card';
 import apiService from '../../../services/apiService';
 import { useSchoolYear } from '../../../services/schoolYearContext';
 import { Calendar, MapPin, User, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
@@ -140,7 +139,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
 
   if (loading) {
     return (
-      <Card className={`p-6 ${className}`}>
+      <div className={`p-6 ${className}`}>
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
           <div className="space-y-3">
@@ -149,16 +148,16 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
             ))}
           </div>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className={`p-6 ${className}`} dir="rtl">
+    <div className={`p-6 ${className}`} dir="rtl">
       {/* Header with Day Navigation */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 rounded">
             <Calendar className="w-6 h-6 text-blue-600" />
           </div>
           <div>
@@ -175,7 +174,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={goToPreviousDay}
-            className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            className="p-2 rounded border border-gray-200 hover:bg-gray-50 transition-colors"
             title="יום קודם"
           >
             <ChevronRight className="w-5 h-5 text-gray-600" />
@@ -186,7 +185,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
               <button
                 key={day}
                 onClick={() => setSelectedDayIndex(index)}
-                className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                className={`px-3 py-1.5 text-sm rounded transition-colors ${
                   index === selectedDayIndex
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-600 hover:bg-gray-100'
@@ -199,7 +198,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
 
           <button
             onClick={goToNextDay}
-            className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            className="p-2 rounded border border-gray-200 hover:bg-gray-50 transition-colors"
             title="יום הבא"
           >
             <ChevronLeft className="w-5 h-5 text-gray-600" />
@@ -209,7 +208,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
 
       {/* Schedule Table */}
       {dailySchedule.length > 0 ? (
-        <div className="overflow-hidden rounded-xl border border-gray-200">
+        <div className="overflow-hidden rounded border border-gray-200">
           <table className="w-full">
             <thead>
               <tr className="bg-gradient-to-l from-blue-600 to-blue-700 text-white">
@@ -269,14 +268,14 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
           </table>
         </div>
       ) : (
-        <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+        <div className="text-center py-12 bg-gray-50 rounded border-2 border-dashed border-gray-200">
           <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <p className="text-gray-500 text-lg font-medium">אין שיעורים ביום {HEBREW_DAYS[selectedDayIndex]}</p>
           <p className="text-gray-400 text-sm mt-1">נסה לבחור יום אחר</p>
         </div>
       )}
 
-    </Card>
+    </div>
   );
 };
 

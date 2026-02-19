@@ -296,11 +296,11 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
 
       {/* Weekly Schedule Grid or Empty State */}
       {lessons.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 w-full max-w-full overflow-hidden">
+        <div className="bg-white rounded shadow-sm border border-gray-200 p-4 w-full max-w-full overflow-hidden">
           <SimpleWeeklyGrid lessons={lessons} />
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+        <div className="bg-white rounded shadow-sm border border-gray-200 p-8 text-center">
           <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <h3 className="text-xl font-medium text-gray-900 mb-2">אין שיעורים מתוכננים</h3>
           <p className="text-gray-600 mb-4">
@@ -319,7 +319,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           {personalLessons.length > 0 ? (
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <h4 className="text-base font-medium text-gray-900 mb-3 flex items-center gap-2">
-                <Music className="w-4 h-4 text-primary-600" />
+                <Music className="w-4 h-4 text-primary" />
                 שיעורים השבוע
               </h4>
 
@@ -330,7 +330,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                     <div key={lesson.id} className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
-                          <Music className="w-4 h-4 text-primary-600" />
+                          <Music className="w-4 h-4 text-primary" />
                           <span className="font-medium text-gray-900">{lesson.instrumentName}</span>
                         </div>
                         <span className="text-sm text-gray-600 font-medium">

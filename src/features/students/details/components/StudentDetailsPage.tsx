@@ -58,7 +58,7 @@ const DocumentsTab = ({ student }: { student: any }) => (
 const TabLoadingFallback: React.FC = () => (
   <div className="flex items-center justify-center py-12">
     <div className="text-center">
-      <Loader className="w-6 h-6 animate-spin mx-auto mb-3 text-primary-600" />
+      <Loader className="w-6 h-6 animate-spin mx-auto mb-3 text-primary" />
       <div className="text-sm text-gray-600">טוען נתונים...</div>
     </div>
   </div>
@@ -221,14 +221,14 @@ const StudentDetailsPage: React.FC = () => {
         <div className="flex gap-3">
           <button
             onClick={() => navigate('/students')}
-            className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <ArrowRight className="w-4 h-4 ml-2" />
             חזור לרשימת תלמידים
           </button>
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
             <RefreshCw className="w-4 h-4 ml-2" />
             נסה שוב
@@ -249,7 +249,7 @@ const StudentDetailsPage: React.FC = () => {
         </p>
         <button
           onClick={() => navigate('/students')}
-          className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+          className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
           <ArrowRight className="w-4 h-4 ml-2" />
           חזור לרשימת תלמידים
@@ -268,14 +268,14 @@ const StudentDetailsPage: React.FC = () => {
         <div className="flex gap-3">
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <RefreshCw className="w-4 h-4 ml-2" />
             נסה שוב
           </button>
           <button
             onClick={() => navigate('/students')}
-            className="flex items-center px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
             <ArrowRight className="w-4 h-4 ml-2" />
             חזור לרשימת תלמידים
@@ -290,7 +290,7 @@ const StudentDetailsPage: React.FC = () => {
     return (
       <div className="space-y-6 animate-pulse">
         {/* Header skeleton with better structure */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-background border border-border p-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
             <div className="flex-1">
@@ -301,7 +301,7 @@ const StudentDetailsPage: React.FC = () => {
         </div>
 
         {/* Tab navigation skeleton with proper spacing */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-background border border-border">
           <div className="border-b border-gray-200 px-6 py-4">
             <div className="flex gap-6">
               {['פרטים אישיים', 'פרטים אקדמיים', 'לוח זמנים', 'נוכחות', 'תזמורות', 'תיאוריה', 'מסמכים'].map((label, i) => (
@@ -333,7 +333,7 @@ const StudentDetailsPage: React.FC = () => {
       <div className="space-y-6 bg-white min-h-screen student-details-container student-content-area">
         {/* Connection Status Indicator - only show if WebSocket is available and relevant */}
         {wsStatus && !wsError && wsStatus.isConnected && (
-          <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-4 py-2 text-sm">
+          <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded px-4 py-2 text-sm">
             <div className="flex items-center gap-2">
               <Wifi className="w-4 h-4 text-green-500" />
               <span className="text-green-700">מחובר לעדכונים בזמן אמת</span>
@@ -343,7 +343,7 @@ const StudentDetailsPage: React.FC = () => {
 
         {/* Only show disconnection warning if we were previously connected */}
         {wsStatus && !wsError && !wsStatus.isConnected && wsStatus.reconnectAttempts > 0 && (
-          <div className="flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2 text-sm">
+          <div className="flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded px-4 py-2 text-sm">
             <div className="flex items-center gap-2">
               <WifiOff className="w-4 h-4 text-yellow-500" />
               <span className="text-yellow-700">מנסה להתחבר לעדכונים בזמן אמת...</span>
@@ -380,7 +380,7 @@ const StudentDetailsPage: React.FC = () => {
         <div className="flex items-center gap-2 justify-end">
           <button
             onClick={handleToggleImpactSummary}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-2 rounded transition-colors ${
               showImpactSummary
                 ? 'bg-blue-100 text-blue-700'
                 : 'text-blue-600 hover:bg-blue-50'
@@ -392,7 +392,7 @@ const StudentDetailsPage: React.FC = () => {
 
           <button
             onClick={handleCheckReferences}
-            className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+            className="p-2 text-gray-600 hover:bg-muted rounded transition-colors"
             title="בדוק תלויות ומחיקה"
           >
             <AlertTriangle className="w-5 h-5" />
@@ -400,7 +400,7 @@ const StudentDetailsPage: React.FC = () => {
 
           <button
             onClick={handleSafeDeleteClick}
-            className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+            className="p-2 text-orange-600 hover:bg-orange-50 rounded transition-colors"
             title="מחיקה מאובטחת"
           >
             <Shield className="w-5 h-5" />
@@ -408,7 +408,7 @@ const StudentDetailsPage: React.FC = () => {
 
           <button
             onClick={handleDeleteClick}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
             title="מחיקה רגילה"
           >
             <Trash2 className="w-5 h-5" />
@@ -424,7 +424,7 @@ const StudentDetailsPage: React.FC = () => {
         />
 
         {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
+        <div className="bg-background border border-border w-full overflow-hidden">
           <Tabs
             value={activeTab}
             onValueChange={(v) => {
@@ -438,35 +438,35 @@ const StudentDetailsPage: React.FC = () => {
             className="w-full"
           >
             <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
-              <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <User className="h-4 w-4" />
                 פרטים אישיים
               </TabsTrigger>
-              <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <GraduationCap className="h-4 w-4" />
                 מידע אקדמי
               </TabsTrigger>
-              <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <Calendar className="h-4 w-4" />
                 לוח זמנים
               </TabsTrigger>
-              <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <CheckCircle className="h-4 w-4" />
                 נוכחות
               </TabsTrigger>
-              <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <Music className="h-4 w-4" />
                 תזמורות
               </TabsTrigger>
-              <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <BookOpen className="h-4 w-4" />
                 תאוריה
               </TabsTrigger>
-              <TabsTrigger value="bagrut" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="bagrut" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <Award className="h-4 w-4" />
                 בגרות
               </TabsTrigger>
-              <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+              <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
                 <FileText className="h-4 w-4" />
                 מסמכים
               </TabsTrigger>

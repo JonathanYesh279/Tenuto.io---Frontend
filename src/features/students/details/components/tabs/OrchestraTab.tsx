@@ -346,7 +346,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
           {enrolledOrchestras.map((orchestra) => (
             <div 
               key={orchestra._id}
-              className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow"
+              className="bg-white rounded border border-gray-200 p-6 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -532,7 +532,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
               return (
                 <div 
                   key={orchestra._id}
-                  className={`bg-white rounded-xl border p-6 hover:shadow-md transition-shadow ${
+                  className={`bg-white rounded border p-6 hover:shadow-md transition-shadow ${
                     !canEnroll ? 'border-gray-200 opacity-75' : 'border-gray-200'
                   }`}
                 >

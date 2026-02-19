@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { clsx } from 'clsx'
 import { motion } from 'framer-motion'
-import { Plus } from 'lucide-react'
+import { PlusIcon } from '@phosphor-icons/react'
 import StatsCard from './StatsCard'
 
 export interface HeroMetric {
@@ -21,10 +21,11 @@ export interface ListPageHeroProps {
 }
 
 // Static lookup avoids dynamic Tailwind class generation (tree-shake safety)
+// Phase 22: Subdued entity colors — thin accent bar, not vivid pastel backgrounds
 const ENTITY_STYLES = {
-  teachers: { bg: 'bg-teachers-bg', fg: 'text-teachers-fg', btnBg: 'bg-teachers-fg' },
-  students: { bg: 'bg-students-bg', fg: 'text-students-fg', btnBg: 'bg-students-fg' },
-  orchestras: { bg: 'bg-orchestras-bg', fg: 'text-orchestras-fg', btnBg: 'bg-orchestras-fg' },
+  teachers: { accentColor: 'hsl(var(--color-teachers-fg))', fg: 'text-teachers-fg' },
+  students: { accentColor: 'hsl(var(--color-students-fg))', fg: 'text-students-fg' },
+  orchestras: { accentColor: 'hsl(var(--color-orchestras-fg))', fg: 'text-orchestras-fg' },
 } as const
 
 const containerVariants = {
@@ -46,24 +47,25 @@ function getGridCols(count: number): string {
   return 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6'
 }
 
+// Note: ListPageHero is transitional — will be eliminated in Plan 06 (list page archetypes)
 export function ListPageHero({ title, entityColor, metrics, action }: ListPageHeroProps) {
   const styles = ENTITY_STYLES[entityColor]
   const cappedMetrics = metrics.slice(0, 6)
 
   return (
-    <div className={clsx('rounded-xl p-6 mb-4', styles.bg)}>
+    <div
+      className="bg-muted/40 border border-border rounded p-6 mb-4"
+      style={{ borderRight: `3px solid ${styles.accentColor}` }}
+    >
       {/* Header row — RTL: title on right (start), action on left (end) */}
       <div className="flex items-center justify-between mb-4">
-        <h1 className={clsx('text-2xl font-bold', styles.fg)}>{title}</h1>
+        <h1 className={clsx('text-2xl font-bold text-foreground', styles.fg)}>{title}</h1>
         {action && (
           <button
             onClick={action.onClick}
-            className={clsx(
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:opacity-90 transition-opacity',
-              styles.btnBg
-            )}
+            className="flex items-center gap-2 px-4 py-2 rounded bg-primary text-primary-foreground hover:bg-neutral-800 transition-colors text-sm font-medium"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" weight="fill" />
             {action.label}
           </button>
         )}

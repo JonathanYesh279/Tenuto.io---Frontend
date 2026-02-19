@@ -120,7 +120,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
           >
             <Edit className="w-4 h-4" />
             ערוך
@@ -158,7 +158,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="text"
                 value={editedData.firstName}
                 onChange={(e) => setEditedData({ ...editedData, firstName: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס שם פרטי"
               />
             ) : (
@@ -173,7 +173,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="text"
                 value={editedData.lastName}
                 onChange={(e) => setEditedData({ ...editedData, lastName: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס שם משפחה"
               />
             ) : (
@@ -188,7 +188,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="tel"
                 value={editedData.phone}
                 onChange={(e) => setEditedData({ ...editedData, phone: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס מספר טלפון"
               />
             ) : (
@@ -206,7 +206,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="number"
                 value={editedData.age}
                 onChange={(e) => setEditedData({ ...editedData, age: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס גיל"
                 min="1"
                 max="99"
@@ -223,7 +223,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="email"
                 value={editedData.studentEmail}
                 onChange={(e) => setEditedData({ ...editedData, studentEmail: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס כתובת דוא״ל תלמיד"
               />
             ) : (
@@ -240,7 +240,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               <textarea
                 value={editedData.address}
                 onChange={(e) => setEditedData({ ...editedData, address: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס כתובת מגורים"
                 rows={2}
               />
@@ -265,7 +265,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="text"
                 value={editedData.parentName}
                 onChange={(e) => setEditedData({ ...editedData, parentName: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס שם הורה"
               />
             ) : (
@@ -280,7 +280,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="tel"
                 value={editedData.parentPhone}
                 onChange={(e) => setEditedData({ ...editedData, parentPhone: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס מספר טלפון הורה"
               />
             ) : (
@@ -298,7 +298,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
                 type="email"
                 value={editedData.parentEmail}
                 onChange={(e) => setEditedData({ ...editedData, parentEmail: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="הכנס כתובת דוא״ל הורה"
               />
             ) : (

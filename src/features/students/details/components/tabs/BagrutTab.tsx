@@ -368,7 +368,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
   const renderRecitalConfiguration = () => (
     <Card className="p-6 mb-6">
       <div className="flex items-center mb-4">
-        <Music className="w-6 h-6 ml-3 text-primary-600" />
+        <Music className="w-6 h-6 ml-3 text-primary" />
         <h3 className="text-xl font-bold text-gray-900">הגדרת רסיטל</h3>
       </div>
       
@@ -422,7 +422,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
         </div>
         
         <div className="text-center">
-          <div className="text-3xl font-bold text-primary-600 mb-2">
+          <div className="text-3xl font-bold text-primary mb-2">
             {Math.round(completionStatus.overall.percentage)}%
           </div>
           <div className="text-sm text-gray-600 mb-3">השלמה כללית</div>
@@ -582,7 +582,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <Music className="w-8 h-8 animate-pulse mx-auto mb-4 text-primary-600" />
+          <Music className="w-8 h-8 animate-pulse mx-auto mb-4 text-primary" />
           <div className="text-lg font-semibold text-gray-700 mb-2">טוען נתוני בגרות...</div>
         </div>
       </div>

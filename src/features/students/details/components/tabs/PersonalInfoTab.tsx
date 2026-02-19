@@ -84,10 +84,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
     children: React.ReactNode;
     className?: string;
   }> = ({ title, icon: Icon, children, className = '' }) => (
-    <div className={`bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 p-6 ${className}`}>
+    <div className={`bg-white rounded border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 p-6 ${className}`}>
       <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
-        <div className="p-2 bg-primary-50 rounded-lg">
-          <Icon className="w-5 h-5 text-primary-600" />
+        <div className="p-2 bg-muted/50 rounded-lg">
+          <Icon className="w-5 h-5 text-primary" />
         </div>
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
       </div>
@@ -255,7 +255,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
             error 
               ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-              : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+              : 'border-gray-300 focus:ring-primary focus:border-border'
           }`}
         />
         {error && (
@@ -351,7 +351,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl font-medium bg-green-500 text-white hover:bg-green-600 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="flex items-center gap-2 px-4 py-2 text-sm rounded font-medium bg-green-500 text-white hover:bg-green-600 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 <Save className="w-4 h-4" />
                 שמור
@@ -359,7 +359,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
               <button
                 onClick={handleCancel}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="flex items-center gap-2 px-4 py-2 text-sm rounded font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 <X className="w-4 h-4" />
                 ביטול
@@ -385,10 +385,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                 }
               }}
               disabled={isSaving}
-              className={`flex items-center gap-2 px-4 py-2 text-sm rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`flex items-center gap-2 px-4 py-2 text-sm rounded font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                 isEditing
                   ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
-                  : 'bg-primary-500 text-white hover:bg-primary-600 shadow-md hover:shadow-lg'
+                  : 'bg-primary text-primary-foreground hover:bg-neutral-800 shadow-md hover:shadow-lg'
               }`}
               style={{ minHeight: '44px' }}
             >
@@ -460,7 +460,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   value={getFieldValue('personalInfo', 'age')}
                   onChange={(e) => handleFieldChange('personalInfo', 'age', parseInt(e.target.value) || 0)}
                   placeholder="גיל"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-border"
                 />
               </div>
             </div>
@@ -474,7 +474,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
               <InfoRow 
                 label="טלפון" 
                 value={personalInfo.phone ? (
-                  <a href={`tel:${personalInfo.phone}`} className="text-primary-600 hover:text-primary-700">
+                  <a href={`tel:${personalInfo.phone}`} className="text-primary hover:text-primary">
                     {personalInfo.phone}
                   </a>
                 ) : 'לא צוין'} 
@@ -482,7 +482,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
               <InfoRow 
                 label="אימייל" 
                 value={personalInfo.email ? (
-                  <a href={`mailto:${personalInfo.email}`} className="text-primary-600 hover:text-primary-700">
+                  <a href={`mailto:${personalInfo.email}`} className="text-primary hover:text-primary">
                     {personalInfo.email}
                   </a>
                 ) : 'לא צוין'} 
@@ -522,9 +522,9 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
         <InfoSection title="פרטי הורים" icon={UserCheck} className="xl:col-span-2">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Primary Parent Contact */}
-            <div className="bg-primary-50 rounded-lg p-4">
-              <h4 className="font-semibold text-primary-800 mb-3 flex items-center gap-2">
-                <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+            <div className="bg-muted/50 rounded-lg p-4">
+              <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <div className="w-2 h-2 bg-muted/500 rounded-full"></div>
                 איש קשר ראשי
               </h4>
               {!isEditing ? (
@@ -533,7 +533,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="טלפון" 
                     value={personalInfo.parentPhone ? (
-                      <a href={`tel:${personalInfo.parentPhone}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`tel:${personalInfo.parentPhone}`} className="text-primary hover:text-primary">
                         {personalInfo.parentPhone}
                       </a>
                     ) : 'לא צוין'} 
@@ -541,7 +541,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="אימייל" 
                     value={personalInfo.parentEmail ? (
-                      <a href={`mailto:${personalInfo.parentEmail}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`mailto:${personalInfo.parentEmail}`} className="text-primary hover:text-primary">
                         {personalInfo.parentEmail}
                       </a>
                     ) : 'לא צוין'} 
@@ -586,7 +586,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="טלפון" 
                     value={parentsInfo.father.phone ? (
-                      <a href={`tel:${parentsInfo.father.phone}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`tel:${parentsInfo.father.phone}`} className="text-primary hover:text-primary">
                         {parentsInfo.father.phone}
                       </a>
                     ) : 'לא צוין'} 
@@ -594,7 +594,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="אימייל" 
                     value={parentsInfo.father.email ? (
-                      <a href={`mailto:${parentsInfo.father.email}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`mailto:${parentsInfo.father.email}`} className="text-primary hover:text-primary">
                         {parentsInfo.father.email}
                       </a>
                     ) : 'לא צוין'} 
@@ -616,7 +616,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="טלפון" 
                     value={parentsInfo.mother.phone ? (
-                      <a href={`tel:${parentsInfo.mother.phone}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`tel:${parentsInfo.mother.phone}`} className="text-primary hover:text-primary">
                         {parentsInfo.mother.phone}
                       </a>
                     ) : 'לא צוין'} 
@@ -624,7 +624,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="אימייל" 
                     value={parentsInfo.mother.email ? (
-                      <a href={`mailto:${parentsInfo.mother.email}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`mailto:${parentsInfo.mother.email}`} className="text-primary hover:text-primary">
                         {parentsInfo.mother.email}
                       </a>
                     ) : 'לא צוין'} 
@@ -646,7 +646,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="טלפון" 
                     value={parentsInfo.guardian.phone ? (
-                      <a href={`tel:${parentsInfo.guardian.phone}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`tel:${parentsInfo.guardian.phone}`} className="text-primary hover:text-primary">
                         {parentsInfo.guardian.phone}
                       </a>
                     ) : 'לא צוין'} 
@@ -654,7 +654,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   <InfoRow 
                     label="אימייל" 
                     value={parentsInfo.guardian.email ? (
-                      <a href={`mailto:${parentsInfo.guardian.email}`} className="text-primary-600 hover:text-primary-700">
+                      <a href={`mailto:${parentsInfo.guardian.email}`} className="text-primary hover:text-primary">
                         {parentsInfo.guardian.email}
                       </a>
                     ) : 'לא צוין'} 
@@ -677,7 +677,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                     <InfoRow 
                       label="טלפון" 
                       value={personalInfo.emergencyContact.phone ? (
-                        <a href={`tel:${personalInfo.emergencyContact.phone}`} className="text-primary-600 hover:text-primary-700">
+                        <a href={`tel:${personalInfo.emergencyContact.phone}`} className="text-primary hover:text-primary">
                           {personalInfo.emergencyContact.phone}
                         </a>
                       ) : 'לא צוין'} 

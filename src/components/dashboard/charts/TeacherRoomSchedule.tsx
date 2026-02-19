@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card } from '../../ui/Card';
 import { enhancedDashboardAnalytics, type TeacherScheduleSlot } from '../../../services/enhancedDashboardAnalytics';
 import { Calendar, MapPin, User, Clock, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -116,37 +115,37 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
 
   if (loading) {
     return (
-      <Card className={`p-6 ${className}`}>
+      <div className={`p-6 ${className}`}>
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
           <div className="h-96 bg-gray-100 rounded"></div>
         </div>
-      </Card>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card className={`p-6 ${className}`}>
+      <div className={`p-6 ${className}`}>
         <div className="text-center py-8">
           <p className="text-red-500 mb-4">{error}</p>
           <button
             onClick={loadData}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
           >
             נסה שוב
           </button>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className={`p-6 ${className}`} dir="rtl">
+    <div className={`p-6 ${className}`} dir="rtl">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
         <div className="flex items-center space-x-3 space-x-reverse">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 rounded">
             <Calendar className="w-6 h-6 text-blue-600" />
           </div>
           <div>
@@ -159,7 +158,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
 
         {/* View Toggle & Filters Button */}
         <div className="flex items-center gap-2">
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex bg-gray-100 rounded p-1">
             <button
               onClick={() => setViewMode('matrix')}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
@@ -184,7 +183,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-1 px-3 py-2 rounded-lg border transition-colors ${
+            className={`flex items-center gap-1 px-3 py-2 rounded border transition-colors ${
               showFilters
                 ? 'bg-blue-50 border-blue-200 text-blue-700'
                 : 'border-gray-200 text-gray-600 hover:bg-gray-50'
@@ -199,14 +198,14 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
 
       {/* Filters Panel */}
       {showFilters && (
-        <div className="bg-gray-50 rounded-lg p-4 mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gray-50 rounded p-4 mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Day Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">יום</label>
             <select
               value={selectedDay}
               onChange={(e) => setSelectedDay(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">כל הימים</option>
               {HEBREW_DAYS.map(day => (
@@ -221,7 +220,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
             <select
               value={selectedRoom}
               onChange={(e) => setSelectedRoom(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">כל החדרים</option>
               {uniqueRooms.map(room => (
@@ -236,7 +235,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
             <select
               value={selectedTeacher}
               onChange={(e) => setSelectedTeacher(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">כל המורים</option>
               {uniqueTeachers.map(teacher => (
@@ -339,7 +338,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
             if (daySlots.length === 0) return null;
 
             return (
-              <div key={day} className="border border-gray-200 rounded-lg overflow-hidden">
+              <div key={day} className="border border-gray-200 rounded overflow-hidden">
                 <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
                   <h4 className="font-medium text-gray-900">יום {day}</h4>
                   <span className="text-sm text-gray-600">{daySlots.length} שיעורים</span>
@@ -427,7 +426,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 

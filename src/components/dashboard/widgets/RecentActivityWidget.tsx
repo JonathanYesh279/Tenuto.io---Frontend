@@ -1,4 +1,3 @@
-import { Card } from '../../ui/Card'
 import { motion } from 'framer-motion'
 
 interface Activity {
@@ -29,7 +28,7 @@ const listItemVariants = {
 
 export function RecentActivityWidget({ activities, loading }: RecentActivityWidgetProps) {
   return (
-    <Card className="p-4">
+    <div className="p-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground">פעילות אחרונה</h3>
       </div>
@@ -49,7 +48,7 @@ export function RecentActivityWidget({ activities, loading }: RecentActivityWidg
               <motion.div
                 key={i}
                 variants={listItemVariants}
-                className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-muted/30 transition-colors"
+                className="flex items-start gap-3 p-2.5 rounded hover:bg-muted/30 transition-colors"
               >
                 <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
                   activity.color === 'primary' ? 'bg-students-fg' : 'bg-orchestras-fg'
@@ -64,6 +63,6 @@ export function RecentActivityWidget({ activities, loading }: RecentActivityWidg
           </motion.div>
         )}
       </div>
-    </Card>
+    </div>
   )
 }

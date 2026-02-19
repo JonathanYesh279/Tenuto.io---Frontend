@@ -19,7 +19,7 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
   const [showQuickActions, setShowQuickActions] = useState(false)
   if (isLoading || !student) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-background border border-border p-6">
         <div className="flex items-start gap-6">
           <div className="w-24 h-24 bg-gray-200 rounded-full animate-pulse"></div>
           <div className="flex-1 space-y-3">
@@ -55,7 +55,7 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
     new Date(registrationDate).toLocaleDateString('he-IL') : null
 
   return (
-    <div className="bg-gradient-to-l from-primary-500 via-primary-600 to-primary-700 rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-primary overflow-hidden">
       {/* Main Header Content */}
       <div className="p-6 text-white">
         <div className="flex items-start justify-between">
@@ -98,21 +98,21 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
               <div className="flex gap-3">
                 <button 
                   onClick={() => setShowQuickActions(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
                 >
                   <Edit className="w-4 h-4" />
                   ערוך
                 </button>
                 <button 
                   onClick={() => setShowQuickActions(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
                 >
                   <Printer className="w-4 h-4" />
                   הדפס
                 </button>
                 <button 
                   onClick={() => setShowQuickActions(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
                 >
                   <Download className="w-4 h-4" />
                   ייצא
@@ -127,8 +127,8 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
               </div>
               
               {/* Photo upload button */}
-              <button className="absolute bottom-0 left-0 w-8 h-8 bg-white rounded-full shadow-md border-2 border-primary-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110">
-                <Camera className="w-4 h-4 text-primary-600" />
+              <button className="absolute bottom-0 left-0 w-8 h-8 bg-white rounded-full shadow-md border-2 border-white/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110">
+                <Camera className="w-4 h-4 text-primary-foreground/70" />
               </button>
             </div>
           </div>
@@ -201,7 +201,7 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
 
           {/* Parent Contact */}
           {personalInfo.parentName && personalInfo.parentPhone && (
-            <div className="text-left bg-white/10 rounded-lg p-3 backdrop-blur-sm">
+            <div className="text-left bg-white/10 rounded p-3 backdrop-blur-sm">
               <div className="font-medium text-white">{personalInfo.parentName}</div>
               <div className="text-white/80 flex items-center gap-1 text-sm">
                 <Phone className="w-3 h-3" />

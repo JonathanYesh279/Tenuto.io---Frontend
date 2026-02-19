@@ -250,7 +250,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
         zIndex: 9999
       }}
     >
-      <div className="bg-white rounded-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">פעולות מהירות</h2>
@@ -267,7 +267,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                 onClick={() => setActiveAction('print')}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-right transition-colors ${
                   activeAction === 'print' 
-                    ? 'bg-primary-100 text-primary-700 border border-primary-200' 
+                    ? 'bg-primary text-primary-foreground-700 border border-border' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
@@ -279,7 +279,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                 onClick={() => setActiveAction('export')}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-right transition-colors ${
                   activeAction === 'export' 
-                    ? 'bg-primary-100 text-primary-700 border border-primary-200' 
+                    ? 'bg-primary text-primary-foreground-700 border border-border' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
@@ -291,7 +291,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                 onClick={() => setActiveAction('email')}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-right transition-colors ${
                   activeAction === 'email' 
-                    ? 'bg-primary-100 text-primary-700 border border-primary-200' 
+                    ? 'bg-primary text-primary-foreground-700 border border-border' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
@@ -303,7 +303,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                 onClick={() => setActiveAction('certificate')}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-right transition-colors ${
                   activeAction === 'certificate' 
-                    ? 'bg-primary-100 text-primary-700 border border-primary-200' 
+                    ? 'bg-primary text-primary-foreground-700 border border-border' 
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
@@ -363,7 +363,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                             onClick={() => setPrintOptions(prev => ({ ...prev, type: option.value as any }))}
                             className={`flex items-center gap-2 p-3 border rounded-lg text-right transition-colors ${
                               printOptions.type === option.value
-                                ? 'border-primary-300 bg-primary-50 text-primary-700'
+                                ? 'border-border bg-muted/50 text-primary'
                                 : 'border-gray-200 hover:bg-gray-50'
                             }`}
                           >
@@ -381,7 +381,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                           onClick={() => setPrintOptions(prev => ({ ...prev, orientation: 'portrait' }))}
                           className={`px-4 py-2 border rounded-lg transition-colors ${
                             printOptions.orientation === 'portrait'
-                              ? 'border-primary-300 bg-primary-50 text-primary-700'
+                              ? 'border-border bg-muted/50 text-primary'
                               : 'border-gray-200 hover:bg-gray-50'
                           }`}
                         >
@@ -391,7 +391,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                           onClick={() => setPrintOptions(prev => ({ ...prev, orientation: 'landscape' }))}
                           className={`px-4 py-2 border rounded-lg transition-colors ${
                             printOptions.orientation === 'landscape'
-                              ? 'border-primary-300 bg-primary-50 text-primary-700'
+                              ? 'border-border bg-muted/50 text-primary'
                               : 'border-gray-200 hover:bg-gray-50'
                           }`}
                         >
@@ -406,7 +406,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                           type="checkbox"
                           checked={printOptions.includePhotos}
                           onChange={(e) => setPrintOptions(prev => ({ ...prev, includePhotos: e.target.checked }))}
-                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                          className="rounded border-gray-300 text-primary focus:ring-primary"
                         />
                         <span className="text-sm text-gray-700">כלול תמונות</span>
                       </label>
@@ -416,7 +416,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                           type="checkbox"
                           checked={printOptions.includeCharts}
                           onChange={(e) => setPrintOptions(prev => ({ ...prev, includeCharts: e.target.checked }))}
-                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                          className="rounded border-gray-300 text-primary focus:ring-primary"
                         />
                         <span className="text-sm text-gray-700">כלול גרפים וטבלאות</span>
                       </label>
@@ -447,7 +447,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                             onClick={() => setExportOptions(prev => ({ ...prev, format: format.value as any }))}
                             className={`flex items-center gap-2 p-3 border rounded-lg text-right transition-colors ${
                               exportOptions.format === format.value
-                                ? 'border-primary-300 bg-primary-50 text-primary-700'
+                                ? 'border-border bg-muted/50 text-primary'
                                 : 'border-gray-200 hover:bg-gray-50'
                             }`}
                           >
@@ -477,7 +477,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                                 ...prev, 
                                 [option.key]: e.target.checked 
                               }))}
-                              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                              className="rounded border-gray-300 text-primary focus:ring-primary"
                             />
                             <span className="text-sm text-gray-700">{option.label}</span>
                           </label>
@@ -526,7 +526,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                         type="text"
                         value={emailOptions.subject}
                         onChange={(e) => setEmailOptions(prev => ({ ...prev, subject: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
 
@@ -536,7 +536,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                         value={emailOptions.message}
                         onChange={(e) => setEmailOptions(prev => ({ ...prev, message: e.target.value }))}
                         rows={4}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
 
@@ -572,7 +572,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                         type="text"
                         value={certificateData.title}
                         onChange={(e) => setCertificateData(prev => ({ ...prev, title: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
 
@@ -582,7 +582,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                         value={certificateData.description}
                         onChange={(e) => setCertificateData(prev => ({ ...prev, description: e.target.value }))}
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
 
@@ -592,7 +592,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                         type="text"
                         value={certificateData.signedBy}
                         onChange={(e) => setCertificateData(prev => ({ ...prev, signedBy: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
 
@@ -818,7 +818,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                   ? 'bg-red-500 text-white hover:bg-red-600' 
                   : activeAction === 'archive'
                   ? 'bg-orange-500 text-white hover:bg-orange-600'
-                  : 'bg-primary-500 text-white hover:bg-primary-600'
+                  : 'bg-primary text-primary-foreground hover:bg-neutral-800'
               }`}
             >
               {isProcessing ? (

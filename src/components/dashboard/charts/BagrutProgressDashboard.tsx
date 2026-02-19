@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '../../ui/Card';
 import { DonutChart, BarChart, ProgressRingChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type BagrutProgressData } from '../../../services/enhancedDashboardAnalytics';
 import { Award, CheckCircle, Clock, AlertCircle, Calendar, User, TrendingUp } from 'lucide-react';
@@ -39,23 +38,23 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
 
   if (loading) {
     return (
-      <Card className={`p-6 ${className}`}>
+      <div className={`p-6 ${className}`}>
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
           <div className="h-64 bg-gray-100 rounded"></div>
         </div>
-      </Card>
+      </div>
     );
   }
 
   if (!data) {
     return (
-      <Card className={`p-6 ${className}`} dir="rtl">
+      <div className={`p-6 ${className}`} dir="rtl">
         <div className="text-center py-8 text-gray-500">
           <Award className="w-12 h-12 mx-auto mb-4 text-gray-300" />
           <p>אין נתוני בגרויות זמינים</p>
         </div>
-      </Card>
+      </div>
     );
   }
 
@@ -108,11 +107,11 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
   return (
     <div className={`space-y-6 ${className}`} dir="rtl">
       {/* Header Card */}
-      <Card className="p-6">
+      <div className="p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           {/* Title */}
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-amber-100 rounded-xl">
+            <div className="p-3 bg-amber-100 rounded">
               <Award className="w-8 h-8 text-amber-600" />
             </div>
             <div>
@@ -123,21 +122,21 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
 
           {/* Summary Stats */}
           <div className="flex gap-4">
-            <div className="text-center px-4 py-2 bg-green-50 rounded-lg">
+            <div className="text-center px-4 py-2 bg-green-50 rounded">
               <div className="flex items-center gap-1 justify-center">
                 <CheckCircle className="w-4 h-4 text-green-600" />
                 <span className="text-2xl font-bold text-green-600">{data.completedCount}</span>
               </div>
               <p className="text-xs text-gray-600">הושלמו</p>
             </div>
-            <div className="text-center px-4 py-2 bg-amber-50 rounded-lg">
+            <div className="text-center px-4 py-2 bg-amber-50 rounded">
               <div className="flex items-center gap-1 justify-center">
                 <Clock className="w-4 h-4 text-amber-600" />
                 <span className="text-2xl font-bold text-amber-600">{data.inProgressCount}</span>
               </div>
               <p className="text-xs text-gray-600">בתהליך</p>
             </div>
-            <div className="text-center px-4 py-2 bg-gray-50 rounded-lg">
+            <div className="text-center px-4 py-2 bg-gray-50 rounded">
               <div className="flex items-center gap-1 justify-center">
                 <AlertCircle className="w-4 h-4 text-gray-500" />
                 <span className="text-2xl font-bold text-gray-600">{data.notStartedCount}</span>
@@ -146,12 +145,12 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Completion Rate Ring */}
-        <Card className="p-6">
+        <div className="p-6">
           <h4 className="text-lg font-semibold text-gray-900 mb-6">שיעור השלמה כולל</h4>
 
           <div className="flex items-center justify-center">
@@ -179,10 +178,10 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
               />
             )}
           </div>
-        </Card>
+        </div>
 
         {/* Presentation Progress */}
-        <Card className="p-6">
+        <div className="p-6">
           <h4 className="text-lg font-semibold text-gray-900 mb-6">התקדמות לפי הצגות</h4>
 
           <div className="space-y-4">
@@ -195,7 +194,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
                 : 0;
 
               return (
-                <div key={pres.key} className="p-4 bg-gray-50 rounded-lg">
+                <div key={pres.key} className="p-4 bg-gray-50 rounded">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
@@ -234,10 +233,10 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
               );
             })}
           </div>
-        </Card>
+        </div>
 
         {/* Grade Distribution */}
-        <Card className="p-6">
+        <div className="p-6">
           <h4 className="text-lg font-semibold text-gray-900 mb-6">התפלגות ציונים</h4>
 
           {gradeChartData.some(d => d.value > 0) ? (
@@ -248,7 +247,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
               />
 
               {/* Average Grade */}
-              <div className="mt-6 p-4 bg-gradient-to-l from-amber-50 to-amber-100 rounded-lg">
+              <div className="mt-6 p-4 bg-gradient-to-l from-amber-50 to-amber-100 rounded">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-amber-600" />
@@ -268,10 +267,10 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
               </div>
             </div>
           )}
-        </Card>
+        </div>
 
         {/* Upcoming Exams */}
-        <Card className="p-6">
+        <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h4 className="text-lg font-semibold text-gray-900">בחינות קרובות</h4>
             <span className="text-sm text-gray-600">
@@ -284,9 +283,9 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
               {data.upcomingExams.map((exam, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-4 p-3 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
                 >
-                  <div className="p-2 bg-amber-100 rounded-lg">
+                  <div className="p-2 bg-amber-100 rounded">
                     <Calendar className="w-5 h-5 text-amber-600" />
                   </div>
                   <div className="flex-1">
@@ -309,19 +308,19 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
           {/* Quick Actions */}
           <div className="mt-6 pt-4 border-t border-gray-100">
             <div className="grid grid-cols-2 gap-2">
-              <button className="px-3 py-2 text-sm text-amber-700 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors">
+              <button className="px-3 py-2 text-sm text-amber-700 bg-amber-50 rounded hover:bg-amber-100 transition-colors">
                 צפה בכל הבגרויות
               </button>
-              <button className="px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+              <button className="px-3 py-2 text-sm text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors">
                 ייצא דוח
               </button>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Summary Footer */}
-      <Card className="p-4 bg-gradient-to-l from-amber-50 to-white">
+      <div className="p-4 bg-gradient-to-l from-amber-50 to-white">
         <div className="flex flex-wrap items-center justify-center gap-8 text-center">
           <div>
             <p className="text-3xl font-bold text-amber-600">{data.totalStudents}</p>
@@ -343,7 +342,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
             <p className="text-sm text-gray-600">בחינות קרובות</p>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

@@ -96,7 +96,7 @@ const LessonCard = memo(({
   }, [lesson.maxStudents, lesson.studentIds])
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded border border-gray-200 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
@@ -359,7 +359,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
         </div>
         <button
           onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-sm"
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors text-sm"
         >
           נסה שוב
         </button>

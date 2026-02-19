@@ -58,10 +58,10 @@ const StudentHeader = memo(({ student }: { student: any }) => {
   }, [student?.isActive])
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
       <div className="flex items-start gap-6">
-        <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center">
-          <span className="text-2xl font-bold text-primary-600">
+        <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center">
+          <span className="text-2xl font-bold text-primary">
             {initials}
           </span>
         </div>
@@ -87,7 +87,7 @@ const Breadcrumb = memo(({ onNavigateBack }: { onNavigateBack: () => void }) => 
   <nav className="flex items-center gap-2 text-sm text-gray-600">
     <button
       onClick={onNavigateBack}
-      className="hover:text-primary-600 transition-colors"
+      className="hover:text-primary transition-colors"
     >
       תלמידים
     </button>
@@ -112,7 +112,7 @@ const ErrorState = memo(({
     <p className="text-gray-600 mb-6">{error}</p>
     <button
       onClick={onRetry}
-      className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+      className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
     >
       <RefreshCw className="w-4 h-4" />
       נסה שוב
@@ -130,7 +130,7 @@ const NotFoundState = memo(({ onNavigateBack }: { onNavigateBack: () => void }) 
     <p className="text-gray-600 mb-6">לא נמצאו פרטים עבור התלמיד המבוקש</p>
     <button
       onClick={onNavigateBack}
-      className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+      className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
     >
       <ArrowRight className="w-4 h-4" />
       חזור לרשימת התלמידים
@@ -220,7 +220,7 @@ const StudentDetailsPageOptimized: React.FC = () => {
       <StudentHeader student={student} />
 
       {/* Tab Navigation and Content — shadcn Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
+      <div className="bg-white rounded border border-border w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => handleTabChange(v as TabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
             <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap">

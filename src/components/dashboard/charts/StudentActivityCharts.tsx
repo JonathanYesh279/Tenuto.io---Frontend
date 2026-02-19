@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '../../ui/Card';
 import { BarChart, DonutChart, LineChart, ProgressRingChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type AttendanceStats } from '../../../services/enhancedDashboardAnalytics';
 import { Users, TrendingUp, Calendar, Music, BookOpen, Award } from 'lucide-react';
@@ -76,12 +75,12 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
     return (
       <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 ${className}`}>
         {[1, 2, 3, 4].map(i => (
-          <Card key={i}>
+          <div key={i}>
             <div className="animate-pulse">
               <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
               <div className="h-48 bg-gray-100 rounded"></div>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
     );
@@ -89,17 +88,17 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
 
   if (error) {
     return (
-      <Card className={className}>
+      <div className={className}>
         <div className="text-center py-8">
           <p className="text-red-500 mb-4">{error}</p>
           <button
             onClick={loadData}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
           >
             נסה שוב
           </button>
         </div>
-      </Card>
+      </div>
     );
   }
 
@@ -176,10 +175,10 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
       {/* Summary Cards Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {activitySummary.map((item, index) => (
-          <Card key={index} className="p-4">
+          <div key={index} className="p-4">
             <div className="flex items-center justify-between mb-2">
               <div
-                className="p-2 rounded-lg"
+                className="p-2 rounded"
                 style={{ backgroundColor: `${item.color}20` }}
               >
                 <div style={{ color: item.color }}>{item.icon}</div>
@@ -194,14 +193,14 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
               {item.label.includes('נוכחות') ? `${item.value}%` : item.value}
             </p>
             <p className="text-sm text-gray-600">{item.label}</p>
-          </Card>
+          </div>
         ))}
       </div>
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Attendance Trend Chart */}
-        <Card className="p-6">
+        <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900">מגמת נוכחות כללית</h3>
             <div className="flex items-center space-x-2 space-x-reverse">
@@ -249,10 +248,10 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
               </div>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Overall Attendance Gauge */}
-        <Card className="p-6">
+        <div className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">נוכחות כוללת</h3>
 
           <div className="flex items-center justify-center">
@@ -301,10 +300,10 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
               </div>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Instrument Distribution */}
-        <Card className="p-6">
+        <div className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">התפלגות כלי נגינה</h3>
 
           {instrumentChartData.length > 0 ? (
@@ -318,10 +317,10 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
               אין נתונים זמינים
             </div>
           )}
-        </Card>
+        </div>
 
         {/* Class Distribution */}
-        <Card className="p-6">
+        <div className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">התפלגות לפי כיתות</h3>
 
           {classChartData.length > 0 ? (
@@ -351,11 +350,11 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
               </span>
             </div>
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Weekly Activity Heatmap */}
-      <Card className="p-6">
+      <div className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">פעילות שבועית</h3>
 
         <div className="grid grid-cols-7 gap-2">
@@ -367,7 +366,7 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
             return (
               <div key={day} className="text-center">
                 <div
-                  className="aspect-square rounded-lg mb-2 transition-colors"
+                  className="aspect-square rounded mb-2 transition-colors"
                   style={{
                     backgroundColor: `rgba(59, 130, 246, ${activityLevel})`,
                   }}
@@ -393,7 +392,7 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
             <span className="text-xs text-gray-600">גבוהה</span>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

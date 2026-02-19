@@ -304,7 +304,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-xl hover:bg-primary-600 transition-colors shadow-md hover:shadow-lg"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors shadow-md hover:shadow-lg"
             >
               <Edit className="w-4 h-4" />
               ערוך
@@ -314,7 +314,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors shadow-md hover:shadow-lg disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors shadow-md hover:shadow-lg disabled:opacity-50"
               >
                 <Save className="w-4 h-4" />
                 {isSaving ? 'שומר...' : 'שמור'}
@@ -322,7 +322,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
               <button
                 onClick={handleCancel}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-xl hover:bg-gray-600 transition-colors shadow-md hover:shadow-lg disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors shadow-md hover:shadow-lg disabled:opacity-50"
               >
                 <X className="w-4 h-4" />
                 בטל
@@ -333,11 +333,11 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
       </div>
 
       {/* Single unified container for ALL academic information */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 p-6">
+      <div className="bg-white rounded border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 p-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
-          <div className="p-2 bg-primary-50 rounded-lg">
-            <BookOpen className="w-5 h-5 text-primary-600" />
+          <div className="p-2 bg-muted/50 rounded-lg">
+            <BookOpen className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900">פרטים אקדמיים</h3>
         </div>
@@ -358,12 +358,12 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         {/* Basic Info - GRID LAYOUT */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {/* Teacher - HIGHLIGHTED - First from right */}
-          <div className="bg-primary-50 rounded-lg p-4 border border-primary-200">
-            <div className="text-sm text-primary-600 mb-1 flex items-center gap-1">
+          <div className="bg-muted/50 rounded-lg p-4 border border-border">
+            <div className="text-sm text-primary mb-1 flex items-center gap-1">
               <User className="w-4 h-4" />
               מורה
             </div>
-            <div className="text-base font-semibold text-primary-800">
+            <div className="text-base font-semibold text-primary">
               {loadingTeachers ? (
                 <span className="text-gray-400 animate-pulse">טוען...</span>
               ) : primaryTeacher ? (
@@ -385,7 +385,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                   type="text"
                   value={editedData.class}
                   onChange={(e) => setEditedData({ ...editedData, class: e.target.value })}
-                  className="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="כיתה"
                 />
               ) : (
@@ -419,7 +419,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                   type="date"
                   value={editedData.startDate ? new Date(editedData.startDate).toISOString().split('T')[0] : ''}
                   onChange={(e) => setEditedData({ ...editedData, startDate: e.target.value })}
-                  className="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               ) : (
                 academicInfo.startDate ? new Date(academicInfo.startDate).toLocaleDateString('he-IL') : <span className="text-gray-400">לא צוין</span>
@@ -432,7 +432,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         {academicInfo.instrumentProgress && academicInfo.instrumentProgress.length > 0 && (
           <div className="border-t border-gray-100 pt-4 mt-4">
             <div className="flex items-center gap-2 mb-4">
-              <Trophy className="w-5 h-5 text-primary-600" />
+              <Trophy className="w-5 h-5 text-primary" />
               <h4 className="text-base font-semibold text-gray-900">מבחנים</h4>
             </div>
 
@@ -444,7 +444,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                     <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
                       <span className="text-sm font-semibold text-gray-900">{instrument.instrumentName}</span>
                       {instrument.isPrimary && (
-                        <span className="text-xs px-2 py-0.5 bg-primary-100 text-primary-800 rounded-full">ראשי</span>
+                        <span className="text-xs px-2 py-0.5 bg-primary text-primary-foreground-800 rounded-full">ראשי</span>
                       )}
                     </div>
                   )}
@@ -458,7 +458,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                         <select
                           value={editedData.instrumentTests?.[instrument.instrumentName]?.technicalTestStatus || 'לא נבחן'}
                           onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'technicalTest', e.target.value)}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                           {TEST_STATUSES.map(status => (
                             <option key={status} value={status}>{status}</option>
@@ -479,7 +479,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                         <select
                           value={editedData.instrumentTests?.[instrument.instrumentName]?.stageTestStatus || 'לא נבחן'}
                           onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'stageTest', e.target.value)}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                           {TEST_STATUSES.map(status => (
                             <option key={status} value={status}>{status}</option>
@@ -503,7 +503,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         {academicInfo.notes && (
           <div className="border-t border-gray-100 pt-4 mt-4">
             <div className="flex items-center gap-2 mb-2">
-              <FileText className="w-4 h-4 text-primary-600" />
+              <FileText className="w-4 h-4 text-primary" />
               <h4 className="text-sm font-semibold text-gray-900">הערות</h4>
             </div>
             <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{academicInfo.notes}</p>

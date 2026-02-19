@@ -168,10 +168,10 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
     children: React.ReactNode;
     className?: string;
   }> = ({ title, icon: Icon, children, className = '' }) => (
-    <div className={`bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-6 ${className}`}>
+    <div className={`bg-white rounded border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-6 ${className}`}>
       <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
-        <div className="p-2 bg-primary-50 rounded-lg">
-          <Icon className="w-5 h-5 text-primary-600" />
+        <div className="p-2 bg-muted/50 rounded-lg">
+          <Icon className="w-5 h-5 text-primary" />
         </div>
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
       </div>
@@ -323,7 +323,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold text-gray-900">{current}</span>
             <span className="text-xs text-gray-500">/ {target}</span>
-            <span className="text-xs font-medium text-primary-600">{Math.round(percentage)}%</span>
+            <span className="text-xs font-medium text-primary">{Math.round(percentage)}%</span>
           </div>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
@@ -409,7 +409,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
     const targetStage = HEBREW_STAGES[target as keyof typeof HEBREW_STAGES]
     
     return (
-      <div className="bg-gradient-to-l from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+      <div className="bg-gradient-to-l from-blue-50 to-indigo-50 rounded p-6 border border-blue-200">
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-semibold text-gray-900">{instrumentName}</h4>
           <div className="flex items-center gap-2">
@@ -461,7 +461,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       ACHIEVEMENTS.practiceHours.bronze.threshold
     
     return (
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded p-6 border border-green-200">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-green-600" />
@@ -544,7 +544,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
     const progressPercentage = (completedCount / requirements.length) * 100
     
     return (
-      <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
+      <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded p-6 border border-purple-200">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-purple-500 rounded-lg">
@@ -635,7 +635,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
           <InfoRow
             label="שלב"
             value={primaryInstrument ? (
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-primary text-primary-foreground-800">
                 {HEBREW_STAGES[primaryInstrument.currentStage as keyof typeof HEBREW_STAGES]?.name || primaryInstrument.currentStage}
               </span>
             ) : 'לא צוין'}
@@ -643,7 +643,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
           <InfoRow
             label="מורה"
             value={primaryTeacher ? (
-              <span className="font-medium text-primary-700">{primaryTeacher}</span>
+              <span className="font-medium text-primary">{primaryTeacher}</span>
             ) : 'לא משויך'}
           />
         </div>
@@ -689,7 +689,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
               <div className="flex justify-end mb-4">
                 <button
                   onClick={handleEditTests}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors shadow-sm"
                 >
                   <Edit2 className="w-4 h-4" />
                   <span>ערוך תוצאות מבחנים</span>
@@ -784,7 +784,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                           <select
                             value={stageTestStatus}
                             onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'stageTest', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-base"
                           >
                             {TEST_STATUSES.map(status => (
                               <option key={status} value={status}>{status}</option>
@@ -806,7 +806,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                           <select
                             value={technicalTestStatus}
                             onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'technicalTest', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-base"
                           >
                             {TEST_STATUSES.map(status => (
                               <option key={status} value={status}>{status}</option>
@@ -823,7 +823,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                       <div className="pt-3 border-t border-gray-200">
                         <div className="flex justify-between items-center text-sm">
                           <span className="text-gray-600">שלב נוכחי:</span>
-                          <span className="font-bold text-primary-600 text-lg">
+                          <span className="font-bold text-primary text-lg">
                             {HEBREW_STAGES[instrument.currentStage as keyof typeof HEBREW_STAGES]?.name || instrument.currentStage}
                           </span>
                         </div>
@@ -942,17 +942,17 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
         {academicInfo.instrumentProgress && academicInfo.instrumentProgress.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {academicInfo.instrumentProgress.map((instrument, index) => (
-              <div key={index} className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-6 border border-primary-200 shadow-sm">
+              <div key={index} className="bg-gradient-to-br from-primary-50 to-primary-100 rounded p-6 border border-border shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary-500 rounded-lg">
+                    <div className="p-2 bg-muted/500 rounded-lg">
                       <Music className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 flex items-center gap-2">
                         {instrument.instrumentName}
                         {instrument.isPrimary && (
-                          <span className="bg-primary-200 text-primary-800 text-xs px-2 py-1 rounded-full font-medium">
+                          <span className="bg-primary text-primary-foreground-800 text-xs px-2 py-1 rounded-full font-medium">
                             כלי ראשי
                           </span>
                         )}
@@ -965,11 +965,11 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                 </div>
 
                 <div className="space-y-4">
-                  <div className="bg-white/80 rounded-lg p-4 border border-primary-200">
+                  <div className="bg-white/80 rounded-lg p-4 border border-border">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm font-medium text-gray-700">שלב נוכחי</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-primary-600">
+                        <span className="text-2xl font-bold text-primary">
                           {HEBREW_STAGES[instrument.currentStage as keyof typeof HEBREW_STAGES]?.name || instrument.currentStage}
                         </span>
                         <span className="text-xs text-gray-500">יעד:</span>
@@ -991,9 +991,9 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                   />
 
                   {instrument.progressNotes && (
-                    <div className="bg-white/60 rounded-lg p-3 border border-primary-200">
+                    <div className="bg-white/60 rounded-lg p-3 border border-border">
                       <div className="flex items-start gap-2">
-                        <Target className="w-4 h-4 text-primary-600 mt-0.5 flex-shrink-0" />
+                        <Target className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="text-sm font-medium text-gray-800 mb-1">הערות התקדמות</p>
                           <p className="text-sm text-gray-700">{instrument.progressNotes}</p>
@@ -1003,9 +1003,9 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                   )}
 
                   {instrument.skillAssessments && (
-                    <div className="bg-white/60 rounded-lg p-3 border border-primary-200">
+                    <div className="bg-white/60 rounded-lg p-3 border border-border">
                       <div className="flex items-center gap-2 mb-3">
-                        <Star className="w-4 h-4 text-primary-600" />
+                        <Star className="w-4 h-4 text-primary" />
                         <h5 className="text-sm font-semibold text-gray-800">הערכת כישורים</h5>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -1017,13 +1017,13 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                       </div>
                       
                       {/* Practice Hours for this instrument */}
-                      <div className="mt-3 pt-3 border-t border-primary-200">
+                      <div className="mt-3 pt-3 border-t border-border">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-primary-600" />
+                            <Clock className="w-4 h-4 text-primary" />
                             <span className="text-sm font-medium text-gray-700">שעות תרגול השבוע</span>
                           </div>
-                          <span className="text-lg font-bold text-primary-600">
+                          <span className="text-lg font-bold text-primary">
                             {Math.floor(Math.random() * 10) + 5} שעות
                           </span>
                         </div>
@@ -1052,7 +1052,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
             {teacherAssignments.map((assignment, index) => (
               <div 
                 key={index} 
-                className={`rounded-xl p-6 border-2 transition-all duration-200 hover:shadow-lg ${
+                className={`rounded p-6 border-2 transition-all duration-200 hover:shadow-lg ${
                   assignment.isActive 
                     ? 'border-success-200 bg-gradient-to-br from-success-50 to-success-100' 
                     : 'border-gray-200 bg-gray-50'
@@ -1124,7 +1124,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
             {teachersWithoutLessons.map((teacher, index) => (
               <div
                 key={teacher._id || index}
-                className="bg-orange-50 border-2 border-orange-200 rounded-xl p-4 flex items-start gap-3"
+                className="bg-orange-50 border-2 border-orange-200 rounded p-4 flex items-start gap-3"
               >
                 <div className="p-2 bg-orange-100 rounded-lg flex-shrink-0">
                   <Clock className="w-5 h-5 text-orange-600" />

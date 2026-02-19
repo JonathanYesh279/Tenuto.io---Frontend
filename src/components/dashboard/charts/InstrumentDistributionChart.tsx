@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card } from '../../ui/Card';
 import { DonutChart, BarChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type InstrumentDistribution } from '../../../services/enhancedDashboardAnalytics';
 import { Music, BarChart3, PieChart, Users } from 'lucide-react';
@@ -89,21 +88,21 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
 
   if (loading) {
     return (
-      <Card className={`p-6 ${className}`}>
+      <div className={`p-6 ${className}`}>
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
           <div className="h-48 bg-gray-100 rounded"></div>
         </div>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className={`p-6 ${className}`} dir="rtl">
+    <div className={`p-6 ${className}`} dir="rtl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-100 rounded-lg">
+          <div className="p-2 bg-purple-100 rounded">
             <Music className="w-5 h-5 text-purple-600" />
           </div>
           <div>
@@ -115,7 +114,7 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
         {/* Controls */}
         <div className="flex items-center gap-2">
           {/* View Toggle */}
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex bg-gray-100 rounded p-1">
             <button
               onClick={() => setViewType('donut')}
               className={`p-1.5 rounded-md transition-colors ${
@@ -140,7 +139,7 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
           {showFamilyGroups && (
             <button
               onClick={() => setGroupByFamily(!groupByFamily)}
-              className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
+              className={`px-3 py-1.5 text-sm rounded border transition-colors ${
                 groupByFamily
                   ? 'bg-purple-50 border-purple-200 text-purple-700'
                   : 'border-gray-200 text-gray-600 hover:bg-gray-50'
@@ -154,15 +153,15 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
 
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-gray-50 rounded-lg p-3 text-center">
+        <div className="bg-gray-50 rounded p-3 text-center">
           <p className="text-2xl font-bold text-gray-900">{total}</p>
           <p className="text-xs text-gray-600">סה"כ נרשמים</p>
         </div>
-        <div className="bg-purple-50 rounded-lg p-3 text-center">
+        <div className="bg-purple-50 rounded p-3 text-center">
           <p className="text-2xl font-bold text-purple-600">{data.length}</p>
           <p className="text-xs text-gray-600">כלי נגינה</p>
         </div>
-        <div className="bg-blue-50 rounded-lg p-3 text-center">
+        <div className="bg-blue-50 rounded p-3 text-center">
           <p className="text-lg font-bold text-blue-600 truncate" title={topInstrument?.instrumentName}>
             {topInstrument?.instrumentName || '-'}
           </p>
@@ -251,7 +250,7 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
           </div>
         </details>
       )}
-    </Card>
+    </div>
   );
 };
 

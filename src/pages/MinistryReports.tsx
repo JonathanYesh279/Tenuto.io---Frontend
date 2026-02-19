@@ -232,7 +232,7 @@ export default function MinistryReports() {
       {/* Page Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+          <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
             <FileText className="w-5 h-5 text-primary" />
           </div>
           <div>
@@ -250,7 +250,7 @@ export default function MinistryReports() {
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             רענן
@@ -265,7 +265,7 @@ export default function MinistryReports() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-ring focus:border-ring bg-white"
+            className="w-64 px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-ring focus:border-ring bg-white"
           >
             {schoolYears.map((year) => (
               <option key={year._id} value={year._id}>
@@ -357,7 +357,7 @@ export default function MinistryReports() {
             <Card key={section.key} hover>
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg ${section.color === 'blue' ? 'bg-muted' : `bg-${section.color}-100`} flex items-center justify-center`}>
+                  <div className={`w-10 h-10 rounded ${section.color === 'blue' ? 'bg-muted' : `bg-${section.color}-100`} flex items-center justify-center`}>
                     <Icon className={`w-5 h-5 ${section.color === 'blue' ? 'text-primary' : `text-${section.color}-600`}`} />
                   </div>
                   <div>
@@ -502,7 +502,7 @@ export default function MinistryReports() {
         <button
           onClick={handleDownload}
           disabled={downloading || !endpointsAvailable || (status?.preExportErrors?.length ?? 0) > 0}
-          className="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium shadow-sm"
+          className="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-medium"
         >
           <Download className="w-5 h-5" />
           {downloading ? 'מוריד...' : 'הורד דוח מלא'}

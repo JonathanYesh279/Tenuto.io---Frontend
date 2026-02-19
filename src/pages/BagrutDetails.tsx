@@ -708,7 +708,7 @@ export default function BagrutDetails() {
         </div>
         <button
           onClick={() => navigate('/bagruts')}
-          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
+          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
           <ArrowRight className="w-4 h-4 ml-2" />
           חזור לרשימת בגרויות
@@ -769,7 +769,7 @@ export default function BagrutDetails() {
         {!bagrut.isCompleted && (
           <button
             onClick={() => setShowCompleteModal(true)}
-            className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded-lg hover:bg-green-50"
+            className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded hover:bg-green-50"
           >
             <CheckCircle className="w-4 h-4 ml-1" />
             השלם בגרות
@@ -777,14 +777,14 @@ export default function BagrutDetails() {
         )}
         <button
           onClick={handleExportPDF}
-          className="flex items-center px-3 py-2 text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-50"
+          className="flex items-center px-3 py-2 text-blue-700 border border-blue-300 rounded hover:bg-blue-50"
         >
           <Download className="w-4 h-4 ml-1" />
           ייצא PDF
         </button>
         <button
           onClick={() => setShowDeleteModal(true)}
-          className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded-lg hover:bg-red-50"
+          className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded hover:bg-red-50"
         >
           <Trash2 className="w-4 h-4 ml-1" />
           מחק
@@ -831,7 +831,7 @@ export default function BagrutDetails() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-sm">
+      <div className="bg-white rounded">
         <div className="border-b border-gray-200">
           <div className="flex overflow-x-auto">
             <Tab
@@ -901,7 +901,7 @@ export default function BagrutDetails() {
                 {!isEditingOverview ? (
                   <button
                     onClick={() => setIsEditingOverview(true)}
-                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
                   >
                     <Edit className="w-4 h-4" />
                     ערוך פרטים כלליים
@@ -910,14 +910,14 @@ export default function BagrutDetails() {
                   <div className="flex gap-2">
                     <button
                       onClick={handleSaveOverview}
-                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                     >
                       <Save className="w-4 h-4" />
                       שמור
                     </button>
                     <button
                       onClick={handleCancelOverviewEdit}
-                      className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
                     >
                       <X className="w-4 h-4" />
                       ביטול
@@ -1038,7 +1038,7 @@ export default function BagrutDetails() {
                   <textarea
                     value={overviewFormData.notes}
                     onChange={(e) => setOverviewFormData(prev => ({ ...prev, notes: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 rounded resize-none"
                     rows={4}
                     placeholder="הוסף הערות..."
                   />
@@ -1057,7 +1057,7 @@ export default function BagrutDetails() {
                 <h3 className="text-lg font-semibold text-gray-900">תכנית הביצוע</h3>
                 <button
                   onClick={() => setShowAddPieceModal(true)}
-                  className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
+                  className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
                 >
                   <Plus className="w-4 h-4 ml-1" />
                   הוסף יצירה
@@ -1173,7 +1173,7 @@ export default function BagrutDetails() {
                   <p>אין השמעות</p>
                   <button
                     onClick={() => navigate(`/bagruts/${bagrutId}/edit?tab=presentations`)}
-                    className="mt-4 flex items-center mx-auto px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
+                    className="mt-4 flex items-center mx-auto px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
                   >
                     <Plus className="w-4 h-4 ml-1" />
                     הוסף השמעות
@@ -1226,7 +1226,7 @@ export default function BagrutDetails() {
               {/* Final Grade Summary */}
               <Card>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">ציון סופי</h3>
-                <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
+                <div className="flex justify-between items-center p-4 bg-muted rounded">
                   <span className="text-lg font-semibold force-black-text">ציון מגן בגרות</span>
                   <div className="text-right">
                     <span className="text-3xl font-bold text-foreground">
@@ -1313,7 +1313,7 @@ export default function BagrutDetails() {
                   </div>
 
                   {/* Summary Row */}
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <div className="mt-6 p-4 bg-blue-50 rounded">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex justify-between">
                         <span className="font-medium text-gray-700">ממוצע מיומנות נגינה:</span>
@@ -1362,25 +1362,25 @@ export default function BagrutDetails() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">פירוט ציונים (סיכום)</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                       <span className="force-black-text">מיומנות נגינה</span>
                       <span className="text-xl font-semibold text-gray-900">
                         {bagrut.magenBagrut.detailedGrading.playingSkills?.points || 0}/40
                       </span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                       <span className="force-black-text">הבנה מוזיקלית</span>
                       <span className="text-xl font-semibold text-gray-900">
                         {bagrut.magenBagrut.detailedGrading.musicalUnderstanding?.points || 0}/30
                       </span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                       <span className="force-black-text">ידיעת הטקסט</span>
                       <span className="text-xl font-semibold text-gray-900">
                         {bagrut.magenBagrut.detailedGrading.textKnowledge?.points || 0}/20
                       </span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                       <span className="force-black-text">נגינה בעל פה</span>
                       <span className="text-xl font-semibold text-gray-900">
                         {bagrut.magenBagrut.detailedGrading.playingByHeart?.points || 0}/10
@@ -1388,7 +1388,7 @@ export default function BagrutDetails() {
                     </div>
                   </div>
 
-                  <div className="mt-6 p-3 bg-blue-50 rounded-lg">
+                  <div className="mt-6 p-3 bg-blue-50 rounded">
                     <div className="text-2xl font-bold text-blue-900">
                       ציון מפורט: {(
                         (bagrut.magenBagrut.detailedGrading.playingSkills?.points || 0) +
@@ -1417,7 +1417,7 @@ export default function BagrutDetails() {
             <div>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">מסמכים</h3>
-                <label className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 cursor-pointer">
+                <label className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 cursor-pointer">
                   <Upload className="w-4 h-4 ml-1" />
                   העלה מסמך
                   <input
@@ -1528,7 +1528,7 @@ export default function BagrutDetails() {
             value={teacherSignature}
             onChange={(e) => setTeacherSignature(e.target.value)}
             placeholder="הכנס את שמך המלא כחתימה"
-            className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
       </ConfirmationModal>

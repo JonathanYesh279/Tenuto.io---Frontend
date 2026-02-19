@@ -443,7 +443,7 @@ export default function Bagruts() {
             clearError()
             loadData()
           }}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
+          className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
           נסה שוב
         </button>
@@ -467,7 +467,7 @@ export default function Bagruts() {
         {!isTeacherRole && (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <Plus className="w-4 h-4 ml-2" />
             בגרות חדשה
@@ -518,7 +518,7 @@ export default function Bagruts() {
                 placeholder="חיפוש לפי שם תלמיד, מורה או קונסרבטוריון..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                className="w-full pr-10 pl-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -527,7 +527,7 @@ export default function Bagruts() {
             <select
               value={filters.status}
               onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-              className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+              className="px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">כל הסטטוסים</option>
               <option value="completed">הושלם</option>
@@ -537,7 +537,7 @@ export default function Bagruts() {
             <select
               value={filters.teacherId}
               onChange={(e) => setFilters(prev => ({ ...prev, teacherId: e.target.value }))}
-              className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+              className="px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">כל המורים</option>
               {teachers.map(teacher => (
@@ -550,7 +550,7 @@ export default function Bagruts() {
             <select
               value={filters.conservatory}
               onChange={(e) => setFilters(prev => ({ ...prev, conservatory: e.target.value }))}
-              className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+              className="px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">כל הקונסרבטוריונים</option>
               {[...new Set(bagruts.map(b => b.conservatoryName).filter(Boolean))].map(name => (
@@ -567,10 +567,10 @@ export default function Bagruts() {
           מציג {filteredBagruts.length} מתוך {totalBagruts} בגרויות
         </div>
         
-        <div className="flex items-center bg-gray-50 p-1 rounded-lg border border-gray-200">
+        <div className="flex items-center bg-gray-50 p-1 rounded border border-gray-200">
           <button
             onClick={() => setViewMode('table')}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+            className={`px-3 py-2 rounded text-sm font-medium transition-all flex items-center gap-2 ${
               viewMode === 'table'
                 ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800'
@@ -581,7 +581,7 @@ export default function Bagruts() {
           </button>
           <button
             onClick={() => setViewMode('grid')}
-            className={`px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+            className={`px-3 py-2 rounded text-sm font-medium transition-all flex items-center gap-2 ${
               viewMode === 'grid'
                 ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800'

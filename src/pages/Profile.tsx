@@ -295,7 +295,7 @@ export default function Profile() {
   return (
     <div className="p-6" dir="rtl">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-white rounded border border-gray-200 p-6 mb-6">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center">
             <span className="text-xl font-bold text-white font-reisinger-yonatan">
@@ -346,7 +346,7 @@ export default function Profile() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+      <div className="bg-white rounded border border-gray-200 mb-6">
         <div className="border-b border-gray-200">
           <nav className="flex gap-0 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => {
@@ -414,7 +414,7 @@ function StatCard({ title, value, icon: Icon, color, loading }: StatCardProps) {
   const variant = colorVariants[color]
 
   return (
-    <div className={`bg-white rounded-lg border ${variant.border} p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-200`}>
+    <div className={`bg-white rounded border ${variant.border} p-3 sm:p-4`}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <p className="text-xs sm:text-sm font-medium text-gray-600 font-reisinger-yonatan truncate">

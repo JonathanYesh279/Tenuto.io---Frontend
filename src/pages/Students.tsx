@@ -759,7 +759,7 @@ export default function Students() {
         if (isUpdating) {
           return (
             <div className="flex items-center justify-center">
-              <div className="w-16 h-8 flex items-center justify-center bg-blue-50 rounded-lg border-2 border-blue-200">
+              <div className="w-16 h-8 flex items-center justify-center bg-blue-50 rounded border-2 border-blue-200">
                 <span className="text-blue-600 font-medium">...</span>
               </div>
             </div>
@@ -784,7 +784,7 @@ export default function Students() {
                 -
               </button>
               
-              <div className="w-12 h-8 flex items-center justify-center bg-blue-50 rounded-lg border-2 border-blue-300 mx-1">
+              <div className="w-12 h-8 flex items-center justify-center bg-blue-50 rounded border-2 border-blue-300 mx-1">
                 <span className="text-blue-700 font-bold text-sm">{student.stageLevel}</span>
               </div>
               
@@ -810,7 +810,7 @@ export default function Students() {
                 e.stopPropagation()
                 handleStageLevelClick(student.id)
               }}
-              className="w-8 h-8 flex items-center justify-center text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors font-medium border border-transparent hover:border-blue-200"
+              className="w-8 h-8 flex items-center justify-center text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded transition-colors font-medium border border-transparent hover:border-blue-200"
               title="לחץ לעריכת השלב"
             >
               {student.stageLevel}
@@ -884,7 +884,7 @@ export default function Students() {
         <select
           value={filters.orchestra}
           onChange={(e) => setFilters(prev => ({ ...prev, orchestra: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
+          className="px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
         >
           <option value="">כל התזמורות</option>
           <option value="תזמורת">תזמורת</option>
@@ -893,7 +893,7 @@ export default function Students() {
         <select
           value={filters.instrument}
           onChange={(e) => setFilters(prev => ({ ...prev, instrument: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
+          className="px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
         >
           <option value="">כל הכלים</option>
           <option value="חלילית">חלילית</option>
@@ -919,7 +919,7 @@ export default function Students() {
         <select
           value={filters.stageLevel}
           onChange={(e) => setFilters(prev => ({ ...prev, stageLevel: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
+          className="px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
         >
           <option value="">כל השלבים</option>
           {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
@@ -951,7 +951,7 @@ export default function Students() {
         <div className="flex items-center gap-3">
           <button 
             onClick={handleToggleSelectMode}
-            className={`flex items-center px-3 py-1 rounded-lg text-xs transition-colors ${
+            className={`flex items-center px-3 py-1 rounded text-xs transition-colors ${
               isSelectMode 
                 ? 'bg-gray-500 text-white hover:bg-gray-600' 
                 : 'bg-blue-500 text-white hover:bg-blue-600'
@@ -965,17 +965,17 @@ export default function Students() {
           {isSelectMode && selectedStudents.size > 0 && (
             <button 
               onClick={handleBatchDelete}
-              className="flex items-center px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-xs"
+              className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs"
             >
               <Trash2 className="w-3 h-3 ml-1" />
               מחק נבחרים ({selectedStudents.size})
             </button>
           )}
           
-          <div className="flex items-center bg-gray-50 p-1 rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex items-center bg-gray-50 p-1 rounded border border-gray-200">
           <button
             onClick={() => setViewMode('table')}
-            className={`relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
+            className={`relative px-3 py-2 rounded text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
               viewMode === 'table'
                 ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
@@ -986,12 +986,12 @@ export default function Students() {
             <List className="w-4 h-4" />
             <span className="hidden sm:inline">טבלה</span>
             {viewMode === 'table' && (
-              <div className="absolute inset-0 rounded-md bg-muted/40 pointer-events-none" />
+              <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
             )}
           </button>
           <button
             onClick={() => setViewMode('grid')}
-            className={`relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
+            className={`relative px-3 py-2 rounded text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
               viewMode === 'grid'
                 ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
@@ -1002,7 +1002,7 @@ export default function Students() {
             <Grid className="w-4 h-4" />
             <span className="hidden sm:inline">רשת</span>
             {viewMode === 'grid' && (
-              <div className="absolute inset-0 rounded-md bg-muted/40 pointer-events-none" />
+              <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
             )}
           </button>
         </div>
@@ -1012,7 +1012,7 @@ export default function Students() {
       {/* Students Display */}
       <div className="relative">
         {searchLoading && (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
+          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded">
             <div className="text-center">
               <Loader className="w-6 h-6 animate-spin mx-auto mb-2 text-primary" />
               <div className="text-sm text-gray-600">מחפש תלמידים...</div>
@@ -1053,7 +1053,7 @@ export default function Students() {
         <div>
           {/* Grid Select All Header */}
           {isSelectMode && (
-            <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <input
@@ -1133,7 +1133,7 @@ export default function Students() {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingMore ? (
               <>

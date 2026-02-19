@@ -531,7 +531,7 @@ export default function TheoryLessons() {
           <div className="flex space-x-4 rtl:space-x-reverse mt-4">
             <button
               onClick={() => setActiveTab('lessons')}
-              className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded font-medium transition-colors ${
                 activeTab === 'lessons'
                   ? 'bg-muted text-foreground'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -542,7 +542,7 @@ export default function TheoryLessons() {
             </button>
             <button
               onClick={() => setActiveTab('bulk')}
-              className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`flex items-center px-4 py-2 rounded font-medium transition-colors ${
                 activeTab === 'bulk'
                   ? 'bg-muted text-foreground'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -560,7 +560,7 @@ export default function TheoryLessons() {
                 <>
                   <button
                     onClick={handleBulkEdit}
-                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                     title={`עריכה קבוצתית של ${selectedLessons.size} שיעורים`}
                   >
                     <Users className="w-4 h-4 ml-1" />
@@ -568,7 +568,7 @@ export default function TheoryLessons() {
                   </button>
                   <button
                     onClick={() => setSelectedLessons(new Set())}
-                    className="flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    className="flex items-center px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
                     title="בטל בחירה"
                   >
                     ביטול בחירה
@@ -577,7 +577,7 @@ export default function TheoryLessons() {
               )}
               <button
                 onClick={() => setShowBulkDeleteModal(true)}
-                className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                 title="מחיקה קבוצתית של שיעורי תיאוריה"
               >
                 <Trash2 className="w-4 h-4 ml-1" />
@@ -585,7 +585,7 @@ export default function TheoryLessons() {
               </button>
               <button
                 onClick={handleCreateLesson}
-                className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
+                className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
               >
                 <Plus className="w-4 h-4 ml-2" />
                 שיעור חדש
@@ -597,7 +597,7 @@ export default function TheoryLessons() {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-50 border border-red-200 rounded p-4">
           <p className="text-red-800">{error}</p>
         </div>
       )}
@@ -649,7 +649,7 @@ export default function TheoryLessons() {
                 placeholder="חיפוש שיעורים..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+                className="w-full pr-10 pl-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -659,7 +659,7 @@ export default function TheoryLessons() {
             <select
               value={filters.category}
               onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+              className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             >
               <option value="">כל הקטגוריות</option>
               <option value="תלמידים חדשים ב-ד">תלמידים חדשים ב-ד</option>
@@ -685,7 +685,7 @@ export default function TheoryLessons() {
               type="date"
               value={filters.date}
               onChange={(e) => setFilters(prev => ({ ...prev, date: e.target.value }))}
-              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+              className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
@@ -695,7 +695,7 @@ export default function TheoryLessons() {
               setFilters({ category: '', teacherId: '', date: '' })
               setSearchQuery('')
             }}
-            className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
           >
             <Filter className="w-4 h-4" />
           </button>
@@ -736,7 +736,7 @@ export default function TheoryLessons() {
             <p className="text-gray-600 mb-4">התחל על ידי יצירת שיעור התיאוריה הראשון</p>
             <button
               onClick={handleCreateLesson}
-              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 ml-2" />
               צור שיעור ראשון
@@ -746,7 +746,7 @@ export default function TheoryLessons() {
           <div className="space-y-6">
             {/* No Upcoming Lessons Message */}
             {groupedLessonsByDay.today.length === 0 && groupedLessonsByDay.future.length === 0 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
+              <div className="bg-blue-50 border border-blue-200 rounded p-6 text-center">
                 <Calendar className="w-10 h-10 text-blue-400 mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-blue-900 mb-1">אין שיעורים קרובים</h3>
                 <p className="text-blue-700 text-sm mb-3">
@@ -754,7 +754,7 @@ export default function TheoryLessons() {
                 </p>
                 <button
                   onClick={handleCreateLesson}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
                 >
                   <Plus className="w-4 h-4 ml-2" />
                   צור שיעור חדש
@@ -819,7 +819,7 @@ export default function TheoryLessons() {
                 {groupedLessonsByDay.future.map(([date, dayLessons]) => {
                   const dayInfo = formatDayHeader(date)
                   return (
-                    <div key={date} className="bg-blue-50 rounded-xl p-4 space-y-3">
+                    <div key={date} className="bg-blue-50 rounded p-4 space-y-3">
                       <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold text-blue-900">
                           <span className="text-blue-700">{dayInfo.prefix}</span>
@@ -862,7 +862,7 @@ export default function TheoryLessons() {
               {/* Past Lessons Toggle Button */}
               <button
                 onClick={handleTogglePastLessons}
-                className="w-full flex items-center justify-between p-4 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors border border-gray-200"
+                className="w-full flex items-center justify-between p-4 bg-gray-100 hover:bg-gray-200 rounded transition-colors border border-gray-200"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">
@@ -902,7 +902,7 @@ export default function TheoryLessons() {
                   {groupedLessonsByDay.past.map(([date, dayLessons]) => {
                     const dayInfo = formatDayHeader(date)
                     return (
-                      <div key={date} className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-200">
+                      <div key={date} className="bg-gray-50 rounded p-4 space-y-3 border border-gray-200">
                         <div className="flex items-center justify-between">
                           <h3 className="text-lg font-semibold text-gray-700">
                             {dayInfo.main}
@@ -941,7 +941,7 @@ export default function TheoryLessons() {
 
               {/* No past lessons message */}
               {showPastLessons && pastLessonsLoaded && groupedLessonsByDay.past.length === 0 && (
-                <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200">
+                <div className="bg-gray-50 rounded p-6 text-center border border-gray-200">
                   <p className="text-gray-500">אין שיעורים שהסתיימו</p>
                 </div>
               )}
@@ -956,7 +956,7 @@ export default function TheoryLessons() {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loadingMore ? (
               <>
@@ -1033,7 +1033,7 @@ export default function TheoryLessons() {
         maxWidth="lg"
       >
         <div className="p-6">
-          <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
             <div className="flex items-center">
               <AlertTriangle className="w-5 h-5 text-yellow-600 ml-2" />
               <p className="text-yellow-800">
@@ -1094,7 +1094,7 @@ export default function TheoryLessons() {
                     type="date"
                     value={bulkDeleteData.startDate}
                     onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, startDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
                     required
                   />
                 </div>
@@ -1106,7 +1106,7 @@ export default function TheoryLessons() {
                     type="date"
                     value={bulkDeleteData.endDate}
                     onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, endDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
                     required
                   />
                 </div>
@@ -1122,7 +1122,7 @@ export default function TheoryLessons() {
                 <select
                   value={bulkDeleteData.category}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 >
                   <option value="">בחר קטגוריה</option>
@@ -1155,7 +1155,7 @@ export default function TheoryLessons() {
                   placeholder="הזן מזהה מורה או שם"
                   value={bulkDeleteData.teacherId}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, teacherId: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -1168,13 +1168,13 @@ export default function TheoryLessons() {
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={cancelBulkDelete}
-              className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
             >
               ביטול
             </button>
             <button
               onClick={handleBulkDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               disabled={
                 (bulkDeleteType === 'date' && (!bulkDeleteData.startDate || !bulkDeleteData.endDate)) ||
                 (bulkDeleteType === 'category' && !bulkDeleteData.category) ||

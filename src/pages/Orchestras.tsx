@@ -290,14 +290,14 @@ export default function Orchestras() {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-50 border border-red-200 rounded p-4">
           <p className="text-red-800">{error}</p>
         </div>
       )}
 
       {/* View Mode Toggle + Sort Controls */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+        <div className="flex items-center border border-gray-200 rounded overflow-hidden">
           <button
             onClick={() => setViewMode('dashboard')}
             className={`p-2 text-sm ${viewMode === 'dashboard' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
@@ -326,7 +326,7 @@ export default function Orchestras() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
+              className="px-3 py-1.5 text-sm border border-gray-200 rounded"
             >
               <option value="name">מיון לפי שם</option>
               <option value="type">מיון לפי סוג</option>
@@ -337,7 +337,7 @@ export default function Orchestras() {
             </select>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
+              className="px-3 py-1.5 text-sm border border-gray-200 rounded hover:bg-gray-50"
             >
               {sortOrder === 'asc' ? '↑' : '↓'}
             </button>
@@ -359,7 +359,7 @@ export default function Orchestras() {
           <select
             value={filters.type}
             onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as OrchestraType | '' }))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
+            className="px-3 py-1.5 text-sm border border-gray-200 rounded"
           >
             <option value="">כל הסוגים</option>
             {VALID_ORCHESTRA_TYPES.map(type => (
@@ -369,7 +369,7 @@ export default function Orchestras() {
           <select
             value={filters.conductorId}
             onChange={(e) => setFilters(prev => ({ ...prev, conductorId: e.target.value }))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
+            className="px-3 py-1.5 text-sm border border-gray-200 rounded"
           >
             <option value="">כל המנצחים</option>
             {teachers.map((teacher: any) => (
@@ -379,7 +379,7 @@ export default function Orchestras() {
           <select
             value={filters.location}
             onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value as LocationType | '' }))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg"
+            className="px-3 py-1.5 text-sm border border-gray-200 rounded"
           >
             <option value="">כל המיקומים</option>
             {VALID_LOCATIONS.map(location => (

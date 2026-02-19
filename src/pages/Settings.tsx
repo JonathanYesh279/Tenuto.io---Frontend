@@ -150,7 +150,7 @@ export default function Settings() {
     <div className="p-6 max-w-4xl mx-auto" dir="rtl">
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+        <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
           <SettingsIcon className="w-5 h-5 text-primary" />
         </div>
         <div>
@@ -225,7 +225,7 @@ export default function Settings() {
                     ...prev,
                     director: { ...prev.director, teacherId: e.target.value },
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-right"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-right"
                 >
                   <option value="">-- בחר מורה --</option>
                   {teachers.map(t => (
@@ -315,7 +315,7 @@ export default function Settings() {
                     ...prev,
                     settings: { ...prev.settings, schoolStartMonth: Number(e.target.value) },
                   }))}
-                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent text-right"
+                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-right"
                 >
                   {MONTHS.map(m => (
                     <option key={m.value} value={m.value}>{m.label}</option>
@@ -331,7 +331,7 @@ export default function Settings() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Save className="w-4 h-4" />
             {saving ? 'שומר...' : 'שמור הגדרות'}

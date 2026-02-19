@@ -399,10 +399,10 @@ export default function Rehearsals() {
         
         <div className="flex items-center gap-3">
           {/* View Toggle */}
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex bg-gray-100 rounded p-1">
             <button
               onClick={() => setViewMode('calendar')}
-              className={`p-2 rounded-md transition-colors ${
+              className={`p-2 rounded transition-colors ${
                 viewMode === 'calendar'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-500 hover:text-gray-700'
@@ -412,7 +412,7 @@ export default function Rehearsals() {
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-md transition-colors ${
+              className={`p-2 rounded transition-colors ${
                 viewMode === 'list'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-500 hover:text-gray-700'
@@ -425,7 +425,7 @@ export default function Rehearsals() {
           <div className="flex gap-2">
             <button
               onClick={() => setShowBulkDeleteModal(true)}
-              className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               title="מחיקת חזרות בטווח תאריכים"
             >
               <Trash2 className="w-4 h-4 ml-1" />
@@ -434,7 +434,7 @@ export default function Rehearsals() {
             
             <button
               onClick={() => setShowCreateForm(true)}
-              className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
+              className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 ml-1" />
               חזרה חדשה
@@ -466,7 +466,7 @@ export default function Rehearsals() {
             {/* Toggle Filters */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
             >
               <Filter className="w-4 h-4 ml-1" />
               מסננים
@@ -484,7 +484,7 @@ export default function Rehearsals() {
             {/* Export */}
             <button
               onClick={handleExportRehearsals}
-              className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
             >
               <Download className="w-4 h-4 ml-1" />
               ייצא
@@ -492,7 +492,7 @@ export default function Rehearsals() {
 
             {/* Calendar View Toggle */}
             {viewMode === 'calendar' && (
-              <div className="flex bg-gray-100 rounded-lg p-1">
+              <div className="flex bg-gray-100 rounded p-1">
                 <button
                   onClick={() => setCalendarView('week')}
                   className={`px-3 py-1 text-sm rounded transition-colors ${
@@ -526,7 +526,7 @@ export default function Rehearsals() {
               <select
                 value={filters.orchestraId}
                 onChange={(e) => handleFilterChange('orchestraId', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל התזמורות</option>
                 {orchestras.map(orchestra => (
@@ -542,7 +542,7 @@ export default function Rehearsals() {
               <select
                 value={filters.dayOfWeek}
                 onChange={(e) => handleFilterChange('dayOfWeek', e.target.value ? parseInt(e.target.value) : '')}
-                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל הימים</option>
                 {DAYS_OF_WEEK_ARRAY.map(day => (
@@ -558,7 +558,7 @@ export default function Rehearsals() {
               <select
                 value={filters.location}
                 onChange={(e) => handleFilterChange('location', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל המיקומים</option>
                 {locations.map(location => (
@@ -574,7 +574,7 @@ export default function Rehearsals() {
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
               >
                 <option value="all">כל החזרות</option>
                 <option value="upcoming">עתידות</option>
@@ -589,7 +589,7 @@ export default function Rehearsals() {
                 type="date"
                 value={filters.startDate}
                 onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
               />
             </div>
 
@@ -599,7 +599,7 @@ export default function Rehearsals() {
                 type="date"
                 value={filters.endDate}
                 onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
               />
             </div>
 
@@ -652,7 +652,7 @@ export default function Rehearsals() {
                   setSortBy(sort as any)
                   setSortOrder(order as any)
                 }}
-                className="px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
+                className="px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
               >
                 <option value="date-asc">תאריך (עולה)</option>
                 <option value="date-desc">תאריך (יורד)</option>
@@ -770,7 +770,7 @@ export default function Rehearsals() {
         maxWidth="lg"
       >
         <div className="p-6">
-          <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
             <p className="text-yellow-800">
               ⚠️ פעולה זו תמחק את כל החזרות בטווח התאריכים שנבחר עבור התזמורת הנבחרת. 
               פעולה זו אינה ניתנת לביטול!
@@ -786,7 +786,7 @@ export default function Rehearsals() {
               <select
                 value={bulkDeleteData.orchestraId}
                 onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, orchestraId: e.target.value })}
-                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
                 required
               >
                 <option value="">בחר תזמורת</option>
@@ -808,7 +808,7 @@ export default function Rehearsals() {
                   type="date"
                   value={bulkDeleteData.startDate}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, startDate: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 />
               </div>
@@ -821,7 +821,7 @@ export default function Rehearsals() {
                   type="date"
                   value={bulkDeleteData.endDate}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, endDate: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 />
               </div>
@@ -831,13 +831,13 @@ export default function Rehearsals() {
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={cancelBulkDelete}
-              className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
             >
               ביטול
             </button>
             <button
               onClick={handleBulkDeleteByDateRange}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               disabled={!bulkDeleteData.orchestraId || !bulkDeleteData.startDate || !bulkDeleteData.endDate}
             >
               <Trash2 className="w-4 h-4 ml-2 inline" />

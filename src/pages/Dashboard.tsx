@@ -324,7 +324,7 @@ export default function Dashboard() {
         <button
           onClick={handleRefresh}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-card border border-border rounded-lg hover:bg-muted disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 text-sm bg-card border border-border rounded hover:bg-muted disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           רענן נתונים
@@ -332,14 +332,14 @@ export default function Dashboard() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-card border border-border rounded-lg mb-6 p-1 flex overflow-x-auto">
+      <div className="bg-card border border-border rounded mb-6 p-1 flex overflow-x-auto">
         {tabs.map(tab => {
           const Icon = tab.icon
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded transition-colors whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'bg-primary/10 text-primary'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -481,21 +481,21 @@ export default function Dashboard() {
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-foreground mb-4">סיכום שבועי</h3>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-primary/10 rounded">
                   <div className="flex items-center gap-3">
                     <Music className="w-5 h-5 text-primary" />
                     <span className="text-foreground/80">חזרות תזמורת</span>
                   </div>
                   <span className="text-xl font-bold text-primary">{stats.weeklyRehearsals}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded">
                   <div className="flex items-center gap-3">
                     <BookOpen className="w-5 h-5 text-muted-foreground" />
                     <span className="text-foreground/80">שיעורי תאוריה</span>
                   </div>
                   <span className="text-xl font-bold text-muted-foreground">{stats.theoryLessonsThisWeek}</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded">
                   <div className="flex items-center gap-3">
                     <GraduationCap className="w-5 h-5 text-muted-foreground" />
                     <span className="text-foreground/80">מורים פעילים</span>
@@ -592,7 +592,7 @@ function AdminHoursOverview({
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={onLoad}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
           >
             <RefreshCw className="w-4 h-4" />
             נסה שוב
@@ -609,7 +609,7 @@ function AdminHoursOverview({
         <button
           onClick={onRecalculateAll}
           disabled={isRecalculating}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-muted text-foreground border border-border rounded-lg hover:bg-muted/80 disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 text-sm bg-muted text-foreground border border-border rounded hover:bg-muted/80 disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
           {isRecalculating ? 'מחשב...' : 'חשב מחדש הכל'}

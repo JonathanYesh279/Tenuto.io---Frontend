@@ -256,7 +256,7 @@ export default function AuditTrail() {
                       setStartDate(e.target.value)
                       setAuditPage(1)
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-ring"
                   />
                 </div>
                 <div>
@@ -270,7 +270,7 @@ export default function AuditTrail() {
                       setEndDate(e.target.value)
                       setAuditPage(1)
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-ring"
                   />
                 </div>
                 <div>
@@ -283,7 +283,7 @@ export default function AuditTrail() {
                       setEntityType(e.target.value as any)
                       setAuditPage(1)
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-ring"
                   >
                     <option value="all">כל הסוגים</option>
                     <option value="teacher">מורה</option>
@@ -352,7 +352,7 @@ export default function AuditTrail() {
                     setActivityType(e.target.value as any)
                     setActivitiesPage(1)
                   }}
-                  className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-ring"
+                  className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-ring"
                 >
                   <option value="all">הכל</option>
                   <option value="rehearsals">חזרות</option>

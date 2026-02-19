@@ -349,7 +349,7 @@ export default function TheoryLessonDetails() {
         <p className="text-gray-600 mb-4">{error || 'שיעור תאוריה לא נמצא'}</p>
         <button
           onClick={() => navigate('/theories')}
-          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
           <ArrowRight className="w-4 h-4 ml-2" />
           חזור לרשימת שיעורי תאוריה
@@ -479,7 +479,7 @@ export default function TheoryLessonDetails() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate('/theories')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded transition-colors"
           >
             <ArrowRight className="w-5 h-5 text-gray-600" />
           </button>
@@ -503,7 +503,7 @@ export default function TheoryLessonDetails() {
           {hasLessonPassed && (
             <button
               onClick={() => setShowAttendance(true)}
-              className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded-lg hover:bg-green-50 transition-colors"
+              className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded hover:bg-green-50 transition-colors"
             >
               <Check className="w-4 h-4 ml-1" />
               נוכחות
@@ -511,14 +511,14 @@ export default function TheoryLessonDetails() {
           )}
           <button
             onClick={() => setShowEditForm(true)}
-            className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
           >
             <Edit className="w-4 h-4 ml-1" />
             ערוך
           </button>
           <button
             onClick={handleDeleteTheoryLesson}
-            className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded-lg hover:bg-red-50 transition-colors"
+            className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded hover:bg-red-50 transition-colors"
           >
             <Trash2 className="w-4 h-4 ml-1" />
             מחק
@@ -528,7 +528,7 @@ export default function TheoryLessonDetails() {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-50 border border-red-200 rounded p-4">
           <p className="text-red-800">{error}</p>
         </div>
       )}
@@ -668,7 +668,7 @@ export default function TheoryLessonDetails() {
               </h3>
               <button
                 onClick={() => setShowAddStudent(!showAddStudent)}
-                className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
+                className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
               >
                 <Plus className="w-4 h-4 ml-1" />
                 הוסף תלמיד
@@ -677,7 +677,7 @@ export default function TheoryLessonDetails() {
 
             {/* Add Student Section */}
             {showAddStudent && (
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+              <div className="mb-6 p-4 bg-gray-50 rounded border">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex-1">
                     <div className="relative">
@@ -687,7 +687,7 @@ export default function TheoryLessonDetails() {
                         placeholder="חיפוש תלמידים..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pr-10 pl-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+                        className="w-full pr-10 pl-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -696,7 +696,7 @@ export default function TheoryLessonDetails() {
                       setShowAddStudent(false)
                       setSearchQuery('')
                     }}
-                    className="px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100"
+                    className="px-3 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-100"
                   >
                     ביטול
                   </button>
@@ -739,7 +739,7 @@ export default function TheoryLessonDetails() {
                 <p className="text-gray-600 mb-4">התחל על ידי הוספת התלמיד הראשון</p>
                 <button
                   onClick={() => setShowAddStudent(true)}
-                  className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
                 >
                   <Plus className="w-4 h-4 ml-1" />
                   הוסף תלמיד ראשון
@@ -773,7 +773,7 @@ export default function TheoryLessonDetails() {
                   type="date"
                   value={attendanceDate}
                   onChange={(e) => setAttendanceDate(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2"
+                  className="border border-gray-300 rounded px-3 py-2"
                 />
               </div>
 
@@ -781,21 +781,21 @@ export default function TheoryLessonDetails() {
               <div className="mb-4 flex gap-2 flex-wrap">
                 <button
                   onClick={markAllPresent}
-                  className="px-3 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="px-3 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                 >
                   <Check className="w-4 h-4 inline ml-1" />
                   סמן הכל נוכח
                 </button>
                 <button
                   onClick={markAllAbsent}
-                  className="px-3 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  className="px-3 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                 >
                   <X className="w-4 h-4 inline ml-1" />
                   סמן הכל נעדר
                 </button>
                 <button
                   onClick={clearAllAttendance}
-                  className="px-3 py-2 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  className="px-3 py-2 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
                 >
                   נקה הכל
                 </button>
@@ -807,7 +807,7 @@ export default function TheoryLessonDetails() {
                   const isAbsent = tempAttendance.absent.includes(student._id)
                   
                   return (
-                    <div key={student._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={student._id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                       <div>
                         <div className="font-medium text-gray-900">{getDisplayName(student.personalInfo)}</div>
                         <div className="text-sm text-gray-500">כיתה {student.academicInfo?.class}</div>
@@ -842,13 +842,13 @@ export default function TheoryLessonDetails() {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleSaveAttendance}
-                  className="flex-1 bg-primary text-primary-foreground py-2 rounded-lg hover:bg-neutral-800 transition-colors"
+                  className="flex-1 bg-primary text-primary-foreground py-2 rounded hover:bg-neutral-800 transition-colors"
                 >
                   שמור נוכחות
                 </button>
                 <button
                   onClick={() => setShowAttendance(false)}
-                  className="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                  className="flex-1 bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400 transition-colors"
                 >
                   ביטול
                 </button>

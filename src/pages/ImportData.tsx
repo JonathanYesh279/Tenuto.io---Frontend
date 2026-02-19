@@ -185,7 +185,7 @@ export default function ImportData() {
     <div className="p-6 max-w-6xl mx-auto" dir="rtl">
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+        <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
           <Upload className="w-5 h-5 text-primary" />
         </div>
         <div>
@@ -198,7 +198,7 @@ export default function ImportData() {
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => handleTabChange('teachers')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded text-sm font-medium transition-colors ${
             activeTab === 'teachers'
               ? 'bg-muted text-primary border border-border'
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
@@ -209,7 +209,7 @@ export default function ImportData() {
         </button>
         <button
           onClick={() => handleTabChange('students')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded text-sm font-medium transition-colors ${
             activeTab === 'students'
               ? 'bg-muted text-primary border border-border'
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
@@ -243,7 +243,7 @@ export default function ImportData() {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onClick={() => fileInputRef.current?.click()}
-                className={`flex flex-col items-center justify-center py-16 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
+                className={`flex flex-col items-center justify-center py-16 border-2 border-dashed rounded cursor-pointer transition-colors ${
                   dragActive
                     ? 'border-primary bg-muted'
                     : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
@@ -376,7 +376,7 @@ export default function ImportData() {
           <div className="flex items-center justify-between">
             <button
               onClick={resetState}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               ביטול
@@ -384,7 +384,7 @@ export default function ImportData() {
             <button
               onClick={handleExecute}
               disabled={executing || previewData.preview.matched.length === 0}
-              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {executing ? (
                 <>
@@ -459,7 +459,7 @@ export default function ImportData() {
           <div className="flex justify-center pt-4 pb-8">
             <button
               onClick={resetState}
-              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded hover:bg-primary/90 transition-colors font-medium"
             >
               <Upload className="w-4 h-4" />
               ייבוא קובץ נוסף

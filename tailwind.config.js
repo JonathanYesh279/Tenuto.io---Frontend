@@ -67,14 +67,17 @@ export default {
           fg: "hsl(var(--color-theory-fg))",
         },
         // === Existing palettes with semantic tokens MERGED in ===
-        // Modern professional blue theme (inspired by InsideBox design)
+        // NOTE (Phase 22-01): primary-50 through primary-950 are hardcoded blue hex values.
+        // These are used by ~1,211 bg-primary-NNN classes across 134 files.
+        // DO NOT remove — migration to new palette deferred to Phase 22-03.
+        // primary.DEFAULT and primary.foreground read from CSS vars (--primary = 0 0% 0% = black).
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',
           300: '#93c5fd',
           400: '#60a5fa',
-          500: '#4F46E5', // Main brand blue
+          500: '#4F46E5', // Main brand blue (hardcoded — see note above)
           600: '#3b82f6',
           700: '#1d4ed8',
           800: '#1e40af',

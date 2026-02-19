@@ -156,7 +156,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
     <div className="p-6 space-y-6">
       {/* Success Message */}
       {saveSuccess && (
-        <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
+        <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded text-green-800">
           <CheckCircle className="w-5 h-5" />
           <span>הנתונים נשמרו בהצלחה!</span>
         </div>
@@ -164,7 +164,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
 
       {/* Error Message */}
       {saveError && (
-        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
+        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded text-red-800">
           <AlertCircle className="w-5 h-5" />
           <span>{saveError}</span>
         </div>
@@ -175,7 +175,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <Edit className="w-4 h-4" />
             ערוך
@@ -185,7 +185,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <>
@@ -202,7 +202,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
             <button
               onClick={handleCancel}
               disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <X className="w-4 h-4" />
               בטל
@@ -234,10 +234,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                       setFieldErrors({ ...fieldErrors, firstName: validateFirstName(e.target.value) })
                     }
                   }}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
                     fieldErrors.firstName
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary-500'
+                      : 'border-gray-300 focus:ring-primary'
                   }`}
                   placeholder="הכנס שם פרטי"
                 />
@@ -270,10 +270,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                       setFieldErrors({ ...fieldErrors, lastName: validateLastName(e.target.value) })
                     }
                   }}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
                     fieldErrors.lastName
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary-500'
+                      : 'border-gray-300 focus:ring-primary'
                   }`}
                   placeholder="הכנס שם משפחה"
                 />
@@ -306,10 +306,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                       setFieldErrors({ ...fieldErrors, phone: validatePhone(e.target.value) })
                     }
                   }}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
                     fieldErrors.phone
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary-500'
+                      : 'border-gray-300 focus:ring-primary'
                   }`}
                   placeholder="05XXXXXXXX"
                 />
@@ -342,10 +342,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                       setFieldErrors({ ...fieldErrors, email: validateEmail(e.target.value) })
                     }
                   }}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
                     fieldErrors.email
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary-500'
+                      : 'border-gray-300 focus:ring-primary'
                   }`}
                   placeholder="example@email.com"
                 />
@@ -377,10 +377,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                       setFieldErrors({ ...fieldErrors, address: validateAddress(e.target.value) })
                     }
                   }}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
                     fieldErrors.address
                       ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary-500'
+                      : 'border-gray-300 focus:ring-primary'
                   }`}
                   placeholder="הכנס כתובת מגורים"
                   rows={2}
@@ -462,11 +462,11 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
       </div>
 
       {/* Student Count Summary */}
-      <div className="bg-gray-50 rounded-lg p-4">
+      <div className="bg-muted/30 rounded p-4">
         <h3 className="text-md font-medium text-gray-700 mb-3">סיכום תלמידים</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary-600">
+            <div className="text-2xl font-bold text-primary">
               {teacher.studentCount || 0}
             </div>
             <div className="text-sm text-gray-600">סך התלמידים</div>

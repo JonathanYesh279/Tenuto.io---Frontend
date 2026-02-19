@@ -44,8 +44,8 @@ const TeacherTabNavigation: React.FC<TeacherTabNavigationProps> = ({
                 className={`
                   group inline-flex items-center gap-3 py-4 px-2 border-b-2 font-medium text-sm transition-all duration-300 relative tab-button
                   ${isActive
-                    ? 'border-primary-500 text-primary-600 bg-primary-50/50'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/50'
+                    ? 'border-primary text-primary bg-muted/50'
+                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border hover:bg-muted/50'
                   }
                 `}
                 aria-current={isActive ? 'page' : undefined}
@@ -54,15 +54,15 @@ const TeacherTabNavigation: React.FC<TeacherTabNavigationProps> = ({
                 }}
               >
                 <Icon className={`w-5 h-5 transition-all duration-300 ${
-                  isActive 
-                    ? 'text-primary-500 scale-110' 
-                    : 'text-gray-400 group-hover:text-gray-500 group-hover:scale-105'
+                  isActive
+                    ? 'text-primary scale-110'
+                    : 'text-muted-foreground group-hover:text-foreground group-hover:scale-105'
                 }`} />
                 <span className="whitespace-nowrap">
                   {config?.label || tab.label}
                 </span>
                 {isActive && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full animate-scale-in" />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full animate-scale-in" />
                 )}
               </button>
             )
@@ -84,10 +84,10 @@ const TeacherTabNavigation: React.FC<TeacherTabNavigationProps> = ({
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   className={`
-                    flex flex-col items-center gap-1 px-4 py-3 rounded-xl font-medium text-xs transition-all duration-300 whitespace-nowrap transform tab-button
+                    flex flex-col items-center gap-1 px-4 py-3 rounded font-medium text-xs transition-all duration-300 whitespace-nowrap transform tab-button
                     ${isActive
-                      ? 'bg-primary-100 text-primary-700 border-2 border-primary-200 scale-105 shadow-md'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 hover:scale-102 border-2 border-transparent'
+                      ? 'bg-muted text-foreground border-2 border-border scale-105 shadow-md'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted hover:scale-102 border-2 border-transparent'
                     }
                   `}
                   aria-current={isActive ? 'page' : undefined}
@@ -97,9 +97,9 @@ const TeacherTabNavigation: React.FC<TeacherTabNavigationProps> = ({
                   }}
                 >
                   <Icon className={`w-5 h-5 transition-all duration-300 ${
-                    isActive 
-                      ? 'text-primary-600' 
-                      : 'text-gray-500'
+                    isActive
+                      ? 'text-primary'
+                      : 'text-muted-foreground'
                   }`} />
                   <span className="leading-tight">
                     {config?.label || tab.label}
@@ -114,7 +114,7 @@ const TeacherTabNavigation: React.FC<TeacherTabNavigationProps> = ({
         <div className="flex justify-center py-1">
           <div className="w-8 h-1 bg-gray-200 rounded-full">
             <div 
-              className="h-full bg-primary-400 rounded-full transition-all duration-300"
+              className="h-full bg-primary rounded-full transition-all duration-300"
               style={{
                 width: `${tabs?.length > 0 ? ((tabs.findIndex(t => t.id === activeTab) + 1) / tabs.length * 100) : 0}%`
               }}

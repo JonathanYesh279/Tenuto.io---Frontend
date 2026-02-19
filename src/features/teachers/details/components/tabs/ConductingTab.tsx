@@ -227,7 +227,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
           <h3 className="text-lg font-medium text-gray-900">תזמורות</h3>
           <button
             onClick={() => setIsCreatingOrchestra(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
           >
             <Plus className="w-4 h-4" />
             צור תזמורת
@@ -235,7 +235,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
         </div>
 
         {orchestras.length === 0 ? (
-          <div className="text-center py-8 bg-purple-50 rounded-lg">
+          <div className="text-center py-8 bg-purple-50 rounded">
             <Music className="w-12 h-12 text-purple-400 mx-auto mb-4" />
             <h4 className="text-lg font-medium text-gray-900 mb-2">אין תזמורות</h4>
             <p className="text-gray-600 mb-4">
@@ -243,7 +243,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
             </p>
             <button
               onClick={() => setIsCreatingOrchestra(true)}
-              className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+              className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
             >
               צור תזמורת ראשונה
             </button>
@@ -253,7 +253,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
             {orchestras.map(orchestra => (
               <div
                 key={orchestra._id}
-                className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                className="bg-background border border-border rounded p-6 transition-colors hover:bg-muted/20"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -307,7 +307,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
           <h3 className="text-lg font-medium text-gray-900">אנסמבלים</h3>
           <button
             onClick={() => setIsCreatingEnsemble(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             <Plus className="w-4 h-4" />
             צור אנסמבל
@@ -315,7 +315,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
         </div>
 
         {ensembles.length === 0 ? (
-          <div className="text-center py-8 bg-blue-50 rounded-lg">
+          <div className="text-center py-8 bg-blue-50 rounded">
             <Award className="w-12 h-12 text-blue-400 mx-auto mb-4" />
             <h4 className="text-lg font-medium text-gray-900 mb-2">אין אנסמבלים</h4>
             <p className="text-gray-600 mb-4">
@@ -323,7 +323,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
             </p>
             <button
               onClick={() => setIsCreatingEnsemble(true)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
             >
               צור אנסמבל ראשון
             </button>
@@ -333,7 +333,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
             {ensembles.map(ensemble => (
               <div
                 key={ensemble._id}
-                className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                className="bg-background border border-border rounded p-6 transition-colors hover:bg-muted/20"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -385,7 +385,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
       {/* Create Orchestra Modal */}
       {isCreatingOrchestra && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-background rounded p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">צור תזמורת חדשה</h3>
             
             <div className="space-y-4">
@@ -397,7 +397,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                   type="text"
                   value={newOrchestra.name}
                   onChange={(e) => setNewOrchestra({ ...newOrchestra, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="הכנס שם תזמורת..."
                 />
               </div>
@@ -409,7 +409,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                 <textarea
                   value={newOrchestra.description}
                   onChange={(e) => setNewOrchestra({ ...newOrchestra, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="תיאור התזמורת..."
                   rows={3}
                 />
@@ -419,7 +419,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                 <button
                   onClick={handleCreateOrchestra}
                   disabled={!newOrchestra.name.trim()}
-                  className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:bg-gray-300"
+                  className="flex-1 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors disabled:bg-gray-300"
                 >
                   צור תזמורת
                 </button>
@@ -428,7 +428,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                     setIsCreatingOrchestra(false)
                     setNewOrchestra({ name: '', description: '' })
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-muted/80 transition-colors"
                 >
                   בטל
                 </button>
@@ -441,7 +441,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
       {/* Create Ensemble Modal */}
       {isCreatingEnsemble && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-background rounded p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">צור אנסמבל חדש</h3>
             
             <div className="space-y-4">
@@ -453,7 +453,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                   type="text"
                   value={newEnsemble.name}
                   onChange={(e) => setNewEnsemble({ ...newEnsemble, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="הכנס שם אנסמבל..."
                 />
               </div>
@@ -465,7 +465,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                 <select
                   value={newEnsemble.type}
                   onChange={(e) => setNewEnsemble({ ...newEnsemble, type: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">בחר סוג...</option>
                   <option value="קלאסי">קלאסי</option>
@@ -483,7 +483,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                 <textarea
                   value={newEnsemble.description}
                   onChange={(e) => setNewEnsemble({ ...newEnsemble, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="תיאור האנסמבל..."
                   rows={3}
                 />
@@ -493,7 +493,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                 <button
                   onClick={handleCreateEnsemble}
                   disabled={!newEnsemble.name.trim()}
-                  className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300"
+                  className="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:bg-gray-300"
                 >
                   צור אנסמבל
                 </button>
@@ -502,7 +502,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                     setIsCreatingEnsemble(false)
                     setNewEnsemble({ name: '', description: '', type: '' })
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-muted/80 transition-colors"
                 >
                   בטל
                 </button>

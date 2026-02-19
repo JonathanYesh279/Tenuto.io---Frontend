@@ -113,10 +113,10 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
     return (
       <div className="p-6 space-y-4">
         <div className="animate-pulse space-y-4">
-          <div className="h-24 bg-gray-200 rounded-lg"></div>
+          <div className="h-24 bg-muted rounded"></div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-20 bg-gray-200 rounded-lg"></div>
+              <div key={i} className="h-20 bg-muted rounded"></div>
             ))}
           </div>
         </div>
@@ -133,7 +133,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={fetchHoursSummary}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             נסה שוב
@@ -157,7 +157,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
             <button
               onClick={handleRecalculate}
               disabled={isRecalculating}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
               {isRecalculating ? 'מחשב...' : 'חשב שעות'}
@@ -215,7 +215,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
             <button
               onClick={handleRecalculate}
               disabled={isRecalculating}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-primary-50 text-primary-700 border border-primary-200 rounded-lg hover:bg-primary-100 transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-muted text-foreground border border-border rounded hover:bg-muted/80 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRecalculating ? 'animate-spin' : ''}`} />
               {isRecalculating ? 'מחשב...' : 'חשב מחדש'}
@@ -225,13 +225,13 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       </div>
 
       {/* Total hours — big card */}
-      <div className="bg-gradient-to-l from-primary-500 to-primary-600 rounded-xl p-6 text-white">
+      <div className="bg-primary rounded p-6 text-primary-foreground">
         <div className="flex items-center gap-3 mb-2">
-          <Clock className="w-6 h-6 text-primary-100" />
-          <span className="text-primary-100 font-medium">סה"כ ש"ש</span>
+          <Clock className="w-6 h-6 opacity-80" />
+          <span className="opacity-80 font-medium">סה"כ ש"ש</span>
         </div>
         <div className="text-4xl font-bold">{totals.totalWeeklyHours}</div>
-        <div className="text-primary-200 mt-1">שעות שבועיות</div>
+        <div className="opacity-70 mt-1">שעות שבועיות</div>
       </div>
 
       {/* Category breakdown — grid of small cards */}
@@ -241,7 +241,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
           return (
             <div
               key={cat.label}
-              className={`rounded-lg border p-4 ${colorMap[cat.color]}`}
+              className={`rounded border p-4 ${colorMap[cat.color]}`}
             >
               <div className="flex items-center gap-2 mb-2">
                 <Icon className={`w-4 h-4 ${iconColorMap[cat.color]}`} />
@@ -260,7 +260,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
             <Users className="w-4 h-4 text-blue-500" />
             פירוט תלמידים ({breakdown.students.length})
           </h3>
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-background border border-border rounded overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
@@ -294,7 +294,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
             <Music className="w-4 h-4 text-purple-500" />
             פירוט תזמורות ({breakdown.orchestras.length})
           </h3>
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-background border border-border rounded overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
@@ -328,7 +328,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
             <BookOpen className="w-4 h-4 text-green-500" />
             פירוט תיאוריה ({breakdown.theory.length})
           </h3>
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-background border border-border rounded overflow-hidden">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>

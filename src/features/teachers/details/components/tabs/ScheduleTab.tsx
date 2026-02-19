@@ -508,7 +508,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
         
         <div className="flex gap-4 text-sm">
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary-600">
+            <div className="text-2xl font-bold text-primary">
               {Math.round(totalWeeklyHours)}
             </div>
             <div className="text-gray-600">שעות שבועיות</div>
@@ -535,13 +535,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
       </div>
       
       {/* View Toggle */}
-      <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+      <div className="flex items-center justify-between bg-muted/30 p-3 rounded">
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowLegacyView(false)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
               !showLegacyView
-                ? 'bg-primary-500 text-white'
+                ? 'bg-primary text-primary-foreground'
                 : 'bg-white text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -549,9 +549,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
           </button>
           <button
             onClick={() => setShowLegacyView(true)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
               showLegacyView
-                ? 'bg-primary-500 text-white'
+                ? 'bg-primary text-primary-foreground'
                 : 'bg-white text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -587,7 +587,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
               {allTeachingDays.map((timeBlock, index) => (
                 <div
                   key={timeBlock._id || index}
-                  className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200"
+                  className="bg-white border border-gray-200 rounded p-6 transition-all duration-200"
                 >
                   {/* Header */}
                   <div className="flex items-center justify-between mb-4">
@@ -645,7 +645,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                   <div className="flex gap-2 pt-4 border-t border-gray-100">
                     <button
                       onClick={() => setSelectedTimeBlock(timeBlock)}
-                      className="flex-1 px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+                      className="flex-1 px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors font-medium"
                     >
                       <Edit className="w-4 h-4 inline-block ml-1" />
                       ערוך
@@ -653,7 +653,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                     <button
                       onClick={() => setDeleteConfirmation({timeBlock})}
                       disabled={isUpdating}
-                      className="flex-1 px-3 py-2 text-sm bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors font-medium disabled:opacity-50"
+                      className="flex-1 px-3 py-2 text-sm bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors font-medium disabled:opacity-50"
                     >
                       <Trash2 className="w-4 h-4 inline-block ml-1" />
                       {isUpdating ? 'מוחק...' : 'מחק'}
@@ -664,7 +664,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
             </div>
           ) : (
             /* Empty State */
-            <div className="bg-white rounded-xl border-2 border-dashed border-gray-200 p-12 text-center">
+            <div className="bg-background rounded border-2 border-dashed border-gray-200 p-12 text-center">
               <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <h3 className="text-xl font-medium text-gray-900 mb-2">אין ימי לימוד מוגדרים</h3>
               <p className="text-gray-600 mb-6">
@@ -672,7 +672,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
               </p>
               <button
                 onClick={() => setIsAddingTimeBlock(true)}
-                className="px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-medium"
+                className="px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors font-medium"
               >
                 הוסף יום לימוד ראשון
               </button>
@@ -684,7 +684,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
             <div className="flex justify-center">
               <button
                 onClick={() => setIsAddingTimeBlock(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-medium shadow-sm"
+                className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors font-medium"
               >
                 <Plus className="w-5 h-5" />
                 הוסף יום לימוד חדש
@@ -697,7 +697,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
       {/* Edit Teaching Day Modal */}
       {selectedTimeBlock && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+          <div className="bg-background rounded p-6 w-full max-w-lg">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-gray-900">
                 ערוך יום לימוד - {selectedTimeBlock.day}
@@ -721,7 +721,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                   <input
                     type="time"
                     defaultValue={selectedTimeBlock.startTime}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -731,7 +731,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                   <input
                     type="time"
                     defaultValue={selectedTimeBlock.endTime}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
               </div>
@@ -742,7 +742,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                 </label>
                 <select
                   defaultValue={selectedTimeBlock.location || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
+                  className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
                 >
                   <option value="">בחר מיקום...</option>
                   {VALID_LOCATIONS.map((location) => (
@@ -761,7 +761,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                   defaultValue={selectedTimeBlock.notes}
                   placeholder="הערות נוספות על יום הלימוד..."
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
@@ -770,7 +770,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                   type="checkbox"
                   id="isActive"
                   defaultChecked={selectedTimeBlock.isActive}
-                  className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                  className="w-4 h-4 text-foreground border-gray-300 rounded focus:ring-primary"
                 />
                 <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
                   יום לימוד פעיל (זמין לקביעת שיעורים)
@@ -780,7 +780,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
               <div className="flex gap-3 pt-6 border-t">
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-medium disabled:opacity-50"
+                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors font-medium disabled:opacity-50"
                   disabled={isUpdating}
                   onClick={async (e) => {
                     e.preventDefault()
@@ -857,7 +857,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
       
       {/* Calendar Legend */}
       {!showLegacyView && (
-        <div className="bg-gray-50 p-4 rounded-lg">
+        <div className="bg-muted/30 p-4 rounded">
           <h3 className="font-semibold text-gray-900 mb-3">מקרא</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <div className="flex items-center gap-2">
@@ -883,7 +883,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
       {/* Delete Confirmation Dialog */}
       {deleteConfirmation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6">
+          <div className="bg-background rounded max-w-md w-full mx-4 p-6">
             <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
               <AlertCircle className="w-6 h-6 text-red-600" />
             </div>
@@ -896,7 +896,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirmation(null)}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-muted transition-colors font-medium"
               >
                 ביטול
               </button>
@@ -930,7 +930,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                   }
                 }}
                 disabled={isUpdating}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors font-medium disabled:opacity-50"
               >
                 {isUpdating ? 'מוחק...' : 'מחק'}
               </button>

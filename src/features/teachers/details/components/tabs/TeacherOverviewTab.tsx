@@ -45,7 +45,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
   return (
     <div className="space-y-8">
       {/* Personal Information Card */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+      <div className="bg-muted/30 rounded p-6 border border-border">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <User className="w-5 h-5 text-blue-600" />
           פרטים אישיים
@@ -105,7 +105,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
       </div>
 
       {/* Professional Information Card */}
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
+      <div className="bg-muted/30 rounded p-6 border border-border">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Award className="w-5 h-5 text-green-600" />
           מידע מקצועי
@@ -164,7 +164,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
       </div>
 
       {/* Schedule Summary */}
-      <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-6 border border-purple-100">
+      <div className="bg-muted/30 rounded p-6 border border-border">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Calendar className="w-5 h-5 text-purple-600" />
           סיכום לוח זמנים
@@ -173,16 +173,16 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
         {teacher.teaching?.timeBlocks && teacher.teaching.timeBlocks.length > 0 ? (
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-white rounded-lg border">
-                <div className="text-2xl font-bold text-purple-600">{totalTimeBlocks}</div>
+              <div className="text-center p-4 bg-background rounded border border-border">
+                <div className="text-2xl font-bold text-foreground">{totalTimeBlocks}</div>
                 <div className="text-sm text-black font-semibold" style={{color: '#000000'}}>סך בלוקי זמן:</div>
               </div>
-              <div className="text-center p-4 bg-white rounded-lg border">
-                <div className="text-2xl font-bold text-green-600">{activeTimeBlocks}</div>
+              <div className="text-center p-4 bg-background rounded border border-border">
+                <div className="text-2xl font-bold text-foreground">{activeTimeBlocks}</div>
                 <div className="text-sm text-black font-semibold" style={{color: '#000000'}}>בלוקים פעילים:</div>
               </div>
-              <div className="text-center p-4 bg-white rounded-lg border">
-                <div className="text-2xl font-bold text-blue-600">{weeklyHours.toFixed(1)}</div>
+              <div className="text-center p-4 bg-background rounded border border-border">
+                <div className="text-2xl font-bold text-foreground">{weeklyHours.toFixed(1)}</div>
                 <div className="text-sm text-black font-semibold" style={{color: '#000000'}}>שעות בשבוע:</div>
               </div>
             </div>
@@ -193,7 +193,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
                 .filter(block => block.isActive)
                 .slice(0, 5)
                 .map((block, index) => (
-                  <div key={block._id || index} className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                  <div key={block._id || index} className="flex items-center justify-between p-3 bg-background rounded border border-border">
                     <div className="flex items-center space-x-3 space-x-reverse">
                       <Calendar className="w-4 h-4 text-purple-500" />
                       <span className="font-medium">{block.day}</span>
@@ -222,7 +222,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
 
       {/* Recent Students */}
       {totalStudents > 0 && (
-        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6 border border-orange-100">
+        <div className="bg-muted/30 rounded p-6 border border-border">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Users className="w-5 h-5 text-orange-600" />
             תלמידים ({totalStudents})
@@ -235,7 +235,7 @@ const TeacherOverviewTab: React.FC<TeacherOverviewTabProps> = ({
       )}
 
       {/* System Information */}
-      <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+      <div className="bg-muted/30 rounded p-6 border border-border">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">מידע מערכת</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

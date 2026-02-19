@@ -307,14 +307,14 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                 <button
                   onClick={handleAddMultipleMembers}
                   disabled={isAddingMultiple}
-                  className="flex items-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                  className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50"
                 >
                   <UserCheck className="w-4 h-4 ml-1" />
                   {isAddingMultiple ? 'מוסיף...' : `הוסף ${selectedStudentIds.size} חברים`}
                 </button>
                 <button
                   onClick={clearSelection}
-                  className="flex items-center px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center px-3 py-2 text-muted-foreground border border-border rounded hover:bg-muted transition-colors"
                 >
                   ביטול בחירה
                 </button>
@@ -322,7 +322,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
             )}
             <button
               onClick={() => setShowAddMember(!showAddMember)}
-              className="flex items-center px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 ml-1" />
               הוסף חבר
@@ -333,14 +333,14 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded">
           <p className="text-red-800 text-sm">{error}</p>
         </div>
       )}
 
       {/* Add Member Section */}
       {showAddMember && (
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+        <div className="mb-6 p-4 bg-muted/30 rounded border">
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-1">
               <div className="relative">
@@ -350,7 +350,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                   placeholder="חיפוש תלמידים לפי שם, כיתה או כלי..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
             </div>
@@ -358,14 +358,14 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
               <div className="flex gap-2">
                 <button
                   onClick={selectAllAvailableStudents}
-                  className="px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                  className="px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                 >
                   בחר הכל
                 </button>
                 {selectedStudentIds.size > 0 && (
                   <button
                     onClick={clearSelection}
-                    className="px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100"
+                    className="px-3 py-2 text-sm text-muted-foreground border border-border rounded hover:bg-gray-100"
                   >
                     בטל בחירה
                   </button>
@@ -378,14 +378,14 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                 setSearchQuery('')
                 clearSelection()
               }}
-              className="px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100"
+              className="px-3 py-2 text-muted-foreground border border-border rounded hover:bg-gray-100"
             >
               ביטול
             </button>
           </div>
           
           {selectedStudentIds.size > 0 && (
-            <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="mb-4 p-3 bg-blue-50 rounded border border-blue-200">
               <div className="flex items-center justify-between">
                 <span className="text-blue-800 font-medium">
                   נבחרו {selectedStudentIds.size} תלמידים
@@ -408,7 +408,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                 {filteredAvailableStudents.map((student) => {
                   const isSelected = selectedStudentIds.has(student._id)
                   return (
-                    <div key={student._id} className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                    <div key={student._id} className={`flex items-center justify-between p-3 rounded border transition-colors ${
                       isSelected ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'
                     }`}>
                       <div className="flex items-center flex-1">
@@ -456,10 +456,10 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
       {members.length > 0 ? (
         <div className="space-y-4">
           {members.map((member) => (
-            <div key={member._id} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+            <div key={member._id} className="flex items-center justify-between p-4 bg-background border border-border rounded">
               <div className="flex items-center flex-1">
-                <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center ml-3">
-                  <span className="text-sm text-primary-600">
+                <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center ml-3">
+                  <span className="text-sm text-primary">
                     {getDisplayName(member.personalInfo).charAt(0) || '?'}
                   </span>
                 </div>
@@ -481,7 +481,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
               <div className="flex gap-2">
                 <button
                   onClick={() => handleViewStudentProfile(member._id)}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
                   title="צפה בפרופיל"
                 >
                   <Eye className="w-4 h-4" />
@@ -489,7 +489,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                 {canEdit() && (
                   <button
                     onClick={() => handleRemoveMember(member._id, getDisplayName(member.personalInfo))}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
                     title="הסר מהתזמורת"
                   >
                     <UserMinus className="w-4 h-4" />
@@ -509,7 +509,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
           {canEdit() && (
             <button
               onClick={() => setShowAddMember(true)}
-              className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 ml-1" />
               הוסף חבר ראשון

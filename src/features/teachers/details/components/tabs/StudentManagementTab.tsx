@@ -371,7 +371,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
       <div className="flex justify-end">
         <button
           onClick={() => setIsAddingStudent(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all shadow-sm font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all shadow-sm font-medium"
         >
           <Plus className="w-4 h-4" />
           הוסף תלמיד
@@ -381,7 +381,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
       {/* Add Student Modal */}
       {isAddingStudent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 teacher-modal-backdrop">
-          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md transform transition-all teacher-modal-container">
+          <div className="bg-white rounded p-6 w-full max-w-md transform transition-all teacher-modal-container">
             <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">הוסף תלמיד חדש</h3>
             
             <div className="space-y-4">
@@ -408,7 +408,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                       onKeyDown={handleKeyDown}
                       onFocus={() => setShowDropdown(true)}
                       placeholder="הקלד שם תלמיד או כיתה..."
-                      className="w-full pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900 bg-white teacher-search-input"
+                      className="w-full pr-10 py-3 border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-white teacher-search-input"
                       style={{ paddingLeft: searchTerm ? '2.5rem' : '2.5rem' }}
                     />
                     {searchTerm ? (
@@ -427,7 +427,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
                   {/* Dropdown */}
                   {showDropdown && (
-                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto teacher-search-dropdown teacher-dropdown-enter">
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded shadow-lg max-h-60 overflow-y-auto teacher-search-dropdown teacher-dropdown-enter">
                       {filteredStudents.length > 0 ? (
                         <>
                           {filteredStudents.map((student, index) => (
@@ -435,8 +435,8 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                               key={student._id}
                               onClick={() => handleStudentSelect(student)}
                               className={`w-full text-right px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 teacher-search-option ${
-                                index === highlightedIndex ? 'bg-primary-50 text-primary-700 highlighted' : 'text-gray-900'
-                              } ${selectedStudentId === student._id ? 'bg-primary-100 text-primary-700 font-medium' : ''}`}
+                                index === highlightedIndex ? 'bg-muted text-foreground highlighted' : 'text-gray-900'
+                              } ${selectedStudentId === student._id ? 'bg-muted/80 text-foreground font-medium' : ''}`}
                             >
                               <div className="flex justify-between items-center">
                                 <span className="font-medium">
@@ -463,7 +463,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                 <button
                   onClick={handleAddStudent}
                   disabled={!selectedStudentId}
-                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed shadow-sm font-medium teacher-modal-button"
+                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed shadow-sm font-medium teacher-modal-button"
                 >
                   הוסף
                 </button>
@@ -472,7 +472,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                     setIsAddingStudent(false)
                     setSelectedStudentId('')
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all shadow-sm font-medium teacher-modal-button"
+                  className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-muted/80 focus:ring-2 focus:ring-border focus:ring-offset-2 transition-all font-medium teacher-modal-button"
                 >
                   בטל
                 </button>
@@ -485,13 +485,13 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
       {/* Schedule Lesson Modal */}
       {isSchedulingLesson && schedulingStudent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md transform transition-all">
+          <div className="bg-white rounded p-6 w-full max-w-md transform transition-all">
             <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">
               קביעת שיעור שבועי
             </h3>
             
             {/* Student Info */}
-            <div className="bg-blue-50 p-4 rounded-lg mb-6">
+            <div className="bg-blue-50 p-4 rounded mb-6">
               <h4 className="font-medium text-blue-900 mb-2">פרטי התלמיד</h4>
               <div className="text-sm text-blue-800">
                 <div><strong>שם:</strong> {getDisplayName(schedulingStudent.personalInfo)}</div>
@@ -509,7 +509,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                 <select
                   value={lessonData.day}
                   onChange={(e) => setLessonData(prev => ({ ...prev, day: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                   required
                 >
                   <option value="">בחר יום</option>
@@ -533,7 +533,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                     type="time"
                     value={lessonData.startTime}
                     onChange={(e) => setLessonData(prev => ({ ...prev, startTime: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                     required
                   />
                 </div>
@@ -544,7 +544,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                   <select
                     value={lessonData.duration}
                     onChange={(e) => setLessonData(prev => ({ ...prev, duration: Number(e.target.value) }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                   >
                     <option value={30}>30 דקות</option>
                     <option value={45}>45 דקות</option>
@@ -557,7 +557,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
               <div className="flex gap-3 pt-6 border-t">
                 <button
                   onClick={handleSaveLesson}
-                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium"
                 >
                   קבע שיעור
                 </button>
@@ -567,7 +567,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                     setSchedulingStudent(null)
                     setLessonData({ day: '', startTime: '', duration: 30 })
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium"
+                  className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-muted/80 transition-colors font-medium"
                 >
                   ביטול
                 </button>
@@ -579,7 +579,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
       {/* Students List */}
       {students.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <div className="text-center py-12 bg-muted/30 rounded">
           <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">אין תלמידים משויכים</h3>
           <p className="text-gray-600 mb-4">
@@ -587,7 +587,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
           </p>
           <button
             onClick={() => setIsAddingStudent(true)}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all shadow-sm font-medium"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all shadow-sm font-medium"
           >
             הוסף תלמיד ראשון
           </button>
@@ -597,7 +597,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
           {students.map(student => (
             <div
               key={student._id}
-              className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+              className="bg-background border border-border rounded p-4 transition-colors hover:bg-muted/20"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -622,7 +622,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                   {!studentsWithLessons[student._id] && (
                     <button
                       onClick={() => handleScheduleLesson(student)}
-                      className="px-3 py-1 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-all shadow-sm font-medium flex items-center gap-1"
+                      className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-all font-medium flex items-center gap-1"
                     >
                       <BookOpen className="w-4 h-4" />
                       קבע שיעור
@@ -631,13 +631,13 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                   
                   <button
                     onClick={() => window.location.href = `/students/${student._id}`}
-                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all shadow-sm font-medium"
+                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all font-medium"
                   >
                     צפה בפרטים
                   </button>
                   <button
                     onClick={() => handleRemoveStudent(student._id)}
-                    className="px-3 py-1 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all shadow-sm font-medium flex items-center gap-1"
+                    className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all font-medium flex items-center gap-1"
                   >
                     <Trash2 className="w-4 h-4" />
                     הסר
@@ -651,7 +651,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
       {/* Schedule Overview for Students */}
       {students.length > 0 && (
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="bg-muted/30 rounded p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             סקירת לוח זמנים
@@ -659,7 +659,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {teacher.teaching?.timeBlocks?.map((timeBlock, index) => (
-              <div key={timeBlock._id || index} className="bg-white rounded-lg p-4 border">
+              <div key={timeBlock._id || index} className="bg-background rounded p-4 border border-border">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-gray-900">{timeBlock.day}</span>
                   <span className="text-sm text-gray-600 flex items-center gap-1">

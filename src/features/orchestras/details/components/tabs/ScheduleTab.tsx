@@ -112,7 +112,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
         </h3>
         <button
           onClick={() => window.open('/rehearsals', '_blank')}
-          className="flex items-center px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
           <Plus className="w-4 h-4 ml-1" />
           הוסף חזרה
@@ -121,7 +121,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded">
           <p className="text-red-800 text-sm">{error}</p>
         </div>
       )}
@@ -137,7 +137,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
             return (
               <div 
                 key={rehearsal._id} 
-                className={`p-4 border rounded-lg ${
+                className={`p-4 border rounded ${
                   isUpcoming 
                     ? 'bg-blue-50 border-blue-200' 
                     : 'bg-white border-gray-200'
@@ -211,7 +211,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
                     {!isUpcoming && rehearsal.attendance && (
                       <button
                         onClick={() => window.open(`/rehearsals/${rehearsal._id}`, '_blank')}
-                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                        className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors"
                         title="צפה בנוכחות"
                       >
                         <UserCheck className="w-4 h-4" />
@@ -219,7 +219,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
                     )}
                     <button
                       onClick={() => window.open(`/rehearsals/${rehearsal._id}`, '_blank')}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
                       title="צפה בפרטים"
                     >
                       <Eye className="w-4 h-4" />
@@ -237,7 +237,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
           <p className="text-gray-600 mb-4">התחל על ידי הוספת החזרה הראשונה</p>
           <button
             onClick={() => window.open('/rehearsals', '_blank')}
-            className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <Plus className="w-4 h-4 ml-1" />
             הוסף חזרה ראשונה
@@ -247,7 +247,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
 
       {/* Summary Statistics */}
       {rehearsals.length > 0 && (
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        <div className="mt-8 p-4 bg-muted/30 rounded">
           <h4 className="font-medium text-gray-900 mb-3">סיכום סטטיסטי</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>

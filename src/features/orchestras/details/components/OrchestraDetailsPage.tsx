@@ -72,14 +72,14 @@ const OrchestraDetailsPage: React.FC = () => {
         <div className="flex gap-3">
           <button
             onClick={() => navigate('/orchestras')}
-            className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <ArrowRight className="w-4 h-4 ml-2" />
             חזור לרשימת תזמורות
           </button>
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
             <RefreshCw className="w-4 h-4 ml-2" />
             נסה שוב
@@ -100,7 +100,7 @@ const OrchestraDetailsPage: React.FC = () => {
         </p>
         <button
           onClick={() => navigate('/orchestras')}
-          className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+          className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
           <ArrowRight className="w-4 h-4 ml-2" />
           חזור לרשימת תזמורות
@@ -119,14 +119,14 @@ const OrchestraDetailsPage: React.FC = () => {
         <div className="flex gap-3">
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
             <RefreshCw className="w-4 h-4 ml-2" />
             נסה שוב
           </button>
           <button
             onClick={() => navigate('/orchestras')}
-            className="flex items-center px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
             <ArrowRight className="w-4 h-4 ml-2" />
             חזור לרשימת תזמורות
@@ -141,7 +141,7 @@ const OrchestraDetailsPage: React.FC = () => {
     return (
       <div className="space-y-6 p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <div className="text-gray-600">טוען פרטי תזמורת...</div>
         </div>
       </div>
@@ -172,18 +172,18 @@ const OrchestraDetailsPage: React.FC = () => {
       />
 
       {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full overflow-hidden">
+      <div className="bg-background border border-border w-full overflow-hidden">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as OrchestraTabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6">
-            <TabsTrigger value="personal" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+            <TabsTrigger value="personal" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
               <Info className="h-4 w-4" />
               פרטי תזמורת
             </TabsTrigger>
-            <TabsTrigger value="members" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+            <TabsTrigger value="members" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
               <Users className="h-4 w-4" />
               חברי תזמורת
             </TabsTrigger>
-            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
               <Calendar className="h-4 w-4" />
               לוח זמנים
             </TabsTrigger>

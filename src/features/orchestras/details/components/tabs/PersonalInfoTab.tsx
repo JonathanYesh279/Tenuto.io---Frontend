@@ -143,7 +143,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
         {canEdit() && !isEditing ? (
           <button
             onClick={handleEdit}
-            className="flex items-center px-3 py-2 text-primary-600 border border-primary-300 rounded-lg hover:bg-primary-50 transition-colors"
+            className="flex items-center px-3 py-2 text-primary border border-border rounded hover:bg-muted transition-colors"
           >
             <Edit className="w-4 h-4 ml-1" />
             ערוך
@@ -153,14 +153,14 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="flex items-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+              className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50"
             >
               <Save className="w-4 h-4 ml-1" />
               {isSaving ? 'שומר...' : 'שמור'}
             </button>
             <button
               onClick={handleCancel}
-              className="flex items-center px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center px-3 py-2 text-muted-foreground border border-border rounded hover:bg-muted transition-colors"
             >
               <X className="w-4 h-4 ml-1" />
               ביטול
@@ -171,7 +171,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded">
           <p className="text-red-800 text-sm">{error}</p>
         </div>
       )}
@@ -189,7 +189,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
                 type="text"
                 value={editedData?.name || ''}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             ) : (
               <div className="flex items-center">
@@ -207,7 +207,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               <select
                 value={editedData?.type || ''}
                 onChange={(e) => handleInputChange('type', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">בחר סוג הרכב</option>
                 <option value="הרכב">הרכב</option>
@@ -229,7 +229,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               <select
                 value={editedData?.location || ''}
                 onChange={(e) => handleInputChange('location', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">בחר מיקום</option>
                 {VALID_LOCATIONS.map(location => (
@@ -255,7 +255,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               <select
                 value={editedData?.conductorId || ''}
                 onChange={(e) => handleInputChange('conductorId', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="">בחר מנצח</option>
                 {teachers

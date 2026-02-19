@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -157,21 +158,30 @@ export default {
           800: '#1f2937',
           900: '#111827',
           950: '#030712',
-        }
+        },
+        // v4.0 Chart color tokens for dashboard visualizations
+        'chart-blue': '#BAE6FD',
+        'chart-yellow': '#FDE047',
+        'chart-purple': '#C7D2FE',
+        // v4.0 Dark mode background tokens
+        'background-light': '#f8fafc',
+        'background-dark': '#0f172a',
+        'sidebar-light': '#ffffff',
+        'sidebar-dark': '#1e293b',
       },
       fontFamily: {
-        // Hebrew-optimized font stack — Heebo primary, Reisinger fallback
+        // Hebrew-optimized font stack — v4.0: Assistant primary, Plus Jakarta Sans, Reisinger fallback
         sans: [
-          'Heebo',
+          'Assistant',
+          'Plus Jakarta Sans',
           'Reisinger Yonatan',
-          'Arial Hebrew',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
           'sans-serif'
         ],
         // Utility alias for explicit Hebrew font use
-        hebrew: ['Heebo', 'Arial Hebrew', 'Noto Sans Hebrew', 'sans-serif'],
+        hebrew: ['Assistant', 'Arial Hebrew', 'Noto Sans Hebrew', 'sans-serif'],
         // Music notation fonts
         music: [
           'Bravura',
@@ -206,7 +216,12 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        DEFAULT: '12px',
+        'xl': '18px',
+        '2xl': '24px',
+        '3xl': '32px',
         '4xl': '2rem',
+        'full': '9999px',
       },
       boxShadow: {
         'soft': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',

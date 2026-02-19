@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Search, X, Clock, Users, GraduationCap, BookOpen, Music, Calendar, Filter } from 'lucide-react'
+
 import { Link } from 'react-router-dom'
+import { BookOpenIcon, CalendarIcon, ClockIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MusicNotesIcon, UsersIcon, XIcon } from '@phosphor-icons/react'
 
 interface SearchResult {
   id: string
@@ -29,46 +30,46 @@ interface GlobalSearchProps {
   autoFocus?: boolean
 }
 
-// Search categories with Hebrew labels
+// MagnifyingGlassIcon categories with Hebrew labels
 const searchCategories: SearchCategory[] = [
   {
     key: 'all',
     label: 'הכל',
-    icon: Search,
+    icon: MagnifyingGlassIcon,
     placeholder: 'חפש תלמידים, מורים, שיעורים, תזמורות...'
   },
   {
     key: 'students',
     label: 'תלמידים',
-    icon: Users,
+    icon: UsersIcon,
     placeholder: 'חפש תלמיד לפי שם, כיתה או כלי נגינה...',
     filters: ['class', 'instrument', 'stage']
   },
   {
     key: 'teachers',
     label: 'מורים',
-    icon: GraduationCap,
+    icon: GraduationCapIcon,
     placeholder: 'חפש מורה לפי שם או התמחות...',
     filters: ['specialization', 'employment']
   },
   {
     key: 'lessons',
     label: 'שיעורים',
-    icon: BookOpen,
+    icon: BookOpenIcon,
     placeholder: 'חפש שיעור לפי נושא, מורה או תלמיד...',
     filters: ['subject', 'day', 'time']
   },
   {
     key: 'orchestras',
     label: 'תזמורות',
-    icon: Music,
+    icon: MusicNotesIcon,
     placeholder: 'חפש תזמורת לפי שם או סוג...',
     filters: ['type', 'level']
   },
   {
     key: 'rehearsals',
     label: 'חזרות',
-    icon: Calendar,
+    icon: CalendarIcon,
     placeholder: 'חפש חזרה לפי תאריך או תזמורת...',
     filters: ['date', 'orchestra']
   }
@@ -128,7 +129,7 @@ const performSearch = async (query: string, category: string, filters: Record<st
     }
   ]
   
-  // Filter by category and query
+  // FunnelIcon by category and query
   return mockResults.filter(result => {
     if (category !== 'all' && result.type !== category.slice(0, -1)) {
       return false
@@ -146,14 +147,14 @@ const performSearch = async (query: string, category: string, filters: Record<st
 // Icons for different result types
 const getResultIcon = (type: SearchResult['type']) => {
   const icons = {
-    student: Users,
-    teacher: GraduationCap,
-    lesson: BookOpen,
-    orchestra: Music,
-    rehearsal: Calendar,
-    room: Search
+    student: UsersIcon,
+    teacher: GraduationCapIcon,
+    lesson: BookOpenIcon,
+    orchestra: MusicNotesIcon,
+    rehearsal: CalendarIcon,
+    room: MagnifyingGlassIcon
   }
-  return icons[type] || Search
+  return icons[type] || MagnifyingGlassIcon
 }
 
 // Status colors for different result types
@@ -203,7 +204,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
           setResults(searchResults)
           setShowResults(true)
         } catch (error) {
-          console.error('Search error:', error)
+          console.error('MagnifyingGlassIcon error:', error)
           setResults([])
         } finally {
           setIsLoading(false)
@@ -260,17 +261,17 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
   
   return (
     <div ref={searchRef} className={`relative ${className}`} dir="rtl">
-      {/* Search Input */}
+      {/* MagnifyingGlassIcon Input */}
       <div className="relative">
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2 space-x-reverse">
-          <Search className="w-4 h-4 text-gray-400" />
+          <MagnifyingGlassIcon className="w-4 h-4 text-gray-400" />
           {variant === 'page' && (
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
               title="מסננים"
             >
-              <Filter className="w-4 h-4" />
+              <FunnelIcon className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -283,7 +284,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={() => setShowResults(true)}
           placeholder={currentCategory.placeholder}
-          className={`w-full pr-12 pl-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-reisinger-yonatan text-right rtl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+          className={`w-full pr-12 pl-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-reisinger-yonatan text-right rtl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent ${
             variant === 'page' ? 'py-3' : ''
           }`}
         />
@@ -293,7 +294,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
             onClick={clearSearch}
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <X className="w-4 h-4" />
+            <XIcon className="w-4 h-4" />
           </button>
         )}
       </div>
@@ -309,7 +310,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                 onClick={() => setCategory(cat.key)}
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   category === cat.key
-                    ? 'bg-primary-100 text-primary-700'
+                    ? 'bg-muted text-primary'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
@@ -321,12 +322,12 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
         </div>
       )}
       
-      {/* Search Results */}
+      {/* MagnifyingGlassIcon Results */}
       {showResults && (query || category !== 'all') && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
           {isLoading ? (
             <div className="p-4 text-center">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500 mx-auto"></div>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
               <p className="text-sm text-gray-500 mt-2">מחפש...</p>
             </div>
           ) : results.length > 0 ? (
@@ -382,7 +383,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
             </div>
           ) : query ? (
             <div className="p-4 text-center">
-              <Search className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <MagnifyingGlassIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <p className="text-sm text-gray-500">לא נמצאו תוצאות עבור "{query}"</p>
               <p className="text-xs text-gray-400 mt-1">נסה חיפוש עם מילים אחרות</p>
             </div>
@@ -397,7 +398,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({
                       onClick={() => setQuery(search)}
                       className="flex items-center w-full px-2 py-1 text-sm text-gray-600 hover:bg-gray-50 rounded transition-colors text-right"
                     >
-                      <Clock className="w-4 h-4 ml-2 text-gray-400" />
+                      <ClockIcon className="w-4 h-4 ml-2 text-gray-400" />
                       {search}
                     </button>
                   ))}
@@ -427,7 +428,7 @@ export const useSearch = () => {
       setResults(searchResults)
       return searchResults
     } catch (error) {
-      console.error('Search error:', error)
+      console.error('MagnifyingGlassIcon error:', error)
       setResults([])
       return []
     } finally {

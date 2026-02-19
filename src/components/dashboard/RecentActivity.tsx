@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { 
-  Users, 
-  GraduationCap, 
-  BookOpen, 
-  Calendar, 
-  UserPlus, 
-  UserCheck, 
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Music,
-  Star
-} from 'lucide-react'
+import { BookOpenIcon, CalendarIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, MusicNotesIcon, StarIcon, UserCircleCheckIcon, UserPlusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
+
 
 interface ActivityItem {
   id: string
@@ -160,19 +149,19 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
 
   const getActivityIcon = (type: string) => {
     const icons = {
-      student_added: <UserPlus className="w-5 h-5 text-green-500" />,
-      teacher_added: <GraduationCap className="w-5 h-5 text-blue-500" />,
-      lesson_scheduled: <BookOpen className="w-5 h-5 text-purple-500" />,
-      rehearsal_scheduled: <Calendar className="w-5 h-5 text-orange-500" />,
-      test_completed: <CheckCircle className="w-5 h-5 text-green-600" />,
-      attendance_recorded: <UserCheck className="w-5 h-5 text-blue-600" />,
-      stage_completed: <Star className="w-5 h-5 text-yellow-500" />,
-      achievement_earned: <Star className="w-5 h-5 text-yellow-600" />,
-      lesson_cancelled: <AlertTriangle className="w-5 h-5 text-red-500" />,
-      teacher_assigned: <Users className="w-5 h-5 text-indigo-500" />
+      student_added: <UserPlusIcon className="w-5 h-5 text-green-500" />,
+      teacher_added: <GraduationCapIcon className="w-5 h-5 text-blue-500" />,
+      lesson_scheduled: <BookOpenIcon className="w-5 h-5 text-purple-500" />,
+      rehearsal_scheduled: <CalendarIcon className="w-5 h-5 text-orange-500" />,
+      test_completed: <CheckCircleIcon className="w-5 h-5 text-green-600" />,
+      attendance_recorded: <UserCircleCheckIcon className="w-5 h-5 text-blue-600" />,
+      stage_completed: <StarIcon className="w-5 h-5 text-yellow-500" />,
+      achievement_earned: <StarIcon className="w-5 h-5 text-yellow-600" />,
+      lesson_cancelled: <WarningIcon className="w-5 h-5 text-red-500" />,
+      teacher_assigned: <UsersIcon className="w-5 h-5 text-indigo-500" />
     }
     
-    return icons[type as keyof typeof icons] || <Clock className="w-5 h-5 text-gray-500" />
+    return icons[type as keyof typeof icons] || <ClockIcon className="w-5 h-5 text-gray-500" />
   }
 
   const getPriorityColor = (priority: string) => {
@@ -240,7 +229,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
     return (
       <div className={`bg-white rounded-lg border border-red-200 p-6 ${className}`} dir="rtl">
         <div className="text-center">
-          <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-2" />
+          <WarningIcon className="w-8 h-8 text-red-500 mx-auto mb-2" />
           <div className="text-red-700 font-reisinger-yonatan">{error}</div>
           <button
             onClick={fetchActivities}
@@ -307,7 +296,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
       <div className="divide-y divide-gray-100">
         {filteredActivities.length === 0 ? (
           <div className="p-8 text-center">
-            <Music className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <MusicNotesIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 font-reisinger-yonatan">
               {filter === 'all' ? 'אין פעילות אחרונה' : `אין פעילות אחרונה בקטגוריה ${
                 filter === 'students' ? 'תלמידים' :
@@ -371,7 +360,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
         <div className="p-4 border-t border-gray-200 text-center">
           <button
             onClick={() => window.location.href = '/activity'}
-            className="text-sm text-primary-600 hover:text-primary-800 font-reisinger-yonatan"
+            className="text-sm text-primary hover:text-primary font-reisinger-yonatan"
           >
             הצג את כל הפעילות
           </button>

@@ -1,5 +1,5 @@
-import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
-import { Loader } from 'lucide-react'
+import { CircleNotchIcon, MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
+
 import { cn } from '@/lib/utils'
 
 interface SearchInputProps {
@@ -16,7 +16,7 @@ export function SearchInput({ value, onChange, onClear, placeholder, className, 
     <div className={cn('relative', className)}>
       <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
         {isLoading
-          ? <Loader className="w-4 h-4 text-muted-foreground animate-spin" />
+          ? <CircleNotchIcon className="w-4 h-4 text-muted-foreground animate-spin" />
           : <MagnifyingGlassIcon className="w-4 h-4 text-muted-foreground" weight="regular" />
         }
       </span>

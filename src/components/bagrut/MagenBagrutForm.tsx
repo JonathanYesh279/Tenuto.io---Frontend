@@ -4,8 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar, Users, Link, Award, CheckCircle } from 'lucide-react';
+
 import { DetailedGrading, MagenBagrut } from '@/types/bagrut.types';
+import { CalendarIcon, CheckCircleIcon, LinkIcon, MedalIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface MagenBagrutFormProps {
   magenBagrut?: MagenBagrut;
@@ -148,7 +149,7 @@ export const MagenBagrutForm: React.FC<MagenBagrutFormProps> = ({
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-900 flex items-center">
-          <Award className="w-6 h-6 ml-3 text-gold-600" />
+          <MedalIcon className="w-6 h-6 ml-3 text-gold-600" />
           מגן בגרות - השמעה סופית
         </h3>
         <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -163,7 +164,7 @@ export const MagenBagrutForm: React.FC<MagenBagrutFormProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div>
           <Label htmlFor="magen-date" className="text-right block mb-2 font-semibold">
-            <Calendar className="w-4 h-4 inline ml-2" />
+            <CalendarIcon className="w-4 h-4 inline ml-2" />
             תאריך מגן הבגרות
           </Label>
           <Input
@@ -178,7 +179,7 @@ export const MagenBagrutForm: React.FC<MagenBagrutFormProps> = ({
 
         <div>
           <Label htmlFor="magen-reviewedBy" className="text-right block mb-2 font-semibold">
-            <Users className="w-4 h-4 inline ml-2" />
+            <UsersIcon className="w-4 h-4 inline ml-2" />
             ועדת הבוחנים
           </Label>
           <Input
@@ -357,7 +358,7 @@ export const MagenBagrutForm: React.FC<MagenBagrutFormProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div>
           <Label className="text-right block mb-2 font-semibold">
-            <Link className="w-4 h-4 inline ml-2" />
+            <LinkIcon className="w-4 h-4 inline ml-2" />
             קישורי הקלטות למגן
           </Label>
           <div className="space-y-2">
@@ -440,12 +441,12 @@ export const MagenBagrutForm: React.FC<MagenBagrutFormProps> = ({
           >
             {formData.completed ? (
               <>
-                <CheckCircle className="w-4 h-4 ml-2" />
+                <CheckCircleIcon className="w-4 h-4 ml-2" />
                 בטל השלמת מגן
               </>
             ) : (
               <>
-                <Award className="w-4 h-4 ml-2" />
+                <MedalIcon className="w-4 h-4 ml-2" />
                 השלם מגן בגרות
               </>
             )}

@@ -6,19 +6,11 @@
  */
 
 import React from 'react'
-import { 
-  Loader2, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  AlertTriangle,
-  Pause,
-  Play,
-  Square
-} from 'lucide-react'
+
 import { DeletionOperation } from './types'
 import { ProgressBar, StepProgress } from '../feedback/ProgressIndicators'
 import { Card } from '../ui/Card'
+import { CheckCircleIcon, CircleNotchIcon, ClockIcon, PauseIcon, PlayIcon, SquareIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface DeletionProgressTrackerProps {
   operation: DeletionOperation
@@ -38,14 +30,14 @@ const DeletionProgressTracker: React.FC<DeletionProgressTrackerProps> = ({
   const getStatusIcon = () => {
     switch (operation.status) {
       case 'completed':
-        return <CheckCircle className="w-6 h-6 text-green-500" />
+        return <CheckCircleIcon className="w-6 h-6 text-green-500" />
       case 'failed':
       case 'cancelled':
-        return <XCircle className="w-6 h-6 text-red-500" />
+        return <XCircleIcon className="w-6 h-6 text-red-500" />
       case 'running':
-        return <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
+        return <CircleNotchIcon className="w-6 h-6 text-blue-500 animate-spin" />
       default:
-        return <Clock className="w-6 h-6 text-gray-500" />
+        return <ClockIcon className="w-6 h-6 text-gray-500" />
     }
   }
 
@@ -165,7 +157,7 @@ const DeletionProgressTracker: React.FC<DeletionProgressTrackerProps> = ({
                   onClick={onPause}
                   className="flex items-center gap-1 px-3 py-1 text-sm text-yellow-600 bg-yellow-50 border border-yellow-200 rounded hover:bg-yellow-100 transition-colors"
                 >
-                  <Pause className="w-4 h-4" />
+                  <PauseIcon className="w-4 h-4" />
                   <span className="font-reisinger-yonatan">השהה</span>
                 </button>
               )}
@@ -174,7 +166,7 @@ const DeletionProgressTracker: React.FC<DeletionProgressTrackerProps> = ({
                   onClick={onCancel}
                   className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 bg-red-50 border border-red-200 rounded hover:bg-red-100 transition-colors"
                 >
-                  <Square className="w-4 h-4" />
+                  <SquareIcon className="w-4 h-4" />
                   <span className="font-reisinger-yonatan">ביטול</span>
                 </button>
               )}
@@ -186,7 +178,7 @@ const DeletionProgressTracker: React.FC<DeletionProgressTrackerProps> = ({
               onClick={onResume}
               className="flex items-center gap-1 px-3 py-1 text-sm text-green-600 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors"
             >
-              <Play className="w-4 h-4" />
+              <PlayIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">התחל</span>
             </button>
           )}
@@ -221,7 +213,7 @@ const DeletionProgressTracker: React.FC<DeletionProgressTrackerProps> = ({
         {operation.error && (
           <div className="bg-red-50 border border-red-200 rounded p-4">
             <div className="flex items-center gap-2 text-red-700 mb-2">
-              <AlertTriangle className="w-5 h-5" />
+              <WarningIcon className="w-5 h-5" />
               <span className="font-semibold font-reisinger-yonatan">שגיאה</span>
             </div>
             <p className="text-sm text-red-600 font-reisinger-yonatan">
@@ -234,7 +226,7 @@ const DeletionProgressTracker: React.FC<DeletionProgressTrackerProps> = ({
         {operation.status === 'completed' && (
           <div className="bg-green-50 border border-green-200 rounded p-4">
             <div className="flex items-center gap-2 text-green-700">
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircleIcon className="w-5 h-5" />
               <span className="font-semibold font-reisinger-yonatan">
                 המחיקה הושלמה בהצלחה
               </span>
@@ -251,7 +243,7 @@ const DeletionProgressTracker: React.FC<DeletionProgressTrackerProps> = ({
         {operation.status === 'cancelled' && (
           <div className="bg-orange-50 border border-orange-200 rounded p-4">
             <div className="flex items-center gap-2 text-orange-700">
-              <XCircle className="w-5 h-5" />
+              <XCircleIcon className="w-5 h-5" />
               <span className="font-semibold font-reisinger-yonatan">
                 התהליך בוטל
               </span>

@@ -6,7 +6,8 @@
 import React, { useState, useEffect } from 'react';
 import { DonutChart, BarChart, ProgressRingChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type BagrutProgressData } from '../../../services/enhancedDashboardAnalytics';
-import { Award, CheckCircle, Clock, AlertCircle, Calendar, User, TrendingUp } from 'lucide-react';
+import { CalendarIcon, CheckCircleIcon, ClockIcon, MedalIcon, TrendUpIcon, UserIcon, WarningCircleIcon } from '@phosphor-icons/react'
+
 
 interface BagrutProgressDashboardProps {
   schoolYearId?: string;
@@ -51,7 +52,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
     return (
       <div className={`p-6 ${className}`} dir="rtl">
         <div className="text-center py-8 text-gray-500">
-          <Award className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <MedalIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
           <p>אין נתוני בגרויות זמינים</p>
         </div>
       </div>
@@ -112,7 +113,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
           {/* Title */}
           <div className="flex items-center gap-3">
             <div className="p-3 bg-amber-100 rounded">
-              <Award className="w-8 h-8 text-amber-600" />
+              <MedalIcon className="w-8 h-8 text-amber-600" />
             </div>
             <div>
               <h3 className="text-xl font-bold text-gray-900">מעקב בגרויות</h3>
@@ -124,21 +125,21 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
           <div className="flex gap-4">
             <div className="text-center px-4 py-2 bg-green-50 rounded">
               <div className="flex items-center gap-1 justify-center">
-                <CheckCircle className="w-4 h-4 text-green-600" />
+                <CheckCircleIcon className="w-4 h-4 text-green-600" />
                 <span className="text-2xl font-bold text-green-600">{data.completedCount}</span>
               </div>
               <p className="text-xs text-gray-600">הושלמו</p>
             </div>
             <div className="text-center px-4 py-2 bg-amber-50 rounded">
               <div className="flex items-center gap-1 justify-center">
-                <Clock className="w-4 h-4 text-amber-600" />
+                <ClockIcon className="w-4 h-4 text-amber-600" />
                 <span className="text-2xl font-bold text-amber-600">{data.inProgressCount}</span>
               </div>
               <p className="text-xs text-gray-600">בתהליך</p>
             </div>
             <div className="text-center px-4 py-2 bg-gray-50 rounded">
               <div className="flex items-center gap-1 justify-center">
-                <AlertCircle className="w-4 h-4 text-gray-500" />
+                <WarningCircleIcon className="w-4 h-4 text-gray-500" />
                 <span className="text-2xl font-bold text-gray-600">{data.notStartedCount}</span>
               </div>
               <p className="text-xs text-gray-600">טרם התחילו</p>
@@ -250,7 +251,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
               <div className="mt-6 p-4 bg-gradient-to-l from-amber-50 to-amber-100 rounded">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-amber-600" />
+                    <TrendUpIcon className="w-5 h-5 text-amber-600" />
                     <span className="text-gray-700">ציון ממוצע</span>
                   </div>
                   <span className="text-3xl font-bold text-amber-600">
@@ -262,7 +263,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
           ) : (
             <div className="h-48 flex items-center justify-center text-gray-500">
               <div className="text-center">
-                <Award className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                <MedalIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
                 <p>אין ציונים זמינים</p>
               </div>
             </div>
@@ -286,7 +287,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
                   className="flex items-center gap-4 p-3 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
                 >
                   <div className="p-2 bg-amber-100 rounded">
-                    <Calendar className="w-5 h-5 text-amber-600" />
+                    <CalendarIcon className="w-5 h-5 text-amber-600" />
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">{exam.studentName}</p>
@@ -300,7 +301,7 @@ const BagrutProgressDashboard: React.FC<BagrutProgressDashboardProps> = ({
             </div>
           ) : (
             <div className="text-center py-8 text-gray-500">
-              <Calendar className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+              <CalendarIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
               <p>אין בחינות מתוכננות</p>
             </div>
           )}

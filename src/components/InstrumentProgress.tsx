@@ -1,6 +1,7 @@
 import React from 'react'
-import { Music, Award, Calendar, Star, Edit, Trash2 } from 'lucide-react'
+
 import { Card } from './ui/Card'
+import { CalendarIcon, MedalIcon, MusicNotesIcon, PencilIcon, StarIcon, TrashIcon } from '@phosphor-icons/react'
 
 interface InstrumentProgress {
   instrumentName: string
@@ -90,7 +91,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
           <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
             <div className="flex items-center space-x-2 space-x-reverse">
               {instrument.isPrimary && (
-                <Star className="w-4 h-4 text-yellow-500" />
+                <StarIcon className="w-4 h-4 text-yellow-500" />
               )}
               <span className="text-sm font-medium">{instrument.instrumentName}</span>
               <span className={`
@@ -108,7 +109,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                     onClick={() => onEdit(index)}
                     className="p-1 text-gray-400 hover:text-blue-600 rounded"
                   >
-                    <Edit className="w-3 h-3" />
+                    <PencilIcon className="w-3 h-3" />
                   </button>
                 )}
                 {onDelete && instruments.length > 1 && (
@@ -116,7 +117,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                     onClick={() => onDelete(index)}
                     className="p-1 text-gray-400 hover:text-red-600 rounded"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <TrashIcon className="w-3 h-3" />
                   </button>
                 )}
               </div>
@@ -135,7 +136,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3 space-x-reverse">
-                <Music className="w-5 h-5 text-gray-400" />
+                <MusicNotesIcon className="w-5 h-5 text-gray-400" />
                 <div>
                   <div className="flex items-center space-x-2 space-x-reverse">
                     <h3 className="text-lg font-semibold text-gray-900">
@@ -143,7 +144,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                     </h3>
                     {instrument.isPrimary && (
                       <div className="flex items-center space-x-1 space-x-reverse">
-                        <Star className="w-4 h-4 text-yellow-500" />
+                        <StarIcon className="w-4 h-4 text-yellow-500" />
                         <span className="text-xs text-yellow-600 font-medium">כלי ראשי</span>
                       </div>
                     )}
@@ -158,7 +159,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                       onClick={() => onEdit(index)}
                       className="p-2 text-gray-400 hover:text-blue-600 rounded hover:bg-blue-50"
                     >
-                      <Edit className="w-4 h-4" />
+                      <PencilIcon className="w-4 h-4" />
                     </button>
                   )}
                   {onDelete && instruments.length > 1 && (
@@ -166,7 +167,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                       onClick={() => onDelete(index)}
                       className="p-2 text-gray-400 hover:text-red-600 rounded hover:bg-red-50"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   )}
                 </div>
@@ -203,7 +204,7 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
             {showTests && (
               <div className="space-y-3">
                 <h4 className="text-sm font-medium text-gray-700 flex items-center space-x-2 space-x-reverse">
-                  <Award className="w-4 h-4" />
+                  <MedalIcon className="w-4 h-4" />
                   <span>תוצאות בחינות</span>
                 </h4>
 
@@ -222,14 +223,14 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                     
                     {instrument.tests.stageTest.lastTestDate && (
                       <div className="flex items-center space-x-2 space-x-reverse text-xs text-gray-600 mb-1">
-                        <Calendar className="w-3 h-3" />
+                        <CalendarIcon className="w-3 h-3" />
                         <span>בחינה אחרונה: {formatDate(instrument.tests.stageTest.lastTestDate)}</span>
                       </div>
                     )}
                     
                     {instrument.tests.stageTest.nextTestDate && (
                       <div className="flex items-center space-x-2 space-x-reverse text-xs text-blue-600">
-                        <Calendar className="w-3 h-3" />
+                        <CalendarIcon className="w-3 h-3" />
                         <span>בחינה הבאה: {formatDate(instrument.tests.stageTest.nextTestDate)}</span>
                       </div>
                     )}
@@ -253,14 +254,14 @@ const InstrumentProgress: React.FC<InstrumentProgressProps> = ({
                     
                     {instrument.tests.technicalTest.lastTestDate && (
                       <div className="flex items-center space-x-2 space-x-reverse text-xs text-gray-600 mb-1">
-                        <Calendar className="w-3 h-3" />
+                        <CalendarIcon className="w-3 h-3" />
                         <span>בחינה אחרונה: {formatDate(instrument.tests.technicalTest.lastTestDate)}</span>
                       </div>
                     )}
                     
                     {instrument.tests.technicalTest.nextTestDate && (
                       <div className="flex items-center space-x-2 space-x-reverse text-xs text-blue-600">
-                        <Calendar className="w-3 h-3" />
+                        <CalendarIcon className="w-3 h-3" />
                         <span>בחינה הבאה: {formatDate(instrument.tests.technicalTest.nextTestDate)}</span>
                       </div>
                     )}

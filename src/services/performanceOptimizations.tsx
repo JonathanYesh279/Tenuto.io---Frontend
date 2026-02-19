@@ -115,7 +115,7 @@ export const SkeletonComponents = {
       {/* Cards grid skeleton */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
+          <div key={i} className="bg-white rounded border border-gray-200 p-6 animate-pulse">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -153,7 +153,7 @@ export const SkeletonComponents = {
   OrchestraList: () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[1, 2, 3].map(i => (
-        <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
+        <div key={i} className="bg-white rounded border border-gray-200 p-6 animate-pulse">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 bg-gray-200 rounded"></div>
             <div className="h-6 bg-gray-200 rounded w-2/3"></div>

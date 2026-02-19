@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Users, TrendingUp, Award, Clock } from 'lucide-react'
+
 import StatCard, { ProgressStatCard } from './StatCard'
 import { VALID_CLASSES, VALID_INSTRUMENTS } from '../../utils/validationUtils'
+import { ClockIcon, MedalIcon, TrendUpIcon, UsersIcon } from '@phosphor-icons/react'
 
 // Mock API functions - in real app, these would call actual backend APIs
 const mockStudentAPI = {
@@ -156,7 +157,7 @@ const StudentStatistics: React.FC<StudentStatisticsProps> = ({
           title="סך הכל תלמידים"
           value={studentStats?.totalStudents || 0}
           subtitle={`פעילים: ${studentStats?.activeStudents || 0}`}
-          icon={<Users className="w-6 h-6" />}
+          icon={<UsersIcon className="w-6 h-6" />}
           trend={
             studentStats?.newStudentsThisMonth > 0 ? {
               value: Math.round((studentStats.newStudentsThisMonth / studentStats.totalStudents) * 100),
@@ -178,7 +179,7 @@ const StudentStatistics: React.FC<StudentStatisticsProps> = ({
           title="תלמידים חדשים"
           value={studentStats?.newStudentsThisMonth || 0}
           subtitle="החודש"
-          icon={<TrendingUp className="w-6 h-6" />}
+          icon={<TrendUpIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
         />
@@ -188,7 +189,7 @@ const StudentStatistics: React.FC<StudentStatisticsProps> = ({
           title="בוגרים השנה"
           value={studentStats?.graduatedThisYear || 0}
           subtitle="הושלמו כל השלבים"
-          icon={<Award className="w-6 h-6" />}
+          icon={<MedalIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
         />
@@ -198,7 +199,7 @@ const StudentStatistics: React.FC<StudentStatisticsProps> = ({
           title="נוכחות ממוצעת"
           value={`${studentStats?.averageAttendance || 0}%`}
           subtitle="כל התלמידים"
-          icon={<Clock className="w-6 h-6" />}
+          icon={<ClockIcon className="w-6 h-6" />}
           trend={studentStats?.attendanceTrend}
           loading={loading}
           error={error}

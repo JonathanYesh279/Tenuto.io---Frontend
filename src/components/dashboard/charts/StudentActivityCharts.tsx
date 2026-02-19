@@ -6,7 +6,8 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, DonutChart, LineChart, ProgressRingChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type AttendanceStats } from '../../../services/enhancedDashboardAnalytics';
-import { Users, TrendingUp, Calendar, Music, BookOpen, Award } from 'lucide-react';
+import { BookOpenIcon, CalendarIcon, MedalIcon, MusicNotesIcon, TrendUpIcon, UsersIcon } from '@phosphor-icons/react'
+
 
 interface StudentActivityChartsProps {
   schoolYearId?: string;
@@ -108,28 +109,28 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
       label: 'תלמידים פעילים',
       value: summary?.students?.active || 0,
       trend: summary?.students?.trend || 0,
-      icon: <Users className="w-5 h-5" />,
+      icon: <UsersIcon className="w-5 h-5" />,
       color: '#3B82F6'
     },
     {
       label: 'נוכחות תזמורות',
       value: summary?.rehearsals?.avgAttendance || 0,
       trend: 0,
-      icon: <Music className="w-5 h-5" />,
+      icon: <MusicNotesIcon className="w-5 h-5" />,
       color: '#10B981'
     },
     {
       label: 'נוכחות תאוריה',
       value: summary?.theoryLessons?.avgAttendance || 0,
       trend: 0,
-      icon: <BookOpen className="w-5 h-5" />,
+      icon: <BookOpenIcon className="w-5 h-5" />,
       color: '#8B5CF6'
     },
     {
       label: 'בגרויות פעילות',
       value: summary?.bagrut?.active || 0,
       trend: 0,
-      icon: <Award className="w-5 h-5" />,
+      icon: <MedalIcon className="w-5 h-5" />,
       color: '#F59E0B'
     }
   ];
@@ -204,7 +205,7 @@ const StudentActivityCharts: React.FC<StudentActivityChartsProps> = ({
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900">מגמת נוכחות כללית</h3>
             <div className="flex items-center space-x-2 space-x-reverse">
-              <TrendingUp className={`w-4 h-4 ${
+              <TrendUpIcon className={`w-4 h-4 ${
                 getTrendDirection() === 'up' ? 'text-green-500' :
                 getTrendDirection() === 'down' ? 'text-red-500' : 'text-gray-400'
               }`} />

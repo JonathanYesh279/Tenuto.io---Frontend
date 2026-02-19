@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Clock } from 'lucide-react'
+
 import { validateTime, ValidationResult } from '../../utils/validationUtils'
 import ValidationIndicator from '../ui/ValidationIndicator'
+import { ClockIcon } from '@phosphor-icons/react'
 
 interface TimeInputProps {
   value: string
@@ -176,9 +177,9 @@ const TimeInput: React.FC<TimeInputProps> = ({
       )}
       
       <div className="relative">
-        {/* Clock icon */}
+        {/* ClockIcon icon */}
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-          <Clock className="w-4 h-4 text-gray-400" />
+          <ClockIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Input field */}

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDown, ChevronUp, Calendar, Check } from 'lucide-react'
+
 import { useSchoolYear } from '../services/schoolYearContext'
+import { CalendarIcon, CaretDownIcon, CaretUpIcon, CheckIcon } from '@phosphor-icons/react'
 
 export default function SchoolYearSelector() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -34,7 +35,7 @@ export default function SchoolYearSelector() {
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg">
-        <Calendar className="w-4 h-4 text-gray-400" />
+        <CalendarIcon className="w-4 h-4 text-gray-400" />
         <div className="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
       </div>
     )
@@ -48,8 +49,8 @@ export default function SchoolYearSelector() {
         className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 ease-in-out min-w-[200px]"
         style={{ direction: 'rtl' }}
       >
-        {/* Calendar Icon */}
-        <Calendar className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+        {/* CalendarIcon Icon */}
+        <CalendarIcon className="w-4 h-4 text-indigo-600 flex-shrink-0" />
         
         {/* School Year Text */}
         <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan flex-grow text-right truncate">
@@ -58,9 +59,9 @@ export default function SchoolYearSelector() {
         
         {/* Dropdown Arrow */}
         {isDropdownOpen ? (
-          <ChevronUp className="w-4 h-4 text-gray-500 flex-shrink-0" />
+          <CaretUpIcon className="w-4 h-4 text-gray-500 flex-shrink-0" />
         ) : (
-          <ChevronDown className="w-4 h-4 text-gray-500 flex-shrink-0" />
+          <CaretDownIcon className="w-4 h-4 text-gray-500 flex-shrink-0" />
         )}
       </button>
 
@@ -127,7 +128,7 @@ export default function SchoolYearSelector() {
 
                       {/* Selected Indicator */}
                       {isSelected && (
-                        <Check className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+                        <CheckIcon className="w-4 h-4 text-indigo-600 flex-shrink-0" />
                       )}
                     </button>
                   )

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { X, AlertTriangle, Shield, Database, Clock, CheckCircle, XCircle, Loader } from 'lucide-react'
+
 import { cascadeDeletionService } from '../services/cascadeDeletionService'
+import { CheckCircleIcon, CircleNotchIcon, ClockIcon, DatabaseIcon, ShieldIcon, WarningIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface SafeDeleteModalProps {
   isOpen: boolean
@@ -60,11 +61,11 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <Shield className="w-6 h-6 text-orange-600" />
+            <ShieldIcon className="w-6 h-6 text-orange-600" />
             <h2 className="text-xl font-semibold text-gray-900">מחיקה מאובטחת</h2>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -72,7 +73,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
           {/* Student Info */}
           <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded">
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-orange-600" />
+              <WarningIcon className="w-5 h-5 text-orange-600" />
               <span className="font-medium text-orange-900">
                 מחיקת התלמיד: {studentName}
               </span>
@@ -84,7 +85,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
 
           {loading && (
             <div className="flex items-center justify-center py-8">
-              <Loader className="w-6 h-6 animate-spin text-primary" />
+              <CircleNotchIcon className="w-6 h-6 animate-spin text-primary" />
               <span className="ml-2 text-gray-600">טוען תצוגה מקדימה...</span>
             </div>
           )}
@@ -92,7 +93,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded">
               <div className="flex items-center gap-2">
-                <XCircle className="w-5 h-5 text-red-600" />
+                <XCircleIcon className="w-5 h-5 text-red-600" />
                 <span className="font-medium text-red-900">שגיאה</span>
               </div>
               <p className="text-sm text-red-700 mt-1">{error}</p>
@@ -128,7 +129,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                   'bg-green-50 border-green-200'
                 }`}>
                   <div className="flex items-center gap-2">
-                    <Database className={`w-5 h-5 ${
+                    <DatabaseIcon className={`w-5 h-5 ${
                       preview.summary?.riskLevel === 'high' ? 'text-red-600' :
                       preview.summary?.riskLevel === 'medium' ? 'text-yellow-600' :
                       'text-green-600'
@@ -151,7 +152,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                   <div className="space-y-2">
                     {preview.summary.affectedCollections.map((collection: string, index: number) => (
                       <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <CheckCircleIcon className="w-4 h-4 text-green-600" />
                         <span className="text-sm">{collection}</span>
                       </div>
                     ))}
@@ -166,7 +167,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
                   <div className="space-y-2">
                     {preview.warnings.map((warning: string, index: number) => (
                       <div key={index} className="flex items-start gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                        <AlertTriangle className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <WarningIcon className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
                         <span className="text-sm text-yellow-800">{warning}</span>
                       </div>
                     ))}
@@ -255,7 +256,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Clock className="w-4 h-4" />
+            <ClockIcon className="w-4 h-4" />
             <span>המחיקה תחל לאחר אישור</span>
           </div>
           
@@ -272,7 +273,7 @@ const SafeDeleteModal: React.FC<SafeDeleteModalProps> = ({
               disabled={loading || !preview?.canProceed}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Shield className="w-4 h-4" />
+              <ShieldIcon className="w-4 h-4" />
               מחק באופן מאובטח
             </button>
           </div>

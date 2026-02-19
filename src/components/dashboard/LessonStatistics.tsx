@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { BookOpen, Calendar, Clock, TrendingUp, Users, AlertCircle } from 'lucide-react'
+
 import StatCard, { ProgressStatCard } from './StatCard'
 import { VALID_DAYS } from '../../utils/validationUtils'
+import { BookOpenIcon, CalendarIcon, ClockIcon, TrendUpIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 // Mock API functions for lesson data
 const mockLessonAPI = {
@@ -178,7 +179,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
           title="שיעורים השבוע"
           value={lessonStats?.totalLessonsThisWeek || 0}
           subtitle={`היום: ${(lessonStats?.completedLessonsToday || 0) + (lessonStats?.upcomingLessonsToday || 0)}`}
-          icon={<BookOpen className="w-6 h-6" />}
+          icon={<BookOpenIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
           onClick={() => window.location.href = '/lessons'}
@@ -193,7 +194,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
           title="נוכחות ממוצעת"
           value={`${lessonStats?.averageAttendanceRate || 0}%`}
           subtitle="כל השיעורים"
-          icon={<Users className="w-6 h-6" />}
+          icon={<UsersIcon className="w-6 h-6" />}
           trend={lessonStats?.attendanceTrend}
           loading={loading}
           error={error}
@@ -204,7 +205,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
           title="שיעורים היום"
           value={lessonStats?.upcomingLessonsToday || 0}
           subtitle={`הושלמו: ${lessonStats?.completedLessonsToday || 0}`}
-          icon={<Clock className="w-6 h-6" />}
+          icon={<ClockIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
         />
@@ -214,7 +215,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
           title="ניצול קיבולת"
           value={`${lessonStats?.capacityUtilization || 0}%`}
           subtitle="מתוך זמני ההוראה הזמינים"
-          icon={<TrendingUp className="w-6 h-6" />}
+          icon={<TrendUpIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
         />
@@ -368,7 +369,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
           title="בחינות קרובות"
           value={upcomingTests.length}
           subtitle="השבוע הקרוב"
-          icon={<Calendar className="w-6 h-6" />}
+          icon={<CalendarIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
           chart={
@@ -420,7 +421,7 @@ const LessonStatistics: React.FC<LessonStatisticsProps> = ({
           value={lessonStats?.cancelledLessonsThisWeek || 0}
           subtitle={`אחוז ביטולים: ${lessonStats?.totalLessonsThisWeek > 0 ? 
             Math.round((lessonStats.cancelledLessonsThisWeek / lessonStats.totalLessonsThisWeek) * 100) : 0}%`}
-          icon={lessonStats?.cancelledLessonsThisWeek > 10 ? <AlertCircle className="w-6 h-6 text-red-500" /> : <Calendar className="w-6 h-6" />}
+          icon={lessonStats?.cancelledLessonsThisWeek > 10 ? <WarningCircleIcon className="w-6 h-6 text-red-500" /> : <CalendarIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
         />

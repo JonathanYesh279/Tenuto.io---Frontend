@@ -1,11 +1,12 @@
 import React, { useState, useCallback } from 'react'
-import { Music, TrendingUp, Users, Calendar, AlertTriangle, BarChart3 } from 'lucide-react'
+
 import StudentStatistics from './StudentStatistics'
 import TeacherStatistics from './TeacherStatistics'
 import LessonStatistics from './LessonStatistics'
 import RecentActivity from './RecentActivity'
 import DashboardRefresh, { useDashboardRefresh } from './DashboardRefresh'
 import { BarChart, DonutChart, LineChart, ProgressRingChart, GaugeChart } from '../charts/HebrewCharts'
+import { CalendarIcon, ChartBarIcon, MusicNotesIcon, TrendUpIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface DashboardTab {
   id: string
@@ -60,25 +61,25 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
     {
       id: 'overview',
       label: 'סקירה כללית',
-      icon: BarChart3,
+      icon: ChartBarIcon,
       component: () => <OverviewDashboard data={overviewData} refreshTrigger={refreshTrigger} />
     },
     {
       id: 'students',
       label: 'תלמידים',
-      icon: Users,
+      icon: UsersIcon,
       component: () => <StudentStatistics key={refreshTrigger} />
     },
     {
       id: 'teachers',
       label: 'מורים',
-      icon: TrendingUp,
+      icon: TrendUpIcon,
       component: () => <TeacherStatistics key={refreshTrigger} />
     },
     {
       id: 'lessons',
       label: 'שיעורים',
-      icon: Calendar,
+      icon: CalendarIcon,
       component: () => <LessonStatistics key={refreshTrigger} />
     }
   ]
@@ -94,7 +95,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
           <div className="flex items-center justify-between h-16">
             {/* Title */}
             <div className="flex items-center">
-              <Music className="w-8 h-8 text-primary ml-3" />
+              <MusicNotesIcon className="w-8 h-8 text-primary ml-3" />
               <div>
                 <h1 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
                   לוח הבקרה
@@ -143,7 +144,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
       {error && (
         <div className="bg-red-50 border border-red-200 p-4 m-4 rounded-lg">
           <div className="flex items-center">
-            <AlertTriangle className="w-5 h-5 text-red-500 ml-2" />
+            <WarningIcon className="w-5 h-5 text-red-500 ml-2" />
             <span className="text-red-700 font-reisinger-yonatan">{error}</span>
             <button
               onClick={refresh}
@@ -205,7 +206,7 @@ const OverviewDashboard: React.FC<{
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">סך הכל תלמידים</p>
               <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.totalStudents}</p>
             </div>
-            <Users className="w-8 h-8 text-blue-500" />
+            <UsersIcon className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
@@ -215,7 +216,7 @@ const OverviewDashboard: React.FC<{
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">סך הכל מורים</p>
               <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.totalTeachers}</p>
             </div>
-            <TrendingUp className="w-8 h-8 text-green-500" />
+            <TrendUpIcon className="w-8 h-8 text-green-500" />
           </div>
         </div>
 
@@ -225,7 +226,7 @@ const OverviewDashboard: React.FC<{
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">שיעורים השבוע</p>
               <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.weeklyLessons}</p>
             </div>
-            <Calendar className="w-8 h-8 text-purple-500" />
+            <CalendarIcon className="w-8 h-8 text-purple-500" />
           </div>
         </div>
 
@@ -235,7 +236,7 @@ const OverviewDashboard: React.FC<{
               <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">נוכחות ממוצעת</p>
               <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.attendanceRate}%</p>
             </div>
-            <BarChart3 className="w-8 h-8 text-orange-500" />
+            <ChartBarIcon className="w-8 h-8 text-orange-500" />
           </div>
         </div>
       </div>

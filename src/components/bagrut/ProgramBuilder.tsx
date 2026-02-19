@@ -1,17 +1,7 @@
 import { useState } from 'react'
-import { 
-  Music, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Save, 
-  X, 
-  Clock,
-  User,
-  ExternalLink,
-  PlayCircle
-} from 'lucide-react'
+
 import { Card } from '../ui/Card'
+import { ArrowSquareOutIcon, ClockIcon, FloppyDiskIcon, MusicNotesIcon, PencilIcon, PlayCircleIcon, PlusIcon, TrashIcon, UserIcon, XIcon } from '@phosphor-icons/react'
 
 interface Piece {
   pieceTitle: string
@@ -214,7 +204,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                 </h3>
                 
                 <div className="flex items-center text-gray-600 mb-2">
-                  <User className="w-4 h-4 mr-1" />
+                  <UserIcon className="w-4 h-4 mr-1" />
                   <span className="text-sm">{piece.composer}</span>
                   {piece.movement && (
                     <>
@@ -225,7 +215,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                 </div>
                 
                 <div className="flex items-center text-gray-500 text-sm mb-3">
-                  <Clock className="w-4 h-4 mr-1" />
+                  <ClockIcon className="w-4 h-4 mr-1" />
                   {piece.duration}
                 </div>
                 
@@ -236,9 +226,9 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-red-600 hover:text-red-800 text-sm"
                   >
-                    <PlayCircle className="w-4 h-4 mr-1" />
+                    <PlayCircleIcon className="w-4 h-4 mr-1" />
                     צפה ב-YouTube
-                    <ExternalLink className="w-3 h-3 mr-1" />
+                    <ArrowSquareOutIcon className="w-3 h-3 mr-1" />
                   </a>
                 )}
               </div>
@@ -254,13 +244,13 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                     disabled={!editData?.pieceTitle || !editData?.composer || !editData?.duration}
                     className="p-2 text-green-600 hover:text-green-800 disabled:text-gray-400"
                   >
-                    <Save className="w-4 h-4" />
+                    <FloppyDiskIcon className="w-4 h-4" />
                   </button>
                   <button
                     onClick={cancelEdit}
                     className="p-2 text-gray-600 hover:text-gray-800"
                   >
-                    <X className="w-4 h-4" />
+                    <XIcon className="w-4 h-4" />
                   </button>
                 </>
               ) : (
@@ -269,13 +259,13 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                     onClick={() => startEdit(index)}
                     className="p-2 text-primary hover:text-foreground"
                   >
-                    <Edit className="w-4 h-4" />
+                    <PencilIcon className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => deletePiece(index)}
                     className="p-2 text-red-600 hover:text-red-800"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 </>
               )}
@@ -290,7 +280,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <Music className="w-6 h-6 mr-3 text-primary" />
+          <MusicNotesIcon className="w-6 h-6 mr-3 text-primary" />
           תוכנית הבגרות
         </h2>
         
@@ -308,7 +298,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
               onClick={() => setShowAddForm(true)}
               className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <PlusIcon className="w-4 h-4 mr-2" />
               הוסף יצירה
             </button>
           )}
@@ -318,7 +308,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
       {/* Program Requirements Info */}
       <Card padding="md" className="bg-blue-50 border-blue-200">
         <div className="flex items-start">
-          <Music className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
+          <MusicNotesIcon className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
           <div>
             <h3 className="text-sm font-semibold text-blue-900 mb-2">דרישות התוכנית</h3>
             <ul className="text-sm text-blue-800 space-y-1">
@@ -358,7 +348,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
               onClick={cancelAdd}
               className="text-gray-500 hover:text-gray-700"
             >
-              <X className="w-5 h-5" />
+              <XIcon className="w-5 h-5" />
             </button>
           </div>
 
@@ -467,7 +457,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
       ) : (
         <Card padding="md">
           <div className="text-center py-8">
-            <Music className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+            <MusicNotesIcon className="w-16 h-16 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-semibold text-gray-700 mb-2">אין יצירות בתוכנית</h3>
             <p className="text-gray-600 mb-4">הוסף יצירות לתוכנית הבגרות שלך</p>
             {!readonly && (
@@ -475,7 +465,7 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
                 onClick={() => setShowAddForm(true)}
                 className="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <PlusIcon className="w-4 h-4 mr-2" />
                 הוסף יצירה ראשונה
               </button>
             )}

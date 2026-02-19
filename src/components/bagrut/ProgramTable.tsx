@@ -3,8 +3,9 @@ import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { PlayCircle, ExternalLink } from 'lucide-react';
+
 import { ProgramPiece } from '@/types/bagrut.types';
+import { ArrowSquareOutIcon, PlayCircleIcon } from '@phosphor-icons/react'
 
 interface ProgramTableProps {
   program: ProgramPiece[];
@@ -181,7 +182,7 @@ export const ProgramTable: React.FC<ProgramTableProps> = ({
                         rel="noopener noreferrer"
                         className="text-red-600 hover:text-red-800 flex-shrink-0"
                       >
-                        <PlayCircle className="w-5 h-5" />
+                        <PlayCircleIcon className="w-5 h-5" />
                       </a>
                     )}
                   </div>

@@ -1,7 +1,8 @@
 import * as React from "react"
-import { AlertCircle } from "lucide-react"
+
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { WarningCircleIcon } from '@phosphor-icons/react'
 
 interface FormFieldProps {
   label: string
@@ -23,7 +24,7 @@ export function FormField({ label, htmlFor, error, required, hint, className, ch
       {children}
       {error && (
         <p id={`${htmlFor}-error`} role="alert" className="flex items-center gap-1 text-sm text-destructive">
-          <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <WarningCircleIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           {error}
         </p>
       )}

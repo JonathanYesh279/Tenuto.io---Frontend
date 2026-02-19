@@ -1,16 +1,6 @@
 import React, { useState, useMemo } from 'react'
-import { 
-  Users, 
-  Music, 
-  Clock, 
-  User, 
-  Trash2, 
-  Plus, 
-  AlertTriangle,
-  CheckCircle,
-  Filter,
-  X
-} from 'lucide-react'
+import { CheckCircleIcon, ClockIcon, FunnelIcon, MusicNotesIcon, PlusIcon, TrashIcon, UserIcon, UsersIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
+
 
 interface Orchestra {
   id: string
@@ -68,7 +58,7 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
   } | null>(null)
   const [loading, setLoading] = useState<string | null>(null)
 
-  // Filter available orchestras
+  // FunnelIcon available orchestras
   const filteredOrchestras = useMemo(() => {
     const enrolledIds = currentEnrollments.map(e => e.orchestraId)
     const available = availableOrchestras.filter(o => !enrolledIds.includes(o.id))
@@ -127,7 +117,7 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
       {/* Current Enrollments Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-3 mb-6">
-          <Users className="w-6 h-6 text-blue-600" />
+          <UsersIcon className="w-6 h-6 text-blue-600" />
           <h2 className="text-xl font-bold text-gray-900">התזמורות וההרכבים שלי</h2>
         </div>
 
@@ -136,15 +126,15 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
             {currentEnrollments.map((enrollment) => (
               <div
                 key={enrollment.id}
-                className="bg-white border-2 border-blue-500 rounded-xl p-6 shadow-sm hover:shadow-md transition-all"
+                className="bg-white border-2 border-blue-500 rounded p-6 shadow-sm hover:shadow-md transition-all"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-2">
                     {enrollment.type === 'orchestra' ? (
-                      <Music className="w-5 h-5 text-blue-600" />
+                      <MusicNotesIcon className="w-5 h-5 text-blue-600" />
                     ) : (
-                      <Users className="w-5 h-5 text-blue-600" />
+                      <UsersIcon className="w-5 h-5 text-blue-600" />
                     )}
                     <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                       {enrollment.type === 'orchestra' ? 'תזמורת' : 'הרכב'}
@@ -155,7 +145,7 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     disabled={loading === enrollment.id}
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -166,12 +156,12 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
                   </h3>
                   
                   <div className="flex items-center gap-2 text-gray-600">
-                    <User className="w-4 h-4" />
+                    <UserIcon className="w-4 h-4" />
                     <span className="text-sm">{enrollment.conductorName}</span>
                   </div>
                   
                   <div className="flex items-center gap-2 text-gray-600">
-                    <Clock className="w-4 h-4" />
+                    <ClockIcon className="w-4 h-4" />
                     <span className="text-sm">
                       יום {getHebrewDay(enrollment.rehearsalDay)} {enrollment.rehearsalTime}
                     </span>
@@ -187,7 +177,7 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
                 {/* Enrollment Status */}
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-2 text-green-600">
-                    <CheckCircle className="w-4 h-4" />
+                    <CheckCircleIcon className="w-4 h-4" />
                     <span className="text-sm font-medium">רשום</span>
                   </div>
                 </div>
@@ -195,8 +185,8 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-            <Users className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+          <div className="text-center py-12 bg-gray-50 rounded border-2 border-dashed border-gray-300">
+            <UsersIcon className="w-12 h-12 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-medium text-gray-600 mb-2">
               לא רשום לתזמורות או הרכבים
             </h3>
@@ -211,11 +201,11 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Music className="w-6 h-6 text-gray-600" />
+            <MusicNotesIcon className="w-6 h-6 text-gray-600" />
             <h2 className="text-xl font-bold text-gray-900">תזמורות והרכבים זמינים להרשמה</h2>
           </div>
           
-          {/* Filter Buttons */}
+          {/* FunnelIcon Buttons */}
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
               onClick={() => setFilterType('all')}
@@ -260,15 +250,15 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
               return (
                 <div
                   key={orchestra.id}
-                  className="bg-white border-2 border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all"
+                  className="bg-white border-2 border-gray-200 rounded p-6 shadow-sm hover:shadow-md transition-all"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-2">
                       {orchestra.type === 'orchestra' ? (
-                        <Music className="w-5 h-5 text-gray-600" />
+                        <MusicNotesIcon className="w-5 h-5 text-gray-600" />
                       ) : (
-                        <Users className="w-5 h-5 text-gray-600" />
+                        <UsersIcon className="w-5 h-5 text-gray-600" />
                       )}
                       <span className="text-xs font-medium text-gray-600 bg-gray-50 px-2 py-1 rounded-full">
                         {orchestra.type === 'orchestra' ? 'תזמורת' : 'הרכב'}
@@ -277,7 +267,7 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
                     
                     {conflict && (
                       <div className="relative group">
-                        <AlertTriangle className="w-5 h-5 text-orange-500" />
+                        <WarningIcon className="w-5 h-5 text-orange-500" />
                         <div className="absolute bottom-full right-0 mb-2 w-64 p-2 bg-orange-100 text-orange-800 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                           מתנגש עם {conflict.conflictsWith} ב{conflict.conflictTime}
                         </div>
@@ -292,12 +282,12 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
                     </h3>
                     
                     <div className="flex items-center gap-2 text-gray-600">
-                      <User className="w-4 h-4" />
+                      <UserIcon className="w-4 h-4" />
                       <span className="text-sm">{orchestra.conductorName}</span>
                     </div>
                     
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Clock className="w-4 h-4" />
+                      <ClockIcon className="w-4 h-4" />
                       <span className="text-sm">
                         יום {getHebrewDay(orchestra.rehearsalDay)} {orchestra.rehearsalTime}
                       </span>
@@ -327,7 +317,7 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                     ) : (
                       <>
-                        <Plus className="w-4 h-4" />
+                        <PlusIcon className="w-4 h-4" />
                         {isFull ? 'מלא' : conflict ? 'מתנגש' : 'הרשם'}
                       </>
                     )}
@@ -337,8 +327,8 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
             })}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-            <Filter className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+          <div className="text-center py-12 bg-gray-50 rounded border-2 border-dashed border-gray-300">
+            <FunnelIcon className="w-12 h-12 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-medium text-gray-600 mb-2">
               אין תזמורות זמינות
             </h3>
@@ -352,15 +342,15 @@ const OrchestraEnrollmentManager: React.FC<OrchestraEnrollmentManagerProps> = ({
       {/* Confirmation Dialog */}
       {confirmDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full">
+          <div className="bg-white rounded p-6 max-w-md w-full">
             <div className="flex items-center gap-3 mb-4">
               {confirmDialog.type === 'enroll' ? (
                 <div className="p-2 bg-green-100 rounded-lg">
-                  <Plus className="w-5 h-5 text-green-600" />
+                  <PlusIcon className="w-5 h-5 text-green-600" />
                 </div>
               ) : (
                 <div className="p-2 bg-red-100 rounded-lg">
-                  <Trash2 className="w-5 h-5 text-red-600" />
+                  <TrashIcon className="w-5 h-5 text-red-600" />
                 </div>
               )}
               <h3 className="text-lg font-bold text-gray-900">

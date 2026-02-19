@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Users, GraduationCap, Music, Calendar, TrendingUp, Clock, Award } from 'lucide-react';
+
 import apiService from '../../services/apiService';
 import { getDisplayName } from '@/utils/nameUtils';
+import { CalendarIcon, ClockIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, TrendUpIcon, UsersIcon } from '@phosphor-icons/react'
 
 // Utility functions
 const isThisWeek = (date: Date) => {
@@ -128,7 +129,7 @@ const DashboardMetrics: React.FC = () => {
         title="תלמידים פעילים"
         value={metrics.studentCount.toString()}
         subtitle={`שנת לימודים: ${metrics.currentSchoolYear}`}
-        icon={<Users className="w-6 h-6" />}
+        icon={<UsersIcon className="w-6 h-6" />}
         color="blue"
       />
       
@@ -136,7 +137,7 @@ const DashboardMetrics: React.FC = () => {
         title="חברי סגל"
         value={metrics.teacherCount.toString()}
         subtitle="מורים ומדריכים פעילים"
-        icon={<GraduationCap className="w-6 h-6" />}
+        icon={<GraduationCapIcon className="w-6 h-6" />}
         color="green"
       />
       
@@ -144,7 +145,7 @@ const DashboardMetrics: React.FC = () => {
         title="חזרות השבוע"
         value={metrics.activeRehearsals.toString()}
         subtitle="חזרות מתוכננות"
-        icon={<Music className="w-6 h-6" />}
+        icon={<MusicNotesIcon className="w-6 h-6" />}
         color="purple"
       />
       
@@ -152,7 +153,7 @@ const DashboardMetrics: React.FC = () => {
         title="שיעורי תאוריה"
         value={metrics.upcomingTheoryLessons.toString()}
         subtitle="השבוע הקרוב"
-        icon={<Calendar className="w-6 h-6" />}
+        icon={<CalendarIcon className="w-6 h-6" />}
         color="orange"
       />
     </div>

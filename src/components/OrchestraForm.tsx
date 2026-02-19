@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { X, Save, Music, User, Users } from 'lucide-react'
+
 import {
+import { FloppyDiskIcon, MusicNotesIcon, UserIcon, UsersIcon, XIcon } from '@phosphor-icons/react'
   VALID_ORCHESTRA_TYPES,
   VALID_LOCATIONS,
   validateOrchestraForm,
@@ -138,7 +139,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
             onClick={onCancel}
             className="p-2 hover:bg-muted rounded transition-colors"
           >
-            <X className="w-5 h-5 text-muted-foreground" />
+            <XIcon className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
@@ -163,7 +164,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
             <div className="md:col-span-2">
               <FormField label="שם התזמורת" htmlFor="name" error={errors.name} required>
                 <div className="relative">
-                  <Music className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  <MusicNotesIcon className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="name"
                     value={formData.name}
@@ -312,7 +313,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
           {/* Conductor Assignment */}
           <FormField label="מנצח" htmlFor="conductorId" error={errors.conductorId} required>
             <div className="relative">
-              <User className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
+              <UserIcon className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
               <Select
                 value={formData.conductorId || undefined}
                 onValueChange={(val) => handleInputChange('conductorId', val)}
@@ -350,7 +351,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
           {/* Members Section - Read Only Display for Now */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              <Users className="w-4 h-4 inline ms-1" />
+              <UsersIcon className="w-4 h-4 inline ms-1" />
               חברי התזמורת
             </label>
 
@@ -405,7 +406,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-borderforeground ms-2"></div>
               ) : (
-                <Save className="w-4 h-4 ms-2" />
+                <FloppyDiskIcon className="w-4 h-4 ms-2" />
               )}
               {orchestra ? 'עדכן תזמורת' : 'צור תזמורת'}
             </Button>

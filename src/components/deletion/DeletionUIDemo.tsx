@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { Trash2, Eye, Settings, Timeline, BarChart3 } from 'lucide-react'
+
 import { Card } from '../ui/Card'
 import StudentDeletionModal from './StudentDeletionModal'
 import DataIntegrityDashboard from './DataIntegrityDashboard'
@@ -14,6 +14,7 @@ import EnhancedProgressTracker from './EnhancedProgressTracker'
 import DeletionTimeline from './DeletionTimeline'
 import AuditLogViewer from './AuditLogViewer'
 import { 
+import { ArrowsDownUpIcon, ChartBarIcon, EyeIcon, GearIcon, TrashIcon } from '@phosphor-icons/react'
   DeletionImpact, 
   DataIntegrityStatus, 
   DeletionOperation,
@@ -197,7 +198,7 @@ const DeletionUIDemo: React.FC = () => {
           <div className="space-y-6">
             <Card>
               <div className="text-center py-8">
-                <Trash2 className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                <TrashIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan mb-4">
                   מחיקת תלמיד - דמו
                 </h3>
@@ -287,7 +288,7 @@ const DeletionUIDemo: React.FC = () => {
                 }
               `}
             >
-              <BarChart3 className="w-4 h-4" />
+              <ChartBarIcon className="w-4 h-4" />
               לוח מחוונים
             </button>
 
@@ -301,7 +302,7 @@ const DeletionUIDemo: React.FC = () => {
                 }
               `}
             >
-              <Trash2 className="w-4 h-4" />
+              <TrashIcon className="w-4 h-4" />
               מודל מחיקה
             </button>
 
@@ -315,7 +316,7 @@ const DeletionUIDemo: React.FC = () => {
                 }
               `}
             >
-              <Settings className="w-4 h-4" />
+              <GearIcon className="w-4 h-4" />
               מעקב התקדמות
             </button>
 
@@ -329,7 +330,7 @@ const DeletionUIDemo: React.FC = () => {
                 }
               `}
             >
-              <Timeline className="w-4 h-4" />
+              <ArrowsDownUpIcon className="w-4 h-4" />
               ציר זמן
             </button>
 
@@ -343,7 +344,7 @@ const DeletionUIDemo: React.FC = () => {
                 }
               `}
             >
-              <Eye className="w-4 h-4" />
+              <EyeIcon className="w-4 h-4" />
               יומן ביקורת
             </button>
           </div>

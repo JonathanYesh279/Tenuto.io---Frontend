@@ -6,10 +6,11 @@
  */
 
 import { useState, useEffect } from 'react'
-import { Clock, RefreshCw, Users, Music, BookOpen, Briefcase, Car, Layers, AlertCircle } from 'lucide-react'
+
 import { Teacher } from '../../types'
 import { hoursSummaryService } from '../../../../../services/apiService'
 import { useAuth } from '../../../../../services/authContext.jsx'
+import { ArrowsClockwiseIcon, BookOpenIcon, BriefcaseIcon, CarIcon, ClockIcon, MusicNotesIcon, StackIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface HoursSummaryTabProps {
   teacher: Teacher
@@ -128,14 +129,14 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
     return (
       <div className="p-6">
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
+          <WarningCircleIcon className="w-12 h-12 text-red-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">שגיאה בטעינת נתונים</h3>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={fetchHoursSummary}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <RefreshCw className="w-4 h-4" />
+            <ArrowsClockwiseIcon className="w-4 h-4" />
             נסה שוב
           </button>
         </div>
@@ -148,7 +149,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
     return (
       <div className="p-6">
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Clock className="w-12 h-12 text-gray-300 mb-4" />
+          <ClockIcon className="w-12 h-12 text-gray-300 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">טרם חושבו שעות</h3>
           <p className="text-gray-600 mb-4">
             נתוני השעות השבועיות עבור מורה זה טרם חושבו
@@ -159,7 +160,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
               disabled={isRecalculating}
               className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors disabled:opacity-50"
             >
-              <RefreshCw className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
+              <ArrowsClockwiseIcon className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
               {isRecalculating ? 'מחשב...' : 'חשב שעות'}
             </button>
           )}
@@ -171,13 +172,13 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
   const { totals, breakdown, calculatedAt } = data
 
   const categoryCards = [
-    { label: 'שיעורים פרטניים', value: totals.individualLessons, icon: Users, color: 'blue' },
-    { label: 'ניצוח תזמורות', value: totals.orchestraConducting, icon: Music, color: 'purple' },
-    { label: 'הוראת תיאוריה', value: totals.theoryTeaching, icon: BookOpen, color: 'green' },
-    { label: 'ניהול', value: totals.management, icon: Briefcase, color: 'amber' },
-    { label: 'ליווי', value: totals.accompaniment, icon: Layers, color: 'pink' },
-    { label: 'תיאום הרכבים', value: totals.ensembleCoordination, icon: Layers, color: 'indigo' },
-    { label: 'נסיעות', value: totals.travelTime, icon: Car, color: 'gray' },
+    { label: 'שיעורים פרטניים', value: totals.individualLessons, icon: UsersIcon, color: 'blue' },
+    { label: 'ניצוח תזמורות', value: totals.orchestraConducting, icon: MusicNotesIcon, color: 'purple' },
+    { label: 'הוראת תיאוריה', value: totals.theoryTeaching, icon: BookOpenIcon, color: 'green' },
+    { label: 'ניהול', value: totals.management, icon: BriefcaseIcon, color: 'amber' },
+    { label: 'ליווי', value: totals.accompaniment, icon: StackIcon, color: 'pink' },
+    { label: 'תיאום הרכבים', value: totals.ensembleCoordination, icon: StackIcon, color: 'indigo' },
+    { label: 'נסיעות', value: totals.travelTime, icon: CarIcon, color: 'gray' },
   ]
 
   const colorMap: Record<string, string> = {
@@ -217,7 +218,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
               disabled={isRecalculating}
               className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-muted text-foreground border border-border rounded hover:bg-muted/80 transition-colors disabled:opacity-50"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isRecalculating ? 'animate-spin' : ''}`} />
+              <ArrowsClockwiseIcon className={`w-3.5 h-3.5 ${isRecalculating ? 'animate-spin' : ''}`} />
               {isRecalculating ? 'מחשב...' : 'חשב מחדש'}
             </button>
           )}
@@ -227,7 +228,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       {/* Total hours — big card */}
       <div className="bg-primary rounded p-6 text-primary-foreground">
         <div className="flex items-center gap-3 mb-2">
-          <Clock className="w-6 h-6 opacity-80" />
+          <ClockIcon className="w-6 h-6 opacity-80" />
           <span className="opacity-80 font-medium">סה"כ ש"ש</span>
         </div>
         <div className="text-4xl font-bold">{totals.totalWeeklyHours}</div>
@@ -257,7 +258,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       {breakdown.students?.length > 0 && (
         <div>
           <h3 className="text-md font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <Users className="w-4 h-4 text-blue-500" />
+            <UsersIcon className="w-4 h-4 text-blue-500" />
             פירוט תלמידים ({breakdown.students.length})
           </h3>
           <div className="bg-background border border-border rounded overflow-hidden">
@@ -291,7 +292,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       {breakdown.orchestras?.length > 0 && (
         <div>
           <h3 className="text-md font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <Music className="w-4 h-4 text-purple-500" />
+            <MusicNotesIcon className="w-4 h-4 text-purple-500" />
             פירוט תזמורות ({breakdown.orchestras.length})
           </h3>
           <div className="bg-background border border-border rounded overflow-hidden">
@@ -325,7 +326,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       {breakdown.theory?.length > 0 && (
         <div>
           <h3 className="text-md font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-green-500" />
+            <BookOpenIcon className="w-4 h-4 text-green-500" />
             פירוט תיאוריה ({breakdown.theory.length})
           </h3>
           <div className="bg-background border border-border rounded overflow-hidden">

@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {
-  User, Phone, Mail, MapPin, Music, Calendar, Clock, Save,
-  X, Plus, Trash2, AlertCircle, CheckCircle, ChevronDown, ChevronUp,
-  BookOpen, Users, Filter, Search
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import ConfirmationModal from '../ui/ConfirmationModal'
 import { handleServerValidationError } from '../../utils/validationUtils'
@@ -14,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { FormField } from '@/components/ui/form-field'
 import {
+import { BookOpenIcon, CalendarIcon, CaretDownIcon, CaretUpIcon, CheckCircleIcon, ClockIcon, EnvelopeIcon, FloppyDiskIcon, FunnelIcon, MagnifyingGlassIcon, MapPinIcon, MusicNotesIcon, PhoneIcon, PlusIcon, TrashIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
   Select, SelectTrigger, SelectValue, SelectContent,
   SelectItem, SelectGroup, SelectLabel
 } from '@/components/ui/select'
@@ -296,7 +293,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Filter teachers based on search query
+  // FunnelIcon teachers based on search query
   const filteredTeachers = teachers.filter(teacher => {
     if (!teacherSearchQuery) return true
     const searchLower = teacherSearchQuery.toLowerCase()
@@ -663,7 +660,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
   }
 
   const handleConflictOverride = () => {
-    // User chose to proceed despite conflict
+    // UserIcon chose to proceed despite conflict
     if (conflictModal.conflictingSlot) {
       addSlotToSchedule(conflictModal.conflictingSlot)
     }
@@ -671,7 +668,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
   }
 
   const handleConflictCancel = () => {
-    // User chose not to proceed
+    // UserIcon chose not to proceed
     setConflictModal({ isOpen: false, message: '', conflictingSlot: null })
   }
 
@@ -791,13 +788,13 @@ const StudentForm: React.FC<StudentFormProps> = ({
           size="icon"
           onClick={onCancel}
         >
-          <X className="w-5 h-5" />
+          <XIcon className="w-5 h-5" />
         </Button>
       </div>
 
       {errors.submit && (
         <div className="bg-destructive/10 border border-destructive/30 rounded p-4 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-destructive" />
+          <WarningCircleIcon className="w-5 h-5 text-destructive" />
           <span className="text-destructive">{errors.submit}</span>
         </div>
       )}
@@ -810,10 +807,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <User className="w-5 h-5 text-primary" />
+            <UserIcon className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">פרטים אישיים</h3>
           </div>
-          {expandedSections.personal ? <ChevronUp /> : <ChevronDown />}
+          {expandedSections.personal ? <CaretUpIcon /> : <CaretDownIcon />}
         </button>
 
         {expandedSections.personal && (
@@ -847,7 +844,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                 />
               </FormField>
 
-              {/* Student Phone */}
+              {/* Student PhoneIcon */}
               <FormField label="טלפון תלמיד" htmlFor="phone" error={errors['personalInfo.phone']}>
                 <Input
                   id="phone"
@@ -918,7 +915,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                 />
               </FormField>
 
-              {/* Parent Phone */}
+              {/* Parent PhoneIcon */}
               <FormField label="טלפון הורה" htmlFor="parentPhone" error={errors['personalInfo.parentPhone']}>
                 <Input
                   id="parentPhone"
@@ -960,10 +957,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-primary" />
+            <BookOpenIcon className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">פרטים אקדמיים</h3>
           </div>
-          {expandedSections.academic ? <ChevronUp /> : <ChevronDown />}
+          {expandedSections.academic ? <CaretUpIcon /> : <CaretDownIcon />}
         </button>
 
         {expandedSections.academic && (
@@ -1003,10 +1000,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Music className="w-5 h-5 text-primary" />
+            <MusicNotesIcon className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">כלי נגינה</h3>
           </div>
-          {expandedSections.instruments ? <ChevronUp /> : <ChevronDown />}
+          {expandedSections.instruments ? <CaretUpIcon /> : <CaretDownIcon />}
         </button>
 
         {expandedSections.instruments && (
@@ -1036,7 +1033,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         onClick={() => removeInstrument(index)}
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                       </Button>
                     )}
                   </div>
@@ -1146,7 +1143,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                 onClick={addInstrument}
                 className="w-full border-dashed border-2 text-muted-foreground hover:text-primary hover:border-primary"
               >
-                <Plus className="w-4 h-4 ms-2" />
+                <PlusIcon className="w-4 h-4 ms-2" />
                 הוסף כלי נגינה
               </Button>
             </div>
@@ -1162,7 +1159,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary" />
+            <CalendarIcon className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">מורים ושיעורים</h3>
             {formData.teacherAssignments.length > 0 && (
               <span className="px-2 py-1 bg-muted text-primary rounded-full text-xs">
@@ -1170,7 +1167,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
               </span>
             )}
           </div>
-          {expandedSections.teachers ? <ChevronUp /> : <ChevronDown />}
+          {expandedSections.teachers ? <CaretUpIcon /> : <CaretDownIcon />}
         </button>
 
         {expandedSections.teachers && (
@@ -1183,7 +1180,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                   {formData.teacherAssignments.map((assignment, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-green-50 rounded border border-green-200">
                       <div className="flex items-center gap-4">
-                        <CheckCircle className="w-5 h-5 text-green-600" />
+                        <CheckCircleIcon className="w-5 h-5 text-green-600" />
                         <div>
                           <p className="font-medium text-foreground">
                             מורה - {teachers.find(t => t._id === assignment.teacherId)?.professionalInfo?.instrument || 'כלי'}
@@ -1201,7 +1198,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         onClick={() => removeTeacherAssignment(index)}
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                       </Button>
                     </div>
                   ))}
@@ -1233,7 +1230,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                 <span className={selectedTeacherId ? 'text-foreground' : 'text-muted-foreground'}>
                   {getSelectedTeacherDisplay()}
                 </span>
-                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isTeacherDropdownOpen ? 'rotate-180' : ''}`} />
+                <CaretDownIcon className={`w-4 h-4 text-muted-foreground transition-transform ${isTeacherDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Dropdown menu - Fixed positioning to escape modal overflow */}
@@ -1247,10 +1244,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
                     maxHeight: `calc(100vh - ${dropdownPosition.top + 20}px)`
                   }}
                 >
-                  {/* Search input */}
+                  {/* MagnifyingGlassIcon input */}
                   <div className="p-2 border-b border-border sticky top-0 bg-popover">
                     <div className="relative">
-                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
                         type="text"
                         value={teacherSearchQuery}
@@ -1295,7 +1292,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                             {teacher.personalInfo?.firstName} {teacher.personalInfo?.lastName} - {teacher.professionalInfo?.instrument || 'ללא כלי'}
                           </span>
                           {selectedTeacherId === teacher._id && (
-                            <CheckCircle className="w-4 h-4 text-primary" />
+                            <CheckCircleIcon className="w-4 h-4 text-primary" />
                           )}
                         </button>
                       ))
@@ -1323,7 +1320,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                       type="button"
                       onClick={() => setShowSlotsMenu(true)}
                     >
-                      <Plus className="w-4 h-4 ms-2" />
+                      <PlusIcon className="w-4 h-4 ms-2" />
                       בחר שיעור נוסף
                     </Button>
                   </div>
@@ -1334,7 +1331,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                   <div className="mb-4 p-4 bg-muted/50 rounded border border-border">
                     <div className="flex items-center justify-between mb-3">
                       <h5 className="text-sm font-medium text-foreground flex items-center gap-2">
-                        <Filter className="w-4 h-4" />
+                        <FunnelIcon className="w-4 h-4" />
                         סינון זמנים
                       </h5>
                       {(slotFilters.duration || slotFilters.selectedDays.length > 0 || slotFilters.startTime || slotFilters.endTime) && (
@@ -1348,14 +1345,14 @@ const StudentForm: React.FC<StudentFormProps> = ({
                           })}
                           className="text-xs text-primary hover:text-primary/80 flex items-center gap-1"
                         >
-                          <X className="w-3 h-3" />
+                          <XIcon className="w-3 h-3" />
                           נקה סינון
                         </button>
                       )}
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      {/* Duration Filter */}
+                      {/* Duration FunnelIcon */}
                       <div>
                         <Label className="text-xs text-muted-foreground mb-1 block">משך שיעור</Label>
                         <Select
@@ -1377,7 +1374,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         </Select>
                       </div>
 
-                      {/* Days Filter - keep custom checkbox dropdown */}
+                      {/* Days FunnelIcon - keep custom checkbox dropdown */}
                       <div>
                         <Label className="text-xs text-muted-foreground mb-1 block">ימים</Label>
                         <div className="relative">
@@ -1396,7 +1393,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                 ? `${slotFilters.selectedDays.length} ימים נבחרו`
                                 : 'כל הימים'}
                             </span>
-                            <ChevronDown className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
+                            <CaretDownIcon className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
                           </button>
                           <div className="hidden absolute top-full mt-1 w-full bg-popover border border-border rounded-md shadow-lg z-10">
                             {VALID_DAYS.map(day => (
@@ -1425,7 +1422,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         </div>
                       </div>
 
-                      {/* Start Time Filter */}
+                      {/* Start Time FunnelIcon */}
                       <div>
                         <Label className="text-xs text-muted-foreground mb-1 block">משעה</Label>
                         <Input
@@ -1439,7 +1436,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                         />
                       </div>
 
-                      {/* End Time Filter */}
+                      {/* End Time FunnelIcon */}
                       <div>
                         <Label className="text-xs text-muted-foreground mb-1 block">עד שעה</Label>
                         <Input
@@ -1494,7 +1491,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                       if (filteredSlots.length === 0) {
                         return (
                           <div className="text-center py-8 bg-muted/50 rounded">
-                            <Filter className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                            <FunnelIcon className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
                             <p className="text-muted-foreground text-sm mb-2">אין זמנים התואמים לסינון שבחרת</p>
                             <button
                               type="button"
@@ -1521,7 +1518,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                       return Object.entries(slotsByDay).map(([day, daySlots]) => (
                         <div key={day} className="mb-4">
                           <h5 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
+                            <CalendarIcon className="w-4 h-4" />
                             {day}
                           </h5>
                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -1541,7 +1538,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                 <div className="space-y-1">
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1">
-                                      <Clock className="w-3 h-3" />
+                                      <ClockIcon className="w-3 h-3" />
                                       <span className="text-sm font-medium text-foreground">
                                         {slot.startTime}-{slot.endTime}
                                       </span>
@@ -1556,7 +1553,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                                   </div>
                                   {slot.location && (
                                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                      <MapPin className="w-3 h-3" />
+                                      <MapPinIcon className="w-3 h-3" />
                                       {slot.location}
                                     </div>
                                   )}
@@ -1573,7 +1570,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                   </div>
                 ) : selectedTeacherId && !loadingSlots && showSlotsMenu && availableSlots.length === 0 ? (
                   <div className="text-center py-6 bg-muted/50 rounded">
-                    <Clock className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+                    <ClockIcon className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
                     <p className="text-muted-foreground text-sm mb-2">אין זמנים פנויים למורה זה</p>
                     <p className="text-xs text-muted-foreground/70">
                       ייתכן שכל הזמנים הפנויים כבר תפוסים או שהמורה לא הגדיר זמני הוראה
@@ -1594,10 +1591,10 @@ const StudentForm: React.FC<StudentFormProps> = ({
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary" />
+            <UsersIcon className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">הרשמות</h3>
           </div>
-          {expandedSections.enrollments ? <ChevronUp /> : <ChevronDown />}
+          {expandedSections.enrollments ? <CaretUpIcon /> : <CaretDownIcon />}
         </button>
 
         {expandedSections.enrollments && (
@@ -1803,7 +1800,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             </>
           ) : (
             <>
-              <Save className="w-4 h-4 ms-2" />
+              <FloppyDiskIcon className="w-4 h-4 ms-2" />
               {isEdit ? 'עדכן תלמיד' : 'הוסף תלמיד'}
             </>
           )}

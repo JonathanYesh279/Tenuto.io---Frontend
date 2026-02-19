@@ -4,7 +4,8 @@
  */
 
 import React from 'react'
-import { LucideIcon } from 'lucide-react'
+import { LucideIconIcon } from '@phosphor-icons/react'
+
 
 // Color-coded status indicators for music education
 export const StatusBadge: React.FC<{
@@ -122,7 +123,7 @@ export const ProgressIndicator: React.FC<{
 export const ActionButton: React.FC<{
   variant: 'primary' | 'secondary' | 'danger' | 'success'
   size?: 'sm' | 'md' | 'lg'
-  icon?: LucideIcon
+  icon?: LucideIconIcon
   children: React.ReactNode
   disabled?: boolean
   loading?: boolean
@@ -139,7 +140,7 @@ export const ActionButton: React.FC<{
   className = ''
 }) => {
   const variants = {
-    // 'primary' was bg-primary-500 — now uses semantic token
+    // 'primary' was bg-primary — now uses semantic token
     primary: 'bg-primary text-primary-foreground hover:bg-neutral-800 focus:ring-ring',
     secondary: 'bg-muted text-foreground hover:bg-muted/80 focus:ring-ring',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
@@ -174,7 +175,7 @@ export const ActionButton: React.FC<{
 
 // Empty state component
 export const EmptyState: React.FC<{
-  icon: LucideIcon
+  icon: LucideIconIcon
   title: string
   description: string
   action?: {

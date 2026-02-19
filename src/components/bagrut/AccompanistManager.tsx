@@ -1,19 +1,8 @@
 import { useState } from 'react'
-import { 
-  Users, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Save, 
-  X, 
-  Phone,
-  Music,
-  UserCheck,
-  Calendar,
-  Clock
-} from 'lucide-react'
+
 import { Card } from '../ui/Card'
 import EnhancedAccompanistForm from '../EnhancedAccompanistForm'
+import { CalendarIcon, ClockIcon, FloppyDiskIcon, MusicNotesIcon, PencilIcon, PhoneIcon, PlusIcon, TrashIcon, UserCircleCheckIcon, UsersIcon, XIcon } from '@phosphor-icons/react'
 
 interface Accompanist {
   name: string
@@ -197,20 +186,20 @@ export default function AccompanistManager({
             ) : (
               <div>
                 <div className="flex items-center mb-2">
-                  <UserCheck className="w-5 h-5 text-primary mr-2" />
+                  <UserCircleCheckIcon className="w-5 h-5 text-primary mr-2" />
                   <h3 className="text-lg font-semibold text-gray-900">
                     {accompanist.name}
                   </h3>
                 </div>
                 
                 <div className="flex items-center text-gray-600 mb-2">
-                  <Music className="w-4 h-4 mr-2" />
+                  <MusicNotesIcon className="w-4 h-4 mr-2" />
                   <span className="text-sm">{accompanist.instrument}</span>
                 </div>
                 
                 {accompanist.phone && (
                   <div className="flex items-center text-gray-600">
-                    <Phone className="w-4 h-4 mr-2" />
+                    <PhoneIcon className="w-4 h-4 mr-2" />
                     <a 
                       href={`tel:${accompanist.phone}`}
                       className="text-sm text-primary hover:text-foreground"
@@ -232,13 +221,13 @@ export default function AccompanistManager({
                     disabled={!editData?.name || !editData?.instrument}
                     className="p-2 text-green-600 hover:text-green-800 disabled:text-gray-400"
                   >
-                    <Save className="w-4 h-4" />
+                    <FloppyDiskIcon className="w-4 h-4" />
                   </button>
                   <button
                     onClick={cancelEdit}
                     className="p-2 text-gray-600 hover:text-gray-800"
                   >
-                    <X className="w-4 h-4" />
+                    <XIcon className="w-4 h-4" />
                   </button>
                 </>
               ) : (
@@ -247,13 +236,13 @@ export default function AccompanistManager({
                     onClick={() => startEdit(index)}
                     className="p-2 text-primary hover:text-foreground"
                   >
-                    <Edit className="w-4 h-4" />
+                    <PencilIcon className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => deleteAccompanist(index)}
                     className="p-2 text-red-600 hover:text-red-800"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 </>
               )}
@@ -268,7 +257,7 @@ export default function AccompanistManager({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <Users className="w-6 h-6 mr-3 text-primary" />
+          <UsersIcon className="w-6 h-6 mr-3 text-primary" />
           ליווי מוזיקלי
         </h2>
         
@@ -282,7 +271,7 @@ export default function AccompanistManager({
               onClick={() => setShowAddForm(true)}
               className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <PlusIcon className="w-4 h-4 mr-2" />
               הוסף נגן
             </button>
           )}
@@ -345,7 +334,7 @@ export default function AccompanistManager({
       ) : (
         <Card padding="md">
           <div className="text-center py-8">
-            <Users className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+            <UsersIcon className="w-16 h-16 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-semibold text-gray-700 mb-2">אין נגנים מלווים</h3>
             <p className="text-gray-600 mb-4">הוסף נגן מלווה לביצוע הבגרות</p>
             {!readonly && (
@@ -353,7 +342,7 @@ export default function AccompanistManager({
                 onClick={() => setShowAddForm(true)}
                 className="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <PlusIcon className="w-4 h-4 mr-2" />
                 הוסף נגן ראשון
               </button>
             )}

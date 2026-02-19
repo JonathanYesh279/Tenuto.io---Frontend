@@ -13,22 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Music, 
-  Award, 
-  CheckCircle, 
-  AlertTriangle, 
-  Clock,
-  User,
-  FileText,
-  Calendar,
-  Star,
-  BarChart3,
-  Shield,
-  ArrowRight,
-  Lock,
-  Unlock
-} from 'lucide-react';
+
 
 import { BagrutHeader } from '@/components/bagrut/BagrutHeader';
 import ProgramBuilder from '@/components/bagrut/ProgramBuilder';
@@ -37,6 +22,7 @@ import { DirectorEvaluation } from '@/components/bagrut/DirectorEvaluation';
 import { GradeSummary } from '@/components/bagrut/GradeSummary';
 
 import { Bagrut, Presentation, DetailedGrading, DirectorEvaluation as DirectorEvaluationType } from '@/types/bagrut.types';
+import { ArrowRightIcon, CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, FileTextIcon, LockIcon, LockOpenIcon, MedalIcon, MusicNotesIcon, ShieldIcon, StarIcon, UserIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface BagrutTabProps {
   student: any;
@@ -368,7 +354,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
   const renderRecitalConfiguration = () => (
     <Card className="p-6 mb-6">
       <div className="flex items-center mb-4">
-        <Music className="w-6 h-6 ml-3 text-primary" />
+        <MusicNotesIcon className="w-6 h-6 ml-3 text-primary" />
         <h3 className="text-xl font-bold text-gray-900">הגדרת רסיטל</h3>
       </div>
       
@@ -391,7 +377,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
     return (
       <Card className="p-6 mb-6">
         <div className="flex items-center mb-4">
-          <BarChart3 className="w-6 h-6 ml-3 text-green-600" />
+          <ChartBarIcon className="w-6 h-6 ml-3 text-green-600" />
           <h3 className="text-xl font-bold text-gray-900">התקדמות כללית</h3>
         </div>
         
@@ -430,12 +416,12 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
           
           {completionStatus.overall.canComplete ? (
             <Badge variant="success" className="text-sm">
-              <CheckCircle className="w-4 h-4 ml-1" />
+              <CheckCircleIcon className="w-4 h-4 ml-1" />
               מוכן להשלמה
             </Badge>
           ) : (
             <Badge variant="secondary" className="text-sm">
-              <Clock className="w-4 h-4 ml-1" />
+              <ClockIcon className="w-4 h-4 ml-1" />
               בתהליך
             </Badge>
           )}
@@ -451,7 +437,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
       <div className="mb-6 space-y-2">
         {validationErrors.map((error, index) => (
           <Alert key={index} variant={error.type === 'error' ? 'destructive' : 'default'}>
-            <AlertTriangle className="h-4 w-4" />
+            <WarningIcon className="h-4 w-4" />
             <AlertDescription>
               {error.message}
             </AlertDescription>
@@ -467,7 +453,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
     return (
       <div className="space-y-6 mb-6">
         <div className="flex items-center">
-          <Calendar className="w-6 h-6 ml-3 text-orange-600" />
+          <CalendarIcon className="w-6 h-6 ml-3 text-orange-600" />
           <h3 className="text-xl font-bold text-gray-900">השמעות</h3>
         </div>
         
@@ -480,7 +466,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
               {!isAccessible && (
                 <div className="absolute inset-0 bg-gray-100/50 flex items-center justify-center z-10 rounded-lg">
                   <div className="bg-white p-4 rounded-lg shadow-lg flex items-center">
-                    <Lock className="w-5 h-5 ml-2 text-gray-500" />
+                    <LockIcon className="w-5 h-5 ml-2 text-gray-500" />
                     <span className="text-gray-600">השלם את השמעה {index} תחילה</span>
                   </div>
                 </div>
@@ -489,9 +475,9 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center">
                   {isMagenBagrut ? (
-                    <Star className="w-6 h-6 ml-3 text-yellow-500" />
+                    <StarIcon className="w-6 h-6 ml-3 text-yellow-500" />
                   ) : (
-                    <Music className="w-6 h-6 ml-3 text-blue-500" />
+                    <MusicNotesIcon className="w-6 h-6 ml-3 text-blue-500" />
                   )}
                   <h4 className="text-lg font-bold">
                     {isMagenBagrut ? 'מגן בגרות' : `השמעה ${index + 1}`}
@@ -501,20 +487,20 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
                 <div className="flex items-center gap-2">
                   {presentation.completed ? (
                     <Badge variant="success">
-                      <CheckCircle className="w-4 h-4 ml-1" />
+                      <CheckCircleIcon className="w-4 h-4 ml-1" />
                       הושלמה
                     </Badge>
                   ) : (
                     <Badge variant="secondary">
-                      <Clock className="w-4 h-4 ml-1" />
+                      <ClockIcon className="w-4 h-4 ml-1" />
                       ממתינה
                     </Badge>
                   )}
                   
                   {isAccessible ? (
-                    <Unlock className="w-4 h-4 text-green-500" />
+                    <LockOpenIcon className="w-4 h-4 text-green-500" />
                   ) : (
-                    <Lock className="w-4 h-4 text-gray-400" />
+                    <LockIcon className="w-4 h-4 text-gray-400" />
                   )}
                 </div>
               </div>
@@ -582,7 +568,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <Music className="w-8 h-8 animate-pulse mx-auto mb-4 text-primary" />
+          <MusicNotesIcon className="w-8 h-8 animate-pulse mx-auto mb-4 text-primary" />
           <div className="text-lg font-semibold text-gray-700 mb-2">טוען נתוני בגרות...</div>
         </div>
       </div>
@@ -612,7 +598,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
       {/* Program Builder */}
       <Card className="p-6">
         <div className="flex items-center mb-4">
-          <FileText className="w-6 h-6 ml-3 text-purple-600" />
+          <FileTextIcon className="w-6 h-6 ml-3 text-purple-600" />
           <h3 className="text-xl font-bold text-gray-900">תכנית הרסיטל</h3>
         </div>
         <ProgramBuilder
@@ -629,7 +615,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
       {/* Director Evaluation */}
       <Card className="p-6">
         <div className="flex items-center mb-4">
-          <Shield className="w-6 h-6 ml-3 text-indigo-600" />
+          <ShieldIcon className="w-6 h-6 ml-3 text-indigo-600" />
           <h3 className="text-xl font-bold text-gray-900">הערכת מנהל</h3>
         </div>
         <DirectorEvaluation

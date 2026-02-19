@@ -4,8 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { UserCheck, Star, FileSignature } from 'lucide-react';
+
 import { DirectorEvaluation as DirectorEvaluationType } from '@/types/bagrut.types';
+import { FileSignatureIcon, StarIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
 
 interface DirectorEvaluationProps {
   directorEvaluation?: DirectorEvaluationType;
@@ -62,7 +63,7 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-900 flex items-center">
-          <UserCheck className="w-6 h-6 ml-3 text-blue-600" />
+          <UserCircleCheckIcon className="w-6 h-6 ml-3 text-blue-600" />
           הערכת המנהל/ת
         </h3>
         <div className="text-sm text-gray-600">
@@ -72,7 +73,7 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
 
       <div className="mb-6 p-4 bg-blue-50 rounded">
         <div className="flex items-start">
-          <Star className="w-5 h-5 text-blue-600 ml-3 mt-0.5" />
+          <StarIcon className="w-5 h-5 text-blue-600 ml-3 mt-0.5" />
           <div>
             <h4 className="font-semibold text-blue-900 mb-2">על הערכת המנהל/ת</h4>
             <p className="text-sm text-blue-800 mb-2">
@@ -141,7 +142,7 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
 
           <div>
             <Label htmlFor="director-signature" className="text-right block mb-2 font-semibold">
-              <FileSignature className="w-4 h-4 inline ml-2" />
+              <FileSignatureIcon className="w-4 h-4 inline ml-2" />
               חתימת המנהל/ת
             </Label>
             <div className="text-sm text-gray-600 mb-2 text-right">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { RefreshCw, Clock, Pause, Play, Settings } from 'lucide-react'
+import { ArrowsClockwiseIcon, ClockIcon, GearIcon, PauseIcon, PlayIcon } from '@phosphor-icons/react'
+
 
 interface DashboardRefreshProps {
   onRefresh: () => Promise<void>
@@ -145,7 +146,7 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
       {/* Last Updated */}
       {lastUpdated && (
         <div className="flex items-center text-sm text-gray-600 font-reisinger-yonatan">
-          <Clock className="w-4 h-4 ml-1" />
+          <ClockIcon className="w-4 h-4 ml-1" />
           <span>עודכן: {formatLastUpdated(lastUpdated)}</span>
         </div>
       )}
@@ -195,7 +196,7 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
         }`}
         title="רענן ידנית"
       >
-        <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+        <ArrowsClockwiseIcon className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
       </button>
 
       {/* Auto-refresh toggle */}
@@ -209,23 +210,23 @@ const DashboardRefresh: React.FC<DashboardRefreshProps> = ({
         title={isAutoRefresh ? 'השבת רענון אוטומטי' : 'הפעל רענון אוטומטי'}
       >
         {isAutoRefresh ? (
-          <Pause className="w-5 h-5" />
+          <PauseIcon className="w-5 h-5" />
         ) : (
-          <Play className="w-5 h-5" />
+          <PlayIcon className="w-5 h-5" />
         )}
       </button>
 
-      {/* Settings */}
+      {/* GearIcon */}
       <div className="relative">
         <button
           onClick={() => setShowSettings(!showSettings)}
           className="p-2 rounded text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors"
           title="הגדרות רענון"
         >
-          <Settings className="w-5 h-5" />
+          <GearIcon className="w-5 h-5" />
         </button>
 
-        {/* Settings dropdown */}
+        {/* GearIcon dropdown */}
         {showSettings && (
           <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
             <div className="p-4 space-y-4">

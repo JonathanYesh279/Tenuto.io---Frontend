@@ -1,28 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  Calendar,
-  Clock,
-  Award,
-  Plus,
-  CheckSquare,
-  BookOpen,
-  UserCheck,
-  TrendingUp,
-  Music,
-  Bell,
-  ChevronRight,
-  Activity,
-  FileText,
-  BarChart3,
-  BookOpenCheck,
-  GraduationCap,
-  ClipboardList,
-  UserPlus
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
+import { ActivityIcon, BellIcon, BookOpenCheckIcon, BookOpenIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClipboardTextIcon, ClockIcon, FileTextIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrendUpIcon, UserCircleCheckIcon, UserPlusIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface TheoryDashboardStats {
   totalTheoryStudents: number
@@ -279,7 +260,7 @@ export default function TheoryTeacherDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <Bell className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadTheoryDashboardData}
@@ -314,7 +295,7 @@ export default function TheoryTeacherDashboard() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
           <TheoryStatCard
-            icon={<Users className="w-6 h-6" />}
+            icon={<UsersIcon className="w-6 h-6" />}
             title="תלמידי תיאוריה"
             value={stats.totalTheoryStudents}
             bgColor="bg-blue-50"
@@ -322,7 +303,7 @@ export default function TheoryTeacherDashboard() {
             borderColor="border-blue-200"
           />
           <TheoryStatCard
-            icon={<Calendar className="w-6 h-6" />}
+            icon={<CalendarIcon className="w-6 h-6" />}
             title="שיעורים היום"
             value={stats.todaysLessons}
             bgColor="bg-green-50"
@@ -330,7 +311,7 @@ export default function TheoryTeacherDashboard() {
             borderColor="border-green-200"
           />
           <TheoryStatCard
-            icon={<Clock className="w-6 h-6" />}
+            icon={<ClockIcon className="w-6 h-6" />}
             title="שעות השבוע"
             value={stats.weeklyTheoryHours}
             suffix="שעות"
@@ -339,7 +320,7 @@ export default function TheoryTeacherDashboard() {
             borderColor="border-purple-200"
           />
           <TheoryStatCard
-            icon={<GraduationCap className="w-6 h-6" />}
+            icon={<GraduationCapIcon className="w-6 h-6" />}
             title="בחינות קרובות"
             value={stats.upcomingExams}
             bgColor="bg-yellow-50"
@@ -347,7 +328,7 @@ export default function TheoryTeacherDashboard() {
             borderColor="border-yellow-200"
           />
           <TheoryStatCard
-            icon={<BookOpen className="w-6 h-6" />}
+            icon={<BookOpenIcon className="w-6 h-6" />}
             title="קבוצות פעילות"
             value={stats.activeTheoryGroups}
             bgColor="bg-indigo-50"
@@ -355,7 +336,7 @@ export default function TheoryTeacherDashboard() {
             borderColor="border-indigo-200"
           />
           <TheoryStatCard
-            icon={<ClipboardList className="w-6 h-6" />}
+            icon={<ClipboardTextIcon className="w-6 h-6" />}
             title="ציונים ממתינים"
             value={stats.pendingGrades}
             bgColor="bg-orange-50"
@@ -371,25 +352,25 @@ export default function TheoryTeacherDashboard() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <TheoryQuickActionButton
-              icon={<Plus className="w-5 h-5" />}
+              icon={<PlusIcon className="w-5 h-5" />}
               label="תזמן שיעור תיאוריה"
               onClick={() => handleQuickAction('scheduleTheoryLesson')}
               color="indigo"
             />
             <TheoryQuickActionButton
-              icon={<CheckSquare className="w-5 h-5" />}
+              icon={<CheckSquareIcon className="w-5 h-5" />}
               label="סמן נוכחות תיאוריה"
               onClick={() => handleQuickAction('markTheoryAttendance')}
               color="green"
             />
             <TheoryQuickActionButton
-              icon={<UserPlus className="w-5 h-5" />}
+              icon={<UserPlusIcon className="w-5 h-5" />}
               label="נהל קבוצות תיאוריה"
               onClick={() => handleQuickAction('manageTheoryGroups')}
               color="blue"
             />
             <TheoryQuickActionButton
-              icon={<BookOpenCheck className="w-5 h-5" />}
+              icon={<BookOpenCheckIcon className="w-5 h-5" />}
               label="דרג תלמידים"
               onClick={() => handleQuickAction('gradeStudents')}
               color="purple"
@@ -410,13 +391,13 @@ export default function TheoryTeacherDashboard() {
                   className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
                 >
                   צפה בכל
-                  <ChevronRight className="w-4 h-4" />
+                  <CaretRightIcon className="w-4 h-4" />
                 </button>
               </div>
 
               {upcomingLessons.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין שיעורי תיאוריה מתוכננים</p>
                 </div>
               ) : (
@@ -425,7 +406,7 @@ export default function TheoryTeacherDashboard() {
                     <div key={lesson.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                          <BookOpen className="w-5 h-5 text-indigo-600" />
+                          <BookOpenIcon className="w-5 h-5 text-indigo-600" />
                         </div>
                         <div>
                           <div className="font-medium text-gray-900 font-reisinger-yonatan">{lesson.name}</div>
@@ -460,13 +441,13 @@ export default function TheoryTeacherDashboard() {
                   className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
                 >
                   צפה בכל
-                  <ChevronRight className="w-4 h-4" />
+                  <CaretRightIcon className="w-4 h-4" />
                 </button>
               </div>
 
               {studentProgress.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <TrendingUp className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <TrendUpIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין נתוני התקדמות</p>
                 </div>
               ) : (
@@ -475,7 +456,7 @@ export default function TheoryTeacherDashboard() {
                     <div key={student.studentId} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <BookOpen className="w-4 h-4 text-blue-600" />
+                          <BookOpenIcon className="w-4 h-4 text-blue-600" />
                         </div>
                         <div>
                           <div className="font-medium text-gray-900 font-reisinger-yonatan">{student.studentName}</div>
@@ -511,18 +492,18 @@ export default function TheoryTeacherDashboard() {
             </div>
           </div>
 
-          {/* Recent Theory Activity Feed */}
+          {/* Recent Theory ActivityIcon Feed */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                 פעילות אחרונה - תיאוריה
               </h2>
-              <Activity className="w-5 h-5 text-gray-400" />
+              <ActivityIcon className="w-5 h-5 text-gray-400" />
             </div>
 
             {recentActivities.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <Bell className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                <BellIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p className="font-reisinger-yonatan">אין פעילות לאחרונה</p>
               </div>
             ) : (
@@ -535,11 +516,11 @@ export default function TheoryTeacherDashboard() {
                       activity.type === 'grade' ? 'bg-purple-100' :
                       activity.type === 'enrollment' ? 'bg-yellow-100' : 'bg-indigo-100'
                     }`}>
-                      {activity.type === 'lesson' && <BookOpen className="w-4 h-4 text-blue-600" />}
-                      {activity.type === 'attendance' && <CheckSquare className="w-4 h-4 text-green-600" />}
-                      {activity.type === 'grade' && <TrendingUp className="w-4 h-4 text-purple-600" />}
-                      {activity.type === 'enrollment' && <UserPlus className="w-4 h-4 text-yellow-600" />}
-                      {activity.type === 'exam' && <GraduationCap className="w-4 h-4 text-indigo-600" />}
+                      {activity.type === 'lesson' && <BookOpenIcon className="w-4 h-4 text-blue-600" />}
+                      {activity.type === 'attendance' && <CheckSquareIcon className="w-4 h-4 text-green-600" />}
+                      {activity.type === 'grade' && <TrendUpIcon className="w-4 h-4 text-purple-600" />}
+                      {activity.type === 'enrollment' && <UserPlusIcon className="w-4 h-4 text-yellow-600" />}
+                      {activity.type === 'exam' && <GraduationCapIcon className="w-4 h-4 text-indigo-600" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">{activity.title}</p>

@@ -1,28 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  Calendar, 
-  Clock, 
-  Music, 
-  Edit2, 
-  Save, 
-  X,
-  Play,
-  Star,
-  CheckCircle,
-  AlertCircle,
-  XCircle,
-  User,
-  FileText,
-  Link2,
-  Plus,
-  Trash2
-} from 'lucide-react';
+
 import { Card } from './ui/Card';
 import type { PresentationDisplay, ProgramPiece } from '../types/bagrut.types';
 import { getPresentationStatusColor, getPresentationStatusIcon } from '../services/presentationService';
 import DetailedMagenBagrutEditor from './DetailedMagenBagrutEditor';
 import apiService from '../services/apiService';
 import { getDisplayName } from '@/utils/nameUtils';
+import { CalendarIcon, CheckCircleIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, LinkIcon, MusicNotesIcon, PencilSimpleIcon, PlayIcon, PlusIcon, StarIcon, TrashIcon, UserIcon, WarningCircleIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PresentationCardProps {
   presentation: PresentationDisplay;
@@ -194,10 +178,10 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
   };
 
   const getStatusIcon = (status?: string, completed?: boolean) => {
-    if (completed || status === 'עבר/ה') return <CheckCircle className="w-4 h-4" />;
-    if (status === 'לא עבר/ה') return <XCircle className="w-4 h-4" />;
-    if (status === 'לא נבחן') return <AlertCircle className="w-4 h-4" />;
-    return <Clock className="w-4 h-4" />;
+    if (completed || status === 'עבר/ה') return <CheckCircleIcon className="w-4 h-4" />;
+    if (status === 'לא עבר/ה') return <XCircleIcon className="w-4 h-4" />;
+    if (status === 'לא נבחן') return <WarningCircleIcon className="w-4 h-4" />;
+    return <ClockIcon className="w-4 h-4" />;
   };
 
   const isMagen = presentation.type === 'magen';
@@ -210,7 +194,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              {isMagen ? <Star className="w-5 h-5 text-yellow-500" /> : <Play className="w-5 h-5 text-primary" />}
+              {isMagen ? <StarIcon className="w-5 h-5 text-yellow-500" /> : <PlayIcon className="w-5 h-5 text-primary" />}
               <h3 className="text-lg font-semibold text-gray-900">{presentation.title}</h3>
             </div>
           </div>
@@ -236,7 +220,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                   className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-all"
                   title="עריכה"
                 >
-                  <Edit2 className="w-4 h-4" />
+                  <PencilSimpleIcon className="w-4 h-4" />
                 </button>
                 {onDelete && (
                   <button
@@ -247,7 +231,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                     className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-all"
                     title="מחיקה"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 )}
               </div>
@@ -260,7 +244,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                   }}
                   className="p-1 text-green-600 hover:bg-green-50 rounded"
                 >
-                  <Save className="w-4 h-4" />
+                  <FloppyDiskIcon className="w-4 h-4" />
                 </button>
                 <button
                   onClick={(e) => {
@@ -269,7 +253,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                   }}
                   className="p-1 text-red-600 hover:bg-red-50 rounded"
                 >
-                  <X className="w-4 h-4" />
+                  <XIcon className="w-4 h-4" />
                 </button>
               </div>
             ) : null}
@@ -280,7 +264,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         {!isEditing ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
             <div className="flex items-center gap-2 text-sm text-gray-700">
-              <Calendar className="w-4 h-4 text-gray-500" />
+              <CalendarIcon className="w-4 h-4 text-gray-500" />
               <span>
                 {presentation.date 
                   ? new Date(presentation.date).toLocaleDateString('he-IL', {
@@ -295,7 +279,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
 
             {(examinerNames || presentation.reviewedBy) && (
               <div className="flex items-center gap-2 text-sm text-gray-700">
-                <User className="w-4 h-4 text-gray-500" />
+                <UserIcon className="w-4 h-4 text-gray-500" />
                 <span title={`Original: ${presentation.reviewedBy}, Resolved: ${examinerNames || 'none'}`}>
                   {(() => {
                     const displayName = examinerNames || presentation.reviewedBy;
@@ -315,7 +299,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
           <div className="space-y-4 mb-4">
             {/* Date Input */}
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-gray-500" />
+              <CalendarIcon className="w-4 h-4 text-gray-500" />
               <label className="text-sm font-medium text-gray-700 w-24">תאריך השמעה:</label>
               <input
                 type="datetime-local"
@@ -331,7 +315,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             {/* Examiners */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-gray-500" />
+                <UserIcon className="w-4 h-4 text-gray-500" />
                 <label className="text-sm font-medium text-gray-700">שמות הבוחנים:</label>
               </div>
               {examiners.map((examiner, index) => (
@@ -349,7 +333,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                       className="p-1 text-red-600 hover:bg-red-50 rounded"
                       type="button"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   )}
                 </div>
@@ -359,7 +343,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                 className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-neutral-800 rounded transition-colors text-sm mr-6"
                 type="button"
               >
-                <Plus className="w-4 h-4" />
+                <PlusIcon className="w-4 h-4" />
                 הוסף בוחן
               </button>
             </div>
@@ -367,7 +351,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             {/* Recording Links */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Link2 className="w-4 h-4 text-gray-500" />
+                <LinkIcon className="w-4 h-4 text-gray-500" />
                 <label className="text-sm font-medium text-gray-700">קישורי תיעוד:</label>
               </div>
               {recordingLinks.map((link, index) => (
@@ -385,7 +369,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                       className="p-1 text-red-600 hover:bg-red-50 rounded"
                       type="button"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   )}
                 </div>
@@ -395,7 +379,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
                 className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-neutral-800 rounded transition-colors text-sm mr-6"
                 type="button"
               >
-                <Plus className="w-4 h-4" />
+                <PlusIcon className="w-4 h-4" />
                 הוסף קישור
               </button>
             </div>
@@ -403,7 +387,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
             {/* Notes */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-gray-500" />
+                <FileTextIcon className="w-4 h-4 text-gray-500" />
                 <label className="text-sm font-medium text-gray-700">הערות כלליות:</label>
               </div>
               <textarea
@@ -465,7 +449,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
         {/* Recording Links */}
         {presentation.recordingLinks && presentation.recordingLinks.length > 0 && (
           <div className="mt-3 flex items-center gap-2 text-sm text-blue-600">
-            <Link2 className="w-4 h-4" />
+            <LinkIcon className="w-4 h-4" />
             <span>{presentation.recordingLinks.length} קישורי תיעוד</span>
           </div>
         )}
@@ -491,7 +475,7 @@ export const PresentationCard: React.FC<PresentationCardProps> = ({
           <div className="bg-white rounded p-6 max-w-md w-full mx-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-red-100 rounded-full">
-                <Trash2 className="w-6 h-6 text-red-600" />
+                <TrashIcon className="w-6 h-6 text-red-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">מחיקת {presentation.title}</h3>
             </div>

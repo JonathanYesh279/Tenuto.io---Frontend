@@ -1,20 +1,8 @@
 import { useState } from 'react'
-import { 
-  PlayCircle, 
-  CheckCircle, 
-  Clock, 
-  Edit, 
-  Save, 
-  X, 
-  Calendar,
-  Star,
-  FileText,
-  ExternalLink,
-  Plus,
-  Trash2
-} from 'lucide-react'
+
 import { Card } from '../ui/Card'
 import { StatusBadge } from '../ui/Table'
+import { ArrowSquareOutIcon, CalendarIcon, CheckCircleIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, PencilIcon, PlayCircleIcon, PlusIcon, StarIcon, TrashIcon, XIcon } from '@phosphor-icons/react'
 
 const PRESENTATION_NAMES = [
   'השמעה 1',
@@ -163,9 +151,9 @@ export default function PresentationTracker({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             {presentation.completed ? (
-              <CheckCircle className="w-6 h-6 text-green-500 mr-3" />
+              <CheckCircleIcon className="w-6 h-6 text-green-500 mr-3" />
             ) : (
-              <Clock className="w-6 h-6 text-gray-400 mr-3" />
+              <ClockIcon className="w-6 h-6 text-gray-400 mr-3" />
             )}
             <h3 className="text-lg font-semibold text-gray-900">
               {PRESENTATION_NAMES[index]}
@@ -180,7 +168,7 @@ export default function PresentationTracker({
                 onClick={() => isEditing ? saveEdit() : startEdit(index)}
                 className="p-2 text-primary hover:text-foreground"
               >
-                {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
+                {isEditing ? <FloppyDiskIcon className="w-4 h-4" /> : <PencilIcon className="w-4 h-4" />}
               </button>
             )}
             
@@ -189,7 +177,7 @@ export default function PresentationTracker({
                 onClick={cancelEdit}
                 className="p-2 text-gray-600 hover:text-gray-800"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -247,7 +235,7 @@ export default function PresentationTracker({
           <div className="space-y-3">
             {presentation.date && (
               <div className="flex items-center text-sm text-gray-600">
-                <Calendar className="w-4 h-4 mr-2" />
+                <CalendarIcon className="w-4 h-4 mr-2" />
                 {new Date(presentation.date).toLocaleDateString('he-IL')}
               </div>
             )}
@@ -275,7 +263,7 @@ export default function PresentationTracker({
                 onClick={() => addRecordingLink(index)}
                 className="text-xs text-primary hover:text-foreground flex items-center"
               >
-                <Plus className="w-3 h-3 mr-1" />
+                <PlusIcon className="w-3 h-3 mr-1" />
                 הוסף קישור
               </button>
             )}
@@ -291,7 +279,7 @@ export default function PresentationTracker({
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 text-sm flex items-center"
                   >
-                    <ExternalLink className="w-3 h-3 mr-1" />
+                    <ArrowSquareOutIcon className="w-3 h-3 mr-1" />
                     הקלטה {linkIndex + 1}
                   </a>
                   {!readonly && (
@@ -299,7 +287,7 @@ export default function PresentationTracker({
                       onClick={() => removeRecordingLink(index, linkIndex)}
                       className="text-red-600 hover:text-red-800"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <TrashIcon className="w-3 h-3" />
                     </button>
                   )}
                 </div>
@@ -320,7 +308,7 @@ export default function PresentationTracker({
       <Card key={index} padding="md" className="border-l-4 border-l-yellow-500">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <Star className="w-6 h-6 text-yellow-500 mr-3" />
+            <StarIcon className="w-6 h-6 text-yellow-500 mr-3" />
             <h3 className="text-xl font-bold text-gray-900">מגן בגרות</h3>
           </div>
           
@@ -344,7 +332,7 @@ export default function PresentationTracker({
                 onClick={() => isEditing ? saveEdit() : startEdit(index)}
                 className="p-2 text-primary hover:text-foreground"
               >
-                {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
+                {isEditing ? <FloppyDiskIcon className="w-4 h-4" /> : <PencilIcon className="w-4 h-4" />}
               </button>
             )}
             
@@ -353,7 +341,7 @@ export default function PresentationTracker({
                 onClick={cancelEdit}
                 className="p-2 text-gray-600 hover:text-gray-800"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -469,7 +457,7 @@ export default function PresentationTracker({
               
               {presentation.date && (
                 <div className="flex items-center text-sm text-gray-600">
-                  <Calendar className="w-4 h-4 mr-2" />
+                  <CalendarIcon className="w-4 h-4 mr-2" />
                   {new Date(presentation.date).toLocaleDateString('he-IL')}
                 </div>
               )}
@@ -523,7 +511,7 @@ export default function PresentationTracker({
                 onClick={() => addRecordingLink(index)}
                 className="text-xs text-primary hover:text-foreground flex items-center"
               >
-                <Plus className="w-3 h-3 mr-1" />
+                <PlusIcon className="w-3 h-3 mr-1" />
                 הוסף הקלטה
               </button>
             )}
@@ -539,7 +527,7 @@ export default function PresentationTracker({
                     rel="noopener noreferrer"
                     className="text-yellow-700 hover:text-yellow-900 text-sm flex items-center"
                   >
-                    <PlayCircle className="w-3 h-3 mr-1" />
+                    <PlayCircleIcon className="w-3 h-3 mr-1" />
                     הקלטת בחינה {linkIndex + 1}
                   </a>
                   {!readonly && (
@@ -547,7 +535,7 @@ export default function PresentationTracker({
                       onClick={() => removeRecordingLink(index, linkIndex)}
                       className="text-red-600 hover:text-red-800"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <TrashIcon className="w-3 h-3" />
                     </button>
                   )}
                 </div>
@@ -565,7 +553,7 @@ export default function PresentationTracker({
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <PlayCircle className="w-6 h-6 mr-3 text-primary" />
+          <PlayCircleIcon className="w-6 h-6 mr-3 text-primary" />
           מעקב השמעות
         </h2>
         

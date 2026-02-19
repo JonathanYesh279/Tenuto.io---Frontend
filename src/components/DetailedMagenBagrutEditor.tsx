@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Save, X, Plus, Trash2, Calculator, AlertCircle } from 'lucide-react';
+
 import { Card } from './ui/Card';
 import type { ProgramPiece, DetailedGrading, PresentationDisplay } from '../types/bagrut.types';
+import { CalculatorIcon, FloppyDiskIcon, PlusIcon, TrashIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PieceGrading {
   pieceNumber: number;
@@ -243,7 +244,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="סגור"
           >
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -309,7 +310,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                         onClick={() => removeRecordingLink(index)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                       </button>
                     )}
                   </div>
@@ -318,7 +319,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                   onClick={addRecordingLink}
                   className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-muted rounded transition-colors"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   הוסף קישור נוסף
                 </button>
               </div>
@@ -330,7 +331,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">טבלת ציונים מפורטת</h3>
               <div className="flex items-center gap-2 text-lg font-bold text-primary">
-                <Calculator className="w-5 h-5" />
+                <CalculatorIcon className="w-5 h-5" />
                 ממוצע כללי: {calculateOverallAverage()}
               </div>
             </div>
@@ -500,7 +501,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
               onClick={handleSave}
               className="flex-1 sm:flex-none flex items-center justify-center px-6 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
             >
-              <Save className="w-4 h-4 ml-2" />
+              <FloppyDiskIcon className="w-4 h-4 ml-2" />
               שמור ציונים
             </button>
           </div>

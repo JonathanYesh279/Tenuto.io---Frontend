@@ -1,17 +1,8 @@
 import { useState } from 'react'
-import { 
-  Download, 
-  FileText, 
-  Award, 
-  Printer,
-  Mail,
-  Share2,
-  CheckCircle,
-  AlertCircle,
-  Calendar
-} from 'lucide-react'
+
 import { Card } from '../ui/Card'
 import { getDisplayName } from '../../utils/nameUtils'
+import { CalendarIcon, CheckCircleIcon, DownloadSimpleIcon, EnvelopeIcon, FileTextIcon, MedalIcon, PrinterIcon, ShareNetworkIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface BagrutData {
   _id?: string
@@ -93,28 +84,28 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
       key: 'summary',
       label: 'דוח סיכום',
       description: 'סיכום כללי של התקדמות הבגרות',
-      icon: FileText,
+      icon: FileTextIcon,
       available: true
     },
     {
       key: 'detailed',
       label: 'דוח מפורט',
       description: 'דוח מלא הכולל את כל הפרטים והציונים',
-      icon: FileText,
+      icon: FileTextIcon,
       available: bagrut.presentations.some(p => p.completed)
     },
     {
       key: 'certificate',
       label: 'תעודת בגרות',
       description: 'תעודה רשמית (זמינה רק לאחר השלמה)',
-      icon: Award,
+      icon: MedalIcon,
       available: bagrut.isCompleted && bagrut.finalGrade !== null
     },
     {
       key: 'progress',
       label: 'דוח התקדמות',
       description: 'דוח זמני להורים ולתלמיד',
-      icon: Calendar,
+      icon: CalendarIcon,
       available: true
     }
   ]
@@ -224,7 +215,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
       <Card padding="md">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold text-gray-900 flex items-center">
-            <Download className="w-6 h-6 mr-3 text-primary" />
+            <DownloadSimpleIcon className="w-6 h-6 mr-3 text-primary" />
             ייצוא ושיתוף
           </h3>
           
@@ -233,7 +224,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
               onClick={shareProgress}
               className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
             >
-              <Share2 className="w-4 h-4 mr-2" />
+              <ShareNetworkIcon className="w-4 h-4 mr-2" />
               שתף
             </button>
             
@@ -241,7 +232,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
               onClick={printReport}
               className="flex items-center px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
             >
-              <Printer className="w-4 h-4 mr-2" />
+              <PrinterIcon className="w-4 h-4 mr-2" />
               הדפס
             </button>
           </div>
@@ -275,9 +266,9 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
                         {type.label}
                       </h4>
                       {type.available ? (
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                        <CheckCircleIcon className="w-4 h-4 text-green-500 mr-2" />
                       ) : (
-                        <AlertCircle className="w-4 h-4 text-gray-400 mr-2" />
+                        <WarningCircleIcon className="w-4 h-4 text-gray-400 mr-2" />
                       )}
                     </div>
                     <p className={`text-sm ${
@@ -306,7 +297,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
               </>
             ) : (
               <>
-                <FileText className="w-4 h-4 mr-2" />
+                <FileTextIcon className="w-4 h-4 mr-2" />
                 ייצא כ-PDF
               </>
             )}
@@ -317,7 +308,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
             disabled={exporting || !EXPORT_TYPES.find(t => t.key === exportType)?.available || exportType === 'certificate'}
             className="flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <Download className="w-4 h-4 mr-2" />
+            <DownloadSimpleIcon className="w-4 h-4 mr-2" />
             ייצא כ-Excel
           </button>
           
@@ -326,7 +317,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
             disabled={exporting || !EXPORT_TYPES.find(t => t.key === exportType)?.available}
             className="flex items-center justify-center px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <Mail className="w-4 h-4 mr-2" />
+            <EnvelopeIcon className="w-4 h-4 mr-2" />
             שלח במייל
           </button>
         </div>
@@ -379,7 +370,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
         {bagrut.testDate && (
           <div className="mt-4 p-3 bg-blue-50 rounded">
             <div className="flex items-center text-blue-800">
-              <Calendar className="w-4 h-4 mr-2" />
+              <CalendarIcon className="w-4 h-4 mr-2" />
               <span className="font-medium">תאריך בחינה:</span>
               <span className="mr-2">{new Date(bagrut.testDate).toLocaleDateString('he-IL')}</span>
             </div>
@@ -391,7 +382,7 @@ export default function BagrutExporter({ bagrut, student, teacher }: BagrutExpor
       {bagrut.isCompleted && bagrut.finalGrade && (
         <Card padding="md" className="bg-yellow-50 border-yellow-200">
           <div className="text-center py-8">
-            <Award className="w-16 h-16 mx-auto mb-4 text-yellow-600" />
+            <MedalIcon className="w-16 h-16 mx-auto mb-4 text-yellow-600" />
             <h3 className="text-xl font-bold text-yellow-900 mb-2">תעודת בגרות במוזיקה</h3>
             <p className="text-yellow-800 mb-4">
               מוענקת בזה ל{getDisplayName(student?.personalInfo)}

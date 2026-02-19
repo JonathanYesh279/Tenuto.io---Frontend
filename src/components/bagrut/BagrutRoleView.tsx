@@ -1,33 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  GraduationCap,
-  Users,
-  Calendar,
-  Clock,
-  Award,
-  Music,
-  Target,
-  BarChart3,
-  AlertCircle,
-  CheckCircle,
-  Eye,
-  Edit,
-  Plus,
-  Download,
-  FileText,
-  CalendarClock,
-  Bell,
-  TrendingUp,
-  Activity,
-  Briefcase,
-  School
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
 import type { Bagrut } from '../../types/bagrut.types'
 import BagrutDashboard from './BagrutDashboard'
 import BagrutStudentManager from './BagrutStudentManager'
+import { ActivityIcon, BellIcon, BriefcaseIcon, CalendarClockIcon, CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, SchoolIcon, TargetIcon, TrendUpIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface BagrutRoleViewProps {
   role?: 'teacher' | 'admin' | 'conductor' | 'theory_teacher'
@@ -336,14 +315,14 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
               onClick={() => window.location.href = '/teacher/bagrut/add-student'}
               className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               הוסף תלמיד לבגרות
             </button>
             <button
               onClick={() => window.location.href = '/teacher/bagrut/schedule'}
               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
             >
-              <Calendar className="w-4 h-4" />
+              <CalendarIcon className="w-4 h-4" />
               תזמון מבחנים
             </button>
           </div>
@@ -355,14 +334,14 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
               onClick={() => window.location.href = '/conductor/bagrut/orchestra-overview'}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
             >
-              <Music className="w-4 h-4" />
+              <MusicNotesIcon className="w-4 h-4" />
               סקירת תזמורת
             </button>
             <button
               onClick={() => window.location.href = '/conductor/bagrut/performance-planning'}
               className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2"
             >
-              <Target className="w-4 h-4" />
+              <TargetIcon className="w-4 h-4" />
               תכנון ביצועים
             </button>
           </div>
@@ -374,14 +353,14 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
               onClick={() => window.location.href = '/theory/bagrut/assignments'}
               className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 flex items-center gap-2"
             >
-              <Briefcase className="w-4 h-4" />
+              <BriefcaseIcon className="w-4 h-4" />
               מטלות תיאוריה
             </button>
             <button
               onClick={() => window.location.href = '/theory/bagrut/evaluations'}
               className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 flex items-center gap-2"
             >
-              <School className="w-4 h-4" />
+              <SchoolIcon className="w-4 h-4" />
               הערכות תיאוריה
             </button>
           </div>
@@ -394,21 +373,21 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
               onClick={() => setActiveView('students')}
               className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2"
             >
-              <Users className="w-4 h-4" />
+              <UsersIcon className="w-4 h-4" />
               ניהול תלמידים
             </button>
             <button
               onClick={() => setActiveView('reports')}
               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
             >
-              <BarChart3 className="w-4 h-4" />
+              <ChartBarIcon className="w-4 h-4" />
               דוחות
             </button>
             <button
               onClick={() => window.location.href = '/admin/bagrut/export'}
               className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2"
             >
-              <Download className="w-4 h-4" />
+              <DownloadSimpleIcon className="w-4 h-4" />
               ייצא נתונים
             </button>
           </div>
@@ -457,7 +436,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
             <div key={member.studentId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Music className="w-4 h-4 text-blue-600" />
+                  <MusicNotesIcon className="w-4 h-4 text-blue-600" />
                 </div>
                 <div>
                   <div className="font-medium text-gray-900">{member.studentName}</div>
@@ -520,7 +499,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <WarningCircleIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadRoleSpecificData}
@@ -560,7 +539,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">סה״כ תלמידים</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.totalStudents}</p>
               </div>
-              <GraduationCap className="w-6 h-6 text-indigo-600" />
+              <GraduationCapIcon className="w-6 h-6 text-indigo-600" />
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -569,7 +548,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">פעילים</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.activeStudents}</p>
               </div>
-              <Clock className="w-6 h-6 text-blue-600" />
+              <ClockIcon className="w-6 h-6 text-blue-600" />
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -578,7 +557,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">הושלמו</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.completedStudents}</p>
               </div>
-              <CheckCircle className="w-6 h-6 text-green-600" />
+              <CheckCircleIcon className="w-6 h-6 text-green-600" />
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -587,7 +566,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">אחוז הצלחה</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.passRate}%</p>
               </div>
-              <Target className="w-6 h-6 text-purple-600" />
+              <TargetIcon className="w-6 h-6 text-purple-600" />
             </div>
           </div>
         </div>

@@ -1,23 +1,10 @@
 import { useState, useEffect } from 'react'
-import { 
-  X, 
-  Search, 
-  Users, 
-  User, 
-  Music,
-  Phone,
-  Mail,
-  GraduationCap,
-  Filter,
-  UserPlus,
-  UserMinus,
-  AlertCircle,
-  CheckCircle2
-} from 'lucide-react'
+
 import { Card } from './ui/Card'
 import { orchestraService, studentService } from '../services/apiService'
 import { type Orchestra } from '../utils/orchestraUtils'
 import { getDisplayName } from '@/utils/nameUtils'
+import { CheckCircle2Icon, EnvelopeIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MusicNotesIcon, PhoneIcon, UserIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface OrchestraMemberManagementProps {
   orchestraId: string
@@ -133,10 +120,10 @@ export default function OrchestraMemberManagement({
     }
   }
 
-  // Filter students based on search and filters
+  // FunnelIcon students based on search and filters
   const filterStudents = (students: StudentWithDetails[]) => {
     return students.filter(student => {
-      // Search filter
+      // MagnifyingGlassIcon filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
         if (!getDisplayName(student.personalInfo).toLowerCase().includes(query)) {
@@ -203,7 +190,7 @@ export default function OrchestraMemberManagement({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
         <div className="bg-white rounded p-8 max-w-md w-full mx-4">
           <div className="flex items-center mb-4">
-            <AlertCircle className="w-6 h-6 text-red-600 ml-2" />
+            <WarningCircleIcon className="w-6 h-6 text-red-600 ml-2" />
             <h3 className="text-lg font-semibold text-gray-900">שגיאה</h3>
           </div>
           <p className="text-gray-600 mb-6">{error || 'לא ניתן לטעון נתוני התזמורת'}</p>
@@ -227,7 +214,7 @@ export default function OrchestraMemberManagement({
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3 flex-1">
             <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-gray-600" />
+              <UserIcon className="w-5 h-5 text-gray-600" />
             </div>
             <div className="flex-1">
               <div className="font-medium text-gray-900 mb-1">
@@ -237,14 +224,14 @@ export default function OrchestraMemberManagement({
               <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                 {student.academicInfo?.class && (
                   <div className="flex items-center gap-1">
-                    <GraduationCap className="w-3 h-3" />
+                    <GraduationCapIcon className="w-3 h-3" />
                     <span>כיתה {student.academicInfo.class}</span>
                   </div>
                 )}
                 
                 {primaryInstrument && (
                   <div className="flex items-center gap-1">
-                    <Music className="w-3 h-3" />
+                    <MusicNotesIcon className="w-3 h-3" />
                     <span>{primaryInstrument.instrumentName}</span>
                     <span className="text-xs text-gray-500">
                       (שלב {primaryInstrument.currentStage})
@@ -256,14 +243,14 @@ export default function OrchestraMemberManagement({
               <div className="flex items-center gap-4 text-xs text-gray-500">
                 {student.personalInfo.phone && (
                   <div className="flex items-center gap-1">
-                    <Phone className="w-3 h-3" />
+                    <PhoneIcon className="w-3 h-3" />
                     <span>{student.personalInfo.phone}</span>
                   </div>
                 )}
                 
                 {student.personalInfo.studentEmail && (
                   <div className="flex items-center gap-1">
-                    <Mail className="w-3 h-3" />
+                    <EnvelopeIcon className="w-3 h-3" />
                     <span>{student.personalInfo.studentEmail}</span>
                   </div>
                 )}
@@ -285,7 +272,7 @@ export default function OrchestraMemberManagement({
                 {isLoading ? (
                   <div className="animate-spin rounded-full h-3 w-3 border border-gray-400 border-t-transparent"></div>
                 ) : (
-                  <UserMinus className="w-3 h-3" />
+                  <UserMinusIcon className="w-3 h-3" />
                 )}
                 הסר
               </button>
@@ -302,7 +289,7 @@ export default function OrchestraMemberManagement({
                 {isLoading ? (
                   <div className="animate-spin rounded-full h-3 w-3 border border-gray-400 border-t-transparent"></div>
                 ) : (
-                  <UserPlus className="w-3 h-3" />
+                  <UserPlusIcon className="w-3 h-3" />
                 )}
                 הוסף
               </button>
@@ -326,17 +313,17 @@ export default function OrchestraMemberManagement({
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
 
         {/* Filters */}
         <div className="p-6 border-b border-gray-200 bg-gray-50">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
+            {/* MagnifyingGlassIcon */}
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="חיפוש תלמידים..."
@@ -347,7 +334,7 @@ export default function OrchestraMemberManagement({
               </div>
             </div>
 
-            {/* Class Filter */}
+            {/* Class FunnelIcon */}
             <div className="w-32">
               <select
                 value={classFilter}
@@ -361,7 +348,7 @@ export default function OrchestraMemberManagement({
               </select>
             </div>
 
-            {/* Instrument Filter */}
+            {/* Instrument FunnelIcon */}
             <div className="w-40">
               <select
                 value={instrumentFilter}
@@ -384,7 +371,7 @@ export default function OrchestraMemberManagement({
               }}
               className="px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
             >
-              <Filter className="w-4 h-4" />
+              <FunnelIcon className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -395,7 +382,7 @@ export default function OrchestraMemberManagement({
           <div className="flex-1 border-b md:border-b-0 md:border-l border-gray-200">
             <div className="p-6 border-b border-gray-200 bg-blue-50">
               <div className="flex items-center gap-2 mb-2">
-                <Users className="w-5 h-5 text-blue-600" />
+                <UsersIcon className="w-5 h-5 text-blue-600" />
                 <h3 className="font-semibold text-gray-900">חברים נוכחיים</h3>
                 <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
                   {filteredCurrentMembers.length}
@@ -417,13 +404,13 @@ export default function OrchestraMemberManagement({
                 </div>
               ) : currentMembers.length === 0 ? (
                 <div className="text-center py-12">
-                  <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <UsersIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">אין חברים בתזמורת</h4>
                   <p className="text-gray-600">התחל על ידי הוספת תלמידים מהרשימה הזמינה</p>
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <MagnifyingGlassIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">אין תוצאות</h4>
                   <p className="text-gray-600">נסה לשנות את קריטריוני החיפוש</p>
                 </div>
@@ -435,7 +422,7 @@ export default function OrchestraMemberManagement({
           <div className="flex-1">
             <div className="p-6 border-b border-gray-200 bg-green-50">
               <div className="flex items-center gap-2 mb-2">
-                <UserPlus className="w-5 h-5 text-green-600" />
+                <UserPlusIcon className="w-5 h-5 text-green-600" />
                 <h3 className="font-semibold text-gray-900">תלמידים זמינים</h3>
                 <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
                   {filteredAvailableStudents.length}
@@ -457,13 +444,13 @@ export default function OrchestraMemberManagement({
                 </div>
               ) : availableStudents.length === 0 ? (
                 <div className="text-center py-12">
-                  <CheckCircle2 className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                  <CheckCircle2Icon className="w-16 h-16 text-green-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">כל התלמידים כבר חברים</h4>
                   <p className="text-gray-600">כל התלמידים הפעילים כבר חברים בתזמורת</p>
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <MagnifyingGlassIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">אין תוצאות</h4>
                   <p className="text-gray-600">נסה לשנות את קריטריוני החיפוש</p>
                 </div>

@@ -1,23 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import {
-  Check,
-  Save,
-  Trash2,
-  Users,
-  Filter,
-  Download,
-  AlertTriangle,
-  CheckSquare,
-  Square,
-  Eye,
-  RotateCcw,
-  Clock,
-  MapPin,
-  BookOpen,
-  Loader2,
-  Info,
-  TrendingUp
-} from 'lucide-react'
+
 import { Card } from './ui/Card'
 import Modal from './ui/Modal'
 import ConfirmationModal from './ui/ConfirmationModal'
@@ -25,6 +7,7 @@ import { theoryService, teacherService } from '../services/apiService'
 import { filterLessons, type TheoryLesson } from '../utils/theoryLessonUtils'
 import { VALID_LOCATIONS } from '../constants/locations'
 import { getDisplayName } from '@/utils/nameUtils'
+import { ArrowCounterClockwiseIcon, BookOpenIcon, CheckIcon, CheckSquareIcon, CircleNotchIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FloppyDiskIcon, FunnelIcon, InfoIcon, MapPinIcon, SquareIcon, TrashIcon, TrendUpIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface BulkTheoryUpdateTabProps {
   lessons: TheoryLesson[]
@@ -66,7 +49,7 @@ export default function BulkTheoryUpdateTab({
   const [selectedLessons, setSelectedLessons] = useState<Set<string>>(new Set())
   const [selectAll, setSelectAll] = useState(false)
   
-  // Filter state for bulk tab
+  // FunnelIcon state for bulk tab
   const [localFilters, setLocalFilters] = useState({
     category: '',
     teacherId: '',
@@ -134,7 +117,7 @@ export default function BulkTheoryUpdateTab({
     }
   }
 
-  // Filter lessons based on local filters and search
+  // FunnelIcon lessons based on local filters and search
   const filteredLessons = useMemo(() => {
     let filtered = filterLessons(lessons, {
       searchQuery,
@@ -211,7 +194,7 @@ export default function BulkTheoryUpdateTab({
     setLoading(true)
     setError('')
     try {
-      // Filter out empty values
+      // FunnelIcon out empty values
       const updateData = Object.entries(bulkUpdateData).reduce((acc, [key, value]) => {
         if (value !== undefined && value !== '' && value !== null) {
           acc[key] = value
@@ -445,7 +428,7 @@ export default function BulkTheoryUpdateTab({
           {/* Help/Instructions */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 max-w-md">
             <div className="flex items-start">
-              <Info className="w-4 h-4 text-blue-600 ml-2 mt-0.5 flex-shrink-0" />
+              <InfoIcon className="w-4 h-4 text-blue-600 ml-2 mt-0.5 flex-shrink-0" />
               <div className="text-sm text-blue-800">
                 <p className="font-medium mb-1">הוראות שימוש:</p>
                 <ul className="text-xs space-y-1">
@@ -475,7 +458,7 @@ export default function BulkTheoryUpdateTab({
               onClick={() => {/* TODO: Implement undo functionality */}}
               className="text-green-700 hover:text-green-900 text-sm font-medium"
             >
-              <RotateCcw className="w-4 h-4 inline ml-1" />
+              <ArrowCounterClockwiseIcon className="w-4 h-4 inline ml-1" />
               ביטול פעולה
             </button>
           )}
@@ -487,7 +470,7 @@ export default function BulkTheoryUpdateTab({
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
-              <Loader2 className="w-5 h-5 text-blue-600 animate-spin ml-2" />
+              <CircleNotchIcon className="w-5 h-5 text-blue-600 animate-spin ml-2" />
               <span className="text-blue-800 font-medium">{operationProgress.operation}</span>
             </div>
             <span className="text-blue-600 text-sm">
@@ -513,12 +496,12 @@ export default function BulkTheoryUpdateTab({
       <Card>
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-            <Filter className="w-5 h-5 ml-2" />
+            <FunnelIcon className="w-5 h-5 ml-2" />
             מסננים מתקדמים
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Category Filter */}
+            {/* Category FunnelIcon */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 קטגוריה
@@ -526,7 +509,7 @@ export default function BulkTheoryUpdateTab({
               <select
                 value={localFilters.category}
                 onChange={(e) => setLocalFilters(prev => ({ ...prev, category: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל הקטגוריות</option>
                 {categories.map(category => (
@@ -535,7 +518,7 @@ export default function BulkTheoryUpdateTab({
               </select>
             </div>
 
-            {/* Teacher Filter */}
+            {/* Teacher FunnelIcon */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 מורה
@@ -543,7 +526,7 @@ export default function BulkTheoryUpdateTab({
               <select
                 value={localFilters.teacherId}
                 onChange={(e) => setLocalFilters(prev => ({ ...prev, teacherId: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל המורים</option>
                 {teachers.map(teacher => (
@@ -554,7 +537,7 @@ export default function BulkTheoryUpdateTab({
               </select>
             </div>
 
-            {/* Status Filter */}
+            {/* Status FunnelIcon */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 סטטוס
@@ -562,7 +545,7 @@ export default function BulkTheoryUpdateTab({
               <select
                 value={localFilters.status}
                 onChange={(e) => setLocalFilters(prev => ({ ...prev, status: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="all">כל השיעורים</option>
                 <option value="active">פעילים</option>
@@ -581,7 +564,7 @@ export default function BulkTheoryUpdateTab({
             </div>
           </div>
 
-          {/* Date Range Filter */}
+          {/* Date Range FunnelIcon */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -594,7 +577,7 @@ export default function BulkTheoryUpdateTab({
                   ...prev, 
                   dateRange: { ...prev.dateRange, start: e.target.value } 
                 }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
               />
             </div>
             <div>
@@ -608,7 +591,7 @@ export default function BulkTheoryUpdateTab({
                   ...prev, 
                   dateRange: { ...prev.dateRange, end: e.target.value } 
                 }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
               />
             </div>
           </div>
@@ -620,7 +603,7 @@ export default function BulkTheoryUpdateTab({
         <Card>
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
-              <TrendingUp className="w-5 h-5 ml-2" />
+              <TrendUpIcon className="w-5 h-5 ml-2" />
               סיכום בחירה
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -659,7 +642,7 @@ export default function BulkTheoryUpdateTab({
               type="checkbox"
               checked={selectAll}
               onChange={handleSelectAll}
-              className="ml-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="ml-2 rounded border-gray-300 text-primary focus:ring-ring"
             />
             בחר הכל ({filteredLessons.length} שיעורים)
           </label>
@@ -681,7 +664,7 @@ export default function BulkTheoryUpdateTab({
                 onClick={handleExportCSV}
                 className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded-lg hover:bg-green-50"
               >
-                <Download className="w-4 h-4 ml-1" />
+                <DownloadSimpleIcon className="w-4 h-4 ml-1" />
                 ייצוא
               </button>
               
@@ -703,7 +686,7 @@ export default function BulkTheoryUpdateTab({
                 onClick={handleBulkUpdate}
                 className="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                <Save className="w-4 h-4 ml-1" />
+                <FloppyDiskIcon className="w-4 h-4 ml-1" />
                 עדכון ({selectedLessons.size})
               </button>
               
@@ -711,7 +694,7 @@ export default function BulkTheoryUpdateTab({
                 onClick={handleBulkDelete}
                 className="flex items-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
               >
-                <Trash2 className="w-4 h-4 ml-1" />
+                <TrashIcon className="w-4 h-4 ml-1" />
                 מחיקה ({selectedLessons.size})
               </button>
             </>
@@ -728,7 +711,7 @@ export default function BulkTheoryUpdateTab({
 
           {filteredLessons.length === 0 ? (
             <div className="text-center py-12">
-              <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <BookOpenIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">לא נמצאו שיעורים</h3>
               <p className="text-gray-600">נסה לשנות את המסננים או הוסף שיעורים חדשים</p>
             </div>
@@ -759,9 +742,9 @@ export default function BulkTheoryUpdateTab({
                           className="p-1 hover:bg-gray-100 rounded"
                         >
                           {selectedLessons.has(lesson._id) ? (
-                            <CheckSquare className="w-5 h-5 text-blue-600" />
+                            <CheckSquareIcon className="w-5 h-5 text-blue-600" />
                           ) : (
-                            <Square className="w-5 h-5 text-gray-400" />
+                            <SquareIcon className="w-5 h-5 text-gray-400" />
                           )}
                         </button>
                       </td>
@@ -782,19 +765,19 @@ export default function BulkTheoryUpdateTab({
                       </td>
                       <td className="px-4 py-3 text-sm">
                         <div className="flex items-center text-gray-600">
-                          <Clock className="w-4 h-4 ml-1" />
+                          <ClockIcon className="w-4 h-4 ml-1" />
                           {lesson.startTime} - {lesson.endTime}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm">
                         <div className="flex items-center text-gray-600">
-                          <MapPin className="w-4 h-4 ml-1" />
+                          <MapPinIcon className="w-4 h-4 ml-1" />
                           <span className="truncate max-w-20">{lesson.location}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm">
                         <div className="flex items-center text-gray-600">
-                          <Users className="w-4 h-4 ml-1" />
+                          <UsersIcon className="w-4 h-4 ml-1" />
                           {lesson.studentIds?.length || 0}
                         </div>
                       </td>
@@ -813,7 +796,7 @@ export default function BulkTheoryUpdateTab({
                           className="p-1 hover:bg-gray-100 rounded text-blue-600"
                           title="צפייה בפרטים"
                         >
-                          <Eye className="w-4 h-4" />
+                          <EyeIcon className="w-4 h-4" />
                         </button>
                       </td>
                     </tr>
@@ -842,7 +825,7 @@ export default function BulkTheoryUpdateTab({
               <div className="space-y-6">
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-center">
-                    <Users className="w-5 h-5 text-blue-600 ml-2" />
+                    <UsersIcon className="w-5 h-5 text-blue-600 ml-2" />
                     <p className="text-blue-800">
                       עדכון קבוצתי של {selectedLessons.size} שיעורי תיאוריה
                     </p>
@@ -861,7 +844,7 @@ export default function BulkTheoryUpdateTab({
                     <select
                       value={bulkUpdateData.category || ''}
                       onChange={(e) => setBulkUpdateData(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                     >
                       <option value="">ללא שינוי</option>
                       {categories.map(category => (
@@ -878,7 +861,7 @@ export default function BulkTheoryUpdateTab({
                     <select
                       value={bulkUpdateData.teacherId || ''}
                       onChange={(e) => setBulkUpdateData(prev => ({ ...prev, teacherId: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                     >
                       <option value="">ללא שינוי</option>
                       {teachers.map(teacher => (
@@ -897,7 +880,7 @@ export default function BulkTheoryUpdateTab({
                     <select
                       value={bulkUpdateData.location || ''}
                       onChange={(e) => setBulkUpdateData(prev => ({ ...prev, location: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                     >
                       <option value="">ללא שינוי</option>
                       {VALID_LOCATIONS.map(location => (
@@ -917,7 +900,7 @@ export default function BulkTheoryUpdateTab({
                         ...prev, 
                         isActive: e.target.value === '' ? undefined : e.target.value === 'true' 
                       }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                     >
                       <option value="">ללא שינוי</option>
                       <option value="true">פעיל</option>
@@ -934,7 +917,7 @@ export default function BulkTheoryUpdateTab({
                       type="time"
                       value={bulkUpdateData.startTime || ''}
                       onChange={(e) => setBulkUpdateData(prev => ({ ...prev, startTime: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                     />
                   </div>
 
@@ -947,7 +930,7 @@ export default function BulkTheoryUpdateTab({
                       type="time"
                       value={bulkUpdateData.endTime || ''}
                       onChange={(e) => setBulkUpdateData(prev => ({ ...prev, endTime: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                     />
                   </div>
                 </div>
@@ -962,7 +945,7 @@ export default function BulkTheoryUpdateTab({
                       type="text"
                       value={bulkUpdateData.title || ''}
                       onChange={(e) => setBulkUpdateData(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                       placeholder="ללא שינוי"
                     />
                   </div>
@@ -977,7 +960,7 @@ export default function BulkTheoryUpdateTab({
                       max="50"
                       value={bulkUpdateData.maxStudents || ''}
                       onChange={(e) => setBulkUpdateData(prev => ({ ...prev, maxStudents: e.target.value ? parseInt(e.target.value) : undefined }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                       placeholder="ללא שינוי"
                     />
                   </div>
@@ -992,7 +975,7 @@ export default function BulkTheoryUpdateTab({
                     value={bulkUpdateData.description || ''}
                     onChange={(e) => setBulkUpdateData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring"
                     placeholder="ללא שינוי"
                   />
                 </div>
@@ -1002,7 +985,7 @@ export default function BulkTheoryUpdateTab({
               <div className="space-y-6">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <div className="flex items-center">
-                    <AlertTriangle className="w-5 h-5 text-yellow-600 ml-2" />
+                    <WarningIcon className="w-5 h-5 text-yellow-600 ml-2" />
                     <p className="text-yellow-800 font-medium">
                       תצוגה מקדימה - השינויים יחולו על {selectedLessons.size} שיעורים
                     </p>
@@ -1070,7 +1053,7 @@ export default function BulkTheoryUpdateTab({
                   onClick={handleBulkUpdateSubmit}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
-                  <Eye className="w-4 h-4 ml-1 inline" />
+                  <EyeIcon className="w-4 h-4 ml-1 inline" />
                   תצוגה מקדימה
                 </button>
               )}
@@ -1083,7 +1066,7 @@ export default function BulkTheoryUpdateTab({
                   {loading ? (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
                   ) : (
-                    <Check className="w-4 h-4 ml-1" />
+                    <CheckIcon className="w-4 h-4 ml-1" />
                   )}
                   אישור עדכון
                 </button>

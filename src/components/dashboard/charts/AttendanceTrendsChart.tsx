@@ -6,7 +6,8 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type AttendanceTrendData } from '../../../services/enhancedDashboardAnalytics';
-import { TrendingUp, TrendingDown, Minus, Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { ArrowDownRightIcon, ArrowUpRightIcon, CalendarIcon, MinusIcon, TrendDownIcon, TrendUpIcon } from '@phosphor-icons/react'
+
 
 interface AttendanceTrendsChartProps {
   schoolYearId?: string;
@@ -104,9 +105,9 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
         <div className="flex items-center justify-between mb-3">
           <h4 className="text-sm font-medium text-gray-900">מגמת נוכחות</h4>
           <div className="flex items-center gap-1">
-            {stats.direction === 'up' && <TrendingUp className="w-4 h-4 text-green-500" />}
-            {stats.direction === 'down' && <TrendingDown className="w-4 h-4 text-red-500" />}
-            {stats.direction === 'neutral' && <Minus className="w-4 h-4 text-gray-400" />}
+            {stats.direction === 'up' && <TrendUpIcon className="w-4 h-4 text-green-500" />}
+            {stats.direction === 'down' && <TrendDownIcon className="w-4 h-4 text-red-500" />}
+            {stats.direction === 'neutral' && <MinusIcon className="w-4 h-4 text-gray-400" />}
             <span className={`text-sm font-medium ${
               stats.direction === 'up' ? 'text-green-600' :
               stats.direction === 'down' ? 'text-red-600' : 'text-gray-600'
@@ -138,7 +139,7 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-100 rounded">
-            <Calendar className="w-5 h-5 text-blue-600" />
+            <CalendarIcon className="w-5 h-5 text-blue-600" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">מגמות נוכחות</h3>
@@ -176,8 +177,8 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
           stats.direction === 'down' ? 'bg-red-50' : 'bg-gray-50'
         }`}>
           <div className="flex items-center justify-center gap-1">
-            {stats.direction === 'up' && <ArrowUpRight className="w-5 h-5 text-green-600" />}
-            {stats.direction === 'down' && <ArrowDownRight className="w-5 h-5 text-red-600" />}
+            {stats.direction === 'up' && <ArrowUpRightIcon className="w-5 h-5 text-green-600" />}
+            {stats.direction === 'down' && <ArrowDownRightIcon className="w-5 h-5 text-red-600" />}
             <span className={`text-2xl font-bold ${
               stats.direction === 'up' ? 'text-green-600' :
               stats.direction === 'down' ? 'text-red-600' : 'text-gray-900'
@@ -236,8 +237,8 @@ const AttendanceTrendsChart: React.FC<AttendanceTrendsChartProps> = ({
                     }`}>
                       {value}%
                     </span>
-                    {isUp && <TrendingUp className="w-3 h-3 text-green-500" />}
-                    {isDown && <TrendingDown className="w-3 h-3 text-red-500" />}
+                    {isUp && <TrendUpIcon className="w-3 h-3 text-green-500" />}
+                    {isDown && <TrendDownIcon className="w-3 h-3 text-red-500" />}
                   </div>
                 </div>
               );

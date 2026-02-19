@@ -29,7 +29,7 @@
 }
 
 .btn-add-day {
-  @apply text-primary-600 hover:text-primary-800 text-sm font-medium;
+  @apply text-primary hover:text-primary text-sm font-medium;
 }
 
 .time-block-card {
@@ -37,7 +37,7 @@
 }
 
 .time-block-card:not(.inactive) {
-  @apply bg-white border-gray-200 hover:border-primary-300 hover:shadow-md;
+  @apply bg-white border-gray-200 hover:border-border hover:shadow-md;
 }
 
 .time-block-card.inactive {
@@ -105,7 +105,7 @@
 .form-row input,
 .form-row select,
 .form-row textarea {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500;
+  @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring;
 }
 
 .form-row textarea {
@@ -121,7 +121,7 @@
 }
 
 .form-actions button[type="submit"] {
-  @apply flex-1 flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50;
+  @apply flex-1 flex items-center justify-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary disabled:opacity-50;
 }
 
 .form-actions button[type="button"] {

@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react'
-import { Upload, X, File, AlertCircle, CheckCircle, Loader } from 'lucide-react'
+
 import { Card } from './ui/Card'
+import { CheckCircleIcon, CircleNotchIcon, FileIcon, UploadSimpleIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface DocumentUploadProps {
-  onUpload: (file: File, category: string, description?: string) => Promise<void>
+  onUpload: (file: FileIcon, category: string, description?: string) => Promise<void>
   onCancel: () => void
   maxFileSize?: number // in MB
   acceptedTypes?: string[]
@@ -24,7 +25,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ]
 }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedFile, setSelectedFile] = useState<FileIcon | null>(null)
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -41,15 +42,15 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
     { value: 'אחר', label: 'אחר', description: 'מסמכים נוספים' }
   ]
 
-  const validateFile = (file: File): boolean => {
+  const validateFile = (file: FileIcon): boolean => {
     const newErrors: Record<string, string> = {}
 
-    // File size check
+    // FileIcon size check
     if (file.size > maxFileSize * 1024 * 1024) {
       newErrors.file = `גודל הקובץ חייב להיות קטן מ-${maxFileSize}MB`
     }
 
-    // File type check
+    // FileIcon type check
     if (!acceptedTypes.includes(file.type)) {
       newErrors.file = 'סוג קובץ לא נתמך'
     }
@@ -58,7 +59,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
     return Object.keys(newErrors).length === 0
   }
 
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = (file: FileIcon) => {
     if (validateFile(file)) {
       setSelectedFile(file)
       setErrors({})
@@ -155,7 +156,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           disabled={loading}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -164,12 +165,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
         {/* General Error */}
         {errors.general && (
           <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <WarningCircleIcon className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
         )}
 
-        {/* File Upload Area */}
+        {/* FileIcon UploadSimpleIcon Area */}
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">בחירת קובץ</h3>
           
@@ -187,7 +188,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
             >
-              <Upload className={`w-12 h-12 mx-auto mb-4 ${
+              <UploadSimpleIcon className={`w-12 h-12 mx-auto mb-4 ${
                 dragOver ? 'text-primary' : 'text-gray-400'
               }`} />
               <p className="text-lg font-medium text-gray-900 mb-2">
@@ -221,13 +222,13 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <CheckCircleIcon className="w-5 h-5 text-green-500" />
                   <button
                     type="button"
                     onClick={() => setSelectedFile(null)}
                     className="p-1 text-gray-400 hover:text-red-600 rounded"
                   >
-                    <X className="w-4 h-4" />
+                    <XIcon className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -289,10 +290,10 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           />
         </Card>
 
-        {/* Upload Guidelines */}
+        {/* UploadSimpleIcon Guidelines */}
         <div className="p-4 bg-blue-50 border border-blue-200 rounded">
           <div className="flex items-start gap-3">
-            <File className="w-5 h-5 text-blue-600 mt-0.5" />
+            <FileIcon className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-blue-800">
               <p className="font-medium mb-1">הנחיות העלאה</p>
               <ul className="space-y-1 text-xs">
@@ -323,12 +324,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           >
             {loading ? (
               <>
-                <Loader className="w-4 h-4 animate-spin ml-2" />
+                <CircleNotchIcon className="w-4 h-4 animate-spin ml-2" />
                 מעלה...
               </>
             ) : (
               <>
-                <Upload className="w-4 h-4 ml-2" />
+                <UploadSimpleIcon className="w-4 h-4 ml-2" />
                 העלה מסמך
               </>
             )}

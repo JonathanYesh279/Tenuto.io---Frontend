@@ -5,7 +5,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { enhancedDashboardAnalytics, type TeacherScheduleSlot } from '../../../services/enhancedDashboardAnalytics';
-import { Calendar, MapPin, User, Clock, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { CalendarIcon, CaretDownIcon, CaretUpIcon, ClockIcon, FunnelIcon, MapPinIcon, UserIcon } from '@phosphor-icons/react'
+
 
 interface TeacherRoomScheduleProps {
   schoolYearId?: string;
@@ -58,7 +59,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
     }
   };
 
-  // Filter slots based on selections
+  // FunnelIcon slots based on selections
   const filteredSlots = useMemo(() => {
     if (!scheduleData) return [];
 
@@ -146,7 +147,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
         <div className="flex items-center space-x-3 space-x-reverse">
           <div className="p-2 bg-blue-100 rounded">
-            <Calendar className="w-6 h-6 text-blue-600" />
+            <CalendarIcon className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">לוח מורים וחדרים</h3>
@@ -189,9 +190,9 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
                 : 'border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}
           >
-            <Filter className="w-4 h-4" />
+            <FunnelIcon className="w-4 h-4" />
             <span className="text-sm">סינון</span>
-            {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {showFilters ? <CaretUpIcon className="w-4 h-4" /> : <CaretDownIcon className="w-4 h-4" />}
           </button>
         </div>
       </div>
@@ -199,7 +200,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
       {/* Filters Panel */}
       {showFilters && (
         <div className="bg-gray-50 rounded p-4 mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Day Filter */}
+          {/* Day FunnelIcon */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">יום</label>
             <select
@@ -214,7 +215,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
             </select>
           </div>
 
-          {/* Room Filter */}
+          {/* Room FunnelIcon */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">חדר</label>
             <select
@@ -229,7 +230,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
             </select>
           </div>
 
-          {/* Teacher Filter */}
+          {/* Teacher FunnelIcon */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">מורה</label>
             <select
@@ -299,7 +300,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
                                   {slot.teacherName}
                                 </div>
                                 <div className="flex items-center gap-1 text-gray-600">
-                                  <MapPin className="w-3 h-3" />
+                                  <MapPinIcon className="w-3 h-3" />
                                   <span className="truncate">{slot.roomNumber || 'לא צוין'}</span>
                                 </div>
                               </div>
@@ -357,19 +358,19 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
 
                       {/* Time */}
                       <div className="flex items-center gap-1 text-sm text-gray-600 min-w-[100px]">
-                        <Clock className="w-4 h-4" />
+                        <ClockIcon className="w-4 h-4" />
                         <span>{slot.startTime} - {slot.endTime}</span>
                       </div>
 
                       {/* Teacher */}
                       <div className="flex items-center gap-2 min-w-[150px]">
-                        <User className="w-4 h-4 text-gray-400" />
+                        <UserIcon className="w-4 h-4 text-gray-400" />
                         <span className="font-medium text-gray-900">{slot.teacherName}</span>
                       </div>
 
                       {/* Room */}
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-gray-400" />
+                        <MapPinIcon className="w-4 h-4 text-gray-400" />
                         <span className="text-gray-600">{slot.roomNumber || slot.location || 'לא צוין'}</span>
                       </div>
 
@@ -389,7 +390,7 @@ const TeacherRoomSchedule: React.FC<TeacherRoomScheduleProps> = ({
 
           {filteredSlots.length === 0 && (
             <div className="text-center py-12 text-gray-500">
-              <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <CalendarIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>לא נמצאו שיעורים</p>
               <p className="text-sm mt-1">נסה לשנות את הסינון</p>
             </div>

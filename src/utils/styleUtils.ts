@@ -136,9 +136,9 @@ export const TEST_STATUS_COLORS = {
 // Instrument Category Colors (for grouping)
 export const INSTRUMENT_CATEGORY_COLORS = {
   strings: {
-    bgLight: 'bg-primary-100',
-    text: 'text-primary-800',
-    ring: 'ring-primary-200'
+    bgLight: 'bg-muted',
+    text: 'text-primary',
+    ring: 'ring-ring'
   },
   woodwinds: {
     bgLight: 'bg-secondary-100',
@@ -180,9 +180,9 @@ export const STATUS_COLORS = {
     dot: 'bg-gray-300'
   },
   graduated: {
-    bgLight: 'bg-primary-100',
-    text: 'text-primary-800',
-    dot: 'bg-primary-400'
+    bgLight: 'bg-muted',
+    text: 'text-primary',
+    dot: 'bg-primary/80'
   },
   suspended: {
     bgLight: 'bg-red-100',
@@ -298,11 +298,11 @@ export const getRTLSpacing = (spacing: keyof typeof RTL_SPACING): string => {
  * Hebrew-optimized button classes
  */
 export const BUTTON_STYLES = {
-  primary: 'bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200',
-  secondary: 'bg-secondary-500 hover:bg-secondary-600 text-white font-medium rounded-lg transition-colors duration-200',
-  outline: 'border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors duration-200',
-  ghost: 'hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition-colors duration-200',
-  danger: 'bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200'
+  primary: 'bg-primary hover:bg-neutral-800 text-white font-medium rounded transition-colors duration-200',
+  secondary: 'bg-secondary-500 hover:bg-secondary-600 text-white font-medium rounded transition-colors duration-200',
+  outline: 'border border-input hover:bg-muted text-foreground font-medium rounded transition-colors duration-200',
+  ghost: 'hover:bg-muted text-foreground font-medium rounded transition-colors duration-200',
+  danger: 'bg-red-500 hover:bg-red-600 text-white font-medium rounded transition-colors duration-200'
 } as const
 
 /**
@@ -320,7 +320,7 @@ export const CARD_SHADOWS = {
  * Hebrew-friendly form input classes
  */
 export const INPUT_STYLES = {
-  base: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-right',
+  base: 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-right',
   error: 'border-red-300 focus:ring-red-500 focus:border-red-500',
   success: 'border-green-300 focus:ring-green-500 focus:border-green-500',
   disabled: 'bg-gray-100 cursor-not-allowed opacity-60'

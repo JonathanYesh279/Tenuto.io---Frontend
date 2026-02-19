@@ -10,26 +10,10 @@
  */
 
 import { useState, useEffect, useMemo } from 'react'
-import {
-  Check,
-  X,
-  Clock,
-  AlertCircle,
-  CheckCircle,
-  Calendar,
-  User,
-  Music,
-  ChevronLeft,
-  ChevronRight,
-  Save,
-  History,
-  TrendingUp,
-  XCircle,
-  Info,
-  FileText
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '@/utils/nameUtils'
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, CheckCircleIcon, CheckIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, HistoryIcon, InfoIcon, MusicNotesIcon, TrendUpIcon, UserIcon, WarningCircleIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface Student {
   id: string
@@ -211,9 +195,9 @@ export default function IndividualLessonAttendance({
   const getStatusIcon = (statusType: 'present' | 'absent') => {
     switch (statusType) {
       case 'present':
-        return <Check className="w-5 h-5" />
+        return <CheckIcon className="w-5 h-5" />
       case 'absent':
-        return <X className="w-5 h-5" />
+        return <XIcon className="w-5 h-5" />
     }
   }
 
@@ -279,9 +263,9 @@ export default function IndividualLessonAttendance({
           }
         `}</style>
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center animate-scale-in">
+          <div className="bg-white rounded shadow-2xl p-8 max-w-md w-full text-center animate-scale-in">
             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4 animate-check">
-              <CheckCircle className="h-10 w-10 text-green-600" />
+              <CheckCircleIcon className="h-10 w-10 text-green-600" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">הנוכחות נשמרה בהצלחה!</h3>
             <p className="text-gray-600">
@@ -296,7 +280,7 @@ export default function IndividualLessonAttendance({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all"
+        className="bg-white rounded shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -307,13 +291,13 @@ export default function IndividualLessonAttendance({
               className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               aria-label="סגור"
             >
-              <X className="w-5 h-5" />
+              <XIcon className="w-5 h-5" />
             </button>
 
             <div className="flex-1 text-center">
               <h3 className="text-xl font-bold text-gray-900">רישום נוכחות - שיעור אישי</h3>
               <div className="flex items-center justify-center gap-2 mt-1 text-sm text-gray-600">
-                <User className="w-4 h-4" />
+                <UserIcon className="w-4 h-4" />
                 <span>{studentName}</span>
                 {scheduleInfo && (
                   <>
@@ -334,15 +318,15 @@ export default function IndividualLessonAttendance({
               aria-label="היסטוריה"
               title="היסטוריית נוכחות"
             >
-              <History className="w-5 h-5" />
+              <HistoryIcon className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Student Info Card */}
+          {/* Student InfoIcon Card */}
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-3 mt-3">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center">
-                <Music className="w-6 h-6 text-white" />
+                <MusicNotesIcon className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
                 <div className="font-semibold text-gray-900">{primaryInstrument}</div>
@@ -363,7 +347,7 @@ export default function IndividualLessonAttendance({
         {/* Content */}
         <div className="p-6">
           {showHistory ? (
-            /* History View */
+            /* HistoryIcon View */
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-gray-900">היסטוריית נוכחות</h4>
@@ -391,7 +375,7 @@ export default function IndividualLessonAttendance({
                 </div>
               </div>
 
-              {/* History List */}
+              {/* HistoryIcon List */}
               {loadingHistory ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-3"></div>
@@ -399,7 +383,7 @@ export default function IndividualLessonAttendance({
                 </div>
               ) : attendanceHistory.length === 0 ? (
                 <div className="text-center py-12">
-                  <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <FileTextIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                   <h4 className="text-gray-900 font-medium mb-2">אין היסטוריית נוכחות</h4>
                   <p className="text-gray-600 text-sm">התחל לרשום נוכחות כדי לראות היסטוריה</p>
                 </div>
@@ -458,7 +442,7 @@ export default function IndividualLessonAttendance({
                     className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                     title="שבוע קודם"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <CaretRightIcon className="w-5 h-5" />
                   </button>
 
                   <input
@@ -475,7 +459,7 @@ export default function IndividualLessonAttendance({
                     className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     title="שבוע הבא"
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <CaretLeftIcon className="w-5 h-5" />
                   </button>
                 </div>
                 <div className="text-center mt-2 text-sm text-gray-600">
@@ -491,7 +475,7 @@ export default function IndividualLessonAttendance({
                     <button
                       key={statusOption}
                       onClick={() => setStatus(statusOption)}
-                      className={`flex items-center justify-center gap-3 p-5 rounded-xl border-2 transition-all transform ${
+                      className={`flex items-center justify-center gap-3 p-5 rounded border-2 transition-all transform ${
                         status === statusOption
                           ? getStatusColor(statusOption) + ' scale-105 shadow-lg ring-2 ring-offset-2 ' + (
                             statusOption === 'present' ? 'ring-green-500' : 'ring-red-500'
@@ -523,7 +507,7 @@ export default function IndividualLessonAttendance({
               {/* Error Display */}
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <WarningCircleIcon className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="font-medium text-red-900">שגיאה</div>
                     <div className="text-red-700 text-sm">{error}</div>
@@ -549,7 +533,7 @@ export default function IndividualLessonAttendance({
                     </>
                   ) : (
                     <>
-                      <Save className="w-5 h-5" />
+                      <FloppyDiskIcon className="w-5 h-5" />
                       <span>שמור נוכחות</span>
                     </>
                   )}

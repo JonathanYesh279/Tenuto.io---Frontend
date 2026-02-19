@@ -1,24 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Calendar,
-  Clock,
-  Users,
-  MapPin,
-  BookOpen,
-  Plus,
-  Edit,
-  Trash2,
-  AlertTriangle,
-  CheckSquare,
-  Copy,
-  Filter,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  RotateCcw
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
+import { ArrowCounterClockwiseIcon, BookOpenIcon, CalendarIcon, CaretLeftIcon, CaretRightIcon, CheckSquareIcon, ClockIcon, CopyIcon, FunnelIcon, MagnifyingGlassIcon, MapPinIcon, PencilIcon, PlusIcon, TrashIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface TheoryLessonEvent {
   id: string
@@ -374,7 +358,7 @@ export default function TheoryLessonScheduler() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <WarningIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadTheoryLessons}
@@ -420,13 +404,13 @@ export default function TheoryLessonScheduler() {
               onClick={() => setShowCreateModal(true)}
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">שיעור חדש</span>
             </button>
           </div>
         </div>
 
-        {/* Calendar Navigation */}
+        {/* CalendarIcon Navigation */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center gap-4">
@@ -434,7 +418,7 @@ export default function TheoryLessonScheduler() {
                 onClick={() => navigateMonth('prev')}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <ChevronRight className="w-5 h-5" />
+                <CaretRightIcon className="w-5 h-5" />
               </button>
               <h2 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
                 {currentDate.toLocaleDateString('he-IL', { year: 'numeric', month: 'long' })}
@@ -443,13 +427,13 @@ export default function TheoryLessonScheduler() {
                 onClick={() => navigateMonth('next')}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <CaretLeftIcon className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setCurrentDate(new Date())}
                 className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
               >
-                <RotateCcw className="w-4 h-4" />
+                <ArrowCounterClockwiseIcon className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">היום</span>
               </button>
             </div>
@@ -457,7 +441,7 @@ export default function TheoryLessonScheduler() {
             {/* Filters */}
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="חיפוש שיעורים..."
@@ -480,7 +464,7 @@ export default function TheoryLessonScheduler() {
             </div>
           </div>
 
-          {/* Calendar Grid */}
+          {/* CalendarIcon Grid */}
           {viewMode === 'month' && calendarView && (
             <div className="p-4">
               {/* Week day headers */}
@@ -492,7 +476,7 @@ export default function TheoryLessonScheduler() {
                 ))}
               </div>
 
-              {/* Calendar days */}
+              {/* CalendarIcon days */}
               <div className="space-y-1">
                 {calendarView.weeks.map((week, weekIndex) => (
                   <div key={weekIndex} className="grid grid-cols-7 gap-1" dir="rtl">
@@ -518,7 +502,7 @@ export default function TheoryLessonScheduler() {
                             >
                               <div className="font-medium font-reisinger-yonatan">{lesson.startTime} {lesson.title}</div>
                               {lesson.conflicts && lesson.conflicts.length > 0 && (
-                                <AlertTriangle className="w-3 h-3 text-red-500 inline ml-1" />
+                                <WarningIcon className="w-3 h-3 text-red-500 inline ml-1" />
                               )}
                             </div>
                           ))}
@@ -546,7 +530,7 @@ export default function TheoryLessonScheduler() {
 
             {lessons.filter(lesson => new Date(lesson.date).toDateString() === selectedDate.toDateString()).length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p className="font-reisinger-yonatan">אין שיעורים מתוכננים ליום זה</p>
                 <button
                   onClick={() => setShowCreateModal(true)}
@@ -564,21 +548,21 @@ export default function TheoryLessonScheduler() {
                     <div key={lesson.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                          <BookOpen className="w-6 h-6 text-indigo-600" />
+                          <BookOpenIcon className="w-6 h-6 text-indigo-600" />
                         </div>
                         <div>
                           <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{lesson.title}</h4>
                           <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
                             <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
+                              <ClockIcon className="w-4 h-4" />
                               <span>{lesson.startTime} - {lesson.endTime}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
+                              <MapPinIcon className="w-4 h-4" />
                               <span>{lesson.location}</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <Users className="w-4 h-4" />
+                              <UsersIcon className="w-4 h-4" />
                               <span>{lesson.enrolledStudents}/{lesson.maxStudents}</span>
                             </div>
                           </div>
@@ -591,7 +575,7 @@ export default function TheoryLessonScheduler() {
                             </span>
                             {lesson.conflicts && lesson.conflicts.length > 0 && (
                               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                <AlertTriangle className="w-3 h-3 mr-1" />
+                                <WarningIcon className="w-3 h-3 mr-1" />
                                 {lesson.conflicts.length} התנגשויות
                               </span>
                             )}
@@ -604,21 +588,21 @@ export default function TheoryLessonScheduler() {
                           className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
                           title="שכפל שיעור"
                         >
-                          <Copy className="w-4 h-4" />
+                          <CopyIcon className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setEditingLesson(lesson)}
                           className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"
                           title="ערוך שיעור"
                         >
-                          <Edit className="w-4 h-4" />
+                          <PencilIcon className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteLesson(lesson.id)}
                           className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                           title="מחק שיעור"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       </div>
                     </div>

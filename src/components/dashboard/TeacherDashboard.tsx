@@ -1,37 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  Calendar,
-  Clock,
-  Award,
-  Plus,
-  CheckSquare,
-  BookOpen,
-  UserCheck,
-  TrendingUp,
-  Music,
-  Bell,
-  ChevronRight,
-  Activity,
-  FileText,
-  BarChart3,
-  GraduationCap,
-  AlertCircle,
-  Eye,
-  Edit,
-  Target,
-  CalendarClock,
-  X,
-  Settings,
-  Save,
-  Trash2
-} from 'lucide-react'
+
 import apiService, { hoursSummaryService } from '../../services/apiService'
 import { TeacherDataTransformUtils } from '../../services/teacherDetailsApi'
 import type { Bagrut } from '../../types/bagrut.types'
 import { getDisplayName } from '@/utils/nameUtils'
+import { ActivityIcon, BellIcon, BookOpenIcon, CalendarClockIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, EyeIcon, FileTextIcon, FloppyDiskIcon, GearIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrashIcon, TrendUpIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface DashboardStats {
   totalStudents: number
@@ -565,7 +540,7 @@ export default function TeacherDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <Bell className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadDashboardData}
@@ -590,16 +565,16 @@ export default function TeacherDashboard() {
           }`}>
             <div className="flex items-center gap-2">
               {toast.type === 'success' ? (
-                <CheckSquare className="w-5 h-5" />
+                <CheckSquareIcon className="w-5 h-5" />
               ) : (
-                <AlertCircle className="w-5 h-5" />
+                <WarningCircleIcon className="w-5 h-5" />
               )}
               <span className="font-reisinger-yonatan">{toast.message}</span>
               <button
                 onClick={() => setToast(null)}
                 className="ml-2 text-gray-400 hover:text-gray-600"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -625,7 +600,7 @@ export default function TeacherDashboard() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
-            icon={<Users className="w-6 h-6" />}
+            icon={<UsersIcon className="w-6 h-6" />}
             title="סה״כ תלמידים"
             value={stats.totalStudents}
             bgColor="bg-blue-50"
@@ -633,7 +608,7 @@ export default function TeacherDashboard() {
             borderColor="border-blue-200"
           />
           <StatCard
-            icon={<Calendar className="w-6 h-6" />}
+            icon={<CalendarIcon className="w-6 h-6" />}
             title="שיעורים היום"
             value={stats.todaysLessons}
             bgColor="bg-green-50"
@@ -641,7 +616,7 @@ export default function TeacherDashboard() {
             borderColor="border-green-200"
           />
           <StatCard
-            icon={<Clock className="w-6 h-6" />}
+            icon={<ClockIcon className="w-6 h-6" />}
             title="ש״ש שבועי"
             value={hoursSummary?.totalWeeklyHours ?? stats.weeklyHours}
             suffix={hoursSummary ? 'ש"ש' : 'שעות'}
@@ -650,7 +625,7 @@ export default function TeacherDashboard() {
             borderColor="border-purple-200"
           />
           <StatCard
-            icon={<GraduationCap className="w-6 h-6" />}
+            icon={<GraduationCapIcon className="w-6 h-6" />}
             title="תלמידי בגרות פעילים"
             value={stats.activeBagrutStudents}
             bgColor="bg-yellow-50"
@@ -666,25 +641,25 @@ export default function TeacherDashboard() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <QuickActionButton
-              icon={<Plus className="w-5 h-5" />}
+              icon={<PlusIcon className="w-5 h-5" />}
               label="הוסף שיעור"
               onClick={() => handleQuickAction('addLesson')}
               color="indigo"
             />
             <QuickActionButton
-              icon={<CheckSquare className="w-5 h-5" />}
+              icon={<CheckSquareIcon className="w-5 h-5" />}
               label="סמן נוכחות"
               onClick={() => handleQuickAction('markAttendance')}
               color="green"
             />
             <QuickActionButton
-              icon={<Calendar className="w-5 h-5" />}
+              icon={<CalendarIcon className="w-5 h-5" />}
               label="צפה בלו״ז"
               onClick={() => handleQuickAction('viewSchedule')}
               color="blue"
             />
             <QuickActionButton
-              icon={<UserCheck className="w-5 h-5" />}
+              icon={<UserCircleCheckIcon className="w-5 h-5" />}
               label="ניהול תלמידים"
               onClick={() => handleQuickAction('manageStudents')}
               color="purple"
@@ -692,7 +667,7 @@ export default function TeacherDashboard() {
             {/* Only show ימי לימוד for teachers */}
             {userRoles.includes('teacher') && (
               <QuickActionButton
-                icon={<Clock className="w-5 h-5" />}
+                icon={<ClockIcon className="w-5 h-5" />}
                 label="ימי לימוד"
                 onClick={() => handleQuickAction('manageTeachingDays')}
                 color="orange"
@@ -702,7 +677,7 @@ export default function TeacherDashboard() {
             {/* Only show orchestra actions for conductors */}
             {userRoles.includes('conductor') && (
               <QuickActionButton
-                icon={<Music className="w-5 h-5" />}
+                icon={<MusicNotesIcon className="w-5 h-5" />}
                 label="התזמורות שלי"
                 onClick={() => handleQuickAction('viewOrchestras')}
                 color="rose"
@@ -712,7 +687,7 @@ export default function TeacherDashboard() {
             {/* Only show theory actions for theory teachers */}
             {userRoles.includes('theory-teacher') && (
               <QuickActionButton
-                icon={<BookOpen className="w-5 h-5" />}
+                icon={<BookOpenIcon className="w-5 h-5" />}
                 label="שיעורי תיאוריה"
                 onClick={() => handleQuickAction('viewTheoryLessons')}
                 color="amber"
@@ -723,25 +698,25 @@ export default function TeacherDashboard() {
             {bagrutStudents.length > 0 && (
               <>
                 <QuickActionButton
-                  icon={<GraduationCap className="w-5 h-5" />}
+                  icon={<GraduationCapIcon className="w-5 h-5" />}
                   label="ניהול בגרות"
                   onClick={() => handleQuickAction('manageBagrut')}
                   color="emerald"
                 />
                 <QuickActionButton
-                  icon={<CalendarClock className="w-5 h-5" />}
+                  icon={<CalendarClockIcon className="w-5 h-5" />}
                   label="תזמון מבחן"
                   onClick={() => handleQuickAction('scheduleBagrutExam')}
                   color="orange"
                 />
                 <QuickActionButton
-                  icon={<Target className="w-5 h-5" />}
+                  icon={<TargetIcon className="w-5 h-5" />}
                   label="מעקב התקדמות"
                   onClick={() => handleQuickAction('viewBagrutProgress')}
                   color="cyan"
                 />
                 <QuickActionButton
-                  icon={<Edit className="w-5 h-5" />}
+                  icon={<PencilIcon className="w-5 h-5" />}
                   label="עדכון סטטוס"
                   onClick={() => handleQuickAction('updateBagrutStatus')}
                   color="pink"
@@ -765,13 +740,13 @@ export default function TeacherDashboard() {
                   className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
                 >
                   צפה בכל
-                  <ChevronRight className="w-4 h-4" />
+                  <CaretRightIcon className="w-4 h-4" />
                 </button>
               </div>
 
               {upcomingLessons.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין שיעורים מתוכננים היום</p>
                 </div>
               ) : (
@@ -780,7 +755,7 @@ export default function TeacherDashboard() {
                     <div key={lesson.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                          <Clock className="w-5 h-5 text-indigo-600" />
+                          <ClockIcon className="w-5 h-5 text-indigo-600" />
                         </div>
                         <div>
                           <div className="font-medium text-gray-900 font-reisinger-yonatan">{lesson.studentName}</div>
@@ -810,13 +785,13 @@ export default function TeacherDashboard() {
                   className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
                 >
                   צפה בכל
-                  <ChevronRight className="w-4 h-4" />
+                  <CaretRightIcon className="w-4 h-4" />
                 </button>
               </div>
 
               {studentAttendance.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <UsersIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין נתוני נוכחות</p>
                 </div>
               ) : (
@@ -860,7 +835,7 @@ export default function TeacherDashboard() {
                     className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1 mx-auto"
                   >
                     צפה בכל תלמידי הבגרות ({bagrutStudents.length})
-                    <ChevronRight className="w-4 h-4" />
+                    <CaretRightIcon className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -869,7 +844,7 @@ export default function TeacherDashboard() {
                     <div key={student.studentId} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                          <GraduationCap className="w-4 h-4 text-indigo-600" />
+                          <GraduationCapIcon className="w-4 h-4 text-indigo-600" />
                         </div>
                         <div>
                           <div className="font-medium text-gray-900 font-reisinger-yonatan">{student.studentName}</div>
@@ -904,18 +879,18 @@ export default function TeacherDashboard() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Recent Activity */}
+            {/* Recent ActivityIcon */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                   פעילות אחרונה
                 </h2>
-                <Activity className="w-5 h-5 text-gray-400" />
+                <ActivityIcon className="w-5 h-5 text-gray-400" />
               </div>
 
               {recentActivities.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <Bell className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <BellIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין פעילות לאחרונה</p>
                 </div>
               ) : (
@@ -927,10 +902,10 @@ export default function TeacherDashboard() {
                         activity.type === 'attendance' ? 'bg-green-100' :
                         activity.type === 'note' ? 'bg-yellow-100' : 'bg-purple-100'
                       }`}>
-                        {activity.type === 'lesson' && <BookOpen className="w-4 h-4 text-blue-600" />}
-                        {activity.type === 'attendance' && <CheckSquare className="w-4 h-4 text-green-600" />}
-                        {activity.type === 'note' && <FileText className="w-4 h-4 text-yellow-600" />}
-                        {activity.type === 'grade' && <Award className="w-4 h-4 text-purple-600" />}
+                        {activity.type === 'lesson' && <BookOpenIcon className="w-4 h-4 text-blue-600" />}
+                        {activity.type === 'attendance' && <CheckSquareIcon className="w-4 h-4 text-green-600" />}
+                        {activity.type === 'note' && <FileTextIcon className="w-4 h-4 text-yellow-600" />}
+                        {activity.type === 'grade' && <MedalIcon className="w-4 h-4 text-purple-600" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">{activity.title}</p>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { ChevronDown, Calendar } from 'lucide-react'
+
 import { VALID_DAYS, validateSelection, ValidationResult } from '../../utils/validationUtils'
 import ValidationIndicator from '../ui/ValidationIndicator'
+import { CalendarIcon, CaretDownIcon } from '@phosphor-icons/react'
 
 interface DaySelectProps {
   value: string
@@ -117,7 +118,7 @@ const DaySelect: React.FC<DaySelectProps> = ({
       <div className="relative">
         {/* Icon */}
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <Calendar className="w-4 h-4 text-gray-400" />
+          <CalendarIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Select field */}
@@ -147,7 +148,7 @@ const DaySelect: React.FC<DaySelectProps> = ({
         
         {/* Dropdown arrow */}
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <ChevronDown className="w-4 h-4 text-gray-400" />
+          <CaretDownIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Validation icon */}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { GraduationCap, Users, Clock, TrendingUp, AlertTriangle } from 'lucide-react'
+
 import StatCard, { ProgressStatCard } from './StatCard'
 import { VALID_INSTRUMENTS } from '../../utils/validationUtils'
+import { ClockIcon, GraduationCapIcon, TrendUpIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 // Mock API functions for teacher data
 const mockTeacherAPI = {
@@ -170,7 +171,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsProps> = ({
           title="סך הכל מורים"
           value={teacherStats?.totalTeachers || 0}
           subtitle={`פעילים: ${teacherStats?.activeTeachers || 0}`}
-          icon={<GraduationCap className="w-6 h-6" />}
+          icon={<GraduationCapIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
           onClick={() => window.location.href = '/teachers'}
@@ -185,7 +186,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsProps> = ({
           title="עומס מורים"
           value={teacherStats?.averageStudentsPerTeacher || 0}
           subtitle="ממוצע תלמידים למורה"
-          icon={<Users className="w-6 h-6" />}
+          icon={<UsersIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
         />
@@ -195,7 +196,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsProps> = ({
           title="שעות עבודה"
           value={teacherStats?.averageWorkloadHours || 0}
           subtitle="ממוצע שעות שבועיות"
-          icon={<Clock className="w-6 h-6" />}
+          icon={<ClockIcon className="w-6 h-6" />}
           trend={teacherStats?.workloadTrend}
           loading={loading}
           error={error}
@@ -206,7 +207,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsProps> = ({
           title="ניצול מורים"
           value={`${teacherStats?.teacherUtilization || 0}%`}
           subtitle="אחוז ניצול אופטימלי"
-          icon={<TrendingUp className="w-6 h-6" />}
+          icon={<TrendUpIcon className="w-6 h-6" />}
           loading={loading}
           error={error}
         />
@@ -305,7 +306,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsProps> = ({
                 {/* Warning for overloaded teachers */}
                 {workloadDistribution.overloaded > 0 && (
                   <div className="mt-3 p-2 bg-orange-50 rounded-lg flex items-center">
-                    <AlertTriangle className="w-4 h-4 text-orange-500 ml-2" />
+                    <WarningIcon className="w-4 h-4 text-orange-500 ml-2" />
                     <span className="text-xs text-orange-700 font-reisinger-yonatan">
                       {workloadDistribution.overloaded} מורים בעומס יתר
                     </span>

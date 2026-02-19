@@ -15,8 +15,9 @@
  */
 
 import * as React from "react"
-import { AlertTriangle } from "lucide-react"
+
 import {
+import { WarningIcon } from '@phosphor-icons/react'
   Dialog,
   DialogContent,
   DialogDescription,
@@ -74,7 +75,7 @@ export function ConfirmDeleteDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <div className={`p-1.5 rounded-lg ${bgColorClass}`}>
-              <AlertTriangle className={`h-5 w-5 ${iconColorClass}`} />
+              <WarningIcon className={`h-5 w-5 ${iconColorClass}`} />
             </div>
             {title}
           </DialogTitle>

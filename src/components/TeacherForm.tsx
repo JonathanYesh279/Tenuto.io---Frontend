@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Save, X, AlertCircle } from 'lucide-react';
+
 import { Card } from './ui/Card';
 import apiService from '../services/apiService';
 import { VALID_INSTRUMENTS, VALID_DAYS, VALID_DURATIONS, VALID_ROLES } from '../utils/validationUtils';
 import { CLASSIFICATIONS, DEGREES, TEACHING_SUBJECTS, INSTRUMENT_DEPARTMENTS } from '../constants/enums';
 import { formatAddress } from '../utils/nameUtils';
+import { FloppyDiskIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface TeacherFormProps {
   teacher?: any;
@@ -268,7 +269,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
             onClick={onCancel}
             className="text-gray-400 hover:text-gray-600"
           >
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -294,7 +295,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               />
               {getFieldError('personalInfo.firstName') && (
                 <div className="flex items-center mt-1 text-red-600 text-sm">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <WarningCircleIcon className="w-4 h-4 mr-1" />
                   {getFieldError('personalInfo.firstName')}
                 </div>
               )}
@@ -315,7 +316,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               />
               {getFieldError('personalInfo.lastName') && (
                 <div className="flex items-center mt-1 text-red-600 text-sm">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <WarningCircleIcon className="w-4 h-4 mr-1" />
                   {getFieldError('personalInfo.lastName')}
                 </div>
               )}
@@ -336,7 +337,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               />
               {getFieldError('personalInfo.phone') && (
                 <div className="flex items-center mt-1 text-red-600 text-sm">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <WarningCircleIcon className="w-4 h-4 mr-1" />
                   {getFieldError('personalInfo.phone')}
                 </div>
               )}
@@ -357,7 +358,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               />
               {getFieldError('personalInfo.email') && (
                 <div className="flex items-center mt-1 text-red-600 text-sm">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <WarningCircleIcon className="w-4 h-4 mr-1" />
                   {getFieldError('personalInfo.email')}
                 </div>
               )}
@@ -430,7 +431,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
           </div>
           {getFieldError('roles') && (
             <div className="flex items-center mt-1 text-red-600 text-sm">
-              <AlertCircle className="w-4 h-4 mr-1" />
+              <WarningCircleIcon className="w-4 h-4 mr-1" />
               {getFieldError('roles')}
             </div>
           )}
@@ -466,7 +467,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               </select>
               {getFieldError('professionalInfo.instrument') && (
                 <div className="flex items-center mt-1 text-red-600 text-sm">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <WarningCircleIcon className="w-4 h-4 mr-1" />
                   {getFieldError('professionalInfo.instrument')}
                 </div>
               )}
@@ -593,7 +594,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               />
               {getFieldError('credentials.email') && (
                 <div className="flex items-center mt-1 text-red-600 text-sm">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <WarningCircleIcon className="w-4 h-4 mr-1" />
                   {getFieldError('credentials.email')}
                 </div>
               )}
@@ -615,7 +616,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 />
                 {getFieldError('credentials.password') && (
                   <div className="flex items-center mt-1 text-red-600 text-sm">
-                    <AlertCircle className="w-4 h-4 mr-1" />
+                    <WarningCircleIcon className="w-4 h-4 mr-1" />
                     {getFieldError('credentials.password')}
                   </div>
                 )}
@@ -662,7 +663,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" />
+                <FloppyDiskIcon className="w-4 h-4 mr-2" />
                 {teacher ? 'עדכן מורה' : 'צור מורה'}
               </>
             )}

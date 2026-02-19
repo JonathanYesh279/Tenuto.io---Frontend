@@ -1,37 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  Calendar,
-  Clock,
-  Award,
-  Plus,
-  CheckSquare,
-  BookOpen,
-  UserCheck,
-  TrendingUp,
-  Music,
-  Bell,
-  ChevronRight,
-  Activity,
-  FileText,
-  BarChart3,
-  Trophy,
-  AlertCircle,
-  Download,
-  Eye,
-  Edit,
-  Trash2,
-  Search,
-  Filter,
-  CalendarClock,
-  GraduationCap,
-  Target
-} from 'lucide-react'
+
 import { useBagrutContext } from '../../contexts/BagrutContext'
 import apiService from '../../services/apiService'
 import type { Bagrut } from '../../types/bagrut.types'
 import { getDisplayName } from '@/utils/nameUtils'
+import { ActivityIcon, BellIcon, BookOpenIcon, CalendarClockIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrashIcon, TrendUpIcon, TrophyIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface BagrutStats {
   activeBagrutStudents: number
@@ -290,7 +264,7 @@ export default function BagrutDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <WarningCircleIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadBagrutData}
@@ -320,7 +294,7 @@ export default function BagrutDashboard() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
           <StatCard
-            icon={<GraduationCap className="w-6 h-6" />}
+            icon={<GraduationCapIcon className="w-6 h-6" />}
             title="תלמידי בגרות פעילים"
             value={stats.activeBagrutStudents}
             bgColor="bg-indigo-50"
@@ -328,7 +302,7 @@ export default function BagrutDashboard() {
             borderColor="border-indigo-200"
           />
           <StatCard
-            icon={<CalendarClock className="w-6 h-6" />}
+            icon={<CalendarClockIcon className="w-6 h-6" />}
             title="מבחנים קרובים"
             value={stats.upcomingExams}
             bgColor="bg-blue-50"
@@ -336,7 +310,7 @@ export default function BagrutDashboard() {
             borderColor="border-blue-200"
           />
           <StatCard
-            icon={<Trophy className="w-6 h-6" />}
+            icon={<TrophyIcon className="w-6 h-6" />}
             title="מבחנים שהושלמו"
             value={stats.completedExams}
             bgColor="bg-green-50"
@@ -344,7 +318,7 @@ export default function BagrutDashboard() {
             borderColor="border-green-200"
           />
           <StatCard
-            icon={<Target className="w-6 h-6" />}
+            icon={<TargetIcon className="w-6 h-6" />}
             title="אחוז הצלחה"
             value={stats.passRate}
             suffix="%"
@@ -353,7 +327,7 @@ export default function BagrutDashboard() {
             borderColor="border-purple-200"
           />
           <StatCard
-            icon={<BarChart3 className="w-6 h-6" />}
+            icon={<ChartBarIcon className="w-6 h-6" />}
             title="ציון ממוצע"
             value={stats.avgGrade}
             bgColor="bg-yellow-50"
@@ -361,7 +335,7 @@ export default function BagrutDashboard() {
             borderColor="border-yellow-200"
           />
           <StatCard
-            icon={<AlertCircle className="w-6 h-6" />}
+            icon={<WarningCircleIcon className="w-6 h-6" />}
             title="הערכות ממתינות"
             value={stats.pendingEvaluations}
             bgColor="bg-orange-50"
@@ -377,37 +351,37 @@ export default function BagrutDashboard() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <QuickActionButton
-              icon={<Calendar className="w-5 h-5" />}
+              icon={<CalendarIcon className="w-5 h-5" />}
               label="תזמון מבחן"
               onClick={() => handleQuickAction('scheduleExam')}
               color="indigo"
             />
             <QuickActionButton
-              icon={<Music className="w-5 h-5" />}
+              icon={<MusicNotesIcon className="w-5 h-5" />}
               label="הקצה מלווה"
               onClick={() => handleQuickAction('assignAccompanist')}
               color="blue"
             />
             <QuickActionButton
-              icon={<CheckSquare className="w-5 h-5" />}
+              icon={<CheckSquareIcon className="w-5 h-5" />}
               label="סקור הערכות"
               onClick={() => handleQuickAction('reviewEvaluations')}
               color="green"
             />
             <QuickActionButton
-              icon={<Download className="w-5 h-5" />}
+              icon={<DownloadSimpleIcon className="w-5 h-5" />}
               label="ייצא תעודות"
               onClick={() => handleQuickAction('exportCertificates')}
               color="purple"
             />
             <QuickActionButton
-              icon={<Plus className="w-5 h-5" />}
+              icon={<PlusIcon className="w-5 h-5" />}
               label="הוסף תלמיד"
               onClick={() => handleQuickAction('addBagrutStudent')}
               color="emerald"
             />
             <QuickActionButton
-              icon={<FileText className="w-5 h-5" />}
+              icon={<FileTextIcon className="w-5 h-5" />}
               label="דוחות"
               onClick={() => handleQuickAction('viewReports')}
               color="amber"
@@ -426,7 +400,7 @@ export default function BagrutDashboard() {
                 </h2>
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <MagnifyingGlassIcon className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input
                       type="text"
                       placeholder="חיפוש תלמידים..."
@@ -451,7 +425,7 @@ export default function BagrutDashboard() {
 
               {filteredStudents.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <GraduationCap className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <GraduationCapIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין תלמידי בגרות</p>
                 </div>
               ) : (
@@ -461,7 +435,7 @@ export default function BagrutDashboard() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                            <GraduationCap className="w-6 h-6 text-indigo-600" />
+                            <GraduationCapIcon className="w-6 h-6 text-indigo-600" />
                           </div>
                           <div>
                             <div className="font-medium text-gray-900">{student.studentName}</div>
@@ -488,10 +462,10 @@ export default function BagrutDashboard() {
                           </div>
                           <div className="flex items-center gap-1">
                             <button className="p-1 text-gray-400 hover:text-indigo-600">
-                              <Eye className="w-4 h-4" />
+                              <EyeIcon className="w-4 h-4" />
                             </button>
                             <button className="p-1 text-gray-400 hover:text-indigo-600">
-                              <Edit className="w-4 h-4" />
+                              <PencilIcon className="w-4 h-4" />
                             </button>
                             {student.finalGrade && (
                               <span className="text-sm font-bold text-gray-900 ml-2">
@@ -513,7 +487,7 @@ export default function BagrutDashboard() {
                 <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                   אנליטיקת התקדמות
                 </h2>
-                <BarChart3 className="w-5 h-5 text-gray-400" />
+                <ChartBarIcon className="w-5 h-5 text-gray-400" />
               </div>
               <div className="grid grid-cols-4 gap-4">
                 <div className="text-center">
@@ -552,12 +526,12 @@ export default function BagrutDashboard() {
                 <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                   מבחנים קרובים
                 </h2>
-                <CalendarClock className="w-5 h-5 text-gray-400" />
+                <CalendarClockIcon className="w-5 h-5 text-gray-400" />
               </div>
 
               {upcomingExams.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין מבחנים מתוכננים</p>
                 </div>
               ) : (
@@ -575,7 +549,7 @@ export default function BagrutDashboard() {
                           </div>
                           {exam.isUrgent && (
                             <div className="text-xs text-red-600 flex items-center gap-1">
-                              <AlertCircle className="w-3 h-3" />
+                              <WarningCircleIcon className="w-3 h-3" />
                               דחוף
                             </div>
                           )}
@@ -593,7 +567,7 @@ export default function BagrutDashboard() {
                 <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                   מדדי ביצועים
                 </h2>
-                <TrendingUp className="w-5 h-5 text-gray-400" />
+                <TrendUpIcon className="w-5 h-5 text-gray-400" />
               </div>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">

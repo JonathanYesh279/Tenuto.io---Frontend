@@ -1,5 +1,6 @@
-import { Clock, MapPin, Users } from 'lucide-react'
+
 import { 
+import { ClockIcon, MapPinIcon, UsersIcon } from '@phosphor-icons/react'
   formatRehearsalDateTime, 
   getRehearsalColor,
   calculateAttendanceStats,
@@ -41,18 +42,18 @@ export default function RehearsalCard({
         {/* Time and Location Info */}
         <div className="space-y-1.5 text-xs">
           <div className="flex items-center gap-1.5 opacity-95">
-            <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+            <ClockIcon className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="font-medium">{dateTime.time}</span>
           </div>
           
           <div className="flex items-center gap-1.5 opacity-95">
-            <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+            <MapPinIcon className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{rehearsal.location || 'לא צוין מיקום'}</span>
           </div>
           
           {!compact && attendanceStats.hasAttendanceData && (
             <div className="flex items-center gap-1.5 opacity-95">
-              <Users className="w-3.5 h-3.5 flex-shrink-0" />
+              <UsersIcon className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{attendanceStats.presentCount}/{attendanceStats.totalMembers} נוכחים</span>
             </div>
           )}

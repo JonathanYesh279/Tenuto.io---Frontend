@@ -1,21 +1,10 @@
 import { useState, useEffect } from 'react'
-import {
-  Users,
-  Music,
-  Calendar,
-  MapPin,
-  User,
-  AlertCircle,
-  Clock,
-  Edit,
-  Eye,
-  UserPlus,
-  Trash2
-} from 'lucide-react'
+
 import { Card } from './ui/Card'
 import StatsCard from './ui/StatsCard'
 import { orchestraService, studentService, teacherService, rehearsalService } from '../services/apiService'
 import {
+import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, MusicNotesIcon, PencilIcon, TrashIcon, UserIcon, UserPlusIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
@@ -197,7 +186,7 @@ export default function OrchestraManagementDashboard({
       {/* Error Display */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded p-4 flex items-center">
-          <AlertCircle className="w-5 h-5 text-red-600 ml-2" />
+          <WarningCircleIcon className="w-5 h-5 text-red-600 ml-2" />
           <span className="text-red-800">{error}</span>
         </div>
       )}
@@ -208,7 +197,7 @@ export default function OrchestraManagementDashboard({
           title="סה״כ תזמורות"
           value={stats.total.toString()}
           subtitle={`${stats.active} פעילות`}
-          icon={<Music />}
+          icon={<MusicNotesIcon />}
           color="blue"
           trend={{ 
             value: stats.typeDistribution['תזמורת'], 
@@ -220,7 +209,7 @@ export default function OrchestraManagementDashboard({
           title="סה״כ מבצעים"
           value={stats.totalMembers.toString()}
           subtitle={`ממוצע ${stats.avgMembersPerOrchestra} לתזמורת`}
-          icon={<Users />}
+          icon={<UsersIcon />}
           color="green"
           trend={{ 
             value: stats.typeDistribution['הרכב'], 
@@ -232,7 +221,7 @@ export default function OrchestraManagementDashboard({
           title="מנצחים מוקצים"
           value={`${stats.withConductor}/${stats.total}`}
           subtitle={`${Math.round((stats.withConductor / Math.max(stats.total, 1)) * 100)}% הקצאה`}
-          icon={<User />}
+          icon={<UserIcon />}
           color="purple"
         />
       </div>
@@ -294,7 +283,7 @@ export default function OrchestraManagementDashboard({
                 <div className="space-y-3">
                   {/* Conductor */}
                   <div className="flex items-center gap-2 text-sm">
-                    <User className="w-4 h-4 text-gray-400" />
+                    <UserIcon className="w-4 h-4 text-gray-400" />
                     {orchestra.conductorDetails ? (
                       <div>
                         <span className="font-medium text-gray-900">
@@ -313,13 +302,13 @@ export default function OrchestraManagementDashboard({
 
                   {/* Location */}
                   <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="w-4 h-4 text-gray-400" />
+                    <MapPinIcon className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-600">{orchestra.location}</span>
                   </div>
 
                   {/* Members Count */}
                   <div className="flex items-center gap-2 text-sm">
-                    <Users className="w-4 h-4 text-gray-400" />
+                    <UsersIcon className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-600">
                       {orchestra.memberDetails?.length || 0} חברים
                       {instrumentsSummary.totalInstruments > 0 && (
@@ -332,7 +321,7 @@ export default function OrchestraManagementDashboard({
 
                   {/* Rehearsals */}
                   <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="w-4 h-4 text-gray-400" />
+                    <CalendarIcon className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-600">
                       {orchestra.rehearsalCount || 0} חזרות
                       {orchestra.upcomingRehearsals && orchestra.upcomingRehearsals.length > 0 && (
@@ -351,7 +340,7 @@ export default function OrchestraManagementDashboard({
                     <div className="space-y-1">
                       {orchestra.upcomingRehearsals.slice(0, 2).map(rehearsal => (
                         <div key={rehearsal._id} className="text-xs text-gray-600 flex items-center gap-2">
-                          <Clock className="w-3 h-3" />
+                          <ClockIcon className="w-3 h-3" />
                           <span>
                             {new Date(rehearsal.date).toLocaleDateString('he-IL')} • {rehearsal.startTime}
                           </span>
@@ -370,7 +359,7 @@ export default function OrchestraManagementDashboard({
                     }}
                     className="flex items-center gap-1 px-3 py-2 text-xs bg-green-50 text-green-700 rounded hover:bg-green-100 transition-colors"
                   >
-                    <UserPlus className="w-3 h-3" />
+                    <UserPlusIcon className="w-3 h-3" />
                     חברים
                   </button>
                   <button
@@ -380,7 +369,7 @@ export default function OrchestraManagementDashboard({
                     }}
                     className="flex items-center gap-1 px-3 py-2 text-xs bg-gray-50 text-gray-700 rounded hover:bg-gray-100 transition-colors"
                   >
-                    <Edit className="w-3 h-3" />
+                    <PencilIcon className="w-3 h-3" />
                     עריכה
                   </button>
                   <button
@@ -390,7 +379,7 @@ export default function OrchestraManagementDashboard({
                     }}
                     className="flex items-center gap-1 px-3 py-2 text-xs bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <TrashIcon className="w-3 h-3" />
                   </button>
                 </div>
               </div>
@@ -402,7 +391,7 @@ export default function OrchestraManagementDashboard({
       {/* Empty State */}
       {filteredOrchestras.length === 0 && !loading && (
         <div className="text-center py-12">
-          <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <MusicNotesIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             {selectedFilter === 'all' ? 'אין תזמורות' : `אין תזמורות ${
               selectedFilter === 'active' ? 'פעילות' :

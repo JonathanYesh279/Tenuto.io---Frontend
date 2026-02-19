@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { AlertTriangle, Clock, MapPin, Users, User, CheckCircle, XCircle } from 'lucide-react'
+
 import {
+import { CheckCircleIcon, ClockIcon, MapPinIcon, UserIcon, UsersIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
   checkRehearsalConflict,
   formatRehearsalDateTime,
   type Rehearsal,
@@ -194,26 +195,26 @@ export default function ConflictDetector({
   const getConflictIcon = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return <XCircle className="w-5 h-5 text-red-600" />
+        return <XCircleIcon className="w-5 h-5 text-red-600" />
       case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-yellow-600" />
+        return <WarningIcon className="w-5 h-5 text-yellow-600" />
       default:
-        return <CheckCircle className="w-5 h-5 text-green-600" />
+        return <CheckCircleIcon className="w-5 h-5 text-green-600" />
     }
   }
 
   const getConflictTypeIcon = (type: string) => {
     switch (type) {
       case 'location':
-        return <MapPin className="w-4 h-4" />
+        return <MapPinIcon className="w-4 h-4" />
       case 'conductor':
-        return <User className="w-4 h-4" />
+        return <UserIcon className="w-4 h-4" />
       case 'members':
-        return <Users className="w-4 h-4" />
+        return <UsersIcon className="w-4 h-4" />
       case 'time':
-        return <Clock className="w-4 h-4" />
+        return <ClockIcon className="w-4 h-4" />
       default:
-        return <CheckCircle className="w-4 h-4" />
+        return <CheckCircleIcon className="w-4 h-4" />
     }
   }
 
@@ -246,7 +247,7 @@ export default function ConflictDetector({
     return (
       <div className="bg-green-50 border border-green-200 rounded p-4">
         <div className="flex items-center">
-          <CheckCircle className="w-5 h-5 text-green-600 ml-2" />
+          <CheckCircleIcon className="w-5 h-5 text-green-600 ml-2" />
           <span className="text-sm text-green-800">
             לא נמצאו התנגשויות - ניתן ליצור את החזרה
           </span>
@@ -268,13 +269,13 @@ export default function ConflictDetector({
           <div className="flex items-center gap-4 text-sm">
             {criticalConflicts.length > 0 && (
               <div className="flex items-center text-red-600">
-                <XCircle className="w-4 h-4 ml-1" />
+                <XCircleIcon className="w-4 h-4 ml-1" />
                 <span>{criticalConflicts.length} קריטיות</span>
               </div>
             )}
             {warningConflicts.length > 0 && (
               <div className="flex items-center text-yellow-600">
-                <AlertTriangle className="w-4 h-4 ml-1" />
+                <WarningIcon className="w-4 h-4 ml-1" />
                 <span>{warningConflicts.length} אזהרות</span>
               </div>
             )}

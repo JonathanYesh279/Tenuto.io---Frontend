@@ -5,9 +5,10 @@
  */
 
 import React, { useState } from 'react'
-import { Save, RotateCcw } from 'lucide-react'
+
 import { Card } from '../ui/Card'
 import {
+import { ArrowCounterClockwiseIcon, FloppyDiskIcon } from '@phosphor-icons/react'
   PhoneInput,
   TimeInput,
   ClassSelect,
@@ -255,7 +256,7 @@ const FormValidationExample: React.FC = () => {
                   type="text"
                   value={formData.studentName}
                   onChange={(e) => handleFieldChange('studentName', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-right"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-right"
                   placeholder="הכנס שם מלא"
                 />
                 {errors.studentName && (
@@ -290,7 +291,7 @@ const FormValidationExample: React.FC = () => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleFieldChange('email', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-right"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-right"
                   placeholder="example@email.com"
                   dir="ltr"
                 />
@@ -379,7 +380,7 @@ const FormValidationExample: React.FC = () => {
               type="text"
               value={formData.location}
               onChange={(e) => handleFieldChange('location', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-right"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-right"
               placeholder="חדר 101, אולם גדול, וכו'"
             />
             {errors.location && (
@@ -396,7 +397,7 @@ const FormValidationExample: React.FC = () => {
               value={formData.notes}
               onChange={(e) => handleFieldChange('notes', e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-right"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-right"
               placeholder="הערות נוספות..."
             />
           </div>
@@ -408,14 +409,14 @@ const FormValidationExample: React.FC = () => {
               onClick={handleReset}
               className="flex items-center px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              <RotateCcw className="w-4 h-4 mr-2" />
+              <ArrowCounterClockwiseIcon className="w-4 h-4 mr-2" />
               איפוס
             </button>
             
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center px-6 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting ? (
                 <>
@@ -424,7 +425,7 @@ const FormValidationExample: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
+                  <FloppyDiskIcon className="w-4 h-4 mr-2" />
                   שמור
                 </>
               )}

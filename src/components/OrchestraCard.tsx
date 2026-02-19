@@ -1,5 +1,6 @@
-import { Music, User, Users, Calendar, MapPin, Edit, Trash2, Eye, Clock } from 'lucide-react'
+
 import { 
+import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, MusicNotesIcon, PencilIcon, TrashIcon, UserIcon, UsersIcon } from '@phosphor-icons/react'
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
@@ -62,7 +63,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
               {orchestra.name}
             </h3>
             <p className="text-sm text-gray-600 flex items-center group-hover:text-blue-600 transition-colors">
-              <User className="w-3 h-3 ml-1" />
+              <UserIcon className="w-3 h-3 ml-1" />
               {getConductorName(orchestra)}
             </p>
           </div>
@@ -78,7 +79,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
                 className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors opacity-0 group-hover:opacity-100"
                 title="ערוך תזמורת"
               >
-                <Edit className="w-4 h-4" />
+                <PencilIcon className="w-4 h-4" />
               </button>
             )}
             {onDelete && (
@@ -90,7 +91,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
                 className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-0 group-hover:opacity-100"
                 title="מחק תזמורת"
               >
-                <Trash2 className="w-4 h-4" />
+                <TrashIcon className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -101,7 +102,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
       <div className="p-4 space-y-3">
         {/* Location */}
         <div className="flex items-center text-sm text-gray-600">
-          <MapPin className="w-4 h-4 ml-2 text-gray-400" />
+          <MapPinIcon className="w-4 h-4 ml-2 text-gray-400" />
           <span className="font-medium text-gray-900 ml-1">מיקום:</span>
           {orchestra.location}
         </div>
@@ -109,12 +110,12 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
         {/* Members and Rehearsals */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center text-gray-600">
-            <Users className="w-4 h-4 ml-2 text-gray-400" />
+            <UsersIcon className="w-4 h-4 ml-2 text-gray-400" />
             <span className="font-medium text-gray-900 ml-1">חברים:</span>
             {formatMemberCount(stats.memberCount)}
           </div>
           <div className="flex items-center text-gray-600">
-            <Calendar className="w-4 h-4 ml-2 text-gray-400" />
+            <CalendarIcon className="w-4 h-4 ml-2 text-gray-400" />
             <span className="font-medium text-gray-900 ml-1">חזרות:</span>
             {formatRehearsalCount(stats.rehearsalCount)}
           </div>
@@ -125,7 +126,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
           <div className="bg-gray-50 rounded p-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-900">
-                <Music className="w-4 h-4 inline ml-1" />
+                <MusicNotesIcon className="w-4 h-4 inline ml-1" />
                 כלי נגינה
               </span>
               <span className="text-xs text-gray-500">
@@ -160,7 +161,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
         {stats.averageAttendance > 0 && (
           <div className="flex items-center bg-gray-50 rounded p-3">
             <div className="flex items-center text-sm">
-              <Clock className="w-4 h-4 ml-2 text-gray-400" />
+              <ClockIcon className="w-4 h-4 ml-2 text-gray-400" />
               <span className="font-medium text-gray-900 ml-1">נוכחות ממוצעת:</span>
               <span className="text-gray-600">{stats.averageAttendance}%</span>
             </div>

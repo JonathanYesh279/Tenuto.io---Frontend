@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Calendar, 
-  User, 
-  Link2, 
-  Plus, 
-  Trash2, 
-  Edit2, 
-  Save, 
-  X, 
-  Calculator,
-  CheckCircle,
-  AlertCircle,
-  Clock
-} from 'lucide-react';
+
 import { Card } from './ui/Card';
 import type { Bagrut, ProgramPiece, DetailedGrading } from '../types/bagrut.types';
 import apiService from '../services/apiService';
 import { getDisplayName } from '@/utils/nameUtils';
+import { CalculatorIcon, CalendarIcon, CheckCircleIcon, ClockIcon, FloppyDiskIcon, LinkIcon, PencilSimpleIcon, PlusIcon, TrashIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PieceGrading {
   pieceNumber: number;
@@ -257,7 +245,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
 
       console.log('💾 Final מגן בגרות data to save:', magenData);
       
-      // Save to backend through the API via parent component
+      // FloppyDiskIcon to backend through the API via parent component
       console.log('📡 Calling onUpdate with magen data...');
       await onUpdate(magenData);
       console.log('✅ onUpdate completed successfully');
@@ -325,10 +313,10 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
   };
 
   const getStatusIcon = () => {
-    if (!bagrut.magenBagrut) return <AlertCircle className="w-4 h-4" />;
-    if (bagrut.magenBagrut.completed) return <CheckCircle className="w-4 h-4" />;
-    if (bagrut.magenBagrut.date) return <Clock className="w-4 h-4" />;
-    return <AlertCircle className="w-4 h-4" />;
+    if (!bagrut.magenBagrut) return <WarningCircleIcon className="w-4 h-4" />;
+    if (bagrut.magenBagrut.completed) return <CheckCircleIcon className="w-4 h-4" />;
+    if (bagrut.magenBagrut.date) return <ClockIcon className="w-4 h-4" />;
+    return <WarningCircleIcon className="w-4 h-4" />;
   };
 
   const getStatusText = () => {
@@ -360,7 +348,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
               onClick={() => setIsEditing(true)}
               className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
             >
-              <Edit2 className="w-4 h-4" />
+              <PencilSimpleIcon className="w-4 h-4" />
               עריכה
             </button>
           ) : (
@@ -369,14 +357,14 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                 onClick={handleSave}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
               >
-                <Save className="w-4 h-4" />
+                <FloppyDiskIcon className="w-4 h-4" />
                 שמור
               </button>
               <button
                 onClick={handleCancel}
                 className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
                 ביטול
               </button>
             </div>
@@ -396,7 +384,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
               <div>
                 {!isEditing ? (
                   <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-gray-500" />
+                    <CalendarIcon className="w-5 h-5 text-gray-500" />
                     <div>
                       <div className="text-sm text-gray-600">תאריך השמעה</div>
                       <div className="font-medium text-gray-900">
@@ -417,7 +405,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                 ) : (
                   <div>
                     <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                      <Calendar className="w-4 h-4" />
+                      <CalendarIcon className="w-4 h-4" />
                       תאריך השמעה
                     </label>
                     <input
@@ -434,7 +422,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
               <div className="md:col-span-2">
                 {!isEditing ? (
                   <div className="flex items-center gap-3">
-                    <User className="w-5 h-5 text-gray-500" />
+                    <UserIcon className="w-5 h-5 text-gray-500" />
                     <div>
                       <div className="text-sm text-gray-600">בוחנים</div>
                       <div className="font-medium text-gray-900">
@@ -449,7 +437,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                 ) : (
                   <div>
                     <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                      <User className="w-4 h-4" />
+                      <UserIcon className="w-4 h-4" />
                       שמות הבוחנים
                     </label>
                     {formData.reviewedBy.map((examiner, index) => (
@@ -466,7 +454,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                             onClick={() => removeExaminer(index)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <TrashIcon className="w-4 h-4" />
                           </button>
                         )}
                       </div>
@@ -475,7 +463,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                       onClick={addExaminer}
                       className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-muted rounded transition-colors text-sm"
                     >
-                      <Plus className="w-4 h-4" />
+                      <PlusIcon className="w-4 h-4" />
                       הוסף בוחן
                     </button>
                   </div>
@@ -487,7 +475,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
             <div className="mt-6 pt-6 border-t border-gray-200">
               {!isEditing ? (
                 <div className="flex items-start gap-3">
-                  <Link2 className="w-5 h-5 text-gray-500 mt-0.5" />
+                  <LinkIcon className="w-5 h-5 text-gray-500 mt-0.5" />
                   <div className="flex-1">
                     <div className="text-sm text-gray-600 mb-2">קישורי תיעוד</div>
                     {bagrut.magenBagrut?.recordingLinks && bagrut.magenBagrut.recordingLinks.length > 0 ? (
@@ -512,7 +500,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
               ) : (
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                    <Link2 className="w-4 h-4" />
+                    <LinkIcon className="w-4 h-4" />
                     קישורי תיעוד
                   </label>
                   {formData.recordingLinks.map((link, index) => (
@@ -529,7 +517,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                           onClick={() => removeRecordingLink(index)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       )}
                     </div>
@@ -538,7 +526,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                     onClick={addRecordingLink}
                     className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-muted rounded transition-colors text-sm"
                   >
-                    <Plus className="w-4 h-4" />
+                    <PlusIcon className="w-4 h-4" />
                     הוסף קישור
                   </button>
                 </div>
@@ -553,7 +541,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                 <h4 className="text-lg font-semibold text-gray-900">טבלת ציונים מפורטת</h4>
                 {pieceGradings.length > 0 && (
                   <div className="flex items-center gap-2 text-lg font-bold text-primary">
-                    <Calculator className="w-5 h-5" />
+                    <CalculatorIcon className="w-5 h-5" />
                     ממוצע כללי: {calculateOverallAverage()}
                   </div>
                 )}
@@ -689,7 +677,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                       <tr>
                         <td colSpan={6} className="px-4 py-8 text-center text-gray-500 border border-gray-200">
                           <div className="flex flex-col items-center gap-2">
-                            <AlertCircle className="w-8 h-8 text-gray-300" />
+                            <WarningCircleIcon className="w-8 h-8 text-gray-300" />
                             <p>אין יצירות בתכנית הבגרות לדירוג</p>
                             <p className="text-sm">יש להוסיף יצירות בלשונית "יצירות בתכנית" לפני המשך הדירוג</p>
                           </div>
@@ -736,7 +724,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
           ) : (
             <Card>
               <div className="text-center py-12">
-                <AlertCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <WarningCircleIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h4 className="text-lg font-medium text-gray-900 mb-2">אין יצירות בתכנית הבגרות</h4>
                 <p className="text-gray-600 mb-6">
                   לפני שניתן לדרג את המגן בגרות, יש להוסיף יצירות לתכנית הבגרות.
@@ -754,7 +742,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                     }}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
                   >
-                    <Plus className="w-5 h-5" />
+                    <PlusIcon className="w-5 h-5" />
                     עבור לרשימת יצירות
                   </button>
                 </div>
@@ -765,14 +753,14 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
       ) : (
         /* Empty State */
         <div className="text-center py-12">
-          <AlertCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <WarningCircleIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h4 className="text-lg font-medium text-gray-900 mb-2">מגן בגרות טרם נקבע</h4>
           <p className="text-gray-600 mb-6">השמעת מגן בגרות היא השמעה אחרונה לקראת רסיטל וקביעת ציון מגן</p>
           <button
             onClick={() => setIsEditing(true)}
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
           >
-            <Plus className="w-5 h-5" />
+            <PlusIcon className="w-5 h-5" />
             הגדר מגן בגרות
           </button>
         </div>

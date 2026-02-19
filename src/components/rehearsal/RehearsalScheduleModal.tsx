@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Calendar, Clock, MapPin, Users, AlertCircle, X } from 'lucide-react'
+import { CalendarIcon, ClockIcon, MapPinIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+
 
 interface RehearsalScheduleModalProps {
   isOpen: boolean
@@ -157,13 +158,13 @@ export default function RehearsalScheduleModal({
             onClick={onClose}
             className="p-1 text-gray-400 hover:text-gray-600 rounded"
           >
-            <X className="w-5 h-5" />
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
 
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center gap-2 text-blue-800">
-            <Users className="w-4 h-4" />
+            <UsersIcon className="w-4 h-4" />
             <span className="font-medium font-reisinger-yonatan">תזמורת: {orchestraName}</span>
           </div>
         </div>
@@ -175,7 +176,7 @@ export default function RehearsalScheduleModal({
               תאריך החזרה *
             </label>
             <div className="relative">
-              <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="date"
                 required
@@ -198,7 +199,7 @@ export default function RehearsalScheduleModal({
                 שעת התחלה *
               </label>
               <div className="relative">
-                <Clock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="time"
                   required
@@ -219,7 +220,7 @@ export default function RehearsalScheduleModal({
                 שעת סיום *
               </label>
               <div className="relative">
-                <Clock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="time"
                   required
@@ -249,7 +250,7 @@ export default function RehearsalScheduleModal({
               מקום החזרה *
             </label>
             <div className="relative">
-              <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <MapPinIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 required
@@ -334,7 +335,7 @@ export default function RehearsalScheduleModal({
                 </div>
 
                 <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <WarningCircleIcon className="w-4 h-4 mt-0.5 flex-shrink-0" />
                   <span className="font-reisinger-yonatan">
                     חזרות קבועות ייווצרו אוטומטית עד התאריך שצוין
                   </span>

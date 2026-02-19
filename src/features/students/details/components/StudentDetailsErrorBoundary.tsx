@@ -6,8 +6,9 @@
  */
 
 import React, { ErrorInfo, ReactNode } from 'react'
-import { AlertTriangle, RefreshCw, ArrowRight } from 'lucide-react'
+
 import { useNavigate } from 'react-router-dom'
+import { ArrowRightIcon, ArrowsClockwiseIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -90,7 +91,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorInfo, onRetry
         {/* Error Icon */}
         <div className="flex justify-center mb-6">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-            <AlertTriangle className="w-8 h-8 text-red-600" />
+            <WarningIcon className="w-8 h-8 text-red-600" />
           </div>
         </div>
 
@@ -110,7 +111,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorInfo, onRetry
             onClick={onRetry}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
           >
-            <RefreshCw className="w-4 h-4" />
+            <ArrowsClockwiseIcon className="w-4 h-4" />
             נסה שוב
           </button>
           
@@ -118,7 +119,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, errorInfo, onRetry
             onClick={() => navigate('/students')}
             className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRightIcon className="w-4 h-4" />
             חזור לתלמידים
           </button>
         </div>

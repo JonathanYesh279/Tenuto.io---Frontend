@@ -5,10 +5,11 @@
  */
 
 import { useState, useCallback, useRef } from 'react'
-import { FileText, Download, Upload, Eye, Trash2, Calendar, Filter, Search, Folder, Archive, Scan, FileImage, FileAudio, FileVideo, FilePlus, X, CheckCircle, AlertCircle, Clock, Zap } from 'lucide-react'
+
 import { StudentDetails, Document } from '../../types'
 import { useDropzone } from 'react-dropzone'
 import toast from 'react-hot-toast'
+import { ArchiveIcon, CalendarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileAudioIcon, FileImageIcon, FilePlusIcon, FileTextIcon, FileVideoIcon, FolderIcon, FunnelIcon, LightningIcon, MagnifyingGlassIcon, ScanIcon, TrashIcon, UploadSimpleIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface DocumentsTabProps {
   student: StudentDetails
@@ -75,7 +76,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
     }
   }
   
-  // Filter and search documents
+  // FunnelIcon and search documents
   const filteredDocuments = documents?.filter(doc => {
     const matchesCategory = selectedCategory === 'all' || doc.category === selectedCategory
     const matchesSearch = searchTerm === '' || 
@@ -134,10 +135,10 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
       {/* Controls */}
       <div className="bg-white rounded p-4 border border-gray-200 shadow-sm">
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-          {/* Search and Filters */}
+          {/* MagnifyingGlassIcon and Filters */}
           <div className="flex flex-col sm:flex-row gap-3 flex-1">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+              <MagnifyingGlassIcon className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="חפש מסמכים..."
@@ -148,7 +149,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
             </div>
             
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <FunnelIcon className="w-4 h-4 text-gray-500" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -191,11 +192,11 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">{selectedDocuments.length} נבחרו</span>
                 <button className="flex items-center gap-1 px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600">
-                  <Trash2 className="w-3 h-3" />
+                  <TrashIcon className="w-3 h-3" />
                   מחק
                 </button>
                 <button className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
-                  <Archive className="w-3 h-3" />
+                  <ArchiveIcon className="w-3 h-3" />
                   ארכיב
                 </button>
               </div>
@@ -205,7 +206,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
               onClick={() => setShowUploadModal(true)}
               className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
             >
-              <Upload className="w-4 h-4" />
+              <UploadSimpleIcon className="w-4 h-4" />
               העלה מסמך
             </button>
           </div>
@@ -238,14 +239,14 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
         </div>
       </div>
       
-      {/* Upload Modal */}
+      {/* UploadSimpleIcon Modal */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">העלאת מסמכים</h3>
               <button onClick={() => setShowUploadModal(false)}>
-                <X className="w-5 h-5 text-gray-500" />
+                <XIcon className="w-5 h-5 text-gray-500" />
               </button>
             </div>
             
@@ -253,7 +254,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
               isDragActive ? 'border-border bg-muted/50' : 'border-gray-300 hover:border-border'
             }`}>
               <input {...getInputProps()} />
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <UploadSimpleIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-lg font-medium text-gray-900 mb-2">
                 {isDragActive ? 'שחרר קבצים כאן' : 'גרור קבצים לכאן או לחץ לבחירה'}
               </p>
@@ -261,22 +262,22 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                 נתמכים: PDF, Word, תמונות, קבצי שמע ווידאו (עד 10MB)
               </p>
               
-              {/* Quick Upload Categories */}
+              {/* Quick UploadSimpleIcon Categories */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
                 <div className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <FileText className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+                  <FileTextIcon className="w-6 h-6 text-blue-500 mx-auto mb-2" />
                   <div className="text-xs text-gray-600">תעודות רשמיות</div>
                 </div>
                 <div className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <FileImage className="w-6 h-6 text-green-500 mx-auto mb-2" />
+                  <FileImageIcon className="w-6 h-6 text-green-500 mx-auto mb-2" />
                   <div className="text-xs text-gray-600">תמונות</div>
                 </div>
                 <div className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <FileAudio className="w-6 h-6 text-purple-500 mx-auto mb-2" />
+                  <FileAudioIcon className="w-6 h-6 text-purple-500 mx-auto mb-2" />
                   <div className="text-xs text-gray-600">הקלטות</div>
                 </div>
                 <div className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <FileVideo className="w-6 h-6 text-red-500 mx-auto mb-2" />
+                  <FileVideoIcon className="w-6 h-6 text-red-500 mx-auto mb-2" />
                   <div className="text-xs text-gray-600">סרטונים</div>
                 </div>
               </div>
@@ -301,7 +302,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
             <span>מציג {filteredDocuments.length} מתוך {documents?.length || 0} מסמכים</span>
             <div className="flex items-center gap-2">
               <button className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
-                <Archive className="w-3 h-3" />
+                <ArchiveIcon className="w-3 h-3" />
                 הורד הכל כ-ZIP
               </button>
             </div>
@@ -350,7 +351,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                         {/* OCR Processing Indicator */}
                         {isProcessingOCR.includes(document.originalName) && (
                           <div className="flex items-center gap-1 text-xs text-blue-600">
-                            <Zap className="w-3 h-3 animate-pulse" />
+                            <LightningIcon className="w-3 h-3 animate-pulse" />
                             <span>OCR בעיבוד...</span>
                           </div>
                         )}
@@ -363,7 +364,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                           <span>{formatFileSize(document.size)}</span>
                         </span>
                         <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
+                          <CalendarIcon className="w-3 h-3" />
                           {new Date(document.uploadDate).toLocaleDateString('he-IL')}
                         </span>
                         <span>הועלה על ידי: {document.uploadedBy}</span>
@@ -385,7 +386,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                             disabled={isProcessingOCR.includes(document.originalName)}
                             className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs hover:bg-blue-200 disabled:opacity-50"
                           >
-                            <Scan className="w-3 h-3" />
+                            <ScanIcon className="w-3 h-3" />
                             OCR
                           </button>
                         )}
@@ -403,19 +404,19 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                         className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded transition-colors"
                         title="תצוגה מקדימה"
                       >
-                        <Eye className="w-4 h-4" />
+                        <EyeIcon className="w-4 h-4" />
                       </button>
                       <button 
                         className="p-2 text-gray-400 hover:text-primary hover:bg-muted/50 rounded transition-colors"
                         title="הורדה"
                       >
-                        <Download className="w-4 h-4" />
+                        <DownloadSimpleIcon className="w-4 h-4" />
                       </button>
                       <button 
                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                         title="מחיקה"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                       </button>
                     </div>
                     
@@ -435,21 +436,21 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
             <h3 className="font-semibold text-gray-900 mb-4">פעילות אחרונה</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="w-5 h-5 text-green-600" />
+                <CheckCircleIcon className="w-5 h-5 text-green-600" />
                 <div className="flex-1">
                   <div className="text-sm font-medium text-gray-900">תעודת רפואית הועלתה בהצלחה</div>
                   <div className="text-xs text-gray-600">לפני 2 שעות</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <Scan className="w-5 h-5 text-blue-600" />
+                <ScanIcon className="w-5 h-5 text-blue-600" />
                 <div className="flex-1">
                   <div className="text-sm font-medium text-gray-900">OCR הושלם על תעודת זהות</div>
                   <div className="text-xs text-gray-600">לפני 5 שעות - טקסט חולץ בהצלחה</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <Clock className="w-5 h-5 text-yellow-600" />
+                <ClockIcon className="w-5 h-5 text-yellow-600" />
                 <div className="flex-1">
                   <div className="text-sm font-medium text-gray-900">דוח התקדמות ממתין אישור</div>
                   <div className="text-xs text-gray-600">אתמול - נשלח למנהל</div>
@@ -461,7 +462,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
       ) : (
         <div className="text-center py-16 text-gray-500 bg-white rounded shadow-sm border border-gray-200">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-8 h-8 text-gray-300" />
+            <FileTextIcon className="w-8 h-8 text-gray-300" />
           </div>
           <h3 className="text-lg font-medium text-gray-600 mb-2">אין מסמכים</h3>
           <p className="text-sm text-gray-500 mb-6">העלה מסמכים כדי להתחיל לנהל את תיק התלמיד</p>
@@ -469,7 +470,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
             onClick={() => setShowUploadModal(true)}
             className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors mx-auto"
           >
-            <Upload className="w-5 h-5" />
+            <UploadSimpleIcon className="w-5 h-5" />
             העלה מסמך ראשון
           </button>
         </div>
@@ -482,7 +483,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">{showPreview.originalName}</h3>
               <button onClick={() => setShowPreview(null)}>
-                <X className="w-5 h-5 text-gray-500" />
+                <XIcon className="w-5 h-5 text-gray-500" />
               </button>
             </div>
             <div className="p-6 overflow-y-auto max-h-[70vh]">
@@ -492,10 +493,10 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ student, studentId }) => {
                 <iframe src={showPreview.url} className="w-full h-96 border border-gray-200 rounded" />
               ) : (
                 <div className="text-center py-12">
-                  <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <FileTextIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-600">תצוגה מקדימה אינה זמינה עבור סוג קובץ זה</p>
                   <button className="mt-4 flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors mx-auto">
-                    <Download className="w-4 h-4" />
+                    <DownloadSimpleIcon className="w-4 h-4" />
                     הורד קובץ
                   </button>
                 </div>

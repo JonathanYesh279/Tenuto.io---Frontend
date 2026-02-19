@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Save, X, Users, Music, Phone, Mail, AlertCircle } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import type { Accompanist } from '../types/bagrut.types'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { EnvelopeIcon, FloppyDiskIcon, MusicNotesIcon, PhoneIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface AccompanistFormProps {
   initialData?: Partial<Accompanist>
@@ -76,7 +77,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
       newErrors.email = 'כתובת אימייל לא תקינה'
     }
 
-    // Phone validation (optional field, Israeli format - must match backend pattern)
+    // PhoneIcon validation (optional field, Israeli format - must match backend pattern)
     if (formData.phone && formData.phone.trim()) {
       const phonePattern = /^05\d{8}$/
       if (!phonePattern.test(formData.phone.replace(/\D/g, ''))) {
@@ -162,7 +163,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
           onClick={onCancel}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -171,7 +172,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
         {/* General Error */}
         {errors.general && (
           <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <WarningCircleIcon className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
         )}
@@ -179,7 +180,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
         {/* Basic Information */}
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Users className="w-5 h-5 text-gray-600" />
+            <UsersIcon className="w-5 h-5 text-gray-600" />
             פרטי המלווה
           </h3>
           
@@ -209,7 +210,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
                 כלי הליווי <span className="text-red-500">*</span>
               </label>
               <div className="flex items-center gap-2">
-                <Music className="w-4 h-4 text-gray-400" />
+                <MusicNotesIcon className="w-4 h-4 text-gray-400" />
                 <select
                   value={formData.instrument}
                   onChange={(e) => handleInputChange('instrument', e.target.value)}
@@ -249,13 +250,13 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
           <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטי קשר</h3>
           
           <div className="space-y-4">
-            {/* Phone */}
+            {/* PhoneIcon */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 מספר טלפון
               </label>
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-gray-400" />
+                <PhoneIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="tel"
                   value={formData.phone}
@@ -278,7 +279,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
                 כתובת אימייל
               </label>
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-gray-400" />
+                <EnvelopeIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="email"
                   value={formData.email}
@@ -300,7 +301,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
         {/* Info Box */}
         <div className="p-4 bg-blue-50 border border-blue-200 rounded">
           <div className="flex items-start gap-3">
-            <Users className="w-5 h-5 text-blue-600 mt-0.5" />
+            <UsersIcon className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-blue-800">
               <p className="font-medium mb-1">מידע חשוב</p>
               <p>
@@ -334,7 +335,7 @@ const AccompanistForm: React.FC<AccompanistFormProps> = ({
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 ml-2" />
+                <FloppyDiskIcon className="w-4 h-4 ml-2" />
                 שמור מלווה
               </>
             )}

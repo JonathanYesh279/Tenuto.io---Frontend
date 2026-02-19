@@ -5,10 +5,11 @@
  */
 
 import { useState } from 'react'
-import { User, Phone, Mail, MapPin, Edit, Save, X, Calendar, Award, AlertCircle, CheckCircle } from 'lucide-react'
+
 import { Teacher } from '../../types'
 import { teacherDetailsApi } from '../../../../../services/teacherDetailsApi'
 import { getDisplayName, formatAddress } from '../../../../../utils/nameUtils'
+import { CalendarIcon, CheckCircleIcon, EnvelopeIcon, FloppyDiskIcon, MapPinIcon, MedalIcon, PencilIcon, PhoneIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PersonalInfoTabProps {
   teacher: Teacher
@@ -39,7 +40,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
 
   // Validation functions
   const validatePhone = (phone: string): string | undefined => {
-    if (!phone) return undefined // Phone is optional
+    if (!phone) return undefined // PhoneIcon is optional
     // Remove any dashes, spaces, or other formatting
     const cleanPhone = phone.replace(/[\s\-]/g, '')
     // Must be 10 digits starting with 05
@@ -157,7 +158,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
       {/* Success Message */}
       {saveSuccess && (
         <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded text-green-800">
-          <CheckCircle className="w-5 h-5" />
+          <CheckCircleIcon className="w-5 h-5" />
           <span>הנתונים נשמרו בהצלחה!</span>
         </div>
       )}
@@ -165,19 +166,19 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
       {/* Error Message */}
       {saveError && (
         <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded text-red-800">
-          <AlertCircle className="w-5 h-5" />
+          <WarningCircleIcon className="w-5 h-5" />
           <span>{saveError}</span>
         </div>
       )}
 
-      {/* Header with Edit Button */}
+      {/* Header with PencilIcon Button */}
       <div className="flex justify-end">
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <Edit className="w-4 h-4" />
+            <PencilIcon className="w-4 h-4" />
             ערוך
           </button>
         ) : (
@@ -194,7 +195,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4" />
+                  <FloppyDiskIcon className="w-4 h-4" />
                   שמור
                 </>
               )}
@@ -204,7 +205,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
               disabled={isSaving}
               className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <X className="w-4 h-4" />
+              <XIcon className="w-4 h-4" />
               בטל
             </button>
           </div>
@@ -220,7 +221,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
           {/* First Name */}
           <div className="space-y-1">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <User className="w-4 h-4" />
+              <UserIcon className="w-4 h-4" />
               שם פרטי
             </label>
             {isEditing ? (
@@ -243,7 +244,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                 />
                 {fieldErrors.firstName && (
                   <p className="text-sm text-red-600 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                    <WarningCircleIcon className="w-3 h-3" />
                     {fieldErrors.firstName}
                   </p>
                 )}
@@ -256,7 +257,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
           {/* Last Name */}
           <div className="space-y-1">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <User className="w-4 h-4" />
+              <UserIcon className="w-4 h-4" />
               שם משפחה
             </label>
             {isEditing ? (
@@ -279,7 +280,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                 />
                 {fieldErrors.lastName && (
                   <p className="text-sm text-red-600 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                    <WarningCircleIcon className="w-3 h-3" />
                     {fieldErrors.lastName}
                   </p>
                 )}
@@ -289,10 +290,10 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
             )}
           </div>
 
-          {/* Phone */}
+          {/* PhoneIcon */}
           <div className="space-y-1">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <Phone className="w-4 h-4" />
+              <PhoneIcon className="w-4 h-4" />
               טלפון
             </label>
             {isEditing ? (
@@ -315,7 +316,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                 />
                 {fieldErrors.phone && (
                   <p className="text-sm text-red-600 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                    <WarningCircleIcon className="w-3 h-3" />
                     {fieldErrors.phone}
                   </p>
                 )}
@@ -328,7 +329,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
           {/* Email */}
           <div className="space-y-1">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <Mail className="w-4 h-4" />
+              <EnvelopeIcon className="w-4 h-4" />
               דוא"ל
             </label>
             {isEditing ? (
@@ -351,7 +352,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                 />
                 {fieldErrors.email && (
                   <p className="text-sm text-red-600 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                    <WarningCircleIcon className="w-3 h-3" />
                     {fieldErrors.email}
                   </p>
                 )}
@@ -364,7 +365,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
           {/* Address */}
           <div className="space-y-1">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <MapPin className="w-4 h-4" />
+              <MapPinIcon className="w-4 h-4" />
               כתובת
             </label>
             {isEditing ? (
@@ -387,7 +388,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
                 />
                 {fieldErrors.address && (
                   <p className="text-sm text-red-600 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                    <WarningCircleIcon className="w-3 h-3" />
                     {fieldErrors.address}
                   </p>
                 )}
@@ -405,7 +406,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
           {/* Instrument */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <Award className="w-4 h-4" />
+              <MedalIcon className="w-4 h-4" />
               כלי נגינה
             </label>
             <p className="text-gray-900">{teacher.professionalInfo?.instrument || 'לא צוין'}</p>
@@ -441,7 +442,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
           {/* Creation Date */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <Calendar className="w-4 h-4" />
+              <CalendarIcon className="w-4 h-4" />
               תאריך הצטרפות
             </label>
             <p className="text-gray-900">

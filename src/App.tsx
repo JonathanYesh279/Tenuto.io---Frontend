@@ -51,7 +51,7 @@ const OrchestraDetailsPage = lazyWithRetry(
 const PageLoadingFallback: React.FC<{ message?: string }> = ({ message = 'טוען עמוד...' }) => (
   <div className="flex items-center justify-center min-h-96">
     <div className="text-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
       <div className="text-gray-600">{message}</div>
     </div>
   </div>
@@ -133,7 +133,7 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <div className="text-gray-600">מאמת הרשאות...</div>
           {authError && retryAttempts > 0 && (
             <div className="mt-2 text-sm text-amber-600">
@@ -160,7 +160,7 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
           </div>
           <button
             onClick={() => window.history.back()}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            className="px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800"
           >
             חזור
           </button>
@@ -234,7 +234,7 @@ function AppRoutes() {
                 <Suspense fallback={
                   <div className="flex items-center justify-center min-h-96">
                     <div className="text-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
                       <div className="text-gray-600">טוען פרטי מורה...</div>
                     </div>
                   </div>
@@ -283,7 +283,7 @@ function AppRoutes() {
                 <Suspense fallback={
                   <div className="flex items-center justify-center min-h-96">
                     <div className="text-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
                       <div className="text-gray-600">טוען פרטי תזמורת...</div>
                     </div>
                   </div>

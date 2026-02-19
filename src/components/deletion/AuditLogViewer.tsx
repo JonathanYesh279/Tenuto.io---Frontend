@@ -6,28 +6,11 @@
  */
 
 import React, { useState, useMemo } from 'react'
-import { 
-  Search, 
-  Filter, 
-  Download, 
-  RotateCcw, 
-  Eye, 
-  Calendar,
-  User,
-  Database,
-  Clock,
-  ChevronDown,
-  ChevronRight,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Trash2,
-  ArrowUpDown,
-  FileText
-} from 'lucide-react'
+
 import { AuditLogEntry } from './types'
 import { Card } from '../ui/Card'
 import Modal from '../ui/Modal'
+import { ArrowCounterClockwiseIcon, ArrowUpDownIcon, CalendarIcon, CaretDownIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, MagnifyingGlassIcon, TrashIcon, UserIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface AuditLogViewerProps {
   entries: AuditLogEntry[]
@@ -90,13 +73,13 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
       // Entity type filter
       if (filters.entityType && entry.entityType !== filters.entityType) return false
       
-      // User filter
+      // UserIcon filter
       if (filters.userId && entry.userId !== filters.userId) return false
       
       // Rollback filter
       if (filters.canRollback !== null && entry.canRollback !== filters.canRollback) return false
       
-      // Search query
+      // MagnifyingGlassIcon query
       if (filters.searchQuery) {
         const query = filters.searchQuery.toLowerCase()
         if (!entry.entityName.toLowerCase().includes(query) &&
@@ -176,13 +159,13 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
     switch (action) {
       case 'delete':
       case 'cascade_delete':
-        return <Trash2 className="w-4 h-4 text-red-500" />
+        return <TrashIcon className="w-4 h-4 text-red-500" />
       case 'rollback':
-        return <RotateCcw className="w-4 h-4 text-blue-500" />
+        return <ArrowCounterClockwiseIcon className="w-4 h-4 text-blue-500" />
       case 'orphan_cleanup':
-        return <Database className="w-4 h-4 text-orange-500" />
+        return <DatabaseIcon className="w-4 h-4 text-orange-500" />
       default:
-        return <FileText className="w-4 h-4 text-gray-500" />
+        return <FileTextIcon className="w-4 h-4 text-gray-500" />
     }
   }
 
@@ -230,7 +213,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <FileText className="w-6 h-6 text-gray-500" />
+              <FileTextIcon className="w-6 h-6 text-gray-500" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                   יומן ביקורת
@@ -247,7 +230,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                   onClick={() => onExport(filters)}
                   className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
                 >
-                  <Download className="w-4 h-4" />
+                  <DownloadSimpleIcon className="w-4 h-4" />
                   <span className="font-reisinger-yonatan">יצוא</span>
                 </button>
               )}
@@ -256,16 +239,16 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
-                <Filter className="w-4 h-4" />
+                <FunnelIcon className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">סינון</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                <CaretDownIcon className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
             </div>
           </div>
 
-          {/* Search */}
+          {/* MagnifyingGlassIcon */}
           <div className="relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="חיפוש בשם ישות, משתמש או פעולה..."
@@ -408,9 +391,9 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               onClick={() => handleSort('timestamp')}
               className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
             >
-              <Clock className="w-4 h-4" />
+              <ClockIcon className="w-4 h-4" />
               <span>תאריך ושעה</span>
-              <ArrowUpDown className="w-3 h-3" />
+              <ArrowUpDownIcon className="w-3 h-3" />
             </button>
           </div>
           
@@ -420,7 +403,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
             >
               <span>פעולה</span>
-              <ArrowUpDown className="w-3 h-3" />
+              <ArrowUpDownIcon className="w-3 h-3" />
             </button>
           </div>
           
@@ -430,7 +413,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
             >
               <span>סוג ישות</span>
-              <ArrowUpDown className="w-3 h-3" />
+              <ArrowUpDownIcon className="w-3 h-3" />
             </button>
           </div>
           
@@ -443,9 +426,9 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               onClick={() => handleSort('userName')}
               className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
             >
-              <User className="w-4 h-4" />
+              <UserIcon className="w-4 h-4" />
               <span>משתמש</span>
-              <ArrowUpDown className="w-3 h-3" />
+              <ArrowUpDownIcon className="w-3 h-3" />
             </button>
           </div>
         </div>
@@ -467,8 +450,8 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                       className="text-gray-400 hover:text-gray-600"
                     >
                       {isExpanded ? 
-                        <ChevronDown className="w-4 h-4" /> : 
-                        <ChevronRight className="w-4 h-4" />
+                        <CaretDownIcon className="w-4 h-4" /> : 
+                        <CaretRightIcon className="w-4 h-4" />
                       }
                     </button>
                     <span className="text-sm text-gray-600 font-reisinger-yonatan">
@@ -512,7 +495,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                           className="p-1 text-blue-600 hover:bg-blue-50 rounded"
                           title="שחזור"
                         >
-                          <RotateCcw className="w-4 h-4" />
+                          <ArrowCounterClockwiseIcon className="w-4 h-4" />
                         </button>
                       )}
                       
@@ -521,7 +504,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                         className="p-1 text-gray-400 hover:bg-gray-50 rounded"
                         title="צפייה בפרטים"
                       >
-                        <Eye className="w-4 h-4" />
+                        <EyeIcon className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -545,8 +528,8 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                           <div className="flex items-center gap-2 font-reisinger-yonatan">
                             <span className="font-medium">ניתן לשחזור:</span>
                             {entry.canRollback ? 
-                              <CheckCircle className="w-4 h-4 text-green-500" /> :
-                              <XCircle className="w-4 h-4 text-red-500" />
+                              <CheckCircleIcon className="w-4 h-4 text-green-500" /> :
+                              <XCircleIcon className="w-4 h-4 text-red-500" />
                             }
                           </div>
                         </div>
@@ -575,7 +558,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
 
       {filteredAndSortedEntries.length === 0 && !isLoading && (
         <Card className="text-center py-12">
-          <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <FileTextIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-600 font-reisinger-yonatan mb-2">
             לא נמצאו רשומות
           </h3>
@@ -596,7 +579,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
           <div className="space-y-6 p-6" dir="rtl">
             <div className="bg-blue-50 border border-blue-200 rounded p-4">
               <div className="flex items-center gap-2 text-blue-700 mb-2">
-                <RotateCcw className="w-5 h-5" />
+                <ArrowCounterClockwiseIcon className="w-5 h-5" />
                 <span className="font-semibold font-reisinger-yonatan">שחזור נתונים</span>
               </div>
               <p className="text-sm text-blue-700 font-reisinger-yonatan">
@@ -625,7 +608,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
 
             <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
               <div className="flex items-center gap-2 text-yellow-700 mb-1">
-                <AlertCircle className="w-4 h-4" />
+                <WarningCircleIcon className="w-4 h-4" />
                 <span className="font-semibold text-sm font-reisinger-yonatan">שים לב</span>
               </div>
               <p className="text-xs text-yellow-700 font-reisinger-yonatan">

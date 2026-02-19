@@ -9,21 +9,9 @@
  */
 
 import React, { useState } from 'react'
+
 import { 
-  Music, 
-  Users, 
-  Clock, 
-  MapPin, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  Plus, 
-  Minus,
-  Star,
-  DollarSign,
-  Calendar
-} from 'lucide-react'
-import { 
+import { CalendarIcon, CheckCircleIcon, ClockIcon, CurrencyDollarIcon, MapPinIcon, MinusIcon, MusicNotesIcon, PlusIcon, StarIcon, UsersIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
   useEnrollmentManager,
   useStudentOrchestraEnrollments,
   useStudentEnsembleEnrollments 
@@ -95,7 +83,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
     return (
       <div className="mt-3 space-y-2">
         <h5 className="text-sm font-medium text-red-700 flex items-center gap-1">
-          <AlertTriangle className="w-4 h-4" />
+          <WarningIcon className="w-4 h-4" />
           התנגשויות בלוח הזמנים
         </h5>
         {conflicts.map((conflict, index) => (
@@ -110,7 +98,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
             <div className="font-medium">{conflict.conflictWith}</div>
             <div className="flex items-center gap-2 text-xs mt-1">
               <span>{conflict.day}</span>
-              <Clock className="w-3 h-3" />
+              <ClockIcon className="w-3 h-3" />
               <span>{conflict.startTime} - {conflict.endTime}</span>
               <span className="text-xs opacity-75">
                 {conflict.severity === 'overlap' ? '(חופפים)' : '(סמוכים)'}
@@ -134,7 +122,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3">
             <div className="p-2 bg-purple-100 rounded-lg">
-              <Music className="w-5 h-5 text-purple-600" />
+              <MusicNotesIcon className="w-5 h-5 text-purple-600" />
             </div>
             <div>
               <h4 className="font-semibold text-lg text-gray-900">{orchestra.name}</h4>
@@ -164,7 +152,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
           <div className="flex items-center gap-2">
             {enrolled && (
               <span className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                <CheckCircle className="w-4 h-4" />
+                <CheckCircleIcon className="w-4 h-4" />
                 רשום
               </span>
             )}
@@ -182,13 +170,13 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
             <div className="space-y-1">
               {orchestra.rehearsalTimes.map((rehearsal, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
-                  <Calendar className="w-3 h-3" />
+                  <CalendarIcon className="w-3 h-3" />
                   <span>{rehearsal.day}</span>
-                  <Clock className="w-3 h-3" />
+                  <ClockIcon className="w-3 h-3" />
                   <span>{rehearsal.startTime} - {rehearsal.endTime}</span>
                   {rehearsal.location && (
                     <>
-                      <MapPin className="w-3 h-3" />
+                      <MapPinIcon className="w-3 h-3" />
                       <span>{rehearsal.location}</span>
                     </>
                   )}
@@ -218,7 +206,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
         {/* Cost */}
         {orchestra.yearlyFee && (
           <div className="mb-4 flex items-center gap-2 text-sm text-gray-600">
-            <DollarSign className="w-4 h-4" />
+            <CurrencyDollarIcon className="w-4 h-4" />
             <span>תשלום שנתי: ₪{orchestra.yearlyFee}</span>
           </div>
         )}
@@ -228,9 +216,9 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
           <div className="mb-4 p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               {enrollmentManager.orchestraEligibility.canEnroll ? (
-                <CheckCircle className="w-4 h-4 text-green-600" />
+                <CheckCircleIcon className="w-4 h-4 text-green-600" />
               ) : (
-                <XCircle className="w-4 h-4 text-red-600" />
+                <XCircleIcon className="w-4 h-4 text-red-600" />
               )}
               <span className="font-medium text-sm">
                 {enrollmentManager.orchestraEligibility.canEnroll ? 'ניתן להירשם' : 'לא ניתן להירשם'}
@@ -257,7 +245,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
               disabled={enrollmentManager.isUnenrollingOrchestra}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
-              <Minus className="w-4 h-4" />
+              <MinusIcon className="w-4 h-4" />
               {enrollmentManager.isUnenrollingOrchestra ? 'מבטל...' : 'בטל רישום'}
             </button>
           ) : (
@@ -271,7 +259,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
                 }}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
               >
-                <AlertTriangle className="w-4 h-4" />
+                <WarningIcon className="w-4 h-4" />
                 בדוק זכאות
               </button>
               
@@ -281,7 +269,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
                   disabled={enrollmentManager.isEnrollingOrchestra}
                   className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   {enrollmentManager.isEnrollingOrchestra ? 'נרשם...' : 'הירשם'}
                 </button>
               )}
@@ -304,7 +292,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <Users className="w-5 h-5 text-blue-600" />
+              <UsersIcon className="w-5 h-5 text-blue-600" />
             </div>
             <div>
               <h4 className="font-semibold text-lg text-gray-900">{ensemble.name}</h4>
@@ -330,7 +318,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
           <div className="flex items-center gap-2">
             {enrolled && (
               <span className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                <CheckCircle className="w-4 h-4" />
+                <CheckCircleIcon className="w-4 h-4" />
                 רשום
               </span>
             )}
@@ -349,13 +337,13 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
             <div className="space-y-1">
               {ensemble.rehearsalTimes.map((rehearsal, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
-                  <Calendar className="w-3 h-3" />
+                  <CalendarIcon className="w-3 h-3" />
                   <span>{rehearsal.day}</span>
-                  <Clock className="w-3 h-3" />
+                  <ClockIcon className="w-3 h-3" />
                   <span>{rehearsal.startTime} - {rehearsal.endTime}</span>
                   {rehearsal.location && (
                     <>
-                      <MapPin className="w-3 h-3" />
+                      <MapPinIcon className="w-3 h-3" />
                       <span>{rehearsal.location}</span>
                     </>
                   )}
@@ -385,7 +373,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
         {/* Cost */}
         {ensemble.yearlyFee && (
           <div className="mb-4 flex items-center gap-2 text-sm text-gray-600">
-            <DollarSign className="w-4 h-4" />
+            <CurrencyDollarIcon className="w-4 h-4" />
             <span>תשלום שנתי: ₪{ensemble.yearlyFee}</span>
           </div>
         )}
@@ -398,7 +386,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
               disabled={enrollmentManager.isUnenrollingEnsemble}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
-              <Minus className="w-4 h-4" />
+              <MinusIcon className="w-4 h-4" />
               {enrollmentManager.isUnenrollingEnsemble ? 'מבטל...' : 'בטל רישום'}
             </button>
           ) : (
@@ -412,7 +400,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
                 }}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
               >
-                <AlertTriangle className="w-4 h-4" />
+                <WarningIcon className="w-4 h-4" />
                 בדוק זכאות
               </button>
               
@@ -422,7 +410,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
                   disabled={enrollmentManager.isEnrollingEnsemble}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   {enrollmentManager.isEnrollingEnsemble ? 'נרשם...' : 'הירשם'}
                 </button>
               )}
@@ -458,7 +446,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
           }`}
         >
           <div className="flex items-center justify-center gap-2">
-            <Music className="w-4 h-4" />
+            <MusicNotesIcon className="w-4 h-4" />
             תזמורות ({enrollmentManager.availableOrchestras.length})
           </div>
         </button>
@@ -471,7 +459,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
           }`}
         >
           <div className="flex items-center justify-center gap-2">
-            <Users className="w-4 h-4" />
+            <UsersIcon className="w-4 h-4" />
             הרכבים ({enrollmentManager.availableEnsembles.length})
           </div>
         </button>
@@ -482,7 +470,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
         (student?.ensembleIds && student.ensembleIds.length > 0)) && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <h3 className="font-medium text-green-900 mb-2 flex items-center gap-2">
-            <Star className="w-4 h-4" />
+            <StarIcon className="w-4 h-4" />
             הרשמות קיימות
           </h3>
           <div className="space-y-1 text-sm text-green-800">
@@ -503,7 +491,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
             enrollmentManager.availableOrchestras.map(renderOrchestraCard)
           ) : (
             <div className="col-span-2 text-center py-12 text-gray-500">
-              <Music className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <MusicNotesIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <h3 className="text-lg font-medium text-gray-600 mb-2">אין תזמורות זמינות</h3>
               <p className="text-sm text-gray-500">כרגע אין תזמורות פתוחות להרשמה</p>
             </div>
@@ -513,7 +501,7 @@ const EnrollmentManager: React.FC<EnrollmentManagerProps> = ({
             enrollmentManager.availableEnsembles.map(renderEnsembleCard)
           ) : (
             <div className="col-span-2 text-center py-12 text-gray-500">
-              <Users className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <UsersIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <h3 className="text-lg font-medium text-gray-600 mb-2">אין הרכבים זמינים</h3>
               <p className="text-sm text-gray-500">כרגע אין הרכבים פתוחים להרשמה</p>
             </div>

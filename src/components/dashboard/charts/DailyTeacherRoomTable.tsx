@@ -6,8 +6,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import apiService from '../../../services/apiService';
 import { useSchoolYear } from '../../../services/schoolYearContext';
-import { Calendar, MapPin, User, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+
 import { getDisplayName } from '@/utils/nameUtils';
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, ClockIcon, MapPinIcon, UserIcon } from '@phosphor-icons/react'
 
 interface TeacherRoomEntry {
   teacherId: string;
@@ -158,7 +159,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-100 rounded">
-            <Calendar className="w-6 h-6 text-blue-600" />
+            <CalendarIcon className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <h3 className="text-xl font-bold text-gray-900">
@@ -177,7 +178,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
             className="p-2 rounded border border-gray-200 hover:bg-gray-50 transition-colors"
             title="יום קודם"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
+            <CaretRightIcon className="w-5 h-5 text-gray-600" />
           </button>
 
           <div className="flex gap-1">
@@ -201,7 +202,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
             className="p-2 rounded border border-gray-200 hover:bg-gray-50 transition-colors"
             title="יום הבא"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <CaretLeftIcon className="w-5 h-5 text-gray-600" />
           </button>
         </div>
       </div>
@@ -215,19 +216,19 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
                 <th className="px-4 py-3 text-right font-semibold text-sm w-16">#</th>
                 <th className="px-4 py-3 text-right font-semibold text-sm">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
+                    <UserIcon className="w-4 h-4" />
                     שם המורה
                   </div>
                 </th>
                 <th className="px-4 py-3 text-right font-semibold text-sm">
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
+                    <MapPinIcon className="w-4 h-4" />
                     חדר
                   </div>
                 </th>
                 <th className="px-4 py-3 text-right font-semibold text-sm">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
+                    <ClockIcon className="w-4 h-4" />
                     שעות
                   </div>
                 </th>
@@ -250,7 +251,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm">
-                      <MapPin className="w-3.5 h-3.5 text-blue-500" />
+                      <MapPinIcon className="w-3.5 h-3.5 text-blue-500" />
                       {entry.room}
                     </span>
                   </td>
@@ -269,7 +270,7 @@ const DailyTeacherRoomTable: React.FC<DailyTeacherRoomTableProps> = ({
         </div>
       ) : (
         <div className="text-center py-12 bg-gray-50 rounded border-2 border-dashed border-gray-200">
-          <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+          <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <p className="text-gray-500 text-lg font-medium">אין שיעורים ביום {HEBREW_DAYS[selectedDayIndex]}</p>
           <p className="text-gray-400 text-sm mt-1">נסה לבחור יום אחר</p>
         </div>

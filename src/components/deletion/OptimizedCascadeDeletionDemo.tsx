@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import {
+import { ActivityIcon, CheckCircle2Icon, ClockIcon, DatabaseIcon, LightningIcon, MemoryStickIcon, MonitorIcon, PlayIcon, SquareIcon, TrashIcon, WarningIcon } from '@phosphor-icons/react'
   Select,
   SelectContent,
   SelectItem,
@@ -27,19 +28,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import {
-  Activity,
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  Database,
-  MemoryStick,
-  Monitor,
-  Play,
-  Square,
-  Trash2,
-  Zap
-} from 'lucide-react'
+
 
 import VirtualizedDeletionImpactList from './VirtualizedDeletionImpactList'
 import useOptimizedCascadeDeletion from '@/hooks/useOptimizedCascadeDeletion'
@@ -243,11 +232,11 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
         
         <div className="flex items-center gap-2">
           <Badge variant={workerStatus === 'ready' ? 'default' : 'secondary'}>
-            <Zap className="w-3 h-3 mr-1" />
+            <LightningIcon className="w-3 h-3 mr-1" />
             Worker: {workerStatus}
           </Badge>
           <Badge variant={isPerformant ? 'default' : 'destructive'}>
-            <Activity className="w-3 h-3 mr-1" />
+            <ActivityIcon className="w-3 h-3 mr-1" />
             Health: {Math.round(healthScore)}%
           </Badge>
         </div>
@@ -256,7 +245,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
       <Tabs defaultValue="deletion" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="deletion">Deletion Preview</TabsTrigger>
-          <TabsTrigger value="performance">Performance Monitor</TabsTrigger>
+          <TabsTrigger value="performance">Performance MonitorIcon</TabsTrigger>
           <TabsTrigger value="settings">Configuration</TabsTrigger>
         </TabsList>
 
@@ -394,7 +383,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Database className="w-5 h-5" />
+                  <DatabaseIcon className="w-5 h-5" />
                   Deletion Impact Analysis
                   <Badge variant="outline">
                     {mockImpact.totalAffectedCount.toLocaleString()} items
@@ -408,7 +397,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
               <CardContent>
                 {mockImpact.warnings.length > 0 && (
                   <Alert className="mb-4">
-                    <AlertTriangle className="h-4 w-4" />
+                    <WarningIcon className="h-4 w-4" />
                     <AlertDescription>
                       <strong>{mockImpact.warnings.length} warning(s):</strong>
                       <ul className="mt-1 list-disc list-inside">
@@ -435,7 +424,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
             <Card>
               <CardContent className="flex items-center justify-center h-64">
                 <div className="text-center">
-                  <Database className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <DatabaseIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                   <p className="text-muted-foreground">Generate mock data to see the deletion impact preview</p>
                 </div>
               </CardContent>
@@ -443,13 +432,13 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
           )}
         </TabsContent>
 
-        {/* Performance Monitor Tab */}
+        {/* Performance MonitorIcon Tab */}
         <TabsContent value="performance" className="space-y-6">
           {/* Monitoring Controls */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Monitor className="w-5 h-5" />
+                <MonitorIcon className="w-5 h-5" />
                 Performance Monitoring
               </CardTitle>
             </CardHeader>
@@ -462,12 +451,12 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
                 >
                   {isMonitoring ? (
                     <>
-                      <Square className="w-4 h-4 mr-1" />
+                      <SquareIcon className="w-4 h-4 mr-1" />
                       Stop Monitoring
                     </>
                   ) : (
                     <>
-                      <Play className="w-4 h-4 mr-1" />
+                      <PlayIcon className="w-4 h-4 mr-1" />
                       Start Monitoring
                     </>
                   )}
@@ -476,7 +465,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
                   Reset Metrics
                 </Button>
                 <Button onClick={forceMemoryCleanup} variant="outline" size="sm">
-                  <MemoryStick className="w-4 h-4 mr-1" />
+                  <MemoryStickIcon className="w-4 h-4 mr-1" />
                   Force GC
                 </Button>
               </div>
@@ -580,7 +569,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
                       variant={alert.severity === 'critical' ? 'destructive' : 'default'}
                       className="py-2"
                     >
-                      <AlertTriangle className="h-3 w-3" />
+                      <WarningIcon className="h-3 w-3" />
                       <AlertDescription className="text-xs">
                         <span className="font-medium">[{alert.type}]</span> {alert.message}
                         <span className="text-muted-foreground ml-2">
@@ -670,9 +659,9 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
                     <div className="font-mono mt-1">
                       {Math.round(healthScore)}%
                       {isPerformant ? (
-                        <CheckCircle2 className="inline w-3 h-3 ml-1 text-green-500" />
+                        <CheckCircle2Icon className="inline w-3 h-3 ml-1 text-green-500" />
                       ) : (
-                        <AlertTriangle className="inline w-3 h-3 ml-1 text-yellow-500" />
+                        <WarningIcon className="inline w-3 h-3 ml-1 text-yellow-500" />
                       )}
                     </div>
                   </div>

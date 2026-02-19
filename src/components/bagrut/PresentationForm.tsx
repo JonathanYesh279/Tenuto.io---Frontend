@@ -4,8 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar, Users, Link, FileText } from 'lucide-react';
+
 import { Presentation } from '@/types/bagrut.types';
+import { CalendarIcon, FileTextIcon, LinkIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface PresentationFormProps {
   presentationNumber: 1 | 2 | 3;
@@ -60,7 +61,7 @@ export const PresentationForm: React.FC<PresentationFormProps> = ({
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold text-gray-900 flex items-center">
-          <FileText className="w-6 h-6 ml-3 text-blue-600" />
+          <FileTextIcon className="w-6 h-6 ml-3 text-blue-600" />
           השמעה {presentationNumber}
         </h3>
         <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -76,7 +77,7 @@ export const PresentationForm: React.FC<PresentationFormProps> = ({
         <div className="space-y-4">
           <div>
             <Label htmlFor={`date-${presentationNumber}`} className="text-right block mb-2 font-semibold">
-              <Calendar className="w-4 h-4 inline ml-2" />
+              <CalendarIcon className="w-4 h-4 inline ml-2" />
               תאריך ההשמעה
             </Label>
             <Input
@@ -91,7 +92,7 @@ export const PresentationForm: React.FC<PresentationFormProps> = ({
 
           <div>
             <Label htmlFor={`reviewedBy-${presentationNumber}`} className="text-right block mb-2 font-semibold">
-              <Users className="w-4 h-4 inline ml-2" />
+              <UsersIcon className="w-4 h-4 inline ml-2" />
               שמות הבוחנים
             </Label>
             <Input
@@ -107,7 +108,7 @@ export const PresentationForm: React.FC<PresentationFormProps> = ({
 
           <div>
             <Label className="text-right block mb-2 font-semibold">
-              <Link className="w-4 h-4 inline ml-2" />
+              <LinkIcon className="w-4 h-4 inline ml-2" />
               קישורי הקלטות
             </Label>
             <div className="space-y-2">

@@ -1,20 +1,7 @@
 import { useState } from 'react'
-import { 
-  FileText, 
-  Upload, 
-  Download, 
-  Trash2, 
-  Eye, 
-  Calendar,
-  User,
-  File,
-  Image,
-  Music,
-  Video,
-  AlertCircle,
-  CheckCircle
-} from 'lucide-react'
+
 import { Card } from '../ui/Card'
+import { CalendarIcon, CheckCircleIcon, DownloadSimpleIcon, EyeIcon, FileIcon, FileTextIcon, ImageIcon, MusicNotesIcon, TrashIcon, UploadSimpleIcon, UserIcon, VideoIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface Document {
   title: string
@@ -43,7 +30,7 @@ export default function DocumentManager({
     { 
       key: 'sheet_music', 
       label: 'תווים', 
-      icon: Music,
+      icon: MusicNotesIcon,
       description: 'קבצי תווים של היצירות בתוכנית',
       accept: '.pdf,.jpg,.jpeg,.png',
       maxSize: 10 * 1024 * 1024 // 10MB
@@ -51,7 +38,7 @@ export default function DocumentManager({
     { 
       key: 'recordings', 
       label: 'הקלטות', 
-      icon: Video,
+      icon: VideoIcon,
       description: 'הקלטות של הביצועים וחזרות',
       accept: '.mp3,.mp4,.wav,.m4a',
       maxSize: 100 * 1024 * 1024 // 100MB
@@ -59,7 +46,7 @@ export default function DocumentManager({
     { 
       key: 'certificates', 
       label: 'תעודות', 
-      icon: FileText,
+      icon: FileTextIcon,
       description: 'תעודות השלמה ודיפלומות',
       accept: '.pdf,.jpg,.jpeg,.png',
       maxSize: 5 * 1024 * 1024 // 5MB
@@ -67,7 +54,7 @@ export default function DocumentManager({
     { 
       key: 'portfolio', 
       label: 'תיק עבודות', 
-      icon: File,
+      icon: FileIcon,
       description: 'מסמכים נוספים ותיק עבודות',
       accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
       maxSize: 20 * 1024 * 1024 // 20MB
@@ -79,22 +66,22 @@ export default function DocumentManager({
     
     switch (extension) {
       case 'pdf':
-        return <FileText className="w-6 h-6 text-red-500" />
+        return <FileTextIcon className="w-6 h-6 text-red-500" />
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
-        return <Image className="w-6 h-6 text-blue-500" />
+        return <ImageIcon className="w-6 h-6 text-blue-500" />
       case 'mp3':
       case 'wav':
       case 'm4a':
-        return <Music className="w-6 h-6 text-green-500" />
+        return <MusicNotesIcon className="w-6 h-6 text-green-500" />
       case 'mp4':
       case 'mov':
       case 'avi':
-        return <Video className="w-6 h-6 text-purple-500" />
+        return <VideoIcon className="w-6 h-6 text-purple-500" />
       default:
-        return <File className="w-6 h-6 text-gray-500" />
+        return <FileIcon className="w-6 h-6 text-gray-500" />
     }
   }
 
@@ -123,7 +110,7 @@ export default function DocumentManager({
     return 'portfolio'
   }
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = (file: FileIcon): string | null => {
     const category = getFileCategory(file.name)
     const categoryConfig = DOCUMENT_CATEGORIES.find(c => c.key === category)
     
@@ -148,7 +135,7 @@ export default function DocumentManager({
   const handleFileUpload = async (files: FileList | null) => {
     if (!files || readonly) return
 
-    const validFiles: File[] = []
+    const validFiles: FileIcon[] = []
     const errors: string[] = []
 
     Array.from(files).forEach(file => {
@@ -264,7 +251,7 @@ export default function DocumentManager({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <FileText className="w-6 h-6 mr-3 text-primary" />
+          <FileTextIcon className="w-6 h-6 mr-3 text-primary" />
           ניהול מסמכים
         </h2>
         
@@ -278,7 +265,7 @@ export default function DocumentManager({
         </div>
       </div>
 
-      {/* Upload Area */}
+      {/* UploadSimpleIcon Area */}
       {!readonly && (
         <Card 
           padding="md"
@@ -294,7 +281,7 @@ export default function DocumentManager({
           onDrop={handleDrop}
         >
           <div className="text-center py-8">
-            <Upload className={`w-12 h-12 mx-auto mb-4 ${
+            <UploadSimpleIcon className={`w-12 h-12 mx-auto mb-4 ${
               dragOver ? 'text-primary' : uploading ? 'text-blue-600' : 'text-gray-400'
             }`} />
             
@@ -330,7 +317,7 @@ export default function DocumentManager({
                   htmlFor="fileInput"
                   className="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 cursor-pointer transition-colors"
                 >
-                  <Upload className="w-4 h-4 mr-2" />
+                  <UploadSimpleIcon className="w-4 h-4 mr-2" />
                   בחר קבצים
                 </label>
               </div>
@@ -377,7 +364,7 @@ export default function DocumentManager({
                             {doc.title}
                           </div>
                           <div className="flex items-center text-xs text-gray-500 mt-1">
-                            <Calendar className="w-3 h-3 mr-1" />
+                            <CalendarIcon className="w-3 h-3 mr-1" />
                             {new Date(doc.uploadDate).toLocaleDateString('he-IL')}
                           </div>
                         </div>
@@ -389,14 +376,14 @@ export default function DocumentManager({
                           className="p-1 text-blue-600 hover:text-blue-800"
                           title="צפה בקובץ"
                         >
-                          <Eye className="w-4 h-4" />
+                          <EyeIcon className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => downloadDocument(doc)}
                           className="p-1 text-green-600 hover:text-green-800"
                           title="הורד קובץ"
                         >
-                          <Download className="w-4 h-4" />
+                          <DownloadSimpleIcon className="w-4 h-4" />
                         </button>
                         {!readonly && (
                           <button
@@ -407,7 +394,7 @@ export default function DocumentManager({
                             className="p-1 text-red-600 hover:text-red-800"
                             title="מחק קובץ"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <TrashIcon className="w-4 h-4" />
                           </button>
                         )}
                       </div>
@@ -430,7 +417,7 @@ export default function DocumentManager({
       {/* Document Requirements */}
       <Card padding="md" className="bg-green-50 border-green-200">
         <div className="flex items-start">
-          <CheckCircle className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
+          <CheckCircleIcon className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
           <div>
             <h3 className="text-sm font-semibold text-green-900 mb-2">דרישות מסמכים לבגרות</h3>
             
@@ -440,17 +427,17 @@ export default function DocumentManager({
                 <ul className="text-sm text-green-800 space-y-1">
                   <li className="flex items-center">
                     {documents.some(d => getFileCategory(d.title) === 'sheet_music') ? (
-                      <CheckCircle className="w-3 h-3 mr-2 text-green-600" />
+                      <CheckCircleIcon className="w-3 h-3 mr-2 text-green-600" />
                     ) : (
-                      <AlertCircle className="w-3 h-3 mr-2 text-orange-500" />
+                      <WarningCircleIcon className="w-3 h-3 mr-2 text-orange-500" />
                     )}
                     תווים של כל היצירות בתוכנית
                   </li>
                   <li className="flex items-center">
                     {documents.some(d => getFileCategory(d.title) === 'recordings') ? (
-                      <CheckCircle className="w-3 h-3 mr-2 text-green-600" />
+                      <CheckCircleIcon className="w-3 h-3 mr-2 text-green-600" />
                     ) : (
-                      <AlertCircle className="w-3 h-3 mr-2 text-orange-500" />
+                      <WarningCircleIcon className="w-3 h-3 mr-2 text-orange-500" />
                     )}
                     הקלטות של הביצועים
                   </li>
@@ -462,17 +449,17 @@ export default function DocumentManager({
                 <ul className="text-sm text-green-800 space-y-1">
                   <li className="flex items-center">
                     {documents.some(d => getFileCategory(d.title) === 'certificates') ? (
-                      <CheckCircle className="w-3 h-3 mr-2 text-green-600" />
+                      <CheckCircleIcon className="w-3 h-3 mr-2 text-green-600" />
                     ) : (
-                      <AlertCircle className="w-3 h-3 mr-2 text-gray-400" />
+                      <WarningCircleIcon className="w-3 h-3 mr-2 text-gray-400" />
                     )}
                     תעודות והסמכות רלוונטיות
                   </li>
                   <li className="flex items-center">
                     {documents.some(d => getFileCategory(d.title) === 'portfolio') ? (
-                      <CheckCircle className="w-3 h-3 mr-2 text-green-600" />
+                      <CheckCircleIcon className="w-3 h-3 mr-2 text-green-600" />
                     ) : (
-                      <AlertCircle className="w-3 h-3 mr-2 text-gray-400" />
+                      <WarningCircleIcon className="w-3 h-3 mr-2 text-gray-400" />
                     )}
                     תיק עבודות ומסמכים נוספים
                   </li>
@@ -489,10 +476,10 @@ export default function DocumentManager({
         </div>
       </Card>
 
-      {/* File Type Guidelines */}
+      {/* FileIcon Type Guidelines */}
       <Card padding="md" className="bg-blue-50 border-blue-200">
         <div className="flex items-start">
-          <FileText className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
+          <FileTextIcon className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
           <div>
             <h3 className="text-sm font-semibold text-blue-900 mb-2">הנחיות סוגי קבצים</h3>
             
@@ -521,7 +508,7 @@ export default function DocumentManager({
       {documents.length === 0 && (
         <Card padding="md">
           <div className="text-center py-12">
-            <FileText className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+            <FileTextIcon className="w-16 h-16 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-semibold text-gray-700 mb-2">אין מסמכים</h3>
             <p className="text-gray-600 mb-4">
               {readonly 

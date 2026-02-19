@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Save, X, Calendar, Clock, BookOpen, AlertCircle } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import type { PresentationUpdateData } from '../types/bagrut.types'
+import { BookOpenIcon, CalendarIcon, ClockIcon, FloppyDiskIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PresentationFormProps {
   presentationNumber: number
@@ -109,7 +110,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
           onClick={onCancel}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -118,7 +119,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
         {/* General Error */}
         {errors.general && (
           <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <WarningCircleIcon className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
         )}
@@ -126,7 +127,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
         {/* Basic Information */}
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-gray-600" />
+            <BookOpenIcon className="w-5 h-5 text-gray-600" />
             פרטי המצגת
           </h3>
           
@@ -170,7 +171,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                 משך המצגת
               </label>
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" />
+                <ClockIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   value={formData.duration}
@@ -200,7 +201,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
                 תאריך המצגת
               </label>
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-400" />
+                <CalendarIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="date"
                   value={formData.presentationDate ? formData.presentationDate.toISOString().split('T')[0] : ''}
@@ -293,7 +294,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 ml-2" />
+                <FloppyDiskIcon className="w-4 h-4 ml-2" />
                 שמור מצגת
               </>
             )}

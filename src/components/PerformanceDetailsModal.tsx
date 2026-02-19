@@ -1,20 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  X,
-  Calendar,
-  MapPin,
-  Clock,
-  Music,
-  Play,
-  Star,
-  User,
-  FileText,
-  Link2,
-  Edit3,
-  Save
-} from 'lucide-react';
+
 import { Card } from './ui/Card';
 import type { Performance, ProgramPiece } from '../types/bagrut.types';
+import { CalendarIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, LinkIcon, MapPinIcon, MusicNotesIcon, PencilSimpleIcon, PlayIcon, StarIcon, UserIcon, XIcon } from '@phosphor-icons/react'
 
 interface PerformanceDetailsModalProps {
   isOpen: boolean;
@@ -93,7 +81,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <Play className="w-6 h-6 text-primary" />
+            <PlayIcon className="w-6 h-6 text-primary" />
             {isEditing ? (
               <input
                 type="text"
@@ -111,7 +99,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                 onClick={() => setIsEditing(true)}
                 className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
               >
-                <Edit3 className="w-4 h-4" />
+                <PencilSimpleIcon className="w-4 h-4" />
                 ערוך
               </button>
             ) : (
@@ -120,14 +108,14 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                   onClick={handleSave}
                   className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
-                  <Save className="w-4 h-4" />
+                  <FloppyDiskIcon className="w-4 h-4" />
                   שמור
                 </button>
                 <button
                   onClick={handleCancel}
                   className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
                 >
-                  <X className="w-4 h-4" />
+                  <XIcon className="w-4 h-4" />
                   ביטול
                 </button>
               </div>
@@ -136,7 +124,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               onClick={onClose}
               className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
             >
-              <X className="w-5 h-5" />
+              <XIcon className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -147,7 +135,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
             <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטי הביצוع</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-gray-500" />
+                <CalendarIcon className="w-5 h-5 text-gray-500" />
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">תאריך וזמן</label>
                   {isEditing ? (
@@ -175,7 +163,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               </div>
 
               <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-gray-500" />
+                <MapPinIcon className="w-5 h-5 text-gray-500" />
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">מקום</label>
                   {isEditing ? (
@@ -193,7 +181,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               </div>
 
               <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-gray-500" />
+                <ClockIcon className="w-5 h-5 text-gray-500" />
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">משך זמן</label>
                   {isEditing ? (
@@ -211,7 +199,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               </div>
 
               <div className="flex items-center gap-3">
-                <Music className="w-5 h-5 text-gray-500" />
+                <MusicNotesIcon className="w-5 h-5 text-gray-500" />
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">סטטוס</label>
                   {isEditing ? (
@@ -250,7 +238,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                 );
                 return (
                   <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <Music className="w-4 h-4 text-primary" />
+                    <MusicNotesIcon className="w-4 h-4 text-primary" />
                     <div className="flex-1">
                       <div className="font-medium text-gray-900">{pieceTitle}</div>
                       {piece && (
@@ -375,7 +363,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                   onClick={addRecordingLink}
                   className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
                 >
-                  <Link2 className="w-4 h-4" />
+                  <LinkIcon className="w-4 h-4" />
                   הוסף קישור
                 </button>
               )}
@@ -384,7 +372,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
               <div className="space-y-2">
                 {editData.recordingLinks.map((link, index) => (
                   <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <Play className="w-4 h-4 text-blue-600" />
+                    <PlayIcon className="w-4 h-4 text-blue-600" />
                     <a 
                       href={link}
                       target="_blank"
@@ -398,7 +386,7 @@ export const PerformanceDetailsModal: React.FC<PerformanceDetailsModalProps> = (
                         onClick={() => removeRecordingLink(index)}
                         className="p-1 text-red-600 hover:bg-red-50 rounded"
                       >
-                        <X className="w-4 h-4" />
+                        <XIcon className="w-4 h-4" />
                       </button>
                     )}
                   </div>

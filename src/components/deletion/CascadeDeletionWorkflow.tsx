@@ -6,21 +6,14 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react'
-import { 
-  Trash2, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle,
-  ArrowRight,
-  ArrowLeft,
-  Loader2
-} from 'lucide-react'
+
 import { DeletionImpact, DeletionOperation, DeletionFormData } from './types'
 import DeletionImpactPreview from './DeletionImpactPreview'
 import DeletionProgressTracker from './DeletionProgressTracker'
 import { StepProgress } from '../feedback/ProgressIndicators'
 import Modal from '../ui/Modal'
 import { Card } from '../ui/Card'
+import { ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon, CircleNotchIcon, TrashIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface CascadeDeletionWorkflowProps {
   entityType: string
@@ -266,7 +259,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
         return (
           <div className="space-y-6">
             <div className="text-center py-8">
-              <AlertTriangle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+              <WarningIcon className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan mb-2">
                 ניתוח השפעת המחיקה
               </h3>
@@ -280,14 +273,14 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                   className="mt-6 flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors mx-auto font-reisinger-yonatan"
                   aria-describedby="analysis-description"
                 >
-                  <Loader2 className="w-5 h-5" />
+                  <CircleNotchIcon className="w-5 h-5" />
                   התחל ניתוח
                 </button>
               )}
 
               {isAnalyzing && (
                 <div className="mt-6 flex items-center justify-center gap-3">
-                  <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+                  <CircleNotchIcon className="w-6 h-6 text-blue-600 animate-spin" />
                   <span className="text-blue-600 font-reisinger-yonatan">מנתח השפעה...</span>
                 </div>
               )}
@@ -307,7 +300,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
             <Card className="border-red-200 bg-red-50">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                  <WarningIcon className="w-6 h-6 text-red-600" />
                   <div>
                     <h3 className="text-lg font-semibold text-red-900 font-reisinger-yonatan">
                       אישור מחיקה
@@ -467,7 +460,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-              <Trash2 className="w-5 h-5 text-red-600" />
+              <TrashIcon className="w-5 h-5 text-red-600" />
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan">
@@ -509,7 +502,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
             tabIndex={-1}
           >
             <div className="flex items-center gap-2 text-red-700">
-              <XCircle className="w-5 h-5" />
+              <XCircleIcon className="w-5 h-5" />
               <span className="font-semibold font-reisinger-yonatan">שגיאה</span>
             </div>
             <p className="text-sm text-red-600 mt-1 font-reisinger-yonatan">
@@ -530,7 +523,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
               onClick={handleCancel}
               className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors font-reisinger-yonatan"
             >
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRightIcon className="w-4 h-4" />
               ביטול
             </button>
 
@@ -540,7 +533,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                   onClick={() => setCurrentStep(prev => prev - 1)}
                   className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors font-reisinger-yonatan"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeftIcon className="w-4 h-4" />
                   חזרה
                 </button>
               )}
@@ -552,7 +545,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                   className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
                 >
                   המשך
-                  <ArrowRight className="w-4 h-4 scale-x-[-1]" />
+                  <ArrowRightIcon className="w-4 h-4 scale-x-[-1]" />
                 </button>
               )}
 
@@ -562,7 +555,7 @@ const CascadeDeletionWorkflow: React.FC<CascadeDeletionWorkflowProps> = ({
                   disabled={!canProceed()}
                   className="flex items-center gap-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <TrashIcon className="w-4 h-4" />
                   מחק כעת
                 </button>
               )}

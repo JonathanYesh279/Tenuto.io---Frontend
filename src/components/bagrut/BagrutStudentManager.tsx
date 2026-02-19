@@ -1,35 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  Search,
-  Filter,
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  Download,
-  Upload,
-  FileText,
-  Calendar,
-  Clock,
-  Award,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  GraduationCap,
-  Music,
-  Target,
-  BarChart3,
-  Save,
-  X,
-  ChevronDown,
-  ChevronRight
-} from 'lucide-react'
+
 import { useBagrutContext } from '../../contexts/BagrutContext'
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
 import type { Bagrut, BagrutFormData, ProgramPiece, Presentation } from '../../types/bagrut.types'
+import { CalendarIcon, CaretDownIcon, CaretRightIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FloppyDiskIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrashIcon, UploadSimpleIcon, UsersIcon, WarningCircleIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface BagrutStudentManagerProps {
   teacherId?: string
@@ -324,11 +300,11 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
 
   const getStatusIcon = (status: BagrutStudentData['status']) => {
     switch (status) {
-      case 'completed': return <CheckCircle className="w-4 h-4" />
-      case 'active': return <Clock className="w-4 h-4" />
-      case 'pending': return <AlertCircle className="w-4 h-4" />
-      case 'failed': return <XCircle className="w-4 h-4" />
-      default: return <AlertCircle className="w-4 h-4" />
+      case 'completed': return <CheckCircleIcon className="w-4 h-4" />
+      case 'active': return <ClockIcon className="w-4 h-4" />
+      case 'pending': return <WarningCircleIcon className="w-4 h-4" />
+      case 'failed': return <XCircleIcon className="w-4 h-4" />
+      default: return <WarningCircleIcon className="w-4 h-4" />
     }
   }
 
@@ -352,7 +328,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <WarningCircleIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadBagrutStudents}
@@ -385,7 +361,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                 onClick={() => setShowAddModal(true)}
                 className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 flex items-center gap-2"
               >
-                <Plus className="w-4 h-4" />
+                <PlusIcon className="w-4 h-4" />
                 הוסף תלמיד בגרות
               </button>
               <button
@@ -393,7 +369,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                 disabled={selectedStudents.length === 0}
                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                <Download className="w-4 h-4" />
+                <DownloadSimpleIcon className="w-4 h-4" />
                 ייצא
               </button>
             </div>
@@ -408,7 +384,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                 <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">סה״כ תלמידי בגרות</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{bagrutStudents.length}</p>
               </div>
-              <GraduationCap className="w-6 h-6 text-indigo-600" />
+              <GraduationCapIcon className="w-6 h-6 text-indigo-600" />
             </div>
           </div>
           <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
@@ -419,7 +395,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                   {bagrutStudents.filter(s => s.status === 'active').length}
                 </p>
               </div>
-              <Clock className="w-6 h-6 text-blue-600" />
+              <ClockIcon className="w-6 h-6 text-blue-600" />
             </div>
           </div>
           <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
@@ -430,7 +406,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                   {bagrutStudents.filter(s => s.status === 'completed').length}
                 </p>
               </div>
-              <CheckCircle className="w-6 h-6 text-green-600" />
+              <CheckCircleIcon className="w-6 h-6 text-green-600" />
             </div>
           </div>
           <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
@@ -444,17 +420,17 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                     : 0}%
                 </p>
               </div>
-              <Target className="w-6 h-6 text-purple-600" />
+              <TargetIcon className="w-6 h-6 text-purple-600" />
             </div>
           </div>
         </div>
 
-        {/* Search and Filters */}
+        {/* MagnifyingGlassIcon and Filters */}
         <div className="bg-white rounded shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4 flex-1">
               <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <MagnifyingGlassIcon className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   placeholder="חיפוש תלמידים..."
@@ -467,9 +443,9 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
               >
-                <Filter className="w-4 h-4" />
+                <FunnelIcon className="w-4 h-4" />
                 מסננים
-                {showFilters ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                {showFilters ? <CaretDownIcon className="w-4 h-4" /> : <CaretRightIcon className="w-4 h-4" />}
               </button>
             </div>
             <div className="flex items-center gap-2">
@@ -627,7 +603,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                 {filteredStudents.length === 0 ? (
                   <tr>
                     <td colSpan={9} className="px-6 py-12 text-center">
-                      <GraduationCap className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                      <GraduationCapIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                       <p className="text-gray-500 font-reisinger-yonatan">
                         {bagrutStudents.length === 0 ? 'אין תלמידי בגרות' : 'לא נמצאו תלמידים התואמים לקריטריונים'}
                       </p>
@@ -653,7 +629,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center ml-3">
-                            <GraduationCap className="w-5 h-5 text-indigo-600" />
+                            <GraduationCapIcon className="w-5 h-5 text-indigo-600" />
                           </div>
                           <div>
                             <div className="text-sm font-medium text-gray-900">{student.studentName}</div>
@@ -713,13 +689,13 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                             onClick={() => window.location.href = `/bagrut/${student.bagrutId}`}
                             className="text-indigo-600 hover:text-indigo-900"
                           >
-                            <Eye className="w-4 h-4" />
+                            <EyeIcon className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => setEditingStudent(student)}
                             className="text-yellow-600 hover:text-yellow-900"
                           >
-                            <Edit className="w-4 h-4" />
+                            <PencilIcon className="w-4 h-4" />
                           </button>
                           {role === 'admin' && (
                             <button
@@ -730,7 +706,7 @@ export default function BagrutStudentManager({ teacherId, role = 'admin' }: Bagr
                               }}
                               className="text-red-600 hover:text-red-900"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" />
                             </button>
                           )}
                         </div>

@@ -1,16 +1,17 @@
 /**
- * Schedule Tab Component - Weekly Calendar Grid
+ * Schedule Tab Component - Weekly CalendarIcon Grid
  * 
  * Displays student's schedule in a proper weekly calendar grid from Sunday to Friday
  * Shows lessons as calendar events with proper time slots and Hebrew labels
  */
 
 import { useMemo, useEffect, useState } from 'react'
-import { Calendar, Clock, MapPin, Music, Users } from 'lucide-react'
+
 import WeeklyCalendarGrid from '../../../../../components/schedule/WeeklyCalendarGrid'
 import SimpleWeeklyGrid from '../../../../../components/schedule/SimpleWeeklyGrid'
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
+import { CalendarIcon, ClockIcon, MapPinIcon, MusicNotesIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface ScheduleTabProps {
   student: any
@@ -301,7 +302,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
         </div>
       ) : (
         <div className="bg-white rounded shadow-sm border border-gray-200 p-8 text-center">
-          <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+          <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <h3 className="text-xl font-medium text-gray-900 mb-2">אין שיעורים מתוכננים</h3>
           <p className="text-gray-600 mb-4">
             התלמיד עדיין לא שוייך למורים או שלא הוגדרו לו שיעורים קבועים
@@ -319,7 +320,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           {personalLessons.length > 0 ? (
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <h4 className="text-base font-medium text-gray-900 mb-3 flex items-center gap-2">
-                <Music className="w-4 h-4 text-primary" />
+                <MusicNotesIcon className="w-4 h-4 text-primary" />
                 שיעורים השבוע
               </h4>
 
@@ -330,7 +331,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                     <div key={lesson.id} className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
-                          <Music className="w-4 h-4 text-primary" />
+                          <MusicNotesIcon className="w-4 h-4 text-primary" />
                           <span className="font-medium text-gray-900">{lesson.instrumentName}</span>
                         </div>
                         <span className="text-sm text-gray-600 font-medium">
@@ -340,13 +341,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
 
                       <div className="flex items-center gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
+                          <ClockIcon className="w-3 h-3" />
                           <span>{lesson.startTime} - {lesson.endTime}</span>
                         </div>
 
                         {(lesson.roomNumber || lesson.location) && (
                           <div className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
+                            <MapPinIcon className="w-3 h-3" />
                             <span>{lesson.roomNumber ? `חדר ${lesson.roomNumber}` : lesson.location}</span>
                           </div>
                         )}
@@ -363,7 +364,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           ) : (
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <div className="text-center py-4">
-                <Music className="w-10 h-10 mx-auto mb-2 text-gray-300" />
+                <MusicNotesIcon className="w-10 h-10 mx-auto mb-2 text-gray-300" />
                 <h4 className="text-base font-medium text-gray-900 mb-1">אין שיעורים אישיים</h4>
                 <p className="text-sm text-gray-600">התלמיד טרם שוייך לשיעורים אישיים</p>
               </div>
@@ -374,7 +375,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           {orchestraActivities.length > 0 && (
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <h4 className="text-base font-medium text-gray-900 mb-3 flex items-center gap-2">
-                <Users className="w-4 h-4 text-purple-600" />
+                <UsersIcon className="w-4 h-4 text-purple-600" />
                 תזמורות ופעילויות
               </h4>
 
@@ -383,7 +384,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                   <div key={activity.id} className="p-5 bg-purple-50 rounded-lg border border-purple-100">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Users className="w-4 h-4 text-purple-600" />
+                        <UsersIcon className="w-4 h-4 text-purple-600" />
                         <span className="font-medium text-gray-900 text-lg">{activity.name}</span>
                       </div>
 
@@ -424,7 +425,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                     {activity.rehearsalSchedule ? (
                       <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                         <h5 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-blue-600" />
+                          <ClockIcon className="w-4 h-4 text-blue-600" />
                           חזרות שבועיות
                         </h5>
                         <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
@@ -441,7 +442,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                               </span>
                             </div>
                             <div className="flex items-center gap-1 text-blue-700">
-                              <MapPin className="w-4 h-4" />
+                              <MapPinIcon className="w-4 h-4" />
                               <span className="text-sm font-medium">
                                 {activity.rehearsalSchedule.location || activity.location || 'אולם גן'}
                               </span>
@@ -464,7 +465,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           {orchestraActivities.length === 0 && (
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <div className="text-center py-8">
-                <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                <UsersIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <h4 className="text-lg font-medium text-gray-900 mb-2">אין תזמורות</h4>
                 <p className="text-gray-600">לא נרשמת עדיין לתזמורות או פעילויות קבוצתיות</p>
               </div>
@@ -477,7 +478,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
       {personalLessons.length === 0 && orchestraActivities.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h4 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-            <Users className="w-5 h-5 text-purple-600" />
+            <UsersIcon className="w-5 h-5 text-purple-600" />
             תזמורות ופעילויות
           </h4>
 
@@ -486,7 +487,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
               <div key={activity.id} className="p-5 bg-purple-50 rounded-lg border border-purple-100">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <Users className="w-4 h-4 text-purple-600" />
+                    <UsersIcon className="w-4 h-4 text-purple-600" />
                     <span className="font-medium text-gray-900 text-lg">{activity.name}</span>
                   </div>
 
@@ -527,7 +528,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                 {activity.rehearsalSchedule ? (
                   <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                     <h5 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-blue-600" />
+                      <ClockIcon className="w-4 h-4 text-blue-600" />
                       חזרות שבועיות
                     </h5>
                     <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
@@ -544,7 +545,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
                           </span>
                         </div>
                         <div className="flex items-center gap-1 text-blue-700">
-                          <MapPin className="w-4 h-4" />
+                          <MapPinIcon className="w-4 h-4" />
                           <span className="text-sm font-medium">
                             {activity.rehearsalSchedule.location || activity.location || 'אולם גן'}
                           </span>

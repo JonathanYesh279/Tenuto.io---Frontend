@@ -1,5 +1,6 @@
 import React from 'react'
-import { Loader2, Music, Users, BookOpen, Calendar } from 'lucide-react'
+import { BookOpenIcon, CalendarIcon, CircleNotchIcon, MusicNotesIcon, UsersIcon } from '@phosphor-icons/react'
+
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl'
@@ -35,13 +36,13 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   }
 
   const colorClasses = {
-    primary: 'text-primary-500',
+    primary: 'text-primary',
     gray: 'text-gray-500',
     white: 'text-white'
   }
 
   return (
-    <Loader2 
+    <CircleNotchIcon 
       className={`animate-spin ${sizeClasses[size]} ${colorClasses[color]} ${className}`}
     />
   )
@@ -88,21 +89,21 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   const renderMusicalNote = () => (
     <div className="flex items-center justify-center">
       <div className="relative">
-        <Music className="w-8 h-8 text-primary-500 animate-bounce" />
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary-300 rounded-full animate-ping" />
+        <MusicNotesIcon className="w-8 h-8 text-primary animate-bounce" />
+        <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary/60 rounded-full animate-ping" />
       </div>
     </div>
   )
 
   const renderContextIcon = () => {
     const icons = {
-      students: Users,
-      teachers: Users,
-      lessons: BookOpen,
-      general: Calendar
+      students: UsersIcon,
+      teachers: UsersIcon,
+      lessons: BookOpenIcon,
+      general: CalendarIcon
     }
     const Icon = icons[context]
-    return <Icon className="w-6 h-6 text-primary-500 animate-pulse" />
+    return <Icon className="w-6 h-6 text-primary animate-pulse" />
   }
 
   const renderDots = () => (
@@ -110,7 +111,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="w-2 h-2 bg-primary-500 rounded-full animate-bounce"
+          className="w-2 h-2 bg-primary rounded-full animate-bounce"
           style={{ animationDelay: `${i * 0.1}s` }}
         />
       ))}
@@ -120,8 +121,8 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   const renderPulse = () => (
     <div className="flex items-center space-x-2 space-x-reverse">
       {renderContextIcon()}
-      <div className="w-16 h-2 bg-primary-200 rounded-full overflow-hidden">
-        <div className="w-full h-full bg-primary-500 rounded-full animate-pulse" />
+      <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
+        <div className="w-full h-full bg-primary rounded-full animate-pulse" />
       </div>
     </div>
   )

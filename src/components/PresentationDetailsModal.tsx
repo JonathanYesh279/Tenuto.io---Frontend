@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  X,
-  Calendar,
-  Clock,
-  Music,
-  Play,
-  Star,
-  User,
-  FileText,
-  Link2,
-  Edit3,
-  Save,
-  Award,
-  AlertCircle
-} from 'lucide-react';
+
 import { Card } from './ui/Card';
 import { InputModal } from './ui/InputModal';
 import type { PresentationDisplay, DetailedGrading, ProgramPiece } from '../types/bagrut.types';
 import { calculateDetailedGradingTotal, getGradeLevelFromScore } from '../services/presentationService';
+import { CalendarIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, LinkIcon, MedalIcon, MusicNotesIcon, PencilSimpleIcon, PlayIcon, StarIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PresentationDetailsModalProps {
   isOpen: boolean;
@@ -127,9 +114,9 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             {isMagen ? (
-              <Star className="w-6 h-6 text-yellow-500" />
+              <StarIcon className="w-6 h-6 text-yellow-500" />
             ) : (
-              <Play className="w-6 h-6 text-primary" />
+              <PlayIcon className="w-6 h-6 text-primary" />
             )}
             <h2 className="text-2xl font-bold text-gray-900">{presentation.title}</h2>
           </div>
@@ -139,7 +126,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                 onClick={() => setIsEditing(true)}
                 className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
               >
-                <Edit3 className="w-4 h-4" />
+                <PencilSimpleIcon className="w-4 h-4" />
                 ערוך
               </button>
             ) : (
@@ -148,14 +135,14 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                   onClick={handleSave}
                   className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
-                  <Save className="w-4 h-4" />
+                  <FloppyDiskIcon className="w-4 h-4" />
                   שמור
                 </button>
                 <button
                   onClick={handleCancel}
                   className="flex items-center gap-1 px-3 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
                 >
-                  <X className="w-4 h-4" />
+                  <XIcon className="w-4 h-4" />
                   ביטול
                 </button>
               </div>
@@ -164,7 +151,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
               onClick={onClose}
               className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
             >
-              <X className="w-5 h-5" />
+              <XIcon className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -175,7 +162,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
             <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטי ההשמעה</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-gray-500" />
+                <CalendarIcon className="w-5 h-5 text-gray-500" />
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">תאריך השמעה</label>
                   {isEditing ? (
@@ -200,7 +187,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
               </div>
 
               <div className="flex items-center gap-3">
-                <User className="w-5 h-5 text-gray-500" />
+                <UserIcon className="w-5 h-5 text-gray-500" />
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">שמות הבוחנים</label>
                   {isEditing ? (
@@ -218,7 +205,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
               </div>
 
               <div className="flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-gray-500" />
+                <WarningCircleIcon className="w-5 h-5 text-gray-500" />
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">סטטוס</label>
                   {isEditing ? (
@@ -426,7 +413,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                   onClick={() => setShowLinkModal(true)}
                   className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-300 rounded hover:bg-blue-50"
                 >
-                  <Link2 className="w-4 h-4" />
+                  <LinkIcon className="w-4 h-4" />
                   הוסף קישור
                 </button>
               )}
@@ -435,7 +422,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
               <div className="space-y-2">
                 {editData.recordingLinks.map((link, index) => (
                   <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <Play className="w-4 h-4 text-blue-600" />
+                    <PlayIcon className="w-4 h-4 text-blue-600" />
                     <a 
                       href={link}
                       target="_blank"
@@ -449,7 +436,7 @@ export const PresentationDetailsModal: React.FC<PresentationDetailsModalProps> =
                         onClick={() => removeRecordingLink(index)}
                         className="p-1 text-red-600 hover:bg-red-50 rounded"
                       >
-                        <X className="w-4 h-4" />
+                        <XIcon className="w-4 h-4" />
                       </button>
                     )}
                   </div>

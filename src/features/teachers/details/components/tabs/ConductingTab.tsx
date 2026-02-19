@@ -5,9 +5,10 @@
  */
 
 import { useState, useEffect } from 'react'
-import { Music, Plus, Edit, Trash2, Users, Calendar, Award } from 'lucide-react'
+
 import { Teacher } from '../../types'
 import apiService from '../../../../../services/apiService'
+import { CalendarIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TrashIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface ConductingTabProps {
   teacher: Teacher
@@ -229,14 +230,14 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
             onClick={() => setIsCreatingOrchestra(true)}
             className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             צור תזמורת
           </button>
         </div>
 
         {orchestras.length === 0 ? (
           <div className="text-center py-8 bg-purple-50 rounded">
-            <Music className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+            <MusicNotesIcon className="w-12 h-12 text-purple-400 mx-auto mb-4" />
             <h4 className="text-lg font-medium text-gray-900 mb-2">אין תזמורות</h4>
             <p className="text-gray-600 mb-4">
               עדיין לא נוצרו תזמורות תחת ניצוחו של המורה
@@ -266,11 +267,11 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                     
                     <div className="flex items-center gap-6 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
+                        <UsersIcon className="w-4 h-4" />
                         {orchestra.memberIds?.length || 0} חברים
                       </div>
                       <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
+                        <CalendarIcon className="w-4 h-4" />
                         {orchestra.rehearsalSchedule?.length || 0} חזרות
                       </div>
                       <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
@@ -285,13 +286,13 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                   
                   <div className="flex items-center gap-2">
                     <button className="px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
-                      <Edit className="w-4 h-4" />
+                      <PencilIcon className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteOrchestra(orchestra._id)}
                       className="px-3 py-2 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -309,14 +310,14 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
             onClick={() => setIsCreatingEnsemble(true)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             צור אנסמבל
           </button>
         </div>
 
         {ensembles.length === 0 ? (
           <div className="text-center py-8 bg-blue-50 rounded">
-            <Award className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+            <MedalIcon className="w-12 h-12 text-blue-400 mx-auto mb-4" />
             <h4 className="text-lg font-medium text-gray-900 mb-2">אין אנסמבלים</h4>
             <p className="text-gray-600 mb-4">
               עדיין לא נוצרו אנסמבלים תחת ניצוחו של המורה
@@ -346,7 +347,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                     
                     <div className="flex items-center gap-6 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
+                        <UsersIcon className="w-4 h-4" />
                         {ensemble.memberIds?.length || 0} חברים
                       </div>
                       {ensemble.type && (
@@ -366,13 +367,13 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
                   
                   <div className="flex items-center gap-2">
                     <button className="px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors">
-                      <Edit className="w-4 h-4" />
+                      <PencilIcon className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteEnsemble(ensemble._id)}
                       className="px-3 py-2 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </div>

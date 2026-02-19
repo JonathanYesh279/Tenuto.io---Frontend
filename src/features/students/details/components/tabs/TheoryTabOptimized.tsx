@@ -6,13 +6,10 @@
  */
 
 import React, { useState, useMemo, memo } from 'react'
-import {
-  BookOpen, Calendar, TrendingUp, Award, Clock, User, Plus,
-  Trash2, AlertCircle, MapPin, CheckCircle, X, Music,
-  GraduationCap, Users, Info, RefreshCw
-} from 'lucide-react'
+
 import TeacherNameDisplay from '../../../../../components/TeacherNameDisplay'
 import { 
+import { ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, InfoIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrashIcon, TrendUpIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
   useStudent,
   useStudentTheoryLessons,
   useAvailableTheoryLessons,
@@ -68,15 +65,15 @@ const LessonCard = memo(({
     switch (lesson.category?.toLowerCase()) {
       case 'harmony':
       case 'הרמוניה':
-        return <Music className="w-4 h-4" />
+        return <MusicNotesIcon className="w-4 h-4" />
       case 'theory':
       case 'תיאוריה':
-        return <BookOpen className="w-4 h-4" />
+        return <BookOpenIcon className="w-4 h-4" />
       case 'composition':
       case 'קומפוזיציה':
-        return <GraduationCap className="w-4 h-4" />
+        return <GraduationCapIcon className="w-4 h-4" />
       default:
-        return <BookOpen className="w-4 h-4" />
+        return <BookOpenIcon className="w-4 h-4" />
     }
   }, [lesson.category])
 
@@ -123,7 +120,7 @@ const LessonCard = memo(({
           {isEnrolled ? (
             <>
               <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                <CheckCircle className="w-3 h-3 mr-1" />
+                <CheckCircleIcon className="w-3 h-3 mr-1" />
                 רשום
               </span>
               <button
@@ -133,9 +130,9 @@ const LessonCard = memo(({
                 title="בטל הרשמה"
               >
                 {isUnenrolling ? (
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
                 ) : (
-                  <Trash2 className="w-4 h-4" />
+                  <TrashIcon className="w-4 h-4" />
                 )}
               </button>
             </>
@@ -151,12 +148,12 @@ const LessonCard = memo(({
             >
               {isEnrolling ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
                   נרשם...
                 </>
               ) : (
                 <>
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   הרשם
                 </>
               )}
@@ -176,7 +173,7 @@ const LessonCard = memo(({
       {(lesson.date || lesson.startTime) && (
         <div className="mb-3">
           <div className="flex items-center gap-2 text-gray-600">
-            <Clock className="w-4 h-4" />
+            <ClockIcon className="w-4 h-4" />
             <span className="text-sm">
               {lesson.date && new Date(lesson.date).toLocaleDateString('he-IL')}
               {lesson.startTime && lesson.endTime && (
@@ -193,7 +190,7 @@ const LessonCard = memo(({
       {/* Location */}
       {lesson.location && (
         <div className="flex items-center gap-2 text-gray-600 mb-3">
-          <MapPin className="w-4 h-4" />
+          <MapPinIcon className="w-4 h-4" />
           <span className="text-sm">{lesson.location}</span>
         </div>
       )}
@@ -202,7 +199,7 @@ const LessonCard = memo(({
       {studentsProgress && (
         <div className="mb-3">
           <div className="flex items-center gap-2 text-gray-600 mb-2">
-            <Users className="w-4 h-4" />
+            <UsersIcon className="w-4 h-4" />
             <span className="text-sm">
               {studentsProgress.current} / {studentsProgress.total} תלמידים
             </span>
@@ -222,7 +219,7 @@ const LessonCard = memo(({
           {lesson.isFull && (
             <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <div className="flex items-center gap-2 text-yellow-800">
-                <AlertCircle className="w-4 h-4" />
+                <WarningCircleIcon className="w-4 h-4" />
                 <span className="text-sm font-medium">השיעור מלא</span>
               </div>
             </div>
@@ -231,7 +228,7 @@ const LessonCard = memo(({
           {!lesson.gradeCompatible && (
             <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
               <div className="flex items-center gap-2 text-red-800">
-                <AlertCircle className="w-4 h-4" />
+                <WarningCircleIcon className="w-4 h-4" />
                 <span className="text-sm font-medium">לא מתאים לכיתה</span>
               </div>
             </div>
@@ -240,7 +237,7 @@ const LessonCard = memo(({
           {!lesson.levelCompatible && (
             <div className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
               <div className="flex items-center gap-2 text-orange-800">
-                <AlertCircle className="w-4 h-4" />
+                <WarningCircleIcon className="w-4 h-4" />
                 <span className="text-sm font-medium">רמה לא מתאימה</span>
               </div>
             </div>
@@ -259,7 +256,7 @@ const LessonCard = memo(({
       {lesson.targetGrades && lesson.targetGrades.length > 0 && (
         <div className="mt-3 pt-3 border-t">
           <div className="flex items-center gap-2">
-            <Info className="w-4 h-4 text-gray-500" />
+            <InfoIcon className="w-4 h-4 text-gray-500" />
             <span className="text-xs text-gray-500">
               מיועד לכיתות: {lesson.targetGrades.join(', ')}
             </span>
@@ -371,7 +368,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
     if (enrolledLessons.length === 0) {
       return (
         <EmptyState
-          icon={<BookOpen className="w-8 h-8 text-gray-300" />}
+          icon={<BookOpenIcon className="w-8 h-8 text-gray-300" />}
           title="אין שיעורי תיאוריה רשומים"
           description="התלמיד אינו רשום כרגע לשיעורי תיאוריה"
           actionLabel="צפה בשיעורים זמינים"
@@ -383,7 +380,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
     return (
       <div className="space-y-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-purple-600" />
+          <BookOpenIcon className="w-5 h-5 text-purple-600" />
           שיעורי תיאוריה רשומים ({enrolledLessons.length})
         </h3>
         
@@ -408,7 +405,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-green-600" />
+            <PlusIcon className="w-5 h-5 text-green-600" />
             שיעורי תיאוריה זמינים להרשמה
           </h3>
           <div className="text-sm text-gray-600">
@@ -418,7 +415,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
 
         {availableLessons.length === 0 ? (
           <EmptyState
-            icon={<BookOpen className="w-8 h-8 text-gray-300" />}
+            icon={<BookOpenIcon className="w-8 h-8 text-gray-300" />}
             title="אין שיעורים זמינים"
             description="כל השיעורים המתאימים מלאים או שכבר נרשמת אליהם"
           />
@@ -460,7 +457,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
             }`}
           >
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
+              <CheckCircleIcon className="w-4 h-4" />
               שיעורים רשומים ({enrolledLessons.length})
             </div>
           </button>
@@ -473,7 +470,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
             }`}
           >
             <div className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               הרשמה חדשה ({availableLessons.length})
             </div>
           </button>
@@ -508,7 +505,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
               >
                 {isUnenrolling ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
                     מבטל...
                   </>
                 ) : (

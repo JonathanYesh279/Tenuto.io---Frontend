@@ -3,7 +3,8 @@
  */
 
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRightIcon } from '@phosphor-icons/react'
+
 
 const StudentDetailsTest: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>()
@@ -16,7 +17,7 @@ const StudentDetailsTest: React.FC = () => {
           onClick={() => navigate('/students')}
           className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
         >
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRightIcon className="w-4 h-4" />
           חזור לרשימת תלמידים
         </button>
       </div>

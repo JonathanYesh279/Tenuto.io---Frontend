@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { ChevronDown, GraduationCap } from 'lucide-react'
+
 import { VALID_CLASSES, validateSelection, ValidationResult } from '../../utils/validationUtils'
 import ValidationIndicator from '../ui/ValidationIndicator'
+import { CaretDownIcon, GraduationCapIcon } from '@phosphor-icons/react'
 
 interface ClassSelectProps {
   value: string
@@ -98,7 +99,7 @@ const ClassSelect: React.FC<ClassSelectProps> = ({
       <div className="relative">
         {/* Icon */}
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <GraduationCap className="w-4 h-4 text-gray-400" />
+          <GraduationCapIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Select field */}
@@ -128,7 +129,7 @@ const ClassSelect: React.FC<ClassSelectProps> = ({
         
         {/* Dropdown arrow */}
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <ChevronDown className="w-4 h-4 text-gray-400" />
+          <CaretDownIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Validation icon */}

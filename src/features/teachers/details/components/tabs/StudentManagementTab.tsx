@@ -5,10 +5,11 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { Users, Plus, Trash2, Calendar, Clock, User, Search, X, ChevronDown, BookOpen } from 'lucide-react'
+
 import { Teacher } from '../../types'
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
+import { BookOpenIcon, CalendarIcon, CaretDownIcon, ClockIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon, UserIcon, UsersIcon, XIcon } from '@phosphor-icons/react'
 
 interface StudentManagementTabProps {
   teacher: Teacher
@@ -373,7 +374,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
           onClick={() => setIsAddingStudent(true)}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all shadow-sm font-medium"
         >
-          <Plus className="w-4 h-4" />
+          <PlusIcon className="w-4 h-4" />
           הוסף תלמיד
         </button>
       </div>
@@ -395,10 +396,10 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                   </div>
                 </div>
                 <div className="relative" ref={dropdownRef}>
-                  {/* Search Input */}
+                  {/* MagnifyingGlassIcon Input */}
                   <div className="relative">
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <Search className="h-5 w-5 text-gray-400" />
+                      <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
                     </div>
                     <input
                       ref={inputRef}
@@ -416,11 +417,11 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                         onClick={handleClearSearch}
                         className="absolute inset-y-0 left-0 pl-3 flex items-center hover:bg-gray-50 rounded-r-lg"
                       >
-                        <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                        <XIcon className="h-4 w-4 text-gray-400 hover:text-gray-600" />
                       </button>
                     ) : (
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                        <CaretDownIcon className={`h-4 w-4 text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                       </div>
                     )}
                   </div>
@@ -580,7 +581,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
       {/* Students List */}
       {students.length === 0 ? (
         <div className="text-center py-12 bg-muted/30 rounded">
-          <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">אין תלמידים משויכים</h3>
           <p className="text-gray-600 mb-4">
             עדיין לא שויכו תלמידים למורה זה
@@ -602,7 +603,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <User className="w-6 h-6 text-blue-600" />
+                    <UserIcon className="w-6 h-6 text-blue-600" />
                   </div>
                   
                   <div>
@@ -624,7 +625,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                       onClick={() => handleScheduleLesson(student)}
                       className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-all font-medium flex items-center gap-1"
                     >
-                      <BookOpen className="w-4 h-4" />
+                      <BookOpenIcon className="w-4 h-4" />
                       קבע שיעור
                     </button>
                   )}
@@ -639,7 +640,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                     onClick={() => handleRemoveStudent(student._id)}
                     className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all font-medium flex items-center gap-1"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                     הסר
                   </button>
                 </div>
@@ -653,7 +654,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
       {students.length > 0 && (
         <div className="bg-muted/30 rounded p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5" />
+            <CalendarIcon className="w-5 h-5" />
             סקירת לוח זמנים
           </h3>
           
@@ -663,7 +664,7 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-gray-900">{timeBlock.day}</span>
                   <span className="text-sm text-gray-600 flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
+                    <ClockIcon className="w-4 h-4" />
                     {Math.round(timeBlock.totalDuration / 60)} שעות
                   </span>
                 </div>

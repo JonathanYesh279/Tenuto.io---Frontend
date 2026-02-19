@@ -5,29 +5,9 @@
  */
 
 import { useState, useEffect } from 'react'
+
 import { 
-  History, 
-  Eye, 
-  Edit, 
-  Plus, 
-  Trash2, 
-  Download, 
-  Upload, 
-  Mail, 
-  Printer,
-  Calendar,
-  User,
-  Filter,
-  Search,
-  ChevronDown,
-  ChevronRight,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Activity
-} from 'lucide-react'
-import { 
+import { ActivityIcon, CalendarIcon, CaretDownIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EnvelopeIcon, EyeIcon, FunnelIcon, HistoryIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, PrinterIcon, TrashIcon, UploadSimpleIcon, UserIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
   auditTrailService, 
   AuditEntry, 
   AuditAction, 
@@ -153,21 +133,21 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
 
   const getActionIcon = (action: AuditAction) => {
     const iconMap: Record<AuditAction, React.ComponentType<any>> = {
-      view: Eye,
-      create: Plus,
-      update: Edit,
-      delete: Trash2,
-      upload: Upload,
-      download: Download,
-      export: Download,
-      email: Mail,
-      print: Printer,
-      login: User,
-      logout: User,
-      permission_change: User
+      view: EyeIcon,
+      create: PlusIcon,
+      update: PencilIcon,
+      delete: TrashIcon,
+      upload: UploadSimpleIcon,
+      download: DownloadSimpleIcon,
+      export: DownloadSimpleIcon,
+      email: EnvelopeIcon,
+      print: PrinterIcon,
+      login: UserIcon,
+      logout: UserIcon,
+      permission_change: UserIcon
     }
     
-    return iconMap[action] || Activity
+    return iconMap[action] || ActivityIcon
   }
 
   const getActionLabel = (action: AuditAction) => {
@@ -224,7 +204,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
     return (
       <div className={`bg-white rounded-lg border border-gray-200 p-6 ${className}`}>
         <div className="flex items-center gap-2 text-gray-500">
-          <AlertCircle className="w-5 h-5" />
+          <WarningCircleIcon className="w-5 h-5" />
           <span>אין הרשאה לצפות בלוג הפעילות</span>
         </div>
       </div>
@@ -237,7 +217,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
       <div className="border-b border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <History className="w-5 h-5 text-gray-600" />
+            <HistoryIcon className="w-5 h-5 text-gray-600" />
             <h3 className="text-lg font-medium text-gray-900">לוג פעילות</h3>
             <span className="text-sm text-gray-500">({filteredEntries.length} פעולות)</span>
           </div>
@@ -247,14 +227,14 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
               onClick={exportAuditTrail}
               className="flex items-center gap-1 px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-              <Download className="w-4 h-4" />
+              <DownloadSimpleIcon className="w-4 h-4" />
               ייצא CSV
             </button>
             <button
               onClick={loadAuditEntries}
               className="flex items-center gap-1 px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50"
             >
-              <Activity className="w-4 h-4" />
+              <ActivityIcon className="w-4 h-4" />
               רענן
             </button>
           </div>
@@ -265,7 +245,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
       <div className="border-b border-gray-200 p-4 bg-gray-50">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <div className="relative">
-            <Search className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="חיפוש..."
@@ -342,7 +322,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
           </div>
         ) : filteredEntries.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-8 text-gray-500">
-            <History className="w-8 h-8 mb-2" />
+            <HistoryIcon className="w-8 h-8 mb-2" />
             <span>לא נמצאו פעולות</span>
           </div>
         ) : (
@@ -360,9 +340,9 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
                     {/* Expand/Collapse Button */}
                     <button className="mt-1 text-gray-400 hover:text-gray-600">
                       {isExpanded ? (
-                        <ChevronDown className="w-4 h-4" />
+                        <CaretDownIcon className="w-4 h-4" />
                       ) : (
-                        <ChevronRight className="w-4 h-4" />
+                        <CaretRightIcon className="w-4 h-4" />
                       )}
                     </button>
 
@@ -398,7 +378,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
                           
                           <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
                             <div className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
+                              <CalendarIcon className="w-3 h-3" />
                               <span>{entry.timestamp.toLocaleDateString('he-IL')}</span>
                               <span>{entry.timestamp.toLocaleTimeString('he-IL', { 
                                 hour: '2-digit', 
@@ -407,13 +387,13 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
                             </div>
                             
                             <div className="flex items-center gap-1">
-                              <User className="w-3 h-3" />
+                              <UserIcon className="w-3 h-3" />
                               <span>{entry.userRole}</span>
                             </div>
                             
                             {entry.duration && (
                               <div className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                                <ClockIcon className="w-3 h-3" />
                                 <span>{entry.duration}ms</span>
                               </div>
                             )}
@@ -429,9 +409,9 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
                         {/* Status Icon */}
                         <div className="ml-2">
                           {entry.success ? (
-                            <CheckCircle className="w-4 h-4 text-green-500" />
+                            <CheckCircleIcon className="w-4 h-4 text-green-500" />
                           ) : (
-                            <XCircle className="w-4 h-4 text-red-500" />
+                            <XCircleIcon className="w-4 h-4 text-red-500" />
                           )}
                         </div>
                       </div>

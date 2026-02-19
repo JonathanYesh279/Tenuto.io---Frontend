@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  Music,
-  Search,
-  Filter,
-  UserPlus,
-  UserMinus,
-  CheckCircle,
-  XCircle,
-  Clock,
-  AlertCircle,
-  Download,
-  Upload,
-  Star,
-  Award,
-  BookOpen,
-  Calendar,
-  TrendingUp
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
+import { BookOpenIcon, CalendarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, FunnelIcon, MagnifyingGlassIcon, MedalIcon, MusicNotesIcon, StarIcon, TrendUpIcon, UploadSimpleIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface EnrollmentStudent {
   id: string
@@ -369,7 +352,7 @@ export default function OrchestraEnrollmentManager() {
     return (
       <div className="bg-red-50 border border-red-200 rounded p-4">
         <div className="flex items-center gap-2 text-red-800">
-          <AlertCircle className="w-5 h-5" />
+          <WarningCircleIcon className="w-5 h-5" />
           <div className="font-reisinger-yonatan">{error}</div>
         </div>
       </div>
@@ -395,7 +378,7 @@ export default function OrchestraEnrollmentManager() {
           onClick={exportEnrollmentData}
           className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
         >
-          <Download className="w-4 h-4" />
+          <DownloadSimpleIcon className="w-4 h-4" />
           ייצא נתונים
         </button>
       </div>
@@ -408,7 +391,7 @@ export default function OrchestraEnrollmentManager() {
               <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
               <div className="text-sm text-gray-600 font-reisinger-yonatan">סה״כ תלמידים</div>
             </div>
-            <Users className="w-8 h-8 text-blue-600" />
+            <UsersIcon className="w-8 h-8 text-blue-600" />
           </div>
         </div>
         <div className="bg-white p-4 rounded border border-gray-200">
@@ -417,7 +400,7 @@ export default function OrchestraEnrollmentManager() {
               <div className="text-2xl font-bold text-green-600">{stats.enrolled}</div>
               <div className="text-sm text-gray-600 font-reisinger-yonatan">רשומים</div>
             </div>
-            <CheckCircle className="w-8 h-8 text-green-600" />
+            <CheckCircleIcon className="w-8 h-8 text-green-600" />
           </div>
         </div>
         <div className="bg-white p-4 rounded border border-gray-200">
@@ -426,7 +409,7 @@ export default function OrchestraEnrollmentManager() {
               <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
               <div className="text-sm text-gray-600 font-reisinger-yonatan">ממתינים</div>
             </div>
-            <Clock className="w-8 h-8 text-yellow-600" />
+            <ClockIcon className="w-8 h-8 text-yellow-600" />
           </div>
         </div>
         <div className="bg-white p-4 rounded border border-gray-200">
@@ -435,7 +418,7 @@ export default function OrchestraEnrollmentManager() {
               <div className="text-2xl font-bold text-purple-600">{Math.round(stats.averageAttendance)}%</div>
               <div className="text-sm text-gray-600 font-reisinger-yonatan">נוכחות ממוצעת</div>
             </div>
-            <TrendingUp className="w-8 h-8 text-purple-600" />
+            <TrendUpIcon className="w-8 h-8 text-purple-600" />
           </div>
         </div>
       </div>
@@ -444,7 +427,7 @@ export default function OrchestraEnrollmentManager() {
       <div className="bg-white p-4 rounded border border-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
               placeholder="חיפוש תלמידים..."
@@ -550,7 +533,7 @@ export default function OrchestraEnrollmentManager() {
 
         {filteredStudents.length === 0 ? (
           <div className="text-center py-12">
-            <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+            <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
             <p className="text-gray-500 font-reisinger-yonatan">לא נמצאו תלמידים</p>
           </div>
         ) : (
@@ -661,7 +644,7 @@ export default function OrchestraEnrollmentManager() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }, (_, i) => (
-                          <Star
+                          <StarIcon
                             key={i}
                             className={`w-3 h-3 ${
                               i < student.performanceLevel ? 'text-yellow-400 fill-current' : 'text-gray-300'

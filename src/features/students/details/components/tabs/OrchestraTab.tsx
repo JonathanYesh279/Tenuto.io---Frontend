@@ -6,9 +6,10 @@
  */
 
 import { useState, useEffect } from 'react'
-import { Music, Users, Plus, Trash2, AlertCircle, Clock, MapPin, CheckCircle, X } from 'lucide-react'
+
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
+import { CheckCircleIcon, ClockIcon, MapPinIcon, MusicNotesIcon, PlusIcon, TrashIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface RehearsalSchedule {
   dayOfWeek: number
@@ -321,7 +322,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
       return (
         <div className="text-center py-16">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Music className="w-8 h-8 text-gray-300" />
+            <MusicNotesIcon className="w-8 h-8 text-gray-300" />
           </div>
           <h3 className="text-lg font-medium text-gray-600 mb-2">אין הרשמות קיימות</h3>
           <p className="text-gray-500 mb-6">התלמיד אינו רשום כרגע לתזמורות</p>
@@ -338,7 +339,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
     return (
       <div className="space-y-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Music className="w-5 h-5 text-purple-600" />
+          <MusicNotesIcon className="w-5 h-5 text-purple-600" />
           תזמורות רשומות ({enrolledOrchestras.length})
         </h3>
         
@@ -428,7 +429,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                 
                 <div className="flex items-center gap-2">
                   <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                    <CheckCircle className="w-3 h-3 mr-1" />
+                    <CheckCircleIcon className="w-3 h-3 mr-1" />
                     רשום
                   </span>
                   
@@ -438,7 +439,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="בטל הרשמה"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -450,7 +451,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
               {/* Rehearsal Summary */}
               <div className="mb-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
                 <h5 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-blue-600" />
+                  <ClockIcon className="w-5 h-5 text-blue-600" />
                   חזרות שבועיות
                 </h5>
                 <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
@@ -467,7 +468,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                       </span>
                     </div>
                     <div className="flex items-center gap-1 text-blue-700">
-                      <MapPin className="w-4 h-4" />
+                      <MapPinIcon className="w-4 h-4" />
                       <span className="text-sm font-medium">
                         {orchestra.rehearsalSchedule?.location || orchestra.location || 'אולם גן'}
                       </span>
@@ -504,7 +505,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-green-600" />
+            <PlusIcon className="w-5 h-5 text-green-600" />
             תזמורות זמינות להרשמה
           </h3>
           <div className="text-sm text-gray-600">
@@ -515,7 +516,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
         {availableOrchestras.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Music className="w-8 h-8 text-gray-300" />
+              <MusicNotesIcon className="w-8 h-8 text-gray-300" />
             </div>
             <h4 className="text-lg font-medium text-gray-600 mb-2">אין תזמורות זמינות</h4>
             <p className="text-gray-500">
@@ -647,7 +648,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                         </>
                       ) : (
                         <>
-                          <Plus className="w-4 h-4" />
+                          <PlusIcon className="w-4 h-4" />
                           הרשם
                         </>
                       )}
@@ -662,7 +663,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                   {hasConflict && (
                     <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                       <div className="flex items-center gap-2 text-red-800">
-                        <AlertCircle className="w-4 h-4" />
+                        <WarningCircleIcon className="w-4 h-4" />
                         <span className="text-sm font-medium">התנגשות בלוח זמנים</span>
                       </div>
                       <p className="text-red-700 text-sm mt-1">
@@ -674,7 +675,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                   {isFull && (
                     <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                       <div className="flex items-center gap-2 text-yellow-800">
-                        <AlertCircle className="w-4 h-4" />
+                        <WarningCircleIcon className="w-4 h-4" />
                         <span className="text-sm font-medium">התזמורת מלאה</span>
                       </div>
                       <p className="text-yellow-700 text-sm mt-1">
@@ -690,7 +691,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                     <h5 className={`font-semibold mb-3 flex items-center gap-2 ${
                       hasConflict ? 'text-red-900' : 'text-blue-900'
                     }`}>
-                      <Clock className={`w-5 h-5 ${hasConflict ? 'text-red-600' : 'text-blue-600'}`} />
+                      <ClockIcon className={`w-5 h-5 ${hasConflict ? 'text-red-600' : 'text-blue-600'}`} />
                       חזרות שבועיות
                       {hasConflict && (
                         <span className="text-xs bg-red-200 text-red-800 px-2 py-1 rounded-full">
@@ -720,7 +721,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                         <div className={`flex items-center gap-1 ${
                           hasConflict ? 'text-red-700' : 'text-blue-700'
                         }`}>
-                          <MapPin className="w-4 h-4" />
+                          <MapPinIcon className="w-4 h-4" />
                           <span className="text-sm font-medium">
                             {orchestra.rehearsalSchedule?.location || orchestra.location || 'אולם גן'}
                           </span>
@@ -784,7 +785,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
             }`}
           >
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
+              <CheckCircleIcon className="w-4 h-4" />
               הרשמות קיימות
             </div>
           </button>
@@ -797,7 +798,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
             }`}
           >
             <div className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               הרשמה חדשה
             </div>
           </button>

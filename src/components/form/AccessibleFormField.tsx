@@ -1,5 +1,6 @@
 import React from 'react'
-import { AlertCircle } from 'lucide-react'
+import { WarningCircleIcon } from '@phosphor-icons/react'
+
 
 interface AccessibleFormFieldProps {
   children: React.ReactElement
@@ -77,7 +78,7 @@ const AccessibleFormField: React.FC<AccessibleFormFieldProps> = ({
           aria-live="polite"
           className="flex items-center space-x-2 space-x-reverse mt-1 text-sm text-red-600"
         >
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <WarningCircleIcon className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}

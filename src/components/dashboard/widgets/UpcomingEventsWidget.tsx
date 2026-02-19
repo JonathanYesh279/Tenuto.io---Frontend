@@ -1,5 +1,6 @@
-import { Music } from 'lucide-react'
+
 import { motion } from 'framer-motion'
+import { MusicNotesIcon } from '@phosphor-icons/react'
 
 interface UpcomingEvent {
   title: string
@@ -51,7 +52,7 @@ export function UpcomingEventsWidget({ events, loading }: UpcomingEventsWidgetPr
                 className="flex items-start gap-3 p-2.5 rounded bg-muted/40"
               >
                 <div className="w-7 h-7 rounded-md bg-orchestras-bg flex items-center justify-center flex-shrink-0">
-                  <Music className="w-3.5 h-3.5 text-orchestras-fg" />
+                  <MusicNotesIcon className="w-3.5 h-3.5 text-orchestras-fg" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-foreground truncate">{event.title}</p>

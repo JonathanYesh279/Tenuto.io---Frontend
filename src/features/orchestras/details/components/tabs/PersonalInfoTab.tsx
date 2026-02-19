@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Edit, Save, X, User, MapPin, Music, Clock, Calendar } from 'lucide-react'
+
 import { OrchestraTabProps } from '../../types'
 import apiService from '../../../../../services/apiService'
 import { useAuth } from '../../../../../services/authContext'
 import { VALID_LOCATIONS } from '../../../../../constants/locations'
 import { getDisplayName } from '@/utils/nameUtils'
+import { CalendarIcon, ClockIcon, FloppyDiskIcon, MapPinIcon, MusicNotesIcon, PencilIcon, UserIcon, XIcon } from '@phosphor-icons/react'
 
 const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
   orchestraId,
@@ -145,7 +146,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
             onClick={handleEdit}
             className="flex items-center px-3 py-2 text-primary border border-border rounded hover:bg-muted transition-colors"
           >
-            <Edit className="w-4 h-4 ml-1" />
+            <PencilIcon className="w-4 h-4 ml-1" />
             ערוך
           </button>
         ) : canEdit() && isEditing ? (
@@ -155,14 +156,14 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               disabled={isSaving}
               className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50"
             >
-              <Save className="w-4 h-4 ml-1" />
+              <FloppyDiskIcon className="w-4 h-4 ml-1" />
               {isSaving ? 'שומר...' : 'שמור'}
             </button>
             <button
               onClick={handleCancel}
               className="flex items-center px-3 py-2 text-muted-foreground border border-border rounded hover:bg-muted transition-colors"
             >
-              <X className="w-4 h-4 ml-1" />
+              <XIcon className="w-4 h-4 ml-1" />
               ביטול
             </button>
           </div>
@@ -193,7 +194,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               />
             ) : (
               <div className="flex items-center">
-                <Music className="w-5 h-5 text-gray-400 ml-2" />
+                <MusicNotesIcon className="w-5 h-5 text-gray-400 ml-2" />
                 <span className="text-gray-900">{orchestra.name}</span>
               </div>
             )}
@@ -215,7 +216,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               </select>
             ) : (
               <div className="flex items-center">
-                <Calendar className="w-5 h-5 text-gray-400 ml-2" />
+                <CalendarIcon className="w-5 h-5 text-gray-400 ml-2" />
                 <span className="text-gray-900">{orchestra.type}</span>
               </div>
             )}
@@ -238,7 +239,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               </select>
             ) : (
               <div className="flex items-center">
-                <MapPin className="w-5 h-5 text-gray-400 ml-2" />
+                <MapPinIcon className="w-5 h-5 text-gray-400 ml-2" />
                 <span className="text-gray-900">{orchestra.location}</span>
               </div>
             )}
@@ -268,7 +269,7 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
               </select>
             ) : (
               <div className="flex items-center">
-                <User className="w-5 h-5 text-gray-400 ml-2" />
+                <UserIcon className="w-5 h-5 text-gray-400 ml-2" />
                 <div>
                   {conductor ? (
                     <div>
@@ -292,13 +293,13 @@ const PersonalInfoTab: React.FC<OrchestraTabProps> = ({
             </label>
             <div className="space-y-2">
               <div className="flex items-center">
-                <Clock className="w-5 h-5 text-gray-400 ml-2" />
+                <ClockIcon className="w-5 h-5 text-gray-400 ml-2" />
                 <span className="text-gray-900">
                   {orchestra.memberIds?.length || 0} חברים
                 </span>
               </div>
               <div className="flex items-center">
-                <Calendar className="w-5 h-5 text-gray-400 ml-2" />
+                <CalendarIcon className="w-5 h-5 text-gray-400 ml-2" />
                 <span className="text-gray-900">
                   {orchestra.rehearsalIds?.length || 0} חזרות מתוכננות
                 </span>

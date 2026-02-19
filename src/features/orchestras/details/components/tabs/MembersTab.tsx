@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Search, Users, UserPlus, UserMinus, Eye, Trash2, UserCheck } from 'lucide-react'
+
 import { OrchestraTabProps, OrchestraMember } from '../../types'
 import apiService from '../../../../../services/apiService'
 import ConfirmationModal from '../../../../../components/ui/ConfirmationModal'
 import { useAuth } from '../../../../../services/authContext'
 import { getDisplayName } from '@/utils/nameUtils'
+import { EyeIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon, UserCircleCheckIcon, UserMinusIcon, UserPlusIcon, UsersIcon } from '@phosphor-icons/react'
 
 const MembersTab: React.FC<OrchestraTabProps> = ({
   orchestraId,
@@ -309,7 +310,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                   disabled={isAddingMultiple}
                   className="flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors disabled:opacity-50"
                 >
-                  <UserCheck className="w-4 h-4 ml-1" />
+                  <UserCircleCheckIcon className="w-4 h-4 ml-1" />
                   {isAddingMultiple ? 'מוסיף...' : `הוסף ${selectedStudentIds.size} חברים`}
                 </button>
                 <button
@@ -324,7 +325,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
               onClick={() => setShowAddMember(!showAddMember)}
               className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
-              <Plus className="w-4 h-4 ml-1" />
+              <PlusIcon className="w-4 h-4 ml-1" />
               הוסף חבר
             </button>
           </div>
@@ -344,7 +345,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="חיפוש תלמידים לפי שם, כיתה או כלי..."
@@ -395,7 +396,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                   disabled={isAddingMultiple}
                   className="flex items-center px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
                 >
-                  <UserCheck className="w-4 h-4 ml-1" />
+                  <UserCircleCheckIcon className="w-4 h-4 ml-1" />
                   {isAddingMultiple ? 'מוסיף...' : 'הוסף לתזמורת'}
                 </button>
               </div>
@@ -432,7 +433,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                           onClick={() => handleAddMember(student._id)}
                           className="flex items-center px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
                         >
-                          <UserPlus className="w-4 h-4 ml-1" />
+                          <UserPlusIcon className="w-4 h-4 ml-1" />
                           הוסף
                         </button>
                       </div>
@@ -442,7 +443,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500">
-                <Users className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                <UsersIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                 <p>
                   {searchQuery ? 'לא נמצאו תלמידים תואמים' : 'אין תלמידים זמינים להוספה'}
                 </p>
@@ -484,7 +485,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                   className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
                   title="צפה בפרופיל"
                 >
-                  <Eye className="w-4 h-4" />
+                  <EyeIcon className="w-4 h-4" />
                 </button>
                 {canEdit() && (
                   <button
@@ -492,7 +493,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
                     className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
                     title="הסר מהתזמורת"
                   >
-                    <UserMinus className="w-4 h-4" />
+                    <UserMinusIcon className="w-4 h-4" />
                   </button>
                 )}
               </div>
@@ -501,7 +502,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
         </div>
       ) : (
         <div className="text-center py-12">
-          <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">אין חברים בתזמורת</h3>
           <p className="text-gray-600 mb-4">
             {canEdit() ? 'התחל על ידי הוספת התלמיד הראשון' : 'אין חברים רשומים בתזמורת זו'}
@@ -511,7 +512,7 @@ const MembersTab: React.FC<OrchestraTabProps> = ({
               onClick={() => setShowAddMember(true)}
               className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
-              <Plus className="w-4 h-4 ml-1" />
+              <PlusIcon className="w-4 h-4 ml-1" />
               הוסף חבר ראשון
             </button>
           )}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Filter, X, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowCounterClockwiseIcon, CaretDownIcon, CaretUpIcon, FunnelIcon, XIcon } from '@phosphor-icons/react'
+
 
 export interface FilterOption {
   value: string
@@ -200,9 +201,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             )}
           </div>
           {isExpanded ? (
-            <ChevronUp className="w-4 h-4 text-gray-500" />
+            <CaretUpIcon className="w-4 h-4 text-gray-500" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-gray-500" />
+            <CaretDownIcon className="w-4 h-4 text-gray-500" />
           )}
         </button>
         
@@ -226,7 +227,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       <div className={`bg-white border border-border rounded p-4 ${className}`} dir="rtl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2 space-x-reverse">
-            <Filter className="w-5 h-5 text-gray-600" />
+            <FunnelIcon className="w-5 h-5 text-gray-600" />
             <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">מסננים</h3>
             {activeFilterCount > 0 && (
               <span className="px-2 py-1 text-xs bg-muted text-primary rounded-full">
@@ -240,7 +241,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={handleReset}
               className="flex items-center px-3 py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
             >
-              <RotateCcw className="w-4 h-4 ml-1" />
+              <ArrowCounterClockwiseIcon className="w-4 h-4 ml-1" />
               איפוס
             </button>
           )}
@@ -273,7 +274,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center space-x-2 space-x-reverse">
-          <Filter className="w-5 h-5 text-gray-600" />
+          <FunnelIcon className="w-5 h-5 text-gray-600" />
           <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">מסננים</h3>
           {activeFilterCount > 0 && (
             <span className="px-2 py-1 text-xs bg-muted text-primary rounded-full">
@@ -289,7 +290,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               className="flex items-center px-2 py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
               title="איפוס מסננים"
             >
-              <RotateCcw className="w-4 h-4" />
+              <ArrowCounterClockwiseIcon className="w-4 h-4" />
             </button>
           )}
           
@@ -298,13 +299,13 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="p-1 text-gray-600 hover:text-gray-800 transition-colors"
             >
-              {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+              {isCollapsed ? <CaretDownIcon className="w-4 h-4" /> : <CaretUpIcon className="w-4 h-4" />}
             </button>
           )}
         </div>
       </div>
       
-      {/* Filter Content */}
+      {/* FunnelIcon Content */}
       {!isCollapsed && (
         <div className="p-4">
           <div className="space-y-1">

@@ -12,18 +12,8 @@ import { DependentEntity, DeletionImpact, DeletionWarning } from '@/types/cascad
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { 
-  ChevronDown, 
-  ChevronRight, 
-  AlertTriangle, 
-  AlertCircle, 
-  Trash2, 
-  Database,
-  Users,
-  BookOpen,
-  Music,
-  Clock
-} from 'lucide-react'
+import { BookOpenIcon, CaretDownIcon, CaretRightIcon, ClockIcon, DatabaseIcon, MusicNotesIcon, TrashIcon, UsersIcon, WarningCircleIcon, WarningIcon } from '@phosphor-icons/react'
+
 
 interface FlattenedItem {
   id: string
@@ -60,13 +50,13 @@ interface ItemRendererProps {
 }
 
 const ENTITY_TYPE_ICONS = {
-  student: Users,
-  teacher: Users,
-  orchestra: Music,
-  rehearsal: Clock,
-  theory_lesson: BookOpen,
-  bagrut: BookOpen,
-  default: Database
+  student: UsersIcon,
+  teacher: UsersIcon,
+  orchestra: MusicNotesIcon,
+  rehearsal: ClockIcon,
+  theory_lesson: BookOpenIcon,
+  bagrut: BookOpenIcon,
+  default: DatabaseIcon
 }
 
 const ENTITY_TYPE_COLORS = {
@@ -131,7 +121,7 @@ const ItemRenderer = React.memo<ItemRendererProps>(({ index, style, data }) => {
           disabled={!hasChildren}
         >
           {hasChildren ? (
-            isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />
+            isExpanded ? <CaretDownIcon size={14} /> : <CaretRightIcon size={14} />
           ) : (
             <div className="w-3.5 h-3.5" />
           )}
@@ -172,7 +162,7 @@ const ItemRenderer = React.memo<ItemRendererProps>(({ index, style, data }) => {
 
         {/* Warning Indicator */}
         {entity.cascadeAction === 'delete' && (
-          <AlertTriangle size={16} className="flex-shrink-0 text-red-500" />
+          <WarningIcon size={16} className="flex-shrink-0 text-red-500" />
         )}
       </div>
     </div>
@@ -336,7 +326,7 @@ export const VirtualizedDeletionImpactList: React.FC<VirtualizedDeletionImpactLi
   if (impact.dependents.length === 0) {
     return (
       <div className={`p-6 text-center ${className}`}>
-        <Database size={48} className="mx-auto mb-4 text-gray-400" />
+        <DatabaseIcon size={48} className="mx-auto mb-4 text-gray-400" />
         <p className="text-gray-500">No dependent entities found</p>
         <p className="text-sm text-gray-400 mt-1">
           This deletion will not affect any other entities
@@ -384,7 +374,7 @@ export const VirtualizedDeletionImpactList: React.FC<VirtualizedDeletionImpactLi
       {impact.warnings.length > 0 && (
         <div className="p-3 border-b bg-yellow-50">
           <Alert>
-            <AlertTriangle className="h-4 w-4" />
+            <WarningIcon className="h-4 w-4" />
             <AlertDescription>
               <strong>{impact.warnings.length} warnings:</strong>
               <ul className="mt-1 text-sm space-y-1">

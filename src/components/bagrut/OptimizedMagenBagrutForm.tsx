@@ -17,19 +17,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { 
-  Calendar, 
-  Users, 
-  Link, 
-  Award, 
-  CheckCircle,
-  Save,
-  AlertTriangle,
-  Clock,
-  Zap,
-  RefreshCw
-} from 'lucide-react'
+
 import { DetailedGrading, MagenBagrut } from '@/types/bagrut.types'
+import { ArrowsClockwiseIcon, CalendarIcon, CheckCircleIcon, ClockIcon, FloppyDiskIcon, LightningIcon, LinkIcon, MedalIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface OptimizedMagenBagrutFormProps {
   magenBagrut?: MagenBagrut
@@ -435,9 +425,9 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
               }
               className="text-xs"
             >
-              {autoSaveState.status === 'saved' && <CheckCircle className="w-3 h-3 mr-1" />}
-              {autoSaveState.status === 'saving' && <RefreshCw className="w-3 h-3 mr-1 animate-spin" />}
-              {autoSaveState.status === 'error' && <AlertTriangle className="w-3 h-3 mr-1" />}
+              {autoSaveState.status === 'saved' && <CheckCircleIcon className="w-3 h-3 mr-1" />}
+              {autoSaveState.status === 'saving' && <ArrowsClockwiseIcon className="w-3 h-3 mr-1 animate-spin" />}
+              {autoSaveState.status === 'error' && <WarningIcon className="w-3 h-3 mr-1" />}
               
               {autoSaveState.status === 'saved' && 'שמור אוטומטית'}
               {autoSaveState.status === 'saving' && 'שומר...'}
@@ -458,7 +448,7 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
             onClick={handleManualSave}
             disabled={!autoSaveState.pendingChanges}
           >
-            <Save className="w-4 h-4 mr-1" />
+            <FloppyDiskIcon className="w-4 h-4 mr-1" />
             שמור עכשיו
           </Button>
         </div>
@@ -469,7 +459,7 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
         <div className="space-y-2">
           {validationErrors.map((error, index) => (
             <Alert key={index} variant={error.type === 'error' ? 'destructive' : 'default'}>
-              <AlertTriangle className="h-4 w-4" />
+              <WarningIcon className="h-4 w-4" />
               <AlertDescription>{error.message}</AlertDescription>
             </Alert>
           ))}
@@ -482,7 +472,7 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
           <h4 className="font-semibold text-gray-900">התקדמות ציון</h4>
           <div className="flex items-center gap-2">
             <Badge variant={gradeCalculation.isPassing ? 'default' : 'destructive'}>
-              <Zap className="w-3 h-3 mr-1" />
+              <LightningIcon className="w-3 h-3 mr-1" />
               {gradeCalculation.total}/100
             </Badge>
           </div>
@@ -506,7 +496,7 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-gray-900 flex items-center">
-            <Award className="w-6 h-6 ml-3 text-yellow-600" />
+            <MedalIcon className="w-6 h-6 ml-3 text-yellow-600" />
             מגן בגרות - השמעה סופית
           </h3>
           <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -521,7 +511,7 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <div>
             <Label htmlFor="magen-date" className="text-right block mb-2 font-semibold">
-              <Calendar className="w-4 h-4 inline ml-2" />
+              <CalendarIcon className="w-4 h-4 inline ml-2" />
               תאריך מגן הבגרות
             </Label>
             <Input
@@ -536,7 +526,7 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
 
           <div>
             <Label htmlFor="magen-reviewedBy" className="text-right block mb-2 font-semibold">
-              <Users className="w-4 h-4 inline ml-2" />
+              <UsersIcon className="w-4 h-4 inline ml-2" />
               ועדת הבוחנים
             </Label>
             <Input
@@ -725,7 +715,7 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
         {/* Recording Links */}
         <div className="mb-6">
           <Label className="text-right block mb-2 font-semibold">
-            <Link className="w-4 h-4 inline ml-2" />
+            <LinkIcon className="w-4 h-4 inline ml-2" />
             קישורי הקלטות למגן
           </Label>
           <div className="space-y-2">
@@ -770,12 +760,12 @@ const OptimizedMagenBagrutForm: React.FC<OptimizedMagenBagrutFormProps> = ({
             >
               {formData.completed ? (
                 <>
-                  <Clock className="w-4 h-4 ml-2" />
+                  <ClockIcon className="w-4 h-4 ml-2" />
                   בטל השלמת מגן
                 </>
               ) : (
                 <>
-                  <CheckCircle className="w-4 h-4 ml-2" />
+                  <CheckCircleIcon className="w-4 h-4 ml-2" />
                   השלם מגן בגרות
                 </>
               )}

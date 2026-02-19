@@ -10,6 +10,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react'
 import {
+import { ArrowLeftIcon, ArrowRightIcon, ArrowsClockwiseIcon, CheckIcon, ClockIcon, EyeIcon, GitMergeIcon, PencilSimpleIcon, UserIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
   Dialog,
   DialogContent,
   DialogDescription,
@@ -25,19 +26,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Separator } from '@/components/ui/separator'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  AlertTriangle,
-  Check,
-  X,
-  GitMerge,
-  Clock,
-  User,
-  ArrowLeft,
-  ArrowRight,
-  RefreshCw,
-  Eye,
-  Edit3
-} from 'lucide-react'
+
 
 import { Bagrut, Presentation, ProgramPiece, DetailedGrading } from '@/types/bagrut.types'
 
@@ -329,7 +318,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <GitMerge className="w-6 h-6 text-orange-500" />
+            <GitMergeIcon className="w-6 h-6 text-orange-500" />
             זוהו קונפליקטים בנתונים
           </DialogTitle>
           <DialogDescription>
@@ -337,10 +326,10 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        {/* User Info */}
+        {/* UserIcon Info */}
         {userInfo && (
           <Alert>
-            <Clock className="h-4 w-4" />
+            <ClockIcon className="h-4 w-4" />
             <AlertDescription>
               <div className="flex items-center justify-between text-sm">
                 <span>
@@ -377,7 +366,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                 </p>
               </div>
               <Button onClick={handleApplyAllSuggestions} variant="outline">
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <ArrowsClockwiseIcon className="w-4 h-4 mr-2" />
                 החל הצעות אוטומטיות
               </Button>
             </div>
@@ -401,7 +390,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label className="text-sm font-medium flex items-center gap-2">
-                            <User className="w-4 h-4 text-blue-500" />
+                            <UserIcon className="w-4 h-4 text-blue-500" />
                             הגרסה שלך
                           </Label>
                           <div className="p-3 bg-blue-50 rounded">
@@ -410,7 +399,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                         </div>
                         <div className="space-y-2">
                           <Label className="text-sm font-medium flex items-center gap-2">
-                            <RefreshCw className="w-4 h-4 text-orange-500" />
+                            <ArrowsClockwiseIcon className="w-4 h-4 text-orange-500" />
                             גרסת השרת
                           </Label>
                           <div className="p-3 bg-orange-50 rounded">
@@ -465,7 +454,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                       >
                         <div className="flex items-center gap-2 mb-2">
                           {fieldResolutions[conflict.field] === 'local' && 
-                            <Check className="w-4 h-4 text-blue-500" />}
+                            <CheckIcon className="w-4 h-4 text-blue-500" />}
                           <Label className="text-sm font-medium text-blue-700">
                             השתמש בגרסה המקומית
                           </Label>
@@ -486,7 +475,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                       >
                         <div className="flex items-center gap-2 mb-2">
                           {fieldResolutions[conflict.field] === 'server' && 
-                            <Check className="w-4 h-4 text-orange-500" />}
+                            <CheckIcon className="w-4 h-4 text-orange-500" />}
                           <Label className="text-sm font-medium text-orange-700">
                             השתמש בגרסת השרת
                           </Label>
@@ -507,7 +496,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                       >
                         <div className="flex items-center gap-2 mb-2">
                           {fieldResolutions[conflict.field] === 'custom' && 
-                            <Check className="w-4 h-4 text-green-500" />}
+                            <CheckIcon className="w-4 h-4 text-green-500" />}
                           <Label className="text-sm font-medium text-green-700">
                             ערך מותאם אישית
                           </Label>
@@ -543,7 +532,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
             </div>
 
             <Alert>
-              <Eye className="h-4 w-4" />
+              <EyeIcon className="h-4 w-4" />
               <AlertDescription>
                 תצוגה זו מבוססת על הבחירות הנוכחיות שלך. 
                 {!isAllResolved && ' אנא השלם את פתרון כל הקונפליקטים.'}
@@ -598,7 +587,7 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                 variant="outline"
                 onClick={() => handleResolveConflict('abort')}
               >
-                <X className="w-4 h-4 mr-2" />
+                <XIcon className="w-4 h-4 mr-2" />
                 ביטול
               </Button>
             </div>
@@ -608,21 +597,21 @@ const ConflictResolutionModal: React.FC<ConflictResolutionModalProps> = ({
                 variant="outline"
                 onClick={() => handleResolveConflict('use_server')}
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeftIcon className="w-4 h-4 mr-2" />
                 השתמש בגרסת השרת
               </Button>
               <Button
                 variant="outline"
                 onClick={() => handleResolveConflict('use_local')}
               >
-                <ArrowRight className="w-4 h-4 mr-2" />
+                <ArrowRightIcon className="w-4 h-4 mr-2" />
                 השתמש בגרסה המקומית
               </Button>
               <Button
                 onClick={() => handleResolveConflict('merge')}
                 disabled={!isAllResolved}
               >
-                <GitMerge className="w-4 h-4 mr-2" />
+                <GitMergeIcon className="w-4 h-4 mr-2" />
                 מזג שינויים
               </Button>
             </div>

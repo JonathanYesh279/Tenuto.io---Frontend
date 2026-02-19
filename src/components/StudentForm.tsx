@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Save, X, Plus, Trash2, Loader, AlertCircle } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import apiService from '../services/apiService'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { CircleNotchIcon, FloppyDiskIcon, PlusIcon, TrashIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface StudentFormProps {
   studentId?: string | null
@@ -341,7 +342,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded p-8">
           <div className="flex items-center">
-            <Loader className="w-6 h-6 animate-spin mr-3" />
+            <CircleNotchIcon className="w-6 h-6 animate-spin mr-3" />
             <span>טוען נתוני תלמיד...</span>
           </div>
         </div>
@@ -376,7 +377,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700"
             >
-              <X className="w-6 h-6" />
+              <XIcon className="w-6 h-6" />
             </button>
           </div>
 
@@ -410,7 +411,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   />
                   {errors.firstName && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                      <WarningCircleIcon className="w-3 h-3" />
                       {errors.firstName}
                     </p>
                   )}
@@ -431,7 +432,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   />
                   {errors.lastName && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                      <WarningCircleIcon className="w-3 h-3" />
                       {errors.lastName}
                     </p>
                   )}
@@ -452,7 +453,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   />
                   {errors.phone && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                      <WarningCircleIcon className="w-3 h-3" />
                       {errors.phone}
                     </p>
                   )}
@@ -475,7 +476,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   />
                   {errors.age && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                      <WarningCircleIcon className="w-3 h-3" />
                       {errors.age}
                     </p>
                   )}
@@ -522,7 +523,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   />
                   {errors.parentPhone && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                      <WarningCircleIcon className="w-3 h-3" />
                       {errors.parentPhone}
                     </p>
                   )}
@@ -543,7 +544,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   />
                   {errors.parentEmail && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                      <WarningCircleIcon className="w-3 h-3" />
                       {errors.parentEmail}
                     </p>
                   )}
@@ -564,7 +565,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                   />
                   {errors.studentEmail && (
                     <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
+                      <WarningCircleIcon className="w-3 h-3" />
                       {errors.studentEmail}
                     </p>
                   )}
@@ -597,7 +598,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                 </select>
                 {errors.class && (
                   <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                    <WarningCircleIcon className="w-3 h-3" />
                     {errors.class}
                   </p>
                 )}
@@ -647,7 +648,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                     onClick={addInstrument}
                     className="flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-muted text-sm"
                   >
-                    <Plus className="w-4 h-4 mr-1" />
+                    <PlusIcon className="w-4 h-4 mr-1" />
                     הוסף כלי
                   </button>
                 </div>
@@ -673,7 +674,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                           </select>
                           {errors[`instrument_${index}`] && (
                             <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                              <AlertCircle className="w-3 h-3" />
+                              <WarningCircleIcon className="w-3 h-3" />
                               {errors[`instrument_${index}`]}
                             </p>
                           )}
@@ -703,7 +704,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                           </div>
                           {errors[`stage_${index}`] && (
                             <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                              <AlertCircle className="w-3 h-3" />
+                              <WarningCircleIcon className="w-3 h-3" />
                               {errors[`stage_${index}`]}
                             </p>
                           )}
@@ -742,7 +743,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                               onClick={() => removeInstrument(index)}
                               className="p-2 text-red-600 hover:text-red-800"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" />
                             </button>
                           )}
                         </div>
@@ -899,7 +900,7 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
                 </div>
                 {errors.instruments && (
                   <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
+                    <WarningCircleIcon className="w-3 h-3" />
                     {errors.instruments}
                   </p>
                 )}
@@ -983,9 +984,9 @@ export default function StudentForm({ studentId, onClose, onSave }: StudentFormP
               className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-muted disabled:opacity-50"
             >
               {loading ? (
-                <Loader className="w-4 h-4 animate-spin mr-2" />
+                <CircleNotchIcon className="w-4 h-4 animate-spin mr-2" />
               ) : (
-                <Save className="w-4 h-4 mr-2" />
+                <FloppyDiskIcon className="w-4 h-4 mr-2" />
               )}
               {studentId ? 'שמור שינויים' : 'הוסף תלמיד'}
             </button>

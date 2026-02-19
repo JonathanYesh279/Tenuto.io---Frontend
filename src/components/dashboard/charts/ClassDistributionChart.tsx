@@ -6,7 +6,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { BarChart, DonutChart, ProgressRingChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type ClassDistribution } from '../../../services/enhancedDashboardAnalytics';
-import { GraduationCap, BarChart3, PieChart, Grid3X3, Layers } from 'lucide-react';
+import { ChartBarIcon, ChartPieIcon, GraduationCapIcon, GridNineIcon, StackIcon } from '@phosphor-icons/react'
+
 
 interface ClassDistributionChartProps {
   schoolYearId?: string;
@@ -121,10 +122,10 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
   const avgPerClass = data.length > 0 ? Math.round(totalActive / data.length) : 0;
 
   const viewTabs = [
-    { id: 'bar' as const, label: 'עמודות', icon: BarChart3 },
-    { id: 'donut' as const, label: 'עוגה', icon: PieChart },
-    { id: 'cards' as const, label: 'כרטיסים', icon: Grid3X3 },
-    { id: 'levels' as const, label: 'שלבים', icon: Layers },
+    { id: 'bar' as const, label: 'עמודות', icon: ChartBarIcon },
+    { id: 'donut' as const, label: 'עוגה', icon: ChartPieIcon },
+    { id: 'cards' as const, label: 'כרטיסים', icon: GridNineIcon },
+    { id: 'levels' as const, label: 'שלבים', icon: StackIcon },
   ];
 
   if (loading) {
@@ -144,7 +145,7 @@ const ClassDistributionChart: React.FC<ClassDistributionChartProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-green-100 rounded">
-            <GraduationCap className="w-5 h-5 text-green-600" />
+            <GraduationCapIcon className="w-5 h-5 text-green-600" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">התפלגות לפי כיתות</h3>

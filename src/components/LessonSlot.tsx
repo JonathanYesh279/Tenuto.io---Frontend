@@ -1,6 +1,7 @@
 import React from 'react'
-import { Clock, MapPin, User, Music, Edit, Trash2 } from 'lucide-react'
+
 import { Card } from './ui/Card'
+import { ClockIcon, MapPinIcon, MusicNotesIcon, PencilIcon, TrashIcon, UserIcon } from '@phosphor-icons/react'
 
 interface LessonSlot {
   _id?: string
@@ -117,7 +118,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
                   }}
                   className="p-1 text-gray-400 hover:text-blue-600 rounded"
                 >
-                  <Edit className="w-3 h-3" />
+                  <PencilIcon className="w-3 h-3" />
                 </button>
               )}
               {onDelete && (
@@ -128,7 +129,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
                   }}
                   className="p-1 text-gray-400 hover:text-red-600 rounded"
                 >
-                  <Trash2 className="w-3 h-3" />
+                  <TrashIcon className="w-3 h-3" />
                 </button>
               )}
             </div>
@@ -174,7 +175,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
         <div className="flex items-center justify-between">
           {showTime && (
             <div className="flex items-center space-x-2 space-x-reverse">
-              <Clock className="w-4 h-4 text-gray-400" />
+              <ClockIcon className="w-4 h-4 text-gray-400" />
               <span className="text-sm font-medium text-gray-900">
                 {lesson.time} - {endTime}
               </span>
@@ -194,7 +195,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
                   }}
                   className="p-1 text-gray-400 hover:text-blue-600 rounded"
                 >
-                  <Edit className="w-4 h-4" />
+                  <PencilIcon className="w-4 h-4" />
                 </button>
               )}
               {onDelete && (
@@ -205,7 +206,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
                   }}
                   className="p-1 text-gray-400 hover:text-red-600 rounded"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <TrashIcon className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -215,7 +216,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
         {/* Student info */}
         {showStudent && lesson.studentName && (
           <div className="flex items-center space-x-2 space-x-reverse">
-            <User className="w-4 h-4 text-gray-400" />
+            <UserIcon className="w-4 h-4 text-gray-400" />
             <span className="text-sm text-gray-700">{lesson.studentName}</span>
           </div>
         )}
@@ -223,7 +224,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
         {/* Available slot indicator */}
         {!lesson.studentName && isAvailable && (
           <div className="flex items-center space-x-2 space-x-reverse">
-            <User className="w-4 h-4 text-gray-400" />
+            <UserIcon className="w-4 h-4 text-gray-400" />
             <span className="text-sm text-gray-500 italic">זמין לשיעור</span>
           </div>
         )}
@@ -231,7 +232,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
         {/* Instrument and stage */}
         {showInstrument && lesson.instrumentName && (
           <div className="flex items-center space-x-2 space-x-reverse">
-            <Music className="w-4 h-4 text-gray-400" />
+            <MusicNotesIcon className="w-4 h-4 text-gray-400" />
             <span className="text-sm text-gray-700">{lesson.instrumentName}</span>
             {lesson.currentStage && (
               <span className={`
@@ -247,7 +248,7 @@ const LessonSlot: React.FC<LessonSlotProps> = ({
         {/* Location */}
         {showLocation && lesson.location && (
           <div className="flex items-center space-x-2 space-x-reverse">
-            <MapPin className="w-4 h-4 text-gray-400" />
+            <MapPinIcon className="w-4 h-4 text-gray-400" />
             <span className="text-sm text-gray-600">{lesson.location}</span>
           </div>
         )}

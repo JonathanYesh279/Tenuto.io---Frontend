@@ -5,8 +5,9 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { Activity, Clock, Database, Zap, AlertCircle, CheckCircle, TrendingUp } from 'lucide-react'
+
 import { Card } from './ui/Card'
+import { ActivityIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, LightningIcon, TrendUpIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface PerformanceMetrics {
   renderTime: number
@@ -212,9 +213,9 @@ function MetricStatus({ value, thresholds, unit = '' }: {
 
   const status = getStatus()
   const icons = {
-    good: <CheckCircle className="w-4 h-4 text-green-500" />,
-    warning: <AlertCircle className="w-4 h-4 text-yellow-500" />,
-    critical: <AlertCircle className="w-4 h-4 text-red-500" />
+    good: <CheckCircleIcon className="w-4 h-4 text-green-500" />,
+    warning: <WarningCircleIcon className="w-4 h-4 text-yellow-500" />,
+    critical: <WarningCircleIcon className="w-4 h-4 text-red-500" />
   }
 
   const colors = {
@@ -296,7 +297,7 @@ export const PerformanceMonitor: React.FC<{ isOpen: boolean; onClose: () => void
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-bold flex items-center gap-2">
-            <Activity className="w-5 h-5" />
+            <ActivityIcon className="w-5 h-5" />
             מוניטור ביצועים
           </h2>
           <button
@@ -310,16 +311,16 @@ export const PerformanceMonitor: React.FC<{ isOpen: boolean; onClose: () => void
         {/* Tab Navigation */}
         <div className="flex border-b">
           {[
-            { id: 'overview', label: 'סקירה כללית', icon: TrendingUp },
-            { id: 'components', label: 'קומפוננטות', icon: Database },
-            { id: 'recommendations', label: 'המלצות', icon: Zap }
+            { id: 'overview', label: 'סקירה כללית', icon: TrendUpIcon },
+            { id: 'components', label: 'קומפוננטות', icon: DatabaseIcon },
+            { id: 'recommendations', label: 'המלצות', icon: LightningIcon }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-3 border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-primary-500 text-primary-600 bg-primary-50'
+                  ? 'border-primary text-primary bg-muted/50'
                   : 'border-transparent text-gray-600 hover:text-gray-800'
               }`}
             >
@@ -343,7 +344,7 @@ export const PerformanceMonitor: React.FC<{ isOpen: boolean; onClose: () => void
                         unit="ms"
                       />
                     </div>
-                    <Clock className="w-8 h-8 text-blue-500" />
+                    <ClockIcon className="w-8 h-8 text-blue-500" />
                   </div>
                 </Card>
 
@@ -357,7 +358,7 @@ export const PerformanceMonitor: React.FC<{ isOpen: boolean; onClose: () => void
                         unit="MB"
                       />
                     </div>
-                    <Database className="w-8 h-8 text-purple-500" />
+                    <DatabaseIcon className="w-8 h-8 text-purple-500" />
                   </div>
                 </Card>
 
@@ -371,7 +372,7 @@ export const PerformanceMonitor: React.FC<{ isOpen: boolean; onClose: () => void
                         unit="%"
                       />
                     </div>
-                    <Zap className="w-8 h-8 text-green-500" />
+                    <LightningIcon className="w-8 h-8 text-green-500" />
                   </div>
                 </Card>
               </div>
@@ -479,7 +480,7 @@ export const PerformanceMonitor: React.FC<{ isOpen: boolean; onClose: () => void
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary"
           >
             סגור
           </button>

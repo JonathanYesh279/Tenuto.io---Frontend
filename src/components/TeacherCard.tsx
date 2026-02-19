@@ -1,7 +1,8 @@
 import React from 'react'
-import { Users, Calendar, Phone, Mail } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
+import { CalendarIcon, EnvelopeIcon, PhoneIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface Teacher {
   _id: string
@@ -173,7 +174,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
           {showStudentCount && (
             <div className="mb-3">
               <div className="flex items-center space-x-2 space-x-reverse text-sm text-gray-600">
-                <Users className="w-4 h-4" />
+                <UsersIcon className="w-4 h-4" />
                 <span>
                   {studentCount} {studentCount === 1 ? 'תלמיד' : 'תלמידים'}
                 </span>
@@ -185,7 +186,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
           {showSchedule && scheduleInfo.lessons > 0 && (
             <div className="mb-3">
               <div className="flex items-center space-x-2 space-x-reverse text-sm text-gray-600">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 <span>
                   {scheduleInfo.lessons} שיעורים ({scheduleInfo.hours} שעות בשבוע)
                 </span>
@@ -198,7 +199,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
             <div className="border-t border-gray-100 pt-3 mt-3 space-y-2">
               {teacher.personalInfo.phone && (
                 <div className="flex items-center space-x-2 space-x-reverse text-sm">
-                  <Phone className="w-3 h-3 text-gray-400" />
+                  <PhoneIcon className="w-3 h-3 text-gray-400" />
                   <span className="text-gray-700 font-mono" dir="ltr">
                     {teacher.personalInfo.phone}
                   </span>
@@ -206,7 +207,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
               )}
               {teacher.personalInfo.email && (
                 <div className="flex items-center space-x-2 space-x-reverse text-sm">
-                  <Mail className="w-3 h-3 text-gray-400" />
+                  <EnvelopeIcon className="w-3 h-3 text-gray-400" />
                   <span className="text-gray-700 font-mono" dir="ltr">
                     {teacher.personalInfo.email}
                   </span>

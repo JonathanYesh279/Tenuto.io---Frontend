@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { ChevronDown, Timer } from 'lucide-react'
+
 import { VALID_DURATIONS, ValidationResult } from '../../utils/validationUtils'
 import ValidationIndicator from '../ui/ValidationIndicator'
+import { CaretDownIcon, TimerIcon } from '@phosphor-icons/react'
 
 interface DurationSelectProps {
   value: number | string
@@ -134,7 +135,7 @@ const DurationSelect: React.FC<DurationSelectProps> = ({
       <div className="relative">
         {/* Icon */}
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <Timer className="w-4 h-4 text-gray-400" />
+          <TimerIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Select field */}
@@ -164,7 +165,7 @@ const DurationSelect: React.FC<DurationSelectProps> = ({
         
         {/* Dropdown arrow */}
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <ChevronDown className="w-4 h-4 text-gray-400" />
+          <CaretDownIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Validation icon */}

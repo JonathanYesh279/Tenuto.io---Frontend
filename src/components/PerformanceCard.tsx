@@ -1,20 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  Calendar, 
-  MapPin, 
-  Clock, 
-  Music, 
-  Edit2, 
-  Save, 
-  X,
-  Play,
-  Star,
-  CheckCircle,
-  AlertCircle,
-  XCircle
-} from 'lucide-react';
+
 import { Card } from './ui/Card';
 import type { Performance } from '../types/bagrut.types';
+import { CalendarIcon, CheckCircleIcon, ClockIcon, FloppyDiskIcon, MapPinIcon, MusicNotesIcon, PencilSimpleIcon, PlayIcon, StarIcon, WarningCircleIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PerformanceCardProps {
   performance: Performance;
@@ -51,10 +39,10 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
 
   const getStatusIcon = (status: Performance['status']) => {
     switch (status) {
-      case 'completed': return <CheckCircle className="w-4 h-4" />;
-      case 'scheduled': return <AlertCircle className="w-4 h-4" />;
-      case 'cancelled': return <XCircle className="w-4 h-4" />;
-      default: return <Clock className="w-4 h-4" />;
+      case 'completed': return <CheckCircleIcon className="w-4 h-4" />;
+      case 'scheduled': return <WarningCircleIcon className="w-4 h-4" />;
+      case 'cancelled': return <XCircleIcon className="w-4 h-4" />;
+      default: return <ClockIcon className="w-4 h-4" />;
     }
   };
 
@@ -74,7 +62,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <Play className="w-5 h-5 text-primary" />
+              <PlayIcon className="w-5 h-5 text-primary" />
               {isEditing ? (
                 <input
                   type="text"
@@ -103,7 +91,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
                 }}
                 className="opacity-0 group-hover:opacity-100 p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-all"
               >
-                <Edit2 className="w-4 h-4" />
+                <PencilSimpleIcon className="w-4 h-4" />
               </button>
             ) : (
               <div className="flex gap-1">
@@ -114,7 +102,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
                   }}
                   className="p-1 text-green-600 hover:bg-green-50 rounded"
                 >
-                  <Save className="w-4 h-4" />
+                  <FloppyDiskIcon className="w-4 h-4" />
                 </button>
                 <button
                   onClick={(e) => {
@@ -123,7 +111,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
                   }}
                   className="p-1 text-red-600 hover:bg-red-50 rounded"
                 >
-                  <X className="w-4 h-4" />
+                  <XIcon className="w-4 h-4" />
                 </button>
               </div>
             )}
@@ -133,7 +121,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
         {/* Performance Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <Calendar className="w-4 h-4 text-gray-500" />
+            <CalendarIcon className="w-4 h-4 text-gray-500" />
             {isEditing ? (
               <input
                 type="datetime-local"
@@ -161,7 +149,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <MapPin className="w-4 h-4 text-gray-500" />
+            <MapPinIcon className="w-4 h-4 text-gray-500" />
             {isEditing ? (
               <input
                 type="text"
@@ -176,7 +164,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <Clock className="w-4 h-4 text-gray-500" />
+            <ClockIcon className="w-4 h-4 text-gray-500" />
             {isEditing ? (
               <input
                 type="text"
@@ -191,7 +179,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <Music className="w-4 h-4 text-gray-500" />
+            <MusicNotesIcon className="w-4 h-4 text-gray-500" />
             <span>{performance.pieces.length} יצירות</span>
           </div>
         </div>
@@ -200,7 +188,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
         {performance.evaluation && (
           <div className="mb-3">
             <div className="flex items-center gap-2 mb-2">
-              <Star className="w-4 h-4 text-yellow-500" />
+              <StarIcon className="w-4 h-4 text-yellow-500" />
               <span className="text-sm font-medium text-gray-700">הערכה</span>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
@@ -259,7 +247,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({
         {/* Recording Links */}
         {performance.recordingLinks && performance.recordingLinks.length > 0 && (
           <div className="mt-3 flex items-center gap-2 text-sm text-blue-600">
-            <Play className="w-4 h-4" />
+            <PlayIcon className="w-4 h-4" />
             <span>{performance.recordingLinks.length} הקלטות</span>
           </div>
         )}

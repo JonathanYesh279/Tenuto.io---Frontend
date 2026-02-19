@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle, 
-  Info, 
-  X,
-  Music,
-  Users,
-  GraduationCap,
-  BookOpen,
-  Calendar
-} from 'lucide-react'
+import { BookOpenIcon, CalendarIcon, CheckCircleIcon, GraduationCapIcon, InfoIcon, MusicNotesIcon, UsersIcon, WarningIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
+
 
 export interface NotificationProps {
   id?: string
@@ -48,22 +38,22 @@ export const Notification: React.FC<NotificationProps> = ({
     const styles = {
       success: {
         container: 'bg-green-50 border-green-200 text-green-800',
-        icon: CheckCircle,
+        icon: CheckCircleIcon,
         iconColor: 'text-green-500'
       },
       error: {
         container: 'bg-red-50 border-red-200 text-red-800',
-        icon: XCircle,
+        icon: XCircleIcon,
         iconColor: 'text-red-500'
       },
       warning: {
         container: 'bg-orange-50 border-orange-200 text-orange-800',
-        icon: AlertTriangle,
+        icon: WarningIcon,
         iconColor: 'text-orange-500'
       },
       info: {
         container: 'bg-blue-50 border-blue-200 text-blue-800',
-        icon: Info,
+        icon: InfoIcon,
         iconColor: 'text-blue-500'
       }
     }
@@ -72,11 +62,11 @@ export const Notification: React.FC<NotificationProps> = ({
 
   const getContextIcon = () => {
     const icons = {
-      students: Users,
-      teachers: GraduationCap,
-      lessons: BookOpen,
-      orchestras: Music,
-      general: Info
+      students: UsersIcon,
+      teachers: GraduationCapIcon,
+      lessons: BookOpenIcon,
+      orchestras: MusicNotesIcon,
+      general: InfoIcon
     }
     return icons[context]
   }
@@ -144,7 +134,7 @@ export const Notification: React.FC<NotificationProps> = ({
             }`}
             aria-label="סגור הודעה"
           >
-            <X className="w-4 h-4" />
+            <XIcon className="w-4 h-4" />
           </button>
         )}
       </div>
@@ -254,32 +244,32 @@ export const EmptyState: React.FC<{
       students: {
         title: 'אין תלמידים',
         message: 'לא נמצאו תלמידים במערכת. התחל בהוספת תלמיד ראשון.',
-        icon: Users
+        icon: UsersIcon
       },
       teachers: {
         title: 'אין מורים',
         message: 'לא נמצאו מורים במערכת. התחל בהוספת מורה ראשון.',
-        icon: GraduationCap
+        icon: GraduationCapIcon
       },
       lessons: {
         title: 'אין שיעורים',
         message: 'לא נמצאו שיעורים במערכת. התחל ביצירת שיעור ראשון.',
-        icon: BookOpen
+        icon: BookOpenIcon
       },
       orchestras: {
         title: 'אין תזמורות',
         message: 'לא נמצאו תזמורות במערכת. התחל ביצירת תזמורת ראשונה.',
-        icon: Music
+        icon: MusicNotesIcon
       },
       search: {
         title: 'לא נמצאו תוצאות',
         message: 'נסה לחפש עם מילות מפתח אחרות או בדוק את הפילטרים.',
-        icon: Info
+        icon: InfoIcon
       },
       general: {
         title: 'אין נתונים',
         message: 'לא נמצאו נתונים להצגה.',
-        icon: Info
+        icon: InfoIcon
       }
     }
     return content[context]
@@ -306,7 +296,7 @@ export const EmptyState: React.FC<{
         {action && (
           <button
             onClick={action.onClick}
-            className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-reisinger-yonatan"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors font-reisinger-yonatan"
           >
             {action.label}
           </button>

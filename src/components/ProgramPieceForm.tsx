@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Save, X, Music, Clock, User, AlertCircle } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import type { ProgramPiece } from '../types/bagrut.types'
+import { ClockIcon, FloppyDiskIcon, MusicNotesIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface ProgramPieceFormProps {
   initialData?: Partial<ProgramPiece>
@@ -138,7 +139,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
           onClick={onCancel}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -147,7 +148,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
         {/* General Error */}
         {errors.general && (
           <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <WarningCircleIcon className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
         )}
@@ -155,7 +156,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
         {/* Basic Information */}
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Music className="w-5 h-5 text-gray-600" />
+            <MusicNotesIcon className="w-5 h-5 text-gray-600" />
             פרטי היצירה
           </h3>
           
@@ -193,7 +194,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
                 משך הביצוע
               </label>
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" />
+                <ClockIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   value={formData.duration}
@@ -218,7 +219,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
                 שם המלחין <span className="text-red-500">*</span>
               </label>
               <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-gray-400" />
+                <UserIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   value={formData.composerName}
@@ -309,7 +310,7 @@ const ProgramPieceForm: React.FC<ProgramPieceFormProps> = ({
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 ml-2" />
+                <FloppyDiskIcon className="w-4 h-4 ml-2" />
                 שמור יצירה
               </>
             )}

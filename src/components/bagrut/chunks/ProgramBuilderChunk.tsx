@@ -18,27 +18,14 @@ import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Textarea } from '@/components/ui/textarea'
 import {
+import { ArrowsClockwiseIcon, CheckCircleIcon, ClockIcon, DotsSixIcon, EyeIcon, EyeSlashIcon, FloppyDiskIcon, MusicNotesIcon, PlusIcon, TrashIcon, UserIcon, WarningIcon, YoutubeIcon } from '@phosphor-icons/react'
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Music,
-  Plus,
-  Trash2,
-  GripVertical,
-  Clock,
-  User,
-  Youtube,
-  AlertTriangle,
-  CheckCircle,
-  Save,
-  RefreshCw,
-  Eye,
-  EyeOff
-} from 'lucide-react'
+
 
 import { ProgramPiece } from '@/types/bagrut.types'
 
@@ -154,7 +141,7 @@ const ProgramPieceItem = memo<{
           <div className="flex items-center gap-3">
             {!readonly && (
               <div className="cursor-grab">
-                <GripVertical className="w-4 h-4 text-gray-400" />
+                <DotsSixIcon className="w-4 h-4 text-gray-400" />
               </div>
             )}
             
@@ -170,14 +157,14 @@ const ProgramPieceItem = memo<{
                 <p className="text-sm text-gray-600 text-right">
                   {piece.composer && (
                     <>
-                      <User className="w-3 h-3 inline ml-1" />
+                      <UserIcon className="w-3 h-3 inline ml-1" />
                       {piece.composer}
                     </>
                   )}
                   {piece.duration && (
                     <>
                       {piece.composer && ' • '}
-                      <Clock className="w-3 h-3 inline ml-1" />
+                      <ClockIcon className="w-3 h-3 inline ml-1" />
                       {piece.duration}
                     </>
                   )}
@@ -188,9 +175,9 @@ const ProgramPieceItem = memo<{
 
           <div className="flex items-center gap-2">
             {isComplete ? (
-              <CheckCircle className="w-5 h-5 text-green-500" />
+              <CheckCircleIcon className="w-5 h-5 text-green-500" />
             ) : (
-              <AlertTriangle className="w-5 h-5 text-yellow-500" />
+              <WarningIcon className="w-5 h-5 text-yellow-500" />
             )}
             
             {pieceErrors.length > 0 && (
@@ -208,7 +195,7 @@ const ProgramPieceItem = memo<{
                   onDelete(index)
                 }}
               >
-                <Trash2 className="w-4 h-4 text-red-500" />
+                <TrashIcon className="w-4 h-4 text-red-500" />
               </Button>
             )}
           </div>
@@ -222,7 +209,7 @@ const ProgramPieceItem = memo<{
             <div className="mb-4 space-y-2">
               {pieceErrors.map((error, idx) => (
                 <Alert key={idx} variant="destructive">
-                  <AlertTriangle className="h-4 w-4" />
+                  <WarningIcon className="h-4 w-4" />
                   <AlertDescription>{error.message}</AlertDescription>
                 </Alert>
               ))}
@@ -296,7 +283,7 @@ const ProgramPieceItem = memo<{
                   size="sm"
                   onClick={() => window.open(piece.youtubeLink, '_blank')}
                 >
-                  <Youtube className="w-4 h-4 text-red-500" />
+                  <YoutubeIcon className="w-4 h-4 text-red-500" />
                 </Button>
               )}
             </div>
@@ -522,7 +509,7 @@ const ProgramBuilderChunk: React.FC<ProgramBuilderChunkProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Music className="w-6 h-6 text-purple-600" />
+              <MusicNotesIcon className="w-6 h-6 text-purple-600" />
               תכנית הרסיטל
             </div>
             <div className="flex items-center gap-3">
@@ -535,9 +522,9 @@ const ProgramBuilderChunk: React.FC<ProgramBuilderChunkProps> = ({
                   }
                   className="text-xs"
                 >
-                  {autoSaveStatus.status === 'saved' && <CheckCircle className="w-3 h-3 mr-1" />}
-                  {autoSaveStatus.status === 'saving' && <RefreshCw className="w-3 h-3 mr-1 animate-spin" />}
-                  {autoSaveStatus.status === 'error' && <AlertTriangle className="w-3 h-3 mr-1" />}
+                  {autoSaveStatus.status === 'saved' && <CheckCircleIcon className="w-3 h-3 mr-1" />}
+                  {autoSaveStatus.status === 'saving' && <ArrowsClockwiseIcon className="w-3 h-3 mr-1 animate-spin" />}
+                  {autoSaveStatus.status === 'error' && <WarningIcon className="w-3 h-3 mr-1" />}
                   
                   {autoSaveStatus.status === 'saved' && 'נשמר'}
                   {autoSaveStatus.status === 'saving' && 'שומר...'}
@@ -615,7 +602,7 @@ const ProgramBuilderChunk: React.FC<ProgramBuilderChunkProps> = ({
                   size="sm"
                   onClick={() => setShowValidation(!showValidation)}
                 >
-                  {showValidation ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
+                  {showValidation ? <EyeSlashIcon className="w-4 h-4 mr-1" /> : <EyeIcon className="w-4 h-4 mr-1" />}
                   {showValidation ? 'הסתר שגיאות' : 'הצג שגיאות'}
                 </Button>
               )}
@@ -623,7 +610,7 @@ const ProgramBuilderChunk: React.FC<ProgramBuilderChunkProps> = ({
 
             {!readonly && (
               <Button onClick={handleAddPiece}>
-                <Plus className="w-4 h-4 mr-1" />
+                <PlusIcon className="w-4 h-4 mr-1" />
                 הוסף יצירה
               </Button>
             )}
@@ -638,7 +625,7 @@ const ProgramBuilderChunk: React.FC<ProgramBuilderChunkProps> = ({
             .filter(e => e.index === -1)
             .map((error, index) => (
               <Alert key={index} variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
+                <WarningIcon className="h-4 w-4" />
                 <AlertDescription>{error.message}</AlertDescription>
               </Alert>
             ))}
@@ -650,13 +637,13 @@ const ProgramBuilderChunk: React.FC<ProgramBuilderChunkProps> = ({
         {program.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <Music className="w-12 h-12 text-gray-400 mb-4" />
+              <MusicNotesIcon className="w-12 h-12 text-gray-400 mb-4" />
               <p className="text-gray-500 text-center mb-4">
                 לא נוספו יצירות לתכנית עדיין
               </p>
               {!readonly && (
                 <Button onClick={handleAddPiece}>
-                  <Plus className="w-4 h-4 mr-1" />
+                  <PlusIcon className="w-4 h-4 mr-1" />
                   הוסף יצירה ראשונה
                 </Button>
               )}
@@ -684,7 +671,7 @@ const ProgramBuilderChunk: React.FC<ProgramBuilderChunkProps> = ({
       {/* Requirements Check */}
       {requiredPieces === 5 && !stats.hasMemoryPiece && program.length >= requiredPieces && (
         <Alert>
-          <AlertTriangle className="h-4 w-4" />
+          <WarningIcon className="h-4 w-4" />
           <AlertDescription>
             תלמידי 5 יחידות נדרשים לבצע יצירה אחת לפחות בעל פה. 
             ציין "בעל פה" בשדה הפרק/חלק של אחת היצירות.

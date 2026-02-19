@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
-import { ArrowRight, RefreshCw, User, GraduationCap, Calendar, CheckCircle, Music, BookOpen, FileText } from 'lucide-react'
+
 import { TabType } from '../types'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DetailPageHeader } from '@/components/domain'
@@ -18,6 +18,7 @@ import OrchestraTab from './tabs/OrchestraTab'
 import TheoryTabOptimized from './tabs/TheoryTabOptimized'
 import apiService from '../../../../services/apiService'
 import { getDisplayName, getInitials } from '../../../../utils/nameUtils'
+import { ArrowRightIcon, ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, FileTextIcon, GraduationCapIcon, MusicNotesIcon, UserIcon } from '@phosphor-icons/react'
 
 // Placeholder tabs not yet implemented
 const AttendanceTab = ({ student }: { student: any }) => (
@@ -85,7 +86,7 @@ const StudentDetailsPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+          <ArrowsClockwiseIcon className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
           <div className="text-lg text-gray-600">טוען פרטי תלמיד...</div>
         </div>
       </div>
@@ -103,7 +104,7 @@ const StudentDetailsPage: React.FC = () => {
           onClick={() => window.location.reload()}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
-          <RefreshCw className="w-4 h-4" />
+          <ArrowsClockwiseIcon className="w-4 h-4" />
           נסה שוב
         </button>
       </div>
@@ -121,7 +122,7 @@ const StudentDetailsPage: React.FC = () => {
           onClick={() => navigate('/students')}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRightIcon className="w-4 h-4" />
           חזור לרשימת התלמידים
         </button>
       </div>
@@ -156,31 +157,31 @@ const StudentDetailsPage: React.FC = () => {
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabType)} className="w-full">
           <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
             <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <User className="h-4 w-4" />
+              <UserIcon className="h-4 w-4" />
               פרטים אישיים
             </TabsTrigger>
             <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <GraduationCap className="h-4 w-4" />
+              <GraduationCapIcon className="h-4 w-4" />
               מידע אקדמי
             </TabsTrigger>
             <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <Calendar className="h-4 w-4" />
+              <CalendarIcon className="h-4 w-4" />
               לוח זמנים
             </TabsTrigger>
             <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <CheckCircle className="h-4 w-4" />
+              <CheckCircleIcon className="h-4 w-4" />
               נוכחות
             </TabsTrigger>
             <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <Music className="h-4 w-4" />
+              <MusicNotesIcon className="h-4 w-4" />
               תזמורות
             </TabsTrigger>
             <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <BookOpen className="h-4 w-4" />
+              <BookOpenIcon className="h-4 w-4" />
               תאוריה
             </TabsTrigger>
             <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <FileText className="h-4 w-4" />
+              <FileTextIcon className="h-4 w-4" />
               מסמכים
             </TabsTrigger>
           </TabsList>

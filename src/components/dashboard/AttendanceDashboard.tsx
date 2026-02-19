@@ -1,30 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  Calendar,
-  Clock,
-  CheckSquare,
-  UserCheck,
-  UserX,
-  AlertTriangle,
-  TrendingUp,
-  TrendingDown,
-  Download,
-  Filter,
-  Search,
-  BarChart3,
-  PieChart,
-  Activity,
-  Bell,
-  ChevronRight,
-  Eye,
-  Edit,
-  FileText,
-  CalendarDays
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '@/utils/nameUtils'
+import { ActivityIcon, BellIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, ChartPieIcon, CheckSquareIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, MagnifyingGlassIcon, PencilIcon, TrendDownIcon, TrendUpIcon, UserCircleCheckIcon, UserCircleMinusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface AttendanceStats {
   totalStudents: number
@@ -131,12 +110,12 @@ export default function AttendanceDashboard() {
         attendanceData = await generateMockAttendanceData(allStudentIds, 'admin')
       }
 
-      // Filter by lesson type
+      // FunnelIcon by lesson type
       if (filterType !== 'all') {
         attendanceData = attendanceData.filter(record => record.lessonType === filterType)
       }
 
-      // Filter by search term
+      // FunnelIcon by search term
       if (searchTerm) {
         attendanceData = attendanceData.filter(record =>
           record.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -285,10 +264,10 @@ export default function AttendanceDashboard() {
 
   const getStatusIcon = (status: StudentAttendanceRecord['status']) => {
     switch (status) {
-      case 'present': return <CheckSquare className="w-4 h-4 text-green-600" />
-      case 'absent': return <UserX className="w-4 h-4 text-red-600" />
-      case 'late': return <Clock className="w-4 h-4 text-yellow-600" />
-      case 'excused': return <UserCheck className="w-4 h-4 text-blue-600" />
+      case 'present': return <CheckSquareIcon className="w-4 h-4 text-green-600" />
+      case 'absent': return <UserCircleMinusIcon className="w-4 h-4 text-red-600" />
+      case 'late': return <ClockIcon className="w-4 h-4 text-yellow-600" />
+      case 'excused': return <UserCircleCheckIcon className="w-4 h-4 text-blue-600" />
     }
   }
 
@@ -335,7 +314,7 @@ export default function AttendanceDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <Bell className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadAttendanceData}
@@ -372,10 +351,10 @@ export default function AttendanceDashboard() {
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8 px-6" dir="rtl">
               {[
-                { id: 'overview', label: 'סקירה כללית', icon: BarChart3 },
-                { id: 'marking', label: 'סימון נוכחות', icon: CheckSquare },
-                { id: 'reports', label: 'דוחות', icon: FileText },
-                { id: 'alerts', label: 'התראות', icon: Bell }
+                { id: 'overview', label: 'סקירה כללית', icon: ChartBarIcon },
+                { id: 'marking', label: 'סימון נוכחות', icon: CheckSquareIcon },
+                { id: 'reports', label: 'דוחות', icon: FileTextIcon },
+                { id: 'alerts', label: 'התראות', icon: BellIcon }
               ].map((tab) => {
                 const Icon = tab.icon
                 return (
@@ -407,7 +386,7 @@ export default function AttendanceDashboard() {
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-8">
                   <AttendanceStatCard
-                    icon={<Users className="w-6 h-6" />}
+                    icon={<UsersIcon className="w-6 h-6" />}
                     title="סה״כ תלמידים"
                     value={stats.totalStudents}
                     bgColor="bg-blue-50"
@@ -415,7 +394,7 @@ export default function AttendanceDashboard() {
                     borderColor="border-blue-200"
                   />
                   <AttendanceStatCard
-                    icon={<CheckSquare className="w-6 h-6" />}
+                    icon={<CheckSquareIcon className="w-6 h-6" />}
                     title="נוכחים היום"
                     value={stats.presentToday}
                     bgColor="bg-green-50"
@@ -423,7 +402,7 @@ export default function AttendanceDashboard() {
                     borderColor="border-green-200"
                   />
                   <AttendanceStatCard
-                    icon={<UserX className="w-6 h-6" />}
+                    icon={<UserCircleMinusIcon className="w-6 h-6" />}
                     title="נעדרים היום"
                     value={stats.absentToday}
                     bgColor="bg-red-50"
@@ -431,7 +410,7 @@ export default function AttendanceDashboard() {
                     borderColor="border-red-200"
                   />
                   <AttendanceStatCard
-                    icon={<Clock className="w-6 h-6" />}
+                    icon={<ClockIcon className="w-6 h-6" />}
                     title="איחורים היום"
                     value={stats.lateToday}
                     bgColor="bg-yellow-50"
@@ -439,7 +418,7 @@ export default function AttendanceDashboard() {
                     borderColor="border-yellow-200"
                   />
                   <AttendanceStatCard
-                    icon={<TrendingUp className="w-6 h-6" />}
+                    icon={<TrendUpIcon className="w-6 h-6" />}
                     title="נוכחות שבועית"
                     value={stats.weeklyAttendanceRate}
                     suffix="%"
@@ -448,7 +427,7 @@ export default function AttendanceDashboard() {
                     borderColor="border-purple-200"
                   />
                   <AttendanceStatCard
-                    icon={<BarChart3 className="w-6 h-6" />}
+                    icon={<ChartBarIcon className="w-6 h-6" />}
                     title="נוכחות חודשית"
                     value={stats.monthlyAttendanceRate}
                     suffix="%"
@@ -457,7 +436,7 @@ export default function AttendanceDashboard() {
                     borderColor="border-indigo-200"
                   />
                   <AttendanceStatCard
-                    icon={<AlertTriangle className="w-6 h-6" />}
+                    icon={<WarningIcon className="w-6 h-6" />}
                     title="התראות פעילות"
                     value={stats.alertsCount}
                     bgColor="bg-orange-50"
@@ -475,7 +454,7 @@ export default function AttendanceDashboard() {
                     {attendanceTrends.map((trend, index) => (
                       <div key={trend.date} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
-                          <CalendarDays className="w-5 h-5 text-gray-500" />
+                          <CalendarIcon className="w-5 h-5 text-gray-500" />
                           <span className="font-medium text-gray-900 font-reisinger-yonatan">
                             {new Date(trend.date).toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'short' })}
                           </span>
@@ -533,7 +512,7 @@ export default function AttendanceDashboard() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">חיפוש</label>
                     <div className="relative">
-                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                       <input
                         type="text"
                         placeholder="שם תלמיד או מורה..."
@@ -549,7 +528,7 @@ export default function AttendanceDashboard() {
                       onClick={exportAttendanceReport}
                       className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors w-full justify-center"
                     >
-                      <Download className="w-4 h-4" />
+                      <DownloadSimpleIcon className="w-4 h-4" />
                       <span className="font-reisinger-yonatan">ייצא דוח</span>
                     </button>
                   </div>
@@ -593,7 +572,7 @@ export default function AttendanceDashboard() {
                         {todayAttendance.length === 0 ? (
                           <tr>
                             <td colSpan={7} className="px-6 py-12 text-center">
-                              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                              <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                               <p className="text-gray-500 font-reisinger-yonatan">אין רשומות נוכחות לתאריך זה</p>
                             </td>
                           </tr>
@@ -634,24 +613,24 @@ export default function AttendanceDashboard() {
                                     className="text-green-600 hover:text-green-900"
                                     title="סמן כנוכח"
                                   >
-                                    <CheckSquare className="w-4 h-4" />
+                                    <CheckSquareIcon className="w-4 h-4" />
                                   </button>
                                   <button
                                     onClick={() => handleMarkAttendance(record.studentId, 'absent')}
                                     className="text-red-600 hover:text-red-900"
                                     title="סמן כנעדר"
                                   >
-                                    <UserX className="w-4 h-4" />
+                                    <UserCircleMinusIcon className="w-4 h-4" />
                                   </button>
                                   <button
                                     onClick={() => handleMarkAttendance(record.studentId, 'late')}
                                     className="text-yellow-600 hover:text-yellow-900"
                                     title="סמן כמאחר"
                                   >
-                                    <Clock className="w-4 h-4" />
+                                    <ClockIcon className="w-4 h-4" />
                                   </button>
                                   <button className="text-gray-400 hover:text-gray-600" title="ערוך">
-                                    <Edit className="w-4 h-4" />
+                                    <PencilIcon className="w-4 h-4" />
                                   </button>
                                 </div>
                               </td>
@@ -667,7 +646,7 @@ export default function AttendanceDashboard() {
 
             {activeView === 'reports' && (
               <div className="text-center py-12">
-                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <FileTextIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">דוחות נוכחות מתקדמים</h3>
                 <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
               </div>
@@ -678,7 +657,7 @@ export default function AttendanceDashboard() {
                 <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">התראות נוכחות</h2>
                 {attendanceAlerts.length === 0 ? (
                   <div className="text-center py-12">
-                    <Bell className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <BellIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">אין התראות חדשות</h3>
                     <p className="text-gray-600 font-reisinger-yonatan">כל התלמידים עם נוכחות תקינה</p>
                   </div>
@@ -691,7 +670,7 @@ export default function AttendanceDashboard() {
                     }`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <AlertTriangle className={`w-5 h-5 ${
+                          <WarningIcon className={`w-5 h-5 ${
                             alert.severity === 'high' ? 'text-red-600' :
                             alert.severity === 'medium' ? 'text-yellow-600' :
                             'text-blue-600'
@@ -706,10 +685,10 @@ export default function AttendanceDashboard() {
                         </div>
                         <div className="flex gap-2">
                           <button className="text-indigo-600 hover:text-indigo-800 p-1" title="צפה בפרטים">
-                            <Eye className="w-4 h-4" />
+                            <EyeIcon className="w-4 h-4" />
                           </button>
                           <button className="text-gray-400 hover:text-gray-600 p-1" title="סמן כטופל">
-                            <CheckSquare className="w-4 h-4" />
+                            <CheckSquareIcon className="w-4 h-4" />
                           </button>
                         </div>
                       </div>

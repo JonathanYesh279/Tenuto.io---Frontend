@@ -1,22 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Search,
-  Calendar,
-  MapPin,
-  Music,
-  UserCheck,
-  AlertCircle,
-  Save,
-  RefreshCw,
-  BarChart3
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
+import { ArrowsClockwiseIcon, CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, FloppyDiskIcon, MagnifyingGlassIcon, MapPinIcon, MusicNotesIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface AttendanceMember {
   id: string
@@ -265,7 +252,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
         <div className="flex items-center gap-2 text-red-800">
-          <AlertCircle className="w-5 h-5" />
+          <WarningCircleIcon className="w-5 h-5" />
           <div className="font-reisinger-yonatan">{error}</div>
         </div>
       </div>
@@ -275,7 +262,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
   if (!rehearsal) {
     return (
       <div className="text-center py-12">
-        <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
         <div className="text-gray-600 font-reisinger-yonatan">לא נמצאה חזרה</div>
       </div>
     )
@@ -297,7 +284,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
               onClick={loadRehearsalAttendance}
               className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
             >
-              <RefreshCw className="w-4 h-4" />
+              <ArrowsClockwiseIcon className="w-4 h-4" />
               רענן
             </button>
             <button
@@ -305,7 +292,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
               disabled={saving}
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
             >
-              <Save className="w-4 h-4" />
+              <FloppyDiskIcon className="w-4 h-4" />
               {saving ? 'שומר...' : 'שמור נוכחות'}
             </button>
           </div>
@@ -313,21 +300,21 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-3">
-            <Music className="w-5 h-5 text-indigo-600" />
+            <MusicNotesIcon className="w-5 h-5 text-indigo-600" />
             <div>
               <div className="font-medium text-gray-900 font-reisinger-yonatan">{rehearsal.orchestraName}</div>
               <div className="text-sm text-gray-600">{rehearsal.date}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Clock className="w-5 h-5 text-indigo-600" />
+            <ClockIcon className="w-5 h-5 text-indigo-600" />
             <div>
               <div className="font-medium text-gray-900">{rehearsal.startTime} - {rehearsal.endTime}</div>
               <div className="text-sm text-gray-600">{rehearsal.duration} דקות</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <MapPin className="w-5 h-5 text-indigo-600" />
+            <MapPinIcon className="w-5 h-5 text-indigo-600" />
             <div>
               <div className="font-medium text-gray-900">{rehearsal.location}</div>
               <div className="text-sm text-gray-600">מקום החזרה</div>
@@ -376,7 +363,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
         {stats.total > 0 && (
           <div className="mt-4">
             <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-              <BarChart3 className="w-4 h-4" />
+              <ChartBarIcon className="w-4 h-4" />
               <span>אחוז נוכחות: {Math.round((stats.present / stats.total) * 100)}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
@@ -389,11 +376,11 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
         )}
       </div>
 
-      {/* Filters and Search */}
+      {/* Filters and MagnifyingGlassIcon */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
               placeholder="חיפוש לפי שם, כלי או קבוצה..."
@@ -427,7 +414,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
 
         {filteredMembers.length === 0 ? (
           <div className="text-center py-12">
-            <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+            <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
             <p className="text-gray-500 font-reisinger-yonatan">
               {searchTerm || filterStatus !== 'all' ? 'לא נמצאו חברים' : 'אין חברים רשומים'}
             </p>
@@ -472,7 +459,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
                         }`}
                         title="נוכח"
                       >
-                        <CheckCircle className="w-4 h-4" />
+                        <CheckCircleIcon className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => updateAttendance(member.id, 'late')}
@@ -483,7 +470,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
                         }`}
                         title="מאחר"
                       >
-                        <Clock className="w-4 h-4" />
+                        <ClockIcon className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => updateAttendance(member.id, 'absent')}
@@ -494,7 +481,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
                         }`}
                         title="נעדר"
                       >
-                        <XCircle className="w-4 h-4" />
+                        <XCircleIcon className="w-4 h-4" />
                       </button>
                     </div>
                   </div>

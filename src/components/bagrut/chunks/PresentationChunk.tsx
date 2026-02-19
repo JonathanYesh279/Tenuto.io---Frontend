@@ -18,25 +18,14 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
+import { ArrowsClockwiseIcon, CalendarIcon, CheckCircleIcon, ClockIcon, FloppyDiskIcon, LinkIcon, LockIcon, LockOpenIcon, MusicNotesIcon, StarIcon, WarningIcon } from '@phosphor-icons/react'
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Music,
-  Calendar,
-  Clock,
-  CheckCircle,
-  Lock,
-  Unlock,
-  Star,
-  AlertTriangle,
-  Save,
-  RefreshCw,
-  Link as LinkIcon
-} from 'lucide-react'
+
 
 import { Presentation, DetailedGrading } from '@/types/bagrut.types'
 import OptimizedMagenBagrutForm from '../OptimizedMagenBagrutForm'
@@ -310,7 +299,7 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
       {!isAccessible && (
         <div className="absolute inset-0 bg-gray-100/80 backdrop-blur-sm flex items-center justify-center z-10 rounded">
           <div className="bg-white p-4 rounded shadow-lg flex items-center">
-            <Lock className="w-5 h-5 ml-2 text-gray-500" />
+            <LockIcon className="w-5 h-5 ml-2 text-gray-500" />
             <span className="text-gray-600">השלם את השמעה {index} תחילה</span>
           </div>
         </div>
@@ -324,9 +313,9 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {isMagenBagrut ? (
-              <Star className="w-6 h-6 text-yellow-500" />
+              <StarIcon className="w-6 h-6 text-yellow-500" />
             ) : (
-              <Music className="w-6 h-6 text-blue-500" />
+              <MusicNotesIcon className="w-6 h-6 text-blue-500" />
             )}
             <div>
               <h4 className="text-lg font-bold">
@@ -334,7 +323,7 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
               </h4>
               {presentation.date && (
                 <p className="text-sm text-gray-600">
-                  <Calendar className="w-4 h-4 inline ml-1" />
+                  <CalendarIcon className="w-4 h-4 inline ml-1" />
                   {new Date(presentation.date).toLocaleDateString('he-IL')}
                 </p>
               )}
@@ -354,21 +343,21 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
             {/* Status Badge */}
             {presentation.completed ? (
               <Badge variant="default">
-                <CheckCircle className="w-4 h-4 ml-1" />
+                <CheckCircleIcon className="w-4 h-4 ml-1" />
                 הושלמה
               </Badge>
             ) : (
               <Badge variant="secondary">
-                <Clock className="w-4 h-4 ml-1" />
+                <ClockIcon className="w-4 h-4 ml-1" />
                 ממתינה
               </Badge>
             )}
             
             {/* Access Status */}
             {isAccessible ? (
-              <Unlock className="w-4 h-4 text-green-500" />
+              <LockOpenIcon className="w-4 h-4 text-green-500" />
             ) : (
-              <Lock className="w-4 h-4 text-gray-400" />
+              <LockIcon className="w-4 h-4 text-gray-400" />
             )}
           </div>
         </div>
@@ -385,9 +374,9 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
                 }
                 className="text-xs"
               >
-                {autoSaveStatus.status === 'saved' && <CheckCircle className="w-3 h-3 mr-1" />}
-                {autoSaveStatus.status === 'saving' && <RefreshCw className="w-3 h-3 mr-1 animate-spin" />}
-                {autoSaveStatus.status === 'error' && <AlertTriangle className="w-3 h-3 mr-1" />}
+                {autoSaveStatus.status === 'saved' && <CheckCircleIcon className="w-3 h-3 mr-1" />}
+                {autoSaveStatus.status === 'saving' && <ArrowsClockwiseIcon className="w-3 h-3 mr-1 animate-spin" />}
+                {autoSaveStatus.status === 'error' && <WarningIcon className="w-3 h-3 mr-1" />}
                 
                 {autoSaveStatus.status === 'saved' && 'נשמר'}
                 {autoSaveStatus.status === 'saving' && 'שומר...'}
@@ -411,7 +400,7 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
                   handleManualSave()
                 }}
               >
-                <Save className="w-3 h-3 mr-1" />
+                <FloppyDiskIcon className="w-3 h-3 mr-1" />
                 שמור
               </Button>
             )}
@@ -427,7 +416,7 @@ const PresentationChunk: React.FC<PresentationChunkProps> = ({
             <div className="mb-4 space-y-2">
               {validationErrors.map((error, index) => (
                 <Alert key={index} variant="destructive">
-                  <AlertTriangle className="h-4 w-4" />
+                  <WarningIcon className="h-4 w-4" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               ))}

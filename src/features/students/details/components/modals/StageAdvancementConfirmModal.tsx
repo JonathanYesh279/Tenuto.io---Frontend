@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { X, AlertTriangle, TrendingUp } from 'lucide-react'
+import { TrendUpIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
+
 
 interface StageAdvancementConfirmModalProps {
   isOpen: boolean
@@ -54,7 +55,7 @@ const StageAdvancementConfirmModal: React.FC<StageAdvancementConfirmModalProps> 
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-orange-100 rounded-lg">
-              <AlertTriangle className="w-6 h-6 text-orange-600" />
+              <WarningIcon className="w-6 h-6 text-orange-600" />
             </div>
             <h2 id="modal-title" className="text-xl font-bold text-gray-900">
               אישור העלאת שלב
@@ -65,7 +66,7 @@ const StageAdvancementConfirmModal: React.FC<StageAdvancementConfirmModalProps> 
             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="סגור"
           >
-            <X className="w-5 h-5" />
+            <XIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -102,7 +103,7 @@ const StageAdvancementConfirmModal: React.FC<StageAdvancementConfirmModalProps> 
                 <div className="text-xs text-gray-600">שלב נוכחי</div>
               </div>
 
-              <TrendingUp className="w-8 h-8 text-green-600 animate-pulse" />
+              <TrendUpIcon className="w-8 h-8 text-green-600 animate-pulse" />
 
               <div className="text-center">
                 <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-bold text-2xl mb-1">

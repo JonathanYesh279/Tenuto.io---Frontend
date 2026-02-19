@@ -6,29 +6,10 @@
  */
 
 import { useState, useRef } from 'react'
-import { 
-  X, 
-  Printer, 
-  Download, 
-  Mail, 
-  FileText, 
-  Award, 
-  Calendar,
-  BarChart3,
-  Music,
-  FileSpreadsheet,
-  FileImage,
-  Send,
-  Plus,
-  Trash2,
-  Check,
-  AlertCircle,
-  Shield,
-  Database,
-  Archive
-} from 'lucide-react'
+
 import { StudentDetails } from '../types'
 import { 
+import { ArchiveIcon, CalendarIcon, ChartBarIcon, CheckIcon, DatabaseIcon, DownloadSimpleIcon, EnvelopeIcon, FileImageIcon, FileSpreadsheetIcon, FileTextIcon, MedalIcon, MusicNotesIcon, PlusIcon, PrinterIcon, SendIcon, ShieldIcon, TrashIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
   quickActionsService, 
   ExportOptions, 
   PrintOptions, 
@@ -255,7 +236,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">פעולות מהירות</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -271,7 +252,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                <Printer className="w-5 h-5" />
+                <PrinterIcon className="w-5 h-5" />
                 הדפסה
               </button>
               
@@ -283,7 +264,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                <Download className="w-5 h-5" />
+                <DownloadSimpleIcon className="w-5 h-5" />
                 ייצוא
               </button>
               
@@ -295,7 +276,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                <Mail className="w-5 h-5" />
+                <EnvelopeIcon className="w-5 h-5" />
                 שליחת אימייל
               </button>
               
@@ -307,7 +288,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                <Award className="w-5 h-5" />
+                <MedalIcon className="w-5 h-5" />
                 תעודת הוקרה
               </button>
               
@@ -322,7 +303,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                     : 'text-red-600 hover:bg-red-50'
                 }`}
               >
-                <Shield className="w-5 h-5" />
+                <ShieldIcon className="w-5 h-5" />
                 מחיקה מאובטחת
               </button>
               
@@ -334,7 +315,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                     : 'text-orange-600 hover:bg-orange-50'
                 }`}
               >
-                <Archive className="w-5 h-5" />
+                <ArchiveIcon className="w-5 h-5" />
                 העברה לארכיון
               </button>
             </nav>
@@ -353,10 +334,10 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                       <label className="block text-sm font-medium text-gray-700 mb-2">סוג דוח</label>
                       <div className="grid grid-cols-2 gap-3">
                         {[
-                          { value: 'summary', label: 'דוח קצר', icon: FileText },
-                          { value: 'detailed', label: 'דוח מפורט', icon: BarChart3 },
-                          { value: 'attendance', label: 'דוח נוכחות', icon: Calendar },
-                          { value: 'schedule', label: 'לוח זמנים', icon: Calendar }
+                          { value: 'summary', label: 'דוח קצר', icon: FileTextIcon },
+                          { value: 'detailed', label: 'דוח מפורט', icon: ChartBarIcon },
+                          { value: 'attendance', label: 'דוח נוכחות', icon: CalendarIcon },
+                          { value: 'schedule', label: 'לוח זמנים', icon: CalendarIcon }
                         ].map(option => (
                           <button
                             key={option.value}
@@ -437,10 +418,10 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                       <label className="block text-sm font-medium text-gray-700 mb-2">פורמט קובץ</label>
                       <div className="grid grid-cols-2 gap-3">
                         {[
-                          { value: 'pdf', label: 'PDF', icon: FileImage },
-                          { value: 'excel', label: 'Excel', icon: FileSpreadsheet },
-                          { value: 'csv', label: 'CSV', icon: FileText },
-                          { value: 'json', label: 'JSON', icon: FileText }
+                          { value: 'pdf', label: 'PDF', icon: FileImageIcon },
+                          { value: 'excel', label: 'Excel', icon: FileSpreadsheetIcon },
+                          { value: 'csv', label: 'CSV', icon: FileTextIcon },
+                          { value: 'json', label: 'JSON', icon: FileTextIcon }
                         ].map(format => (
                           <button
                             key={format.value}
@@ -506,7 +487,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                               onClick={() => removeEmailRecipient(index)}
                               className="text-red-500 hover:text-red-700"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" />
                             </button>
                           </div>
                         ))}
@@ -514,7 +495,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                           onClick={addEmailRecipient}
                           className="flex items-center gap-2 px-3 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
                         >
-                          <Plus className="w-4 h-4" />
+                          <PlusIcon className="w-4 h-4" />
                           הוסף נמען
                         </button>
                       </div>
@@ -598,7 +579,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
 
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start gap-2">
-                        <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <WarningCircleIcon className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                         <div className="text-sm text-blue-700">
                           <strong>תצוגה מקדימה:</strong>
                           <div className="mt-2 p-3 bg-white border border-blue-200 rounded text-center">
@@ -626,7 +607,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                   {/* Warning */}
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                     <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <ShieldIcon className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                       <div>
                         <div className="font-medium text-red-900">מחיקת תלמיד</div>
                         <div className="text-sm text-red-700 mt-1">
@@ -721,7 +702,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
               </div>
             )}
 
-            {/* Archive Options */}
+            {/* ArchiveIcon Options */}
             {activeAction === 'archive' && (
               <div className="space-y-6">
                 <div>
@@ -730,7 +711,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                   {/* Info */}
                   <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
                     <div className="flex items-start gap-3">
-                      <Archive className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+                      <ArchiveIcon className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                       <div>
                         <div className="font-medium text-orange-900">העברת תלמיד לארכיון</div>
                         <div className="text-sm text-orange-700 mt-1">
@@ -757,7 +738,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                       </div>
                     </div>
 
-                    {/* Archive Benefits */}
+                    {/* ArchiveIcon Benefits */}
                     <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <div className="font-medium text-blue-900 mb-2">יתרונות ארכיון:</div>
                       <ul className="text-sm text-blue-700 space-y-1">
@@ -777,7 +758,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Check className="w-4 h-4 text-green-600" />
+            <CheckIcon className="w-4 h-4 text-green-600" />
             <span>תלמיד: {getDisplayName(student.personalInfo)}</span>
           </div>
           
@@ -828,12 +809,12 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                 </>
               ) : (
                 <>
-                  {activeAction === 'print' && <Printer className="w-4 h-4" />}
-                  {activeAction === 'export' && <Download className="w-4 h-4" />}
-                  {activeAction === 'email' && <Send className="w-4 h-4" />}
-                  {activeAction === 'certificate' && <Award className="w-4 h-4" />}
-                  {activeAction === 'deletion' && <Shield className="w-4 h-4" />}
-                  {activeAction === 'archive' && <Archive className="w-4 h-4" />}
+                  {activeAction === 'print' && <PrinterIcon className="w-4 h-4" />}
+                  {activeAction === 'export' && <DownloadSimpleIcon className="w-4 h-4" />}
+                  {activeAction === 'email' && <SendIcon className="w-4 h-4" />}
+                  {activeAction === 'certificate' && <MedalIcon className="w-4 h-4" />}
+                  {activeAction === 'deletion' && <ShieldIcon className="w-4 h-4" />}
+                  {activeAction === 'archive' && <ArchiveIcon className="w-4 h-4" />}
                   
                   {activeAction === 'print' && 'הדפס'}
                   {activeAction === 'export' && 'ייצא'}

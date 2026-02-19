@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { User, Phone, Mail, MapPin, Calendar, Edit, Save, X, UserCheck, AlertCircle, Clock, CheckCircle, Shield, History } from 'lucide-react'
+
 import { StudentDetails, PersonalInfo, ParentsInfo } from '../../types'
 import { studentDetailsApi } from '../../../../services/studentDetailsApi'
 import { usePermissionsAndAudit, useFieldPermissions } from '../../hooks/usePermissionsAndAudit'
@@ -14,6 +14,7 @@ import PermissionWrapper, { ViewWrapper, EditWrapper } from '../PermissionWrappe
 import AuditTrailPanel from '../AuditTrailPanel'
 import toast from 'react-hot-toast'
 import { formatAddress } from '../../../../../utils/nameUtils'
+import { CalendarIcon, CheckCircleIcon, ClockIcon, EnvelopeIcon, FloppyDiskIcon, HistoryIcon, MapPinIcon, PencilIcon, PhoneIcon, ShieldIcon, UserCircleCheckIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PersonalInfoTabProps {
   student: StudentDetails
@@ -204,7 +205,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
     }
   }
 
-  // Save changes manually
+  // FloppyDiskIcon changes manually
   const handleSave = async () => {
     if (!validateForm()) {
       toast.error('יש לתקן את השגיאות בטופס')
@@ -260,7 +261,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
         />
         {error && (
           <div className="flex items-center gap-1 text-sm text-red-600">
-            <AlertCircle className="w-4 h-4" />
+            <WarningCircleIcon className="w-4 h-4" />
             {error}
           </div>
         )}
@@ -287,14 +288,14 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
       studentId={studentId}
       fallback={
         <div className="flex flex-col items-center justify-center p-12 text-center">
-          <Shield className="w-16 h-16 text-gray-300 mb-4" />
+          <ShieldIcon className="w-16 h-16 text-gray-300 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">אין הרשאה</h3>
           <p className="text-gray-600">אין לך הרשאה לצפות בפרטים האישיים של תלמיד זה</p>
         </div>
       }
     >
       <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
-      {/* Header with Edit Button */}
+      {/* Header with PencilIcon Button */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">פרטים אישיים</h2>
@@ -303,12 +304,12 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
             <div className="flex items-center gap-2 mt-2 text-sm">
               {isSaving ? (
                 <div className="flex items-center gap-1 text-blue-600">
-                  <Clock className="w-4 h-4 animate-pulse" />
+                  <ClockIcon className="w-4 h-4 animate-pulse" />
                   <span>שומר...</span>
                 </div>
               ) : lastSaved ? (
                 <div className="flex items-center gap-1 text-green-600">
-                  <CheckCircle className="w-4 h-4" />
+                  <CheckCircleIcon className="w-4 h-4" />
                   <span>נשמר לאחרונה: {lastSaved.toLocaleTimeString('he-IL')}</span>
                 </div>
               ) : null}
@@ -325,7 +326,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
             )}
             {canView && !canEdit && (
               <span className="flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-                <Shield className="w-3 h-3" />
+                <ShieldIcon className="w-3 h-3" />
                 קריאה בלבד
               </span>
             )}
@@ -341,7 +342,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   : 'border-gray-200 text-gray-600 hover:bg-gray-50'
               }`}
             >
-              <History className="w-4 h-4" />
+              <HistoryIcon className="w-4 h-4" />
               לוג פעילות
             </button>
           </PermissionWrapper>
@@ -353,7 +354,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                 disabled={isSaving}
                 className="flex items-center gap-2 px-4 py-2 text-sm rounded font-medium bg-green-500 text-white hover:bg-green-600 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
-                <Save className="w-4 h-4" />
+                <FloppyDiskIcon className="w-4 h-4" />
                 שמור
               </button>
               <button
@@ -361,7 +362,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                 disabled={isSaving}
                 className="flex items-center gap-2 px-4 py-2 text-sm rounded font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
                 ביטול
               </button>
             </>
@@ -381,7 +382,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   handleCancel()
                 } else {
                   setIsEditing(true)
-                  audit.logView('personal_info', studentId, 'Edit mode entered')
+                  audit.logView('personal_info', studentId, 'PencilIcon mode entered')
                 }
               }}
               disabled={isSaving}
@@ -392,7 +393,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
               }`}
               style={{ minHeight: '44px' }}
             >
-              {isEditing ? <X className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
+              {isEditing ? <XIcon className="w-4 h-4" /> : <PencilIcon className="w-4 h-4" />}
             {isEditing ? 'ביטול' : 'עריכה'}
           </button>
         </EditWrapper>
@@ -401,7 +402,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Basic Information */}
-        <InfoSection title="מידע בסיסי" icon={User}>
+        <InfoSection title="מידע בסיסי" icon={UserIcon}>
           {!isEditing ? (
             <div className="space-y-1">
               <InfoRow label="שם פרטי" value={personalInfo.firstName} />
@@ -417,7 +418,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-red-100 text-red-800'
                   }`}>
-                    <UserCheck className="w-3 h-3" />
+                    <UserCircleCheckIcon className="w-3 h-3" />
                     {isActive ? 'פעיל' : 'לא פעיל'}
                   </span>
                 } 
@@ -468,7 +469,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
         </InfoSection>
 
         {/* Contact Information */}
-        <InfoSection title="פרטי קשר" icon={Phone}>
+        <InfoSection title="פרטי קשר" icon={PhoneIcon}>
           {!isEditing ? (
             <div className="space-y-1">
               <InfoRow 
@@ -519,7 +520,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
         </InfoSection>
 
         {/* Parent Information */}
-        <InfoSection title="פרטי הורים" icon={UserCheck} className="xl:col-span-2">
+        <InfoSection title="פרטי הורים" icon={UserCircleCheckIcon} className="xl:col-span-2">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Primary Parent Contact */}
             <div className="bg-muted/50 rounded-lg p-4">
@@ -668,7 +669,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
 
         {/* Emergency Contact */}
         {(personalInfo.emergencyContact || isEditing) && (
-          <InfoSection title="איש קשר לחירום" icon={Phone} className="xl:col-span-2">
+          <InfoSection title="איש קשר לחירום" icon={PhoneIcon} className="xl:col-span-2">
             <div className="bg-red-50 rounded-lg p-4">
               {!isEditing ? (
                 personalInfo.emergencyContact && (
@@ -716,7 +717,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
       {!isActive && (
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-orange-600" />
+            <WarningCircleIcon className="w-5 h-5 text-orange-600" />
             <div>
               <h3 className="font-semibold text-orange-800">תלמיד לא פעיל</h3>
               <p className="text-sm text-orange-700 mt-1">

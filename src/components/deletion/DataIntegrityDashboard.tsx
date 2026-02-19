@@ -6,27 +6,11 @@
  */
 
 import React, { useState } from 'react'
-import { 
-  Shield, 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle,
-  Database,
-  RefreshCw,
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  Clock,
-  Users,
-  FileText,
-  Settings,
-  Zap,
-  BarChart3,
-  AlertCircle
-} from 'lucide-react'
+
 import { DataIntegrityStatus, IntegrityIssue, BatchOperation } from './types'
 import { CircularProgress, ProgressBar } from '../feedback/ProgressIndicators'
 import { Card } from '../ui/Card'
+import { ActivityIcon, ArrowsClockwiseIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, FileTextIcon, GearIcon, LightningIcon, ShieldIcon, TrendDownIcon, TrendUpIcon, UsersIcon, WarningCircleIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface DataIntegrityDashboardProps {
   status: DataIntegrityStatus
@@ -65,10 +49,10 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'high': return <XCircle className="w-5 h-5 text-red-500" />
-      case 'medium': return <AlertTriangle className="w-5 h-5 text-yellow-500" />
-      case 'low': return <AlertCircle className="w-5 h-5 text-blue-500" />
-      default: return <CheckCircle className="w-5 h-5 text-gray-500" />
+      case 'high': return <XCircleIcon className="w-5 h-5 text-red-500" />
+      case 'medium': return <WarningIcon className="w-5 h-5 text-yellow-500" />
+      case 'low': return <WarningCircleIcon className="w-5 h-5 text-blue-500" />
+      default: return <CheckCircleIcon className="w-5 h-5 text-gray-500" />
     }
   }
 
@@ -109,7 +93,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Shield className="w-8 h-8 text-blue-600" />
+          <ShieldIcon className="w-8 h-8 text-blue-600" />
           <div>
             <h2 className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">
               מוניטור שלמות נתונים
@@ -127,7 +111,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
               disabled={isLoading}
               className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors disabled:opacity-50"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <ArrowsClockwiseIcon className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               <span className="font-reisinger-yonatan">רענון</span>
             </button>
           )}
@@ -137,7 +121,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
               onClick={onRunIntegrityCheck}
               className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
             >
-              <Activity className="w-4 h-4" />
+              <ActivityIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">בדיקת שלמות</span>
             </button>
           )}
@@ -181,10 +165,10 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                 <span className="text-2xl font-bold text-yellow-600">
                   {status.orphanedCount.toLocaleString()}
                 </span>
-                {status.orphanedCount > 0 && <TrendingUp className="w-4 h-4 text-yellow-500" />}
+                {status.orphanedCount > 0 && <TrendUpIcon className="w-4 h-4 text-yellow-500" />}
               </div>
             </div>
-            <Database className="w-8 h-8 text-yellow-500" />
+            <DatabaseIcon className="w-8 h-8 text-yellow-500" />
           </div>
         </Card>
 
@@ -198,10 +182,10 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                 <span className="text-2xl font-bold text-blue-600">
                   {status.pendingOperations}
                 </span>
-                {status.pendingOperations > 0 && <Activity className="w-4 h-4 text-blue-500" />}
+                {status.pendingOperations > 0 && <ActivityIcon className="w-4 h-4 text-blue-500" />}
               </div>
             </div>
-            <Settings className="w-8 h-8 text-blue-500" />
+            <GearIcon className="w-8 h-8 text-blue-500" />
           </div>
         </Card>
 
@@ -219,7 +203,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                 )}
               </div>
             </div>
-            <Clock className="w-8 h-8 text-gray-400" />
+            <ClockIcon className="w-8 h-8 text-gray-400" />
           </div>
         </Card>
       </div>
@@ -230,7 +214,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <AlertTriangle className="w-6 h-6 text-yellow-500" />
+                <WarningIcon className="w-6 h-6 text-yellow-500" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                     בעיות שלמות נתונים
@@ -247,7 +231,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                     onClick={() => onAutoFixIssues(autoFixableIssues)}
                     className="flex items-center gap-1 px-3 py-2 text-sm text-green-600 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors"
                   >
-                    <Zap className="w-4 h-4" />
+                    <LightningIcon className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">תקן אוטומטית</span>
                   </button>
                 )}
@@ -256,7 +240,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                   onClick={() => setShowIssueDetails(!showIssueDetails)}
                   className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
                 >
-                  <BarChart3 className="w-4 h-4" />
+                  <ChartBarIcon className="w-4 h-4" />
                   <span className="font-reisinger-yonatan">צפה בפרטים</span>
                 </button>
               </div>
@@ -337,7 +321,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
         <Card>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <Activity className="w-6 h-6 text-blue-500" />
+              <ActivityIcon className="w-6 h-6 text-blue-500" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                   פעולות אחרונות
@@ -405,7 +389,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
       <Card className="bg-blue-50 border-blue-200">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <Zap className="w-6 h-6 text-blue-600" />
+            <LightningIcon className="w-6 h-6 text-blue-600" />
             <div>
               <h3 className="text-lg font-semibold text-blue-900 font-reisinger-yonatan">
                 פעולות מהירות
@@ -418,21 +402,21 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <button className="flex items-center gap-2 p-3 bg-white rounded border border-blue-200 hover:bg-blue-50 transition-colors">
-              <Database className="w-5 h-5 text-blue-600" />
+              <DatabaseIcon className="w-5 h-5 text-blue-600" />
               <span className="font-medium text-blue-900 font-reisinger-yonatan">
                 ניקוי הפניות יתומות
               </span>
             </button>
 
             <button className="flex items-center gap-2 p-3 bg-white rounded border border-blue-200 hover:bg-blue-50 transition-colors">
-              <Shield className="w-5 h-5 text-blue-600" />
+              <ShieldIcon className="w-5 h-5 text-blue-600" />
               <span className="font-medium text-blue-900 font-reisinger-yonatan">
                 בדיקת אילוצים
               </span>
             </button>
 
             <button className="flex items-center gap-2 p-3 bg-white rounded border border-blue-200 hover:bg-blue-50 transition-colors">
-              <FileText className="w-5 h-5 text-blue-600" />
+              <FileTextIcon className="w-5 h-5 text-blue-600" />
               <span className="font-medium text-blue-900 font-reisinger-yonatan">
                 דוח שלמות מלא
               </span>

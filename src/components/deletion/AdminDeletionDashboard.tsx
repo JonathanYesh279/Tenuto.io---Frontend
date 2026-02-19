@@ -6,27 +6,9 @@
  */
 
 import React, { useState, useEffect } from 'react'
+
 import { 
-  Shield, 
-  Trash2, 
-  Database, 
-  FileText,
-  Settings,
-  AlertTriangle,
-  CheckCircle,
-  Activity,
-  Users,
-  Calendar,
-  Music,
-  BookOpen,
-  Search,
-  Filter,
-  Download,
-  RefreshCw,
-  Eye,
-  Plus
-} from 'lucide-react'
-import { 
+import { ActivityIcon, ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MusicNotesIcon, PlusIcon, ShieldIcon, TrashIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
   DataIntegrityStatus, 
   DeletionOperation, 
   AuditLogEntry,
@@ -135,7 +117,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
     }
   ]
 
-  // Search functionality
+  // MagnifyingGlassIcon functionality
   const handleSearch = async () => {
     if (!searchQuery.trim()) return
 
@@ -174,11 +156,11 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
   const getEntityIcon = (type: string) => {
     switch (type) {
-      case 'student': return <Users className="w-5 h-5 text-blue-500" />
-      case 'teacher': return <Users className="w-5 h-5 text-green-500" />
-      case 'lesson': return <Calendar className="w-5 h-5 text-purple-500" />
-      case 'orchestra': return <Music className="w-5 h-5 text-orange-500" />
-      default: return <Database className="w-5 h-5 text-gray-500" />
+      case 'student': return <UsersIcon className="w-5 h-5 text-blue-500" />
+      case 'teacher': return <UsersIcon className="w-5 h-5 text-green-500" />
+      case 'lesson': return <CalendarIcon className="w-5 h-5 text-purple-500" />
+      case 'orchestra': return <MusicNotesIcon className="w-5 h-5 text-orange-500" />
+      default: return <DatabaseIcon className="w-5 h-5 text-gray-500" />
     }
   }
 
@@ -194,11 +176,11 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
   // Mobile navigation tabs
   const tabConfig = [
-    { id: 'overview', label: 'סקירה', icon: Activity },
-    { id: 'integrity', label: 'שלמות', icon: Shield },
-    { id: 'operations', label: 'פעולות', icon: Settings },
-    { id: 'audit', label: 'יומן', icon: FileText },
-    { id: 'cleanup', label: 'ניקוי', icon: Database }
+    { id: 'overview', label: 'סקירה', icon: ActivityIcon },
+    { id: 'integrity', label: 'שלמות', icon: ShieldIcon },
+    { id: 'operations', label: 'פעולות', icon: GearIcon },
+    { id: 'audit', label: 'יומן', icon: FileTextIcon },
+    { id: 'cleanup', label: 'ניקוי', icon: DatabaseIcon }
   ]
 
   return (
@@ -214,7 +196,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-gray-500 hover:text-gray-700"
             >
-              <Settings className="w-5 h-5" />
+              <GearIcon className="w-5 h-5" />
             </button>
           </div>
 
@@ -253,7 +235,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6 text-red-600" />
+              <ShieldIcon className="w-6 h-6 text-red-600" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
@@ -267,11 +249,11 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
           <div className="flex gap-2">
             <button className="flex items-center gap-1 px-4 py-2 text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors">
-              <Download className="w-4 h-4" />
+              <DownloadSimpleIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">יצוא דוחות</span>
             </button>
             <button className="flex items-center gap-1 px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors">
-              <RefreshCw className="w-4 h-4" />
+              <ArrowsClockwiseIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">רענון נתונים</span>
             </button>
           </div>
@@ -318,7 +300,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
         <Card className="text-center">
           <div className="flex items-center justify-between mb-2">
             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <Trash2 className="w-4 h-4 text-blue-600" />
+              <TrashIcon className="w-4 h-4 text-blue-600" />
             </div>
             <span className="text-2xl font-bold text-blue-600">{quickStats.totalDeletions}</span>
           </div>
@@ -328,7 +310,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
         <Card className="text-center">
           <div className="flex items-center justify-between mb-2">
             <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-              <Activity className="w-4 h-4 text-orange-600" />
+              <ActivityIcon className="w-4 h-4 text-orange-600" />
             </div>
             <span className="text-2xl font-bold text-orange-600">{quickStats.pendingOperations}</span>
           </div>
@@ -338,7 +320,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
         <Card className="text-center">
           <div className="flex items-center justify-between mb-2">
             <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-              <Database className="w-4 h-4 text-yellow-600" />
+              <DatabaseIcon className="w-4 h-4 text-yellow-600" />
             </div>
             <span className="text-2xl font-bold text-yellow-600">{quickStats.orphanedReferences}</span>
           </div>
@@ -362,7 +344,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
         <Card className="text-center">
           <div className="flex items-center justify-between mb-2">
             <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-              <AlertTriangle className="w-4 h-4 text-red-600" />
+              <WarningIcon className="w-4 h-4 text-red-600" />
             </div>
             <span className="text-2xl font-bold text-red-600">{quickStats.recentFailures}</span>
           </div>
@@ -373,11 +355,11 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
       {/* Tab Content */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
-          {/* Entity Search */}
+          {/* Entity MagnifyingGlassIcon */}
           <Card>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <Search className="w-6 h-6 text-gray-500" />
+                <MagnifyingGlassIcon className="w-6 h-6 text-gray-500" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                     חיפוש ישויות למחיקה
@@ -390,7 +372,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
               <div className="flex gap-2">
                 <div className="flex-1 relative">
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
                     placeholder="חפש לפי שם, מזהה או סוג..."
@@ -406,14 +388,14 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
                 >
                   {isSearching ? (
-                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
                   ) : (
                     'חפש'
                   )}
                 </button>
               </div>
 
-              {/* Search Results */}
+              {/* MagnifyingGlassIcon Results */}
               {searchResults.length > 0 && (
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {searchResults.map((result) => (
@@ -432,7 +414,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
                           <p className="text-sm text-gray-600 font-reisinger-yonatan">{result.details}</p>
                           {result.warnings && result.warnings.length > 0 && (
                             <div className="flex items-center gap-1 mt-1">
-                              <AlertTriangle className="w-3 h-3 text-yellow-500" />
+                              <WarningIcon className="w-3 h-3 text-yellow-500" />
                               <span className="text-xs text-yellow-600 font-reisinger-yonatan">
                                 {result.warnings[0]}
                               </span>
@@ -443,14 +425,14 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
                       <div className="flex gap-2">
                         <button className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">
-                          <Eye className="w-4 h-4" />
+                          <EyeIcon className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteEntity(result)}
                           disabled={!result.canDelete}
                           className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -464,7 +446,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
           <Card>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Activity className="w-6 h-6 text-blue-500" />
+                <ActivityIcon className="w-6 h-6 text-blue-500" />
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                   פעולות אחרונות
                 </h3>
@@ -487,7 +469,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
             {recentOperations.length === 0 && (
               <div className="text-center py-8">
-                <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <ActivityIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 font-reisinger-yonatan">אין פעולות אחרונות</p>
               </div>
             )}
@@ -506,7 +488,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
         <div className="space-y-6">
           <Card>
             <div className="text-center py-12">
-              <Settings className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <GearIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-600 font-reisinger-yonatan mb-2">
                 פעולות מתקדמות
               </h3>
@@ -516,21 +498,21 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
                 <button className="p-4 border-2 border-dashed border-gray-300 rounded hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                  <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                  <PlusIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <span className="block text-sm font-medium text-gray-600 font-reisinger-yonatan">
                     מחיקה מרובה
                   </span>
                 </button>
                 
                 <button className="p-4 border-2 border-dashed border-gray-300 rounded hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                  <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                  <PlusIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <span className="block text-sm font-medium text-gray-600 font-reisinger-yonatan">
                     בדיקת שלמות
                   </span>
                 </button>
                 
                 <button className="p-4 border-2 border-dashed border-gray-300 rounded hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                  <Plus className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                  <PlusIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <span className="block text-sm font-medium text-gray-600 font-reisinger-yonatan">
                     תחזוקת מערכת
                   </span>

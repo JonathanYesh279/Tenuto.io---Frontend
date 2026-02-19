@@ -6,28 +6,11 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { 
-  Loader2, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  AlertTriangle,
-  Pause,
-  Play,
-  Square,
-  Info,
-  Zap,
-  TrendingUp,
-  Activity,
-  Timer,
-  AlertCircle,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp
-} from 'lucide-react'
+
 import { DeletionOperation } from './types'
 import { ProgressBar, StepProgress } from '../feedback/ProgressIndicators'
 import { Card } from '../ui/Card'
+import { ActivityIcon, ArrowsClockwiseIcon, CaretDownIcon, CaretUpIcon, CheckCircleIcon, CircleNotchIcon, ClockIcon, InfoIcon, LightningIcon, PauseIcon, PlayIcon, SquareIcon, TimerIcon, TrendUpIcon, WarningCircleIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface EnhancedProgressTrackerProps {
   operation: DeletionOperation
@@ -101,14 +84,14 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
   const getStatusIcon = () => {
     switch (operation.status) {
       case 'completed':
-        return <CheckCircle className="w-6 h-6 text-green-500" />
+        return <CheckCircleIcon className="w-6 h-6 text-green-500" />
       case 'failed':
       case 'cancelled':
-        return <XCircle className="w-6 h-6 text-red-500" />
+        return <XCircleIcon className="w-6 h-6 text-red-500" />
       case 'running':
-        return <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
+        return <CircleNotchIcon className="w-6 h-6 text-blue-500 animate-spin" />
       default:
-        return <Clock className="w-6 h-6 text-gray-500" />
+        return <ClockIcon className="w-6 h-6 text-gray-500" />
     }
   }
 
@@ -299,7 +282,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                 
                 {operation.startTime && (
                   <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
+                    <ClockIcon className="w-3 h-3" />
                     <span className="font-reisinger-yonatan">
                       זמן שעבר: {formatDuration(performanceMetrics.totalElapsedTime)}
                     </span>
@@ -308,7 +291,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                 
                 {operation.status === 'running' && (
                   <div className="flex items-center gap-1">
-                    <Timer className="w-3 h-3" />
+                    <TimerIcon className="w-3 h-3" />
                     <span className="font-reisinger-yonatan">
                       נותר: {formatTimeRemaining()}
                     </span>
@@ -327,7 +310,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                     onClick={onPause}
                     className="flex items-center gap-1 px-3 py-1 text-sm text-yellow-600 bg-yellow-50 border border-yellow-200 rounded hover:bg-yellow-100 transition-colors"
                   >
-                    <Pause className="w-4 h-4" />
+                    <PauseIcon className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">השהה</span>
                   </button>
                 )}
@@ -336,7 +319,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                     onClick={onCancel}
                     className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 bg-red-50 border border-red-200 rounded hover:bg-red-100 transition-colors"
                   >
-                    <Square className="w-4 h-4" />
+                    <SquareIcon className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">ביטול</span>
                   </button>
                 )}
@@ -348,7 +331,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                 onClick={onResume}
                 className="flex items-center gap-1 px-3 py-1 text-sm text-green-600 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors"
               >
-                <Play className="w-4 h-4" />
+                <PlayIcon className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">המשך</span>
               </button>
             )}
@@ -358,7 +341,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                 onClick={onRetry}
                 className="flex items-center gap-1 px-3 py-1 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
-                <RefreshCw className="w-4 h-4" />
+                <ArrowsClockwiseIcon className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">נסה שוב</span>
               </button>
             )}
@@ -367,9 +350,9 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
               onClick={() => setShowMetrics(!showMetrics)}
               className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
             >
-              <Activity className="w-4 h-4" />
+              <ActivityIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">מטריקות</span>
-              {showMetrics ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              {showMetrics ? <CaretUpIcon className="w-3 h-3" /> : <CaretDownIcon className="w-3 h-3" />}
             </button>
           </div>
         </div>
@@ -403,7 +386,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
           <Card className="bg-blue-50 border-blue-200">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
+                <TrendUpIcon className="w-5 h-5 text-blue-600" />
                 <h4 className="font-semibold text-blue-900 font-reisinger-yonatan">
                   מטריקות ביצועים
                 </h4>
@@ -448,7 +431,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
         {showDetailedSteps && (
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-gray-500" />
+              <LightningIcon className="w-5 h-5 text-gray-500" />
               <h4 className="font-semibold text-gray-900 font-reisinger-yonatan">
                 שלבי התהליך
               </h4>
@@ -467,7 +450,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
           <Card className="bg-red-50 border-red-200">
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-red-700">
-                <AlertTriangle className="w-5 h-5" />
+                <WarningIcon className="w-5 h-5" />
                 <span className="font-semibold font-reisinger-yonatan">שגיאה בתהליך</span>
               </div>
               
@@ -481,7 +464,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                     onClick={onRetry}
                     className="flex items-center gap-1 px-3 py-1 text-sm text-red-700 bg-red-100 border border-red-300 rounded hover:bg-red-200 transition-colors"
                   >
-                    <RefreshCw className="w-4 h-4" />
+                    <ArrowsClockwiseIcon className="w-4 h-4" />
                     <span className="font-reisinger-yonatan">נסה שוב</span>
                   </button>
                   
@@ -490,7 +473,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
                       onClick={onCancel}
                       className="flex items-center gap-1 px-3 py-1 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition-colors"
                     >
-                      <Square className="w-4 h-4" />
+                      <SquareIcon className="w-4 h-4" />
                       <span className="font-reisinger-yonatan">בטל תהליך</span>
                     </button>
                   )}
@@ -500,12 +483,12 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
           </Card>
         )}
 
-        {/* Completion Info */}
+        {/* Completion InfoIcon */}
         {operation.status === 'completed' && (
           <Card className="bg-green-50 border-green-200">
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-green-700">
-                <CheckCircle className="w-5 h-5" />
+                <CheckCircleIcon className="w-5 h-5" />
                 <span className="font-semibold font-reisinger-yonatan">
                   התהליך הושלם בהצלחה!
                 </span>
@@ -522,7 +505,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
 
               {operation.rollbackAvailable && (
                 <div className="flex items-center gap-2 text-green-600 text-sm">
-                  <Info className="w-4 h-4" />
+                  <InfoIcon className="w-4 h-4" />
                   <span className="font-reisinger-yonatan">
                     ניתן לשחזר את הנתונים תוך 30 יום
                   </span>
@@ -532,11 +515,11 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
           </Card>
         )}
 
-        {/* Cancellation Info */}
+        {/* Cancellation InfoIcon */}
         {operation.status === 'cancelled' && (
           <Card className="bg-orange-50 border-orange-200">
             <div className="flex items-center gap-2 text-orange-700">
-              <AlertCircle className="w-5 h-5" />
+              <WarningCircleIcon className="w-5 h-5" />
               <div>
                 <span className="font-semibold font-reisinger-yonatan block">
                   התהליך בוטל על ידי המשתמש

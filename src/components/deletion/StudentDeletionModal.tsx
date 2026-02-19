@@ -6,23 +6,13 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { 
-  AlertTriangle, 
-  User, 
-  ChevronRight,
-  ChevronLeft,
-  X,
-  Shield,
-  FileText,
-  Clock,
-  CheckCircle,
-  XCircle
-} from 'lucide-react'
+
 import Modal from '../ui/Modal'
 import { Card } from '../ui/Card'
 import { DeletionImpact, DeletionFormData } from './types'
 import DeletionImpactPreview from './DeletionImpactPreview'
 import DeletionProgressTracker from './DeletionProgressTracker'
+import { CaretLeftIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, FileTextIcon, ShieldIcon, UserIcon, WarningIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface StudentDeletionModalProps {
   isOpen: boolean
@@ -167,10 +157,10 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
 
   const renderStepIndicator = () => {
     const steps = [
-      { id: 'impact', label: 'השפעה', icon: Shield },
-      { id: 'confirmation', label: 'אישור', icon: FileText },
-      { id: 'progress', label: 'ביצוע', icon: Clock },
-      { id: 'complete', label: 'הושלם', icon: CheckCircle }
+      { id: 'impact', label: 'השפעה', icon: ShieldIcon },
+      { id: 'confirmation', label: 'אישור', icon: FileTextIcon },
+      { id: 'progress', label: 'ביצוע', icon: ClockIcon },
+      { id: 'complete', label: 'הושלם', icon: CheckCircleIcon }
     ]
 
     const getCurrentStepIndex = () => {
@@ -231,7 +221,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
     <div className="space-y-6" dir="rtl">
       <div className="text-center">
         <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full">
-          <User className="w-8 h-8 text-red-600" />
+          <UserIcon className="w-8 h-8 text-red-600" />
         </div>
         <h3 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan mb-2">
           מחיקת תלמיד - {studentName}
@@ -252,7 +242,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
         <DeletionImpactPreview impact={impact} />
       ) : (
         <Card className="text-center py-8">
-          <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+          <WarningIcon className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
           <p className="text-gray-600 font-reisinger-yonatan">
             לא ניתן לטעון את נתוני ההשפעה
           </p>
@@ -271,7 +261,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
     <div className="space-y-6" dir="rtl">
       <div className="text-center">
         <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-orange-100 rounded-full">
-          <AlertTriangle className="w-8 h-8 text-orange-600" />
+          <WarningIcon className="w-8 h-8 text-orange-600" />
         </div>
         <h3 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan mb-2">
           אישור סופי למחיקה
@@ -284,7 +274,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
       <Card className="bg-red-50 border-red-200">
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-red-700">
-            <XCircle className="w-5 h-5" />
+            <XCircleIcon className="w-5 h-5" />
             <span className="font-semibold font-reisinger-yonatan">אזהרה חמורה</span>
           </div>
           <div className="text-sm text-red-700 space-y-1 font-reisinger-yonatan">
@@ -438,7 +428,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
 
         <Card className="bg-blue-50 border-blue-200">
           <div className="flex items-center gap-2 text-blue-700">
-            <Clock className="w-5 h-5" />
+            <ClockIcon className="w-5 h-5" />
             <span className="font-semibold font-reisinger-yonatan">הערה חשובה</span>
           </div>
           <p className="text-sm text-blue-700 mt-2 font-reisinger-yonatan">
@@ -452,7 +442,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
   const renderCompleteStep = () => (
     <div className="space-y-6 text-center" dir="rtl">
       <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
-        <CheckCircle className="w-8 h-8 text-green-600" />
+        <CheckCircleIcon className="w-8 h-8 text-green-600" />
       </div>
       
       <div>
@@ -467,7 +457,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
       <Card className="bg-green-50 border-green-200 text-right">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-green-700">
-            <CheckCircle className="w-5 h-5" />
+            <CheckCircleIcon className="w-5 h-5" />
             <span className="font-semibold font-reisinger-yonatan">פעולות שבוצעו:</span>
           </div>
           <ul className="text-sm text-green-700 space-y-1 font-reisinger-yonatan">
@@ -495,7 +485,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
               onClick={handlePrevious}
               className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
             >
-              <ChevronRight className="w-4 h-4" />
+              <CaretRightIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">הקודם</span>
             </button>
           )}
@@ -531,7 +521,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
               <span className="font-reisinger-yonatan">
                 {currentStep === 'impact' ? 'המשך' : 'מחק תלמיד'}
               </span>
-              <ChevronLeft className="w-4 h-4" />
+              <CaretLeftIcon className="w-4 h-4" />
             </button>
           )}
 
@@ -540,7 +530,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
               onClick={onClose}
               className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
             >
-              <CheckCircle className="w-4 h-4" />
+              <CheckCircleIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">סגור</span>
             </button>
           )}

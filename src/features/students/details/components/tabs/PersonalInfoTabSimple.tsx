@@ -6,9 +6,10 @@
  */
 
 import { useState, useEffect } from 'react'
-import { User, Phone, Mail, MapPin, Edit, Save, X } from 'lucide-react'
+
 import apiService from '../../../../../services/apiService'
 import { getDisplayName, formatAddress } from '../../../../../utils/nameUtils'
+import { EnvelopeIcon, FloppyDiskIcon, MapPinIcon, PencilIcon, PhoneIcon, UserIcon, XIcon } from '@phosphor-icons/react'
 
 interface PersonalInfoTabProps {
   student: any
@@ -115,14 +116,14 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
 
   return (
     <div className="p-6 space-y-8">
-      {/* Header with Edit Button */}
+      {/* Header with PencilIcon Button */}
       <div className="flex justify-end">
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
           >
-            <Edit className="w-4 h-4" />
+            <PencilIcon className="w-4 h-4" />
             ערוך
           </button>
         ) : (
@@ -132,7 +133,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               disabled={isSaving}
               className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
             >
-              <Save className="w-4 h-4" />
+              <FloppyDiskIcon className="w-4 h-4" />
               {isSaving ? 'שומר...' : 'שמור'}
             </button>
             <button
@@ -140,7 +141,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               disabled={isSaving}
               className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
             >
-              <X className="w-4 h-4" />
+              <XIcon className="w-4 h-4" />
               בטל
             </button>
           </div>
@@ -193,7 +194,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               />
             ) : (
               <div className="text-gray-900 flex items-center gap-2">
-                <Phone className="w-4 h-4 text-gray-500" />
+                <PhoneIcon className="w-4 h-4 text-gray-500" />
                 {personalInfo.phone || 'לא צוין'}
               </div>
             )}
@@ -228,7 +229,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               />
             ) : (
               <div className="text-gray-900 flex items-center gap-2">
-                <Mail className="w-4 h-4 text-gray-500" />
+                <EnvelopeIcon className="w-4 h-4 text-gray-500" />
                 {personalInfo.studentEmail || 'לא צוין'}
               </div>
             )}
@@ -246,7 +247,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               />
             ) : (
               <div className="text-gray-900 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-gray-500" />
+                <MapPinIcon className="w-4 h-4 text-gray-500" />
                 {formatAddress(personalInfo.address) || 'לא צוין'}
               </div>
             )}
@@ -285,7 +286,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               />
             ) : (
               <div className="text-gray-900 flex items-center gap-2">
-                <Phone className="w-4 h-4 text-gray-500" />
+                <PhoneIcon className="w-4 h-4 text-gray-500" />
                 {personalInfo.parentPhone || 'לא צוין'}
               </div>
             )}
@@ -303,7 +304,7 @@ const PersonalInfoTabSimple: React.FC<PersonalInfoTabProps> = ({ student, studen
               />
             ) : (
               <div className="text-gray-900 flex items-center gap-2">
-                <Mail className="w-4 h-4 text-gray-500" />
+                <EnvelopeIcon className="w-4 h-4 text-gray-500" />
                 {personalInfo.parentEmail || 'לא צוין'}
               </div>
             )}

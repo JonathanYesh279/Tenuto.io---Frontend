@@ -5,15 +5,12 @@
  */
 
 import { useState, useEffect } from 'react'
-import {
-  BookOpen, Calendar, TrendingUp, Award, Clock, User, Plus,
-  Trash2, AlertCircle, MapPin, CheckCircle, X, Music,
-  GraduationCap, Users, Info
-} from 'lucide-react'
+
 import apiService from '../../../../../services/apiService'
 import theoryEnrollmentService from '../../../../../services/theoryEnrollmentService'
 import { syncStudentTheoryLessons } from '../../../../../utils/syncTheoryLessonsData'
 import TeacherNameDisplay from '../../../../../components/TeacherNameDisplay'
+import { BookOpenIcon, CalendarIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, InfoIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrashIcon, TrendUpIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface TheoryTabProps {
   student: any
@@ -252,15 +249,15 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
     switch (category?.toLowerCase()) {
       case 'harmony':
       case 'הרמוניה':
-        return <Music className="w-4 h-4" />
+        return <MusicNotesIcon className="w-4 h-4" />
       case 'theory':
       case 'תיאוריה':
-        return <BookOpen className="w-4 h-4" />
+        return <BookOpenIcon className="w-4 h-4" />
       case 'composition':
       case 'קומפוזיציה':
-        return <GraduationCap className="w-4 h-4" />
+        return <GraduationCapIcon className="w-4 h-4" />
       default:
-        return <BookOpen className="w-4 h-4" />
+        return <BookOpenIcon className="w-4 h-4" />
     }
   }
 
@@ -291,7 +288,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
       return (
         <div className="text-center py-16">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="w-8 h-8 text-gray-300" />
+            <BookOpenIcon className="w-8 h-8 text-gray-300" />
           </div>
           <h3 className="text-lg font-medium text-gray-600 mb-2">אין שיעורי תיאוריה רשומים</h3>
           <p className="text-gray-500 mb-6">התלמיד אינו רשום כרגע לשיעורי תיאוריה</p>
@@ -308,7 +305,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
     return (
       <div className="space-y-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-purple-600" />
+          <BookOpenIcon className="w-5 h-5 text-purple-600" />
           שיעורי תיאוריה רשומים ({enrolledTheoryLessons.length})
         </h3>
         
@@ -338,7 +335,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                 
                 <div className="flex items-center gap-2">
                   <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                    <CheckCircle className="w-3 h-3 mr-1" />
+                    <CheckCircleIcon className="w-3 h-3 mr-1" />
                     רשום
                   </span>
                   
@@ -348,7 +345,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="בטל הרשמה"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -364,7 +361,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
               {(lesson.date || lesson.startTime) && (
                 <div className="mb-3">
                   <div className="flex items-center gap-2 text-gray-600">
-                    <Clock className="w-4 h-4" />
+                    <ClockIcon className="w-4 h-4" />
                     <span className="text-sm">
                       {lesson.date && new Date(lesson.date).toLocaleDateString('he-IL')}
                       {lesson.startTime && lesson.endTime && (
@@ -381,7 +378,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
               {/* Location */}
               {lesson.location && (
                 <div className="flex items-center gap-2 text-gray-600 mb-3">
-                  <MapPin className="w-4 h-4" />
+                  <MapPinIcon className="w-4 h-4" />
                   <span className="text-sm">{lesson.location}</span>
                 </div>
               )}
@@ -389,7 +386,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
               {/* Students count */}
               {lesson.maxStudents && (
                 <div className="flex items-center gap-2 text-gray-600">
-                  <Users className="w-4 h-4" />
+                  <UsersIcon className="w-4 h-4" />
                   <span className="text-sm">
                     {lesson.studentIds?.length || 0} / {lesson.maxStudents} תלמידים
                   </span>
@@ -424,7 +421,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-green-600" />
+            <PlusIcon className="w-5 h-5 text-green-600" />
             שיעורי תיאוריה זמינים להרשמה
           </h3>
           <div className="text-sm text-gray-600">
@@ -435,7 +432,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
         {availableTheoryLessons.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-8 h-8 text-gray-300" />
+              <BookOpenIcon className="w-8 h-8 text-gray-300" />
             </div>
             <h4 className="text-lg font-medium text-gray-600 mb-2">אין שיעורים זמינים</h4>
             <p className="text-gray-500">
@@ -497,7 +494,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                         </>
                       ) : (
                         <>
-                          <Plus className="w-4 h-4" />
+                          <PlusIcon className="w-4 h-4" />
                           הרשם
                         </>
                       )}
@@ -515,7 +512,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                   {(lesson.date || lesson.startTime) && (
                     <div className="mb-3">
                       <div className="flex items-center gap-2 text-gray-600">
-                        <Clock className="w-4 h-4" />
+                        <ClockIcon className="w-4 h-4" />
                         <span className="text-sm">
                           {lesson.date && new Date(lesson.date).toLocaleDateString('he-IL')}
                           {lesson.startTime && lesson.endTime && (
@@ -532,7 +529,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                   {/* Location */}
                   {lesson.location && (
                     <div className="flex items-center gap-2 text-gray-600 mb-3">
-                      <MapPin className="w-4 h-4" />
+                      <MapPinIcon className="w-4 h-4" />
                       <span className="text-sm">{lesson.location}</span>
                     </div>
                   )}
@@ -541,7 +538,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                   {lesson.isFull && (
                     <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                       <div className="flex items-center gap-2 text-yellow-800">
-                        <AlertCircle className="w-4 h-4" />
+                        <WarningCircleIcon className="w-4 h-4" />
                         <span className="text-sm font-medium">השיעור מלא</span>
                       </div>
                       <p className="text-yellow-700 text-sm mt-1">
@@ -553,7 +550,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                   {!lesson.gradeCompatible && (
                     <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                       <div className="flex items-center gap-2 text-red-800">
-                        <AlertCircle className="w-4 h-4" />
+                        <WarningCircleIcon className="w-4 h-4" />
                         <span className="text-sm font-medium">לא מתאים לכיתה</span>
                       </div>
                       <p className="text-red-700 text-sm mt-1">
@@ -565,7 +562,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                   {!lesson.levelCompatible && (
                     <div className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div className="flex items-center gap-2 text-orange-800">
-                        <AlertCircle className="w-4 h-4" />
+                        <WarningCircleIcon className="w-4 h-4" />
                         <span className="text-sm font-medium">רמה לא מתאימה</span>
                       </div>
                       <p className="text-orange-700 text-sm mt-1">
@@ -577,7 +574,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                   {/* Students count */}
                   {lesson.maxStudents && (
                     <div className="flex items-center gap-2 text-gray-600 mb-3">
-                      <Users className="w-4 h-4" />
+                      <UsersIcon className="w-4 h-4" />
                       <span className="text-sm">
                         {lesson.studentIds?.length || 0} / {lesson.maxStudents} תלמידים
                       </span>
@@ -603,7 +600,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                   {lesson.targetGrades && lesson.targetGrades.length > 0 && (
                     <div className="mt-3 pt-3 border-t">
                       <div className="flex items-center gap-2">
-                        <Info className="w-4 h-4 text-gray-500" />
+                        <InfoIcon className="w-4 h-4 text-gray-500" />
                         <span className="text-xs text-gray-500">
                           מיועד לכיתות: {lesson.targetGrades.join(', ')}
                         </span>
@@ -626,7 +623,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
           <div className="flex items-start justify-between">
             <div className="flex items-start">
-              <AlertCircle className="w-5 h-5 text-yellow-600 mt-1 mr-3" />
+              <WarningCircleIcon className="w-5 h-5 text-yellow-600 mt-1 mr-3" />
               <div>
                 <h4 className="font-semibold text-yellow-800">Data Inconsistency Detected</h4>
                 <p className="text-sm text-yellow-700 mt-1">
@@ -647,7 +644,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
                 </>
               ) : (
                 <>
-                  <CheckCircle className="w-4 h-4" />
+                  <CheckCircleIcon className="w-4 h-4" />
                   Fix Data
                 </>
               )}
@@ -673,7 +670,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
             }`}
           >
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
+              <CheckCircleIcon className="w-4 h-4" />
               שיעורים רשומים
             </div>
           </button>
@@ -686,7 +683,7 @@ const TheoryTab: React.FC<TheoryTabProps> = ({ student, studentId, isLoading }) 
             }`}
           >
             <div className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               הרשמה חדשה
             </div>
           </button>

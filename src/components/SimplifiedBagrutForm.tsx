@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import {
-  X, Save, User, AlertCircle, CheckCircle, Search, Music,
-  FileText, ChevronLeft, ChevronRight, Plus, Trash2,
-  Info, Clock, CheckCircle2, AlertTriangle, Sparkles, ArrowRight
-} from 'lucide-react'
+
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import type { BagrutFormData } from '../types/bagrut.types'
 import { handleServerValidationError } from '../utils/validationUtils'
 import { getDisplayName } from '@/utils/nameUtils'
+import { ArrowRightIcon, CaretLeftIcon, CaretRightIcon, CheckCircle2Icon, CheckCircleIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, InfoIcon, MagnifyingGlassIcon, MusicNotesIcon, PlusIcon, SparkleIcon, TrashIcon, UserIcon, WarningCircleIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
 
 interface SimplifiedBagrutFormProps {
   students: any[]
@@ -37,9 +34,9 @@ interface StepState {
 
 // Simplified steps for initial bagrut creation
 const STEPS = [
-  { id: 'basic', name: 'מידע בסיסי', icon: User },
-  { id: 'recital', name: 'הגדרת רסיטל', icon: Music },
-  { id: 'program', name: 'תוכנית בסיסית', icon: FileText }
+  { id: 'basic', name: 'מידע בסיסי', icon: UserIcon },
+  { id: 'recital', name: 'הגדרת רסיטל', icon: MusicNotesIcon },
+  { id: 'program', name: 'תוכנית בסיסית', icon: FileTextIcon }
 ] as const
 
 const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
@@ -146,7 +143,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
   const updateStepStates = useCallback(() => {
     const states: StepState[] = []
     
-    // Step 0: Basic Info
+    // Step 0: Basic InfoIcon
     const basicFields = ['studentId', 'teacherId']
     const basicCompleted = basicFields.filter(field => {
       const validation = validateField(field, formData[field as keyof BagrutFormData])
@@ -515,7 +512,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     : 'bg-gray-100 border-gray-300 text-gray-400'
                 }`}>
                   {isCompleted ? (
-                    <CheckCircle2 className="w-6 h-6" />
+                    <CheckCircle2Icon className="w-6 h-6" />
                   ) : isCurrent && isValidatingStep ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
                   ) : (
@@ -544,7 +541,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     <p className="text-xs text-gray-500 mt-1">
                       {isValid ? (
                         <span className="flex items-center justify-center gap-1 text-success-600">
-                          <CheckCircle2 className="w-3 h-3" />
+                          <CheckCircle2Icon className="w-3 h-3" />
                           מוכן
                         </span>
                       ) : (
@@ -574,13 +571,13 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
       {/* Student Selection */}
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <User className="w-5 h-5 text-gray-600" />
+          <UserIcon className="w-5 h-5 text-gray-600" />
           בחירת תלמיד <span className="text-red-500">*</span>
         </h3>
         
         <div className="space-y-4">
           <div className="relative">
-            <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="חיפוש תלמיד לפי שם או כיתה..."
@@ -606,7 +603,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     <p>טלפון: {selectedStudent.personalInfo?.phone}</p>
                   </div>
                 </div>
-                <CheckCircle className="w-6 h-6 text-green-600" />
+                <CheckCircleIcon className="w-6 h-6 text-green-600" />
               </div>
             </div>
           )}
@@ -652,13 +649,13 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
       {/* Teacher Selection */}
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <User className="w-5 h-5 text-gray-600" />
+          <UserIcon className="w-5 h-5 text-gray-600" />
           בחירת מורה מנחה <span className="text-red-500">*</span>
         </h3>
         
         <div className="space-y-4">
           <div className="relative">
-            <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="חיפוש מורה לפי שם..."
@@ -684,7 +681,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     <p>טלפון: {selectedTeacher.personalInfo?.phone}</p>
                   </div>
                 </div>
-                <CheckCircle className="w-6 h-6 text-green-600" />
+                <CheckCircleIcon className="w-6 h-6 text-green-600" />
               </div>
             </div>
           )}
@@ -727,7 +724,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
         </div>
       </Card>
 
-      {/* Additional Basic Info */}
+      {/* Additional Basic InfoIcon */}
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטים נוספים</h3>
         
@@ -778,7 +775,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
     <div className="space-y-6">
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Music className="w-5 h-5 text-gray-600" />
+          <MusicNotesIcon className="w-5 h-5 text-gray-600" />
           הגדרת רסיטל
         </h3>
         
@@ -852,7 +849,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
     <div className="space-y-6">
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <FileText className="w-5 h-5 text-gray-600" />
+          <FileTextIcon className="w-5 h-5 text-gray-600" />
           תוכנית בסיסית
         </h3>
         <p className="text-sm text-gray-600 mb-4">
@@ -873,7 +870,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     onClick={() => removeProgramPiece(index)}
                     className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 )}
               </div>
@@ -927,7 +924,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               onClick={addProgramPiece}
               className="flex items-center px-4 py-2 text-primary border border-border rounded hover:bg-muted/50 transition-colors"
             >
-              <Plus className="w-4 h-4 ml-1" />
+              <PlusIcon className="w-4 h-4 ml-1" />
               הוסף יצירה
             </button>
           </div>
@@ -977,7 +974,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
         <div className="bg-white rounded max-w-md w-full p-6 shadow-2xl animate-scale-in">
           <div className="text-center">
             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-success-100 mb-4">
-              <CheckCircle2 className="w-8 h-8 text-success-600" aria-hidden="true" />
+              <CheckCircle2Icon className="w-8 h-8 text-success-600" aria-hidden="true" />
             </div>
             
             <h3 id="success-title" className="text-xl font-bold text-gray-900 mb-2">
@@ -998,7 +995,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                 className="w-full px-4 py-3 bg-primary text-primary-foreground rounded hover:bg-muted transition-colors font-medium"
               >
                 <div className="flex items-center justify-center gap-2">
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  <ArrowRightIcon className="w-4 h-4" aria-hidden="true" />
                   עבור לדף הבגרות
                 </div>
               </button>
@@ -1058,7 +1055,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
           onClick={onCancel}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -1070,7 +1067,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
         {/* General Error */}
         {errors.general && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <WarningCircleIcon className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
         )}
@@ -1089,7 +1086,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
             className="flex items-center px-4 py-3 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 min-w-[120px] justify-center"
             aria-label="חזר לשלב הקודם"
           >
-            <ChevronRight className="w-4 h-4 ml-2" aria-hidden="true" />
+            <CaretRightIcon className="w-4 h-4 ml-2" aria-hidden="true" />
             הקודם
           </button>
           
@@ -1124,7 +1121,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 ml-2" aria-hidden="true" />
+                  <FloppyDiskIcon className="w-4 h-4 ml-2" aria-hidden="true" />
                   {isEdit ? 'עדכן בגרות' : 'צור בגרות'}
                 </>
               )}
@@ -1149,7 +1146,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
               ) : (
                 <>
                   הבא
-                  <ChevronLeft className="w-4 h-4 mr-2" aria-hidden="true" />
+                  <CaretLeftIcon className="w-4 h-4 mr-2" aria-hidden="true" />
                 </>
               )}
             </button>

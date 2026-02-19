@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Calendar, Clock, MapPin, Users, Plus, Eye, UserCheck } from 'lucide-react'
+
 import { OrchestraTabProps, OrchestraRehearsal } from '../../types'
 import apiService from '../../../../../services/apiService'
+import { CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, PlusIcon, UserCircleCheckIcon, UsersIcon } from '@phosphor-icons/react'
 
 const ScheduleTab: React.FC<OrchestraTabProps> = ({
   orchestraId,
@@ -114,7 +115,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
           onClick={() => window.open('/rehearsals', '_blank')}
           className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
-          <Plus className="w-4 h-4 ml-1" />
+          <PlusIcon className="w-4 h-4 ml-1" />
           הוסף חזרה
         </button>
       </div>
@@ -148,7 +149,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
                     {/* Date and Time */}
                     <div className="flex items-center gap-4 mb-2">
                       <div className="flex items-center">
-                        <Calendar className="w-5 h-5 text-gray-400 ml-2" />
+                        <CalendarIcon className="w-5 h-5 text-gray-400 ml-2" />
                         <span className="font-medium text-gray-900">
                           {formatDate(rehearsal.date)}
                         </span>
@@ -163,11 +164,11 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
                     {/* Time and Location */}
                     <div className="flex items-center gap-6 mb-3 text-sm text-gray-600">
                       <div className="flex items-center">
-                        <Clock className="w-4 h-4 ml-2" />
+                        <ClockIcon className="w-4 h-4 ml-2" />
                         <span>{rehearsal.startTime} - {rehearsal.endTime}</span>
                       </div>
                       <div className="flex items-center">
-                        <MapPin className="w-4 h-4 ml-2" />
+                        <MapPinIcon className="w-4 h-4 ml-2" />
                         <span>{rehearsal.location}</span>
                       </div>
                     </div>
@@ -176,7 +177,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
                     {rehearsal.attendance && (
                       <div className="flex items-center gap-4">
                         <div className="flex items-center">
-                          <Users className="w-4 h-4 text-gray-400 ml-2" />
+                          <UsersIcon className="w-4 h-4 text-gray-400 ml-2" />
                           <span className="text-sm text-gray-600">
                             נוכחות: {stats.present} מתוך {stats.total}
                           </span>
@@ -214,7 +215,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
                         className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors"
                         title="צפה בנוכחות"
                       >
-                        <UserCheck className="w-4 h-4" />
+                        <UserCircleCheckIcon className="w-4 h-4" />
                       </button>
                     )}
                     <button
@@ -222,7 +223,7 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
                       className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
                       title="צפה בפרטים"
                     >
-                      <Eye className="w-4 h-4" />
+                      <EyeIcon className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -232,14 +233,14 @@ const ScheduleTab: React.FC<OrchestraTabProps> = ({
         </div>
       ) : (
         <div className="text-center py-12">
-          <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">אין חזרות מתוכננות</h3>
           <p className="text-gray-600 mb-4">התחל על ידי הוספת החזרה הראשונה</p>
           <button
             onClick={() => window.open('/rehearsals', '_blank')}
             className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <Plus className="w-4 h-4 ml-1" />
+            <PlusIcon className="w-4 h-4 ml-1" />
             הוסף חזרה ראשונה
           </button>
         </div>

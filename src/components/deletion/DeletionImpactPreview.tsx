@@ -6,23 +6,10 @@
  */
 
 import React, { useState } from 'react'
-import { 
-  AlertTriangle, 
-  FileText, 
-  Users, 
-  Calendar, 
-  Music, 
-  BookOpen,
-  Database,
-  Clock,
-  ChevronDown,
-  ChevronLeft,
-  Info,
-  AlertCircle,
-  XCircle
-} from 'lucide-react'
+
 import { DeletionImpact, RelatedRecord } from './types'
 import { Card } from '../ui/Card'
+import { BookOpenIcon, CalendarIcon, CaretDownIcon, CaretLeftIcon, ClockIcon, DatabaseIcon, FileTextIcon, InfoIcon, MusicNotesIcon, UsersIcon, WarningCircleIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface DeletionImpactPreviewProps {
   impact: DeletionImpact
@@ -58,21 +45,21 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'critical': return <XCircle className="w-5 h-5" />
-      case 'high': return <AlertTriangle className="w-5 h-5" />
-      case 'medium': return <AlertCircle className="w-5 h-5" />
-      default: return <Info className="w-5 h-5" />
+      case 'critical': return <XCircleIcon className="w-5 h-5" />
+      case 'high': return <WarningIcon className="w-5 h-5" />
+      case 'medium': return <WarningCircleIcon className="w-5 h-5" />
+      default: return <InfoIcon className="w-5 h-5" />
     }
   }
 
   const getRecordTypeIcon = (type: string) => {
     switch (type) {
-      case 'lesson': return <Calendar className="w-4 h-4" />
-      case 'attendance': return <Users className="w-4 h-4" />
-      case 'document': return <FileText className="w-4 h-4" />
-      case 'orchestra': return <Music className="w-4 h-4" />
-      case 'theory_class': return <BookOpen className="w-4 h-4" />
-      default: return <Database className="w-4 h-4" />
+      case 'lesson': return <CalendarIcon className="w-4 h-4" />
+      case 'attendance': return <UsersIcon className="w-4 h-4" />
+      case 'document': return <FileTextIcon className="w-4 h-4" />
+      case 'orchestra': return <MusicNotesIcon className="w-4 h-4" />
+      case 'theory_class': return <BookOpenIcon className="w-4 h-4" />
+      default: return <DatabaseIcon className="w-4 h-4" />
     }
   }
 
@@ -164,7 +151,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
           {!impact.canDelete && (
             <div className="bg-red-50 border border-red-200 rounded p-4">
               <div className="flex items-center gap-2 text-red-700">
-                <XCircle className="w-5 h-5" />
+                <XCircleIcon className="w-5 h-5" />
                 <span className="font-semibold font-reisinger-yonatan">
                   לא ניתן למחוק כרגע
                 </span>
@@ -180,7 +167,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
           {impact.warnings.length > 0 && impact.canDelete && (
             <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
               <div className="flex items-center gap-2 text-yellow-700 mb-2">
-                <AlertTriangle className="w-5 h-5" />
+                <WarningIcon className="w-5 h-5" />
                 <span className="font-semibold font-reisinger-yonatan">אזהרות</span>
               </div>
               <ul className="space-y-1 text-sm text-yellow-700">
@@ -202,14 +189,14 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
               className="flex items-center justify-between w-full text-right"
             >
               <div className="flex items-center gap-2">
-                <Database className="w-5 h-5 text-gray-500" />
+                <DatabaseIcon className="w-5 h-5 text-gray-500" />
                 <h4 className="text-md font-semibold text-gray-900 font-reisinger-yonatan">
                   רשומות קשורות ({impact.relatedRecords.length})
                 </h4>
               </div>
               {expandedSections.has('related') ? 
-                <ChevronDown className="w-5 h-5 text-gray-500" /> :
-                <ChevronLeft className="w-5 h-5 text-gray-500" />
+                <CaretDownIcon className="w-5 h-5 text-gray-500" /> :
+                <CaretLeftIcon className="w-5 h-5 text-gray-500" />
               }
             </button>
 
@@ -256,14 +243,14 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
               className="flex items-center justify-between w-full text-right"
             >
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-yellow-500" />
+                <WarningCircleIcon className="w-5 h-5 text-yellow-500" />
                 <h4 className="text-md font-semibold text-gray-900 font-reisinger-yonatan">
                   הפניות יתומות ({impact.orphanedReferences.length})
                 </h4>
               </div>
               {expandedSections.has('orphaned') ? 
-                <ChevronDown className="w-5 h-5 text-gray-500" /> :
-                <ChevronLeft className="w-5 h-5 text-gray-500" />
+                <CaretDownIcon className="w-5 h-5 text-gray-500" /> :
+                <CaretLeftIcon className="w-5 h-5 text-gray-500" />
               }
             </button>
 
@@ -304,7 +291,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
       {/* Time Estimation */}
       <Card className="bg-blue-50 border-blue-200">
         <div className="flex items-center gap-3">
-          <Clock className="w-5 h-5 text-blue-600" />
+          <ClockIcon className="w-5 h-5 text-blue-600" />
           <div>
             <h4 className="text-md font-semibold text-blue-900 font-reisinger-yonatan">
               זמן ביצוע משוער

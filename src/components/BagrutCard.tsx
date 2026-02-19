@@ -1,10 +1,8 @@
 import React from 'react'
-import { 
-  User, Calendar, CheckCircle, 
-  FileText, Eye, Edit, Download, Trash2, Music 
-} from 'lucide-react'
+
 import { Card } from './ui/Card'
 import type { Bagrut } from '../types/bagrut.types'
+import { CalendarIcon, CheckCircleIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, MusicNotesIcon, PencilIcon, TrashIcon, UserIcon } from '@phosphor-icons/react'
 
 interface BagrutCardProps {
   bagrut: Bagrut
@@ -62,7 +60,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-2 space-x-reverse">
           <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-            <User className="w-5 h-5 text-primary" />
+            <UserIcon className="w-5 h-5 text-primary" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">{studentName}</h3>
@@ -95,19 +93,19 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
       {/* Details Grid */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="flex items-center text-sm text-gray-600">
-          <FileText className="w-4 h-4 ml-1 text-gray-400" />
+          <FileTextIcon className="w-4 h-4 ml-1 text-gray-400" />
           <span>{presentationsCompleted}/{totalPresentations} מצגות</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
-          <Music className="w-4 h-4 ml-1 text-gray-400" />
+          <MusicNotesIcon className="w-4 h-4 ml-1 text-gray-400" />
           <span>{programPieces} יצירות</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
-          <CheckCircle className="w-4 h-4 ml-1 text-gray-400" />
+          <CheckCircleIcon className="w-4 h-4 ml-1 text-gray-400" />
           <span>מגן: {magenCompleted ? 'הושלם' : 'בתהליך'}</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
-          <Calendar className="w-4 h-4 ml-1 text-gray-400" />
+          <CalendarIcon className="w-4 h-4 ml-1 text-gray-400" />
           <span>
             {bagrut.testDate 
               ? new Date(bagrut.testDate).toLocaleDateString('he-IL', { month: 'short', day: 'numeric' })
@@ -147,7 +145,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
             className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
             title="ערוך"
           >
-            <Edit className="w-4 h-4" />
+            <PencilIcon className="w-4 h-4" />
           </button>
           <button
             onClick={(e) => {
@@ -157,7 +155,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
             className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded transition-colors"
             title="ייצא PDF"
           >
-            <Download className="w-4 h-4" />
+            <DownloadSimpleIcon className="w-4 h-4" />
           </button>
           <button
             onClick={(e) => {
@@ -167,7 +165,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
             className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded transition-colors"
             title="מחק"
           >
-            <Trash2 className="w-4 h-4" />
+            <TrashIcon className="w-4 h-4" />
           </button>
         </div>
         
@@ -178,7 +176,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
           }}
           className="flex items-center px-3 py-1.5 bg-primary text-white rounded hover:bg-neutral-800 transition-colors text-sm"
         >
-          <Eye className="w-3.5 h-3.5 ml-1" />
+          <EyeIcon className="w-3.5 h-3.5 ml-1" />
           פרטים
         </button>
       </div>

@@ -1,10 +1,11 @@
-import { User, LogOut, Home } from 'lucide-react'
+
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
 import {
+import { HouseIcon, LogOutIcon, UserIcon } from '@phosphor-icons/react'
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -119,7 +120,7 @@ export default function Header() {
         <SchoolYearSelector />
       </div>
 
-      {/* Left side (RTL) - User Controls */}
+      {/* Left side (RTL) - UserIcon Controls */}
       <div className="flex items-center gap-4" style={{ direction: 'ltr' }}>
         {/* Desktop - Individual Icons */}
         {!isMobile && (
@@ -131,13 +132,13 @@ export default function Header() {
                 className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center hover:bg-primary/15 hover:border-primary/30 transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 title="לוח בקרה"
               >
-                <Home className="w-5 h-5 text-primary" />
+                <HouseIcon className="w-5 h-5 text-primary" />
               </button>
             )}
           </>
         )}
 
-        {/* User Avatar with Profile Dropdown — shadcn DropdownMenu */}
+        {/* UserIcon Avatar with Profile Dropdown — shadcn DropdownMenu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -167,7 +168,7 @@ export default function Header() {
               className="flex items-center justify-between cursor-pointer"
             >
               <span className="font-reisinger-yonatan">עמוד אישי</span>
-              <User className="w-4 h-4 text-muted-foreground" />
+              <UserIcon className="w-4 h-4 text-muted-foreground" />
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -175,7 +176,7 @@ export default function Header() {
               className="flex items-center justify-between cursor-pointer text-destructive focus:text-destructive"
             >
               <span className="font-reisinger-yonatan">יציאה</span>
-              <LogOut className="w-4 h-4" />
+              <LogOutIcon className="w-4 h-4" />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

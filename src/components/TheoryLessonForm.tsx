@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { X, Save, Clock, MapPin, Users, BookOpen, Calendar, Repeat } from 'lucide-react'
+
 import { teacherService, schoolYearService } from '../services/apiService'
 import { VALID_LOCATIONS } from '../constants/locations'
 import { handleServerValidationError } from '../utils/validationUtils'
 import { getDisplayName } from '@/utils/nameUtils'
+import { BookOpenIcon, CalendarIcon, ClockIcon, FloppyDiskIcon, MapPinIcon, RepeatIcon, UsersIcon, XIcon } from '@phosphor-icons/react'
 
 interface TheoryLessonFormProps {
   theoryLesson?: any
@@ -447,7 +448,7 @@ export default function TheoryLessonForm({
               onClick={onCancel}
               className="p-2 hover:bg-gray-100 rounded transition-colors"
             >
-              <X className="w-5 h-5 text-gray-500" />
+              <XIcon className="w-5 h-5 text-gray-500" />
             </button>
           </div>
 
@@ -463,7 +464,7 @@ export default function TheoryLessonForm({
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                <Calendar className="w-4 h-4 ml-2" />
+                <CalendarIcon className="w-4 h-4 ml-2" />
                 שיעור בודד
               </button>
               <button
@@ -475,7 +476,7 @@ export default function TheoryLessonForm({
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                <Repeat className="w-4 h-4 ml-2" />
+                <RepeatIcon className="w-4 h-4 ml-2" />
                 רצף שיעורים
               </button>
             </div>
@@ -485,7 +486,7 @@ export default function TheoryLessonForm({
           {mode === 'bulk-edit' && theoryLessons && (
             <div className="bg-blue-50 border border-blue-200 rounded p-4">
               <div className="flex items-center">
-                <Users className="w-5 h-5 text-blue-600 ml-2" />
+                <UsersIcon className="w-5 h-5 text-blue-600 ml-2" />
                 <p className="text-blue-800">
                   עריכה קבוצתית של {theoryLessons.length} שיעורי תיאוריה
                 </p>
@@ -528,7 +529,7 @@ export default function TheoryLessonForm({
             {/* Category */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                <BookOpen className="w-4 h-4 inline ml-1" />
+                <BookOpenIcon className="w-4 h-4 inline ml-1" />
                 קטגוריה *
               </label>
               <select
@@ -568,7 +569,7 @@ export default function TheoryLessonForm({
           {/* Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <MapPin className="w-4 h-4 inline ml-1" />
+              <MapPinIcon className="w-4 h-4 inline ml-1" />
               מיקום *
             </label>
             <select
@@ -617,7 +618,7 @@ export default function TheoryLessonForm({
               {/* Start Time */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Clock className="w-4 h-4 inline ml-1" />
+                  <ClockIcon className="w-4 h-4 inline ml-1" />
                   שעת התחלה *
                 </label>
                 <input
@@ -649,7 +650,7 @@ export default function TheoryLessonForm({
               {/* Start Time */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Clock className="w-4 h-4 inline ml-1" />
+                  <ClockIcon className="w-4 h-4 inline ml-1" />
                   שעת התחלה
                 </label>
                 <input
@@ -729,7 +730,7 @@ export default function TheoryLessonForm({
                 {/* Start Time */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Clock className="w-4 h-4 inline ml-1" />
+                    <ClockIcon className="w-4 h-4 inline ml-1" />
                     שעת התחלה *
                   </label>
                   <input
@@ -823,7 +824,7 @@ export default function TheoryLessonForm({
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
               ) : (
-                <Save className="w-4 h-4 ml-2" />
+                <FloppyDiskIcon className="w-4 h-4 ml-2" />
               )}
               {mode === 'edit' ? 'עדכן שיעור' : 
                mode === 'bulk-edit' ? 'עדכן שיעורים' :

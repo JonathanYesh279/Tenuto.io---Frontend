@@ -6,9 +6,10 @@
  */
 
 import { useState, useEffect, useMemo } from 'react'
-import { BookOpen, Trophy, Clock, FileText, CheckCircle, XCircle, Star, Edit, Save, X, AlertTriangle, User } from 'lucide-react'
+
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
+import { BookOpenIcon, CheckCircleIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, PencilIcon, StarIcon, TrophyIcon, UserIcon, WarningIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface AcademicInfoTabProps {
   student: any
@@ -265,15 +266,15 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
   const getExamStatusIcon = (status: string) => {
     switch (status) {
       case 'עבר/ה':
-        return <CheckCircle className="w-4 h-4 text-green-500" />
+        return <CheckCircleIcon className="w-4 h-4 text-green-500" />
       case 'לא עבר/ה':
-        return <XCircle className="w-4 h-4 text-red-500" />
+        return <XCircleIcon className="w-4 h-4 text-red-500" />
       case 'עבר/ה בהצטיינות':
-        return <Star className="w-4 h-4 text-blue-500" />
+        return <StarIcon className="w-4 h-4 text-blue-500" />
       case 'עבר/ה בהצטיינות יתרה':
-        return <Star className="w-4 h-4 text-purple-500" />
+        return <StarIcon className="w-4 h-4 text-purple-500" />
       default:
-        return <Clock className="w-4 h-4 text-gray-500" />
+        return <ClockIcon className="w-4 h-4 text-gray-500" />
     }
   }
 
@@ -294,7 +295,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
-      {/* Header with Edit Button - matching PersonalInfoTab */}
+      {/* Header with PencilIcon Button - matching PersonalInfoTab */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">מידע אקדמי</h2>
@@ -306,7 +307,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
               onClick={() => setIsEditing(true)}
               className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors shadow-md hover:shadow-lg"
             >
-              <Edit className="w-4 h-4" />
+              <PencilIcon className="w-4 h-4" />
               ערוך
             </button>
           ) : (
@@ -316,7 +317,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                 disabled={isSaving}
                 className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors shadow-md hover:shadow-lg disabled:opacity-50"
               >
-                <Save className="w-4 h-4" />
+                <FloppyDiskIcon className="w-4 h-4" />
                 {isSaving ? 'שומר...' : 'שמור'}
               </button>
               <button
@@ -324,7 +325,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                 disabled={isSaving}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors shadow-md hover:shadow-lg disabled:opacity-50"
               >
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
                 בטל
               </button>
             </>
@@ -337,7 +338,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         {/* Header */}
         <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
           <div className="p-2 bg-muted/50 rounded-lg">
-            <BookOpen className="w-5 h-5 text-primary" />
+            <BookOpenIcon className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900">פרטים אקדמיים</h3>
         </div>
@@ -346,7 +347,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         {teachersWithoutLessons.length > 0 && (
           <div className="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
             <div className="flex items-center gap-2 text-sm text-orange-700">
-              <AlertTriangle className="w-4 h-4" />
+              <WarningIcon className="w-4 h-4" />
               <span className="font-medium">מורים ללא שיעור:</span>
               {teachersWithoutLessons.map((t, i) => (
                 <span key={t._id || i}>{getDisplayName(t.personalInfo) || 'מורה'}{i < teachersWithoutLessons.length - 1 ? ', ' : ''}</span>
@@ -360,7 +361,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
           {/* Teacher - HIGHLIGHTED - First from right */}
           <div className="bg-muted/50 rounded-lg p-4 border border-border">
             <div className="text-sm text-primary mb-1 flex items-center gap-1">
-              <User className="w-4 h-4" />
+              <UserIcon className="w-4 h-4" />
               מורה
             </div>
             <div className="text-base font-semibold text-primary">
@@ -432,7 +433,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         {academicInfo.instrumentProgress && academicInfo.instrumentProgress.length > 0 && (
           <div className="border-t border-gray-100 pt-4 mt-4">
             <div className="flex items-center gap-2 mb-4">
-              <Trophy className="w-5 h-5 text-primary" />
+              <TrophyIcon className="w-5 h-5 text-primary" />
               <h4 className="text-base font-semibold text-gray-900">מבחנים</h4>
             </div>
 
@@ -503,7 +504,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         {academicInfo.notes && (
           <div className="border-t border-gray-100 pt-4 mt-4">
             <div className="flex items-center gap-2 mb-2">
-              <FileText className="w-4 h-4 text-primary" />
+              <FileTextIcon className="w-4 h-4 text-primary" />
               <h4 className="text-sm font-semibold text-gray-900">הערות</h4>
             </div>
             <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{academicInfo.notes}</p>

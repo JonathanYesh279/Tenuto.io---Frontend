@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Check, X, Users, Clock, Calendar, Search, Save, RotateCcw, AlertCircle, CheckCircle } from 'lucide-react'
+
 import {
+import { ArrowCounterClockwiseIcon, CalendarIcon, CheckCircleIcon, CheckIcon, ClockIcon, FloppyDiskIcon, MagnifyingGlassIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
   formatRehearsalDateTime,
   calculateAttendanceStats,
   formatAttendanceList,
@@ -70,7 +71,7 @@ export default function AttendanceManager({
   }
 
   useEffect(() => {
-    // Check if there are changes
+    // CheckIcon if there are changes
     const originalPresent = new Set(rehearsal.attendance?.present || [])
     const originalAbsent = new Set(rehearsal.attendance?.absent || [])
     
@@ -175,11 +176,11 @@ export default function AttendanceManager({
   const getStatusIcon = (status: 'present' | 'absent' | 'unmarked') => {
     switch (status) {
       case 'present':
-        return <Check className="w-4 h-4 text-green-600" />
+        return <CheckIcon className="w-4 h-4 text-green-600" />
       case 'absent':
-        return <X className="w-4 h-4 text-red-600" />
+        return <XIcon className="w-4 h-4 text-red-600" />
       default:
-        return <Users className="w-4 h-4 text-gray-400" />
+        return <UsersIcon className="w-4 h-4 text-gray-400" />
     }
   }
 
@@ -199,7 +200,7 @@ export default function AttendanceManager({
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded shadow-2xl p-8 max-w-md w-full text-center">
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-              <CheckCircle className="h-6 w-6 text-green-600" />
+              <CheckCircleIcon className="h-6 w-6 text-green-600" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">הנוכחות נשמרה בהצלחה</h3>
             <p className="text-sm text-gray-500">הנתונים עודכנו במערכת</p>
@@ -218,18 +219,18 @@ export default function AttendanceManager({
               onClick={onClose}
               className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <XIcon className="w-5 h-5" />
             </button>
             
             <div className="flex-1 text-center">
               <h3 className="text-lg font-semibold text-gray-900">ניהול נוכחות</h3>
               <div className="text-sm text-gray-600 mt-1">
                 <div className="flex items-center justify-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <CalendarIcon className="w-4 h-4" />
                   <span>{dateTime.fullDateTime}</span>
                 </div>
                 <div className="flex items-center justify-center gap-2 mt-1">
-                  <Users className="w-4 h-4" />
+                  <UsersIcon className="w-4 h-4" />
                   <span>{rehearsal.orchestra?.name}</span>
                 </div>
               </div>
@@ -265,21 +266,21 @@ export default function AttendanceManager({
                 onClick={() => handleQuickMarkAll('present')}
                 className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
               >
-                <Check className="w-4 h-4 ml-1" />
+                <CheckIcon className="w-4 h-4 ml-1" />
                 סמן הכל כנוכח
               </button>
               <button
                 onClick={() => handleQuickMarkAll('absent')}
                 className="flex items-center px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
               >
-                <X className="w-4 h-4 ml-1" />
+                <XIcon className="w-4 h-4 ml-1" />
                 סמן הכל כנעדר
               </button>
             </div>
 
-            {/* Search */}
+            {/* MagnifyingGlassIcon */}
             <div className="relative">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="חיפוש חבר..."
@@ -293,7 +294,7 @@ export default function AttendanceManager({
           {/* Error Display */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded p-4 mb-6 flex items-center">
-              <AlertCircle className="w-5 h-5 text-red-600 ml-2" />
+              <WarningCircleIcon className="w-5 h-5 text-red-600 ml-2" />
               <span className="text-red-800">{error}</span>
             </div>
           )}
@@ -334,7 +335,7 @@ export default function AttendanceManager({
                           }`}
                           title="נוכח"
                         >
-                          <Check className="w-4 h-4" />
+                          <CheckIcon className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleAttendanceChange(member._id, 'absent')}
@@ -345,7 +346,7 @@ export default function AttendanceManager({
                           }`}
                           title="נעדר"
                         >
-                          <X className="w-4 h-4" />
+                          <XIcon className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleAttendanceChange(member._id, 'unmarked')}
@@ -356,7 +357,7 @@ export default function AttendanceManager({
                           }`}
                           title="בטל סימון"
                         >
-                          <RotateCcw className="w-4 h-4" />
+                          <ArrowCounterClockwiseIcon className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -367,7 +368,7 @@ export default function AttendanceManager({
 
             {filteredMembers.length === 0 && (
               <div className="text-center py-12">
-                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">אין תוצאות</h3>
                 <p className="text-gray-600">לא נמצאו חברים התואמים לחיפוש</p>
               </div>
@@ -381,7 +382,7 @@ export default function AttendanceManager({
               disabled={!hasChanges || loading}
               className="flex items-center px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <RotateCcw className="w-4 h-4 ml-1" />
+              <ArrowCounterClockwiseIcon className="w-4 h-4 ml-1" />
               איפוס
             </button>
 
@@ -399,7 +400,7 @@ export default function AttendanceManager({
                   loading ? 'cursor-wait' : ''
                 }`}
               >
-                <Save className="w-4 h-4 ml-1" />
+                <FloppyDiskIcon className="w-4 h-4 ml-1" />
                 {loading ? 'שומר...' : 'שמור נוכחות'}
               </button>
             </div>

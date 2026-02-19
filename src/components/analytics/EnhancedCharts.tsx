@@ -52,7 +52,7 @@ export const AttendanceChart: React.FC<{
   }>
 }> = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+    <div className="bg-white p-6 rounded border border-gray-200 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-900 mb-4 text-right">
         סיכום נוכחות חודשי
       </h3>
@@ -120,7 +120,7 @@ export const InstrumentDistributionChart: React.FC<{
   const total = data.reduce((sum, item) => sum + item.count, 0)
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+    <div className="bg-white p-6 rounded border border-gray-200 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-900 mb-4 text-right">
         התפלגות כלי נגינה
       </h3>
@@ -186,7 +186,7 @@ export const ProgressTrendChart: React.FC<{
   }>
 }> = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+    <div className="bg-white p-6 rounded border border-gray-200 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-900 mb-4 text-right">
         התפתחות רמות התלמידים
       </h3>
@@ -302,7 +302,7 @@ export const QuickStatsCards: React.FC<{
       {cards.map((card, index) => (
         <div 
           key={index}
-          className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200"
+          className="bg-white p-6 rounded border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200"
         >
           <div className="flex items-center justify-between">
             <div>

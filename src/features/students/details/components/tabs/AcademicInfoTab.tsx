@@ -6,10 +6,11 @@
  */
 
 import { useState, useMemo, useEffect } from 'react'
-import { GraduationCap, Music, User, TrendingUp, School, BookOpen, Award, Target, Star, Clock, Trophy, Calendar, CheckCircle, AlertTriangle, Edit2, Save, X as XIcon, ClipboardCheck } from 'lucide-react'
+
 import { StudentDetails } from '../../types'
 import { Doughnut, Line, Bar } from 'react-chartjs-2'
 import {
+import { BookOpenIcon, CalendarIcon, CheckCircleIcon, ClipboardCheckIcon, ClockIcon, FloppyDiskIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilSimpleIcon, SchoolIcon, StarIcon, TargetIcon, TrendUpIcon, TrophyIcon, UserIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -297,7 +298,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
 
   const handleCancelStageAdvancement = () => {
     setShowStageModal(false)
-    // Save without stage advancement
+    // FloppyDiskIcon without stage advancement
     saveTestUpdates(false)
   }
 
@@ -464,7 +465,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded p-6 border border-green-200">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-green-600" />
+            <ClockIcon className="w-5 h-5 text-green-600" />
             <h4 className="font-semibold text-gray-900">שעות תרגול - {instrumentName}</h4>
           </div>
           {achievement && (
@@ -548,7 +549,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-purple-500 rounded-lg">
-              <GraduationCap className="w-6 h-6 text-white" />
+              <GraduationCapIcon className="w-6 h-6 text-white" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900">מעקב דרישות בגרות</h3>
@@ -575,9 +576,9 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-medium text-gray-900">{req.name}</h4>
                   {req.status === 'completed' ? (
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <CheckCircleIcon className="w-5 h-5 text-green-500" />
                   ) : (
-                    <AlertTriangle className="w-5 h-5 text-orange-500" />
+                    <WarningIcon className="w-5 h-5 text-orange-500" />
                   )}
                 </div>
                 <p className="text-sm text-gray-600 mb-2">{req.description}</p>
@@ -624,7 +625,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       </div>
 
       {/* Academic Summary Card - Shows key info at a glance */}
-      <InfoSection title="מידע אקדמי" icon={BookOpen}>
+      <InfoSection title="מידע אקדמי" icon={BookOpenIcon}>
         <div className="space-y-1">
           <InfoRow label="כיתה" value={academicInfo.class} />
           <InfoRow
@@ -680,7 +681,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       {academicInfo.instrumentProgress && academicInfo.instrumentProgress.length > 0 && (
         <InfoSection
           title="תוצאות מבחנים"
-          icon={ClipboardCheck}
+          icon={ClipboardCheckIcon}
           className="bg-gradient-to-br from-blue-50 to-cyan-50"
         >
           <div className="space-y-4">
@@ -691,13 +692,13 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                   onClick={handleEditTests}
                   className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors shadow-sm"
                 >
-                  <Edit2 className="w-4 h-4" />
+                  <PencilSimpleIcon className="w-4 h-4" />
                   <span>ערוך תוצאות מבחנים</span>
                 </button>
               </div>
             )}
 
-            {/* Save/Cancel buttons when editing */}
+            {/* FloppyDiskIcon/Cancel buttons when editing */}
             {isAdmin && isEditingTests && (
               <div className="flex gap-3 justify-end mb-4">
                 <button
@@ -720,7 +721,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                     </>
                   ) : (
                     <>
-                      <Save className="w-4 h-4" />
+                      <FloppyDiskIcon className="w-4 h-4" />
                       <span>שמור שינויים</span>
                     </>
                   )}
@@ -731,14 +732,14 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
             {/* Success/Error messages */}
             {saveSuccess && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3 mb-4">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                <CheckCircleIcon className="w-5 h-5 text-green-600 flex-shrink-0" />
                 <p className="text-green-800">תוצאות המבחנים עודכנו בהצלחה!</p>
               </div>
             )}
 
             {saveError && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3 mb-4">
-                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                <WarningIcon className="w-5 h-5 text-red-600 flex-shrink-0" />
                 <p className="text-red-800">{saveError}</p>
               </div>
             )}
@@ -768,7 +769,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                     className="bg-white rounded-lg p-5 border border-cyan-200 shadow-sm"
                   >
                     <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2 pb-3 border-b border-gray-200">
-                      <Music className="w-5 h-5 text-cyan-600" />
+                      <MusicNotesIcon className="w-5 h-5 text-cyan-600" />
                       {instrument.instrumentName}
                     </h4>
 
@@ -838,7 +839,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       )}
 
       {/* Achievement Badges Display */}
-      <InfoSection title="הישגים ואותות הכרה" icon={Award}>
+      <InfoSection title="הישגים ואותות הכרה" icon={MedalIcon}>
         <div className="space-y-4">
           <div>
             <h4 className="text-sm font-semibold text-gray-700 mb-3">תרגול והתמדה</h4>
@@ -875,7 +876,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Skills Overview Chart */}
         {skillsChartData && (
-          <InfoSection title="סקירת כישורים" icon={TrendingUp}>
+          <InfoSection title="סקירת כישורים" icon={TrendUpIcon}>
             <div className="h-64">
               <Doughnut data={skillsChartData} options={chartOptions} />
             </div>
@@ -890,7 +891,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
         {/* Academic Stats Cards */}
         <div className="xl:col-span-2 grid grid-cols-1 gap-6">
           {/* General Academic Info */}
-          <InfoSection title="מידע כללי" icon={School}>
+          <InfoSection title="מידע כללי" icon={SchoolIcon}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <InfoRow label="כיתה" value={academicInfo.class} />
               <InfoRow label="בית ספר" value={academicInfo.schoolName} />
@@ -913,7 +914,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
 
       {/* Theoretical Knowledge Section */}
       {academicInfo.theoreticalKnowledge && (
-        <InfoSection title="ידע תיאורטי" icon={BookOpen}>
+        <InfoSection title="ידע תיאורטי" icon={BookOpenIcon}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ProgressBar
               current={academicInfo.theoreticalKnowledge.solfege}
@@ -938,7 +939,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       )}
 
       {/* Instrument Progress */}
-      <InfoSection title="התקדמות בכלי נגינה" icon={Music}>
+      <InfoSection title="התקדמות בכלי נגינה" icon={MusicNotesIcon}>
         {academicInfo.instrumentProgress && academicInfo.instrumentProgress.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {academicInfo.instrumentProgress.map((instrument, index) => (
@@ -946,7 +947,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-muted/500 rounded-lg">
-                      <Music className="w-5 h-5 text-white" />
+                      <MusicNotesIcon className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -993,7 +994,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                   {instrument.progressNotes && (
                     <div className="bg-white/60 rounded-lg p-3 border border-border">
                       <div className="flex items-start gap-2">
-                        <Target className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <TargetIcon className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="text-sm font-medium text-gray-800 mb-1">הערות התקדמות</p>
                           <p className="text-sm text-gray-700">{instrument.progressNotes}</p>
@@ -1005,7 +1006,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                   {instrument.skillAssessments && (
                     <div className="bg-white/60 rounded-lg p-3 border border-border">
                       <div className="flex items-center gap-2 mb-3">
-                        <Star className="w-4 h-4 text-primary" />
+                        <StarIcon className="w-4 h-4 text-primary" />
                         <h5 className="text-sm font-semibold text-gray-800">הערכת כישורים</h5>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -1020,7 +1021,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                       <div className="mt-3 pt-3 border-t border-border">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-primary" />
+                            <ClockIcon className="w-4 h-4 text-primary" />
                             <span className="text-sm font-medium text-gray-700">שעות תרגול השבוע</span>
                           </div>
                           <span className="text-lg font-bold text-primary">
@@ -1037,7 +1038,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
         ) : (
           <div className="text-center py-12 text-gray-500">
             <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Music className="w-8 h-8 text-gray-300" />
+              <MusicNotesIcon className="w-8 h-8 text-gray-300" />
             </div>
             <p className="text-lg font-medium text-gray-600">לא הוגדרו כלי נגינה</p>
             <p className="text-sm text-gray-500 mt-1">כלי הנגינה יוצגו כאן לאחר השיבוץ</p>
@@ -1046,7 +1047,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       </InfoSection>
 
       {/* Teacher Assignments */}
-      <InfoSection title="מורים ושיעורים" icon={User}>
+      <InfoSection title="מורים ושיעורים" icon={UserIcon}>
         {teacherAssignments && teacherAssignments.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {teacherAssignments.map((assignment, index) => (
@@ -1063,7 +1064,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                     <div className={`p-2 rounded-lg ${
                       assignment.isActive ? 'bg-success-500' : 'bg-gray-400'
                     }`}>
-                      <User className="w-5 h-5 text-white" />
+                      <UserIcon className="w-5 h-5 text-white" />
                     </div>
                     <h4 className="font-semibold text-gray-900">{assignment.teacherName}</h4>
                   </div>
@@ -1107,7 +1108,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
         ) : (
           <div className="text-center py-12 text-gray-500">
             <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <User className="w-8 h-8 text-gray-300" />
+              <UserIcon className="w-8 h-8 text-gray-300" />
             </div>
             <p className="text-lg font-medium text-gray-600">לא הוגדרו מורים</p>
             <p className="text-sm text-gray-500 mt-1">מורים ושיעורים יוצגו כאן לאחר השיבוץ</p>
@@ -1118,7 +1119,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
         {teachersWithoutLessons.length > 0 && (
           <div className="mt-6 space-y-3">
             <div className="flex items-center gap-2 text-sm font-medium text-orange-700 mb-3">
-              <AlertTriangle className="w-4 h-4" />
+              <WarningIcon className="w-4 h-4" />
               <span>מורים ללא שיעור מתוזמן</span>
             </div>
             {teachersWithoutLessons.map((teacher, index) => (
@@ -1127,7 +1128,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
                 className="bg-orange-50 border-2 border-orange-200 rounded p-4 flex items-start gap-3"
               >
                 <div className="p-2 bg-orange-100 rounded-lg flex-shrink-0">
-                  <Clock className="w-5 h-5 text-orange-600" />
+                  <ClockIcon className="w-5 h-5 text-orange-600" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-orange-900">

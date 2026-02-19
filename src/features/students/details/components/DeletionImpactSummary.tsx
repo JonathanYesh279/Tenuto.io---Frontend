@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { AlertTriangle, Database, Users, Calendar, Music, FileText, Shield, CheckCircle, XCircle, RefreshCw } from 'lucide-react'
+
 import { cascadeDeletionService } from '../../../../services/cascadeDeletionService'
+import { ArrowsClockwiseIcon, CalendarIcon, CheckCircleIcon, DatabaseIcon, FileTextIcon, MusicNotesIcon, ShieldIcon, UsersIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface DeletionImpactSummaryProps {
   studentId: string
@@ -66,7 +67,7 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-orange-50 border-b border-orange-200">
         <div className="flex items-center gap-3">
-          <Shield className="w-5 h-5 text-orange-600" />
+          <ShieldIcon className="w-5 h-5 text-orange-600" />
           <span className="font-medium text-orange-900">השפעת מחיקה - {studentName}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -76,7 +77,7 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
             className="p-1.5 text-orange-600 hover:text-orange-800 hover:bg-orange-100 rounded transition-colors disabled:opacity-50"
             title="רענן נתונים"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <ArrowsClockwiseIcon className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button
             onClick={onClose}
@@ -91,14 +92,14 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
       <div className="p-4">
         {loading && (
           <div className="flex items-center justify-center py-6">
-            <RefreshCw className="w-5 h-5 animate-spin text-orange-600 mr-2" />
+            <ArrowsClockwiseIcon className="w-5 h-5 animate-spin text-orange-600 mr-2" />
             <span className="text-gray-600">טוען השפעת מחיקה...</span>
           </div>
         )}
 
         {error && (
           <div className="flex items-center gap-3 p-3 bg-red-50 border border-red-200 rounded-lg mb-4">
-            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+            <XCircleIcon className="w-5 h-5 text-red-600 flex-shrink-0" />
             <div>
               <div className="font-medium text-red-900">שגיאה בטעינת נתונים</div>
               <div className="text-sm text-red-700">{error}</div>
@@ -112,7 +113,7 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
             <div className={`border rounded-lg p-4 mb-4 ${getImpactColor(preview.summary?.riskLevel)}`}>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className={`w-5 h-5 ${
+                  <WarningIcon className={`w-5 h-5 ${
                     preview.summary?.riskLevel === 'high' ? 'text-red-600' :
                     preview.summary?.riskLevel === 'medium' ? 'text-yellow-600' :
                     'text-green-600'
@@ -126,9 +127,9 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
                   </span>
                 </div>
                 {preview.canProceed ? (
-                  <CheckCircle className="w-5 h-5 text-green-600" title="ניתן לבצע מחיקה" />
+                  <CheckCircleIcon className="w-5 h-5 text-green-600" title="ניתן לבצע מחיקה" />
                 ) : (
-                  <XCircle className="w-5 h-5 text-red-600" title="לא ניתן לבצע מחיקה" />
+                  <XCircleIcon className="w-5 h-5 text-red-600" title="לא ניתן לבצע מחיקה" />
                 )}
               </div>
 
@@ -152,11 +153,11 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
                   {preview.summary.affectedCollections.map((collection: string, index: number) => {
                     const getIcon = () => {
                       switch (collection) {
-                        case 'lessons': return <Calendar className="w-4 h-4" />
-                        case 'attendance': return <Users className="w-4 h-4" />
-                        case 'orchestras': return <Music className="w-4 h-4" />
-                        case 'documents': return <FileText className="w-4 h-4" />
-                        default: return <Database className="w-4 h-4" />
+                        case 'lessons': return <CalendarIcon className="w-4 h-4" />
+                        case 'attendance': return <UsersIcon className="w-4 h-4" />
+                        case 'orchestras': return <MusicNotesIcon className="w-4 h-4" />
+                        case 'documents': return <FileTextIcon className="w-4 h-4" />
+                        default: return <DatabaseIcon className="w-4 h-4" />
                       }
                     }
                     
@@ -217,7 +218,7 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
                 <div className="space-y-2">
                   {preview.warnings.map((warning: string, index: number) => (
                     <div key={index} className="flex items-start gap-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
-                      <AlertTriangle className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
+                      <WarningIcon className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
                       <span className="text-yellow-800">{warning}</span>
                     </div>
                   ))}
@@ -232,7 +233,7 @@ const DeletionImpactSummary: React.FC<DeletionImpactSummaryProps> = ({
                 <div className="space-y-2">
                   {preview.dependencies.map((dependency: any, index: number) => (
                     <div key={index} className="flex items-start gap-2 p-2 bg-red-50 border border-red-200 rounded text-sm">
-                      <XCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                      <XCircleIcon className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
                       <div>
                         <div className="font-medium text-red-900">{dependency.type}: {dependency.entity}</div>
                         <div className="text-red-700">{dependency.description}</div>

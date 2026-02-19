@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Phone } from 'lucide-react'
+
 import { validatePhoneNumber, ValidationResult } from '../../utils/validationUtils'
 import ValidationIndicator from '../ui/ValidationIndicator'
+import { PhoneIcon } from '@phosphor-icons/react'
 
 interface PhoneInputProps {
   value: string
@@ -130,9 +131,9 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
       )}
       
       <div className="relative">
-        {/* Phone icon */}
+        {/* PhoneIcon icon */}
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-          <Phone className="w-4 h-4 text-gray-400" />
+          <PhoneIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Input field */}

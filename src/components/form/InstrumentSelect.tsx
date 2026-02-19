@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { ChevronDown, Music } from 'lucide-react'
+
 import { VALID_INSTRUMENTS, validateSelection, ValidationResult } from '../../utils/validationUtils'
 import ValidationIndicator from '../ui/ValidationIndicator'
+import { CaretDownIcon, MusicNotesIcon } from '@phosphor-icons/react'
 
 interface InstrumentSelectProps {
   value: string
@@ -128,7 +129,7 @@ const InstrumentSelect: React.FC<InstrumentSelectProps> = ({
       <div className="relative">
         {/* Icon */}
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <Music className="w-4 h-4 text-gray-400" />
+          <MusicNotesIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Select field */}
@@ -154,7 +155,7 @@ const InstrumentSelect: React.FC<InstrumentSelectProps> = ({
         
         {/* Dropdown arrow */}
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <ChevronDown className="w-4 h-4 text-gray-400" />
+          <CaretDownIcon className="w-4 h-4 text-gray-400" />
         </div>
         
         {/* Validation icon */}

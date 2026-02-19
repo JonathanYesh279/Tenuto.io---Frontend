@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo } from 'react'
 import { 
+import { ArrowRightIcon, ArrowsClockwiseIcon, CheckCircle2Icon, ClockIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, InfoIcon, ShieldIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
   Dialog, 
   DialogContent, 
   DialogDescription, 
@@ -20,19 +21,7 @@ import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import {
-  AlertTriangle,
-  CheckCircle2,
-  ArrowRight,
-  Database,
-  RefreshCw,
-  Eye,
-  Download,
-  Shield,
-  Clock,
-  Info,
-  X
-} from 'lucide-react'
+
 
 import {
   detectMigrationNeeds,
@@ -187,13 +176,13 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
   const renderStatusIcon = (status: 'pending' | 'in_progress' | 'completed' | 'error') => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="w-5 h-5 text-green-500" />
+        return <CheckCircle2Icon className="w-5 h-5 text-green-500" />
       case 'in_progress':
-        return <RefreshCw className="w-5 h-5 text-blue-500 animate-spin" />
+        return <ArrowsClockwiseIcon className="w-5 h-5 text-blue-500 animate-spin" />
       case 'error':
-        return <X className="w-5 h-5 text-red-500" />
+        return <XIcon className="w-5 h-5 text-red-500" />
       default:
-        return <Clock className="w-5 h-5 text-gray-400" />
+        return <ClockIcon className="w-5 h-5 text-gray-400" />
     }
   }
 
@@ -206,7 +195,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Database className="w-6 h-6 text-orange-500" />
+            <DatabaseIcon className="w-6 h-6 text-orange-500" />
             נדרשת המרת נתונים
           </DialogTitle>
           <DialogDescription>
@@ -216,7 +205,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
 
         {error && (
           <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
+            <WarningIcon className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -267,7 +256,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                   <div className="space-y-3">
                     {migrationStatus.issues.map((issue, index) => (
                       <div key={index} className="flex items-start gap-3 p-3 border rounded">
-                        <AlertTriangle 
+                        <WarningIcon 
                           className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
                             issue.severity === 'critical' ? 'text-red-500' :
                             issue.severity === 'high' ? 'text-orange-500' :
@@ -284,7 +273,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                               </Badge>
                               {issue.autoFixable && (
                                 <Badge variant="secondary" className="text-xs">
-                                  <Shield className="w-3 h-3 mr-1" />
+                                  <ShieldIcon className="w-3 h-3 mr-1" />
                                   תיקון אוטומטי
                                 </Badge>
                               )}
@@ -306,19 +295,19 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                 <CardContent>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
                       מבנה ציונים מפורט יותר (40-30-20-10 נקודות)
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
                       טבלת ציונים חדשה עם קטגוריות ברורות
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
                       אימות משופר של נתונים
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
                       תמיכה במערכת החדשה
                     </li>
                   </ul>
@@ -375,7 +364,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                     <div className="space-y-3 max-h-60 overflow-y-auto">
                       {migrationResult.changes.map((change, index) => (
                         <div key={index} className="flex items-center gap-3 p-3 border rounded">
-                          <ArrowRight className="w-4 h-4 text-blue-500" />
+                          <ArrowRightIcon className="w-4 h-4 text-blue-500" />
                           <div className="flex-1">
                             <div className="font-medium">{change.field}</div>
                             <div className="text-sm text-gray-600">{change.description}</div>
@@ -399,7 +388,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                       <div className="space-y-2">
                         {migrationResult.warnings.map((warning, index) => (
                           <Alert key={index}>
-                            <Info className="h-4 w-4" />
+                            <InfoIcon className="h-4 w-4" />
                             <AlertDescription>{warning}</AlertDescription>
                           </Alert>
                         ))}
@@ -440,7 +429,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
             ) : (
               <div className="text-center py-8">
                 <Button onClick={generatePreview}>
-                  <Eye className="w-4 h-4 mr-2" />
+                  <EyeIcon className="w-4 h-4 mr-2" />
                   צור תצוגה מקדימה
                 </Button>
               </div>
@@ -479,7 +468,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
           {/* Completed Tab */}
           <TabsContent value="completed">
             <div className="text-center py-8 space-y-4">
-              <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
+              <CheckCircle2Icon className="w-16 h-16 text-green-500 mx-auto" />
               <h3 className="text-xl font-bold text-green-700">ההמרה הושלמה בהצלחה!</h3>
               <p className="text-gray-600">
                 הנתונים הועברו למבנה החדש ומוכנים לשימוש.
@@ -501,7 +490,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                 דחה לעת עתה
               </Button>
               <Button onClick={generatePreview}>
-                <Eye className="w-4 h-4 mr-2" />
+                <EyeIcon className="w-4 h-4 mr-2" />
                 הצג תצוגה מקדימה
               </Button>
             </>
@@ -516,7 +505,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                 onClick={executeMigration} 
                 disabled={!migrationResult.success}
               >
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <ArrowsClockwiseIcon className="w-4 h-4 mr-2" />
                 בצע המרה
               </Button>
             </>
@@ -524,7 +513,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
 
           {migrationStep === 'migrating' && (
             <Button variant="outline" disabled>
-              <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+              <ArrowsClockwiseIcon className="w-4 h-4 mr-2 animate-spin" />
               מבצע המרה...
             </Button>
           )}

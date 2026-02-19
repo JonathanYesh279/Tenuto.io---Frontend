@@ -1,6 +1,7 @@
 import React from 'react';
-import { User } from 'lucide-react';
+
 import { useTeacherData, getTeacherNameFromLesson } from '../hooks/useTeacherData';
+import { UserIcon } from '@phosphor-icons/react'
 
 interface TeacherNameDisplayProps {
   lesson: any;
@@ -34,7 +35,7 @@ const TeacherNameDisplay: React.FC<TeacherNameDisplayProps> = ({
 
   return (
     <div className={`flex items-center gap-2 text-gray-600 ${className}`}>
-      {showIcon && <User className="w-4 h-4" />}
+      {showIcon && <UserIcon className="w-4 h-4" />}
       <span className={className}>
         מורה: {isLoading ? (
           <span className="inline-block">

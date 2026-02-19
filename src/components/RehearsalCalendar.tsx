@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
-import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Users, Eye, Edit, Trash2 } from 'lucide-react'
+
 import AdditionalRehearsalsModal from './AdditionalRehearsalsModal'
 import {
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, ClockIcon, EyeIcon, MapPinIcon, PencilIcon, TrashIcon, UsersIcon } from '@phosphor-icons/react'
   formatRehearsalDateTime,
   getRehearsalStatus,
   calculateAttendanceStats,
@@ -118,20 +119,20 @@ export default function RehearsalCalendar({
 
   return (
     <div className={`bg-white rounded border border-gray-200 ${className}`}>
-      {/* Calendar Header */}
+      {/* CalendarIcon Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <div className="flex items-center gap-2">
           <button
             onClick={navigatePrevious}
             className="p-2 hover:bg-gray-100 rounded transition-colors"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
+            <CaretRightIcon className="w-5 h-5 text-gray-600" />
           </button>
           <button
             onClick={navigateNext}
             className="p-2 hover:bg-gray-100 rounded transition-colors"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <CaretLeftIcon className="w-5 h-5 text-gray-600" />
           </button>
         </div>
         
@@ -147,7 +148,7 @@ export default function RehearsalCalendar({
         </button>
       </div>
 
-      {/* Calendar Grid */}
+      {/* CalendarIcon Grid */}
       <div className="p-4">
         {viewMode === 'week' ? (
           <WeekView 
@@ -252,7 +253,7 @@ function MonthView({ monthData, currentDate, onRehearsalClick, onEditRehearsal, 
         </div>
       ))}
       
-      {/* Calendar cells */}
+      {/* CalendarIcon cells */}
       {monthData.weeks.map((week, weekIndex) =>
         week.map((day, dayIndex) => (
           <div 
@@ -370,7 +371,7 @@ function RehearsalCard({
                   className="p-1.5 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
                   title="צפה בפרטים"
                 >
-                  <Eye className="w-3.5 h-3.5" />
+                  <EyeIcon className="w-3.5 h-3.5" />
                 </button>
               )}
               {onEditRehearsal && (
@@ -382,7 +383,7 @@ function RehearsalCard({
                   className="p-1.5 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
                   title="ערוך חזרה"
                 >
-                  <Edit className="w-3.5 h-3.5" />
+                  <PencilIcon className="w-3.5 h-3.5" />
                 </button>
               )}
               {onDeleteRehearsal && (
@@ -394,7 +395,7 @@ function RehearsalCard({
                   className="p-1.5 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
                   title="מחק חזרה"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <TrashIcon className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
@@ -404,18 +405,18 @@ function RehearsalCard({
         {/* Time and Location Info */}
         <div className="space-y-1.5 text-xs">
           <div className="flex items-center gap-1.5 opacity-95">
-            <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+            <ClockIcon className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="font-medium">{dateTime.time}</span>
           </div>
           
           <div className="flex items-center gap-1.5 opacity-95">
-            <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+            <MapPinIcon className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{rehearsal.location || 'לא צוין מיקום'}</span>
           </div>
           
           {!compact && attendanceStats.hasAttendanceData && (
             <div className="flex items-center gap-1.5 opacity-95">
-              <Users className="w-3.5 h-3.5 flex-shrink-0" />
+              <UsersIcon className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{attendanceStats.presentCount}/{attendanceStats.totalMembers} נוכחים</span>
             </div>
           )}

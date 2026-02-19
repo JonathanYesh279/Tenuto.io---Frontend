@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import {
-  X, Save, User, AlertCircle, CheckCircle, Search, Music, Users,
-  Star, FileText, Calculator, ChevronLeft, ChevronRight, Plus, Trash2,
-  Calendar, Link, PlayCircle
-} from 'lucide-react'
+
 import { Card } from './ui/Card'
 import type { BagrutFormData } from '../types/bagrut.types'
 import { handleServerValidationError } from '../utils/validationUtils'
 import { getDisplayName } from '@/utils/nameUtils'
+import { CalculatorIcon, CalendarIcon, CaretLeftIcon, CaretRightIcon, CheckCircleIcon, FileTextIcon, FloppyDiskIcon, LinkIcon, MagnifyingGlassIcon, MusicNotesIcon, PlayCircleIcon, PlusIcon, StarIcon, TrashIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface BagrutFormProps {
   students: any[]
@@ -20,9 +17,9 @@ interface BagrutFormProps {
 
 // Simplified steps for initial bagrut creation
 const STEPS = [
-  { id: 'basic', name: 'מידע בסיסי', icon: User },
-  { id: 'recital', name: 'הגדרת רסיטל', icon: Music },
-  { id: 'program', name: 'תוכנית הרסיטל', icon: FileText }
+  { id: 'basic', name: 'מידע בסיסי', icon: UserIcon },
+  { id: 'recital', name: 'הגדרת רסיטל', icon: MusicNotesIcon },
+  { id: 'program', name: 'תוכנית הרסיטל', icon: FileTextIcon }
 ] as const
 
 const BagrutForm: React.FC<BagrutFormProps> = ({
@@ -267,7 +264,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                   : 'bg-gray-100 border-gray-300 text-gray-400'
               }`}>
                 {isCompleted ? (
-                  <CheckCircle className="w-5 h-5" />
+                  <CheckCircleIcon className="w-5 h-5" />
                 ) : (
                   <span className="text-sm font-medium">{index + 1}</span>
                 )}
@@ -296,14 +293,14 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
       {/* Student Selection */}
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <User className="w-5 h-5 text-gray-600" />
+          <UserIcon className="w-5 h-5 text-gray-600" />
           בחירת תלמיד <span className="text-red-500">*</span>
         </h3>
         
         <div className="space-y-4">
-          {/* Search */}
+          {/* MagnifyingGlassIcon */}
           <div className="relative">
-            <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="חיפוש תלמיד לפי שם או כיתה..."
@@ -330,7 +327,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     <p>טלפון: {selectedStudent.personalInfo?.phone}</p>
                   </div>
                 </div>
-                <CheckCircle className="w-6 h-6 text-green-600" />
+                <CheckCircleIcon className="w-6 h-6 text-green-600" />
               </div>
             </div>
           )}
@@ -377,14 +374,14 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
       {/* Teacher Selection */}
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <User className="w-5 h-5 text-gray-600" />
+          <UserIcon className="w-5 h-5 text-gray-600" />
           בחירת מורה מנחה <span className="text-red-500">*</span>
         </h3>
         
         <div className="space-y-4">
-          {/* Search */}
+          {/* MagnifyingGlassIcon */}
           <div className="relative">
-            <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="חיפוש מורה לפי שם..."
@@ -411,7 +408,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     <p>טלפון: {selectedTeacher.personalInfo?.phone}</p>
                   </div>
                 </div>
-                <CheckCircle className="w-6 h-6 text-green-600" />
+                <CheckCircleIcon className="w-6 h-6 text-green-600" />
               </div>
             </div>
           )}
@@ -509,7 +506,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
     <div className="space-y-6">
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Music className="w-5 h-5 text-gray-600" />
+          <MusicNotesIcon className="w-5 h-5 text-gray-600" />
           הגדרת רסיטל
         </h3>
         
@@ -554,7 +551,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
     <div className="space-y-6">
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <FileText className="w-5 h-5 text-gray-600" />
+          <FileTextIcon className="w-5 h-5 text-gray-600" />
           תוכנית הרסיטל
         </h3>
         <p className="text-sm text-gray-600 mb-4">
@@ -627,7 +624,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                     קישור יוטיוב (אופציונלי)
                   </label>
                   <div className="relative">
-                    <Link className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+                    <LinkIcon className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
                     <input
                       type="url"
                       value={piece.youtubeLink || ''}
@@ -646,7 +643,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
       {/* Accompaniment */}
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Users className="w-5 h-5 text-gray-600" />
+          <UsersIcon className="w-5 h-5 text-gray-600" />
           ליווי
         </h3>
 
@@ -676,7 +673,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 onClick={addAccompanist}
                 className="flex items-center px-3 py-1 text-sm bg-muted text-primary rounded hover:bg-muted transition-colors"
               >
-                <Plus className="w-4 h-4 ml-1" />
+                <PlusIcon className="w-4 h-4 ml-1" />
                 הוסף מלווה
               </button>
             </div>
@@ -691,7 +688,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                       onClick={() => removeAccompanist(index)}
                       className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   )}
                 </div>
@@ -827,7 +824,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
       {formData.presentations?.slice(0, 3).map((presentation, index) => (
         <Card key={index}>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Star className="w-5 h-5 text-gray-600" />
+            <StarIcon className="w-5 h-5 text-gray-600" />
             מצגת {index + 1}
           </h3>
 
@@ -923,7 +920,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
       {/* Final Assessment (Presentation 4) */}
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Calculator className="w-5 h-5 text-gray-600" />
+          <CalculatorIcon className="w-5 h-5 text-gray-600" />
           הערכה סופית - מצגת 4
         </h3>
 
@@ -1109,7 +1106,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
     <div className="space-y-6">
       <Card>
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Users className="w-5 h-5 text-gray-600" />
+          <UsersIcon className="w-5 h-5 text-gray-600" />
           הערכת מנהל
         </h3>
 
@@ -1167,7 +1164,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
       <div className="space-y-6">
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Calculator className="w-5 h-5 text-gray-600" />
+            <CalculatorIcon className="w-5 h-5 text-gray-600" />
             סיכום וציון סופי
           </h3>
 
@@ -1319,7 +1316,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
           onClick={onCancel}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -1331,7 +1328,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
         {/* General Error */}
         {errors.general && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <WarningCircleIcon className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
         )}
@@ -1349,7 +1346,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
             disabled={!canGoBack()}
             className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <ChevronRight className="w-4 h-4 ml-2" />
+            <CaretRightIcon className="w-4 h-4 ml-2" />
             הקודם
           </button>
           
@@ -1366,7 +1363,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 ml-2" />
+                  <FloppyDiskIcon className="w-4 h-4 ml-2" />
                   {isEdit ? 'עדכן בגרות' : 'שמור בגרות'}
                 </>
               )}
@@ -1379,7 +1376,7 @@ const BagrutForm: React.FC<BagrutFormProps> = ({
               className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               הבא
-              <ChevronLeft className="w-4 h-4 mr-2" />
+              <CaretLeftIcon className="w-4 h-4 mr-2" />
             </button>
           )}
         </div>

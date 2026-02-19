@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Building2, Users, GraduationCap, BarChart3, RefreshCw, Shield, ChevronLeft, ToggleLeft, ToggleRight } from 'lucide-react'
+
 import StatsCard from '../ui/StatsCard'
 import { superAdminService } from '../../services/apiService'
+import { ArrowsClockwiseIcon, BuildingsIcon, CaretLeftIcon, ChartBarIcon, GraduationCapIcon, ShieldIcon, ToggleLeftIcon, ToggleRightIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface TenantWithStats {
   _id: string
@@ -100,7 +101,7 @@ export default function SuperAdminDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Shield className="w-5 h-5 text-amber-500" />
+            <ShieldIcon className="w-5 h-5 text-amber-500" />
             <h1 className="text-2xl font-bold text-gray-900">לוח בקרה — מנהל-על</h1>
           </div>
           <p className="text-sm text-gray-600">
@@ -112,7 +113,7 @@ export default function SuperAdminDashboard() {
           disabled={loading}
           className="flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50"
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <ArrowsClockwiseIcon className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           רענן נתונים
         </button>
       </div>
@@ -129,28 +130,28 @@ export default function SuperAdminDashboard() {
           title="סה״כ מוסדות"
           value={loading ? '...' : String(analytics?.totalTenants ?? tenants.length)}
           subtitle="פלטפורמה"
-          icon={<Building2 />}
+          icon={<BuildingsIcon />}
           color="blue"
         />
         <StatsCard
           title="מוסדות פעילים"
           value={loading ? '...' : String(analytics?.activeTenants ?? tenants.filter(t => t.isActive).length)}
           subtitle="פעילים כרגע"
-          icon={<Building2 />}
+          icon={<BuildingsIcon />}
           color="green"
         />
         <StatsCard
           title="סה״כ מורים"
           value={loading ? '...' : String(analytics?.totalTeachers ?? 0)}
           subtitle="בכל המוסדות"
-          icon={<GraduationCap />}
+          icon={<GraduationCapIcon />}
           color="purple"
         />
         <StatsCard
           title="סה״כ תלמידים"
           value={loading ? '...' : String(analytics?.totalStudents ?? 0)}
           subtitle="בכל המוסדות"
-          icon={<Users />}
+          icon={<UsersIcon />}
           color="orange"
         />
       </div>
@@ -169,7 +170,7 @@ export default function SuperAdminDashboard() {
           </div>
         ) : tenants.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <BuildingsIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
             <p>לא נמצאו מוסדות</p>
           </div>
         ) : (
@@ -183,7 +184,7 @@ export default function SuperAdminDashboard() {
                   <div className={`w-10 h-10 rounded flex items-center justify-center ${
                     tenant.isActive ? 'bg-green-100' : 'bg-gray-200'
                   }`}>
-                    <Building2 className={`w-5 h-5 ${
+                    <BuildingsIcon className={`w-5 h-5 ${
                       tenant.isActive ? 'text-green-600' : 'text-gray-400'
                     }`} />
                   </div>
@@ -200,11 +201,11 @@ export default function SuperAdminDashboard() {
                     </div>
                     <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
                       <span className="flex items-center gap-1">
-                        <GraduationCap className="w-3.5 h-3.5" />
+                        <GraduationCapIcon className="w-3.5 h-3.5" />
                         {tenant.stats?.teacherCount ?? 0} מורים
                       </span>
                       <span className="flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5" />
+                        <UsersIcon className="w-3.5 h-3.5" />
                         {tenant.stats?.studentCount ?? 0} תלמידים
                       </span>
                       <span className="text-gray-400">|</span>
@@ -226,11 +227,11 @@ export default function SuperAdminDashboard() {
                   title={tenant.isActive ? 'השבת מוסד' : 'הפעל מוסד'}
                 >
                   {togglingId === tenant._id ? (
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <ArrowsClockwiseIcon className="w-3.5 h-3.5 animate-spin" />
                   ) : tenant.isActive ? (
-                    <ToggleRight className="w-4 h-4" />
+                    <ToggleRightIcon className="w-4 h-4" />
                   ) : (
-                    <ToggleLeft className="w-4 h-4" />
+                    <ToggleLeftIcon className="w-4 h-4" />
                   )}
                   {tenant.isActive ? 'השבת' : 'הפעל'}
                 </button>

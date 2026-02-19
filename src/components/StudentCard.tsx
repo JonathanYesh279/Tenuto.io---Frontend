@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Phone, User, Calendar, Trash2 } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import ConfirmationModal from './ui/ConfirmationModal'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
+import { CalendarIcon, PhoneIcon, TrashIcon, UserIcon } from '@phosphor-icons/react'
 
 interface Student {
   _id: string
@@ -160,7 +161,7 @@ const StudentCard: React.FC<StudentCardProps> = ({
                   className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
                   title="מחק תלמיד"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <TrashIcon className="w-4 h-4" />
                 </button>
               )}
               {/* Active status indicator */}
@@ -194,7 +195,7 @@ const StudentCard: React.FC<StudentCardProps> = ({
           {showTeacherAssignments && (
             <div className="mb-3">
               <div className="flex items-center space-x-2 space-x-reverse text-sm text-gray-600">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 <span>
                   {student.teacherAssignments?.length || 0} שיעורים שבועיים
                 </span>
@@ -227,12 +228,12 @@ const StudentCard: React.FC<StudentCardProps> = ({
               <div className="text-xs text-gray-500 mb-1">פרטי הורה:</div>
               <div className="space-y-1">
                 <div className="flex items-center space-x-2 space-x-reverse text-sm">
-                  <User className="w-3 h-3 text-gray-400" />
+                  <UserIcon className="w-3 h-3 text-gray-400" />
                   <span className="text-gray-700">{student.personalInfo.parentName}</span>
                 </div>
                 {student.personalInfo.parentPhone && (
                   <div className="flex items-center space-x-2 space-x-reverse text-sm">
-                    <Phone className="w-3 h-3 text-gray-400" />
+                    <PhoneIcon className="w-3 h-3 text-gray-400" />
                     <span className="text-gray-700 font-mono" dir="ltr">
                       {student.personalInfo.parentPhone}
                     </span>
@@ -245,7 +246,7 @@ const StudentCard: React.FC<StudentCardProps> = ({
           {/* Student contact */}
           <div className="border-t border-gray-100 pt-2 mt-2">
             <div className="flex items-center space-x-2 space-x-reverse text-sm">
-              <Phone className="w-3 h-3 text-gray-400" />
+              <PhoneIcon className="w-3 h-3 text-gray-400" />
               <span className="text-gray-600 font-mono" dir="ltr">
                 {student.personalInfo.phone}
               </span>

@@ -1,5 +1,6 @@
 import React from 'react'
-import { TrendingUp, TrendingDown, Minus, MoreHorizontal } from 'lucide-react'
+import { DotsThreeIcon, MinusIcon, TrendDownIcon, TrendUpIcon } from '@phosphor-icons/react'
+
 
 interface StatCardProps {
   title: string
@@ -47,12 +48,12 @@ const StatCard: React.FC<StatCardProps> = ({
   const getTrendIcon = () => {
     switch (trend?.direction) {
       case 'up':
-        return <TrendingUp className="w-4 h-4 text-green-500" />
+        return <TrendUpIcon className="w-4 h-4 text-green-500" />
       case 'down':
-        return <TrendingDown className="w-4 h-4 text-red-500" />
+        return <TrendDownIcon className="w-4 h-4 text-red-500" />
       case 'neutral':
       default:
-        return <Minus className="w-4 h-4 text-gray-400" />
+        return <MinusIcon className="w-4 h-4 text-gray-400" />
     }
   }
 
@@ -110,7 +111,7 @@ const StatCard: React.FC<StatCardProps> = ({
           {actions && actions.length > 0 && (
             <div className="relative group">
               <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors">
-                <MoreHorizontal className="w-4 h-4" />
+                <DotsThreeIcon className="w-4 h-4" />
               </button>
               <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-border rounded shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 {actions.map((action, index) => (

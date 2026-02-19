@@ -1,5 +1,6 @@
 import React from 'react'
-import { X, Database, AlertCircle, Users, Calendar, Music, FileText, CreditCard, BookOpen } from 'lucide-react'
+import { BookOpenIcon, CalendarIcon, CreditCardIcon, DatabaseIcon, FileTextIcon, MusicNotesIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+
 
 interface DeletionImpactModalProps {
   isOpen: boolean
@@ -16,13 +17,13 @@ const DeletionImpactModal: React.FC<DeletionImpactModalProps> = ({
 
   const getCollectionIcon = (collection: string) => {
     switch (collection) {
-      case 'lessons': return <Calendar className="w-4 h-4" />
-      case 'attendance': return <Users className="w-4 h-4" />
-      case 'orchestras': return <Music className="w-4 h-4" />
-      case 'theoryClasses': return <BookOpen className="w-4 h-4" />
-      case 'documents': return <FileText className="w-4 h-4" />
-      case 'payments': return <CreditCard className="w-4 h-4" />
-      default: return <Database className="w-4 h-4" />
+      case 'lessons': return <CalendarIcon className="w-4 h-4" />
+      case 'attendance': return <UsersIcon className="w-4 h-4" />
+      case 'orchestras': return <MusicNotesIcon className="w-4 h-4" />
+      case 'theoryClasses': return <BookOpenIcon className="w-4 h-4" />
+      case 'documents': return <FileTextIcon className="w-4 h-4" />
+      case 'payments': return <CreditCardIcon className="w-4 h-4" />
+      default: return <DatabaseIcon className="w-4 h-4" />
     }
   }
 
@@ -46,11 +47,11 @@ const DeletionImpactModal: React.FC<DeletionImpactModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <Database className="w-6 h-6 text-blue-600" />
+            <DatabaseIcon className="w-6 h-6 text-blue-600" />
             <h2 className="text-xl font-semibold text-gray-900">השפעת המחיקה</h2>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -150,7 +151,7 @@ const DeletionImpactModal: React.FC<DeletionImpactModalProps> = ({
               <div className="space-y-2">
                 {preview.dependencies.map((dependency: any, index: number) => (
                   <div key={index} className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded">
-                    <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+                    <WarningCircleIcon className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <div className="font-medium text-orange-900">
                         {dependency.type}: {dependency.entity}
@@ -172,7 +173,7 @@ const DeletionImpactModal: React.FC<DeletionImpactModalProps> = ({
               <div className="space-y-2">
                 {preview.warnings.map((warning: string, index: number) => (
                   <div key={index} className="flex items-start gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                    <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <WarningCircleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-yellow-800">{warning}</span>
                   </div>
                 ))}

@@ -135,7 +135,7 @@ export const SkipLink: React.FC<{ targetId: string; children: React.ReactNode }>
   return (
     <a
       href={`#${targetId}`}
-      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-500 text-white px-4 py-2 rounded-lg z-50 transition-all"
+      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded-lg z-50 transition-all"
       onClick={(e) => {
         e.preventDefault()
         const target = document.getElementById(targetId)

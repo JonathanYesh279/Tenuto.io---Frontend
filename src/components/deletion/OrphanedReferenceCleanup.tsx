@@ -6,25 +6,12 @@
  */
 
 import React, { useState } from 'react'
-import { 
-  Trash2, 
-  Database, 
-  CheckSquare, 
-  Square, 
-  AlertTriangle,
-  RefreshCw,
-  Download,
-  Filter,
-  Search,
-  ChevronDown,
-  Play,
-  Pause,
-  X
-} from 'lucide-react'
+
 import { OrphanedReference, BatchOperation } from './types'
 import { ProgressBar } from '../feedback/ProgressIndicators'
 import { Card } from '../ui/Card'
 import Modal from '../ui/Modal'
+import { ArrowsClockwiseIcon, CaretDownIcon, CheckSquareIcon, DatabaseIcon, DownloadSimpleIcon, FunnelIcon, MagnifyingGlassIcon, PauseIcon, PlayIcon, SquareIcon, TrashIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
 
 interface OrphanedReferenceCleanupProps {
   orphanedReferences: OrphanedReference[]
@@ -167,7 +154,7 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Database className="w-6 h-6 text-gray-500" />
+              <DatabaseIcon className="w-6 h-6 text-gray-500" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                   ניקוי הפניות יתומות
@@ -185,7 +172,7 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
                   disabled={isLoading}
                   className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors disabled:opacity-50"
                 >
-                  <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  <ArrowsClockwiseIcon className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                   <span className="font-reisinger-yonatan">רענון</span>
                 </button>
               )}
@@ -194,18 +181,18 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
-                <Filter className="w-4 h-4" />
+                <FunnelIcon className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">סינון</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                <CaretDownIcon className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
             </div>
           </div>
 
-          {/* Search and Filters */}
+          {/* MagnifyingGlassIcon and Filters */}
           {showFilters && (
             <div className="space-y-4 pt-4 border-t border-gray-100">
               <div className="relative">
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="חיפוש בטבלאות ושדות..."
@@ -291,8 +278,8 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
                   className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
                 >
                   {selectedCount === selectableReferences.length ? 
-                    <CheckSquare className="w-4 h-4" /> : 
-                    <Square className="w-4 h-4" />
+                    <CheckSquareIcon className="w-4 h-4" /> : 
+                    <SquareIcon className="w-4 h-4" />
                   }
                   <span className="font-reisinger-yonatan">
                     {selectedCount === selectableReferences.length ? 'בטל בחירת הכל' : 'בחר הכל'}
@@ -311,7 +298,7 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
                   onClick={() => setShowCleanupModal(true)}
                   className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-red-600 rounded hover:bg-red-700 transition-colors"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <TrashIcon className="w-4 h-4" />
                   <span className="font-reisinger-yonatan">נקה נבחרים</span>
                 </button>
               )}
@@ -328,8 +315,8 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                   {currentOperation.status === 'running' ? 
-                    <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" /> :
-                    <Database className="w-4 h-4 text-blue-600" />
+                    <ArrowsClockwiseIcon className="w-4 h-4 text-blue-600 animate-spin" /> :
+                    <DatabaseIcon className="w-4 h-4 text-blue-600" />
                   }
                 </div>
                 <div>
@@ -346,7 +333,7 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
                 onClick={() => setCurrentOperation(null)}
                 className="text-blue-600 hover:text-blue-700"
               >
-                <X className="w-5 h-5" />
+                <XIcon className="w-5 h-5" />
               </button>
             </div>
 
@@ -403,8 +390,8 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
                       className="text-blue-600 hover:text-blue-700"
                     >
                       {isSelected ? 
-                        <CheckSquare className="w-5 h-5" /> : 
-                        <Square className="w-5 h-5" />
+                        <CheckSquareIcon className="w-5 h-5" /> : 
+                        <SquareIcon className="w-5 h-5" />
                       }
                     </button>
                   )}
@@ -435,7 +422,7 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
                   </div>
 
                   {!ref.canCleanup && (
-                    <AlertTriangle className="w-5 h-5 text-yellow-500" />
+                    <WarningIcon className="w-5 h-5 text-yellow-500" />
                   )}
                 </div>
               </div>
@@ -446,7 +433,7 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
 
       {filteredReferences.length === 0 && !isLoading && (
         <Card className="text-center py-12">
-          <Database className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <DatabaseIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-600 font-reisinger-yonatan mb-2">
             לא נמצאו הפניות יתומות
           </h3>
@@ -466,7 +453,7 @@ const OrphanedReferenceCleanup: React.FC<OrphanedReferenceCleanupProps> = ({
         <div className="space-y-6 p-6" dir="rtl">
           <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
             <div className="flex items-center gap-2 text-yellow-700 mb-2">
-              <AlertTriangle className="w-5 h-5" />
+              <WarningIcon className="w-5 h-5" />
               <span className="font-semibold font-reisinger-yonatan">אזהרה</span>
             </div>
             <p className="text-sm text-yellow-700 font-reisinger-yonatan">

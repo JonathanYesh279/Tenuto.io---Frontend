@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Save, X, Music, Clock, User, Link, Bookmark, Hash } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import type { ProgramPiece } from '../types/bagrut.types'
+import { BookmarkIcon, ClockIcon, FloppyDiskIcon, HashIcon, LinkIcon, MusicNotesIcon, UserIcon, XIcon } from '@phosphor-icons/react'
 
 interface AddPieceModalProps {
   isOpen: boolean
@@ -182,7 +183,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
             onClick={handleClose}
             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
           >
-            <X className="w-6 h-6" />
+            <XIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -198,7 +199,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
           {/* Basic Information */}
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Music className="w-5 h-5 text-gray-600" />
+              <MusicNotesIcon className="w-5 h-5 text-gray-600" />
               פרטי היצירה
             </h3>
 
@@ -209,7 +210,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                   מספר יצירה <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
-                  <Hash className="w-4 h-4 text-gray-400" />
+                  <HashIcon className="w-4 h-4 text-gray-400" />
                   <select
                     value={formData.pieceNumber}
                     onChange={(e) => handleInputChange('pieceNumber', parseInt(e.target.value))}
@@ -260,7 +261,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                   מלחין <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-gray-400" />
+                  <UserIcon className="w-4 h-4 text-gray-400" />
                   <input
                     type="text"
                     value={formData.composer}
@@ -282,7 +283,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                   משך הביצוע <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-gray-400" />
+                  <ClockIcon className="w-4 h-4 text-gray-400" />
                   <input
                     type="text"
                     value={formData.duration}
@@ -305,7 +306,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                 פרק
               </label>
               <div className="flex items-center gap-2">
-                <Bookmark className="w-4 h-4 text-gray-400" />
+                <BookmarkIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   value={formData.movement || ''}
@@ -317,13 +318,13 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
               <p className="text-gray-500 text-xs mt-1">אופציונלי - ציין פרק או תנועה ספציפיים</p>
             </div>
 
-            {/* YouTube Link */}
+            {/* YouTube LinkIcon */}
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 קישור יוטיוב
               </label>
               <div className="flex items-center gap-2">
-                <Link className="w-4 h-4 text-gray-400" />
+                <LinkIcon className="w-4 h-4 text-gray-400" />
                 <input
                   type="url"
                   value={formData.youtubeLink || ''}
@@ -364,7 +365,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 ml-2" />
+                  <FloppyDiskIcon className="w-4 h-4 ml-2" />
                   {submitText}
                 </>
               )}

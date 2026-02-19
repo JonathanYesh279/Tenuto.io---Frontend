@@ -1,5 +1,6 @@
 import React from 'react'
-import { Check, X, AlertCircle } from 'lucide-react'
+import { CheckIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+
 
 interface ValidationIndicatorProps {
   isValid?: boolean
@@ -23,7 +24,7 @@ const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
   const getIconAndColor = () => {
     if (isValid && !isInvalid) {
       return {
-        icon: <Check className="w-4 h-4" />,
+        icon: <CheckIcon className="w-4 h-4" />,
         iconColor: 'text-green-500',
         textColor: 'text-green-600',
         bgColor: 'bg-green-50',
@@ -33,7 +34,7 @@ const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
     
     if (isInvalid || message) {
       return {
-        icon: <X className="w-4 h-4" />,
+        icon: <XIcon className="w-4 h-4" />,
         iconColor: 'text-red-500',
         textColor: 'text-red-600',
         bgColor: 'bg-red-50',
@@ -42,7 +43,7 @@ const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
     }
 
     return {
-      icon: <AlertCircle className="w-4 h-4" />,
+      icon: <WarningCircleIcon className="w-4 h-4" />,
       iconColor: 'text-yellow-500',
       textColor: 'text-yellow-600',
       bgColor: 'bg-yellow-50',

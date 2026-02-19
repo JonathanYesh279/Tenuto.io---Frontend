@@ -1,5 +1,6 @@
-import { Calendar, Clock, MapPin, BookOpen, Edit, Trash2, UserCheck, Eye } from 'lucide-react'
+
 import {
+import { BookOpenIcon, CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, PencilIcon, TrashIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
   formatLessonDate,
   formatLessonTime,
   getLessonStatus,
@@ -43,7 +44,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
           )}
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <BookOpen className="w-4 h-4 text-primary" />
+              <BookOpenIcon className="w-4 h-4 text-primary" />
               <span className="text-xs font-medium text-primary bg-primary px-2 py-1 rounded-full">
                 {lesson.category}
               </span>
@@ -71,7 +72,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
                 className="p-2 text-gray-400 hover:text-primary hover:bg-neutral-800 rounded transition-colors"
                 title="צפה בפרטים"
               >
-                <Eye className="w-4 h-4" />
+                <EyeIcon className="w-4 h-4" />
               </button>
             )}
             {onViewAttendance && (
@@ -80,7 +81,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
                 className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                 title="צפה בנוכחות"
               >
-                <UserCheck className="w-4 h-4" />
+                <UserCircleCheckIcon className="w-4 h-4" />
               </button>
             )}
             {onEdit && (
@@ -89,7 +90,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
                 className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                 title="ערוך שיעור"
               >
-                <Edit className="w-4 h-4" />
+                <PencilIcon className="w-4 h-4" />
               </button>
             )}
             {onDelete && (
@@ -98,7 +99,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
                 className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                 title="מחק שיעור"
               >
-                <Trash2 className="w-4 h-4" />
+                <TrashIcon className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -110,12 +111,12 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
         {/* Date and Time */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center text-gray-600">
-            <Calendar className="w-4 h-4 ml-2 text-gray-400" />
+            <CalendarIcon className="w-4 h-4 ml-2 text-gray-400" />
             <span className="font-medium text-gray-900 ml-1">תאריך:</span>
             {formattedDate}
           </div>
           <div className="flex items-center text-gray-600">
-            <Clock className="w-4 h-4 ml-2 text-gray-400" />
+            <ClockIcon className="w-4 h-4 ml-2 text-gray-400" />
             <span className="font-medium text-gray-900 ml-1">שעה:</span>
             {formattedTime}
           </div>
@@ -123,7 +124,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
 
         {/* Location */}
         <div className="flex items-center text-sm text-gray-600">
-          <MapPin className="w-4 h-4 ml-2 text-gray-400" />
+          <MapPinIcon className="w-4 h-4 ml-2 text-gray-400" />
           <span className="font-medium text-gray-900 ml-1">מיקום:</span>
           {lesson.location || 'לא צוין'}
         </div>

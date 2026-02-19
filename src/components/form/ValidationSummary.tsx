@@ -1,6 +1,7 @@
 import React from 'react'
-import { AlertTriangle, CheckCircle, X } from 'lucide-react'
+
 import { FIELD_LABELS } from '../../utils/validationUtils'
+import { CheckCircleIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
 
 interface ValidationSummaryProps {
   errors: Record<string, string>
@@ -34,7 +35,7 @@ const ValidationSummary: React.FC<ValidationSummaryProps> = ({
     <div className={`bg-red-50 border border-red-200 rounded p-4 ${className}`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
-          <AlertTriangle className="w-5 h-5 text-red-400" />
+          <WarningIcon className="w-5 h-5 text-red-400" />
         </div>
         <div className="mr-3 flex-1">
           <h3 className="text-sm font-medium text-red-800">
@@ -59,7 +60,7 @@ const ValidationSummary: React.FC<ValidationSummaryProps> = ({
                 className="inline-flex bg-red-50 rounded-md p-1.5 text-red-400 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-600"
               >
                 <span className="sr-only">סגור</span>
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -84,7 +85,7 @@ export const ValidationSuccess: React.FC<ValidationSuccessProps> = ({
     <div className={`bg-green-50 border border-green-200 rounded p-4 ${className}`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
-          <CheckCircle className="w-5 h-5 text-green-400" />
+          <CheckCircleIcon className="w-5 h-5 text-green-400" />
         </div>
         <div className="mr-3 flex-1">
           <h3 className="text-sm font-medium text-green-800">
@@ -100,7 +101,7 @@ export const ValidationSuccess: React.FC<ValidationSuccessProps> = ({
                 className="inline-flex bg-green-50 rounded-md p-1.5 text-green-400 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
               >
                 <span className="sr-only">סגור</span>
-                <X className="w-4 h-4" />
+                <XIcon className="w-4 h-4" />
               </button>
             </div>
           </div>

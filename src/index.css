@@ -15,7 +15,7 @@
 @import './styles/simple-weekly-grid.css';
 
 /* === Design Token System (Phase 22: Visual Architecture Rewrite — cool neutral palette) === */
-/* bg-primary-500 (hardcoded hex) is unaffected — only bg-primary uses these CSS vars. */
+/* bg-primary (hardcoded hex) is unaffected — only bg-primary uses these CSS vars. */
 @layer base {
   :root {
     /* Cool neutral palette */
@@ -313,7 +313,7 @@ body::-webkit-scrollbar-thumb:hover {
     margin-left: 0 !important;
   }
   /* Clean card borders for print — no shadows */
-  .rounded-lg, .rounded-xl {
+  .rounded-lg, .rounded {
     box-shadow: none !important;
     border: 1px solid #e5e7eb !important;
   }

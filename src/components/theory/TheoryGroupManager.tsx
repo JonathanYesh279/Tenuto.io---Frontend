@@ -1,32 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  UserPlus,
-  UserMinus,
-  Search,
-  Filter,
-  Settings,
-  BookOpen,
-  Award,
-  Calendar,
-  Clock,
-  MapPin,
-  CheckSquare,
-  AlertTriangle,
-  TrendingUp,
-  Download,
-  Upload,
-  Mail,
-  Bell,
-  Eye,
-  Edit,
-  Trash2,
-  Copy,
-  Plus
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
+import { BellIcon, BookOpenIcon, CalendarIcon, CheckSquareIcon, ClockIcon, CopyIcon, DownloadSimpleIcon, EnvelopeIcon, EyeIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MapPinIcon, MedalIcon, PencilIcon, PlusIcon, TrashIcon, TrendUpIcon, UploadSimpleIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface TheoryGroup {
   id: string
@@ -423,7 +400,7 @@ export default function TheoryGroupManager() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <WarningIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadTheoryGroups}
@@ -452,7 +429,7 @@ export default function TheoryGroupManager() {
             onClick={() => setShowCreateGroup(true)}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             <span className="font-reisinger-yonatan">קבוצה חדשה</span>
           </button>
         </div>
@@ -467,7 +444,7 @@ export default function TheoryGroupManager() {
                 {/* Filters */}
                 <div className="mt-4 space-y-3">
                   <div className="relative">
-                    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       type="text"
                       placeholder="חיפוש קבוצות..."
@@ -505,7 +482,7 @@ export default function TheoryGroupManager() {
               <div className="max-h-96 overflow-y-auto">
                 {filteredGroups.length === 0 ? (
                   <div className="p-6 text-center text-gray-500">
-                    <Users className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                    <UsersIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
                     <p className="font-reisinger-yonatan">אין קבוצות</p>
                   </div>
                 ) : (
@@ -527,15 +504,15 @@ export default function TheoryGroupManager() {
                       </div>
                       <div className="text-sm text-gray-600 space-y-1">
                         <div className="flex items-center gap-1">
-                          <Users className="w-3 h-3" />
+                          <UsersIcon className="w-3 h-3" />
                           <span>{group.enrolledStudents.length}/{group.capacity}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
+                          <CalendarIcon className="w-3 h-3" />
                           <span>{getDayLabel(group.schedule.dayOfWeek)} {group.schedule.startTime}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
+                          <MapPinIcon className="w-3 h-3" />
                           <span>{group.location}</span>
                         </div>
                       </div>
@@ -571,21 +548,21 @@ export default function TheoryGroupManager() {
                         onClick={() => sendGroupAnnouncement(selectedGroup.id)}
                         className="flex items-center gap-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
-                        <Mail className="w-4 h-4" />
+                        <EnvelopeIcon className="w-4 h-4" />
                         <span className="font-reisinger-yonatan">שלח הודעה</span>
                       </button>
                       <button
                         onClick={() => exportGroupData(selectedGroup)}
                         className="flex items-center gap-1 px-3 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                       >
-                        <Download className="w-4 h-4" />
+                        <DownloadSimpleIcon className="w-4 h-4" />
                         <span className="font-reisinger-yonatan">ייצא נתונים</span>
                       </button>
                       <button
                         onClick={() => setShowEnrollModal(true)}
                         className="flex items-center gap-1 px-3 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                       >
-                        <UserPlus className="w-4 h-4" />
+                        <UserPlusIcon className="w-4 h-4" />
                         <span className="font-reisinger-yonatan">הוסף תלמיד</span>
                       </button>
                     </div>
@@ -620,10 +597,10 @@ export default function TheoryGroupManager() {
                 <div className="border-b border-gray-200">
                   <nav className="flex space-x-8 px-6" dir="rtl">
                     {[
-                      { id: 'students', label: 'תלמידים', icon: Users },
-                      { id: 'waiting', label: 'רשימת המתנה', icon: Clock },
-                      { id: 'curriculum', label: 'תכנית לימודים', icon: BookOpen },
-                      { id: 'analytics', label: 'ניתוח נתונים', icon: TrendingUp }
+                      { id: 'students', label: 'תלמידים', icon: UsersIcon },
+                      { id: 'waiting', label: 'רשימת המתנה', icon: ClockIcon },
+                      { id: 'curriculum', label: 'תכנית לימודים', icon: BookOpenIcon },
+                      { id: 'analytics', label: 'ניתוח נתונים', icon: TrendUpIcon }
                     ].map((tab) => {
                       const Icon = tab.icon
                       return (
@@ -655,7 +632,7 @@ export default function TheoryGroupManager() {
                     <div className="space-y-4">
                       {filteredStudents.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
-                          <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                          <UsersIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                           <p className="font-reisinger-yonatan">אין תלמידים רשומים</p>
                         </div>
                       ) : (
@@ -663,7 +640,7 @@ export default function TheoryGroupManager() {
                           <div key={student.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                             <div className="flex items-center gap-4">
                               <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                                <Users className="w-5 h-5 text-indigo-600" />
+                                <UsersIcon className="w-5 h-5 text-indigo-600" />
                               </div>
                               <div>
                                 <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{getDisplayName(student)}</h4>
@@ -684,17 +661,17 @@ export default function TheoryGroupManager() {
                             </div>
                             <div className="flex items-center gap-2">
                               <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="צפה בפרטים">
-                                <Eye className="w-4 h-4" />
+                                <EyeIcon className="w-4 h-4" />
                               </button>
                               <button className="p-2 text-gray-400 hover:text-indigo-600 transition-colors" title="ערוך">
-                                <Edit className="w-4 h-4" />
+                                <PencilIcon className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => handleUnenrollStudent(student.id, selectedGroup.id)}
                                 className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                                 title="הסר מהקבוצה"
                               >
-                                <UserMinus className="w-4 h-4" />
+                                <UserMinusIcon className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
@@ -707,7 +684,7 @@ export default function TheoryGroupManager() {
                     <div className="space-y-4">
                       {selectedGroup.waitingList.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
-                          <Clock className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                          <ClockIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                           <p className="font-reisinger-yonatan">אין תלמידים ברשימת המתנה</p>
                         </div>
                       ) : (
@@ -735,7 +712,7 @@ export default function TheoryGroupManager() {
                                 disabled={selectedGroup.enrolledStudents.length >= selectedGroup.capacity}
                                 className="flex items-center gap-1 px-3 py-1 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
                               >
-                                <UserPlus className="w-4 h-4" />
+                                <UserPlusIcon className="w-4 h-4" />
                                 רשום
                               </button>
                               <button
@@ -743,7 +720,7 @@ export default function TheoryGroupManager() {
                                 className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                                 title="הסר מרשימת המתנה"
                               >
-                                <Trash2 className="w-4 h-4" />
+                                <TrashIcon className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
@@ -763,7 +740,7 @@ export default function TheoryGroupManager() {
 
                       {!selectedGroup.curriculum || selectedGroup.curriculum.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
-                          <BookOpen className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                          <BookOpenIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                           <p className="font-reisinger-yonatan">אין תכנית לימודים מוגדרת</p>
                         </div>
                       ) : (
@@ -778,7 +755,7 @@ export default function TheoryGroupManager() {
                                     item.isCompleted ? 'bg-green-500' : 'bg-gray-300'
                                   }`}>
                                     {item.isCompleted ? (
-                                      <CheckSquare className="w-4 h-4 text-white" />
+                                      <CheckSquareIcon className="w-4 h-4 text-white" />
                                     ) : (
                                       <span className="text-white text-xs">{item.order}</span>
                                     )}
@@ -824,7 +801,7 @@ export default function TheoryGroupManager() {
 
                   {activeTab === 'analytics' && (
                     <div className="text-center py-12">
-                      <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <TrendUpIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">ניתוח נתונים מתקדם</h3>
                       <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
                     </div>
@@ -834,7 +811,7 @@ export default function TheoryGroupManager() {
             ) : (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
                 <div className="text-center text-gray-500">
-                  <Users className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                  <UsersIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">בחר קבוצה</h3>
                   <p className="font-reisinger-yonatan">בחר קבוצה מהרשימה כדי לצפות בפרטים ולנהל תלמידים</p>
                 </div>
@@ -898,7 +875,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
         </h3>
 
         <div className="relative mb-4">
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
             placeholder="חיפוש תלמידים..."
@@ -911,7 +888,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
         {group.enrolledStudents.length >= group.capacity && (
           <div className="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
             <div className="flex items-center gap-2 text-orange-800">
-              <AlertTriangle className="w-4 h-4" />
+              <WarningIcon className="w-4 h-4" />
               <span className="text-sm font-reisinger-yonatan">הקבוצה מלאה - תלמידים יתווספו לרשימת המתנה</span>
             </div>
           </div>
@@ -920,7 +897,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
         <div className="space-y-2 max-h-60 overflow-y-auto">
           {filteredStudents.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-              <Users className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+              <UsersIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
               <p className="font-reisinger-yonatan">אין תלמידים זמינים</p>
             </div>
           ) : (
@@ -939,7 +916,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
                   onClick={() => onEnroll(student.id)}
                   className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-reisinger-yonatan"
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlusIcon className="w-4 h-4" />
                   {group.enrolledStudents.length >= group.capacity ? 'רשימת המתנה' : 'רשום'}
                 </button>
               </div>

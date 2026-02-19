@@ -11,15 +11,8 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { 
-  Music, 
-  Clock, 
-  AlertTriangle, 
-  Loader2,
-  ChevronDown,
-  ChevronRight,
-  Info
-} from 'lucide-react'
+import { CaretDownIcon, CaretRightIcon, CircleNotchIcon, ClockIcon, InfoIcon, MusicNotesIcon, WarningIcon } from '@phosphor-icons/react'
+
 
 // Lazy load heavy components
 const BagrutHeader = lazy(() => import('@/components/bagrut/BagrutHeader'))
@@ -148,15 +141,15 @@ const CollapsibleSection: React.FC<{
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
           {!isLoaded && (
             <Badge variant="secondary" className="text-xs">
-              <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+              <CircleNotchIcon className="w-3 h-3 mr-1 animate-spin" />
               Loading...
             </Badge>
           )}
         </div>
         {isOpen ? (
-          <ChevronDown className="w-5 h-5 text-gray-500" />
+          <CaretDownIcon className="w-5 h-5 text-gray-500" />
         ) : (
-          <ChevronRight className="w-5 h-5 text-gray-500" />
+          <CaretRightIcon className="w-5 h-5 text-gray-500" />
         )}
       </button>
       
@@ -250,7 +243,7 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
   // Error boundary fallback
   const SectionErrorFallback: React.FC<{ section: string }> = ({ section }) => (
     <Alert>
-      <AlertTriangle className="h-4 w-4" />
+      <WarningIcon className="h-4 w-4" />
       <AlertDescription>
         Failed to load {section} section. 
         <Button 
@@ -271,11 +264,11 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Music className="w-6 h-6 text-primary animate-pulse" />
+              <MusicNotesIcon className="w-6 h-6 text-primary animate-pulse" />
               <h2 className="text-xl font-bold">Loading Bagrut Information...</h2>
             </div>
             <Badge variant="secondary">
-              <Clock className="w-4 h-4 mr-1" />
+              <ClockIcon className="w-4 h-4 mr-1" />
               Initializing
             </Badge>
           </div>
@@ -296,9 +289,9 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Performance Info */}
+      {/* Performance InfoIcon */}
       <Alert>
-        <Info className="h-4 w-4" />
+        <InfoIcon className="h-4 w-4" />
         <AlertDescription>
           Sections load progressively for optimal performance. 
           Click to expand sections as needed.
@@ -320,7 +313,7 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
       <div data-section="header">
         <CollapsibleSection
           title="Recital Configuration"
-          icon={<Music className="w-5 h-5 text-primary" />}
+          icon={<MusicNotesIcon className="w-5 h-5 text-primary" />}
           defaultOpen={true}
           isLoaded={loadingState.header}
           onToggle={(isOpen) => handleSectionToggle('header', isOpen)}
@@ -344,7 +337,7 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
       <div data-section="program">
         <CollapsibleSection
           title="Recital Program"
-          icon={<Music className="w-5 h-5 text-purple-600" />}
+          icon={<MusicNotesIcon className="w-5 h-5 text-purple-600" />}
           isLoaded={loadingState.program}
           onToggle={(isOpen) => handleSectionToggle('program', isOpen)}
         >
@@ -366,7 +359,7 @@ const LazyBagrutTab: React.FC<LazyBagrutTabProps> = ({
       <div data-section="presentations">
         <CollapsibleSection
           title="Presentations & Magen Bagrut"
-          icon={<Clock className="w-5 h-5 text-orange-600" />}
+          icon={<ClockIcon className="w-5 h-5 text-orange-600" />}
           isLoaded={loadingState.presentations}
           onToggle={(isOpen) => handleSectionToggle('presentations', isOpen)}
         >

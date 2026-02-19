@@ -1,5 +1,6 @@
 import React from 'react'
-import { CheckCircle, Clock, AlertCircle, Music } from 'lucide-react'
+import { CheckCircleIcon, ClockIcon, MusicNotesIcon, WarningCircleIcon } from '@phosphor-icons/react'
+
 
 interface ProgressBarProps {
   value: number
@@ -56,7 +57,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   }
   
   const colorClasses = {
-    primary: 'bg-primary-500',
+    primary: 'bg-primary',
     green: 'bg-green-500',
     blue: 'bg-blue-500',
     orange: 'bg-orange-500',
@@ -190,11 +191,11 @@ export const StepProgress: React.FC<StepProgressProps> = ({
   const getStepIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="w-5 h-5 text-green-500" />
+        return <CheckCircleIcon className="w-5 h-5 text-green-500" />
       case 'current':
-        return <Clock className="w-5 h-5 text-primary-500" />
+        return <ClockIcon className="w-5 h-5 text-primary" />
       case 'error':
-        return <AlertCircle className="w-5 h-5 text-red-500" />
+        return <WarningCircleIcon className="w-5 h-5 text-red-500" />
       default:
         return (
           <div className="w-5 h-5 rounded-full border-2 border-gray-300 bg-white" />
@@ -205,7 +206,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
   const getStepStyles = (status: string) => {
     const styles = {
       completed: 'text-green-600 bg-green-50 border-green-200',
-      current: 'text-primary-600 bg-primary-50 border-primary-200',
+      current: 'text-primary bg-muted/50 border-border',
       error: 'text-red-600 bg-red-50 border-red-200',
       pending: 'text-gray-600 bg-gray-50 border-gray-200'
     }
@@ -252,7 +253,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
               <h3 className={`
                 text-sm font-semibold font-reisinger-yonatan
                 ${step.status === 'completed' ? 'text-green-600' :
-                  step.status === 'current' ? 'text-primary-600' :
+                  step.status === 'current' ? 'text-primary' :
                   step.status === 'error' ? 'text-red-600' :
                   'text-gray-600'}
               `}>
@@ -288,7 +289,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
               <h3 className={`
                 text-xs font-semibold font-reisinger-yonatan
                 ${step.status === 'completed' ? 'text-green-600' :
-                  step.status === 'current' ? 'text-primary-600' :
+                  step.status === 'current' ? 'text-primary' :
                   step.status === 'error' ? 'text-red-600' :
                   'text-gray-600'}
               `}>
@@ -341,8 +342,8 @@ export const MusicalProgress: React.FC<{
             {label}
           </span>
           <div className="flex items-center">
-            <Music className="w-4 h-4 text-primary-500 ml-1" />
-            <span className="text-sm font-medium text-primary-600 font-reisinger-yonatan">
+            <MusicNotesIcon className="w-4 h-4 text-primary ml-1" />
+            <span className="text-sm font-medium text-primary font-reisinger-yonatan">
               {currentStage ? stages[currentStage - 1] : `${value}/${max}`}
             </span>
           </div>
@@ -360,9 +361,9 @@ export const MusicalProgress: React.FC<{
               className={`
                 flex-1 h-3 rounded-full border transition-all duration-300
                 ${isCompleted 
-                  ? 'bg-primary-500 border-primary-500' 
+                  ? 'bg-primary border-primary' 
                   : isCurrent 
-                    ? 'bg-primary-200 border-primary-400 animate-pulse'
+                    ? 'bg-muted border-border animate-pulse'
                     : 'bg-gray-200 border-gray-300'
                 }
               `}

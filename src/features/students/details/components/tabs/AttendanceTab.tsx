@@ -5,11 +5,12 @@
  */
 
 import { useState, useMemo } from 'react'
-import { TrendingUp, Calendar, CheckCircle, XCircle, Clock, BarChart3, Filter, Download, Target, Zap, AlertTriangle, Users, Trophy } from 'lucide-react'
+
 import { StudentDetails } from '../../types'
 import { useStudentAttendance } from '../../hooks'
 import { Line, Doughnut } from 'react-chartjs-2'
 import {
+import { CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, FunnelIcon, LightningIcon, TargetIcon, TrendUpIcon, TrophyIcon, UsersIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -125,7 +126,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <TrendingUp className="w-8 h-8 text-red-500" />
+            <TrendUpIcon className="w-8 h-8 text-red-500" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">שגיאה בטעינת נתוני נוכחות</h3>
           <p className="text-gray-600 text-sm">{error.message}</p>
@@ -290,7 +291,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         <StatCard 
           title="שיעורים סה״כ"
           value={attendanceStats?.totalLessons?.toString() || '0'}
-          icon={Calendar}
+          icon={CalendarIcon}
           color="text-blue-600"
           bgColor="bg-blue-100"
           change="+12 החודש"
@@ -298,7 +299,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         <StatCard 
           title="נוכחות"
           value={attendanceStats?.attendedLessons?.toString() || '0'}
-          icon={CheckCircle}
+          icon={CheckCircleIcon}
           color="text-success-600"
           bgColor="bg-success-100"
           change="+5 החודש"
@@ -306,7 +307,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         <StatCard 
           title="אחוז נוכחות"
           value={`${Math.round(attendanceStats?.attendanceRate || 0)}%`}
-          icon={TrendingUp}
+          icon={TrendUpIcon}
           color="text-purple-600"
           bgColor="bg-purple-100"
           change="+2.5%"
@@ -314,14 +315,14 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         <StatCard 
           title="30 ימים אחרונים"
           value={`${Math.round(attendanceStats?.lastThirtyDays?.attendanceRate || 0)}%`}
-          icon={Clock}
+          icon={ClockIcon}
           color="text-orange-600"
           bgColor="bg-orange-100"
         />
         <StatCard 
           title="רצף נוכחות"
           value={calculateStreaks.current.toString()}
-          icon={Zap}
+          icon={LightningIcon}
           color="text-yellow-600"
           bgColor="bg-yellow-100"
           change={`שיא מקסימלי: ${calculateStreaks.longest}`}
@@ -329,7 +330,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         <StatCard 
           title="איחורים"
           value={attendanceRecords?.filter(r => r.status === 'late').length.toString() || '0'}
-          icon={AlertTriangle}
+          icon={WarningIcon}
           color="text-red-600"
           bgColor="bg-red-100"
         />
@@ -341,7 +342,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           onClick={() => setShowExportModal(true)}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
         >
-          <Download className="w-4 h-4" />
+          <DownloadSimpleIcon className="w-4 h-4" />
           ייצא דוח
         </button>
       </div>
@@ -435,7 +436,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           ) : (
             <div className="h-64 flex items-center justify-center text-gray-500">
               <div className="text-center">
-                <BarChart3 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                <ChartBarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p>אין נתונים על העדרות</p>
               </div>
             </div>
@@ -447,7 +448,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
               <div className="flex items-center gap-3">
-                <Target className="w-5 h-5 text-blue-600" />
+                <TargetIcon className="w-5 h-5 text-blue-600" />
                 <span className="font-medium text-blue-900">יעד נוכחות</span>
               </div>
               <span className="text-xl font-bold text-blue-600">90%</span>
@@ -455,7 +456,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
             
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
               <div className="flex items-center gap-3">
-                <Trophy className="w-5 h-5 text-green-600" />
+                <TrophyIcon className="w-5 h-5 text-green-600" />
                 <span className="font-medium text-green-900">דירוג בכיתה</span>
               </div>
               <span className="text-xl font-bold text-green-600">#3</span>
@@ -463,7 +464,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
             
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
               <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-purple-600" />
+                <UsersIcon className="w-5 h-5 text-purple-600" />
                 <span className="font-medium text-purple-900">ממוצע כיתה</span>
               </div>
               <span className="text-xl font-bold text-purple-600">87%</span>
@@ -477,7 +478,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         </div>
       </div>
 
-      {/* Calendar Heatmap */}
+      {/* CalendarIcon Heatmap */}
       <div className="bg-white rounded shadow-sm border border-gray-200 p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">לוח נוכחות חודשי</h3>
@@ -503,7 +504,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           </div>
         </div>
 
-        {/* Calendar Grid */}
+        {/* CalendarIcon Grid */}
         <div className="mb-4">
           <div className="grid grid-cols-7 gap-1 mb-2">
             {['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'].map(day => (
@@ -620,10 +621,10 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           <div className="max-h-96 overflow-y-auto">
             {attendanceRecords.slice(0, 20).map((record, index) => {
               const statusInfo = {
-                present: { label: 'נוכח', color: 'text-success-700', bgColor: 'bg-success-100', icon: CheckCircle },
-                absent: { label: 'נעדר', color: 'text-red-700', bgColor: 'bg-red-100', icon: XCircle },
-                excused: { label: 'נעדר בצידוק', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: Clock },
-                late: { label: 'איחור', color: 'text-orange-700', bgColor: 'bg-orange-100', icon: Clock }
+                present: { label: 'נוכח', color: 'text-success-700', bgColor: 'bg-success-100', icon: CheckCircleIcon },
+                absent: { label: 'נעדר', color: 'text-red-700', bgColor: 'bg-red-100', icon: XCircleIcon },
+                excused: { label: 'נעדר בצידוק', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: ClockIcon },
+                late: { label: 'איחור', color: 'text-orange-700', bgColor: 'bg-orange-100', icon: ClockIcon }
               }
               const status = statusInfo[record.status] || statusInfo.present
               const StatusIcon = status.icon
@@ -671,7 +672,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       ) : (
         <div className="text-center py-16 text-gray-500 bg-white rounded shadow-sm border border-gray-200">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <TrendingUp className="w-8 h-8 text-gray-300" />
+            <TrendUpIcon className="w-8 h-8 text-gray-300" />
           </div>
           <h3 className="text-lg font-medium text-gray-600 mb-2">אין נתוני נוכחות</h3>
           <p className="text-sm text-gray-500">רשומות נוכחות יופיעו כאן לאחר תחילת השיעורים</p>

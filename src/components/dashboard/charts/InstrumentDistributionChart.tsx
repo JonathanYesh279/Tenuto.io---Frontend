@@ -6,7 +6,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { DonutChart, BarChart } from '../../charts/HebrewCharts';
 import { enhancedDashboardAnalytics, type InstrumentDistribution } from '../../../services/enhancedDashboardAnalytics';
-import { Music, BarChart3, PieChart, Users } from 'lucide-react';
+import { ChartBarIcon, ChartPieIcon, MusicNotesIcon, UsersIcon } from '@phosphor-icons/react'
+
 
 interface InstrumentDistributionChartProps {
   schoolYearId?: string;
@@ -103,7 +104,7 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-purple-100 rounded">
-            <Music className="w-5 h-5 text-purple-600" />
+            <MusicNotesIcon className="w-5 h-5 text-purple-600" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">התפלגות כלי נגינה</h3>
@@ -122,7 +123,7 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
               }`}
               title="תצוגת עוגה"
             >
-              <PieChart className={`w-4 h-4 ${viewType === 'donut' ? 'text-gray-900' : 'text-gray-500'}`} />
+              <ChartPieIcon className={`w-4 h-4 ${viewType === 'donut' ? 'text-gray-900' : 'text-gray-500'}`} />
             </button>
             <button
               onClick={() => setViewType('bar')}
@@ -131,7 +132,7 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
               }`}
               title="תצוגת עמודות"
             >
-              <BarChart3 className={`w-4 h-4 ${viewType === 'bar' ? 'text-gray-900' : 'text-gray-500'}`} />
+              <ChartBarIcon className={`w-4 h-4 ${viewType === 'bar' ? 'text-gray-900' : 'text-gray-500'}`} />
             </button>
           </div>
 
@@ -186,7 +187,7 @@ const InstrumentDistributionChart: React.FC<InstrumentDistributionChartProps> = 
       ) : (
         <div className="h-48 flex items-center justify-center text-gray-500">
           <div className="text-center">
-            <Music className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+            <MusicNotesIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
             <p>אין נתונים זמינים</p>
           </div>
         </div>

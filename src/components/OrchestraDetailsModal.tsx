@@ -1,26 +1,9 @@
 import { useState, useEffect } from 'react'
-import { 
-  X, 
-  User, 
-  Users, 
-  Calendar, 
-  MapPin, 
-  Music, 
-  Star,
-  Edit,
-  Trash2,
-  UserPlus,
-  Phone,
-  Mail,
-  Clock,
-  TrendingUp,
-  Award,
-  Activity,
-  AlertCircle
-} from 'lucide-react'
+
 import { Card } from './ui/Card'
 import { orchestraService, studentService, teacherService, rehearsalService } from '../services/apiService'
 import {
+import { ActivityIcon, CalendarIcon, ClockIcon, EnvelopeIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PencilIcon, PhoneIcon, StarIcon, TrashIcon, TrendUpIcon, UserIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
@@ -176,7 +159,7 @@ export default function OrchestraDetailsModal({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleBackdropClick}>
         <div className="bg-white rounded p-8 max-w-md w-full mx-4">
           <div className="flex items-center mb-4">
-            <AlertCircle className="w-6 h-6 text-red-600 ml-2" />
+            <WarningCircleIcon className="w-6 h-6 text-red-600 ml-2" />
             <h3 className="text-lg font-semibold text-gray-900">שגיאה</h3>
           </div>
           <p className="text-gray-600 mb-6">{error || 'תזמורת לא נמצאה'}</p>
@@ -230,7 +213,7 @@ export default function OrchestraDetailsModal({
                   {status.text}
                 </span>
                 {readiness.isReady && (
-                  <Star className="w-4 h-4 text-yellow-500" title="מוכן לביצוע" />
+                  <StarIcon className="w-4 h-4 text-yellow-500" title="מוכן לביצוע" />
                 )}
               </div>
             </div>
@@ -242,7 +225,7 @@ export default function OrchestraDetailsModal({
                 onClick={() => onEdit(orchestra)}
                 className="flex items-center gap-2 px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
               >
-                <Edit className="w-4 h-4" />
+                <PencilIcon className="w-4 h-4" />
                 עריכה
               </button>
             )}
@@ -251,7 +234,7 @@ export default function OrchestraDetailsModal({
                 onClick={() => onDelete(orchestra._id)}
                 className="flex items-center gap-2 px-3 py-2 text-red-700 border border-red-300 rounded hover:bg-red-50 transition-colors"
               >
-                <Trash2 className="w-4 h-4" />
+                <TrashIcon className="w-4 h-4" />
                 מחיקה
               </button>
             )}
@@ -259,7 +242,7 @@ export default function OrchestraDetailsModal({
               onClick={onClose}
               className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <XIcon className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -267,10 +250,10 @@ export default function OrchestraDetailsModal({
         {/* Tabs */}
         <div className="flex border-b border-gray-200">
           {[
-            { key: 'info', label: 'מידע כללי', icon: <Music className="w-4 h-4" /> },
-            { key: 'members', label: `חברים (${orchestra.memberDetails?.length || 0})`, icon: <Users className="w-4 h-4" /> },
-            { key: 'rehearsals', label: `חזרות (${rehearsalStats.total})`, icon: <Calendar className="w-4 h-4" /> },
-            { key: 'analytics', label: 'ניתוח נתונים', icon: <TrendingUp className="w-4 h-4" /> }
+            { key: 'info', label: 'מידע כללי', icon: <MusicNotesIcon className="w-4 h-4" /> },
+            { key: 'members', label: `חברים (${orchestra.memberDetails?.length || 0})`, icon: <UsersIcon className="w-4 h-4" /> },
+            { key: 'rehearsals', label: `חזרות (${rehearsalStats.total})`, icon: <CalendarIcon className="w-4 h-4" /> },
+            { key: 'analytics', label: 'ניתוח נתונים', icon: <TrendUpIcon className="w-4 h-4" /> }
           ].map(tab => (
             <button
               key={tab.key}
@@ -296,7 +279,7 @@ export default function OrchestraDetailsModal({
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטים בסיסיים</h3>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <Music className="w-5 h-5 text-gray-400" />
+                    <MusicNotesIcon className="w-5 h-5 text-gray-400" />
                     <div>
                       <div className="font-medium text-gray-900">סוג הרכב</div>
                       <div className="text-sm text-gray-600">{typeInfo.text}</div>
@@ -304,7 +287,7 @@ export default function OrchestraDetailsModal({
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-gray-400" />
+                    <MapPinIcon className="w-5 h-5 text-gray-400" />
                     <div>
                       <div className="font-medium text-gray-900">מיקום</div>
                       <div className="text-sm text-gray-600">{orchestra.location}</div>
@@ -312,7 +295,7 @@ export default function OrchestraDetailsModal({
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <Activity className="w-5 h-5 text-gray-400" />
+                    <ActivityIcon className="w-5 h-5 text-gray-400" />
                     <div>
                       <div className="font-medium text-gray-900">סטטוס</div>
                       <div className="text-sm text-gray-600">{status.text}</div>
@@ -328,7 +311,7 @@ export default function OrchestraDetailsModal({
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                        <User className="w-5 h-5 text-gray-600" />
+                        <UserIcon className="w-5 h-5 text-gray-600" />
                       </div>
                       <div>
                         <div className="font-medium text-gray-900">
@@ -344,7 +327,7 @@ export default function OrchestraDetailsModal({
 
                     {orchestra.conductorDetails.personalInfo.phone && (
                       <div className="flex items-center gap-3">
-                        <Phone className="w-4 h-4 text-gray-400" />
+                        <PhoneIcon className="w-4 h-4 text-gray-400" />
                         <span className="text-sm text-gray-600">
                           {orchestra.conductorDetails.personalInfo.phone}
                         </span>
@@ -353,7 +336,7 @@ export default function OrchestraDetailsModal({
 
                     {orchestra.conductorDetails.personalInfo.email && (
                       <div className="flex items-center gap-3">
-                        <Mail className="w-4 h-4 text-gray-400" />
+                        <EnvelopeIcon className="w-4 h-4 text-gray-400" />
                         <span className="text-sm text-gray-600">
                           {orchestra.conductorDetails.personalInfo.email}
                         </span>
@@ -362,7 +345,7 @@ export default function OrchestraDetailsModal({
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <User className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <UserIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                     <p className="text-gray-500">לא הוקצה מנצח</p>
                   </div>
                 )}
@@ -460,7 +443,7 @@ export default function OrchestraDetailsModal({
                     onClick={() => onManageMembers(orchestra._id)}
                     className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
                   >
-                    <UserPlus className="w-4 h-4" />
+                    <UserPlusIcon className="w-4 h-4" />
                     ניהול חברים
                   </button>
                 )}
@@ -475,7 +458,7 @@ export default function OrchestraDetailsModal({
                       <Card key={member._id}>
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
-                            <User className="w-5 h-5 text-gray-600" />
+                            <UserIcon className="w-5 h-5 text-gray-600" />
                           </div>
                           <div className="flex-1">
                             <div className="font-medium text-gray-900">{getDisplayName(member.personalInfo)}</div>
@@ -495,7 +478,7 @@ export default function OrchestraDetailsModal({
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <UsersIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">אין חברים רשומים</h4>
                   <p className="text-gray-600 mb-6">התחל על ידי הוספת חברים לתזמורת</p>
                   {onManageMembers && (
@@ -503,7 +486,7 @@ export default function OrchestraDetailsModal({
                       onClick={() => onManageMembers(orchestra._id)}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
                     >
-                      <UserPlus className="w-4 h-4" />
+                      <UserPlusIcon className="w-4 h-4" />
                       הוסף חברים
                     </button>
                   )}
@@ -548,11 +531,11 @@ export default function OrchestraDetailsModal({
 
                               <div className="flex items-center gap-4 text-sm text-gray-600">
                                 <div className="flex items-center gap-1">
-                                  <Clock className="w-4 h-4" />
+                                  <ClockIcon className="w-4 h-4" />
                                   <span>{rehearsal.startTime} - {rehearsal.endTime}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                  <MapPin className="w-4 h-4" />
+                                  <MapPinIcon className="w-4 h-4" />
                                   <span>{rehearsal.location}</span>
                                 </div>
                               </div>
@@ -579,7 +562,7 @@ export default function OrchestraDetailsModal({
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <CalendarIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">אין חזרות מתוכננות</h4>
                   <p className="text-gray-600">חזרות יופיעו כאן לאחר שייווצרו</p>
                 </div>
@@ -592,7 +575,7 @@ export default function OrchestraDetailsModal({
               <Card>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-medium text-gray-900">סטטיסטיקת חברים</h4>
-                  <Users className="w-5 h-5 text-blue-500" />
+                  <UsersIcon className="w-5 h-5 text-blue-500" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900 mb-2">
                   {orchestra.memberDetails?.length || 0}
@@ -603,7 +586,7 @@ export default function OrchestraDetailsModal({
               <Card>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-medium text-gray-900">סך חזרות</h4>
-                  <Calendar className="w-5 h-5 text-green-500" />
+                  <CalendarIcon className="w-5 h-5 text-green-500" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900 mb-2">
                   {rehearsalStats.total}
@@ -616,7 +599,7 @@ export default function OrchestraDetailsModal({
               <Card>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-medium text-gray-900">נוכחות ממוצעת</h4>
-                  <TrendingUp className="w-5 h-5 text-purple-500" />
+                  <TrendUpIcon className="w-5 h-5 text-purple-500" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900 mb-2">
                   {rehearsalStats.avgAttendance}%
@@ -627,7 +610,7 @@ export default function OrchestraDetailsModal({
               <Card>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-medium text-gray-900">כלי נגינה</h4>
-                  <Music className="w-5 h-5 text-orange-500" />
+                  <MusicNotesIcon className="w-5 h-5 text-orange-500" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900 mb-2">
                   {instrumentsSummary.totalInstruments}
@@ -638,7 +621,7 @@ export default function OrchestraDetailsModal({
               <Card>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-medium text-gray-900">מוכנות</h4>
-                  <Award className="w-5 h-5 text-yellow-500" />
+                  <MedalIcon className="w-5 h-5 text-yellow-500" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900 mb-2">
                   {readiness.score}%

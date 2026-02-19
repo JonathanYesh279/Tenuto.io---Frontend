@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'react'
-import { Calendar, Clock, MapPin, Plus, Edit, Trash2, Users, AlertCircle } from 'lucide-react'
+
 import { Teacher } from '../../types'
 import TeacherWeeklyCalendar from '../../../../../components/schedule/TeacherWeeklyCalendar'
 import { orchestraEnrollmentApi } from '../../../../../services/orchestraEnrollmentApi'
@@ -18,6 +18,7 @@ import { getDisplayName } from '../../../../../utils/nameUtils'
 import TimeBlockForm from '../../../../../components/teacher/TimeBlockForm'
 import toast from 'react-hot-toast'
 import { VALID_LOCATIONS } from '../../../../../constants/locations'
+import { CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, PlusIcon, TrashIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface ScheduleTabProps {
   teacher: Teacher
@@ -566,7 +567,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
         )}
       </div>
 
-      {/* Main Calendar View */}
+      {/* Main CalendarIcon View */}
       {!showLegacyView ? (
         <TeacherWeeklyCalendar
           teacher={teacherData}
@@ -605,7 +606,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                   {/* Time Information */}
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center gap-2 text-gray-700">
-                      <Clock className="w-4 h-4 text-blue-500" />
+                      <ClockIcon className="w-4 h-4 text-blue-500" />
                       <span className="font-medium">
                         {timeBlock.startTime} - {timeBlock.endTime}
                       </span>
@@ -621,13 +622,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
 
                     {timeBlock.location && (
                       <div className="flex items-center gap-2 text-gray-600">
-                        <MapPin className="w-4 h-4 text-gray-400" />
+                        <MapPinIcon className="w-4 h-4 text-gray-400" />
                         <span className="text-sm">{timeBlock.location}</span>
                       </div>
                     )}
 
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Users className="w-4 h-4 text-gray-400" />
+                      <UsersIcon className="w-4 h-4 text-gray-400" />
                       <span className="text-sm">
                         {timeBlock.assignedLessons?.length || 0} שיעורים מתוכננים
                       </span>
@@ -647,7 +648,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                       onClick={() => setSelectedTimeBlock(timeBlock)}
                       className="flex-1 px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors font-medium"
                     >
-                      <Edit className="w-4 h-4 inline-block ml-1" />
+                      <PencilIcon className="w-4 h-4 inline-block ml-1" />
                       ערוך
                     </button>
                     <button
@@ -655,7 +656,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                       disabled={isUpdating}
                       className="flex-1 px-3 py-2 text-sm bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors font-medium disabled:opacity-50"
                     >
-                      <Trash2 className="w-4 h-4 inline-block ml-1" />
+                      <TrashIcon className="w-4 h-4 inline-block ml-1" />
                       {isUpdating ? 'מוחק...' : 'מחק'}
                     </button>
                   </div>
@@ -665,7 +666,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
           ) : (
             /* Empty State */
             <div className="bg-background rounded border-2 border-dashed border-gray-200 p-12 text-center">
-              <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <h3 className="text-xl font-medium text-gray-900 mb-2">אין ימי לימוד מוגדרים</h3>
               <p className="text-gray-600 mb-6">
                 טרם הוגדרו ימי לימוד עבור מורה זה. הגדר ימי לימוד כדי לאפשר תזמון שיעורים.
@@ -686,7 +687,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
                 onClick={() => setIsAddingTimeBlock(true)}
                 className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors font-medium"
               >
-                <Plus className="w-5 h-5" />
+                <PlusIcon className="w-5 h-5" />
                 הוסף יום לימוד חדש
               </button>
             </div>
@@ -694,7 +695,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
         </div>
       )}
 
-      {/* Edit Teaching Day Modal */}
+      {/* PencilIcon Teaching Day Modal */}
       {selectedTimeBlock && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-background rounded p-6 w-full max-w-lg">
@@ -855,7 +856,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
         </div>
       )}
       
-      {/* Calendar Legend */}
+      {/* CalendarIcon Legend */}
       {!showLegacyView && (
         <div className="bg-muted/30 p-4 rounded">
           <h3 className="font-semibold text-gray-900 mb-3">מקרא</h3>
@@ -885,7 +886,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-background rounded max-w-md w-full mx-4 p-6">
             <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
-              <AlertCircle className="w-6 h-6 text-red-600" />
+              <WarningCircleIcon className="w-6 h-6 text-red-600" />
             </div>
             <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
               מחיקת יום לימוד

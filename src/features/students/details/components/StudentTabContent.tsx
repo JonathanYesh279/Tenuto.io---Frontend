@@ -6,9 +6,10 @@
  */
 
 import React, { Suspense } from 'react'
-import { Loader } from 'lucide-react'
+
 import { StudentTabContentProps } from '../types'
 import { 
+import { CircleNotchIcon } from '@phosphor-icons/react'
   SmartLoadingState, 
   SkeletonComponents 
 } from '@/services/performanceOptimizations'
@@ -42,7 +43,7 @@ const DocumentsTab = ({ student }: { student: any }) => (
 const TabLoadingFallback: React.FC = () => (
   <div className="flex items-center justify-center py-12">
     <div className="text-center">
-      <Loader className="w-6 h-6 animate-spin mx-auto mb-3 text-foreground" />
+      <CircleNotchIcon className="w-6 h-6 animate-spin mx-auto mb-3 text-foreground" />
       <div className="text-sm text-gray-600">טוען נתונים...</div>
     </div>
   </div>

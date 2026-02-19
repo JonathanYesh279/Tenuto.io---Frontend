@@ -6,27 +6,10 @@
  */
 
 import React, { useState, useMemo } from 'react'
-import { 
-  Clock, 
-  ChevronLeft, 
-  ChevronRight,
-  Calendar,
-  Filter,
-  Zap,
-  User,
-  Database,
-  Trash2,
-  RotateCcw,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Eye,
-  Search,
-  ArrowUp,
-  ArrowDown
-} from 'lucide-react'
+
 import { AuditLogEntry, DeletionOperation } from './types'
 import { Card } from '../ui/Card'
+import { ArrowCounterClockwiseIcon, ArrowDownIcon, ArrowUpIcon, CalendarIcon, CaretLeftIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, EyeIcon, FunnelIcon, LightningIcon, MagnifyingGlassIcon, TrashIcon, UserIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface DeletionTimelineProps {
   entries: AuditLogEntry[]
@@ -111,7 +94,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
     return events.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
   }, [entries, operations])
 
-  // Filter events based on current filters
+  // FunnelIcon events based on current filters
   const filteredEvents = useMemo(() => {
     return timelineEvents.filter(event => {
       // Date range filter
@@ -121,7 +104,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
       // Type filter
       if (filters.types.length > 0 && !filters.types.includes(event.type)) return false
 
-      // Search filter
+      // MagnifyingGlassIcon filter
       if (filters.searchQuery) {
         const query = filters.searchQuery.toLowerCase()
         if (!event.title.toLowerCase().includes(query) &&
@@ -155,13 +138,13 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
     switch (action) {
       case 'delete':
       case 'cascade_delete':
-        return <Trash2 className="w-4 h-4" />
+        return <TrashIcon className="w-4 h-4" />
       case 'rollback':
-        return <RotateCcw className="w-4 h-4" />
+        return <ArrowCounterClockwiseIcon className="w-4 h-4" />
       case 'orphan_cleanup':
-        return <Database className="w-4 h-4" />
+        return <DatabaseIcon className="w-4 h-4" />
       default:
-        return <AlertTriangle className="w-4 h-4" />
+        return <WarningIcon className="w-4 h-4" />
     }
   }
 
@@ -192,15 +175,15 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
   const getOperationIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="w-4 h-4" />
+        return <CheckCircleIcon className="w-4 h-4" />
       case 'failed':
-        return <XCircle className="w-4 h-4" />
+        return <XCircleIcon className="w-4 h-4" />
       case 'running':
-        return <Zap className="w-4 h-4" />
+        return <LightningIcon className="w-4 h-4" />
       case 'cancelled':
-        return <XCircle className="w-4 h-4" />
+        return <XCircleIcon className="w-4 h-4" />
       default:
-        return <Clock className="w-4 h-4" />
+        return <ClockIcon className="w-4 h-4" />
     }
   }
 
@@ -335,7 +318,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
               className="p-1 text-gray-400 hover:text-gray-600 hover:bg-white rounded"
               title="צפייה בפרטים"
             >
-              <Eye className="w-4 h-4" />
+              <EyeIcon className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -350,7 +333,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Clock className="w-6 h-6 text-gray-500" />
+              <ClockIcon className="w-6 h-6 text-gray-500" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                   ציר זמן מחיקות
@@ -366,15 +349,15 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
-                <Filter className="w-4 h-4" />
+                <FunnelIcon className="w-4 h-4" />
                 <span className="font-reisinger-yonatan">סינון</span>
               </button>
             </div>
           </div>
 
-          {/* Search */}
+          {/* MagnifyingGlassIcon */}
           <div className="relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="חיפוש באירועים..."
@@ -486,7 +469,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
               {/* Date Header */}
               <div className="sticky top-0 bg-white z-10 pb-4 mb-4 border-b border-gray-100">
                 <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-primary" />
+                  <CalendarIcon className="w-5 h-5 text-primary" />
                   <h4 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                     {formatDate(dateKey)}
                   </h4>
@@ -504,7 +487,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
           ))
         ) : (
           <Card className="text-center py-12">
-            <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <ClockIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-600 font-reisinger-yonatan mb-2">
               לא נמצאו אירועים
             </h3>

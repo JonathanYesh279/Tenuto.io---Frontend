@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
-import { Calculator, Trophy, Award, Star, AlertTriangle } from 'lucide-react';
+
 import { Bagrut, DirectorEvaluation } from '@/types/bagrut.types';
+import { CalculatorIcon, MedalIcon, StarIcon, TrophyIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface ValidationError {
   field: string;
@@ -95,12 +96,12 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Calculator className="w-7 h-7 ml-3 text-blue-600" />
+            <CalculatorIcon className="w-7 h-7 ml-3 text-blue-600" />
             סיכום ציונים - בגרות במוסיקה
           </h3>
           {isComplete && (
             <Badge variant="success" className="text-lg px-4 py-2">
-              <Trophy className="w-5 h-5 ml-2" />
+              <TrophyIcon className="w-5 h-5 ml-2" />
               הושלם
             </Badge>
           )}
@@ -110,7 +111,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
           {/* Performance Grade */}
           <div className="text-center">
             <div className="bg-blue-50 rounded p-4 border-2 border-blue-200">
-              <Award className="w-8 h-8 mx-auto text-blue-600 mb-2" />
+              <MedalIcon className="w-8 h-8 mx-auto text-blue-600 mb-2" />
               <h4 className="font-semibold text-gray-900 mb-1">ציון מגן בגרות</h4>
               <div className="text-3xl font-bold text-blue-800">
                 {magenPresentation?.grade !== undefined ? magenPresentation.grade : '--'}/100
@@ -129,7 +130,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
           {/* Director Evaluation */}
           <div className="text-center">
             <div className="bg-green-50 rounded p-4 border-2 border-green-200">
-              <Star className="w-8 h-8 mx-auto text-green-600 mb-2" />
+              <StarIcon className="w-8 h-8 mx-auto text-green-600 mb-2" />
               <h4 className="font-semibold text-gray-900 mb-1">הערכת המנהל/ת</h4>
               <div className="text-3xl font-bold text-green-800">
                 {bagrut.directorEvaluation?.points !== undefined ? bagrut.directorEvaluation.points : '--'}/10
@@ -150,7 +151,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
             <div className={`rounded p-4 border-2 ${
               isComplete ? `${gradeInfo.color} text-white` : 'bg-gray-50 border-gray-200'
             }`}>
-              <Trophy className="w-8 h-8 mx-auto mb-2" />
+              <TrophyIcon className="w-8 h-8 mx-auto mb-2" />
               <h4 className="font-semibold mb-1">ציון סופי</h4>
               <div className="text-3xl font-bold">
                 {isComplete ? finalGrade.toFixed(1) : '--'}/100
@@ -205,7 +206,7 @@ export const GradeSummary: React.FC<GradeSummaryProps> = ({
                     ? 'bg-red-50 border border-red-200 text-red-800' 
                     : 'bg-yellow-50 border border-yellow-200 text-yellow-800'
                 }`}>
-                  <AlertTriangle className="w-4 h-4 ml-2 flex-shrink-0" />
+                  <WarningIcon className="w-4 h-4 ml-2 flex-shrink-0" />
                   <span className="text-sm">{error.message}</span>
                 </div>
               ))}

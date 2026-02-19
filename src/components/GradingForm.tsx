@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Save, X, Award, Calculator, AlertCircle, CheckCircle } from 'lucide-react'
+
 import { Card } from './ui/Card'
 import type { GradingDetailsUpdateData } from '../types/bagrut.types'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { CalculatorIcon, CheckCircleIcon, FloppyDiskIcon, MedalIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface GradingFormProps {
   initialData?: GradingDetailsUpdateData
@@ -195,7 +196,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
           onClick={onCancel}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       </div>
 
@@ -204,7 +205,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
         {/* General Error */}
         {errors.general && (
           <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <WarningCircleIcon className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
         )}
@@ -214,7 +215,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
           {/* Performance and Presentations */}
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Award className="w-5 h-5 text-gray-600" />
+              <MedalIcon className="w-5 h-5 text-gray-600" />
               ציוני ביצוע ומצגות
             </h3>
             
@@ -290,7 +291,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
           {/* Evaluations */}
           <Card>
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-gray-600" />
+              <CheckCircleIcon className="w-5 h-5 text-gray-600" />
               הערכות
             </h3>
             
@@ -343,7 +344,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
               {calculatedFinal !== null && (
                 <div className="mt-6 p-4 bg-muted/50 border border-border rounded">
                   <div className="flex items-center gap-2 mb-2">
-                    <Calculator className="w-5 h-5 text-primary" />
+                    <CalculatorIcon className="w-5 h-5 text-primary" />
                     <span className="font-medium text-primary">ציון סופי משוער</span>
                   </div>
                   <div className={`text-3xl font-bold ${getGradeColor(calculatedFinal)}`}>
@@ -420,7 +421,7 @@ const GradingForm: React.FC<GradingFormProps> = ({
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 ml-2" />
+                <FloppyDiskIcon className="w-4 h-4 ml-2" />
                 שמור ציונים
               </>
             )}

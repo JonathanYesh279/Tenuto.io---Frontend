@@ -1,36 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../services/authContext.jsx'
-import {
-  Users,
-  Calendar,
-  Clock,
-  Award,
-  Plus,
-  CheckSquare,
-  Music,
-  UserCheck,
-  TrendingUp,
-  Bell,
-  ChevronRight,
-  Activity,
-  FileText,
-  BarChart3,
-  Mic,
-  Volume2,
-  CalendarDays,
-  Timer,
-  Star,
-  Target,
-  BookOpen,
-  MapPin,
-  GraduationCap,
-  AlertCircle,
-  Eye
-} from 'lucide-react'
+
 import apiService from '../../services/apiService'
 import type { Bagrut } from '../../types/bagrut.types'
 import { getDisplayName } from '@/utils/nameUtils'
+import { ActivityIcon, BellIcon, BookOpenIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, EyeIcon, FileTextIcon, GraduationCapIcon, MapPinIcon, MedalIcon, MicrophoneIcon, MusicNotesIcon, PlusIcon, StarIcon, TargetIcon, TimerIcon, TrendUpIcon, UserCircleCheckIcon, UsersIcon, Volume2Icon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface ConductorDashboardStats {
   totalOrchestras: number
@@ -401,7 +376,7 @@ export default function ConductorDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
           <div className="text-red-800 font-reisinger-yonatan text-center">
-            <Bell className="w-12 h-12 mx-auto mb-4 text-red-600" />
+            <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
               onClick={loadConductorDashboardData}
@@ -436,7 +411,7 @@ export default function ConductorDashboard() {
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
           <StatCard
-            icon={<Music className="w-6 h-6" />}
+            icon={<MusicNotesIcon className="w-6 h-6" />}
             title="סה״כ תזמורות"
             value={stats.totalOrchestras}
             bgColor="bg-blue-50"
@@ -444,7 +419,7 @@ export default function ConductorDashboard() {
             borderColor="border-blue-200"
           />
           <StatCard
-            icon={<Users className="w-6 h-6" />}
+            icon={<UsersIcon className="w-6 h-6" />}
             title="מוזיקאים פעילים"
             value={stats.activeMusicians}
             bgColor="bg-green-50"
@@ -452,7 +427,7 @@ export default function ConductorDashboard() {
             borderColor="border-green-200"
           />
           <StatCard
-            icon={<CalendarDays className="w-6 h-6" />}
+            icon={<CalendarIcon className="w-6 h-6" />}
             title="חזרות השבוע"
             value={stats.weeklyRehearsals}
             bgColor="bg-purple-50"
@@ -460,7 +435,7 @@ export default function ConductorDashboard() {
             borderColor="border-purple-200"
           />
           <StatCard
-            icon={<Star className="w-6 h-6" />}
+            icon={<StarIcon className="w-6 h-6" />}
             title="קונצרטים השנה"
             value={stats.completedConcerts}
             bgColor="bg-yellow-50"
@@ -468,7 +443,7 @@ export default function ConductorDashboard() {
             borderColor="border-yellow-200"
           />
           <StatCard
-            icon={<GraduationCap className="w-6 h-6" />}
+            icon={<GraduationCapIcon className="w-6 h-6" />}
             title="חברי בגרות"
             value={stats.bagrutMembers}
             bgColor="bg-indigo-50"
@@ -476,7 +451,7 @@ export default function ConductorDashboard() {
             borderColor="border-indigo-200"
           />
           <StatCard
-            icon={<Target className="w-6 h-6" />}
+            icon={<TargetIcon className="w-6 h-6" />}
             title="בגרות פעילה"
             value={stats.activeBagrutStudents}
             bgColor="bg-orange-50"
@@ -492,25 +467,25 @@ export default function ConductorDashboard() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <QuickActionButton
-              icon={<Calendar className="w-5 h-5" />}
+              icon={<CalendarIcon className="w-5 h-5" />}
               label="קבע חזרה"
               onClick={() => handleQuickAction('scheduleRehearsal')}
               color="indigo"
             />
             <QuickActionButton
-              icon={<CheckSquare className="w-5 h-5" />}
+              icon={<CheckSquareIcon className="w-5 h-5" />}
               label="סמן נוכחות"
               onClick={() => handleQuickAction('markAttendance')}
               color="green"
             />
             <QuickActionButton
-              icon={<Mic className="w-5 h-5" />}
+              icon={<MicrophoneIcon className="w-5 h-5" />}
               label="נהל תזמורות"
               onClick={() => handleQuickAction('manageOrchestras')}
               color="blue"
             />
             <QuickActionButton
-              icon={<UserCheck className="w-5 h-5" />}
+              icon={<UserCircleCheckIcon className="w-5 h-5" />}
               label="צפה במוזיקאים"
               onClick={() => handleQuickAction('viewMusicians')}
               color="purple"
@@ -531,13 +506,13 @@ export default function ConductorDashboard() {
                   className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
                 >
                   צפה בכל
-                  <ChevronRight className="w-4 h-4" />
+                  <CaretRightIcon className="w-4 h-4" />
                 </button>
               </div>
 
               {upcomingRehearsals.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין חזרות מתוכננות השבוע</p>
                 </div>
               ) : (
@@ -546,12 +521,12 @@ export default function ConductorDashboard() {
                     <div key={rehearsal.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                          <Volume2 className="w-6 h-6 text-indigo-600" />
+                          <Volume2Icon className="w-6 h-6 text-indigo-600" />
                         </div>
                         <div>
                           <div className="font-medium text-gray-900 font-reisinger-yonatan">{rehearsal.orchestraName}</div>
                           <div className="text-sm text-gray-600 flex items-center gap-2">
-                            <MapPin className="w-3 h-3" />
+                            <MapPinIcon className="w-3 h-3" />
                             {rehearsal.location}
                           </div>
                           {rehearsal.attendanceRate && (
@@ -565,7 +540,7 @@ export default function ConductorDashboard() {
                         <div className="font-medium text-gray-900">{rehearsal.date}</div>
                         <div className="text-sm text-gray-600">{rehearsal.time}</div>
                         <div className="text-xs text-gray-500">
-                          <Timer className="w-3 h-3 inline mr-1" />
+                          <TimerIcon className="w-3 h-3 inline mr-1" />
                           {rehearsal.duration} דקות
                         </div>
                       </div>
@@ -582,7 +557,7 @@ export default function ConductorDashboard() {
                   <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                     חברי תזמורת עם בגרות
                   </h2>
-                  <GraduationCap className="w-5 h-5 text-gray-400" />
+                  <GraduationCapIcon className="w-5 h-5 text-gray-400" />
                 </div>
 
                 {/* Bagrut Status Summary */}
@@ -623,7 +598,7 @@ export default function ConductorDashboard() {
                       <div key={member.studentId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Music className="w-4 h-4 text-blue-600" />
+                            <MusicNotesIcon className="w-4 h-4 text-blue-600" />
                           </div>
                           <div>
                             <div className="font-medium text-gray-900">{member.studentName}</div>
@@ -655,7 +630,7 @@ export default function ConductorDashboard() {
                             </div>
                           )}
                           <button className="mt-2 p-1 text-gray-400 hover:text-blue-600">
-                            <Eye className="w-4 h-4" />
+                            <EyeIcon className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
@@ -685,13 +660,13 @@ export default function ConductorDashboard() {
                   className="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1"
                 >
                   דוח מפורט
-                  <ChevronRight className="w-4 h-4" />
+                  <CaretRightIcon className="w-4 h-4" />
                 </button>
               </div>
 
               {orchestraPerformance.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <BarChart3 className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <ChartBarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                   <p className="font-reisinger-yonatan">אין נתוני ביצועים</p>
                 </div>
               ) : (
@@ -712,7 +687,7 @@ export default function ConductorDashboard() {
                       </div>
                       <div className="text-right">
                         <div className="flex items-center gap-1">
-                          <Target className="w-4 h-4 text-gray-400" />
+                          <TargetIcon className="w-4 h-4 text-gray-400" />
                           <span className={`font-medium ${
                             performance.averageAttendance >= 90 ? 'text-green-600' :
                             performance.averageAttendance >= 75 ? 'text-yellow-600' : 'text-red-600'
@@ -729,18 +704,18 @@ export default function ConductorDashboard() {
             </div>
           </div>
 
-          {/* Recent Activity Feed */}
+          {/* Recent ActivityIcon Feed */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                 פעילות אחרונה
               </h2>
-              <Activity className="w-5 h-5 text-gray-400" />
+              <ActivityIcon className="w-5 h-5 text-gray-400" />
             </div>
 
             {recentActivities.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <Bell className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                <BellIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p className="font-reisinger-yonatan">אין פעילות לאחרונה</p>
               </div>
             ) : (
@@ -752,10 +727,10 @@ export default function ConductorDashboard() {
                       activity.type === 'enrollment' ? 'bg-green-100' :
                       activity.type === 'performance' ? 'bg-purple-100' : 'bg-yellow-100'
                     }`}>
-                      {activity.type === 'rehearsal' && <Music className="w-4 h-4 text-blue-600" />}
-                      {activity.type === 'enrollment' && <UserCheck className="w-4 h-4 text-green-600" />}
-                      {activity.type === 'performance' && <Star className="w-4 h-4 text-purple-600" />}
-                      {activity.type === 'attendance' && <CheckSquare className="w-4 h-4 text-yellow-600" />}
+                      {activity.type === 'rehearsal' && <MusicNotesIcon className="w-4 h-4 text-blue-600" />}
+                      {activity.type === 'enrollment' && <UserCircleCheckIcon className="w-4 h-4 text-green-600" />}
+                      {activity.type === 'performance' && <StarIcon className="w-4 h-4 text-purple-600" />}
+                      {activity.type === 'attendance' && <CheckSquareIcon className="w-4 h-4 text-yellow-600" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">{activity.title}</p>

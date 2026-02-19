@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Search, Plus, Eye, Edit, Trash2, Filter, Loader,
-  Grid, List, Download, CheckCircle, Clock, Award,
-  FileText, Calendar, User, Music, AlertCircle, XCircle
-} from 'lucide-react'
+  MagnifyingGlassIcon, PlusIcon, EyeIcon, PencilSimpleIcon, TrashIcon, FunnelIcon, CircleNotchIcon,
+  SquaresFourIcon, ListIcon, DownloadIcon, CheckCircleIcon, ClockIcon, MedalIcon,
+  FileTextIcon, CalendarIcon, UserIcon, MusicNoteIcon, WarningCircleIcon, XCircleIcon
+} from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import { StatusBadge } from '../components/domain'
@@ -289,7 +289,7 @@ export default function Bagruts() {
       header: 'תלמיד',
       render: (bagrut: any) => (
         <div className="flex items-center space-x-2 space-x-reverse">
-          <User className="w-4 h-4 text-gray-400" />
+          <UserIcon size={16} weight="regular" className="text-gray-400" />
           <span className="font-medium">{getStudentName(bagrut.studentId)}</span>
         </div>
       )
@@ -384,7 +384,7 @@ export default function Bagruts() {
             className="p-1.5 text-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
             title="צפה בפרטים"
           >
-            <Eye className="w-4 h-4" />
+            <EyeIcon size={16} weight="regular" />
           </button>
           <button
             onClick={(e) => {
@@ -394,7 +394,7 @@ export default function Bagruts() {
             className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
             title="ערוך"
           >
-            <Edit className="w-4 h-4" />
+            <PencilSimpleIcon size={16} weight="regular" />
           </button>
           <button
             onClick={(e) => {
@@ -404,7 +404,7 @@ export default function Bagruts() {
             className="p-1.5 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded transition-colors"
             title="ייצא PDF"
           >
-            <Download className="w-4 h-4" />
+            <DownloadIcon size={16} weight="regular" />
           </button>
           <button
             onClick={(e) => {
@@ -414,7 +414,7 @@ export default function Bagruts() {
             className="p-1.5 text-red-600 hover:text-red-900 hover:bg-red-50 rounded transition-colors"
             title="מחק"
           >
-            <Trash2 className="w-4 h-4" />
+            <TrashIcon size={16} weight="fill" />
           </button>
         </div>
       )
@@ -425,7 +425,7 @@ export default function Bagruts() {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+          <CircleNotchIcon size={32} weight="regular" className="animate-spin mx-auto mb-4 text-primary" />
           <div className="text-lg text-gray-600">טוען נתוני בגרויות...</div>
         </div>
       </div>
@@ -435,7 +435,7 @@ export default function Bagruts() {
   if (error) {
     return (
       <div className="text-center py-12">
-        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+        <WarningCircleIcon size={48} weight="fill" className="text-red-500 mx-auto mb-4" />
         <div className="text-red-600 text-lg mb-4">שגיאה בטעינת הנתונים</div>
         <div className="text-gray-600 mb-6">{error}</div>
         <button 
@@ -469,7 +469,7 @@ export default function Bagruts() {
             onClick={() => setShowForm(true)}
             className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <Plus className="w-4 h-4 ml-2" />
+            <PlusIcon size={16} weight="fill" className="ml-2" />
             בגרות חדשה
           </button>
         )}
@@ -481,28 +481,28 @@ export default function Bagruts() {
           title="סה״כ בגרויות"
           value={totalBagruts.toString()}
           subtitle="בגרויות רשומות במערכת"
-          icon={<FileText />}
+          icon={<FileTextIcon />}
           color="blue"
         />
         <StatsCard
           title="הושלמו"
           value={completedBagruts.toString()}
           subtitle="בגרויות שהושלמו"
-          icon={<CheckCircle />}
+          icon={<CheckCircleIcon />}
           color="green"
         />
         <StatsCard
           title="בתהליך"
           value={pendingBagruts.toString()}
           subtitle="בגרויות פעילות"
-          icon={<Clock />}
+          icon={<ClockIcon />}
           color="orange"
         />
         <StatsCard
           title="מצטיינים"
           value={excellentGrades.toString()}
           subtitle="ציון 90 ומעלה"
-          icon={<Award />}
+          icon={<MedalIcon />}
           color="purple"
         />
       </div>
@@ -512,7 +512,7 @@ export default function Bagruts() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+              <MagnifyingGlassIcon size={16} weight="regular" className="absolute right-3 top-3 text-gray-400" />
               <input
                 type="text"
                 placeholder="חיפוש לפי שם תלמיד, מורה או קונסרבטוריון..."
@@ -576,7 +576,7 @@ export default function Bagruts() {
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
-            <List className="w-4 h-4" />
+            <ListIcon size={16} weight="regular" />
             טבלה
           </button>
           <button
@@ -587,7 +587,7 @@ export default function Bagruts() {
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
-            <Grid className="w-4 h-4" />
+            <SquaresFourIcon size={16} weight="regular" />
             רשת
           </button>
         </div>
@@ -620,7 +620,7 @@ export default function Bagruts() {
 
       {filteredBagruts.length === 0 && !loading && !loadingAdditionalData && (
         <div className="text-center py-12">
-          <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <FileTextIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-4" />
           <div className="text-gray-500 text-lg">
             {isTeacherRole
               ? totalBagruts === 0

@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-  ArrowRight, Edit, Edit2, Trash2, Download, Upload, Plus,
-  User, Calendar, Music, FileText, Award, Clock,
-  CheckCircle, XCircle, AlertCircle, Star, BookOpen,
-  Users, File, Loader, ChevronRight, Save, X
-} from 'lucide-react'
+  ArrowRightIcon, PencilSimpleIcon, TrashIcon, DownloadIcon, UploadIcon, PlusIcon,
+  UserIcon, CalendarIcon, MusicNoteIcon, FileTextIcon, MedalIcon, ClockIcon,
+  CheckCircleIcon, XCircleIcon, WarningCircleIcon, StarIcon, BookOpenIcon,
+  UsersIcon, FileIcon, CircleNotchIcon, CaretRightIcon, FloppyDiskIcon, XIcon
+} from '@phosphor-icons/react'
 import { DetailPageHeader } from '../components/domain'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
@@ -688,7 +688,7 @@ export default function BagrutDetails() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+          <CircleNotchIcon size={32} weight="regular" className="animate-spin mx-auto mb-4 text-primary" />
           <div className="text-gray-800">טוען פרטי בגרות...</div>
           <div className="text-xs text-gray-500 mt-2">ID: {bagrutId}</div>
         </div>
@@ -700,7 +700,7 @@ export default function BagrutDetails() {
     console.log('❌ BagrutDetails: Showing error state - error:', error, 'bagrut exists:', !!bagrut);
     return (
       <div className="text-center py-12">
-        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+        <WarningCircleIcon size={48} weight="fill" className="text-red-500 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">שגיאה בטעינת הבגרות</h3>
         <p className="text-gray-800 mb-4">{error || 'בגרות לא נמצאה'}</p>
         <div className="text-xs text-gray-400 mb-4">
@@ -710,7 +710,7 @@ export default function BagrutDetails() {
           onClick={() => navigate('/bagruts')}
           className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
         >
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <ArrowRightIcon size={16} weight="fill" className="ml-2" mirrored />
           חזור לרשימת בגרויות
         </button>
       </div>
@@ -771,7 +771,7 @@ export default function BagrutDetails() {
             onClick={() => setShowCompleteModal(true)}
             className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded hover:bg-green-50"
           >
-            <CheckCircle className="w-4 h-4 ml-1" />
+            <CheckCircleIcon size={16} weight="fill" className="ml-1" />
             השלם בגרות
           </button>
         )}
@@ -779,14 +779,14 @@ export default function BagrutDetails() {
           onClick={handleExportPDF}
           className="flex items-center px-3 py-2 text-blue-700 border border-blue-300 rounded hover:bg-blue-50"
         >
-          <Download className="w-4 h-4 ml-1" />
+          <DownloadIcon size={16} weight="regular" className="ml-1" />
           ייצא PDF
         </button>
         <button
           onClick={() => setShowDeleteModal(true)}
           className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded hover:bg-red-50"
         >
-          <Trash2 className="w-4 h-4 ml-1" />
+          <TrashIcon size={16} weight="fill" className="ml-1" />
           מחק
         </button>
       </div>
@@ -797,35 +797,35 @@ export default function BagrutDetails() {
           title="התקדמות כללית"
           value={`${overallProgress}%`}
           subtitle="השלמת משימות"
-          icon={<Clock />}
+          icon={<ClockIcon />}
           color={getStatusColor()}
         />
         <StatsCard
           title="השמעות"
           value={`${completedStats.regular}/3`}
           subtitle="השמעות רגילות שהושלמו"
-          icon={<BookOpen />}
+          icon={<BookOpenIcon />}
           color={completedStats.regular === 3 ? 'green' : 'orange'}
         />
         <StatsCard
           title="תכנית"
           value={programPieces.toString()}
           subtitle="יצירות בתכנית"
-          icon={<Music />}
+          icon={<MusicNoteIcon />}
           color="blue"
         />
         <StatsCard
           title="מסמכים"
           value={documentsCount.toString()}
           subtitle="מסמכים מצורפים"
-          icon={<FileText />}
+          icon={<FileTextIcon />}
           color="purple"
         />
         <StatsCard
           title="ציון סופי"
           value={bagrut.finalGrade?.toString() || '-'}
           subtitle={bagrut.finalGradeLevel || 'טרם חושב'}
-          icon={<Award />}
+          icon={<MedalIcon />}
           color={bagrut.finalGrade && bagrut.finalGrade >= 90 ? 'green' : 'gray'}
         />
       </div>
@@ -836,46 +836,46 @@ export default function BagrutDetails() {
           <div className="flex overflow-x-auto">
             <Tab
               label="סקירה כללית"
-              icon={<FileText className="w-4 h-4" />}
+              icon={<FileTextIcon size={16} weight="regular" />}
               isActive={activeTab === 'overview'}
               onClick={() => setActiveTab('overview')}
             />
             <Tab
               label="תכנית"
-              icon={<Music className="w-4 h-4" />}
+              icon={<MusicNoteIcon size={16} weight="regular" />}
               isActive={activeTab === 'program'}
               onClick={() => setActiveTab('program')}
               badge={programPieces}
             />
             <Tab
               label="השמעות"
-              icon={<BookOpen className="w-4 h-4" />}
+              icon={<BookOpenIcon size={16} weight="regular" />}
               isActive={activeTab === 'presentations'}
               onClick={() => setActiveTab('presentations')}
               badge={completedStats.regular}
             />
             <Tab
               label="מגן בגרות"
-              icon={<Star className="w-4 h-4" />}
+              icon={<StarIcon size={16} weight="regular" />}
               isActive={activeTab === 'magen'}
               onClick={() => setActiveTab('magen')}
             />
             <Tab
               label="ציונים"
-              icon={<Award className="w-4 h-4" />}
+              icon={<MedalIcon size={16} weight="regular" />}
               isActive={activeTab === 'grading'}
               onClick={() => setActiveTab('grading')}
             />
             <Tab
               label="מסמכים"
-              icon={<File className="w-4 h-4" />}
+              icon={<FileIcon size={16} weight="regular" />}
               isActive={activeTab === 'documents'}
               onClick={() => setActiveTab('documents')}
               badge={documentsCount}
             />
             <Tab
               label="מלווים"
-              icon={<Users className="w-4 h-4" />}
+              icon={<UsersIcon size={16} weight="regular" />}
               isActive={activeTab === 'accompanists'}
               onClick={() => setActiveTab('accompanists')}
               badge={bagrut.accompaniment?.accompanists?.length || 0}
@@ -903,7 +903,7 @@ export default function BagrutDetails() {
                     onClick={() => setIsEditingOverview(true)}
                     className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
                   >
-                    <Edit className="w-4 h-4" />
+                    <PencilSimpleIcon size={16} weight="regular" />
                     ערוך פרטים כלליים
                   </button>
                 ) : (
@@ -912,14 +912,14 @@ export default function BagrutDetails() {
                       onClick={handleSaveOverview}
                       className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                     >
-                      <Save className="w-4 h-4" />
+                      <FloppyDiskIcon size={16} weight="regular" />
                       שמור
                     </button>
                     <button
                       onClick={handleCancelOverviewEdit}
                       className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
                     >
-                      <X className="w-4 h-4" />
+                      <XIcon size={16} weight="regular" />
                       ביטול
                     </button>
                   </div>
@@ -1059,7 +1059,7 @@ export default function BagrutDetails() {
                   onClick={() => setShowAddPieceModal(true)}
                   className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
                 >
-                  <Plus className="w-4 h-4 ml-1" />
+                  <PlusIcon size={16} weight="fill" className="ml-1" />
                   הוסף יצירה
                 </button>
               </div>
@@ -1121,14 +1121,14 @@ export default function BagrutDetails() {
                             className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
                             title="ערוך יצירה"
                           >
-                            <Edit2 className="w-4 h-4" />
+                            <PencilSimpleIcon size={16} weight="regular" />
                           </button>
                           <button
                             onClick={() => handleDeletePiece(row.pieceNumber)}
                             className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
                             title="מחק יצירה"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <TrashIcon size={16} weight="fill" />
                           </button>
                         </div>
                       )
@@ -1137,7 +1137,7 @@ export default function BagrutDetails() {
                 />
               ) : (
                 <div className="text-center py-8 text-gray-700">
-                  <Music className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <MusicNoteIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-3" />
                   <p>אין יצירות בתכנית</p>
                 </div>
               )}
@@ -1169,13 +1169,13 @@ export default function BagrutDetails() {
                 </div>
               ) : (
                 <div className="text-center py-8 text-gray-700">
-                  <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <BookOpenIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-3" />
                   <p>אין השמעות</p>
                   <button
                     onClick={() => navigate(`/bagruts/${bagrutId}/edit?tab=presentations`)}
                     className="mt-4 flex items-center mx-auto px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
                   >
-                    <Plus className="w-4 h-4 ml-1" />
+                    <PlusIcon size={16} weight="fill" className="ml-1" />
                     הוסף השמעות
                   </button>
                 </div>
@@ -1403,7 +1403,7 @@ export default function BagrutDetails() {
                 /* No grading data available */
                 <Card>
                   <div className="text-center text-gray-500 py-12">
-                    <AlertCircle className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                    <WarningCircleIcon size={64} weight="regular" className="mx-auto mb-4 text-gray-400" />
                     <h4 className="text-lg font-medium text-gray-900 mb-2">טרם הוזנו ציונים</h4>
                     <p className="text-gray-600">הציונים יוצגו כאן לאחר השלמת מגן בגרות</p>
                   </div>
@@ -1418,7 +1418,7 @@ export default function BagrutDetails() {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">מסמכים</h3>
                 <label className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 cursor-pointer">
-                  <Upload className="w-4 h-4 ml-1" />
+                  <UploadIcon size={16} weight="regular" className="ml-1" />
                   העלה מסמך
                   <input
                     type="file"
@@ -1431,7 +1431,7 @@ export default function BagrutDetails() {
 
               {uploadingDocument && (
                 <div className="text-center py-4">
-                  <Loader className="w-6 h-6 animate-spin mx-auto text-primary" />
+                  <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto text-primary" />
                   <p className="text-sm text-gray-800 mt-2">מעלה מסמך...</p>
                 </div>
               )}
@@ -1442,7 +1442,7 @@ export default function BagrutDetails() {
                     <Card key={doc._id} className="hover:shadow-lg transition-shadow">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <File className="w-8 h-8 text-gray-400 mb-2" />
+                          <FileIcon size={32} weight="regular" className="text-gray-400 mb-2" />
                           <h4 className="font-medium text-gray-900 text-sm mb-1">{doc.fileName}</h4>
                           <span className="inline-block px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs mb-2">
                             {doc.category}
@@ -1460,14 +1460,14 @@ export default function BagrutDetails() {
                             className="p-1 text-blue-600 hover:bg-blue-50 rounded"
                             title="הורד"
                           >
-                            <Download className="w-4 h-4" />
+                            <DownloadIcon size={16} weight="regular" />
                           </button>
                           <button
                             onClick={() => handleDocumentDelete(doc._id!)}
                             className="p-1 text-red-600 hover:bg-red-50 rounded"
                             title="מחק"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <TrashIcon size={16} weight="fill" />
                           </button>
                         </div>
                       </div>
@@ -1476,7 +1476,7 @@ export default function BagrutDetails() {
                 </div>
               ) : (
                 <div className="text-center py-8 text-gray-700">
-                  <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <FileTextIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-3" />
                   <p>אין מסמכים מצורפים</p>
                 </div>
               )}

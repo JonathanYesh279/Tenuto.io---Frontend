@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowRight, Calendar, Clock, MapPin, Users, Edit, Trash2, CheckCircle, XCircle, Check, X, Search, Save, RotateCcw } from 'lucide-react'
+import { ArrowRightIcon, CalendarIcon, ClockIcon, MapPinIcon, UsersIcon, PencilSimpleIcon, TrashIcon, CheckCircleIcon, XCircleIcon, CheckIcon, XIcon, MagnifyingGlassIcon, FloppyDiskIcon, ArrowCounterClockwiseIcon } from '@phosphor-icons/react'
 import { rehearsalService, orchestraService, studentService } from '../services/apiService'
 import { 
   formatRehearsalDateTime, 
@@ -392,7 +392,7 @@ export default function RehearsalDetails() {
             className="p-2 hover:bg-gray-100 rounded transition-colors"
             title="חזור לחזרות"
           >
-            <ArrowRight className="w-5 h-5 text-gray-600" />
+            <ArrowRightIcon size={20} weight="regular" className="text-gray-600" mirrored />
           </button>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">פרטי החזרה</h1>
@@ -406,7 +406,7 @@ export default function RehearsalDetails() {
               onClick={() => setShowAttendanceModal(true)}
               className="flex items-center px-4 py-2 text-green-700 border border-green-300 rounded hover:bg-green-50 transition-colors"
             >
-              <Check className="w-4 h-4 ml-1" />
+              <CheckIcon size={16} weight="fill" className="ml-1" />
               סימון נוכחות
             </button>
           )}
@@ -414,14 +414,14 @@ export default function RehearsalDetails() {
             onClick={() => setShowEditForm(true)}
             className="flex items-center px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
           >
-            <Edit className="w-4 h-4 ml-1" />
+            <PencilSimpleIcon size={16} weight="regular" className="ml-1" />
             ערוך
           </button>
           <button
             onClick={handleDeleteRehearsal}
             className="flex items-center px-4 py-2 text-red-600 border border-red-300 rounded hover:bg-red-50 transition-colors"
           >
-            <Trash2 className="w-4 h-4 ml-1" />
+            <TrashIcon size={16} weight="fill" className="ml-1" />
             מחק
           </button>
         </div>
@@ -450,7 +450,7 @@ export default function RehearsalDetails() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Date & Time */}
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-gray-400" />
+                <CalendarIcon size={20} weight="regular" className="text-gray-400" />
                 <div>
                   <div className="font-medium text-gray-900">תאריך</div>
                   <div className="text-gray-600">{dateTime.date}</div>
@@ -459,7 +459,7 @@ export default function RehearsalDetails() {
               </div>
 
               <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-gray-400" />
+                <ClockIcon size={20} weight="regular" className="text-gray-400" />
                 <div>
                   <div className="font-medium text-gray-900">שעה</div>
                   <div className="text-gray-600">{dateTime.time}</div>
@@ -467,7 +467,7 @@ export default function RehearsalDetails() {
               </div>
 
               <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-gray-400" />
+                <MapPinIcon size={20} weight="regular" className="text-gray-400" />
                 <div>
                   <div className="font-medium text-gray-900">מיקום</div>
                   <div className="text-gray-600">{rehearsal.location || 'לא צוין מיקום'}</div>
@@ -475,7 +475,7 @@ export default function RehearsalDetails() {
               </div>
 
               <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-gray-400" />
+                <UsersIcon size={20} weight="regular" className="text-gray-400" />
                 <div>
                   <div className="font-medium text-gray-900">חברי התזמורת</div>
                   <div className="text-gray-600">
@@ -523,10 +523,10 @@ export default function RehearsalDetails() {
                 onClick={() => setShowAttendanceModal(false)}
                 className="text-gray-400 hover:text-gray-600"
               >
-                <X className="w-6 h-6" />
+                <XIcon size={24} weight="regular" />
               </button>
             </div>
-            
+
             <div className="mb-6">
               
               {/* Quick Actions */}
@@ -535,14 +535,14 @@ export default function RehearsalDetails() {
                   onClick={markAllPresent}
                   className="px-3 py-1 text-sm bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors"
                 >
-                  <Check className="w-3 h-3 inline-block ml-1" />
+                  <CheckIcon size={12} weight="fill" className="inline-block ml-1" />
                   סמן הכל נוכח
                 </button>
                 <button
                   onClick={markAllAbsent}
                   className="px-3 py-1 text-sm bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
                 >
-                  <X className="w-3 h-3 inline-block ml-1" />
+                  <XIcon size={12} weight="regular" className="inline-block ml-1" />
                   סמן הכל נעדר
                 </button>
                 <button
@@ -556,7 +556,7 @@ export default function RehearsalDetails() {
                     onClick={handleAttendanceReset}
                     className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-colors"
                   >
-                    <RotateCcw className="w-3 h-3 mr-1 inline" />
+                    <ArrowCounterClockwiseIcon size={12} weight="regular" className="mr-1 inline" />
                     שחזר מקור
                   </button>
                 )}
@@ -567,7 +567,7 @@ export default function RehearsalDetails() {
             {attendanceSuccess && (
               <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
                 <div className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-600 ml-2" />
+                  <CheckCircleIcon size={16} weight="fill" className="text-green-600 ml-2" />
                   <span className="text-green-800 text-sm">הנוכחות נשמרה בהצלחה!</span>
                 </div>
               </div>
@@ -577,7 +577,7 @@ export default function RehearsalDetails() {
             {attendanceError && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded">
                 <div className="flex items-center">
-                  <XCircle className="w-4 h-4 text-red-600 ml-2" />
+                  <XCircleIcon size={16} weight="fill" className="text-red-600 ml-2" />
                   <span className="text-red-800 text-sm">{attendanceError}</span>
                 </div>
               </div>
@@ -607,7 +607,7 @@ export default function RehearsalDetails() {
 
             {/* Search */}
             <div className="relative mb-4">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <MagnifyingGlassIcon size={16} weight="regular" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="חיפוש חבר..."
@@ -621,7 +621,7 @@ export default function RehearsalDetails() {
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {!rehearsal.orchestra?.members || rehearsal.orchestra.members.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <Users className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                  <UsersIcon size={48} weight="regular" className="mx-auto mb-2 text-gray-400" />
                   <p>אין חברים רשומים לתזמורת/הרכב זה</p>
                   <p className="text-sm mt-1">יש להוסיף חברים דרך עמוד התזמורת</p>
                 </div>
@@ -651,7 +651,7 @@ export default function RehearsalDetails() {
                           }`}
                           title="נוכח"
                         >
-                          <Check className="w-4 h-4" />
+                          <CheckIcon size={16} weight="fill" />
                         </button>
                         
                         <button
@@ -663,7 +663,7 @@ export default function RehearsalDetails() {
                           }`}
                           title="נעדר"
                         >
-                          <X className="w-4 h-4" />
+                          <XIcon size={16} weight="regular" />
                         </button>
                       </div>
                     </div>
@@ -686,7 +686,7 @@ export default function RehearsalDetails() {
                     </>
                   ) : (
                     <>
-                      <Save className="w-4 h-4 ml-2" />
+                      <FloppyDiskIcon size={16} weight="regular" className="ml-2" />
                       שמור נוכחות
                     </>
                   )}
@@ -709,10 +709,10 @@ export default function RehearsalDetails() {
                   onClick={cancelBulkUpdate}
                   className="text-gray-400 hover:text-gray-600"
                 >
-                  <X className="w-6 h-6" />
+                  <XIcon size={24} weight="regular" />
                 </button>
               </div>
-              
+
               <div className="mb-6">
                 <div className="flex items-center mb-4">
                   <div className="flex-shrink-0">
@@ -748,7 +748,7 @@ export default function RehearsalDetails() {
               {bulkUpdateError && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded">
                   <div className="flex items-center">
-                    <XCircle className="w-4 h-4 text-red-600 ml-2" />
+                    <XCircleIcon size={16} weight="fill" className="text-red-600 ml-2" />
                     <span className="text-red-800 text-sm">{bulkUpdateError}</span>
                   </div>
                 </div>
@@ -767,7 +767,7 @@ export default function RehearsalDetails() {
                     </>
                   ) : (
                     <>
-                      <Calendar className="w-5 h-5 ml-2" />
+                      <CalendarIcon size={20} weight="regular" className="ml-2" />
                       עדכון חזרה זו בלבד
                     </>
                   )}
@@ -785,7 +785,7 @@ export default function RehearsalDetails() {
                     </>
                   ) : (
                     <>
-                      <Users className="w-5 h-5 ml-2" />
+                      <UsersIcon size={20} weight="regular" className="ml-2" />
                       עדכון כל החזרות של התזמורת
                     </>
                   )}

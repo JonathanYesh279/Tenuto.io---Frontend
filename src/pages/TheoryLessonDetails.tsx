@@ -1,25 +1,25 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { 
-  ArrowRight, 
-  Edit, 
-  Plus, 
-  Trash2, 
-  Search,
-  User,
-  Users, 
-  Calendar,
-  MapPin,
-  BookOpen,
-  Clock,
-  UserPlus,
-  UserMinus,
-  Eye,
-  Check,
-  X,
-  FileText,
-  CheckCircle
-} from 'lucide-react'
+import {
+  ArrowRightIcon,
+  PencilSimpleIcon,
+  PlusIcon,
+  TrashIcon,
+  MagnifyingGlassIcon,
+  UserIcon,
+  UsersIcon,
+  CalendarIcon,
+  MapPinIcon,
+  BookOpenIcon,
+  ClockIcon,
+  UserPlusIcon,
+  UserMinusIcon,
+  EyeIcon,
+  CheckIcon,
+  XIcon,
+  FileTextIcon,
+  CheckCircleIcon
+} from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import StatsCard from '../components/ui/StatsCard'
@@ -344,14 +344,14 @@ export default function TheoryLessonDetails() {
   if (error || !theoryLesson) {
     return (
       <div className="text-center py-12">
-        <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <BookOpenIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">שגיאה בטעינת שיעור התאוריה</h3>
         <p className="text-gray-600 mb-4">{error || 'שיעור תאוריה לא נמצא'}</p>
         <button
           onClick={() => navigate('/theories')}
           className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <ArrowRightIcon size={16} weight="fill" className="ml-2" mirrored />
           חזור לרשימת שיעורי תאוריה
         </button>
       </div>
@@ -465,7 +465,7 @@ export default function TheoryLessonDetails() {
           onClick={() => handleAddStudent(student._id)}
           className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
         >
-          <UserPlus className="w-3 h-3 ml-1" />
+          <UserPlusIcon size={12} weight="fill" className="ml-1" />
           הוסף
         </button>
       )
@@ -481,12 +481,12 @@ export default function TheoryLessonDetails() {
             onClick={() => navigate('/theories')}
             className="p-2 hover:bg-gray-100 rounded transition-colors"
           >
-            <ArrowRight className="w-5 h-5 text-gray-600" />
+            <ArrowRightIcon size={20} weight="regular" className="text-gray-600" mirrored />
           </button>
           
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <BookOpen className="w-6 h-6 text-primary" />
+              <BookOpenIcon size={24} weight="regular" className="text-primary" />
               <h1 className="text-3xl font-bold text-gray-900">{theoryLesson.category}</h1>
               <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700">
                 {DAYS_OF_WEEK[theoryLesson.dayOfWeek as keyof typeof DAYS_OF_WEEK]}
@@ -505,7 +505,7 @@ export default function TheoryLessonDetails() {
               onClick={() => setShowAttendance(true)}
               className="flex items-center px-3 py-2 text-green-700 border border-green-300 rounded hover:bg-green-50 transition-colors"
             >
-              <Check className="w-4 h-4 ml-1" />
+              <CheckIcon size={16} weight="fill" className="ml-1" />
               נוכחות
             </button>
           )}
@@ -513,14 +513,14 @@ export default function TheoryLessonDetails() {
             onClick={() => setShowEditForm(true)}
             className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
           >
-            <Edit className="w-4 h-4 ml-1" />
+            <PencilSimpleIcon size={16} weight="regular" className="ml-1" />
             ערוך
           </button>
           <button
             onClick={handleDeleteTheoryLesson}
             className="flex items-center px-3 py-2 text-red-700 border border-red-300 rounded hover:bg-red-50 transition-colors"
           >
-            <Trash2 className="w-4 h-4 ml-1" />
+            <TrashIcon size={16} weight="fill" className="ml-1" />
             מחק
           </button>
         </div>
@@ -539,28 +539,28 @@ export default function TheoryLessonDetails() {
           title="תלמידים רשומים"
           value={stats.totalStudents.toString()}
           subtitle="תלמידים בשיעור"
-          icon={<Users />}
+          icon={<UsersIcon />}
           color="blue"
         />
         <StatsCard
           title="נוכחים"
           value={stats.presentCount.toString()}
           subtitle="בשיעור האחרון"
-          icon={<Check />}
+          icon={<CheckIcon />}
           color="green"
         />
         <StatsCard
           title="נעדרים"
           value={stats.absentCount.toString()}
           subtitle="בשיעור האחרון"
-          icon={<X />}
+          icon={<XIcon />}
           color="red"
         />
         <StatsCard
           title="אחוז נוכחות"
           value={`${isNaN(stats.attendanceRate) ? 0 : Math.round(stats.attendanceRate)}%`}
           subtitle="ממוצע כללי"
-          icon={<Calendar />}
+          icon={<CalendarIcon />}
           color={getAttendanceRateColor(stats.attendanceRate)}
         />
       </div>
@@ -575,7 +575,7 @@ export default function TheoryLessonDetails() {
             <div className="space-y-4">
               {/* Teacher */}
               <div className="flex items-start">
-                <User className="w-5 h-5 text-gray-400 mt-0.5 ml-3" />
+                <UserIcon size={20} weight="regular" className="text-gray-400 mt-0.5 ml-3" />
                 <div>
                   <div className="font-medium text-gray-900">מורה</div>
                   {teacher ? (
@@ -598,7 +598,7 @@ export default function TheoryLessonDetails() {
 
               {/* Schedule */}
               <div className="flex items-start">
-                <Clock className="w-5 h-5 text-gray-400 mt-0.5 ml-3" />
+                <ClockIcon size={20} weight="regular" className="text-gray-400 mt-0.5 ml-3" />
                 <div>
                   <div className="font-medium text-gray-900">זמן</div>
                   <div className="text-sm text-gray-600">
@@ -612,7 +612,7 @@ export default function TheoryLessonDetails() {
 
               {/* Location */}
               <div className="flex items-start">
-                <MapPin className="w-5 h-5 text-gray-400 mt-0.5 ml-3" />
+                <MapPinIcon size={20} weight="regular" className="text-gray-400 mt-0.5 ml-3" />
                 <div>
                   <div className="font-medium text-gray-900">מיקום</div>
                   <div className="text-sm text-gray-600">{theoryLesson.location}</div>
@@ -621,7 +621,7 @@ export default function TheoryLessonDetails() {
 
               {/* Category */}
               <div className="flex items-start">
-                <BookOpen className="w-5 h-5 text-gray-400 mt-0.5 ml-3" />
+                <BookOpenIcon size={20} weight="regular" className="text-gray-400 mt-0.5 ml-3" />
                 <div>
                   <div className="font-medium text-gray-900">קטגוריה</div>
                   <div className="text-sm text-gray-600">{theoryLesson.category}</div>
@@ -670,7 +670,7 @@ export default function TheoryLessonDetails() {
                 onClick={() => setShowAddStudent(!showAddStudent)}
                 className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
               >
-                <Plus className="w-4 h-4 ml-1" />
+                <PlusIcon size={16} weight="fill" className="ml-1" />
                 הוסף תלמיד
               </button>
             </div>
@@ -681,7 +681,7 @@ export default function TheoryLessonDetails() {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex-1">
                     <div className="relative">
-                      <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <MagnifyingGlassIcon size={16} weight="regular" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="text"
                         placeholder="חיפוש תלמידים..."
@@ -712,7 +712,7 @@ export default function TheoryLessonDetails() {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    <Users className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    <UsersIcon size={32} weight="regular" className="text-gray-400 mx-auto mb-2" />
                     <p>אין תלמידים זמינים להוספה</p>
                   </div>
                 )}
@@ -734,14 +734,14 @@ export default function TheoryLessonDetails() {
               />
             ) : (
               <div className="text-center py-12">
-                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <UsersIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">אין תלמידים רשומים</h3>
                 <p className="text-gray-600 mb-4">התחל על ידי הוספת התלמיד הראשון</p>
                 <button
                   onClick={() => setShowAddStudent(true)}
                   className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
                 >
-                  <Plus className="w-4 h-4 ml-1" />
+                  <PlusIcon size={16} weight="fill" className="ml-1" />
                   הוסף תלמיד ראשון
                 </button>
               </div>
@@ -761,7 +761,7 @@ export default function TheoryLessonDetails() {
                   onClick={() => setShowAttendance(false)}
                   className="text-gray-400 hover:text-gray-600"
                 >
-                  <X className="w-6 h-6" />
+                  <XIcon size={24} weight="regular" />
                 </button>
               </div>
 
@@ -783,14 +783,14 @@ export default function TheoryLessonDetails() {
                   onClick={markAllPresent}
                   className="px-3 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                 >
-                  <Check className="w-4 h-4 inline ml-1" />
+                  <CheckIcon size={16} weight="fill" className="inline ml-1" />
                   סמן הכל נוכח
                 </button>
                 <button
                   onClick={markAllAbsent}
                   className="px-3 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                 >
-                  <X className="w-4 h-4 inline ml-1" />
+                  <XIcon size={16} weight="fill" className="inline ml-1" />
                   סמן הכל נעדר
                 </button>
                 <button

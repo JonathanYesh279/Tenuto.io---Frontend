@@ -1,21 +1,21 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Calendar,
-  Plus,
-  Filter,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Users,
-  Clock,
-  MapPin,
-  Eye,
-  CheckCircle,
-  Download,
-  Grid,
-  List
-} from 'lucide-react'
+  CalendarIcon,
+  PlusIcon,
+  FunnelIcon,
+  DotsThreeVerticalIcon,
+  PencilSimpleIcon,
+  TrashIcon,
+  UsersIcon,
+  ClockIcon,
+  MapPinIcon,
+  EyeIcon,
+  CheckCircleIcon,
+  DownloadIcon,
+  SquaresFourIcon,
+  ListIcon
+} from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import { SearchInput } from '../components/ui/SearchInput'
@@ -345,7 +345,7 @@ export default function Rehearsals() {
       label: 'מיקום',
       render: (rehearsal: Rehearsal) => (
         <div className="flex items-center">
-          <MapPin className="w-4 h-4 text-gray-400 ml-1" />
+          <MapPinIcon size={16} weight="regular" className="text-gray-400 ml-1" />
           <span className="text-gray-900">{rehearsal.location}</span>
         </div>
       )
@@ -357,7 +357,7 @@ export default function Rehearsals() {
         const stats = calculateAttendanceStats(rehearsal)
         return stats.hasAttendanceData ? (
           <div className="flex items-center">
-            <Users className="w-4 h-4 text-gray-400 ml-1" />
+            <UsersIcon size={16} weight="regular" className="text-gray-400 ml-1" />
             <span className="text-gray-900">
               {stats.presentCount}/{stats.totalMembers} ({stats.attendanceRate}%)
             </span>
@@ -408,7 +408,7 @@ export default function Rehearsals() {
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <Calendar className="w-4 h-4" />
+              <CalendarIcon size={16} weight="regular" />
             </button>
             <button
               onClick={() => setViewMode('list')}
@@ -418,7 +418,7 @@ export default function Rehearsals() {
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <List className="w-4 h-4" />
+              <ListIcon size={16} weight="regular" />
             </button>
           </div>
 
@@ -428,7 +428,7 @@ export default function Rehearsals() {
               className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               title="מחיקת חזרות בטווח תאריכים"
             >
-              <Trash2 className="w-4 h-4 ml-1" />
+              <TrashIcon size={16} weight="fill" className="ml-1" />
               מחיקה בטווח תאריכים
             </button>
             
@@ -436,7 +436,7 @@ export default function Rehearsals() {
               onClick={() => setShowCreateForm(true)}
               className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
-              <Plus className="w-4 h-4 ml-1" />
+              <PlusIcon size={16} weight="fill" className="ml-1" />
               חזרה חדשה
             </button>
           </div>
@@ -468,7 +468,7 @@ export default function Rehearsals() {
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
             >
-              <Filter className="w-4 h-4 ml-1" />
+              <FunnelIcon size={16} weight="regular" className="ml-1" />
               מסננים
             </button>
 
@@ -486,7 +486,7 @@ export default function Rehearsals() {
               onClick={handleExportRehearsals}
               className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
             >
-              <Download className="w-4 h-4 ml-1" />
+              <DownloadIcon size={16} weight="regular" className="ml-1" />
               ייצא
             </button>
 
@@ -690,7 +690,7 @@ export default function Rehearsals() {
               const hasActiveFilters = Object.values(filters).some(f => f && f !== 'all')
               return (
                 <EmptyState
-                  icon={<Calendar className="w-12 h-12" />}
+                  icon={<CalendarIcon size={48} weight="regular" />}
                   title="אין חזרות"
                   description={
                     hasActiveFilters
@@ -840,7 +840,7 @@ export default function Rehearsals() {
               className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               disabled={!bulkDeleteData.orchestraId || !bulkDeleteData.startDate || !bulkDeleteData.endDate}
             >
-              <Trash2 className="w-4 h-4 ml-2 inline" />
+              <TrashIcon size={16} weight="fill" className="ml-2 inline" />
               מחק חזרות
             </button>
           </div>

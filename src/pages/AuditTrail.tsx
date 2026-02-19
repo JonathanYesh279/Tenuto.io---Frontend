@@ -8,10 +8,10 @@ import { TableSkeleton } from '../components/feedback/Skeleton'
 import { ErrorState } from '../components/feedback/ErrorState'
 import toast from 'react-hot-toast'
 import {
-  Shield,
-  Calendar,
-  FileText,
-} from 'lucide-react'
+  ShieldIcon,
+  CalendarIcon,
+  FileTextIcon,
+} from '@phosphor-icons/react'
 
 type ActiveTab = 'deletion-log' | 'past-activities'
 
@@ -197,7 +197,7 @@ export default function AuditTrail() {
   return (
     <div className="p-6 max-w-7xl mx-auto" dir="rtl">
       <div className="flex items-center gap-3 mb-6">
-        <Shield className="w-8 h-8 text-primary" />
+        <ShieldIcon size={32} weight="regular" className="text-primary" />
         <h1 className="text-3xl font-bold text-gray-900">יומן ביקורת</h1>
       </div>
 
@@ -301,7 +301,7 @@ export default function AuditTrail() {
               {/* Empty State */}
               {!loading && auditLog && auditLog.auditEntries.length === 0 && (
                 <div className="text-center py-12">
-                  <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <FileTextIcon size={64} weight="regular" className="text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600">לא נמצאו רשומות</p>
                 </div>
               )}
@@ -369,7 +369,7 @@ export default function AuditTrail() {
               {/* Empty State */}
               {!loading && pastActivities.length === 0 && (
                 <div className="text-center py-12">
-                  <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <CalendarIcon size={64} weight="regular" className="text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600">לא נמצאו רשומות</p>
                 </div>
               )}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../services/authContext.jsx'
-import { User, Users, Music, BookOpen, Calendar, Clock, TrendingUp, Activity, ArrowRight, CheckSquare } from 'lucide-react'
+import { UserIcon, UsersIcon, MusicNoteIcon, BookOpenIcon, CalendarIcon, ClockIcon, TrendUpIcon, ActivityIcon, ArrowRightIcon, CheckSquareIcon } from '@phosphor-icons/react'
 import TeacherStudentsTab from '../components/profile/TeacherStudentsTab'
 import ConductorOrchestrasTab from '../components/profile/ConductorOrchestrasTab'
 import TeacherScheduleTab from '../components/profile/TeacherScheduleTab'
@@ -187,7 +187,7 @@ export default function Profile() {
       {
         id: 'general',
         label: 'פרטים כלליים',
-        icon: User,
+        icon: UserIcon,
         component: GeneralInfoTab
       }
     ]
@@ -199,13 +199,13 @@ export default function Profile() {
       tabs.push({
         id: 'students',
         label: 'התלמידים שלי',
-        icon: Users,
+        icon: UsersIcon,
         component: TeacherStudentsTab
       })
       tabs.push({
         id: 'schedule',
         label: 'לוח זמנים שבועי',
-        icon: Calendar,
+        icon: CalendarIcon,
         component: TeacherScheduleTab
       })
       // Add attendance tab for teachers
@@ -213,7 +213,7 @@ export default function Profile() {
         tabs.push({
           id: 'attendance',
           label: 'נוכחות',
-          icon: CheckSquare,
+          icon: CheckSquareIcon,
           component: TeacherAttendanceTab
         })
       }
@@ -224,7 +224,7 @@ export default function Profile() {
       tabs.push({
         id: 'orchestras',
         label: 'התזמורות שלי',
-        icon: Music,
+        icon: MusicNoteIcon,
         component: ConductorOrchestrasTab
       })
     }
@@ -234,7 +234,7 @@ export default function Profile() {
       tabs.push({
         id: 'lessons',
         label: 'שיעורי התיאוריה שלי',
-        icon: BookOpen,
+        icon: BookOpenIcon,
         component: TheoryTeacherLessonsTab
       })
     }

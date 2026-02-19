@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Filter, Calendar, Clock, Users, BookOpen, Trash2, AlertTriangle, Settings, ChevronDown, ChevronUp, History } from 'lucide-react'
+import { PlusIcon, MagnifyingGlassIcon, FunnelIcon, CalendarIcon, ClockIcon, UsersIcon, BookOpenIcon, TrashIcon, WarningIcon, GearIcon, CaretDownIcon, CaretUpIcon, ClockCounterClockwiseIcon } from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import StatsCard from '../components/ui/StatsCard'
 import TheoryLessonForm from '../components/TheoryLessonForm'
@@ -537,7 +537,7 @@ export default function TheoryLessons() {
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              <BookOpen className="w-4 h-4 ml-2" />
+              <BookOpenIcon size={16} weight="regular" className="ml-2" />
               רשימת שיעורים
             </button>
             <button
@@ -548,7 +548,7 @@ export default function TheoryLessons() {
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              <Settings className="w-4 h-4 ml-2" />
+              <GearIcon size={16} weight="regular" className="ml-2" />
               עדכון שיעורים קבוצתי
             </button>
           </div>
@@ -563,7 +563,7 @@ export default function TheoryLessons() {
                     className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                     title={`עריכה קבוצתית של ${selectedLessons.size} שיעורים`}
                   >
-                    <Users className="w-4 h-4 ml-1" />
+                    <UsersIcon size={16} weight="fill" className="ml-1" />
                     עריכה קבוצתית ({selectedLessons.size})
                   </button>
                   <button
@@ -580,14 +580,14 @@ export default function TheoryLessons() {
                 className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                 title="מחיקה קבוצתית של שיעורי תיאוריה"
               >
-                <Trash2 className="w-4 h-4 ml-1" />
+                <TrashIcon size={16} weight="fill" className="ml-1" />
                 מחיקת שיעורים
               </button>
               <button
                 onClick={handleCreateLesson}
                 className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
               >
-                <Plus className="w-4 h-4 ml-2" />
+                <PlusIcon size={16} weight="fill" className="ml-2" />
                 שיעור חדש
               </button>
             </>
@@ -611,28 +611,28 @@ export default function TheoryLessons() {
           title="סה״כ שיעורים"
           value={stats.totalLessons.toString()}
           subtitle="שיעורי תיאוריה"
-          icon={<BookOpen />}
+          icon={<BookOpenIcon />}
           color="blue"
         />
         <StatsCard
           title="שיעורים קרובים"
           value={stats.upcomingLessons.toString()}
           subtitle="שיעורים מהיום והלאה"
-          icon={<Calendar />}
+          icon={<CalendarIcon />}
           color="green"
         />
         <StatsCard
           title="סה״כ תלמידים"
           value={stats.totalStudents.toString()}
           subtitle="נרשמים לשיעורים"
-          icon={<Users />}
+          icon={<UsersIcon />}
           color="purple"
         />
         <StatsCard
           title="נוכחות ממוצעת"
           value={`${stats.averageAttendance}%`}
           subtitle="אחוז נוכחות"
-          icon={<Clock />}
+          icon={<ClockIcon />}
           color="orange"
         />
       </div>
@@ -643,7 +643,7 @@ export default function TheoryLessons() {
           {/* Search */}
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <MagnifyingGlassIcon size={16} weight="regular" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="חיפוש שיעורים..."
@@ -697,7 +697,7 @@ export default function TheoryLessons() {
             }}
             className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
           >
-            <Filter className="w-4 h-4" />
+            <FunnelIcon size={16} weight="regular" />
           </button>
         </div>
       </Card>
@@ -731,14 +731,14 @@ export default function TheoryLessons() {
 
         {filteredAndSortedLessons.length === 0 ? (
           <div className="text-center py-12">
-            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <BookOpenIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">אין שיעורי תיאוריה</h3>
             <p className="text-gray-600 mb-4">התחל על ידי יצירת שיעור התיאוריה הראשון</p>
             <button
               onClick={handleCreateLesson}
               className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
             >
-              <Plus className="w-4 h-4 ml-2" />
+              <PlusIcon size={16} weight="fill" className="ml-2" />
               צור שיעור ראשון
             </button>
           </div>
@@ -747,7 +747,7 @@ export default function TheoryLessons() {
             {/* No Upcoming Lessons Message */}
             {groupedLessonsByDay.today.length === 0 && groupedLessonsByDay.future.length === 0 && (
               <div className="bg-blue-50 border border-blue-200 rounded p-6 text-center">
-                <Calendar className="w-10 h-10 text-blue-400 mx-auto mb-3" />
+                <CalendarIcon size={40} weight="regular" className="text-blue-400 mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-blue-900 mb-1">אין שיעורים קרובים</h3>
                 <p className="text-blue-700 text-sm mb-3">
                   אין שיעורים מתוכננים להיום או לעתיד. ניתן לצפות בשיעורים שהסתיימו למטה או ליצור שיעורים חדשים.
@@ -756,7 +756,7 @@ export default function TheoryLessons() {
                   onClick={handleCreateLesson}
                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
                 >
-                  <Plus className="w-4 h-4 ml-2" />
+                  <PlusIcon size={16} weight="fill" className="ml-2" />
                   צור שיעור חדש
                 </button>
               </div>
@@ -866,7 +866,7 @@ export default function TheoryLessons() {
               >
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">
-                    <History className="w-5 h-5 text-gray-600" />
+                    <ClockCounterClockwiseIcon size={20} weight="regular" className="text-gray-600" />
                   </div>
                   <div className="text-right">
                     <h2 className="text-lg font-bold text-gray-700">שיעורים שהסתיימו</h2>
@@ -887,9 +887,9 @@ export default function TheoryLessons() {
                         {showPastLessons ? 'הסתר' : 'הצג'}
                       </span>
                       {showPastLessons ? (
-                        <ChevronUp className="w-5 h-5" />
+                        <CaretUpIcon size={20} weight="regular" />
                       ) : (
-                        <ChevronDown className="w-5 h-5" />
+                        <CaretDownIcon size={20} weight="regular" />
                       )}
                     </>
                   )}
@@ -965,7 +965,7 @@ export default function TheoryLessons() {
               </>
             ) : (
               <>
-                <Calendar className="w-5 h-5" />
+                <CalendarIcon size={20} weight="regular" />
                 <span>טען עוד שיעורים</span>
                 {totalCount > lessons.length && (
                   <span className="text-sm opacity-90">
@@ -1035,7 +1035,7 @@ export default function TheoryLessons() {
         <div className="p-6">
           <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
             <div className="flex items-center">
-              <AlertTriangle className="w-5 h-5 text-yellow-600 ml-2" />
+              <WarningIcon size={20} weight="fill" className="text-yellow-600 ml-2" />
               <p className="text-yellow-800">
                 ⚠️ פעולה זו תמחק שיעורי תיאוריה על בסיס הקריטריונים שנבחרו. 
                 פעולה זו אינה ניתנת לביטול!
@@ -1181,7 +1181,7 @@ export default function TheoryLessons() {
                 (bulkDeleteType === 'teacher' && !bulkDeleteData.teacherId)
               }
             >
-              <Trash2 className="w-4 h-4 ml-2 inline" />
+              <TrashIcon size={16} weight="fill" className="ml-2 inline" />
               מחק שיעורי תיאוריה
             </button>
           </div>

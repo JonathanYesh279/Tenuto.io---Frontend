@@ -171,7 +171,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div>
@@ -180,7 +180,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
           </div>
           <button
             onClick={handleClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -190,7 +190,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* General Error */}
           {errors.general && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="p-4 bg-red-50 border border-red-200 rounded">
               <span className="text-red-700">{errors.general}</span>
             </div>
           )}
@@ -214,7 +214,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                     value={formData.pieceNumber}
                     onChange={(e) => handleInputChange('pieceNumber', parseInt(e.target.value))}
                     disabled={!!initialData}
-                    className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                    className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                       errors.pieceNumber ? 'border-red-300' : 'border-gray-300'
                     } ${initialData ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   >
@@ -243,7 +243,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                   value={formData.pieceTitle}
                   onChange={(e) => handleInputChange('pieceTitle', e.target.value)}
                   placeholder="לדוגמה: סונטה לפסנתר במי מינור"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                     errors.pieceTitle ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -266,7 +266,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                     value={formData.composer}
                     onChange={(e) => handleInputChange('composer', e.target.value)}
                     placeholder="לדוגמה: יוהאן סבסטיאן באך"
-                    className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                    className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                       errors.composer ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -288,7 +288,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                     value={formData.duration}
                     onChange={(e) => handleInputChange('duration', e.target.value)}
                     placeholder="לדוגמה: 7 דקות"
-                    className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                    className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                       errors.duration ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -311,7 +311,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                   value={formData.movement || ''}
                   onChange={(e) => handleInputChange('movement', e.target.value)}
                   placeholder="לדוגמה: פרק ראשון - Allegro"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
               <p className="text-gray-500 text-xs mt-1">אופציונלי - ציין פרק או תנועה ספציפיים</p>
@@ -329,7 +329,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
                   value={formData.youtubeLink || ''}
                   onChange={(e) => handleInputChange('youtubeLink', e.target.value)}
                   placeholder="https://www.youtube.com/watch?v=..."
-                  className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                  className={`flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                     errors.youtubeLink ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -347,7 +347,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               ביטול
             </button>
@@ -355,7 +355,7 @@ const AddPieceModal: React.FC<AddPieceModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center px-6 py-2 bg-primary text-white rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? (
                 <>

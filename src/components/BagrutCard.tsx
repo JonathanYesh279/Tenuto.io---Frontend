@@ -61,8 +61,8 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-2 space-x-reverse">
-          <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-            <User className="w-5 h-5 text-primary-600" />
+          <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
+            <User className="w-5 h-5 text-primary" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">{studentName}</h3>
@@ -118,7 +118,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
 
       {/* Grade Display */}
       {bagrut.finalGrade && (
-        <div className="text-center p-3 bg-gray-50 rounded-lg mb-4">
+        <div className="text-center p-3 bg-gray-50 rounded mb-4">
           <div className="text-xs text-gray-600 mb-1">ציון סופי</div>
           <div className={`text-2xl font-bold ${getGradeColor(bagrut.finalGrade)}`}>
             {bagrut.finalGrade}
@@ -144,7 +144,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
               e.stopPropagation()
               onEdit?.()
             }}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
             title="ערוך"
           >
             <Edit className="w-4 h-4" />
@@ -154,7 +154,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
               e.stopPropagation()
               onExport?.()
             }}
-            className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded-lg transition-colors"
+            className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-100 rounded transition-colors"
             title="ייצא PDF"
           >
             <Download className="w-4 h-4" />
@@ -164,7 +164,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
               e.stopPropagation()
               onDelete?.()
             }}
-            className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded transition-colors"
             title="מחק"
           >
             <Trash2 className="w-4 h-4" />
@@ -176,7 +176,7 @@ const BagrutCard: React.FC<BagrutCardProps> = ({
             e.stopPropagation()
             onClick?.()
           }}
-          className="flex items-center px-3 py-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm"
+          className="flex items-center px-3 py-1.5 bg-primary text-white rounded hover:bg-neutral-800 transition-colors text-sm"
         >
           <Eye className="w-3.5 h-3.5 ml-1" />
           פרטים

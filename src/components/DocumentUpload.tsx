@@ -143,7 +143,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg max-w-2xl mx-auto">
+    <div className="bg-white rounded max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
         <div>
@@ -153,7 +153,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
         <button
           onClick={onCancel}
           disabled={loading}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -163,7 +163,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* General Error */}
         {errors.general && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+          <div className="p-4 bg-red-50 border border-red-200 rounded flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500" />
             <span className="text-red-700">{errors.general}</span>
           </div>
@@ -175,9 +175,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           
           {!selectedFile ? (
             <div
-              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+              className={`border-2 border-dashed rounded p-8 text-center transition-colors cursor-pointer ${
                 dragOver
-                  ? 'border-primary-500 bg-primary-50'
+                  ? 'border-primary bg-muted'
                   : errors.file
                   ? 'border-red-300 bg-red-50'
                   : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
@@ -188,7 +188,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className={`w-12 h-12 mx-auto mb-4 ${
-                dragOver ? 'text-primary-600' : 'text-gray-400'
+                dragOver ? 'text-primary' : 'text-gray-400'
               }`} />
               <p className="text-lg font-medium text-gray-900 mb-2">
                 גרור קובץ לכאן או לחץ לבחירה
@@ -209,7 +209,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               />
             </div>
           ) : (
-            <div className="border border-gray-200 rounded-lg p-4">
+            <div className="border border-gray-200 rounded p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{getFileIcon(selectedFile.type)}</span>
@@ -249,9 +249,9 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
             {documentCategories.map(cat => (
               <label
                 key={cat.value}
-                className={`flex flex-col p-4 border rounded-lg cursor-pointer transition-colors ${
+                className={`flex flex-col p-4 border rounded cursor-pointer transition-colors ${
                   category === cat.value
-                    ? 'border-primary-500 bg-primary-50'
+                    ? 'border-primary bg-muted'
                     : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 }`}
               >
@@ -262,7 +262,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
                     value={cat.value}
                     checked={category === cat.value}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500"
+                    className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
                   />
                   <span className="font-medium text-gray-900">{cat.label}</span>
                 </div>
@@ -285,12 +285,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="תיאור קצר של המסמך (אופציונלי)..."
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent resize-vertical"
           />
         </Card>
 
         {/* Upload Guidelines */}
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded">
           <div className="flex items-start gap-3">
             <File className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-blue-800">
@@ -311,7 +311,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             ביטול
           </button>
@@ -319,7 +319,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           <button
             type="submit"
             disabled={loading || !selectedFile}
-            className="flex items-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-6 py-2 bg-primary text-white rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
               <>

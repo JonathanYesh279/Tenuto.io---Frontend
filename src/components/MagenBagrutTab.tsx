@@ -358,7 +358,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
             >
               <Edit2 className="w-4 h-4" />
               עריכה
@@ -367,14 +367,14 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
             <div className="flex gap-2">
               <button
                 onClick={handleSave}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
               >
                 <Save className="w-4 h-4" />
                 שמור
               </button>
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
               >
                 <X className="w-4 h-4" />
                 ביטול
@@ -424,7 +424,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                       type="datetime-local"
                       value={formData.date}
                       onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
                 )}
@@ -459,12 +459,12 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                           value={examiner}
                           onChange={(e) => updateExaminer(index, e.target.value)}
                           placeholder="שם הבוחן"
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
                         {formData.reviewedBy.length > 1 && (
                           <button
                             onClick={() => removeExaminer(index)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                            className="p-2 text-red-600 hover:bg-red-50 rounded"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -473,7 +473,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                     ))}
                     <button
                       onClick={addExaminer}
-                      className="flex items-center gap-2 px-3 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors text-sm"
+                      className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-muted rounded transition-colors text-sm"
                     >
                       <Plus className="w-4 h-4" />
                       הוסף בוחן
@@ -522,12 +522,12 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                         value={link}
                         onChange={(e) => updateRecordingLink(index, e.target.value)}
                         placeholder="https://example.com/recording"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                       />
                       {formData.recordingLinks.length > 1 && (
                         <button
                           onClick={() => removeRecordingLink(index)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                          className="p-2 text-red-600 hover:bg-red-50 rounded"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -536,7 +536,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                   ))}
                   <button
                     onClick={addRecordingLink}
-                    className="flex items-center gap-2 px-3 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors text-sm"
+                    className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-muted rounded transition-colors text-sm"
                   >
                     <Plus className="w-4 h-4" />
                     הוסף קישור
@@ -552,7 +552,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
               <div className="flex items-center justify-between mb-6">
                 <h4 className="text-lg font-semibold text-gray-900">טבלת ציונים מפורטת</h4>
                 {pieceGradings.length > 0 && (
-                  <div className="flex items-center gap-2 text-lg font-bold text-primary-600">
+                  <div className="flex items-center gap-2 text-lg font-bold text-primary">
                     <Calculator className="w-5 h-5" />
                     ממוצע כללי: {calculateOverallAverage()}
                   </div>
@@ -608,7 +608,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                             <select
                               value={piece.playingSkills}
                               onChange={(e) => updatePieceGrading(index, 'playingSkills', parseInt(e.target.value))}
-                              className={`w-20 px-2 py-1 text-center border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                              className={`w-20 px-2 py-1 text-center border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                                 errors[`piece${index}_playingSkills`] ? 'border-red-300' : 'border-gray-300'
                               }`}
                             >
@@ -623,7 +623,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                             <select
                               value={piece.musicalUnderstanding}
                               onChange={(e) => updatePieceGrading(index, 'musicalUnderstanding', parseInt(e.target.value))}
-                              className={`w-20 px-2 py-1 text-center border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                              className={`w-20 px-2 py-1 text-center border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                                 errors[`piece${index}_musicalUnderstanding`] ? 'border-red-300' : 'border-gray-300'
                               }`}
                             >
@@ -638,7 +638,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                             <select
                               value={piece.textKnowledge}
                               onChange={(e) => updatePieceGrading(index, 'textKnowledge', parseInt(e.target.value))}
-                              className={`w-20 px-2 py-1 text-center border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                              className={`w-20 px-2 py-1 text-center border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                                 errors[`piece${index}_textKnowledge`] ? 'border-red-300' : 'border-gray-300'
                               }`}
                             >
@@ -654,7 +654,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                               <button
                                 type="button"
                                 onClick={() => updatePieceGrading(index, 'playingByHeart', !piece.playingByHeart)}
-                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                                   piece.playingByHeart ? 'bg-green-500' : 'bg-gray-300'
                                 }`}
                               >
@@ -681,7 +681,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                             </div>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-center font-bold text-primary-600 border border-gray-200">
+                        <td className="px-4 py-3 text-center font-bold text-primary border border-gray-200">
                           {calculateTotalScore(piece)}
                         </td>
                       </tr>
@@ -702,7 +702,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
 
               {/* Grade Scale Reference - Only show when editing */}
               {isEditing && (
-                <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded">
                   <h4 className="font-medium text-gray-900 mb-3">מפתח ציונים</h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 text-sm">
                     <div className="flex flex-col items-center">
@@ -752,7 +752,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
                         (worksTab as HTMLElement).click();
                       }
                     }}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
                   >
                     <Plus className="w-5 h-5" />
                     עבור לרשימת יצירות
@@ -770,7 +770,7 @@ export const MagenBagrutTab: React.FC<MagenBagrutTabProps> = ({ bagrut, onUpdate
           <p className="text-gray-600 mb-6">השמעת מגן בגרות היא השמעה אחרונה לקראת רסיטל וקביעת ציון מגן</p>
           <button
             onClick={() => setIsEditing(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
           >
             <Plus className="w-5 h-5" />
             הגדר מגן בגרות

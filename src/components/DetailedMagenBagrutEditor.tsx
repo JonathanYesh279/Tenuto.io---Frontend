@@ -240,7 +240,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
           </div>
           <button
             onClick={onCancel}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="סגור"
           >
             <X className="w-6 h-6" />
@@ -262,7 +262,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                     type="datetime-local"
                     value={presentationDate}
                     onChange={(e) => setPresentationDate(e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                       errors.presentationDate ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -280,7 +280,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                     value={examinerNames}
                     onChange={(e) => setExaminerNames(e.target.value)}
                     placeholder="שם מלא של הבוחן/ים"
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                       errors.examinerNames ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -302,12 +302,12 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                       value={link}
                       onChange={(e) => updateRecordingLink(index, e.target.value)}
                       placeholder="https://example.com/recording"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                     {recordingLinks.length > 1 && (
                       <button
                         onClick={() => removeRecordingLink(index)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                        className="p-2 text-red-600 hover:bg-red-50 rounded"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -316,7 +316,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                 ))}
                 <button
                   onClick={addRecordingLink}
-                  className="flex items-center gap-2 px-3 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-primary hover:bg-muted rounded transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   הוסף קישור נוסף
@@ -329,7 +329,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
           <Card>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">טבלת ציונים מפורטת</h3>
-              <div className="flex items-center gap-2 text-lg font-bold text-primary-600">
+              <div className="flex items-center gap-2 text-lg font-bold text-primary">
                 <Calculator className="w-5 h-5" />
                 ממוצע כללי: {calculateOverallAverage()}
               </div>
@@ -383,7 +383,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                         <select
                           value={piece.playingSkills}
                           onChange={(e) => updatePieceGrading(index, 'playingSkills', parseInt(e.target.value))}
-                          className={`w-16 sm:w-20 px-1 sm:px-2 py-1 text-center text-sm border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                          className={`w-16 sm:w-20 px-1 sm:px-2 py-1 text-center text-sm border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                             errors[`piece${index}_playingSkills`] ? 'border-red-300' : 'border-gray-300'
                           }`}
                         >
@@ -397,7 +397,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                         <select
                           value={piece.musicalUnderstanding}
                           onChange={(e) => updatePieceGrading(index, 'musicalUnderstanding', parseInt(e.target.value))}
-                          className={`w-16 sm:w-20 px-1 sm:px-2 py-1 text-center text-sm border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                          className={`w-16 sm:w-20 px-1 sm:px-2 py-1 text-center text-sm border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                             errors[`piece${index}_musicalUnderstanding`] ? 'border-red-300' : 'border-gray-300'
                           }`}
                         >
@@ -411,7 +411,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                         <select
                           value={piece.textKnowledge}
                           onChange={(e) => updatePieceGrading(index, 'textKnowledge', parseInt(e.target.value))}
-                          className={`w-16 sm:w-20 px-1 sm:px-2 py-1 text-center text-sm border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+                          className={`w-16 sm:w-20 px-1 sm:px-2 py-1 text-center text-sm border rounded focus:ring-2 focus:ring-primary focus:border-transparent ${
                             errors[`piece${index}_textKnowledge`] ? 'border-red-300' : 'border-gray-300'
                           }`}
                         >
@@ -426,13 +426,13 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
                           type="checkbox"
                           checked={piece.playingByHeart}
                           onChange={(e) => updatePieceGrading(index, 'playingByHeart', e.target.checked)}
-                          className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
+                          className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary"
                         />
                         <div className="text-xs text-gray-600 mt-1">
                           {piece.playingByHeart ? '10' : '0'}
                         </div>
                       </td>
-                      <td className="px-2 sm:px-4 py-3 text-center font-bold text-primary-600 border border-gray-200">
+                      <td className="px-2 sm:px-4 py-3 text-center font-bold text-primary border border-gray-200">
                         {calculateTotalScore(piece)}
                       </td>
                     </tr>
@@ -442,7 +442,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
             </div>
 
             {/* Grade Scale Reference */}
-            <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+            <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded">
               <h4 className="font-medium text-gray-900 mb-3">מפתח ציונים</h4>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 text-sm">
                 <div className="flex flex-col items-center">
@@ -481,7 +481,7 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
               onChange={(e) => setGeneralNotes(e.target.value)}
               placeholder="הערות כלליות על הביצוע, המלצות לשיפור, נקודות חוזק..."
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent resize-vertical"
             />
           </Card>
         </div>
@@ -491,14 +491,14 @@ export const DetailedMagenBagrutEditor: React.FC<DetailedMagenBagrutEditorProps>
           <div className="flex gap-3 w-full sm:w-auto">
             <button
               onClick={onCancel}
-              className="flex-1 sm:flex-none px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex-1 sm:flex-none px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 transition-colors"
             >
               ביטול
             </button>
             
             <button
               onClick={handleSave}
-              className="flex-1 sm:flex-none flex items-center justify-center px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="flex-1 sm:flex-none flex items-center justify-center px-6 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
             >
               <Save className="w-4 h-4 ml-2" />
               שמור ציונים

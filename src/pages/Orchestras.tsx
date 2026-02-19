@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings, CheckCircle } from 'lucide-react'
+import { Filter, Music, Users, UserCheck, Calendar, Grid, List, MapPin, BarChart3, Settings, CheckCircle } from 'lucide-react'
+import { PlusIcon } from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
-import { ListPageHero } from '../components/ui/ListPageHero'
 import { SearchInput } from '../components/ui/SearchInput'
 import OrchestraForm from '../components/OrchestraForm'
 import OrchestraCard from '../components/OrchestraCard'
@@ -121,14 +121,6 @@ export default function Orchestras() {
       'הרכב': orchestras.filter(o => o.type === 'הרכב').length
     }
   }
-
-  // Hero metrics — 4 entity-colored stat cards
-  const heroMetrics = [
-    { title: 'סה״כ תזמורות', value: stats.totalOrchestras, icon: <Music className="w-5 h-5" /> },
-    { title: 'פעילות', value: stats.activeOrchestras, icon: <CheckCircle className="w-5 h-5" /> },
-    { title: 'סה״כ חברים', value: stats.totalMembers, icon: <Users className="w-5 h-5" /> },
-    { title: 'עם מנצח', value: stats.orchestrasWithConductor, icon: <UserCheck className="w-5 h-5" /> },
-  ]
 
   const handleCreateOrchestra = () => {
     setEditingOrchestra(null)
@@ -277,16 +269,20 @@ export default function Orchestras() {
 
   return (
     <div className="space-y-4">
-      {/* Hero Stats Zone — always visible */}
-      <ListPageHero
-        title="תזמורות והרכבים"
-        entityColor="orchestras"
-        metrics={heroMetrics}
-        action={{
-          label: 'תזמורת חדשה',
-          onClick: handleCreateOrchestra
-        }}
-      />
+      {/* Compact identity strip */}
+      <div className="flex items-center justify-between py-3 border-b border-border">
+        <div className="flex items-center gap-3">
+          <h1 className="text-lg font-semibold text-foreground">תזמורות</h1>
+          <span className="text-sm text-muted-foreground">{stats.activeOrchestras} פעילות</span>
+        </div>
+        <button
+          onClick={handleCreateOrchestra}
+          className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-neutral-800 transition-colors"
+        >
+          <PlusIcon size={14} weight="fill" />
+          תזמורת חדשה
+        </button>
+      </div>
 
       {/* Error Display */}
       {error && (

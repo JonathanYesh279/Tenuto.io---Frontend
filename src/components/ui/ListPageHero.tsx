@@ -1,3 +1,8 @@
+/**
+ * @deprecated Phase 22 — ListPageHero is no longer used. List pages use compact identity strips.
+ * This component is retained temporarily for any remaining references.
+ * Target: remove entirely once all list pages are confirmed migrated.
+ */
 import { ReactNode } from 'react'
 import { clsx } from 'clsx'
 import { motion } from 'framer-motion'

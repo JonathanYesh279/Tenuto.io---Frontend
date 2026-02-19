@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 22-visual-architecture-rewrite
-Plan: 22-11 (10/15 complete)
+Plan: 22-13 (11/15 complete)
 Status: In progress
-Last activity: 2026-02-19 — 22-10 List page archetype applied to Teachers, Students, Orchestras (hero zones eliminated, compact identity strips, flush toolbar, flat table)
+Last activity: 2026-02-19 — 22-12 Dashboard command center archetype: text-7xl primary metric, 2fr:1fr dominant zone, 5-tab bar removed, StatsCard grid eliminated, 3fr:2fr operational panels
 
-Progress: [██████░░░░] 67% (v3.0)
+Progress: [███████░░░] 73% (v3.0)
 
 ## Performance Metrics
 
@@ -28,7 +28,7 @@ Progress: [██████░░░░] 67% (v3.0)
 - v1.1: 5 phases, 7 plans, ~3.5 hours
 - v2.0: 10 phases, 22 plans, ~2.3 hours
 - v2.1: 6 phases, 13 plans
-- v3.0: 1 phase in progress, 9 plans complete (22-01: 2 min, 22-02: 2 min, 22-07: 2 min, 22-09: 3 min)
+- v3.0: 1 phase in progress, 11 plans complete (22-01: 2 min, 22-02: 2 min, 22-07: 2 min, 22-09: 3 min, 22-12: 2 min)
 - Total: 21+ phases, 46 plans
 
 ## Accumulated Context
@@ -89,6 +89,11 @@ Key decisions for v3.0:
 - [22-10 List]: hover:bg-muted replaces hover:bg-gray-50 — semantic token, visibly stronger row hover
 - [22-10 List]: ListPageHero deprecated (not deleted) — secondary list pages (TheoryLessons, Rehearsals, Bagruts) still reference it; will be removed in Plan 12
 - [22-10 List]: PlusIcon from Phosphor (size=14, weight=fill) used for all add buttons in list pages
+- [22-12 Dashboard]: Tab bar removed entirely — 5 tabs (overview/students/schedule/bagrut/hours) converted to scroll sections with border-t separators
+- [22-12 Dashboard]: StatsCard 2x3 grid eliminated — replaced with text-7xl dominant metric (active students) in 2fr:1fr asymmetric dominant zone
+- [22-12 Dashboard]: Secondary metrics (teachers, orchestras, rehearsals, bagruts) stacked at text-3xl in the 1fr column — same heading, clearly subordinate by scale
+- [22-12 Dashboard]: Operational panels at grid-cols-[3fr_2fr] — DailyTeacherRoomTable (60%) vs widget stack (40%)
+- [22-12 Dashboard]: AdminHoursOverview Card wrapper removed — flat div, semantic border-border/hover:bg-muted/50 table tokens
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -108,5 +113,5 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-10-PLAN.md — List page archetype applied to Teachers, Students, Orchestras (hero zones eliminated, identity strips, flush toolbar, flat table)
+Stopped at: Completed 22-12-PLAN.md — Dashboard command center archetype (text-7xl primary metric, tab bar removed, StatsCard grid eliminated, asymmetric dominant zone)
 Resume file: None

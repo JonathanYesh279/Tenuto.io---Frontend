@@ -18,7 +18,7 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 Phase: 22-visual-architecture-rewrite
 Plan: 22-10 (9/15 complete)
 Status: In progress
-Last activity: 2026-02-19 — 22-09 Final bulk component sweep complete (37 files: deletion module, entity cards, modals, schedule, misc)
+Last activity: 2026-02-19 — 22-03 Page color and radius mechanical sweep complete (15 pages: zero primary-NNN, zero rounded-xl/2xl/3xl)
 
 Progress: [█████░░░░░] 60% (v3.0)
 
@@ -69,6 +69,10 @@ Key decisions for v3.0:
 - [22-09 Components]: Modal Card wrappers preserved — DeletionImpactModal, BatchDeletionModal, SafeDeleteModal, PresentationDetailsModal, PerformanceDetailsModal, AdditionalRehearsalsModal, OrchestraDetailsModal all keep Card for floating overlay context
 - [22-09 Components]: hover:bg-primary → hover:bg-neutral-800 for primary action buttons — visible lighter shift on black buttons
 - [22-09 Components]: The full deletion module (12 files) is now semantically clean — primary-NNN purged
+- [22-03 Pages]: All 15 src/pages/ target files: zero primary-NNN hardcoded colors, zero rounded-xl/2xl/3xl/lg/md; token reset from 22-01 now propagates to every page
+- [22-03 Pages]: Modal containers (bg-white rounded-lg max-w-*) preserved — floating panels keep rounded-lg for perceived depth
+- [22-03 Pages]: Auth pages (Login, ForgotPassword, ResetPassword) excluded from sweep — intentional glassmorphism design retained
+- [22-03 Pages]: text-primary-foreground is a semantic token (--primary-foreground = white) — distinct from numbered primary-NNN hardcoded colors
 - [22-08 Detail]: HoursSummaryTab total hours banner: flat bg-primary (black) replaces gradient primary-500→600 — elevation-as-interaction-only principle applied
 - [22-08 Detail]: StudentDetailsHeader: gradient primary header replaced with flat bg-primary — dossier archetype restructuring (Plan 10) will recompose this properly
 - [22-08 Detail]: Tab trigger rounding: rounded-lg → rounded (2px sharp) in TeacherDetailsPage, OrchestraDetailsPage, StudentDetailsPage
@@ -92,12 +96,12 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 - [Pre-existing]: TypeScript errors in 6 utility files — blocks CI typecheck stage. Unrelated to visual work.
 - [Pre-existing]: Backend export endpoints not implemented — MinistryReports info banner stays.
 - [WSL constraint]: npm install on /mnt/c/ NTFS mount causes EIO errors — build verification from Windows PowerShell or CI only.
-- [v2.1 carryover]: 1,211 primary-NNN hex classes across 134 files — migration deferred, may be addressed in v3.0.
+- [v2.1 carryover]: 1,211 primary-NNN hex classes across 134 files — migration deferred. src/pages/ (15 files) RESOLVED by 22-03. src/features/ RESOLVED by 22-08/09. Remaining: src/components/ and src/services/ files.
 - [v2.1 audit]: TeacherForm.tsx and StudentForm.tsx accent bars orphaned — form routing doesn't reach them. Will be addressed or superseded by Phase 22 restructuring.
 - [22-09 Remaining]: ~152 bg-primary-NNN, ~140 text-primary-NNN, ~94 rounded-xl remain in OTHER src/ files (feedback, analytics, schedule, accessibility, OrchestraEnrollmentManager root-level) — outside plan 22-09 scope. May need follow-up plan. NOTE: dashboard/charts resolved by 22-06.
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-06-PLAN.md — Dashboard component style cleanup (24 files: stat cards, charts, widgets, role dashboards)
+Stopped at: Completed 22-03-PLAN.md — Page color and radius mechanical sweep (15 pages: primary-NNN → semantic tokens, rounded-lg/xl → rounded)
 Resume file: None

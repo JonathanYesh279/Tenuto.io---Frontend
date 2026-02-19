@@ -14,7 +14,7 @@
 /* Import simple weekly grid styles */
 @import './styles/simple-weekly-grid.css';
 
-/* === Design Token System (Phase 22: Visual Architecture Rewrite — cool neutral palette) === */
+/* === Design Token System (Phase 23: v4.0 Visual Redesign — indigo primary, rounded surfaces, light sidebar) === */
 /* bg-primary (hardcoded hex) is unaffected — only bg-primary uses these CSS vars. */
 @layer base {
   :root {
@@ -25,7 +25,7 @@
     --card-foreground: 220 15% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 11%;
-    --primary: 0 0% 0%;               /* BLACK — locked decision */
+    --primary: 239 84% 67%;           /* INDIGO #6366f1 — v4.0 colorful SaaS aesthetic */
     --primary-foreground: 0 0% 100%;
     --secondary: 220 14% 96%;
     --secondary-foreground: 220 15% 11%;
@@ -37,16 +37,27 @@
     --destructive-foreground: 0 0% 100%;
     --border: 220 13% 91%;            /* cool gray */
     --input: 220 13% 91%;
-    --ring: 220 15% 11%;              /* dark ring, not coral */
-    --radius: 0.125rem;               /* 2px — locked: sharp 2-4px */
+    --ring: 239 84% 67%;              /* indigo ring to match primary */
+    --radius: 0.75rem;                /* 12px — v4.0 rounded aesthetic */
 
-    /* Dark sidebar tokens */
-    --sidebar: 220 20% 13%;           /* deep charcoal */
-    --sidebar-foreground: 0 0% 94%;   /* near-white text */
-    --sidebar-border: 220 15% 20%;    /* subtle dark border */
-    --sidebar-active-bg: 220 15% 22%; /* slightly lighter pill */
+    /* Light sidebar tokens (v4.0 — reversed from v3.0 dark) */
+    --sidebar: 0 0% 100%;             /* white background */
+    --sidebar-foreground: 220 15% 11%; /* dark text */
+    --sidebar-border: 220 13% 91%;    /* light gray border */
+    --sidebar-active-bg: 239 84% 67%; /* indigo active pill */
     --sidebar-active-fg: 0 0% 100%;   /* white active text */
-    --sidebar-label: 220 10% 55%;     /* muted section labels */
+    --sidebar-label: 220 10% 60%;     /* muted section labels */
+
+    /* Chart color tokens (v4.0 — for dashboard visualizations) */
+    --chart-blue: 199 95% 74%;        /* #BAE6FD */
+    --chart-yellow: 54 97% 63%;       /* #FDE047 */
+    --chart-purple: 230 100% 90%;     /* #C7D2FE */
+
+    /* Background tokens for dark mode compatibility */
+    --background-light: 210 40% 98%;  /* slate-50 */
+    --background-dark: 222 47% 11%;   /* slate-900 */
+    --sidebar-light: 0 0% 100%;       /* white */
+    --sidebar-dark: 217 33% 17%;      /* slate-800 */
 
     /* Entity color system (Phase 22 — subdued entity colors, thin accent use only) */
     /* Raw HSL channels — consumed via hsl(var(--color-*)) in Tailwind config */
@@ -81,17 +92,31 @@
     --neutral-800: hsl(220 8% 20%);
     --neutral-900: hsl(220 8% 12%);
 
-    /* Semantic shadow scale — zero decorative shadow, interaction-only */
+    /* Semantic shadow scale — v4.0 decorative shadows restored */
     --shadow-0: none;
-    --shadow-1: none;                  /* was decorative — now none */
+    --shadow-1: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); /* decorative shadow back */
     --shadow-2: 0 2px 8px -2px rgba(0,0,0,0.12), 0 1px 4px -1px rgba(0,0,0,0.08);
     --shadow-3: 0 8px 24px -4px rgba(0,0,0,0.16), 0 4px 12px -2px rgba(0,0,0,0.10);
     --shadow-4: 0 16px 40px -4px rgba(0,0,0,0.20), 0 8px 16px -4px rgba(0,0,0,0.12);
   }
+
+  .dark {
+    --background: 222 47% 11%;        /* slate-900 */
+    --foreground: 210 40% 98%;        /* slate-50 */
+    --card: 217 33% 17%;              /* slate-800 */
+    --card-foreground: 210 40% 98%;
+    --primary: 239 84% 67%;           /* indigo stays same */
+    --primary-foreground: 0 0% 100%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --border: 217 33% 17%;
+    --sidebar: 217 33% 17%;           /* dark sidebar */
+    --sidebar-foreground: 210 40% 98%;
+  }
 }
 
 /* Reisinger Hebrew Font Family - Custom Fonts */
-/* Note: Heebo font loaded via <link> in index.html (performance — no render-blocking @import) */
+/* Note: Assistant + Plus Jakarta Sans fonts loaded via <link> in index.html (performance — no render-blocking @import) */
 @font-face {
   font-family: 'Reisinger Yonatan';
   src: url('/fonts/Reisinger-Yonatan-web/Reisinger-Yonatan-Regular.woff2') format('woff2'),
@@ -112,7 +137,7 @@
 html {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
-  font-family: 'Heebo', 'Reisinger Yonatan', 'Arial Hebrew', system-ui, sans-serif;
+  font-family: 'Assistant', 'Plus Jakarta Sans', 'Reisinger Yonatan', system-ui, sans-serif;
   font-weight: 500;
   direction: rtl;
   /* Custom scrollbar for html element */

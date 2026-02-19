@@ -436,13 +436,13 @@ export default function Sidebar() {
         <button
           id="hamburger-button"
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-[20px] right-4 z-[60] p-2 bg-sidebar rounded-lg shadow-lg border border-sidebar-border hover:bg-sidebar-active-bg transition-colors duration-200"
+          className="fixed top-[20px] right-4 z-[60] p-2 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-200"
           aria-label="Toggle menu"
         >
           {isOpen ? (
-            <XIcon size={24} weight="bold" className="text-sidebar-foreground" />
+            <XIcon size={24} weight="bold" className="text-foreground" />
           ) : (
-            <ListIcon size={24} weight="bold" className="text-sidebar-foreground" />
+            <ListIcon size={24} weight="bold" className="text-foreground" />
           )}
         </button>
       )}
@@ -451,10 +451,10 @@ export default function Sidebar() {
       {!isMobile && !isDesktopOpen && (
         <button
           onClick={() => setIsDesktopOpen(true)}
-          className="fixed top-[20px] right-4 z-[60] p-2 bg-sidebar rounded-lg shadow-lg border border-sidebar-border hover:bg-sidebar-active-bg transition-all duration-200"
+          className="fixed top-[20px] right-4 z-[60] p-2 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200"
           aria-label="Open sidebar"
         >
-          <ListIcon size={20} weight="bold" className="text-sidebar-foreground" />
+          <ListIcon size={20} weight="bold" className="text-foreground" />
         </button>
       )}
 
@@ -469,7 +469,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <div
         id="sidebar"
-        className={`fixed top-0 right-0 w-[280px] h-screen bg-sidebar text-sidebar-foreground border-l border-sidebar-border shadow-1 rtl z-[55] transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 w-[280px] h-screen bg-white dark:bg-sidebar-dark text-sidebar-foreground border-l border-slate-200 dark:border-slate-800 shadow-1 rtl z-[55] transition-transform duration-300 ease-in-out flex flex-col ${
           isMobile
             ? isOpen ? 'translate-x-0' : 'translate-x-full'
             : isDesktopOpen ? 'translate-x-0' : 'translate-x-full'
@@ -479,45 +479,49 @@ export default function Sidebar() {
         {!isMobile && (
           <button
             onClick={() => setIsDesktopOpen(!isDesktopOpen)}
-            className="absolute top-4 left-4 p-2 bg-sidebar-active-bg rounded border border-sidebar-border hover:bg-sidebar-active-bg/80 transition-all duration-200 z-10"
+            className="absolute top-4 left-4 p-2 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 z-10"
             aria-label="Toggle sidebar"
           >
             {isDesktopOpen ? (
-              <XIcon size={20} weight="bold" className="text-sidebar-foreground/70" />
+              <XIcon size={20} weight="bold" className="text-slate-500 dark:text-slate-400" />
             ) : (
-              <ListIcon size={20} weight="bold" className="text-sidebar-foreground/70" />
+              <ListIcon size={20} weight="bold" className="text-slate-500 dark:text-slate-400" />
             )}
           </button>
         )}
         {/* Brand Logo */}
-        <div className="px-6 py-5 border-b border-sidebar-border flex-shrink-0">
-          <img
-            src="/logo.png"
-            alt="Tenuto"
-            className="h-8 w-auto object-contain"
-          />
+        <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/30">
+              <MusicNotesIcon weight="fill" className="text-white" size={20} />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="font-extrabold text-xl tracking-tight text-foreground">קונסרבטוריון</h2>
+              <span className="text-[10px] uppercase tracking-widest font-bold text-primary/70">v4.0</span>
+            </div>
+          </div>
         </div>
         {/* Search */}
-        <div className="p-4 border-b border-sidebar-border flex-shrink-0">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
           <div className="relative">
             <MagnifyingGlassIcon
               size={16}
               weight="regular"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sidebar-foreground/40"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400"
             />
             <input
               type="text"
               placeholder="חיפוש..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 pl-3 py-2 bg-sidebar-active-bg/30 border border-sidebar-border rounded text-sm font-reisinger-yonatan text-sidebar-foreground placeholder:text-sidebar-foreground/40 text-right rtl focus:outline-none focus:ring-2 focus:ring-sidebar-foreground/20 focus:border-sidebar-foreground/30"
+              className="w-full pr-10 pl-3 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm font-reisinger-yonatan text-foreground placeholder:text-slate-400 text-right rtl focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
         </div>
 
         {/* User Role Badges - Show when user has multiple roles */}
         {hasMultipleRoles && (
-          <div className="px-4 py-3 border-b border-sidebar-border flex-shrink-0">
+          <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
             <div className="flex flex-wrap gap-2">
               {userRoles.map(role => (
                 <span
@@ -548,10 +552,10 @@ export default function Sidebar() {
               {/* Grouped Navigation */}
               {groupedNavigation.map((category, categoryIndex) => (
                 <div key={category.key} className={categoryIndex > 0 ? 'mt-6' : ''}>
-                  <div className="px-4 mb-2">
+                  <div className="px-3 mb-2">
                     <button
                       onClick={() => toggleCategory(category.key)}
-                      className="flex items-center justify-between w-full text-xs font-semibold text-sidebar-label uppercase tracking-wider hover:text-sidebar-foreground/70 transition-colors"
+                      className="flex items-center justify-between w-full text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest hover:text-slate-500 dark:hover:text-slate-400 transition-colors"
                     >
                       <span>{category.label}</span>
                       <CaretDownIcon
@@ -574,16 +578,21 @@ export default function Sidebar() {
                             end={item.href === '/dashboard'}
                             onClick={closeMobileMenu}
                             className={({ isActive: active }) =>
-                              `flex items-center justify-between px-4 py-2.5 mx-1 rounded text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan ${
+                              `flex items-center gap-3 px-3 py-3 rounded-xl transition-all font-reisinger-yonatan ${
                                 active
-                                  ? 'bg-sidebar-active-bg text-sidebar-active-fg font-semibold'
-                                  : 'text-sidebar-foreground/70 hover:bg-sidebar-active-bg/50 hover:text-sidebar-foreground'
+                                  ? 'bg-primary/10 text-primary font-bold'
+                                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium'
                               }`
                             }
                           >
                             {({ isActive: active }) => (
                               <>
-                                <div className="flex items-center gap-2">
+                                <item.Icon
+                                  size={20}
+                                  weight={active ? 'fill' : 'regular'}
+                                  className="flex-shrink-0"
+                                />
+                                <div className="flex items-center gap-2 flex-1">
                                   <span className="text-right">{item.name}</span>
                                   {/* Show role badge for multi-role users */}
                                   {hasMultipleRoles && item.roles && item.roles.length === 1 && (
@@ -592,11 +601,6 @@ export default function Sidebar() {
                                     </span>
                                   )}
                                 </div>
-                                <item.Icon
-                                  size={18}
-                                  weight={active ? 'fill' : 'regular'}
-                                  className="flex-shrink-0"
-                                />
                               </>
                             )}
                           </NavLink>
@@ -609,8 +613,8 @@ export default function Sidebar() {
 
               {/* Quick Actions */}
               {quickActions.length > 0 && (
-                <div className="space-y-1 border-t border-sidebar-border pt-6 mt-6">
-                  <h3 className="px-4 text-xs font-semibold text-sidebar-label uppercase tracking-wider mb-3">
+                <div className="space-y-1 border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">
+                  <h3 className="px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">
                     פעולות מהירות
                   </h3>
                   {quickActions.map((action) => {
@@ -618,9 +622,10 @@ export default function Sidebar() {
                       <button
                         key={`${action.href}-${action.name}-${action.role}`}
                         onClick={() => handleQuickActionClick(action.name, action.href)}
-                        className="w-full flex items-center justify-between px-4 py-2 mx-1 rounded text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan text-sidebar-foreground/70 hover:bg-sidebar-active-bg/50 hover:text-sidebar-foreground group"
+                        className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-medium font-reisinger-yonatan group"
                       >
-                        <div className="flex items-center gap-2">
+                        <PlusIcon size={20} weight="regular" className="flex-shrink-0" />
+                        <div className="flex items-center gap-2 flex-1">
                           <span className="text-right">{action.name}</span>
                           {/* Show role badge for multi-role quick actions */}
                           {hasMultipleRoles && action.role && (
@@ -629,10 +634,7 @@ export default function Sidebar() {
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <PlusIcon size={12} weight="bold" className="text-sidebar-foreground/50 group-hover:text-sidebar-foreground" />
-                          <action.Icon size={14} weight="regular" className="flex-shrink-0" />
-                        </div>
+                        <action.Icon size={14} weight="regular" className="flex-shrink-0" />
                       </button>
                     )
                   })}

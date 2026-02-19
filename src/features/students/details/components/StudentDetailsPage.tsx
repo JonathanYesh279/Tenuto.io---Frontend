@@ -8,11 +8,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
 import {
-  ArrowRight, RefreshCw, Wifi, WifiOff, Trash2, Shield, Database, AlertTriangle,
-  User, GraduationCap, Calendar, CheckCircle, Music, BookOpen, Award, FileText
-} from 'lucide-react'
+  ArrowRightIcon, ArrowClockwiseIcon, WifiHighIcon, WifiSlashIcon, TrashIcon, ShieldIcon, DatabaseIcon, WarningCircleIcon,
+  UserIcon, GraduationCapIcon, CalendarIcon, CheckCircleIcon, MusicNotesIcon, BookOpenIcon, CertificateIcon, FileTextIcon, SpinnerIcon
+} from '@phosphor-icons/react'
 import { TabType } from '../types'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DetailPageHeader } from '@/components/domain'
 import { AnimatePresence, motion } from 'framer-motion'
 import PersonalInfoTab from './tabs/PersonalInfoTabSimple'
@@ -33,22 +32,17 @@ import SafeDeleteModal from '../../../../components/SafeDeleteModal'
 import DeletionImpactModal from '../../../../components/DeletionImpactModal'
 import DeletionImpactSummary from './DeletionImpactSummary'
 import React, { Suspense } from 'react'
-import { Loader } from 'lucide-react'
-import {
-  SmartLoadingState,
-  SkeletonComponents
-} from '../../../../services/performanceOptimizations'
 
 // Simple placeholder components for tabs that need more work
 const AttendanceTab = ({ student }: { student: any }) => (
-  <div className="p-6 text-center text-gray-500">
+  <div className="px-6 py-6 text-center text-muted-foreground">
     <div className="text-4xl mb-4">✅</div>
     <div>נוכחות - בפיתוח</div>
   </div>
 )
 
 const DocumentsTab = ({ student }: { student: any }) => (
-  <div className="p-6 text-center text-gray-500">
+  <div className="px-6 py-6 text-center text-muted-foreground">
     <div className="text-4xl mb-4">📄</div>
     <div>מסמכים - בפיתוח</div>
   </div>
@@ -58,8 +52,8 @@ const DocumentsTab = ({ student }: { student: any }) => (
 const TabLoadingFallback: React.FC = () => (
   <div className="flex items-center justify-center py-12">
     <div className="text-center">
-      <Loader className="w-6 h-6 animate-spin mx-auto mb-3 text-primary" />
-      <div className="text-sm text-gray-600">טוען נתונים...</div>
+      <SpinnerIcon className="w-6 h-6 animate-spin mx-auto mb-3 text-primary" />
+      <div className="text-sm text-muted-foreground">טוען נתונים...</div>
     </div>
   </div>
 )
@@ -214,8 +208,8 @@ const StudentDetailsPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
         <div className="text-6xl mb-4">🔍</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">תלמיד לא נמצא</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="text-2xl font-bold text-foreground mb-2">תלמיד לא נמצא</h1>
+        <p className="text-muted-foreground mb-6">
           התלמיד שביקשת לא נמצא במערכת או שאין לך הרשאה לצפות בו
         </p>
         <div className="flex gap-3">
@@ -223,14 +217,14 @@ const StudentDetailsPage: React.FC = () => {
             onClick={() => navigate('/students')}
             className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRightIcon className="w-4 h-4 ml-2" />
             חזור לרשימת תלמידים
           </button>
           <button
             onClick={() => window.location.reload()}
             className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
-            <RefreshCw className="w-4 h-4 ml-2" />
+            <ArrowClockwiseIcon className="w-4 h-4 ml-2" />
             נסה שוב
           </button>
         </div>
@@ -243,15 +237,15 @@ const StudentDetailsPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
         <div className="text-6xl mb-4">🔒</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">אין הרשאה</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="text-2xl font-bold text-foreground mb-2">אין הרשאה</h1>
+        <p className="text-muted-foreground mb-6">
           אין לך הרשאה לצפות בפרטי תלמיד זה
         </p>
         <button
           onClick={() => navigate('/students')}
           className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <ArrowRightIcon className="w-4 h-4 ml-2" />
           חזור לרשימת תלמידים
         </button>
       </div>
@@ -263,21 +257,21 @@ const StudentDetailsPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
         <div className="text-6xl mb-4">⚠️</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">שגיאה בטעינת הנתונים</h1>
-        <p className="text-gray-600 mb-6">{error.message}</p>
+        <h1 className="text-2xl font-bold text-foreground mb-2">שגיאה בטעינת הנתונים</h1>
+        <p className="text-muted-foreground mb-6">{error.message}</p>
         <div className="flex gap-3">
           <button
             onClick={() => window.location.reload()}
             className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <RefreshCw className="w-4 h-4 ml-2" />
+            <ArrowClockwiseIcon className="w-4 h-4 ml-2" />
             נסה שוב
           </button>
           <button
             onClick={() => navigate('/students')}
             className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRightIcon className="w-4 h-4 ml-2" />
             חזור לרשימת תלמידים
           </button>
         </div>
@@ -289,38 +283,27 @@ const StudentDetailsPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="space-y-6 animate-pulse">
-        {/* Header skeleton with better structure */}
-        <div className="bg-background border border-border p-6">
+        {/* Header skeleton */}
+        <div className="bg-muted/40 border-b border-border p-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div className="w-16 h-16 bg-muted rounded-full"></div>
             <div className="flex-1">
-              <div className="h-6 bg-gray-200 rounded mb-2 w-48"></div>
-              <div className="h-4 bg-gray-200 rounded w-32"></div>
+              <div className="h-6 bg-muted rounded mb-2 w-48"></div>
+              <div className="h-4 bg-muted rounded w-32"></div>
             </div>
           </div>
         </div>
 
-        {/* Tab navigation skeleton with proper spacing */}
-        <div className="bg-background border border-border">
-          <div className="border-b border-gray-200 px-6 py-4">
-            <div className="flex gap-6">
-              {['פרטים אישיים', 'פרטים אקדמיים', 'לוח זמנים', 'נוכחות', 'תזמורות', 'תיאוריה', 'מסמכים'].map((label, i) => (
-                <div key={i} className="h-4 bg-gray-200 rounded animate-pulse" style={{width: `${label.length * 8}px`}}></div>
-              ))}
+        {/* Content skeleton */}
+        <div className="px-6 py-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="h-4 bg-muted rounded w-24"></div>
+              <div className="h-10 bg-muted/50 rounded"></div>
             </div>
-          </div>
-
-          {/* Content skeleton */}
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="h-4 bg-gray-200 rounded w-24"></div>
-                <div className="h-10 bg-gray-100 rounded"></div>
-              </div>
-              <div className="space-y-4">
-                <div className="h-4 bg-gray-200 rounded w-20"></div>
-                <div className="h-10 bg-gray-100 rounded"></div>
-              </div>
+            <div className="space-y-4">
+              <div className="h-4 bg-muted rounded w-20"></div>
+              <div className="h-10 bg-muted/50 rounded"></div>
             </div>
           </div>
         </div>
@@ -330,12 +313,12 @@ const StudentDetailsPage: React.FC = () => {
 
   return (
     <StudentDetailsErrorBoundary>
-      <div className="space-y-6 bg-white min-h-screen student-details-container student-content-area">
+      <div className="min-h-screen bg-background student-details-container student-content-area">
         {/* Connection Status Indicator - only show if WebSocket is available and relevant */}
         {wsStatus && !wsError && wsStatus.isConnected && (
-          <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded px-4 py-2 text-sm">
+          <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded px-4 py-2 text-sm mx-6 mt-4">
             <div className="flex items-center gap-2">
-              <Wifi className="w-4 h-4 text-green-500" />
+              <WifiHighIcon className="w-4 h-4 text-green-500" />
               <span className="text-green-700">מחובר לעדכונים בזמן אמת</span>
             </div>
           </div>
@@ -343,18 +326,18 @@ const StudentDetailsPage: React.FC = () => {
 
         {/* Only show disconnection warning if we were previously connected */}
         {wsStatus && !wsError && !wsStatus.isConnected && wsStatus.reconnectAttempts > 0 && (
-          <div className="flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded px-4 py-2 text-sm">
+          <div className="flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded px-4 py-2 text-sm mx-6 mt-4">
             <div className="flex items-center gap-2">
-              <WifiOff className="w-4 h-4 text-yellow-500" />
+              <WifiSlashIcon className="w-4 h-4 text-yellow-500" />
               <span className="text-yellow-700">מנסה להתחבר לעדכונים בזמן אמת...</span>
             </div>
-            <span className="text-gray-600">
+            <span className="text-muted-foreground">
               ניסיון {wsStatus.reconnectAttempts}
             </span>
           </div>
         )}
 
-        {/* Gradient header with breadcrumb, avatar, badges, updatedAt */}
+        {/* Identity block with attached tab bar — Dossier archetype */}
         <DetailPageHeader
           firstName={student?.personalInfo?.firstName}
           lastName={student?.personalInfo?.lastName}
@@ -366,18 +349,110 @@ const StudentDetailsPage: React.FC = () => {
           updatedAt={student?.updatedAt}
           badges={
             <>
-              <span className="px-3 py-1 bg-students-fg/10 text-students-fg rounded-full text-sm font-medium">
+              <span className="px-2.5 py-0.5 bg-students-fg/10 text-students-fg rounded-full text-xs font-medium">
                 כיתה {student?.academicInfo?.class || '-'}
               </span>
-              <span className="px-3 py-1 bg-students-fg/10 text-students-fg rounded-full text-sm font-medium">
+              <span className="px-2.5 py-0.5 bg-students-fg/10 text-students-fg rounded-full text-xs font-medium">
                 {student?.primaryInstrument || 'ללא כלי'}
               </span>
             </>
           }
-        />
+        >
+          {/* Tab bar — attached inside the identity block, no gap */}
+          <nav className="flex gap-6 overflow-x-auto scrollbar-hide" aria-label="Student tabs">
+            <button
+              onClick={() => setActiveTab('personal')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'personal'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <UserIcon className="h-4 w-4" />
+              פרטים אישיים
+            </button>
+            <button
+              onClick={() => setActiveTab('academic')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'academic'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <GraduationCapIcon className="h-4 w-4" />
+              מידע אקדמי
+            </button>
+            <button
+              onClick={() => setActiveTab('schedule')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'schedule'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <CalendarIcon className="h-4 w-4" />
+              לוח זמנים
+            </button>
+            <button
+              onClick={() => setActiveTab('attendance')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'attendance'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <CheckCircleIcon className="h-4 w-4" />
+              נוכחות
+            </button>
+            <button
+              onClick={() => setActiveTab('orchestra')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'orchestra'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <MusicNotesIcon className="h-4 w-4" />
+              תזמורות
+            </button>
+            <button
+              onClick={() => setActiveTab('theory')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'theory'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <BookOpenIcon className="h-4 w-4" />
+              תאוריה
+            </button>
+            <button
+              onClick={() => setActiveTab('bagrut')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'bagrut'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <CertificateIcon className="h-4 w-4" />
+              בגרות
+            </button>
+            <button
+              onClick={() => setActiveTab('documents')}
+              className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === 'documents'
+                  ? 'text-foreground font-semibold border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              <FileTextIcon className="h-4 w-4" />
+              מסמכים
+            </button>
+          </nav>
+        </DetailPageHeader>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-2 justify-end">
+        <div className="flex items-center gap-2 justify-end px-6 py-3 border-b border-border">
           <button
             onClick={handleToggleImpactSummary}
             className={`p-2 rounded transition-colors ${
@@ -387,15 +462,15 @@ const StudentDetailsPage: React.FC = () => {
             }`}
             title="הצג/הסתר השפעת מחיקה"
           >
-            <Database className="w-5 h-5" />
+            <DatabaseIcon className="w-5 h-5" />
           </button>
 
           <button
             onClick={handleCheckReferences}
-            className="p-2 text-gray-600 hover:bg-muted rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-muted rounded transition-colors"
             title="בדוק תלויות ומחיקה"
           >
-            <AlertTriangle className="w-5 h-5" />
+            <WarningCircleIcon className="w-5 h-5" />
           </button>
 
           <button
@@ -403,7 +478,7 @@ const StudentDetailsPage: React.FC = () => {
             className="p-2 text-orange-600 hover:bg-orange-50 rounded transition-colors"
             title="מחיקה מאובטחת"
           >
-            <Shield className="w-5 h-5" />
+            <ShieldIcon className="w-5 h-5" />
           </button>
 
           <button
@@ -411,7 +486,7 @@ const StudentDetailsPage: React.FC = () => {
             className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
             title="מחיקה רגילה"
           >
-            <Trash2 className="w-5 h-5" />
+            <TrashIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -423,130 +498,87 @@ const StudentDetailsPage: React.FC = () => {
           onClose={() => setShowImpactSummary(false)}
         />
 
-        {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
-        <div className="bg-background border border-border w-full overflow-hidden">
-          <Tabs
-            value={activeTab}
-            onValueChange={(v) => {
-              setActiveTab(v as TabType)
+        {/* Tab content — continuous document, no card wrapper */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onAnimationComplete={() => {
               try {
-                prefetchTabData(v)
+                prefetchTabData(activeTab)
               } catch (error) {
                 console.warn('Failed to prefetch tab data:', error)
               }
             }}
-            className="w-full"
           >
-            <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
-              <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <User className="h-4 w-4" />
-                פרטים אישיים
-              </TabsTrigger>
-              <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <GraduationCap className="h-4 w-4" />
-                מידע אקדמי
-              </TabsTrigger>
-              <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <Calendar className="h-4 w-4" />
-                לוח זמנים
-              </TabsTrigger>
-              <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <CheckCircle className="h-4 w-4" />
-                נוכחות
-              </TabsTrigger>
-              <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <Music className="h-4 w-4" />
-                תזמורות
-              </TabsTrigger>
-              <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <BookOpen className="h-4 w-4" />
-                תאוריה
-              </TabsTrigger>
-              <TabsTrigger value="bagrut" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <Award className="h-4 w-4" />
-                בגרות
-              </TabsTrigger>
-              <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap data-[state=active]:bg-students-bg data-[state=active]:text-students-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-                <FileText className="h-4 w-4" />
-                מסמכים
-              </TabsTrigger>
-            </TabsList>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {activeTab === 'personal' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <PersonalInfoTab
-                      student={student}
-                      studentId={studentId}
-                      onStudentUpdate={handleStudentUpdate}
-                    />
-                  </Suspense>
-                )}
-                {activeTab === 'academic' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <AcademicInfoTab
-                      student={student}
-                      studentId={studentId}
-                      onStudentUpdate={handleStudentUpdate}
-                    />
-                  </Suspense>
-                )}
-                {activeTab === 'schedule' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <ScheduleTab
-                      student={student}
-                      studentId={studentId}
-                      isLoading={false}
-                    />
-                  </Suspense>
-                )}
-                {activeTab === 'attendance' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <AttendanceTab student={student} />
-                  </Suspense>
-                )}
-                {activeTab === 'orchestra' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <OrchestraTab
-                      student={student}
-                      studentId={studentId}
-                      isLoading={false}
-                    />
-                  </Suspense>
-                )}
-                {activeTab === 'theory' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <TheoryTabOptimized
-                      student={student}
-                      studentId={studentId}
-                    />
-                  </Suspense>
-                )}
-                {activeTab === 'bagrut' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <BagrutTab
-                      student={student}
-                      studentId={studentId}
-                      onStudentUpdate={handleStudentUpdate}
-                    />
-                  </Suspense>
-                )}
-                {activeTab === 'documents' && (
-                  <Suspense fallback={<TabLoadingFallback />}>
-                    <DocumentsTab student={student} />
-                  </Suspense>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </Tabs>
-        </div>
+            {activeTab === 'personal' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <PersonalInfoTab
+                  student={student}
+                  studentId={studentId}
+                  onStudentUpdate={handleStudentUpdate}
+                />
+              </Suspense>
+            )}
+            {activeTab === 'academic' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <AcademicInfoTab
+                  student={student}
+                  studentId={studentId}
+                  onStudentUpdate={handleStudentUpdate}
+                />
+              </Suspense>
+            )}
+            {activeTab === 'schedule' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <ScheduleTab
+                  student={student}
+                  studentId={studentId}
+                  isLoading={false}
+                />
+              </Suspense>
+            )}
+            {activeTab === 'attendance' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <AttendanceTab student={student} />
+              </Suspense>
+            )}
+            {activeTab === 'orchestra' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <OrchestraTab
+                  student={student}
+                  studentId={studentId}
+                  isLoading={false}
+                />
+              </Suspense>
+            )}
+            {activeTab === 'theory' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <TheoryTabOptimized
+                  student={student}
+                  studentId={studentId}
+                />
+              </Suspense>
+            )}
+            {activeTab === 'bagrut' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <BagrutTab
+                  student={student}
+                  studentId={studentId}
+                  onStudentUpdate={handleStudentUpdate}
+                />
+              </Suspense>
+            )}
+            {activeTab === 'documents' && (
+              <Suspense fallback={<TabLoadingFallback />}>
+                <DocumentsTab student={student} />
+              </Suspense>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Delete confirmation modal */}

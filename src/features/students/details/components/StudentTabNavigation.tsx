@@ -1,23 +1,23 @@
 /**
  * Student Tab Navigation Component
- * 
+ *
  * Provides horizontal tab navigation for different sections of student details.
- * Responsive design with mobile-friendly scrolling.
+ * Phase 22: Dossier archetype — simple text links with border-b indicator, no pills.
  */
 
-import { User, GraduationCap, Calendar, CheckCircle, Music, BookOpen, FileText, Award } from 'lucide-react'
+import { UserIcon, GraduationCapIcon, CalendarIcon, CheckCircleIcon, MusicNotesIcon, BookOpenIcon, FileTextIcon, CertificateIcon } from '@phosphor-icons/react'
 import { StudentTabNavigationProps, TabType } from '../types'
 
 // Tab configuration with icons
 const tabConfig = {
-  personal: { label: 'פרטים אישיים', icon: User },
-  academic: { label: 'מידע אקדמי', icon: GraduationCap },
-  schedule: { label: 'לוח זמנים', icon: Calendar },
-  attendance: { label: 'נוכחות', icon: CheckCircle },
-  orchestra: { label: 'תזמורות', icon: Music },
-  theory: { label: 'תאוריה', icon: BookOpen },
-  bagrut: { label: 'בגרות', icon: Award },
-  documents: { label: 'מסמכים', icon: FileText },
+  personal: { label: 'פרטים אישיים', icon: UserIcon },
+  academic: { label: 'מידע אקדמי', icon: GraduationCapIcon },
+  schedule: { label: 'לוח זמנים', icon: CalendarIcon },
+  attendance: { label: 'נוכחות', icon: CheckCircleIcon },
+  orchestra: { label: 'תזמורות', icon: MusicNotesIcon },
+  theory: { label: 'תאוריה', icon: BookOpenIcon },
+  bagrut: { label: 'בגרות', icon: CertificateIcon },
+  documents: { label: 'מסמכים', icon: FileTextIcon },
 }
 
 const StudentTabNavigation: React.FC<StudentTabNavigationProps> = ({
@@ -31,101 +31,32 @@ const StudentTabNavigation: React.FC<StudentTabNavigationProps> = ({
   }
 
   return (
-    <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm w-full overflow-hidden student-tab-navigation">
-      {/* Desktop Tab Navigation */}
-      <div className="hidden md:flex w-full overflow-x-auto desktop-tab-nav">
-        <nav className="flex gap-8 px-6 relative min-w-full" aria-label="Tabs">
-          {tabs.map((tab, index) => {
-            const config = tabConfig[tab.id]
-            const Icon = config?.icon || User
-            const isActive = activeTab === tab.id
-            
-            return (
-              <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
-                className={`
-                  group inline-flex items-center gap-3 py-4 px-2 border-b-2 font-medium text-sm transition-all duration-300 relative tab-button
-                  ${isActive
-                    ? 'border-primary text-primary bg-muted/50/50'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/50'
-                  }
-                `}
-                aria-current={isActive ? 'page' : undefined}
-                style={{
-                  minHeight: '44px', // WCAG AA minimum touch target
-                }}
-              >
-                <Icon className={`w-5 h-5 transition-all duration-300 ${
-                  isActive 
-                    ? 'text-primary scale-110' 
-                    : 'text-gray-400 group-hover:text-gray-500 group-hover:scale-105'
-                }`} />
-                <span className="whitespace-nowrap">
-                  {config?.label || tab.label}
-                </span>
-                {isActive && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-primary rounded-full animate-scale-in" />
-                )}
-              </button>
-            )
-          })}
-        </nav>
-      </div>
+    <nav className="flex gap-6 overflow-x-auto scrollbar-hide" aria-label="Student tabs">
+      {tabs.map((tab) => {
+        const config = tabConfig[tab.id]
+        const Icon = config?.icon || UserIcon
+        const isActive = activeTab === tab.id
 
-      {/* Mobile Tab Navigation */}
-      <div className="md:hidden w-full overflow-hidden mobile-tab-nav">
-        <div className="overflow-x-auto scrollbar-hide w-full">
-          <nav className="flex gap-3 ps-4 pe-4 py-3 min-w-max" aria-label="Tabs" style={{width: 'max-content'}}>
-            {tabs.map((tab, index) => {
-              const config = tabConfig[tab.id]
-              const Icon = config?.icon || User
-              const isActive = activeTab === tab.id
-              
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => onTabChange(tab.id)}
-                  className={`
-                    flex flex-col items-center gap-1 px-4 py-3 rounded font-medium text-xs transition-all duration-300 whitespace-nowrap transform tab-button
-                    ${isActive
-                      ? 'bg-muted text-foreground border-2 border-border scale-105 shadow-md'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 hover:scale-102 border-2 border-transparent'
-                    }
-                  `}
-                  aria-current={isActive ? 'page' : undefined}
-                  style={{
-                    minWidth: '80px',
-                    minHeight: '44px', // WCAG AA minimum touch target
-                  }}
-                >
-                  <Icon className={`w-5 h-5 transition-all duration-300 ${
-                    isActive 
-                      ? 'text-primary' 
-                      : 'text-gray-500'
-                  }`} />
-                  <span className="leading-tight">
-                    {config?.label || tab.label}
-                  </span>
-                </button>
-              )
-            })}
-          </nav>
-        </div>
-        
-        {/* Mobile scroll indicator */}
-        <div className="flex justify-center py-1">
-          <div className="w-8 h-1 bg-gray-200 rounded-full">
-            <div 
-              className="h-full bg-primary rounded-full transition-all duration-300"
-              style={{
-                width: `${tabs?.length > 0 ? ((tabs.findIndex(t => t.id === activeTab) + 1) / tabs.length * 100) : 0}%`
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onTabChange(tab.id)}
+            className={`
+              flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors
+              ${isActive
+                ? 'text-foreground font-semibold border-foreground'
+                : 'text-muted-foreground border-transparent hover:text-foreground'
+              }
+            `}
+            aria-current={isActive ? 'page' : undefined}
+            style={{ minHeight: '44px' }}
+          >
+            <Icon className="w-4 h-4" />
+            <span>{config?.label || tab.label}</span>
+          </button>
+        )
+      })}
+    </nav>
   )
 }
 

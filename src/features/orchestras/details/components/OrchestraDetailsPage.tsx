@@ -7,9 +7,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
-import { ArrowRight, RefreshCw, Info, Users, Calendar } from 'lucide-react'
+import { ArrowRightIcon, ArrowClockwiseIcon, InfoIcon, UsersIcon, CalendarIcon } from '@phosphor-icons/react'
 import { OrchestraTabType } from '../types'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AnimatePresence, motion } from 'framer-motion'
 import { DetailPageHeader } from '@/components/domain'
 import PersonalInfoTab from './tabs/PersonalInfoTab'
@@ -65,8 +64,8 @@ const OrchestraDetailsPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
         <div className="text-6xl mb-4">🔍</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">תזמורת לא נמצאה</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="text-2xl font-bold text-foreground mb-2">תזמורת לא נמצאה</h1>
+        <p className="text-muted-foreground mb-6">
           התזמורת שביקשת לא נמצאה במערכת או שאין לך הרשאה לצפות בה
         </p>
         <div className="flex gap-3">
@@ -74,14 +73,14 @@ const OrchestraDetailsPage: React.FC = () => {
             onClick={() => navigate('/orchestras')}
             className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRightIcon className="w-4 h-4 ml-2" />
             חזור לרשימת תזמורות
           </button>
           <button
             onClick={() => window.location.reload()}
             className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
-            <RefreshCw className="w-4 h-4 ml-2" />
+            <ArrowClockwiseIcon className="w-4 h-4 ml-2" />
             נסה שוב
           </button>
         </div>
@@ -94,15 +93,15 @@ const OrchestraDetailsPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
         <div className="text-6xl mb-4">🔒</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">אין הרשאה</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="text-2xl font-bold text-foreground mb-2">אין הרשאה</h1>
+        <p className="text-muted-foreground mb-6">
           אין לך הרשאה לצפות בפרטי תזמורת זו
         </p>
         <button
           onClick={() => navigate('/orchestras')}
           className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
         >
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <ArrowRightIcon className="w-4 h-4 ml-2" />
           חזור לרשימת תזמורות
         </button>
       </div>
@@ -114,21 +113,21 @@ const OrchestraDetailsPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
         <div className="text-6xl mb-4">⚠️</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">שגיאה בטעינת הנתונים</h1>
-        <p className="text-gray-600 mb-6">{error.message}</p>
+        <h1 className="text-2xl font-bold text-foreground mb-2">שגיאה בטעינת הנתונים</h1>
+        <p className="text-muted-foreground mb-6">{error.message}</p>
         <div className="flex gap-3">
           <button
             onClick={() => window.location.reload()}
             className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
           >
-            <RefreshCw className="w-4 h-4 ml-2" />
+            <ArrowClockwiseIcon className="w-4 h-4 ml-2" />
             נסה שוב
           </button>
           <button
             onClick={() => navigate('/orchestras')}
             className="flex items-center px-4 py-2 border border-border text-foreground rounded hover:bg-muted transition-colors"
           >
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRightIcon className="w-4 h-4 ml-2" />
             חזור לרשימת תזמורות
           </button>
         </div>
@@ -142,16 +141,16 @@ const OrchestraDetailsPage: React.FC = () => {
       <div className="space-y-6 p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <div className="text-gray-600">טוען פרטי תזמורת...</div>
+          <div className="text-muted-foreground">טוען פרטי תזמורת...</div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 bg-white min-h-screen orchestra-details-container orchestra-content-area">
+    <div className="min-h-screen bg-background orchestra-details-container orchestra-content-area">
 
-      {/* Gradient header with breadcrumb */}
+      {/* Identity block with attached tab bar — Dossier archetype */}
       <DetailPageHeader
         fullName={orchestra?.name}
         entityType="תזמורת"
@@ -161,71 +160,89 @@ const OrchestraDetailsPage: React.FC = () => {
         updatedAt={orchestra?.updatedAt}
         badges={
           <>
-            <span className="px-3 py-1 bg-orchestras-fg/10 text-orchestras-fg rounded-full text-sm font-medium">
+            <span className="px-2.5 py-0.5 bg-orchestras-fg/10 text-orchestras-fg rounded-full text-xs font-medium">
               {orchestra?.type || 'תזמורת'}
             </span>
-            <span className="px-3 py-1 bg-orchestras-fg/10 text-orchestras-fg rounded-full text-sm font-medium">
+            <span className="px-2.5 py-0.5 bg-orchestras-fg/10 text-orchestras-fg rounded-full text-xs font-medium">
               {orchestra?.memberIds?.length || 0} חברים
             </span>
           </>
         }
-      />
+      >
+        {/* Tab bar — attached inside the identity block, no gap */}
+        <nav className="flex gap-6" aria-label="Orchestra tabs">
+          <button
+            onClick={() => setActiveTab('personal')}
+            className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+              activeTab === 'personal'
+                ? 'text-foreground font-semibold border-foreground'
+                : 'text-muted-foreground border-transparent hover:text-foreground'
+            }`}
+          >
+            <InfoIcon className="h-4 w-4" />
+            פרטי תזמורת
+          </button>
+          <button
+            onClick={() => setActiveTab('members')}
+            className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+              activeTab === 'members'
+                ? 'text-foreground font-semibold border-foreground'
+                : 'text-muted-foreground border-transparent hover:text-foreground'
+            }`}
+          >
+            <UsersIcon className="h-4 w-4" />
+            חברי תזמורת
+          </button>
+          <button
+            onClick={() => setActiveTab('schedule')}
+            className={`flex items-center gap-2 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+              activeTab === 'schedule'
+                ? 'text-foreground font-semibold border-foreground'
+                : 'text-muted-foreground border-transparent hover:text-foreground'
+            }`}
+          >
+            <CalendarIcon className="h-4 w-4" />
+            לוח זמנים
+          </button>
+        </nav>
+      </DetailPageHeader>
 
-      {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
-      <div className="bg-background border border-border w-full overflow-hidden">
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as OrchestraTabType)} className="w-full">
-          <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6">
-            <TabsTrigger value="personal" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-              <Info className="h-4 w-4" />
-              פרטי תזמורת
-            </TabsTrigger>
-            <TabsTrigger value="members" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-              <Users className="h-4 w-4" />
-              חברי תזמורת
-            </TabsTrigger>
-            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center data-[state=active]:bg-orchestras-bg data-[state=active]:text-orchestras-fg data-[state=active]:shadow-none rounded px-3 py-1.5 text-sm font-medium transition-colors">
-              <Calendar className="h-4 w-4" />
-              לוח זמנים
-            </TabsTrigger>
-          </TabsList>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {activeTab === 'personal' && (
-                <PersonalInfoTab
-                  orchestraId={orchestraId}
-                  orchestra={orchestra}
-                  isLoading={false}
-                  activeTab={activeTab}
-                />
-              )}
-              {activeTab === 'members' && (
-                <MembersTab
-                  orchestraId={orchestraId}
-                  orchestra={orchestra}
-                  isLoading={false}
-                  activeTab={activeTab}
-                  onUpdate={fetchOrchestra}
-                />
-              )}
-              {activeTab === 'schedule' && (
-                <ScheduleTab
-                  orchestraId={orchestraId}
-                  orchestra={orchestra}
-                  isLoading={false}
-                  activeTab={activeTab}
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </Tabs>
-      </div>
+      {/* Tab content — continuous document, no card wrapper */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {activeTab === 'personal' && (
+            <PersonalInfoTab
+              orchestraId={orchestraId}
+              orchestra={orchestra}
+              isLoading={false}
+              activeTab={activeTab}
+            />
+          )}
+          {activeTab === 'members' && (
+            <MembersTab
+              orchestraId={orchestraId}
+              orchestra={orchestra}
+              isLoading={false}
+              activeTab={activeTab}
+              onUpdate={fetchOrchestra}
+            />
+          )}
+          {activeTab === 'schedule' && (
+            <ScheduleTab
+              orchestraId={orchestraId}
+              orchestra={orchestra}
+              isLoading={false}
+              activeTab={activeTab}
+            />
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }

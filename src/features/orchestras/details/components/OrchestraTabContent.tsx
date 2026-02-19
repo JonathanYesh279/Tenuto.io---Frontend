@@ -44,7 +44,7 @@ const OrchestraTabContent: React.FC<OrchestraTabProps> = ({
       default:
         return (
           <div className="p-6 text-center">
-            <p className="text-gray-500">תוכן הטאב לא נמצא</p>
+            <p className="text-muted-foreground">תוכן הטאב לא נמצא</p>
           </div>
         )
     }

@@ -1,33 +1,35 @@
 /**
  * Student Details Header Component
- * 
- * Displays student photo, name, key information, and status badges
- * in a visually appealing header layout.
+ *
+ * Displays student name, key information, and status badges.
+ * Phase 22: Dossier archetype — flat tonal surface, semantic tokens.
+ * Note: StudentDetailsPage uses DetailPageHeader directly; this component
+ * is available for legacy usage contexts.
  */
 
 import { useState } from 'react'
-import { User, Phone, Mail, Calendar, MapPin, Edit, Camera, Printer, Download } from 'lucide-react'
+import { PhoneIcon, CalendarIcon, UserIcon, PencilIcon, PrinterIcon, DownloadSimpleIcon } from '@phosphor-icons/react'
 import { StudentDetailsHeaderProps } from '../types'
 import { getDisplayName } from '@/utils/nameUtils'
-import { StatusBadge } from '@/components/ui/Table'
+import { AvatarInitials } from '@/components/domain/AvatarInitials'
 import QuickActionsModal from './QuickActionsModal'
 
-const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({ 
-  student, 
-  isLoading = false 
+const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
+  student,
+  isLoading = false
 }) => {
   const [showQuickActions, setShowQuickActions] = useState(false)
   if (isLoading || !student) {
     return (
-      <div className="bg-background border border-border p-6">
+      <div className="bg-muted/40 border-b border-border p-6">
         <div className="flex items-start gap-6">
-          <div className="w-24 h-24 bg-gray-200 rounded-full animate-pulse"></div>
+          <div className="w-16 h-16 bg-muted rounded-full animate-pulse"></div>
           <div className="flex-1 space-y-3">
-            <div className="h-6 bg-gray-200 rounded animate-pulse w-1/3"></div>
-            <div className="h-4 bg-gray-200 rounded animate-pulse w-1/4"></div>
+            <div className="h-6 bg-muted rounded animate-pulse w-1/3"></div>
+            <div className="h-4 bg-muted rounded animate-pulse w-1/4"></div>
             <div className="flex gap-2">
-              <div className="h-6 bg-gray-200 rounded animate-pulse w-16"></div>
-              <div className="h-6 bg-gray-200 rounded animate-pulse w-20"></div>
+              <div className="h-6 bg-muted rounded animate-pulse w-16"></div>
+              <div className="h-6 bg-muted rounded animate-pulse w-20"></div>
             </div>
           </div>
         </div>
@@ -38,8 +40,8 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
   const { personalInfo, academicInfo, isActive, registrationDate, teacherAssignments } = student
 
   // Calculate age
-  const age = personalInfo.age || (personalInfo.birthDate ? 
-    Math.floor((Date.now() - new Date(personalInfo.birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000)) : 
+  const age = personalInfo.age || (personalInfo.birthDate ?
+    Math.floor((Date.now() - new Date(personalInfo.birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000)) :
     null)
 
   // Get primary instrument
@@ -50,113 +52,104 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
   const primaryTeacher = teacherAssignments?.find(ta => ta.isActive)?.teacherName ||
     teacherAssignments?.[0]?.teacherName || null
 
-  // Format registration date
-  const formattedRegistrationDate = registrationDate ? 
-    new Date(registrationDate).toLocaleDateString('he-IL') : null
-
   return (
-    <div className="bg-primary overflow-hidden">
+    <div className="bg-muted/40 border-b border-border">
       {/* Main Header Content */}
-      <div className="p-6 text-white">
+      <div className="px-6 pt-4 pb-4">
         <div className="flex items-start justify-between">
-          <div className="flex items-start gap-6 flex-1">
-            {/* Student Photo - moved to the right side */}
+          <div className="flex items-center gap-4 flex-1">
+            <AvatarInitials
+              firstName={personalInfo.firstName}
+              lastName={personalInfo.lastName}
+              fullName={personalInfo.fullName}
+              size="xl"
+              colorClassName="bg-students-fg/15 text-students-fg"
+              style={{ borderRight: '3px solid hsl(var(--color-students-fg))' }}
+            />
             <div className="flex-1">
-              {/* Name and basic info */}
-              <h1 className="text-3xl font-bold mb-2">
+              {/* Name */}
+              <h1 className="text-2xl font-bold text-foreground mb-1.5">
                 {getDisplayName(personalInfo)}
               </h1>
-              
+
               {/* Status Badges */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  isActive ? 'bg-success-500 text-white' : 'bg-orange-500 text-white'
+              <div className="flex flex-wrap gap-2 mb-3">
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  isActive ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
                 }`}>
                   {isActive ? 'פעיל' : 'לא פעיל'}
                 </span>
-                
+
                 {primaryInstrument !== 'ללא כלי נגינה' && (
-                  <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium backdrop-blur-sm">
+                  <span className="px-2.5 py-0.5 bg-students-fg/10 text-students-fg rounded-full text-xs font-medium">
                     {primaryInstrument}
                   </span>
                 )}
 
                 {student.orchestraEnrollments?.some(oe => oe.isActive) && (
-                  <span className="px-3 py-1 bg-success-500/80 text-white rounded-full text-sm font-medium">
+                  <span className="px-2.5 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
                     חבר תזמורת
                   </span>
                 )}
 
                 {teacherAssignments?.filter(ta => ta.isActive).length > 0 && (
-                  <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium backdrop-blur-sm">
+                  <span className="px-2.5 py-0.5 bg-students-fg/10 text-students-fg rounded-full text-xs font-medium">
                     {teacherAssignments.filter(ta => ta.isActive).length} מורים
                   </span>
                 )}
               </div>
 
               {/* Quick action buttons */}
-              <div className="flex gap-3">
-                <button 
+              <div className="flex gap-2">
+                <button
                   onClick={() => setShowQuickActions(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground border border-border rounded hover:bg-muted transition-colors"
                 >
-                  <Edit className="w-4 h-4" />
+                  <PencilIcon className="w-3.5 h-3.5" />
                   ערוך
                 </button>
-                <button 
+                <button
                   onClick={() => setShowQuickActions(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground border border-border rounded hover:bg-muted transition-colors"
                 >
-                  <Printer className="w-4 h-4" />
+                  <PrinterIcon className="w-3.5 h-3.5" />
                   הדפס
                 </button>
-                <button 
+                <button
                   onClick={() => setShowQuickActions(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground border border-border rounded hover:bg-muted transition-colors"
                 >
-                  <Download className="w-4 h-4" />
+                  <DownloadSimpleIcon className="w-3.5 h-3.5" />
                   ייצא
                 </button>
               </div>
             </div>
-
-            {/* Student Photo */}
-            <div className="relative group">
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg border-4 border-white/30 backdrop-blur-sm">
-                {getDisplayName(personalInfo) ? getDisplayName(personalInfo).charAt(0) : <User className="w-8 h-8" />}
-              </div>
-              
-              {/* Photo upload button */}
-              <button className="absolute bottom-0 left-0 w-8 h-8 bg-white rounded-full shadow-md border-2 border-white/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110">
-                <Camera className="w-4 h-4 text-primary-foreground/70" />
-              </button>
-            </div>
           </div>
         </div>
 
-        {/* Additional info below */}
-        <div className="mt-6 pt-4 border-t border-white/20">
-          <div className="flex flex-wrap gap-6 text-sm">
+        {/* Additional info */}
+        <div className="mt-4 pt-3 border-t border-border/60">
+          <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
             {age && (
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <CalendarIcon className="w-4 h-4" />
                 <span>{age} שנים</span>
               </div>
             )}
             {academicInfo.class && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <span>כיתה {academicInfo.class}</span>
               </div>
             )}
             {personalInfo.phone && (
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <PhoneIcon className="w-4 h-4" />
                 <span>{personalInfo.phone}</span>
               </div>
             )}
             {primaryTeacher && (
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <UserIcon className="w-4 h-4" />
                 <span>מורה: {primaryTeacher}</span>
               </div>
             )}
@@ -165,46 +158,44 @@ const StudentDetailsHeader: React.FC<StudentDetailsHeaderProps> = ({
       </div>
 
       {/* Quick Stats Bar */}
-      <div className="bg-white/10 backdrop-blur-sm px-6 py-4">
-        <div className="flex items-center justify-between text-sm text-white">
-          <div className="flex items-center gap-8">
-            <div className="text-center">
-              <div className="text-2xl font-bold">
-                {academicInfo.instrumentProgress?.length || 0}
-              </div>
-              <div className="text-white/80">כלי נגינה</div>
+      <div className="px-6 py-3 border-t border-border/60 bg-muted/20">
+        <div className="flex items-center gap-8 text-sm">
+          <div className="text-center">
+            <div className="text-xl font-bold text-foreground">
+              {academicInfo.instrumentProgress?.length || 0}
             </div>
+            <div className="text-xs text-muted-foreground">כלי נגינה</div>
+          </div>
 
-            <div className="text-center">
-              <div className="text-2xl font-bold">
-                {teacherAssignments?.filter(ta => ta.isActive).length || 0}
-              </div>
-              <div className="text-white/80">מורים פעילים</div>
+          <div className="text-center">
+            <div className="text-xl font-bold text-foreground">
+              {teacherAssignments?.filter(ta => ta.isActive).length || 0}
             </div>
+            <div className="text-xs text-muted-foreground">מורים פעילים</div>
+          </div>
 
-            <div className="text-center">
-              <div className="text-2xl font-bold">
-                {student.orchestraEnrollments?.filter(oe => oe.isActive).length || 0}
-              </div>
-              <div className="text-white/80">תזמורות</div>
+          <div className="text-center">
+            <div className="text-xl font-bold text-foreground">
+              {student.orchestraEnrollments?.filter(oe => oe.isActive).length || 0}
             </div>
+            <div className="text-xs text-muted-foreground">תזמורות</div>
+          </div>
 
-            <div className="text-center">
-              <div className="text-2xl font-bold">
-                {student.attendanceStats?.attendanceRate ? 
-                  `${Math.round(student.attendanceStats.attendanceRate)}%` : '--'
-                }
-              </div>
-              <div className="text-white/80">נוכחות</div>
+          <div className="text-center">
+            <div className="text-xl font-bold text-foreground">
+              {student.attendanceStats?.attendanceRate ?
+                `${Math.round(student.attendanceStats.attendanceRate)}%` : '--'
+              }
             </div>
+            <div className="text-xs text-muted-foreground">נוכחות</div>
           </div>
 
           {/* Parent Contact */}
           {personalInfo.parentName && personalInfo.parentPhone && (
-            <div className="text-left bg-white/10 rounded p-3 backdrop-blur-sm">
-              <div className="font-medium text-white">{personalInfo.parentName}</div>
-              <div className="text-white/80 flex items-center gap-1 text-sm">
-                <Phone className="w-3 h-3" />
+            <div className="mr-auto text-right bg-muted rounded p-2.5">
+              <div className="font-medium text-foreground text-sm">{personalInfo.parentName}</div>
+              <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                <PhoneIcon className="w-3 h-3" />
                 {personalInfo.parentPhone}
               </div>
             </div>

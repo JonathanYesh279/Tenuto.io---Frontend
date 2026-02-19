@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChatSquareIcon, ClockIcon, MapPinIcon, PencilSimpleIcon, TrashIcon, UsersIcon } from '@phosphor-icons/react'
+import { ChatTextIcon, ClockIcon, MapPinIcon, PencilSimpleIcon, TrashIcon, UsersIcon } from '@phosphor-icons/react'
 
 
 interface TimeBlock {
@@ -71,7 +71,7 @@ const TimeBlockCard: React.FC<TimeBlockCardProps> = ({ block, onEdit, onDelete }
       {/* Notes */}
       {block.notes && (
         <div className="flex items-start space-x-2 mb-3">
-          <ChatSquareIcon className="w-4 h-4 text-gray-500 mt-0.5" />
+          <ChatTextIcon className="w-4 h-4 text-gray-500 mt-0.5" />
           <span className="text-sm text-gray-600">{block.notes}</span>
         </div>
       )}

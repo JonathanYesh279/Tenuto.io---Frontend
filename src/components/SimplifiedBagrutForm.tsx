@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'
 import type { BagrutFormData } from '../types/bagrut.types'
 import { handleServerValidationError } from '../utils/validationUtils'
 import { getDisplayName } from '@/utils/nameUtils'
-import { ArrowRightIcon, CaretLeftIcon, CaretRightIcon, CheckCircle2Icon, CheckCircleIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, InfoIcon, MagnifyingGlassIcon, MusicNotesIcon, PlusIcon, SparkleIcon, TrashIcon, UserIcon, WarningCircleIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
+import { ArrowRightIcon, CaretLeftIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, InfoIcon, MagnifyingGlassIcon, MusicNotesIcon, PlusIcon, SparkleIcon, TrashIcon, UserIcon, WarningCircleIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
 
 interface SimplifiedBagrutFormProps {
   students: any[]
@@ -512,7 +512,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     : 'bg-gray-100 border-gray-300 text-gray-400'
                 }`}>
                   {isCompleted ? (
-                    <CheckCircle2Icon className="w-6 h-6" />
+                    <CheckCircleIcon className="w-6 h-6" />
                   ) : isCurrent && isValidatingStep ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
                   ) : (
@@ -541,7 +541,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
                     <p className="text-xs text-gray-500 mt-1">
                       {isValid ? (
                         <span className="flex items-center justify-center gap-1 text-success-600">
-                          <CheckCircle2Icon className="w-3 h-3" />
+                          <CheckCircleIcon className="w-3 h-3" />
                           מוכן
                         </span>
                       ) : (
@@ -974,7 +974,7 @@ const SimplifiedBagrutForm: React.FC<SimplifiedBagrutFormProps> = ({
         <div className="bg-white rounded max-w-md w-full p-6 shadow-2xl animate-scale-in">
           <div className="text-center">
             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-success-100 mb-4">
-              <CheckCircle2Icon className="w-8 h-8 text-success-600" aria-hidden="true" />
+              <CheckCircleIcon className="w-8 h-8 text-success-600" aria-hidden="true" />
             </div>
             
             <h3 id="success-title" className="text-xl font-bold text-gray-900 mb-2">

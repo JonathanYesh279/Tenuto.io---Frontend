@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../services/authContext.jsx'
-import { UserIcon, UsersIcon, MusicNoteIcon, BookOpenIcon, CalendarIcon, ClockIcon, TrendUpIcon, ActivityIcon, ArrowRightIcon, CheckSquareIcon } from '@phosphor-icons/react'
+import { UserIcon, UsersIcon, MusicNoteIcon, BookOpenIcon, CalendarIcon, ClockIcon, TrendUpIcon, PulseIcon, ArrowRightIcon, CheckSquareIcon } from '@phosphor-icons/react'
 import TeacherStudentsTab from '../components/profile/TeacherStudentsTab'
 import ConductorOrchestrasTab from '../components/profile/ConductorOrchestrasTab'
 import TeacherScheduleTab from '../components/profile/TeacherScheduleTab'

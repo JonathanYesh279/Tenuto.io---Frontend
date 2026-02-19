@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 
 import { DirectorEvaluation as DirectorEvaluationType } from '@/types/bagrut.types';
-import { FileSignatureIcon, StarIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
+import { SignatureIcon, StarIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
 
 interface DirectorEvaluationProps {
   directorEvaluation?: DirectorEvaluationType;
@@ -142,7 +142,7 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
 
           <div>
             <Label htmlFor="director-signature" className="text-right block mb-2 font-semibold">
-              <FileSignatureIcon className="w-4 h-4 inline ml-2" />
+              <SignatureIcon className="w-4 h-4 inline ml-2" />
               חתימת המנהל/ת
             </Label>
             <div className="text-sm text-gray-600 mb-2 text-right">

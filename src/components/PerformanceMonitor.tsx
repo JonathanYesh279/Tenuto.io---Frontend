@@ -7,7 +7,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
 import { Card } from './ui/Card'
-import { ActivityIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, LightningIcon, TrendUpIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import { PulseIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, LightningIcon, TrendUpIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface PerformanceMetrics {
   renderTime: number
@@ -297,7 +297,7 @@ export const PerformanceMonitor: React.FC<{ isOpen: boolean; onClose: () => void
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-bold flex items-center gap-2">
-            <ActivityIcon className="w-5 h-5" />
+            <PulseIcon className="w-5 h-5" />
             מוניטור ביצועים
           </h2>
           <button

@@ -10,7 +10,7 @@ import React, { useState, useMemo } from 'react'
 import { AuditLogEntry } from './types'
 import { Card } from '../ui/Card'
 import Modal from '../ui/Modal'
-import { ArrowCounterClockwiseIcon, ArrowUpDownIcon, CalendarIcon, CaretDownIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, MagnifyingGlassIcon, TrashIcon, UserIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
+import { ArrowCounterClockwiseIcon, ArrowsDownUpIcon, CalendarIcon, CaretDownIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, MagnifyingGlassIcon, TrashIcon, UserIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface AuditLogViewerProps {
   entries: AuditLogEntry[]
@@ -393,7 +393,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             >
               <ClockIcon className="w-4 h-4" />
               <span>תאריך ושעה</span>
-              <ArrowUpDownIcon className="w-3 h-3" />
+              <ArrowsDownUpIcon className="w-3 h-3" />
             </button>
           </div>
           
@@ -403,7 +403,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
             >
               <span>פעולה</span>
-              <ArrowUpDownIcon className="w-3 h-3" />
+              <ArrowsDownUpIcon className="w-3 h-3" />
             </button>
           </div>
           
@@ -413,7 +413,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
             >
               <span>סוג ישות</span>
-              <ArrowUpDownIcon className="w-3 h-3" />
+              <ArrowsDownUpIcon className="w-3 h-3" />
             </button>
           </div>
           
@@ -428,7 +428,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             >
               <UserIcon className="w-4 h-4" />
               <span>משתמש</span>
-              <ArrowUpDownIcon className="w-3 h-3" />
+              <ArrowsDownUpIcon className="w-3 h-3" />
             </button>
           </div>
         </div>

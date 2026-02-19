@@ -6,7 +6,7 @@ import { getDisplayName } from '../../utils/nameUtils'
 import type { Bagrut } from '../../types/bagrut.types'
 import BagrutDashboard from './BagrutDashboard'
 import BagrutStudentManager from './BagrutStudentManager'
-import { ActivityIcon, BellIcon, BriefcaseIcon, CalendarClockIcon, CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, SchoolIcon, TargetIcon, TrendUpIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import { PulseIcon, BellIcon, BriefcaseIcon, CalendarDotsIcon, CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrendUpIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface BagrutRoleViewProps {
   role?: 'teacher' | 'admin' | 'conductor' | 'theory_teacher'
@@ -360,7 +360,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
               onClick={() => window.location.href = '/theory/bagrut/evaluations'}
               className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 flex items-center gap-2"
             >
-              <SchoolIcon className="w-4 h-4" />
+              <GraduationCapIcon className="w-4 h-4" />
               הערכות תיאוריה
             </button>
           </div>

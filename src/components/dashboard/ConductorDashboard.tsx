@@ -5,7 +5,7 @@ import { useAuth } from '../../services/authContext.jsx'
 import apiService from '../../services/apiService'
 import type { Bagrut } from '../../types/bagrut.types'
 import { getDisplayName } from '@/utils/nameUtils'
-import { ActivityIcon, BellIcon, BookOpenIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, EyeIcon, FileTextIcon, GraduationCapIcon, MapPinIcon, MedalIcon, MicrophoneIcon, MusicNotesIcon, PlusIcon, StarIcon, TargetIcon, TimerIcon, TrendUpIcon, UserCircleCheckIcon, UsersIcon, Volume2Icon, WarningCircleIcon } from '@phosphor-icons/react'
+import { PulseIcon, BellIcon, BookOpenIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, EyeIcon, FileTextIcon, GraduationCapIcon, MapPinIcon, MedalIcon, MicrophoneIcon, MusicNotesIcon, PlusIcon, StarIcon, TargetIcon, TimerIcon, TrendUpIcon, UserCircleCheckIcon, UsersIcon, SpeakerHighIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface ConductorDashboardStats {
   totalOrchestras: number
@@ -521,7 +521,7 @@ export default function ConductorDashboard() {
                     <div key={rehearsal.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                          <Volume2Icon className="w-6 h-6 text-indigo-600" />
+                          <SpeakerHighIcon className="w-6 h-6 text-indigo-600" />
                         </div>
                         <div>
                           <div className="font-medium text-gray-900 font-reisinger-yonatan">{rehearsal.orchestraName}</div>
@@ -704,13 +704,13 @@ export default function ConductorDashboard() {
             </div>
           </div>
 
-          {/* Recent ActivityIcon Feed */}
+          {/* Recent PulseIcon Feed */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                 פעילות אחרונה
               </h2>
-              <ActivityIcon className="w-5 h-5 text-gray-400" />
+              <PulseIcon className="w-5 h-5 text-gray-400" />
             </div>
 
             {recentActivities.length === 0 ? (

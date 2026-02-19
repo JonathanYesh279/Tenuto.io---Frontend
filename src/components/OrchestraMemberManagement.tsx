@@ -4,7 +4,7 @@ import { Card } from './ui/Card'
 import { orchestraService, studentService } from '../services/apiService'
 import { type Orchestra } from '../utils/orchestraUtils'
 import { getDisplayName } from '@/utils/nameUtils'
-import { CheckCircle2Icon, EnvelopeIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MusicNotesIcon, PhoneIcon, UserIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { CheckCircleIcon, EnvelopeIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MusicNotesIcon, PhoneIcon, UserIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface OrchestraMemberManagementProps {
   orchestraId: string
@@ -444,7 +444,7 @@ export default function OrchestraMemberManagement({
                 </div>
               ) : availableStudents.length === 0 ? (
                 <div className="text-center py-12">
-                  <CheckCircle2Icon className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                  <CheckCircleIcon className="w-16 h-16 text-green-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">כל התלמידים כבר חברים</h4>
                   <p className="text-gray-600">כל התלמידים הפעילים כבר חברים בתזמורת</p>
                 </div>

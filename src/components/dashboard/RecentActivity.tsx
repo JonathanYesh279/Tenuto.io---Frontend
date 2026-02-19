@@ -147,7 +147,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
     return () => clearInterval(interval)
   }, [maxItems, refreshInterval])
 
-  const getActivityIcon = (type: string) => {
+  const getPulseIcon = (type: string) => {
     const icons = {
       student_added: <UserPlusIcon className="w-5 h-5 text-green-500" />,
       teacher_added: <GraduationCapIcon className="w-5 h-5 text-blue-500" />,
@@ -319,7 +319,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
             >
               <div className="flex items-start space-x-3 space-x-reverse">
                 <div className="flex-shrink-0 mt-1">
-                  {getActivityIcon(activity.type)}
+                  {getPulseIcon(activity.type)}
                 </div>
                 
                 <div className="flex-1 min-w-0">

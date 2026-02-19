@@ -19,14 +19,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { ActivityIcon, CheckCircle2Icon, ClockIcon, DatabaseIcon, LightningIcon, MemoryStickIcon, MonitorIcon, PlayIcon, SquareIcon, TrashIcon, WarningIcon } from '@phosphor-icons/react'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { PulseIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, LightningIcon, MemoryIcon, MonitorIcon, PlayIcon, SquareIcon, TrashIcon, WarningIcon } from '@phosphor-icons/react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 
 
@@ -236,7 +230,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
             Worker: {workerStatus}
           </Badge>
           <Badge variant={isPerformant ? 'default' : 'destructive'}>
-            <ActivityIcon className="w-3 h-3 mr-1" />
+            <PulseIcon className="w-3 h-3 mr-1" />
             Health: {Math.round(healthScore)}%
           </Badge>
         </div>
@@ -465,7 +459,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
                   Reset Metrics
                 </Button>
                 <Button onClick={forceMemoryCleanup} variant="outline" size="sm">
-                  <MemoryStickIcon className="w-4 h-4 mr-1" />
+                  <MemoryIcon className="w-4 h-4 mr-1" />
                   Force GC
                 </Button>
               </div>
@@ -659,7 +653,7 @@ const OptimizedCascadeDeletionDemo: React.FC = () => {
                     <div className="font-mono mt-1">
                       {Math.round(healthScore)}%
                       {isPerformant ? (
-                        <CheckCircle2Icon className="inline w-3 h-3 ml-1 text-green-500" />
+                        <CheckCircleIcon className="inline w-3 h-3 ml-1 text-green-500" />
                       ) : (
                         <WarningIcon className="inline w-3 h-3 ml-1 text-yellow-500" />
                       )}

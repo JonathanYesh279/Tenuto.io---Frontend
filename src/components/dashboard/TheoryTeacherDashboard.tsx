@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../services/authContext.jsx'
 
 import apiService from '../../services/apiService'
-import { ActivityIcon, BellIcon, BookOpenCheckIcon, BookOpenIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClipboardTextIcon, ClockIcon, FileTextIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrendUpIcon, UserCircleCheckIcon, UserPlusIcon, UsersIcon } from '@phosphor-icons/react'
+import { PulseIcon, BellIcon, BookOpenTextIcon, BookOpenIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClipboardTextIcon, ClockIcon, FileTextIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrendUpIcon, UserCircleCheckIcon, UserPlusIcon, UsersIcon } from '@phosphor-icons/react'
 
 interface TheoryDashboardStats {
   totalTheoryStudents: number
@@ -370,7 +370,7 @@ export default function TheoryTeacherDashboard() {
               color="blue"
             />
             <TheoryQuickActionButton
-              icon={<BookOpenCheckIcon className="w-5 h-5" />}
+              icon={<BookOpenTextIcon className="w-5 h-5" />}
               label="דרג תלמידים"
               onClick={() => handleQuickAction('gradeStudents')}
               color="purple"
@@ -492,13 +492,13 @@ export default function TheoryTeacherDashboard() {
             </div>
           </div>
 
-          {/* Recent Theory ActivityIcon Feed */}
+          {/* Recent Theory PulseIcon Feed */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                 פעילות אחרונה - תיאוריה
               </h2>
-              <ActivityIcon className="w-5 h-5 text-gray-400" />
+              <PulseIcon className="w-5 h-5 text-gray-400" />
             </div>
 
             {recentActivities.length === 0 ? (

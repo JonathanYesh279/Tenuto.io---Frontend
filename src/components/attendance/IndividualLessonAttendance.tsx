@@ -13,7 +13,7 @@ import { useState, useEffect, useMemo } from 'react'
 
 import apiService from '../../services/apiService'
 import { getDisplayName } from '@/utils/nameUtils'
-import { CalendarIcon, CaretLeftIcon, CaretRightIcon, CheckCircleIcon, CheckIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, HistoryIcon, InfoIcon, MusicNotesIcon, TrendUpIcon, UserIcon, WarningCircleIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
+import { CalendarIcon, CaretLeftIcon, CaretRightIcon, CheckCircleIcon, CheckIcon, ClockIcon, FileTextIcon, FloppyDiskIcon, ClockCounterClockwiseIcon, InfoIcon, MusicNotesIcon, TrendUpIcon, UserIcon, WarningCircleIcon, XCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface Student {
   id: string
@@ -318,7 +318,7 @@ export default function IndividualLessonAttendance({
               aria-label="היסטוריה"
               title="היסטוריית נוכחות"
             >
-              <HistoryIcon className="w-5 h-5" />
+              <ClockCounterClockwiseIcon className="w-5 h-5" />
             </button>
           </div>
 
@@ -347,7 +347,7 @@ export default function IndividualLessonAttendance({
         {/* Content */}
         <div className="p-6">
           {showHistory ? (
-            /* HistoryIcon View */
+            /* ClockCounterClockwiseIcon View */
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-gray-900">היסטוריית נוכחות</h4>
@@ -375,7 +375,7 @@ export default function IndividualLessonAttendance({
                 </div>
               </div>
 
-              {/* HistoryIcon List */}
+              {/* ClockCounterClockwiseIcon List */}
               {loadingHistory ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-3"></div>

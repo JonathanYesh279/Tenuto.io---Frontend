@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import { LucideIconIcon } from '@phosphor-icons/react'
+import type { Icon as PhosphorIcon } from '@phosphor-icons/react'
 
 
 // Color-coded status indicators for music education
@@ -123,7 +123,7 @@ export const ProgressIndicator: React.FC<{
 export const ActionButton: React.FC<{
   variant: 'primary' | 'secondary' | 'danger' | 'success'
   size?: 'sm' | 'md' | 'lg'
-  icon?: LucideIconIcon
+  icon?: PhosphorIcon
   children: React.ReactNode
   disabled?: boolean
   loading?: boolean
@@ -175,7 +175,7 @@ export const ActionButton: React.FC<{
 
 // Empty state component
 export const EmptyState: React.FC<{
-  icon: LucideIconIcon
+  icon: PhosphorIcon
   title: string
   description: string
   action?: {

@@ -8,13 +8,8 @@
 import { useState, useRef } from 'react'
 
 import { StudentDetails } from '../types'
-import { ArchiveIcon, CalendarIcon, ChartBarIcon, CheckIcon, DatabaseIcon, DownloadSimpleIcon, EnvelopeIcon, FileImageIcon, FileSpreadsheetIcon, FileTextIcon, MedalIcon, MusicNotesIcon, PlusIcon, PrinterIcon, SendIcon, ShieldIcon, TrashIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
-import {
-  quickActionsService, 
-  ExportOptions, 
-  PrintOptions, 
-  EmailOptions 
-} from '@/services/quickActionsService'
+import { ArchiveIcon, CalendarIcon, ChartBarIcon, CheckIcon, DatabaseIcon, DownloadSimpleIcon, EnvelopeIcon, FileImageIcon, FileXlsIcon, FileTextIcon, MedalIcon, MusicNotesIcon, PlusIcon, PrinterIcon, PaperPlaneTiltIcon, ShieldIcon, TrashIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { quickActionsService, ExportOptions, PrintOptions, EmailOptions } from '@/services/quickActionsService'
 import toast from 'react-hot-toast'
 import { getDisplayName } from '../../../../utils/nameUtils'
 import { cascadeDeletionService } from '../../../../services/cascadeDeletionService'
@@ -419,7 +414,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                       <div className="grid grid-cols-2 gap-3">
                         {[
                           { value: 'pdf', label: 'PDF', icon: FileImageIcon },
-                          { value: 'excel', label: 'Excel', icon: FileSpreadsheetIcon },
+                          { value: 'excel', label: 'Excel', icon: FileXlsIcon },
                           { value: 'csv', label: 'CSV', icon: FileTextIcon },
                           { value: 'json', label: 'JSON', icon: FileTextIcon }
                         ].map(format => (
@@ -811,7 +806,7 @@ const QuickActionsModal: React.FC<QuickActionsModalProps> = ({
                 <>
                   {activeAction === 'print' && <PrinterIcon className="w-4 h-4" />}
                   {activeAction === 'export' && <DownloadSimpleIcon className="w-4 h-4" />}
-                  {activeAction === 'email' && <SendIcon className="w-4 h-4" />}
+                  {activeAction === 'email' && <PaperPlaneTiltIcon className="w-4 h-4" />}
                   {activeAction === 'certificate' && <MedalIcon className="w-4 h-4" />}
                   {activeAction === 'deletion' && <ShieldIcon className="w-4 h-4" />}
                   {activeAction === 'archive' && <ArchiveIcon className="w-4 h-4" />}

@@ -9,18 +9,8 @@ import { useState, useMemo, useEffect } from 'react'
 
 import { StudentDetails } from '../../types'
 import { Doughnut, Line, Bar } from 'react-chartjs-2'
-import { BookOpenIcon, CalendarIcon, CheckCircleIcon, ClipboardCheckIcon, ClockIcon, FloppyDiskIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilSimpleIcon, SchoolIcon, StarIcon, TargetIcon, TrendUpIcon, TrophyIcon, UserIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-} from 'chart.js'
+import { BookOpenIcon, CalendarIcon, CheckCircleIcon, ClipboardTextIcon, ClockIcon, FloppyDiskIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilSimpleIcon, StarIcon, TargetIcon, TrendUpIcon, TrophyIcon, UserIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js'
 import { useAuth } from '../../../../../services/authContext.jsx'
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
@@ -681,7 +671,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
       {academicInfo.instrumentProgress && academicInfo.instrumentProgress.length > 0 && (
         <InfoSection
           title="תוצאות מבחנים"
-          icon={ClipboardCheckIcon}
+          icon={ClipboardTextIcon}
           className="bg-gradient-to-br from-blue-50 to-cyan-50"
         >
           <div className="space-y-4">
@@ -891,7 +881,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
         {/* Academic Stats Cards */}
         <div className="xl:col-span-2 grid grid-cols-1 gap-6">
           {/* General Academic Info */}
-          <InfoSection title="מידע כללי" icon={SchoolIcon}>
+          <InfoSection title="מידע כללי" icon={GraduationCapIcon}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <InfoRow label="כיתה" value={academicInfo.class} />
               <InfoRow label="בית ספר" value={academicInfo.schoolName} />

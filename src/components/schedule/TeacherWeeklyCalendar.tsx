@@ -221,7 +221,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
   const goToCurrentWeek = () => setCurrentWeek(new Date())
 
   // Get icon for activity type
-  const getActivityIcon = (type: string) => {
+  const getPulseIcon = (type: string) => {
     switch (type) {
       case 'lesson':
         return <UserIcon className="w-4 h-4" />
@@ -401,7 +401,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                           {/* Activity Header */}
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              {getActivityIcon(activity.type)}
+                              {getPulseIcon(activity.type)}
                               <span className="font-semibold text-sm">
                                 {activity.title}
                               </span>
@@ -519,7 +519,7 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
                           >
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex items-center gap-2">
-                                {getActivityIcon(activity.type)}
+                                {getPulseIcon(activity.type)}
                                 <h4 className="font-semibold text-sm">{activity.title}</h4>
                               </div>
                               {activity.type === 'lesson' && (

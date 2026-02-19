@@ -6,15 +6,8 @@
  */
 
 import React, { useState, useMemo } from 'react'
-import { ArrowRightIcon, ArrowsClockwiseIcon, CheckCircle2Icon, ClockIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, InfoIcon, ShieldIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
-import {
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle 
-} from '@/components/ui/dialog'
+import { ArrowRightIcon, ArrowsClockwiseIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, InfoIcon, ShieldIcon, WarningIcon, XIcon } from '@phosphor-icons/react'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -23,14 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 
 
-import {
-  detectMigrationNeeds,
-  migrateBagrutData,
-  createMigrationComparison,
-  validateMigratedData,
-  MigrationResult,
-  MigrationStatus
-} from '@/utils/bagrutMigration'
+import { detectMigrationNeeds, migrateBagrutData, createMigrationComparison, validateMigratedData, MigrationResult, MigrationStatus } from '@/utils/bagrutMigration'
 import { Bagrut } from '@/types/bagrut.types'
 
 interface MigrationWarningModalProps {
@@ -176,7 +162,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
   const renderStatusIcon = (status: 'pending' | 'in_progress' | 'completed' | 'error') => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2Icon className="w-5 h-5 text-green-500" />
+        return <CheckCircleIcon className="w-5 h-5 text-green-500" />
       case 'in_progress':
         return <ArrowsClockwiseIcon className="w-5 h-5 text-blue-500 animate-spin" />
       case 'error':
@@ -295,19 +281,19 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
                 <CardContent>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2">
-                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
+                      <CheckCircleIcon className="w-4 h-4 text-green-500" />
                       מבנה ציונים מפורט יותר (40-30-20-10 נקודות)
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
+                      <CheckCircleIcon className="w-4 h-4 text-green-500" />
                       טבלת ציונים חדשה עם קטגוריות ברורות
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
+                      <CheckCircleIcon className="w-4 h-4 text-green-500" />
                       אימות משופר של נתונים
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2Icon className="w-4 h-4 text-green-500" />
+                      <CheckCircleIcon className="w-4 h-4 text-green-500" />
                       תמיכה במערכת החדשה
                     </li>
                   </ul>
@@ -468,7 +454,7 @@ const MigrationWarningModal: React.FC<MigrationWarningModalProps> = ({
           {/* Completed Tab */}
           <TabsContent value="completed">
             <div className="text-center py-8 space-y-4">
-              <CheckCircle2Icon className="w-16 h-16 text-green-500 mx-auto" />
+              <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto" />
               <h3 className="text-xl font-bold text-green-700">ההמרה הושלמה בהצלחה!</h3>
               <p className="text-gray-600">
                 הנתונים הועברו למבנה החדש ומוכנים לשימוש.

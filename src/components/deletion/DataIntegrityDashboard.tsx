@@ -10,7 +10,7 @@ import React, { useState } from 'react'
 import { DataIntegrityStatus, IntegrityIssue, BatchOperation } from './types'
 import { CircularProgress, ProgressBar } from '../feedback/ProgressIndicators'
 import { Card } from '../ui/Card'
-import { ActivityIcon, ArrowsClockwiseIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, FileTextIcon, GearIcon, LightningIcon, ShieldIcon, TrendDownIcon, TrendUpIcon, UsersIcon, WarningCircleIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
+import { PulseIcon, ArrowsClockwiseIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DatabaseIcon, FileTextIcon, GearIcon, LightningIcon, ShieldIcon, TrendDownIcon, TrendUpIcon, UsersIcon, WarningCircleIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface DataIntegrityDashboardProps {
   status: DataIntegrityStatus
@@ -121,7 +121,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
               onClick={onRunIntegrityCheck}
               className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
             >
-              <ActivityIcon className="w-4 h-4" />
+              <PulseIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">בדיקת שלמות</span>
             </button>
           )}
@@ -182,7 +182,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
                 <span className="text-2xl font-bold text-blue-600">
                   {status.pendingOperations}
                 </span>
-                {status.pendingOperations > 0 && <ActivityIcon className="w-4 h-4 text-blue-500" />}
+                {status.pendingOperations > 0 && <PulseIcon className="w-4 h-4 text-blue-500" />}
               </div>
             </div>
             <GearIcon className="w-8 h-8 text-blue-500" />
@@ -321,7 +321,7 @@ const DataIntegrityDashboard: React.FC<DataIntegrityDashboardProps> = ({
         <Card>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <ActivityIcon className="w-6 h-6 text-blue-500" />
+              <PulseIcon className="w-6 h-6 text-blue-500" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                   פעולות אחרונות

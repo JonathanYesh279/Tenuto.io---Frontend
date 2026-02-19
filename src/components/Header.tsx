@@ -4,15 +4,8 @@ import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
-import { HouseIcon, LogOutIcon, UserIcon } from '@phosphor-icons/react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { HouseIcon, SignOutIcon, UserIcon } from '@phosphor-icons/react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 export default function Header() {
   const navigate = useNavigate()
@@ -176,7 +169,7 @@ export default function Header() {
               className="flex items-center justify-between cursor-pointer text-destructive focus:text-destructive"
             >
               <span className="font-reisinger-yonatan">יציאה</span>
-              <LogOutIcon className="w-4 h-4" />
+              <SignOutIcon className="w-4 h-4" />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -5,7 +5,7 @@ import { useBagrutContext } from '../../contexts/BagrutContext'
 import apiService from '../../services/apiService'
 import type { Bagrut } from '../../types/bagrut.types'
 import { getDisplayName } from '@/utils/nameUtils'
-import { ActivityIcon, BellIcon, BookOpenIcon, CalendarClockIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrashIcon, TrendUpIcon, TrophyIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import { PulseIcon, BellIcon, BookOpenIcon, CalendarDotsIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, GraduationCapIcon, MagnifyingGlassIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrashIcon, TrendUpIcon, TrophyIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface BagrutStats {
   activeBagrutStudents: number
@@ -302,7 +302,7 @@ export default function BagrutDashboard() {
             borderColor="border-indigo-200"
           />
           <StatCard
-            icon={<CalendarClockIcon className="w-6 h-6" />}
+            icon={<CalendarDotsIcon className="w-6 h-6" />}
             title="מבחנים קרובים"
             value={stats.upcomingExams}
             bgColor="bg-blue-50"
@@ -526,7 +526,7 @@ export default function BagrutDashboard() {
                 <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                   מבחנים קרובים
                 </h2>
-                <CalendarClockIcon className="w-5 h-5 text-gray-400" />
+                <CalendarDotsIcon className="w-5 h-5 text-gray-400" />
               </div>
 
               {upcomingExams.length === 0 ? (

@@ -6,7 +6,7 @@ import apiService, { hoursSummaryService } from '../../services/apiService'
 import { TeacherDataTransformUtils } from '../../services/teacherDetailsApi'
 import type { Bagrut } from '../../types/bagrut.types'
 import { getDisplayName } from '@/utils/nameUtils'
-import { ActivityIcon, BellIcon, BookOpenIcon, CalendarClockIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, EyeIcon, FileTextIcon, FloppyDiskIcon, GearIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrashIcon, TrendUpIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { PulseIcon, BellIcon, BookOpenIcon, CalendarDotsIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, CheckSquareIcon, ClockIcon, EyeIcon, FileTextIcon, FloppyDiskIcon, GearIcon, GraduationCapIcon, MedalIcon, MusicNotesIcon, PencilIcon, PlusIcon, TargetIcon, TrashIcon, TrendUpIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface DashboardStats {
   totalStudents: number
@@ -704,7 +704,7 @@ export default function TeacherDashboard() {
                   color="emerald"
                 />
                 <QuickActionButton
-                  icon={<CalendarClockIcon className="w-5 h-5" />}
+                  icon={<CalendarDotsIcon className="w-5 h-5" />}
                   label="תזמון מבחן"
                   onClick={() => handleQuickAction('scheduleBagrutExam')}
                   color="orange"
@@ -879,13 +879,13 @@ export default function TeacherDashboard() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Recent ActivityIcon */}
+            {/* Recent PulseIcon */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
                   פעילות אחרונה
                 </h2>
-                <ActivityIcon className="w-5 h-5 text-gray-400" />
+                <PulseIcon className="w-5 h-5 text-gray-400" />
               </div>
 
               {recentActivities.length === 0 ? (

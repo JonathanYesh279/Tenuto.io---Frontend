@@ -4,7 +4,7 @@ import { useAuth } from '../../services/authContext'
 import apiService from '../../services/apiService'
 import { getDisplayName, getInitials as getNameInitials } from '../../utils/nameUtils'
 import { toast } from 'react-hot-toast'
-import { CalendarIcon, CheckCircle2Icon, CircleNotchIcon, ClockIcon, TrendUpIcon, UsersIcon, XCircleIcon } from '@phosphor-icons/react'
+import { CalendarIcon, CheckCircleIcon, CircleNotchIcon, ClockIcon, TrendUpIcon, UsersIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface Student {
   _id: string
@@ -297,7 +297,7 @@ export default function TeacherAttendanceTab() {
               <p className="text-sm font-medium text-green-600">נוכחים</p>
               <p className="text-2xl font-bold text-green-700 mt-1">{stats.presentToday}</p>
             </div>
-            <CheckCircle2Icon className="w-8 h-8 text-green-400" />
+            <CheckCircleIcon className="w-8 h-8 text-green-400" />
           </div>
         </div>
 
@@ -341,7 +341,7 @@ export default function TeacherAttendanceTab() {
                 onClick={() => markAllAs('present')}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
               >
-                <CheckCircle2Icon className="w-4 h-4" />
+                <CheckCircleIcon className="w-4 h-4" />
                 סמן הכל כנוכחים
               </button>
               <button
@@ -404,7 +404,7 @@ export default function TeacherAttendanceTab() {
                   <div className="flex-shrink-0">
                     {student.attendanceStatus === 'present' && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-medium">
-                        <CheckCircle2Icon className="w-4 h-4" />
+                        <CheckCircleIcon className="w-4 h-4" />
                         נוכח
                       </span>
                     )}
@@ -435,7 +435,7 @@ export default function TeacherAttendanceTab() {
                       {student.isMarking ? (
                         <CircleNotchIcon className="w-4 h-4 animate-spin" />
                       ) : (
-                        <CheckCircle2Icon className="w-4 h-4" />
+                        <CheckCircleIcon className="w-4 h-4" />
                       )}
                       נוכח
                     </button>
@@ -467,7 +467,7 @@ export default function TeacherAttendanceTab() {
       {stats.markedToday === stats.totalStudents && stats.totalStudents > 0 && (
         <div className="bg-green-50 rounded-lg border border-green-200 p-4">
           <div className="flex items-center gap-3">
-            <CheckCircle2Icon className="w-6 h-6 text-green-600 flex-shrink-0" />
+            <CheckCircleIcon className="w-6 h-6 text-green-600 flex-shrink-0" />
             <div>
               <p className="font-medium text-green-900">
                 כל התלמידים סומנו! ✓

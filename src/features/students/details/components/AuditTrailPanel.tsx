@@ -6,14 +6,8 @@
 
 import { useState, useEffect } from 'react'
 
-import { ActivityIcon, CalendarIcon, CaretDownIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EnvelopeIcon, EyeIcon, FunnelIcon, HistoryIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, PrinterIcon, TrashIcon, UploadSimpleIcon, UserIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
-import {
-  auditTrailService, 
-  AuditEntry, 
-  AuditAction, 
-  AuditResourceType,
-  AuditQuery 
-} from '@/services/auditTrailService'
+import { PulseIcon, CalendarIcon, CaretDownIcon, CaretRightIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, EnvelopeIcon, EyeIcon, FunnelIcon, ClockCounterClockwiseIcon, MagnifyingGlassIcon, PencilIcon, PlusIcon, PrinterIcon, TrashIcon, UploadSimpleIcon, UserIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
+import { auditTrailService, AuditEntry, AuditAction, AuditResourceType, AuditQuery } from '@/services/auditTrailService'
 import { usePermissionsAndAudit } from '../hooks/usePermissionsAndAudit'
 
 interface AuditTrailPanelProps {
@@ -147,7 +141,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
       permission_change: UserIcon
     }
     
-    return iconMap[action] || ActivityIcon
+    return iconMap[action] || PulseIcon
   }
 
   const getActionLabel = (action: AuditAction) => {
@@ -217,7 +211,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
       <div className="border-b border-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <HistoryIcon className="w-5 h-5 text-gray-600" />
+            <ClockCounterClockwiseIcon className="w-5 h-5 text-gray-600" />
             <h3 className="text-lg font-medium text-gray-900">לוג פעילות</h3>
             <span className="text-sm text-gray-500">({filteredEntries.length} פעולות)</span>
           </div>
@@ -234,7 +228,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
               onClick={loadAuditEntries}
               className="flex items-center gap-1 px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-50"
             >
-              <ActivityIcon className="w-4 h-4" />
+              <PulseIcon className="w-4 h-4" />
               רענן
             </button>
           </div>
@@ -322,7 +316,7 @@ const AuditTrailPanel: React.FC<AuditTrailPanelProps> = ({
           </div>
         ) : filteredEntries.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-8 text-gray-500">
-            <HistoryIcon className="w-8 h-8 mb-2" />
+            <ClockCounterClockwiseIcon className="w-8 h-8 mb-2" />
             <span>לא נמצאו פעולות</span>
           </div>
         ) : (

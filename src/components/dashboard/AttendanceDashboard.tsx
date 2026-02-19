@@ -3,7 +3,7 @@ import { useAuth } from '../../services/authContext.jsx'
 
 import apiService from '../../services/apiService'
 import { getDisplayName } from '@/utils/nameUtils'
-import { ActivityIcon, BellIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, ChartPieIcon, CheckSquareIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, MagnifyingGlassIcon, PencilIcon, TrendDownIcon, TrendUpIcon, UserCircleCheckIcon, UserCircleMinusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
+import { PulseIcon, BellIcon, CalendarIcon, CaretRightIcon, ChartBarIcon, ChartPieIcon, CheckSquareIcon, ClockIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, MagnifyingGlassIcon, PencilIcon, TrendDownIcon, TrendUpIcon, UserCircleCheckIcon, UserCircleMinusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface AttendanceStats {
   totalStudents: number

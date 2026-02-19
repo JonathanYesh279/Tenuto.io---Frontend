@@ -2,15 +2,8 @@ import { useState, useEffect } from 'react'
 
 import { Card } from './ui/Card'
 import { orchestraService, studentService, teacherService, rehearsalService } from '../services/apiService'
-import { ActivityIcon, CalendarIcon, ClockIcon, EnvelopeIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PencilIcon, PhoneIcon, StarIcon, TrashIcon, TrendUpIcon, UserIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
-import {
-  getOrchestraTypeInfo,
-  getOrchestraStatus,
-  calculateOrchestraStats,
-  getOrchestraReadiness,
-  getMemberInstrumentsSummary,
-  type Orchestra
-} from '../utils/orchestraUtils'
+import { PulseIcon, CalendarIcon, ClockIcon, EnvelopeIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PencilIcon, PhoneIcon, StarIcon, TrashIcon, TrendUpIcon, UserIcon, UserPlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { getOrchestraTypeInfo, getOrchestraStatus, calculateOrchestraStats, getOrchestraReadiness, getMemberInstrumentsSummary, type Orchestra } from '../utils/orchestraUtils'
 import { getDisplayName } from '@/utils/nameUtils'
 
 interface OrchestraDetailsModalProps {
@@ -295,7 +288,7 @@ export default function OrchestraDetailsModal({
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <ActivityIcon className="w-5 h-5 text-gray-400" />
+                    <PulseIcon className="w-5 h-5 text-gray-400" />
                     <div>
                       <div className="font-medium text-gray-900">סטטוס</div>
                       <div className="text-sm text-gray-600">{status.text}</div>

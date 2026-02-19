@@ -14,7 +14,7 @@ import PermissionWrapper, { ViewWrapper, EditWrapper } from '../PermissionWrappe
 import AuditTrailPanel from '../AuditTrailPanel'
 import toast from 'react-hot-toast'
 import { formatAddress } from '../../../../../utils/nameUtils'
-import { CalendarIcon, CheckCircleIcon, ClockIcon, EnvelopeIcon, FloppyDiskIcon, HistoryIcon, MapPinIcon, PencilIcon, PhoneIcon, ShieldIcon, UserCircleCheckIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { CalendarIcon, CheckCircleIcon, ClockIcon, EnvelopeIcon, FloppyDiskIcon, ClockCounterClockwiseIcon, MapPinIcon, PencilIcon, PhoneIcon, ShieldIcon, UserCircleCheckIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PersonalInfoTabProps {
   student: StudentDetails
@@ -342,7 +342,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ student, studentId, o
                   : 'border-gray-200 text-gray-600 hover:bg-gray-50'
               }`}
             >
-              <HistoryIcon className="w-4 h-4" />
+              <ClockCounterClockwiseIcon className="w-4 h-4" />
               לוג פעילות
             </button>
           </PermissionWrapper>

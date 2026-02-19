@@ -17,14 +17,8 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Textarea } from '@/components/ui/textarea'
-import { ArrowsClockwiseIcon, CheckCircleIcon, ClockIcon, DotsSixIcon, EyeIcon, EyeSlashIcon, FloppyDiskIcon, MusicNotesIcon, PlusIcon, TrashIcon, UserIcon, WarningIcon, YoutubeIcon } from '@phosphor-icons/react'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { ArrowsClockwiseIcon, CheckCircleIcon, ClockIcon, DotsSixIcon, EyeIcon, EyeSlashIcon, FloppyDiskIcon, MusicNotesIcon, PlusIcon, TrashIcon, UserIcon, WarningIcon, YoutubeLogoIcon } from '@phosphor-icons/react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 
 import { ProgramPiece } from '@/types/bagrut.types'
@@ -283,7 +277,7 @@ const ProgramPieceItem = memo<{
                   size="sm"
                   onClick={() => window.open(piece.youtubeLink, '_blank')}
                 >
-                  <YoutubeIcon className="w-4 h-4 text-red-500" />
+                  <YoutubeLogoIcon className="w-4 h-4 text-red-500" />
                 </Button>
               )}
             </div>

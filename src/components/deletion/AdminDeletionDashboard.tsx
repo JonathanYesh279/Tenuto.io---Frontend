@@ -7,14 +7,8 @@
 
 import React, { useState, useEffect } from 'react'
 
-import { ActivityIcon, ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MusicNotesIcon, PlusIcon, ShieldIcon, TrashIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
-import {
-  DataIntegrityStatus, 
-  DeletionOperation, 
-  AuditLogEntry,
-  OrphanedReference,
-  BatchOperation
-} from './types'
+import { PulseIcon, ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, DatabaseIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MusicNotesIcon, PlusIcon, ShieldIcon, TrashIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
+import { DataIntegrityStatus, DeletionOperation, AuditLogEntry, OrphanedReference, BatchOperation } from './types'
 import DataIntegrityDashboard from './DataIntegrityDashboard'
 import AuditLogViewer from './AuditLogViewer'
 import OrphanedReferenceCleanup from './OrphanedReferenceCleanup'
@@ -176,7 +170,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
   // Mobile navigation tabs
   const tabConfig = [
-    { id: 'overview', label: 'סקירה', icon: ActivityIcon },
+    { id: 'overview', label: 'סקירה', icon: PulseIcon },
     { id: 'integrity', label: 'שלמות', icon: ShieldIcon },
     { id: 'operations', label: 'פעולות', icon: GearIcon },
     { id: 'audit', label: 'יומן', icon: FileTextIcon },
@@ -310,7 +304,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
         <Card className="text-center">
           <div className="flex items-center justify-between mb-2">
             <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-              <ActivityIcon className="w-4 h-4 text-orange-600" />
+              <PulseIcon className="w-4 h-4 text-orange-600" />
             </div>
             <span className="text-2xl font-bold text-orange-600">{quickStats.pendingOperations}</span>
           </div>
@@ -446,7 +440,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
           <Card>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <ActivityIcon className="w-6 h-6 text-blue-500" />
+                <PulseIcon className="w-6 h-6 text-blue-500" />
                 <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
                   פעולות אחרונות
                 </h3>
@@ -469,7 +463,7 @@ const AdminDeletionDashboard: React.FC<AdminDeletionDashboardProps> = ({
 
             {recentOperations.length === 0 && (
               <div className="text-center py-8">
-                <ActivityIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <PulseIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 font-reisinger-yonatan">אין פעולות אחרונות</p>
               </div>
             )}

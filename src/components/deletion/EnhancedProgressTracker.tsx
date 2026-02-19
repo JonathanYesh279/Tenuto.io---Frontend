@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react'
 import { DeletionOperation } from './types'
 import { ProgressBar, StepProgress } from '../feedback/ProgressIndicators'
 import { Card } from '../ui/Card'
-import { ActivityIcon, ArrowsClockwiseIcon, CaretDownIcon, CaretUpIcon, CheckCircleIcon, CircleNotchIcon, ClockIcon, InfoIcon, LightningIcon, PauseIcon, PlayIcon, SquareIcon, TimerIcon, TrendUpIcon, WarningCircleIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
+import { PulseIcon, ArrowsClockwiseIcon, CaretDownIcon, CaretUpIcon, CheckCircleIcon, CircleNotchIcon, ClockIcon, InfoIcon, LightningIcon, PauseIcon, PlayIcon, SquareIcon, TimerIcon, TrendUpIcon, WarningCircleIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface EnhancedProgressTrackerProps {
   operation: DeletionOperation
@@ -350,7 +350,7 @@ const EnhancedProgressTracker: React.FC<EnhancedProgressTrackerProps> = ({
               onClick={() => setShowMetrics(!showMetrics)}
               className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
             >
-              <ActivityIcon className="w-4 h-4" />
+              <PulseIcon className="w-4 h-4" />
               <span className="font-reisinger-yonatan">מטריקות</span>
               {showMetrics ? <CaretUpIcon className="w-3 h-3" /> : <CaretDownIcon className="w-3 h-3" />}
             </button>

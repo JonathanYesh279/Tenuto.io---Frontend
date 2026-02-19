@@ -17,7 +17,7 @@ import { useSchoolYear } from '../../services/schoolYearContext'
 import { VALID_LOCATIONS } from '../../constants/locations'
 import { handleServerValidationError, VALID_INSTRUMENTS } from '../../utils/validationUtils'
 import { formatAddress } from '../../utils/nameUtils'
-import { BookOpenIcon, BriefcaseIcon, CalendarIcon, ClockIcon, FloppyDiskIcon, GearIcon, MapPinIcon, Music2Icon, PlusIcon, TrashIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { BookOpenIcon, BriefcaseIcon, CalendarIcon, ClockIcon, FloppyDiskIcon, GearIcon, MapPinIcon, MusicNotesIcon, PlusIcon, TrashIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 import {
   CLASSIFICATIONS, DEGREES, MANAGEMENT_ROLES, TEACHING_SUBJECTS,
   INSTRUMENT_DEPARTMENTS
@@ -380,7 +380,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, onTe
   const tabs = [
     { id: 'personal', label: 'מידע אישי', icon: UserIcon },
     { id: 'professional', label: 'נתונים מקצועיים', icon: BriefcaseIcon },
-    { id: 'instruments', label: 'כלי נגינה', icon: Music2Icon },
+    { id: 'instruments', label: 'כלי נגינה', icon: MusicNotesIcon },
     { id: 'subjects', label: 'מקצועות הוראה', icon: BookOpenIcon },
     { id: 'management', label: 'שעות ניהול', icon: ClockIcon },
     { id: 'schedule', label: 'לוח זמנים', icon: CalendarIcon },

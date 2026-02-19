@@ -59,6 +59,11 @@ Key decisions for v3.0:
 - [22-07 Bagrut]: Modal Card wrappers preserved (ConflictResolutionModal, MigrationWarningModal) — floating content keeps Card
 - [22-07 Bagrut]: bg-primary-50/100 backgrounds replaced with bg-muted — tonal neutral, not warm tint
 
+- [22-05 Forms]: rounded-lg → rounded in all form contexts — 2px sharp corners match locked architectural identity
+- [22-05 Forms]: focus:ring-primary-500 → focus:ring-ring — semantic ring token, not hardcoded hue
+- [22-05 Forms]: border-gray-300 → border-input in form primitives — consistent functional border token
+- [22-05 Forms]: SimplifiedBagrutForm gradient progress bar eliminated — no decorative gradients per architectural rules
+
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
 ### Pending Todos
@@ -76,5 +81,5 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-07-PLAN.md — Bagrut module token migration (24 files, primary-NNN eliminated)
+Stopped at: Completed 22-05-PLAN.md — Form components sweep (22 files, primary-NNN and rounded-lg eliminated)
 Resume file: None

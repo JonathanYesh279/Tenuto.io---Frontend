@@ -8,117 +8,115 @@ import TheoryLessonForm from './TheoryLessonForm'
 import RehearsalForm from './RehearsalForm'
 import { orchestraService } from '../services/apiService'
 import {
-  Home,
-  Users,
-  GraduationCap,
-  BookOpen,
-  Music,
-  Calendar,
-  ClipboardList,
-  BarChart3,
-  UserCheck,
-  Settings,
-  Search,
-  Menu,
-  X,
-  Plus,
-  Filter,
-  Award,
-  User,
-  Clock,
-  FileText,
-  UserPlus,
-  CalendarPlus,
-  CheckSquare,
-  Shield,
-  ChevronDown,
-  Building2
-} from 'lucide-react'
+  HouseIcon,
+  UsersIcon,
+  GraduationCapIcon,
+  BookOpenIcon,
+  MusicNotesIcon,
+  CalendarIcon,
+  UserCircleCheckIcon,
+  GearIcon,
+  MagnifyingGlassIcon,
+  ListIcon,
+  XIcon,
+  PlusIcon,
+  MedalIcon,
+  UserIcon,
+  ClockIcon,
+  FileTextIcon,
+  UserPlusIcon,
+  CalendarPlusIcon,
+  CheckSquareIcon,
+  ShieldIcon,
+  CaretDownIcon,
+  BuildingsIcon,
+} from '@phosphor-icons/react'
+import type { Icon } from '@phosphor-icons/react'
 
 // Navigation item interface
 interface NavigationItem {
   name: string
   href: string
-  icon: React.ComponentType<{ className?: string }>
+  Icon: Icon
   roles?: string[]
   category?: string
 }
 
 // Admin navigation (full access) - Note: attendance href will be dynamic based on user's additional roles
 const adminNavigation: NavigationItem[] = [
-  { name: 'מידע כללי', href: '/dashboard', icon: Home, category: 'general' },
-  { name: 'תלמידים', href: '/students', icon: Users, category: 'management', roles: ['admin'] },
-  { name: 'מורים', href: '/teachers', icon: GraduationCap, category: 'management', roles: ['admin'] },
-  { name: 'שיעורי תיאוריה', href: '/theory-lessons', icon: BookOpen, category: 'management', roles: ['admin'] },
-  { name: 'תזמורות', href: '/orchestras', icon: Music, category: 'management', roles: ['admin'] },
-  { name: 'חזרות', href: '/rehearsals', icon: Calendar, category: 'management', roles: ['admin'] },
-  { name: 'בגרויות', href: '/bagruts', icon: Award, category: 'management', roles: ['admin'] },
-  { name: 'נוכחות', href: '/teachers', icon: UserCheck, category: 'operations', roles: ['admin'] },
-  { name: 'דוחות משרד', href: '/ministry-reports', icon: FileText, category: 'operations', roles: ['admin'] },
-  { name: 'ייבוא נתונים', href: '/import', icon: Plus, category: 'operations', roles: ['admin'] },
-  { name: 'יומן ביקורת', href: '/audit-trail', icon: Shield, category: 'operations', roles: ['admin'] },
-  { name: 'הגדרות', href: '/settings', icon: Settings, category: 'system', roles: ['admin'] },
+  { name: 'מידע כללי', href: '/dashboard', Icon: HouseIcon, category: 'general' },
+  { name: 'תלמידים', href: '/students', Icon: UsersIcon, category: 'management', roles: ['admin'] },
+  { name: 'מורים', href: '/teachers', Icon: GraduationCapIcon, category: 'management', roles: ['admin'] },
+  { name: 'שיעורי תיאוריה', href: '/theory-lessons', Icon: BookOpenIcon, category: 'management', roles: ['admin'] },
+  { name: 'תזמורות', href: '/orchestras', Icon: MusicNotesIcon, category: 'management', roles: ['admin'] },
+  { name: 'חזרות', href: '/rehearsals', Icon: CalendarIcon, category: 'management', roles: ['admin'] },
+  { name: 'בגרויות', href: '/bagruts', Icon: MedalIcon, category: 'management', roles: ['admin'] },
+  { name: 'נוכחות', href: '/teachers', Icon: UserCircleCheckIcon, category: 'operations', roles: ['admin'] },
+  { name: 'דוחות משרד', href: '/ministry-reports', Icon: FileTextIcon, category: 'operations', roles: ['admin'] },
+  { name: 'ייבוא נתונים', href: '/import', Icon: PlusIcon, category: 'operations', roles: ['admin'] },
+  { name: 'יומן ביקורת', href: '/audit-trail', Icon: ShieldIcon, category: 'operations', roles: ['admin'] },
+  { name: 'הגדרות', href: '/settings', Icon: GearIcon, category: 'system', roles: ['admin'] },
 ]
 
 // Teacher navigation
 const teacherNavigation: NavigationItem[] = [
-  { name: 'לוח בקרה', href: '/dashboard', icon: Home, category: 'general' },
-  { name: 'התלמידים שלי', href: '/students', icon: Users, category: 'personal', roles: ['teacher'] },
-  { name: 'לוח זמנים שלי', href: '/profile', icon: Calendar, category: 'personal', roles: ['teacher'] },
-  { name: 'נוכחות', href: '/profile?tab=attendance', icon: UserCheck, category: 'operations', roles: ['teacher'] },
-  { name: 'ניהול בגרויות', href: '/bagruts', icon: Award, category: 'operations', roles: ['teacher'] },
-  { name: 'פרופיל', href: '/profile', icon: User, category: 'personal' },
+  { name: 'לוח בקרה', href: '/dashboard', Icon: HouseIcon, category: 'general' },
+  { name: 'התלמידים שלי', href: '/students', Icon: UsersIcon, category: 'personal', roles: ['teacher'] },
+  { name: 'לוח זמנים שלי', href: '/profile', Icon: CalendarIcon, category: 'personal', roles: ['teacher'] },
+  { name: 'נוכחות', href: '/profile?tab=attendance', Icon: UserCircleCheckIcon, category: 'operations', roles: ['teacher'] },
+  { name: 'ניהול בגרויות', href: '/bagruts', Icon: MedalIcon, category: 'operations', roles: ['teacher'] },
+  { name: 'פרופיל', href: '/profile', Icon: UserIcon, category: 'personal' },
 ]
 
 // Conductor navigation
 const conductorNavigation: NavigationItem[] = [
-  { name: 'לוח בקרה', href: '/dashboard', icon: Home, category: 'general' },
-  { name: 'התזמורות שלי', href: '/orchestras', icon: Music, category: 'personal', roles: ['conductor'] },
-  { name: 'חזרות', href: '/rehearsals', icon: Calendar, category: 'personal', roles: ['conductor'] },
-  { name: 'נוכחות', href: '/profile?tab=orchestras', icon: UserCheck, category: 'operations', roles: ['conductor'] },
-  { name: 'ניהול רישומים', href: '/conductor/enrollment', icon: UserPlus, category: 'operations', roles: ['conductor'] },
-  { name: 'פרופיל', href: '/profile', icon: User, category: 'personal' },
+  { name: 'לוח בקרה', href: '/dashboard', Icon: HouseIcon, category: 'general' },
+  { name: 'התזמורות שלי', href: '/orchestras', Icon: MusicNotesIcon, category: 'personal', roles: ['conductor'] },
+  { name: 'חזרות', href: '/rehearsals', Icon: CalendarIcon, category: 'personal', roles: ['conductor'] },
+  { name: 'נוכחות', href: '/profile?tab=orchestras', Icon: UserCircleCheckIcon, category: 'operations', roles: ['conductor'] },
+  { name: 'ניהול רישומים', href: '/conductor/enrollment', Icon: UserPlusIcon, category: 'operations', roles: ['conductor'] },
+  { name: 'פרופיל', href: '/profile', Icon: UserIcon, category: 'personal' },
 ]
 
 // Theory Teacher navigation
 const theoryTeacherNavigation: NavigationItem[] = [
-  { name: 'לוח בקרה', href: '/dashboard', icon: Home, category: 'general' },
-  { name: 'השיעורים שלי', href: '/theory-lessons', icon: BookOpen, category: 'personal', roles: ['theory-teacher'] },
-  { name: 'קבוצות תיאוריה', href: '/theory-lessons', icon: Users, category: 'personal', roles: ['theory-teacher'] },
-  { name: 'נוכחות', href: '/profile?tab=lessons', icon: UserCheck, category: 'operations', roles: ['theory-teacher'] },
-  { name: 'תכנית לימודים', href: '/theory-lessons', icon: FileText, category: 'personal', roles: ['theory-teacher'] },
-  { name: 'פרופיל', href: '/profile', icon: User, category: 'personal' },
+  { name: 'לוח בקרה', href: '/dashboard', Icon: HouseIcon, category: 'general' },
+  { name: 'השיעורים שלי', href: '/theory-lessons', Icon: BookOpenIcon, category: 'personal', roles: ['theory-teacher'] },
+  { name: 'קבוצות תיאוריה', href: '/theory-lessons', Icon: UsersIcon, category: 'personal', roles: ['theory-teacher'] },
+  { name: 'נוכחות', href: '/profile?tab=lessons', Icon: UserCircleCheckIcon, category: 'operations', roles: ['theory-teacher'] },
+  { name: 'תכנית לימודים', href: '/theory-lessons', Icon: FileTextIcon, category: 'personal', roles: ['theory-teacher'] },
+  { name: 'פרופיל', href: '/profile', Icon: UserIcon, category: 'personal' },
 ]
 
 // Super admin navigation (platform-level)
 const superAdminNavigation: NavigationItem[] = [
-  { name: 'לוח בקרה', href: '/dashboard', icon: Home, category: 'general' },
-  { name: 'ניהול מוסדות', href: '/dashboard', icon: Building2, category: 'management' },
-  { name: 'הגדרות', href: '/settings', icon: Settings, category: 'system' },
+  { name: 'לוח בקרה', href: '/dashboard', Icon: HouseIcon, category: 'general' },
+  { name: 'ניהול מוסדות', href: '/dashboard', Icon: BuildingsIcon, category: 'management' },
+  { name: 'הגדרות', href: '/settings', Icon: GearIcon, category: 'system' },
 ]
 
 // Quick actions by role
 const quickActionsByRole = {
   admin: [
-    { name: 'הוסף תלמיד חדש', href: '/students/new', icon: Users, role: 'admin' },
-    { name: 'הוסף מורה חדש', href: '/teachers/new', icon: GraduationCap, role: 'admin' },
-    { name: 'צור שיעור תיאוריה', href: '/theory-lessons/new', icon: BookOpen, role: 'admin' },
-    { name: 'תזמן חזרה', href: '/rehearsals/new', icon: Calendar, role: 'admin' },
+    { name: 'הוסף תלמיד חדש', href: '/students/new', Icon: UsersIcon, role: 'admin' },
+    { name: 'הוסף מורה חדש', href: '/teachers/new', Icon: GraduationCapIcon, role: 'admin' },
+    { name: 'צור שיעור תיאוריה', href: '/theory-lessons/new', Icon: BookOpenIcon, role: 'admin' },
+    { name: 'תזמן חזרה', href: '/rehearsals/new', Icon: CalendarIcon, role: 'admin' },
   ],
   teacher: [
-    { name: 'הוסף שיעור', href: '/profile?tab=students&action=addStudent', icon: Plus, role: 'teacher' },
-    { name: 'סמן נוכחות', href: '/profile?tab=attendance', icon: CheckSquare, role: 'teacher' },
-    { name: 'צפה בלוח זמנים', href: '/profile?tab=schedule', icon: Clock, role: 'teacher' },
+    { name: 'הוסף שיעור', href: '/profile?tab=students&action=addStudent', Icon: PlusIcon, role: 'teacher' },
+    { name: 'סמן נוכחות', href: '/profile?tab=attendance', Icon: CheckSquareIcon, role: 'teacher' },
+    { name: 'צפה בלוח זמנים', href: '/profile?tab=schedule', Icon: ClockIcon, role: 'teacher' },
   ],
   conductor: [
-    { name: 'תזמן חזרה', href: '/rehearsals/new', icon: CalendarPlus, role: 'conductor' },
-    { name: 'נהל תזמורת', href: '/orchestras', icon: Music, role: 'conductor' },
-    { name: 'סמן נוכחות', href: '/profile?tab=orchestras', icon: CheckSquare, role: 'conductor' },
+    { name: 'תזמן חזרה', href: '/rehearsals/new', Icon: CalendarPlusIcon, role: 'conductor' },
+    { name: 'נהל תזמורת', href: '/orchestras', Icon: MusicNotesIcon, role: 'conductor' },
+    { name: 'סמן נוכחות', href: '/profile?tab=orchestras', Icon: CheckSquareIcon, role: 'conductor' },
   ],
   'theory-teacher': [
-    { name: 'תזמן שיעור תיאוריה', href: '/theory-lessons/new', icon: CalendarPlus, role: 'theory-teacher' },
-    { name: 'נהל קבוצות', href: '/theory-lessons', icon: UserPlus, role: 'theory-teacher' },
-    { name: 'דרג תלמידים', href: '/theory-lessons', icon: Award, role: 'theory-teacher' },
+    { name: 'תזמן שיעור תיאוריה', href: '/theory-lessons/new', Icon: CalendarPlusIcon, role: 'theory-teacher' },
+    { name: 'נהל קבוצות', href: '/theory-lessons', Icon: UserPlusIcon, role: 'theory-teacher' },
+    { name: 'דרג תלמידים', href: '/theory-lessons', Icon: MedalIcon, role: 'theory-teacher' },
   ]
 }
 
@@ -364,11 +362,11 @@ export default function Sidebar() {
 
   const getRoleBadgeColor = (role: string): string => {
     switch (role) {
-      case 'admin': return 'bg-red-100 text-red-700'
-      case 'teacher': return 'bg-blue-100 text-blue-700'
-      case 'conductor': return 'bg-green-100 text-green-700'
-      case 'theory-teacher': return 'bg-yellow-100 text-yellow-700'
-      default: return 'bg-gray-100 text-gray-600'
+      case 'admin': return 'bg-red-900/40 text-red-300'
+      case 'teacher': return 'bg-blue-900/40 text-blue-300'
+      case 'conductor': return 'bg-green-900/40 text-green-300'
+      case 'theory-teacher': return 'bg-yellow-900/40 text-yellow-300'
+      default: return 'bg-sidebar-active-bg text-sidebar-foreground/70'
     }
   }
 
@@ -438,13 +436,13 @@ export default function Sidebar() {
         <button
           id="hamburger-button"
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-[20px] right-4 z-[60] p-2 bg-white rounded-lg shadow-lg border border-border hover:bg-muted transition-colors duration-200"
+          className="fixed top-[20px] right-4 z-[60] p-2 bg-sidebar rounded-lg shadow-lg border border-sidebar-border hover:bg-sidebar-active-bg transition-colors duration-200"
           aria-label="Toggle menu"
         >
           {isOpen ? (
-            <X className="w-6 h-6 text-foreground" />
+            <XIcon size={24} weight="bold" className="text-sidebar-foreground" />
           ) : (
-            <Menu className="w-6 h-6 text-foreground" />
+            <ListIcon size={24} weight="bold" className="text-sidebar-foreground" />
           )}
         </button>
       )}
@@ -453,10 +451,10 @@ export default function Sidebar() {
       {!isMobile && !isDesktopOpen && (
         <button
           onClick={() => setIsDesktopOpen(true)}
-          className="fixed top-[20px] right-4 z-[60] p-2 bg-card rounded-lg shadow-lg border border-border hover:bg-primary/10 hover:border-primary/30 transition-all duration-200"
+          className="fixed top-[20px] right-4 z-[60] p-2 bg-sidebar rounded-lg shadow-lg border border-sidebar-border hover:bg-sidebar-active-bg transition-all duration-200"
           aria-label="Open sidebar"
         >
-          <Menu className="w-5 h-5 text-primary" />
+          <ListIcon size={20} weight="bold" className="text-sidebar-foreground" />
         </button>
       )}
 
@@ -481,13 +479,13 @@ export default function Sidebar() {
         {!isMobile && (
           <button
             onClick={() => setIsDesktopOpen(!isDesktopOpen)}
-            className="absolute top-4 left-4 p-2 bg-gray-100 rounded-lg border border-gray-200 hover:bg-gray-200 hover:border-gray-300 transition-all duration-200 z-10"
+            className="absolute top-4 left-4 p-2 bg-sidebar-active-bg rounded border border-sidebar-border hover:bg-sidebar-active-bg/80 transition-all duration-200 z-10"
             aria-label="Toggle sidebar"
           >
             {isDesktopOpen ? (
-              <X className="w-5 h-5 text-gray-500" />
+              <XIcon size={20} weight="bold" className="text-sidebar-foreground/70" />
             ) : (
-              <Menu className="w-5 h-5 text-gray-500" />
+              <ListIcon size={20} weight="bold" className="text-sidebar-foreground/70" />
             )}
           </button>
         )}
@@ -502,13 +500,17 @@ export default function Sidebar() {
         {/* Search */}
         <div className="p-4 border-b border-sidebar-border flex-shrink-0">
           <div className="relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <MagnifyingGlassIcon
+              size={16}
+              weight="regular"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sidebar-foreground/40"
+            />
             <input
               type="text"
               placeholder="חיפוש..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 pl-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-reisinger-yonatan text-sidebar-foreground placeholder:text-gray-400 text-right rtl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40"
+              className="w-full pr-10 pl-3 py-2 bg-sidebar-active-bg/30 border border-sidebar-border rounded text-sm font-reisinger-yonatan text-sidebar-foreground placeholder:text-sidebar-foreground/40 text-right rtl focus:outline-none focus:ring-2 focus:ring-sidebar-foreground/20 focus:border-sidebar-foreground/30"
             />
           </div>
         </div>
@@ -520,9 +522,9 @@ export default function Sidebar() {
               {userRoles.map(role => (
                 <span
                   key={role}
-                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(role)}`}
+                  className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${getRoleBadgeColor(role)}`}
                 >
-                  <Shield className="w-3 h-3" />
+                  <ShieldIcon size={12} weight="fill" />
                   {getRoleLabel(role)}
                 </span>
               ))}
@@ -535,10 +537,10 @@ export default function Sidebar() {
           {isLoading ? (
             <div className="space-y-2 px-4 py-8">
               <div className="animate-pulse space-y-3">
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-sidebar-active-bg rounded w-1/2"></div>
+                <div className="h-8 bg-sidebar-active-bg rounded"></div>
+                <div className="h-8 bg-sidebar-active-bg rounded"></div>
+                <div className="h-8 bg-sidebar-active-bg rounded"></div>
               </div>
             </div>
           ) : (
@@ -549,11 +551,13 @@ export default function Sidebar() {
                   <div className="px-4 mb-2">
                     <button
                       onClick={() => toggleCategory(category.key)}
-                      className="flex items-center justify-between w-full text-xs font-semibold text-sidebar-label uppercase tracking-wider hover:text-gray-700 transition-colors"
+                      className="flex items-center justify-between w-full text-xs font-semibold text-sidebar-label uppercase tracking-wider hover:text-sidebar-foreground/70 transition-colors"
                     >
                       <span>{category.label}</span>
-                      <ChevronDown
-                        className={`w-3 h-3 transition-transform ${
+                      <CaretDownIcon
+                        size={12}
+                        weight="bold"
+                        className={`transition-transform ${
                           collapsedCategories.has(category.key) ? 'rotate-180' : ''
                         }`}
                       />
@@ -563,8 +567,6 @@ export default function Sidebar() {
                   {!collapsedCategories.has(category.key) && (
                     <div className="space-y-1">
                       {category.items.map((item) => {
-                        const Icon = item.icon
-
                         return (
                           <NavLink
                             key={`${category.key}-${item.href}-${item.name}`}
@@ -572,23 +574,31 @@ export default function Sidebar() {
                             end={item.href === '/dashboard'}
                             onClick={closeMobileMenu}
                             className={({ isActive: active }) =>
-                              `flex items-center justify-between px-4 py-3 mx-3 rounded-xl text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan ${
+                              `flex items-center justify-between px-4 py-2.5 mx-1 rounded text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan ${
                                 active
                                   ? 'bg-sidebar-active-bg text-sidebar-active-fg font-semibold'
-                                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                                  : 'text-sidebar-foreground/70 hover:bg-sidebar-active-bg/50 hover:text-sidebar-foreground'
                               }`
                             }
                           >
-                            <div className="flex items-center gap-2">
-                              <span className="text-right">{item.name}</span>
-                              {/* Show role badge for multi-role users */}
-                              {hasMultipleRoles && item.roles && item.roles.length === 1 && (
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(item.roles[0])}`}>
-                                  {getRoleLabel(item.roles[0])}
-                                </span>
-                              )}
-                            </div>
-                            <Icon className="w-4 h-4 flex-shrink-0" />
+                            {({ isActive: active }) => (
+                              <>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-right">{item.name}</span>
+                                  {/* Show role badge for multi-role users */}
+                                  {hasMultipleRoles && item.roles && item.roles.length === 1 && (
+                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${getRoleBadgeColor(item.roles[0])}`}>
+                                      {getRoleLabel(item.roles[0])}
+                                    </span>
+                                  )}
+                                </div>
+                                <item.Icon
+                                  size={18}
+                                  weight={active ? 'fill' : 'regular'}
+                                  className="flex-shrink-0"
+                                />
+                              </>
+                            )}
                           </NavLink>
                         )
                       })}
@@ -604,26 +614,24 @@ export default function Sidebar() {
                     פעולות מהירות
                   </h3>
                   {quickActions.map((action) => {
-                    const Icon = action.icon
-
                     return (
                       <button
                         key={`${action.href}-${action.name}-${action.role}`}
                         onClick={() => handleQuickActionClick(action.name, action.href)}
-                        className="w-full flex items-center justify-between px-4 py-2 mx-3 rounded-xl text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan text-gray-600 hover:bg-gray-100 hover:text-gray-900 group"
+                        className="w-full flex items-center justify-between px-4 py-2 mx-1 rounded text-sm font-medium transition-all duration-150 rtl font-reisinger-yonatan text-sidebar-foreground/70 hover:bg-sidebar-active-bg/50 hover:text-sidebar-foreground group"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-right">{action.name}</span>
                           {/* Show role badge for multi-role quick actions */}
                           {hasMultipleRoles && action.role && (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(action.role)}`}>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded ${getRoleBadgeColor(action.role)}`}>
                               {getRoleLabel(action.role)}
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center space-x-1 space-x-reverse">
-                          <Plus className="w-3 h-3 group-hover:text-gray-900" />
-                          <Icon className="w-3.5 h-3.5" />
+                        <div className="flex items-center gap-1">
+                          <PlusIcon size={12} weight="bold" className="text-sidebar-foreground/50 group-hover:text-sidebar-foreground" />
+                          <action.Icon size={14} weight="regular" className="flex-shrink-0" />
                         </div>
                       </button>
                     )
@@ -676,8 +684,8 @@ export default function Sidebar() {
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {loadingOrchestras ? (
               <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">טוען תזמורות...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-900 mx-auto mb-4"></div>
+                <p className="text-neutral-600">טוען תזמורות...</p>
               </div>
             ) : (
               <RehearsalForm

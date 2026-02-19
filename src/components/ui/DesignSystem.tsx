@@ -21,7 +21,8 @@ export const StatusBadge: React.FC<{
   const statusClasses = {
     active: 'bg-success-100 text-success-800 border-success-200',
     inactive: 'bg-gray-100 text-gray-800 border-gray-200',
-    graduated: 'bg-primary-100 text-primary-800 border-primary-200',
+    // 'graduated' was using primary-NNN — now uses neutral muted tokens
+    graduated: 'bg-muted text-foreground border-border',
     suspended: 'bg-red-100 text-red-800 border-red-200',
     present: 'bg-success-100 text-success-800 border-success-200',
     absent: 'bg-red-100 text-red-800 border-red-200',
@@ -47,14 +48,14 @@ export const ConservatoryCard: React.FC<{
   rtl?: boolean
 }> = ({ children, className = '', variant = 'default', rtl = true }) => {
   const variants = {
-    default: 'bg-white border border-gray-200 shadow-sm',
-    elevated: 'bg-white border border-gray-200 shadow-md',
-    outlined: 'bg-white border-2 border-gray-300'
+    default: 'bg-background border border-border',
+    elevated: 'bg-background border border-border shadow-md',
+    outlined: 'bg-background border-2 border-border'
   }
 
   return (
     <div
-      className={`rounded-xl p-6 transition-all duration-200 ${variants[variant]} ${className}`}
+      className={`rounded p-6 transition-all duration-200 ${variants[variant]} ${className}`}
       dir={rtl ? 'rtl' : 'ltr'}
     >
       {children}
@@ -94,22 +95,22 @@ export const ProgressIndicator: React.FC<{
   showPercentage?: boolean
 }> = ({ current, total, label, showPercentage = true }) => {
   const percentage = Math.round((current / total) * 100)
-  
+
   return (
     <div className="space-y-2" role="progressbar" aria-valuenow={current} aria-valuemin={0} aria-valuemax={total}>
       <div className="flex justify-between text-sm">
-        <span className="font-medium text-gray-900">{label}</span>
+        <span className="font-medium text-foreground">{label}</span>
         {showPercentage && (
-          <span className="text-gray-600">{percentage}%</span>
+          <span className="text-muted-foreground">{percentage}%</span>
         )}
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-muted rounded-full h-2">
         <div
-          className="bg-primary-600 h-2 rounded-full transition-all duration-500"
+          className="bg-primary h-2 rounded-full transition-all duration-500"
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs text-muted-foreground">
         <span>{current} הושלם</span>
         <span>מתוך {total}</span>
       </div>
@@ -127,19 +128,20 @@ export const ActionButton: React.FC<{
   loading?: boolean
   onClick?: () => void
   className?: string
-}> = ({ 
-  variant, 
-  size = 'md', 
-  icon: Icon, 
-  children, 
-  disabled = false, 
+}> = ({
+  variant,
+  size = 'md',
+  icon: Icon,
+  children,
+  disabled = false,
   loading = false,
   onClick,
-  className = '' 
+  className = ''
 }) => {
   const variants = {
-    primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500',
-    secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500',
+    // 'primary' was bg-primary-500 — now uses semantic token
+    primary: 'bg-primary text-primary-foreground hover:bg-neutral-800 focus:ring-ring',
+    secondary: 'bg-muted text-foreground hover:bg-muted/80 focus:ring-ring',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
     success: 'bg-success-500 text-white hover:bg-success-600 focus:ring-success-500'
   }
@@ -155,7 +157,7 @@ export const ActionButton: React.FC<{
       onClick={onClick}
       disabled={disabled || loading}
       className={`
-        inline-flex items-center justify-center gap-2 font-medium rounded-lg 
+        inline-flex items-center justify-center gap-2 font-medium rounded
         transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
         disabled:opacity-50 disabled:cursor-not-allowed
         ${variants[variant]} ${sizes[size]} ${className}
@@ -182,11 +184,11 @@ export const EmptyState: React.FC<{
 }> = ({ icon: Icon, title, description, action }) => {
   return (
     <div className="text-center py-12">
-      <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-        <Icon className="w-12 h-12 text-gray-400" />
+      <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
+        <Icon className="w-12 h-12 text-muted-foreground" />
       </div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-600 mb-6 max-w-md mx-auto">{description}</p>
+      <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
+      <p className="text-muted-foreground mb-6 max-w-md mx-auto">{description}</p>
       {action && (
         <ActionButton variant="primary" onClick={action.onClick}>
           {action.label}
@@ -202,38 +204,38 @@ export const LoadingSkeleton: React.FC<{
   count?: number
 }> = ({ type, count = 1 }) => {
   const CardSkeleton = () => (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
-      <div className="h-6 bg-gray-200 rounded mb-4 w-3/4"></div>
+    <div className="bg-background rounded border border-border p-6 animate-pulse">
+      <div className="h-6 bg-muted rounded mb-4 w-3/4"></div>
       <div className="space-y-2">
-        <div className="h-4 bg-gray-200 rounded w-full"></div>
-        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-4 bg-muted rounded w-full"></div>
+        <div className="h-4 bg-muted rounded w-2/3"></div>
+        <div className="h-4 bg-muted rounded w-1/2"></div>
       </div>
     </div>
   )
 
   const TableSkeleton = () => (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden animate-pulse">
-      <div className="h-12 bg-gray-100 border-b border-gray-200"></div>
+    <div className="bg-background border border-border overflow-hidden animate-pulse">
+      <div className="h-12 bg-muted border-b border-border"></div>
       {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="h-16 border-b border-gray-200 p-4">
-          <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+        <div key={i} className="h-16 border-b border-border p-4">
+          <div className="h-4 bg-muted rounded w-full mb-2"></div>
+          <div className="h-3 bg-muted rounded w-2/3"></div>
         </div>
       ))}
     </div>
   )
 
   const CalendarSkeleton = () => (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
+    <div className="bg-background border border-border p-6 animate-pulse">
       <div className="grid grid-cols-7 gap-4 mb-6">
         {Array.from({ length: 7 }).map((_, i) => (
-          <div key={i} className="h-8 bg-gray-200 rounded"></div>
+          <div key={i} className="h-8 bg-muted rounded"></div>
         ))}
       </div>
       <div className="grid grid-cols-7 gap-4">
         {Array.from({ length: 35 }).map((_, i) => (
-          <div key={i} className="h-24 bg-gray-100 rounded border"></div>
+          <div key={i} className="h-24 bg-muted rounded border border-border"></div>
         ))}
       </div>
     </div>
@@ -242,12 +244,12 @@ export const LoadingSkeleton: React.FC<{
   const ListSkeleton = () => (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="bg-white rounded-lg border border-gray-200 p-4 animate-pulse">
+        <div key={i} className="bg-background rounded border border-border p-4 animate-pulse">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div className="w-12 h-12 bg-muted rounded-full"></div>
             <div className="flex-1 space-y-2">
-              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-4 bg-muted rounded w-1/3"></div>
+              <div className="h-3 bg-muted rounded w-2/3"></div>
             </div>
           </div>
         </div>
@@ -263,7 +265,7 @@ export const LoadingSkeleton: React.FC<{
   }
 
   const SkeletonComponent = skeletonComponents[type]
-  
+
   return count === 1 ? <SkeletonComponent /> : (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, i) => (

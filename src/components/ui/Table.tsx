@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { clsx } from 'clsx'
-import { Eye, Trash2 } from 'lucide-react'
+import { EyeIcon, TrashIcon } from '@phosphor-icons/react'
 
 interface Column {
   key: string
@@ -37,7 +37,7 @@ export function StatusBadge({ status, children }: StatusBadgeProps) {
     inactive: 'bg-gray-100 text-gray-800',
     pending: 'bg-orange-100 text-orange-800',
     completed: 'bg-success-100 text-success-800',
-    'in-progress': 'bg-primary-100 text-primary-800'
+    'in-progress': 'bg-muted text-foreground'
   }
 
   return (
@@ -62,17 +62,17 @@ export default function Table({
   actionLabels = { view: 'צפה', delete: 'מחק' }
 }: TableProps) {
   return (
-    <div className={clsx('overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200', className)}>
+    <div className={clsx('overflow-hidden bg-background border border-border', className)}>
       <div className="overflow-x-auto">
         <div className="max-h-[calc(100vh-380px)] overflow-y-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50 sticky top-0 z-10 shadow-[0_1px_0_0_theme(colors.gray.200)]">
+          <table className="min-w-full divide-y divide-border">
+            <thead className="bg-muted sticky top-0 z-10 shadow-[0_1px_0_0_theme(colors.border)]">
               <tr>
                 {columns.map((column) => (
                   <th
                     key={column.key}
                     className={clsx(
-                      'px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider',
+                      'px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider',
                       {
                         'text-start': column.align === 'left',
                         'text-center': column.align === 'center',
@@ -85,13 +85,13 @@ export default function Table({
                   </th>
                 ))}
                 {actions && (
-                  <th className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-end">
+                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider text-end">
                     פעולות
                   </th>
                 )}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-background divide-y divide-border">
               {data.map((row, index) => {
                 const computedRowClassName = typeof rowClassName === 'function'
                   ? rowClassName(row, index)
@@ -104,8 +104,8 @@ export default function Table({
                     key={index}
                     className={clsx(
                       'transition-colors duration-150',
-                      isClickable && 'cursor-pointer hover:bg-gray-50',
-                      !isClickable && 'hover:bg-gray-50',
+                      isClickable && 'cursor-pointer hover:bg-muted',
+                      !isClickable && 'hover:bg-muted',
                       computedRowClassName
                     )}
                     onClick={isClickable ? () => onRowClick(row, index) : undefined}
@@ -123,7 +123,7 @@ export default function Table({
                       <td
                         key={column.key}
                         className={clsx(
-                          'px-4 py-3 whitespace-nowrap text-sm text-gray-900',
+                          'px-4 py-3 whitespace-nowrap text-sm text-foreground',
                           {
                             'text-start': column.align === 'left',
                             'text-center': column.align === 'center',
@@ -143,10 +143,10 @@ export default function Table({
                                 e.stopPropagation()
                                 onView(row)
                               }}
-                              className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
                               title={actionLabels.view}
                             >
-                              <Eye className="w-4 h-4" />
+                              <EyeIcon className="w-4 h-4" weight="regular" />
                             </button>
                           )}
                           {onDelete && (
@@ -155,10 +155,10 @@ export default function Table({
                                 e.stopPropagation()
                                 onDelete(row)
                               }}
-                              className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
                               title={actionLabels.delete}
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" weight="regular" />
                             </button>
                           )}
                         </div>

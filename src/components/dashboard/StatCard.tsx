@@ -85,7 +85,7 @@ const StatCard: React.FC<StatCardProps> = ({
 
   if (error) {
     return (
-      <div className={`bg-white rounded-lg border border-red-200 p-6 ${className}`} dir="rtl">
+      <div className={`bg-background rounded border border-red-200 p-6 ${className}`} dir="rtl">
         <div className="text-center">
           <div className="text-red-500 text-sm font-reisinger-yonatan mb-2">שגיאה בטעינת נתונים</div>
           <div className="text-xs text-gray-500 font-reisinger-yonatan">{error}</div>
@@ -112,12 +112,12 @@ const StatCard: React.FC<StatCardProps> = ({
               <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors">
                 <MoreHorizontal className="w-4 h-4" />
               </button>
-              <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-border rounded shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 {actions.map((action, index) => (
                   <button
                     key={index}
                     onClick={action.onClick}
-                    className="block w-full px-4 py-2 text-right text-sm text-gray-700 hover:bg-gray-50 font-reisinger-yonatan first:rounded-t-lg last:rounded-b-lg"
+                    className="block w-full px-4 py-2 text-right text-sm text-foreground hover:bg-muted font-reisinger-yonatan"
                   >
                     {action.label}
                   </button>

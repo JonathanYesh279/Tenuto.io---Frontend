@@ -10,7 +10,7 @@
  */
 
 import React from 'react'
-import { AlertTriangle } from 'lucide-react'
+import { WarningCircleIcon } from '@phosphor-icons/react'
 import {
   Dialog,
   DialogContent,
@@ -79,7 +79,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${styles.iconBg}`}>
-              <AlertTriangle className={`w-5 h-5 ${styles.icon}`} />
+              <WarningCircleIcon className={`w-5 h-5 ${styles.icon}`} weight="fill" />
             </div>
             {title}
           </DialogTitle>

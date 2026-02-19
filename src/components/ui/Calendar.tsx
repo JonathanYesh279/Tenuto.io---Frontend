@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { CaretLeftIcon, CaretRightIcon, PlusIcon } from '@phosphor-icons/react'
 import { Card } from './Card'
 
 interface Event {
@@ -71,7 +71,7 @@ export default function Calendar({ events = {} }: CalendarProps) {
 
   const getColorClasses = (color: string) => {
     const colorMap = {
-      blue: 'bg-primary-100 text-primary-800 border-primary-200',
+      blue: 'bg-muted text-foreground border-border',
       green: 'bg-success-100 text-success-800 border-success-200',
       orange: 'bg-orange-100 text-orange-800 border-orange-200',
       purple: 'bg-purple-100 text-purple-800 border-purple-200'
@@ -83,35 +83,35 @@ export default function Calendar({ events = {} }: CalendarProps) {
     <Card>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-foreground">
             {MONTHS[currentMonth]} {currentYear}
           </h3>
           <div className="flex items-center mr-4">
             <button
               onClick={() => navigateMonth('prev')}
-              className="p-1 rounded hover:bg-gray-100"
+              className="p-1 rounded hover:bg-muted transition-colors"
             >
-              <ChevronRight className="w-4 h-4 text-gray-600" />
+              <CaretRightIcon className="w-4 h-4 text-muted-foreground" weight="regular" />
             </button>
             <button
               onClick={() => navigateMonth('next')}
-              className="p-1 rounded hover:bg-gray-100"
+              className="p-1 rounded hover:bg-muted transition-colors"
             >
-              <ChevronLeft className="w-4 h-4 text-gray-600" />
+              <CaretLeftIcon className="w-4 h-4 text-muted-foreground" weight="regular" />
             </button>
           </div>
         </div>
-        <button className="flex items-center px-3 py-1.5 bg-primary-500 text-white rounded-lg hover:bg-primary-600 text-sm">
-          <Plus className="w-4 h-4 ml-1" />
+        <button className="flex items-center px-3 py-1.5 bg-primary text-primary-foreground rounded hover:bg-neutral-800 text-sm transition-colors">
+          <PlusIcon className="w-4 h-4 ml-1" weight="fill" />
           הוסף אירוע
         </button>
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-lg overflow-hidden">
+      <div className="grid grid-cols-7 gap-px bg-border rounded overflow-hidden">
         {/* Header */}
         {DAYS.map(day => (
-          <div key={day} className="bg-gray-50 p-3 text-center text-sm font-medium text-gray-700">
+          <div key={day} className="bg-muted p-3 text-center text-sm font-medium text-muted-foreground">
             {day}
           </div>
         ))}
@@ -120,23 +120,23 @@ export default function Calendar({ events = {} }: CalendarProps) {
         {calendarDays.map((date, index) => {
           const dateKey = getDateKey(date)
           const dayEvents = events[dateKey] || []
-          
+
           return (
             <div
               key={index}
-              className={`bg-white p-2 min-h-[100px] cursor-pointer hover:bg-gray-50 ${
-                !isCurrentMonth(date) ? 'text-gray-400' : ''
-              } ${isSelected(date) ? 'ring-2 ring-primary-500' : ''}`}
+              className={`bg-background p-2 min-h-[100px] cursor-pointer hover:bg-muted transition-colors ${
+                !isCurrentMonth(date) ? 'text-muted-foreground' : ''
+              } ${isSelected(date) ? 'ring-2 ring-primary ring-inset' : ''}`}
               onClick={() => setSelectedDate(date)}
             >
               <div className={`text-sm font-medium mb-1 ${
-                isToday(date) 
-                  ? 'w-6 h-6 bg-primary-500 text-white rounded-full flex items-center justify-center' 
+                isToday(date)
+                  ? 'w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center'
                   : ''
               }`}>
                 {date.getDate()}
               </div>
-              
+
               {/* Events */}
               <div className="space-y-1">
                 {dayEvents.slice(0, 2).map(event => (
@@ -149,7 +149,7 @@ export default function Calendar({ events = {} }: CalendarProps) {
                   </div>
                 ))}
                 {dayEvents.length > 2 && (
-                  <div className="text-xs text-gray-500 text-center">
+                  <div className="text-xs text-muted-foreground text-center">
                     +{dayEvents.length - 2} נוספים
                   </div>
                 )}
@@ -161,15 +161,15 @@ export default function Calendar({ events = {} }: CalendarProps) {
 
       {/* Selected Date Events */}
       {selectedDate && events[getDateKey(selectedDate)]?.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <h4 className="font-medium text-gray-900 mb-3">
+        <div className="mt-6 pt-6 border-t border-border">
+          <h4 className="font-medium text-foreground mb-3">
             אירועים ב-{selectedDate.getDate()} {MONTHS[selectedDate.getMonth()]}
           </h4>
           <div className="space-y-2">
             {events[getDateKey(selectedDate)].map(event => (
               <div
                 key={event.id}
-                className={`p-3 rounded-lg border ${getColorClasses(event.color)}`}
+                className={`p-3 rounded border ${getColorClasses(event.color)}`}
               >
                 <div className="flex justify-between items-start">
                   <div>

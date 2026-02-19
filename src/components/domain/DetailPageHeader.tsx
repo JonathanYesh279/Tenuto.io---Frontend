@@ -1,16 +1,15 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft } from 'lucide-react'
+import { CaretLeftIcon } from '@phosphor-icons/react'
 import { getDisplayName } from '@/utils/nameUtils'
 import { getAvatarColorClasses } from '@/utils/avatarColorHash'
 import { AvatarInitials } from '@/components/domain/AvatarInitials'
-import { cn } from '@/lib/utils'
-
 // Static lookup avoids dynamic Tailwind class generation (tree-shake safety)
+// Phase 22: Subdued entity colors — bg-muted/40 base + thin left accent line in entity color
 const ENTITY_DETAIL_STYLES = {
-  teachers:   { headerBg: 'bg-teachers-bg',   nameFg: 'text-teachers-fg',   badgeBg: 'bg-teachers-fg/10', badgeText: 'text-teachers-fg', avatarBg: 'bg-teachers-fg/15 text-teachers-fg', border: 'border-teachers-fg/15' },
-  students:   { headerBg: 'bg-students-bg',   nameFg: 'text-students-fg',   badgeBg: 'bg-students-fg/10', badgeText: 'text-students-fg', avatarBg: 'bg-students-fg/15 text-students-fg', border: 'border-students-fg/15' },
-  orchestras: { headerBg: 'bg-orchestras-bg', nameFg: 'text-orchestras-fg', badgeBg: 'bg-orchestras-fg/10', badgeText: 'text-orchestras-fg', avatarBg: 'bg-orchestras-fg/15 text-orchestras-fg', border: 'border-orchestras-fg/15' },
+  teachers:   { accentColor: 'hsl(var(--color-teachers-fg))',   badgeBg: 'bg-teachers-fg/10', badgeText: 'text-teachers-fg', avatarBg: 'bg-teachers-fg/15 text-teachers-fg' },
+  students:   { accentColor: 'hsl(var(--color-students-fg))',   badgeBg: 'bg-students-fg/10', badgeText: 'text-students-fg', avatarBg: 'bg-students-fg/15 text-students-fg' },
+  orchestras: { accentColor: 'hsl(var(--color-orchestras-fg))', badgeBg: 'bg-orchestras-fg/10', badgeText: 'text-orchestras-fg', avatarBg: 'bg-orchestras-fg/15 text-orchestras-fg' },
 } as const
 
 interface DetailPageHeaderProps {
@@ -61,13 +60,16 @@ export function DetailPageHeader({
         >
           {breadcrumbLabel}
         </button>
-        <ChevronLeft className="w-4 h-4" />
+        <CaretLeftIcon className="w-4 h-4" weight="regular" />
         <span className="text-foreground font-medium">{displayName}</span>
       </nav>
 
       {entityStyles ? (
-        /* Entity-colored pastel header zone */
-        <div className={cn('rounded-xl p-6 border', entityStyles.headerBg, entityStyles.border)}>
+        /* Subdued entity header — flat tonal surface + thin left accent line (no vivid pastel background) */
+        <div
+          className="bg-muted/40 border border-border rounded p-6"
+          style={{ borderRight: `3px solid ${entityStyles.accentColor}` }}
+        >
           <div className="flex items-center gap-4">
             <AvatarInitials
               firstName={firstName}
@@ -78,7 +80,7 @@ export function DetailPageHeader({
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className={cn('text-2xl font-bold truncate', entityStyles.nameFg)}>{displayName}</h1>
+                <h1 className="text-2xl font-bold text-foreground truncate">{displayName}</h1>
                 {badges}
               </div>
               {updatedAt && (
@@ -90,8 +92,8 @@ export function DetailPageHeader({
           </div>
         </div>
       ) : (
-        /* Fallback: gradient strip (backward compatible) */
-        <div className="bg-gradient-to-l from-primary to-accent rounded-xl p-6 text-white">
+        /* Fallback: flat tonal strip (backward compatible — removed gradient) */
+        <div className="bg-muted border border-border rounded p-6">
           <div className="flex items-center gap-4">
             <AvatarInitials
               firstName={firstName}
@@ -102,11 +104,11 @@ export function DetailPageHeader({
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl font-bold truncate">{displayName}</h1>
+                <h1 className="text-2xl font-bold text-foreground truncate">{displayName}</h1>
                 {badges}
               </div>
               {updatedAt && (
-                <p className="text-white/80 text-sm mt-1">
+                <p className="text-muted-foreground text-sm mt-1">
                   עודכן לאחרונה: {formatLastUpdated(updatedAt)}
                 </p>
               )}

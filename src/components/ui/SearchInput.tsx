@@ -1,4 +1,5 @@
-import { Search, X, Loader } from 'lucide-react'
+import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react'
+import { Loader } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface SearchInputProps {
@@ -16,7 +17,7 @@ export function SearchInput({ value, onChange, onClear, placeholder, className, 
       <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
         {isLoading
           ? <Loader className="w-4 h-4 text-muted-foreground animate-spin" />
-          : <Search className="w-4 h-4 text-muted-foreground" />
+          : <MagnifyingGlassIcon className="w-4 h-4 text-muted-foreground" weight="regular" />
         }
       </span>
       <input
@@ -24,7 +25,7 @@ export function SearchInput({ value, onChange, onClear, placeholder, className, 
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full pr-10 pl-8 py-2 border border-input rounded-lg
+        className="w-full pr-10 pl-8 py-2 border border-input rounded
                    bg-background text-sm text-foreground placeholder:text-muted-foreground
                    focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent
                    transition-colors"
@@ -37,7 +38,7 @@ export function SearchInput({ value, onChange, onClear, placeholder, className, 
                      text-muted-foreground hover:text-foreground transition-colors"
           aria-label="נקה חיפוש"
         >
-          <X className="w-4 h-4" />
+          <XIcon className="w-4 h-4" weight="regular" />
         </button>
       )}
     </div>

@@ -26,7 +26,7 @@ export default function StatsCard({
   trend
 }: StatsCardProps) {
   const colorClasses = {
-    // Entity color system (Phase 18)
+    // Entity color system (Phase 18 — subdued per Phase 22)
     students: {
       iconBg: 'bg-students-bg',
       iconColor: 'text-students-fg',
@@ -57,11 +57,11 @@ export default function StatsCard({
       iconColor: 'text-theory-fg',
       valueColor: 'text-theory-fg',
     },
-    // Legacy color system (backward compatible)
+    // Legacy color system (backward compatible — using semantic tokens where possible)
     blue: {
-      iconBg: 'bg-primary-100',
-      iconColor: 'text-primary-600',
-      valueColor: 'text-primary-600'
+      iconBg: 'bg-muted',
+      iconColor: 'text-foreground',
+      valueColor: 'text-foreground'
     },
     green: {
       iconBg: 'bg-success-100',
@@ -84,9 +84,9 @@ export default function StatsCard({
       valueColor: 'text-red-600'
     },
     gray: {
-      iconBg: 'bg-gray-100',
-      iconColor: 'text-gray-600',
-      valueColor: 'text-gray-600'
+      iconBg: 'bg-muted',
+      iconColor: 'text-muted-foreground',
+      valueColor: 'text-muted-foreground'
     },
     teal: {
       iconBg: 'bg-teal-100',
@@ -105,7 +105,7 @@ export default function StatsCard({
   return (
     <Card hover className={coloredBg && color && colorClasses[color] ? colorClasses[color].iconBg : undefined}>
       <div className="flex items-center">
-        <div className={clsx('w-12 h-12 rounded-lg flex items-center justify-center', coloredBg ? 'bg-white/50' : colors.iconBg)}>
+        <div className={clsx('w-12 h-12 rounded flex items-center justify-center', coloredBg ? 'bg-white/50' : colors.iconBg)}>
           <div className={clsx('w-6 h-6', colors.iconColor)}>
             {icon}
           </div>

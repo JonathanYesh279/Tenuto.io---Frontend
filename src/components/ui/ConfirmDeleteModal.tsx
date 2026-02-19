@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { X, AlertTriangle, Trash2 } from 'lucide-react'
+import { XIcon, WarningCircleIcon, TrashIcon } from '@phosphor-icons/react'
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean
@@ -36,36 +36,36 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in duration-200"
+        className="bg-background border border-border rounded w-full max-w-md animate-in fade-in zoom-in duration-200"
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-delete-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <AlertTriangle className="w-6 h-6 text-red-600" />
+            <div className="p-2 bg-red-100 rounded">
+              <WarningCircleIcon className="w-6 h-6 text-red-600" weight="fill" />
             </div>
-            <h2 id="confirm-delete-title" className="text-xl font-bold text-gray-900">
+            <h2 id="confirm-delete-title" className="text-xl font-bold text-foreground">
               {title}
             </h2>
           </div>
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors disabled:opacity-50"
             aria-label="סגור"
           >
-            <X className="w-5 h-5" />
+            <XIcon className="w-5 h-5" weight="regular" />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6 space-y-4">
           {/* Warning Box */}
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-gray-800 text-center leading-relaxed">
+          <div className="bg-red-50 border border-red-200 rounded p-4">
+            <p className="text-foreground text-center leading-relaxed">
               {message}
             </p>
             {itemName && (
@@ -76,30 +76,30 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
           </div>
 
           {/* Confirmation Question */}
-          <p className="text-center text-gray-600 text-sm">
+          <p className="text-center text-muted-foreground text-sm">
             פעולה זו אינה ניתנת לביטול.
           </p>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex gap-3 p-6 bg-gray-50 border-t border-gray-200 rounded-b-2xl">
+        <div className="flex gap-3 p-6 bg-muted border-t border-border rounded-b">
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 px-4 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 hover:border-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-50"
+            className="flex-1 px-4 py-3 bg-background border border-border text-foreground rounded font-medium hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg font-bold hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 bg-red-600 text-white rounded font-bold hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <Trash2 className="w-4 h-4" />
+                <TrashIcon className="w-4 h-4" weight="fill" />
                 {confirmText}
               </>
             )}

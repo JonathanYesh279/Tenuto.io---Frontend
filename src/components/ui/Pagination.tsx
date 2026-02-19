@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { CaretLeftIcon, CaretRightIcon, CaretDoubleLeftIcon, CaretDoubleRightIcon } from '@phosphor-icons/react'
 
 interface PaginationProps {
   currentPage: number
@@ -99,12 +99,12 @@ export default function Pagination({
     <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}>
       {/* Items per page selector */}
       {showItemsPerPage && onItemsPerPageChange && (
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>הצג</span>
           <select
             value={itemsPerPage}
             onChange={(e) => handleItemsPerPageChange(e.target.value)}
-            className="px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="px-3 py-1 border border-input rounded focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
           >
             {itemsPerPageOptions.map(option => (
               <option key={option} value={option}>
@@ -117,7 +117,7 @@ export default function Pagination({
       )}
 
       {/* Page info */}
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-muted-foreground">
         מציג {startItem}–{endItem} מתוך {totalItems} {entityLabel ?? 'פריטים'}
       </div>
 
@@ -127,20 +127,20 @@ export default function Pagination({
         <button
           onClick={() => handlePageChange(1)}
           disabled={currentPage === 1}
-          className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded border border-border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           title="עמוד ראשון"
         >
-          <ChevronsRight className="w-4 h-4" />
+          <CaretDoubleRightIcon className="w-4 h-4" weight="regular" />
         </button>
 
         {/* Previous page button */}
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded border border-border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           title="עמוד קודם"
         >
-          <ChevronRight className="w-4 h-4" />
+          <CaretRightIcon className="w-4 h-4" weight="regular" />
         </button>
 
         {/* Page numbers */}
@@ -150,7 +150,7 @@ export default function Pagination({
               return (
                 <span
                   key={`ellipsis-${index}`}
-                  className="px-3 py-1 text-gray-500"
+                  className="px-3 py-1 text-muted-foreground"
                 >
                   ...
                 </span>
@@ -164,10 +164,10 @@ export default function Pagination({
               <button
                 key={pageNum}
                 onClick={() => handlePageChange(pageNum)}
-                className={`min-w-[40px] px-3 py-1 rounded-lg font-medium transition-colors ${
+                className={`min-w-[40px] px-3 py-1 rounded font-medium transition-colors ${
                   isActive
-                    ? 'bg-primary-600 text-white'
-                    : 'border border-gray-300 hover:bg-gray-50'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'border border-border hover:bg-muted text-foreground'
                 }`}
               >
                 {pageNum}
@@ -180,20 +180,20 @@ export default function Pagination({
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded border border-border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           title="עמוד הבא"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <CaretLeftIcon className="w-4 h-4" weight="regular" />
         </button>
 
         {/* Last page button */}
         <button
           onClick={() => handlePageChange(totalPages)}
           disabled={currentPage === totalPages}
-          className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded border border-border hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           title="עמוד אחרון"
         >
-          <ChevronsLeft className="w-4 h-4" />
+          <CaretDoubleLeftIcon className="w-4 h-4" weight="regular" />
         </button>
       </div>
     </div>

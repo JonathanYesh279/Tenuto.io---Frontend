@@ -91,7 +91,15 @@ Full details: `milestones/v3.0-ROADMAP.md`
   9. Sidebar: white/light with indigo active state pill, category labels, Phosphor icons
   10. Header: search input, notification bell, user profile section
   11. Dark mode support with toggle button
-**Plans:** TBD
+**Plans:** 6 plans
+
+Plans:
+- [ ] 23-01-PLAN.md — Token system reset (indigo primary, 12-32px radius, Assistant font, chart colors, dark mode)
+- [ ] 23-02-PLAN.md — Sidebar + Header visual redesign (white sidebar, indigo active, search bar, bell)
+- [ ] 23-03-PLAN.md — Dashboard layout + StatCard component (12-col grid, 9:3 split, 4 entity cards, FAB)
+- [ ] 23-04-PLAN.md — Charts (Recharts install, financial line, attendance bar, demographics donut)
+- [ ] 23-05-PLAN.md — Teacher table + right sidebar widgets (calendar, agenda, messages)
+- [ ] 23-06-PLAN.md — Visual verification checkpoint
 
 ---
 
@@ -121,8 +129,8 @@ Full details: `milestones/v3.0-ROADMAP.md`
 | 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 22. Visual Architecture Rewrite | v3.0 | 15/15 | Complete | 2026-02-20 |
-| 23. Dashboard Visual Redesign | v4.0 | 0/? | Planned | — |
+| 23. Dashboard Visual Redesign | v4.0 | 0/6 | Planned | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-20 — v2.1 and v3.0 archived, v4.0 started with Phase 23*
+*Last updated: 2026-02-20 — Phase 23 planned with 6 plans in 4 waves*

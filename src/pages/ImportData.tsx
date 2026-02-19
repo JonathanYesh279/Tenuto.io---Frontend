@@ -185,7 +185,7 @@ export default function ImportData() {
     <div className="p-6 max-w-6xl mx-auto" dir="rtl">
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
           <Upload className="w-5 h-5 text-primary" />
         </div>
         <div>
@@ -200,7 +200,7 @@ export default function ImportData() {
           onClick={() => handleTabChange('teachers')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
             activeTab === 'teachers'
-              ? 'bg-primary-100 text-primary border border-primary-200'
+              ? 'bg-muted text-primary border border-border'
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
@@ -211,7 +211,7 @@ export default function ImportData() {
           onClick={() => handleTabChange('students')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
             activeTab === 'students'
-              ? 'bg-primary-100 text-primary border border-primary-200'
+              ? 'bg-muted text-primary border border-border'
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
           }`}
         >
@@ -245,11 +245,11 @@ export default function ImportData() {
                 onClick={() => fileInputRef.current?.click()}
                 className={`flex flex-col items-center justify-center py-16 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
                   dragActive
-                    ? 'border-primary-400 bg-primary-50'
+                    ? 'border-primary bg-muted'
                     : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                 }`}
               >
-                <FileSpreadsheet className={`w-12 h-12 mb-4 ${dragActive ? 'text-primary-500' : 'text-gray-400'}`} />
+                <FileSpreadsheet className={`w-12 h-12 mb-4 ${dragActive ? 'text-primary' : 'text-gray-400'}`} />
                 <p className="text-lg font-medium text-gray-700 mb-1">
                   גרור קובץ לכאן או לחץ לבחירה
                 </p>

@@ -47,7 +47,7 @@ const Tab: React.FC<TabProps> = ({ label, icon, isActive, onClick, badge }) => (
     className={`
       flex items-center px-4 py-3 border-b-2 transition-all
       ${isActive 
-        ? 'border-primary-600 text-primary-700 bg-primary-50' 
+        ? 'border-primary text-foreground bg-muted'
         : 'border-transparent text-gray-800 hover:text-gray-900 hover:bg-gray-50'
       }
     `}
@@ -55,7 +55,7 @@ const Tab: React.FC<TabProps> = ({ label, icon, isActive, onClick, badge }) => (
     {icon}
     <span className="mr-2 font-medium">{label}</span>
     {badge !== undefined && badge > 0 && (
-      <span className="mr-2 px-2 py-0.5 bg-primary-100 text-primary-700 rounded-full text-xs font-semibold">
+      <span className="mr-2 px-2 py-0.5 bg-muted text-foreground rounded-full text-xs font-semibold">
         {badge}
       </span>
     )}
@@ -688,7 +688,7 @@ export default function BagrutDetails() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary-600" />
+          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
           <div className="text-gray-800">טוען פרטי בגרות...</div>
           <div className="text-xs text-gray-500 mt-2">ID: {bagrutId}</div>
         </div>
@@ -708,7 +708,7 @@ export default function BagrutDetails() {
         </div>
         <button
           onClick={() => navigate('/bagruts')}
-          className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
         >
           <ArrowRight className="w-4 h-4 ml-2" />
           חזור לרשימת בגרויות
@@ -1057,7 +1057,7 @@ export default function BagrutDetails() {
                 <h3 className="text-lg font-semibold text-gray-900">תכנית הביצוע</h3>
                 <button
                   onClick={() => setShowAddPieceModal(true)}
-                  className="flex items-center px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                  className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
                 >
                   <Plus className="w-4 h-4 ml-1" />
                   הוסף יצירה
@@ -1173,7 +1173,7 @@ export default function BagrutDetails() {
                   <p>אין השמעות</p>
                   <button
                     onClick={() => navigate(`/bagruts/${bagrutId}/edit?tab=presentations`)}
-                    className="mt-4 flex items-center mx-auto px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                    className="mt-4 flex items-center mx-auto px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
                   >
                     <Plus className="w-4 h-4 ml-1" />
                     הוסף השמעות
@@ -1226,10 +1226,10 @@ export default function BagrutDetails() {
               {/* Final Grade Summary */}
               <Card>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">ציון סופי</h3>
-                <div className="flex justify-between items-center p-4 bg-primary-50 rounded-lg">
+                <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
                   <span className="text-lg font-semibold force-black-text">ציון מגן בגרות</span>
                   <div className="text-right">
-                    <span className="text-3xl font-bold text-primary-600">
+                    <span className="text-3xl font-bold text-foreground">
                       {bagrut.magenBagrut?.grade || bagrut.finalGrade || '-'}
                     </span>
                     {(bagrut.magenBagrut?.gradeLevel || bagrut.finalGradeLevel) && (
@@ -1303,7 +1303,7 @@ export default function BagrutDetails() {
                                 </span>
                               </div>
                             </td>
-                            <td className="px-4 py-3 text-center font-bold text-primary-600 border border-gray-200">
+                            <td className="px-4 py-3 text-center font-bold text-foreground border border-border">
                               {(piece.playingSkills || 0) + (piece.musicalUnderstanding || 0) + (piece.textKnowledge || 0) + (piece.playingByHeart ? 10 : 0)}
                             </td>
                           </tr>
@@ -1344,7 +1344,7 @@ export default function BagrutDetails() {
                     <div className="mt-4 pt-4 border-t border-blue-200">
                       <div className="flex justify-between items-center">
                         <span className="text-lg font-semibold text-gray-800">ציון כולל:</span>
-                        <span className="text-2xl font-bold text-primary-600">
+                        <span className="text-2xl font-bold text-foreground">
                           {Math.round(
                             bagrut.magenBagrut.pieceGradings.reduce((sum, piece) => 
                               sum + (piece.playingSkills || 0) + (piece.musicalUnderstanding || 0) + 
@@ -1417,7 +1417,7 @@ export default function BagrutDetails() {
             <div>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">מסמכים</h3>
-                <label className="flex items-center px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 cursor-pointer">
+                <label className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 cursor-pointer">
                   <Upload className="w-4 h-4 ml-1" />
                   העלה מסמך
                   <input
@@ -1431,7 +1431,7 @@ export default function BagrutDetails() {
 
               {uploadingDocument && (
                 <div className="text-center py-4">
-                  <Loader className="w-6 h-6 animate-spin mx-auto text-primary-600" />
+                  <Loader className="w-6 h-6 animate-spin mx-auto text-primary" />
                   <p className="text-sm text-gray-800 mt-2">מעלה מסמך...</p>
                 </div>
               )}
@@ -1528,7 +1528,7 @@ export default function BagrutDetails() {
             value={teacherSignature}
             onChange={(e) => setTeacherSignature(e.target.value)}
             placeholder="הכנס את שמך המלא כחתימה"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
       </ConfirmationModal>

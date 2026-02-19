@@ -447,7 +447,7 @@ export default function Teachers() {
       render: (row: any) => (
         <div className="flex space-x-2 space-x-reverse justify-center">
           <button
-            className="p-1.5 text-primary-600 hover:text-primary-900 hover:bg-primary-100 rounded transition-colors"
+            className="p-1.5 text-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
             onClick={(e) => {
               e.stopPropagation()
               handleViewTeacher(row.id)
@@ -518,7 +518,7 @@ export default function Teachers() {
 
             {scheduleLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader className="w-8 h-8 animate-spin text-primary-600" />
+                <Loader className="w-8 h-8 animate-spin text-primary" />
                 <span className="mr-3 text-gray-600">טוען לוח זמנים...</span>
               </div>
             ) : (
@@ -608,7 +608,7 @@ export default function Teachers() {
             onChange={(e) => handleInstrumentSearchChange(e.target.value)}
             onFocus={() => setShowInstrumentDropdown(true)}
             onBlur={() => setTimeout(() => setShowInstrumentDropdown(false), 200)}
-            className="w-40 px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 placeholder-gray-500"
+            className="w-40 px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder-muted-foreground"
           />
           {instrumentSearchTerm && (
             <button
@@ -624,7 +624,7 @@ export default function Teachers() {
               <button
                 onClick={() => handleInstrumentSelect('', 'כל הכלים')}
                 className={`w-full text-right px-3 py-2 hover:bg-gray-50 border-b border-gray-100 direction-rtl ${
-                  filters.instrument === '' ? 'bg-primary-50 text-primary-600' : 'text-gray-900'
+                  filters.instrument === '' ? 'bg-muted text-primary' : 'text-foreground'
                 }`}
               >
                 כל הכלים
@@ -634,7 +634,7 @@ export default function Teachers() {
                   key={instrument}
                   onClick={() => handleInstrumentSelect(instrument, instrument)}
                   className={`w-full text-right px-3 py-2 hover:bg-gray-50 direction-rtl ${
-                    filters.instrument === instrument ? 'bg-primary-50 text-primary-600' : 'text-gray-900'
+                    filters.instrument === instrument ? 'bg-muted text-primary' : 'text-foreground'
                   }`}
                 >
                   {instrument}
@@ -651,7 +651,7 @@ export default function Teachers() {
         <select
           value={filters.role}
           onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+          className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
         >
           <option value="">כל התפקידים</option>
           <option value="מורה">מורה</option>
@@ -672,12 +672,12 @@ export default function Teachers() {
           {searchTerm || filters.instrument || filters.role ? (
             <span>
               מציג {filteredTeachers.length} מורים מתוך {totalTeachers} סה"כ
-              {hasMore && <span className="text-primary-600 font-medium"> (טען עוד לתוצאות נוספות)</span>}
+              {hasMore && <span className="text-primary font-medium"> (טען עוד לתוצאות נוספות)</span>}
             </span>
           ) : (
             <span>
               מציג {teachers.length} מתוך {totalTeachers} מורים
-              {hasMore && <span className="text-primary-600 font-medium"> (טען עוד לצפייה בנוספים)</span>}
+              {hasMore && <span className="text-primary font-medium"> (טען עוד לצפייה בנוספים)</span>}
             </span>
           )}
         </div>
@@ -688,7 +688,7 @@ export default function Teachers() {
             onClick={() => setViewMode('table')}
             className={`relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
               viewMode === 'table'
-                ? 'bg-white text-primary-700 shadow-sm border border-gray-200 ring-1 ring-primary-500/20'
+                ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
             }`}
             aria-pressed={viewMode === 'table'}
@@ -697,14 +697,14 @@ export default function Teachers() {
             <List className="w-4 h-4" />
             <span className="hidden sm:inline">טבלה</span>
             {viewMode === 'table' && (
-              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-primary-500/5 to-primary-600/5 pointer-events-none" />
+              <div className="absolute inset-0 rounded-md bg-muted/40 pointer-events-none" />
             )}
           </button>
           <button
             onClick={() => setViewMode('grid')}
             className={`relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
               viewMode === 'grid'
-                ? 'bg-white text-primary-700 shadow-sm border border-gray-200 ring-1 ring-primary-500/20'
+                ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
             }`}
             aria-pressed={viewMode === 'grid'}
@@ -713,7 +713,7 @@ export default function Teachers() {
             <Grid className="w-4 h-4" />
             <span className="hidden sm:inline">רשת</span>
             {viewMode === 'grid' && (
-              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-primary-500/5 to-primary-600/5 pointer-events-none" />
+              <div className="absolute inset-0 rounded-md bg-muted/40 pointer-events-none" />
             )}
           </button>
         </div>
@@ -724,7 +724,7 @@ export default function Teachers() {
         {searchLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
             <div className="text-center">
-              <Loader className="w-6 h-6 animate-spin mx-auto mb-2 text-primary-600" />
+              <Loader className="w-6 h-6 animate-spin mx-auto mb-2 text-primary" />
               <div className="text-sm text-gray-600">מחפש מורים...</div>
             </div>
           </div>
@@ -798,7 +798,7 @@ export default function Teachers() {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingMore ? (
               <>

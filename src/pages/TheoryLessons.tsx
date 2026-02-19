@@ -510,7 +510,7 @@ export default function TheoryLessons() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <div className="text-gray-600">טוען שיעורי תיאוריה...</div>
         </div>
       </div>
@@ -533,7 +533,7 @@ export default function TheoryLessons() {
               onClick={() => setActiveTab('lessons')}
               className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === 'lessons'
-                  ? 'bg-primary-100 text-primary-700'
+                  ? 'bg-muted text-foreground'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -544,7 +544,7 @@ export default function TheoryLessons() {
               onClick={() => setActiveTab('bulk')}
               className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === 'bulk'
-                  ? 'bg-primary-100 text-primary-700'
+                  ? 'bg-muted text-foreground'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -585,7 +585,7 @@ export default function TheoryLessons() {
               </button>
               <button
                 onClick={handleCreateLesson}
-                className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
               >
                 <Plus className="w-4 h-4 ml-2" />
                 שיעור חדש
@@ -649,7 +649,7 @@ export default function TheoryLessons() {
                 placeholder="חיפוש שיעורים..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pr-10 pl-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -659,7 +659,7 @@ export default function TheoryLessons() {
             <select
               value={filters.category}
               onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
             >
               <option value="">כל הקטגוריות</option>
               <option value="תלמידים חדשים ב-ד">תלמידים חדשים ב-ד</option>
@@ -685,7 +685,7 @@ export default function TheoryLessons() {
               type="date"
               value={filters.date}
               onChange={(e) => setFilters(prev => ({ ...prev, date: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
@@ -715,7 +715,7 @@ export default function TheoryLessons() {
                   type="checkbox"
                   checked={selectAll}
                   onChange={handleSelectAll}
-                  className="ml-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  className="ml-2 rounded border-border text-primary focus:ring-ring"
                 />
                 בחר הכל ({selectedLessons.size} נבחרו)
               </label>
@@ -723,7 +723,7 @@ export default function TheoryLessons() {
           </div>
           <button
             onClick={handleRefresh}
-            className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+            className="text-sm text-primary hover:text-neutral-700 font-medium"
           >
             רענן
           </button>
@@ -736,7 +736,7 @@ export default function TheoryLessons() {
             <p className="text-gray-600 mb-4">התחל על ידי יצירת שיעור התיאוריה הראשון</p>
             <button
               onClick={handleCreateLesson}
-              className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 ml-2" />
               צור שיעור ראשון
@@ -766,21 +766,21 @@ export default function TheoryLessons() {
             {groupedLessonsByDay.today.length > 0 && (
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-1 bg-primary-600 rounded-full"></div>
+                  <div className="h-10 w-1 bg-primary rounded-full"></div>
                   <h2 className="text-xl font-bold text-gray-900">להיום</h2>
                 </div>
                 {groupedLessonsByDay.today.map(([date, dayLessons]) => {
                   const dayInfo = formatDayHeader(date)
                   return (
-                    <div key={date} className="bg-primary-50 rounded-xl p-4 space-y-3">
+                    <div key={date} className="bg-muted rounded p-4 space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-primary-900">
+                        <h3 className="text-lg font-semibold text-foreground">
                           {dayInfo.main}
                         </h3>
-                        <span className="text-sm text-primary-700 font-medium">
+                        <span className="text-sm text-muted-foreground font-medium">
                           {dayLessons.length} שיעורים
                           {dayLessons.length > 1 && (
-                            <span className="mr-2 text-xs text-primary-600">← גלל</span>
+                            <span className="mr-2 text-xs text-muted-foreground">← גלל</span>
                           )}
                         </span>
                       </div>
@@ -956,7 +956,7 @@ export default function TheoryLessons() {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="flex items-center gap-2 px-8 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loadingMore ? (
               <>
@@ -1094,7 +1094,7 @@ export default function TheoryLessons() {
                     type="date"
                     value={bulkDeleteData.startDate}
                     onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, startDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                     required
                   />
                 </div>
@@ -1106,7 +1106,7 @@ export default function TheoryLessons() {
                     type="date"
                     value={bulkDeleteData.endDate}
                     onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, endDate: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                     required
                   />
                 </div>
@@ -1122,7 +1122,7 @@ export default function TheoryLessons() {
                 <select
                   value={bulkDeleteData.category}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 >
                   <option value="">בחר קטגוריה</option>
@@ -1155,7 +1155,7 @@ export default function TheoryLessons() {
                   placeholder="הזן מזהה מורה או שם"
                   value={bulkDeleteData.teacherId}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, teacherId: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">

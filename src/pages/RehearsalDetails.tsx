@@ -338,7 +338,7 @@ export default function RehearsalDetails() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <div className="text-gray-600">טוען פרטי החזרה...</div>
         </div>
       </div>
@@ -368,7 +368,7 @@ export default function RehearsalDetails() {
           <h2 className="text-xl font-semibold text-gray-900 mb-2">החזרה לא נמצאה</h2>
           <button
             onClick={() => navigate('/rehearsals')}
-            className="text-primary-600 hover:text-primary-800 underline"
+            className="text-primary hover:text-neutral-700 underline"
           >
             חזור לחזרות
           </button>
@@ -613,7 +613,7 @@ export default function RehearsalDetails() {
                 placeholder="חיפוש חבר..."
                 value={attendanceSearchQuery}
                 onChange={(e) => setAttendanceSearchQuery(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pr-10 pl-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
 
@@ -677,7 +677,7 @@ export default function RehearsalDetails() {
                 <button
                   onClick={handleSaveAttendance}
                   disabled={attendanceLoading}
-                  className="w-full flex items-center justify-center px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full flex items-center justify-center px-4 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {attendanceLoading ? (
                     <>
@@ -776,7 +776,7 @@ export default function RehearsalDetails() {
                 <button
                   onClick={handleBulkUpdate}
                   disabled={bulkUpdateLoading}
-                  className="w-full flex items-center justify-center px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full flex items-center justify-center px-4 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {bulkUpdateLoading ? (
                     <>

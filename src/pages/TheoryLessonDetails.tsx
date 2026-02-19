@@ -334,7 +334,7 @@ export default function TheoryLessonDetails() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <div className="text-gray-600">טוען פרטי שיעור תאוריה...</div>
         </div>
       </div>
@@ -349,7 +349,7 @@ export default function TheoryLessonDetails() {
         <p className="text-gray-600 mb-4">{error || 'שיעור תאוריה לא נמצא'}</p>
         <button
           onClick={() => navigate('/theories')}
-          className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
         >
           <ArrowRight className="w-4 h-4 ml-2" />
           חזור לרשימת שיעורי תאוריה
@@ -486,12 +486,12 @@ export default function TheoryLessonDetails() {
           
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <BookOpen className="w-6 h-6 text-primary-600" />
+              <BookOpen className="w-6 h-6 text-primary" />
               <h1 className="text-3xl font-bold text-gray-900">{theoryLesson.category}</h1>
               <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700">
                 {DAYS_OF_WEEK[theoryLesson.dayOfWeek as keyof typeof DAYS_OF_WEEK]}
               </span>
-              <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary-100 text-primary-700">
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-muted text-foreground">
                 {theoryLesson.startTime} - {theoryLesson.endTime}
               </span>
             </div>
@@ -582,7 +582,7 @@ export default function TheoryLessonDetails() {
                     <div className="text-sm text-gray-600">
                       <button
                         onClick={() => handleViewTeacherProfile(teacher._id)}
-                        className="text-primary-600 hover:text-primary-700 hover:underline"
+                        className="text-primary hover:text-neutral-700 hover:underline"
                       >
                         {getDisplayName(teacher.personalInfo)}
                       </button>
@@ -668,7 +668,7 @@ export default function TheoryLessonDetails() {
               </h3>
               <button
                 onClick={() => setShowAddStudent(!showAddStudent)}
-                className="flex items-center px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="flex items-center px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
               >
                 <Plus className="w-4 h-4 ml-1" />
                 הוסף תלמיד
@@ -687,7 +687,7 @@ export default function TheoryLessonDetails() {
                         placeholder="חיפוש תלמידים..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full pr-10 pl-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -739,7 +739,7 @@ export default function TheoryLessonDetails() {
                 <p className="text-gray-600 mb-4">התחל על ידי הוספת התלמיד הראשון</p>
                 <button
                   onClick={() => setShowAddStudent(true)}
-                  className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
                 >
                   <Plus className="w-4 h-4 ml-1" />
                   הוסף תלמיד ראשון
@@ -842,7 +842,7 @@ export default function TheoryLessonDetails() {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleSaveAttendance}
-                  className="flex-1 bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition-colors"
+                  className="flex-1 bg-primary text-primary-foreground py-2 rounded-lg hover:bg-neutral-800 transition-colors"
                 >
                   שמור נוכחות
                 </button>

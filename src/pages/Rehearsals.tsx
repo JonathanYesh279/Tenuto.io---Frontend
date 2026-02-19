@@ -434,7 +434,7 @@ export default function Rehearsals() {
             
             <button
               onClick={() => setShowCreateForm(true)}
-              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
             >
               <Plus className="w-4 h-4 ml-1" />
               חזרה חדשה
@@ -474,7 +474,7 @@ export default function Rehearsals() {
 
             {/* Active filters count */}
             {Object.values(filters).filter(v => v && v !== 'all').length > 1 && (
-              <span className="text-sm text-primary-600">
+              <span className="text-sm text-primary">
                 {Object.values(filters).filter(v => v && v !== 'all').length - 1} מסננים פעילים
               </span>
             )}
@@ -526,7 +526,7 @@ export default function Rehearsals() {
               <select
                 value={filters.orchestraId}
                 onChange={(e) => handleFilterChange('orchestraId', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל התזמורות</option>
                 {orchestras.map(orchestra => (
@@ -542,7 +542,7 @@ export default function Rehearsals() {
               <select
                 value={filters.dayOfWeek}
                 onChange={(e) => handleFilterChange('dayOfWeek', e.target.value ? parseInt(e.target.value) : '')}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל הימים</option>
                 {DAYS_OF_WEEK_ARRAY.map(day => (
@@ -558,7 +558,7 @@ export default function Rehearsals() {
               <select
                 value={filters.location}
                 onChange={(e) => handleFilterChange('location', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="">כל המיקומים</option>
                 {locations.map(location => (
@@ -574,7 +574,7 @@ export default function Rehearsals() {
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="all">כל החזרות</option>
                 <option value="upcoming">עתידות</option>
@@ -589,7 +589,7 @@ export default function Rehearsals() {
                 type="date"
                 value={filters.startDate}
                 onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
               />
             </div>
 
@@ -599,7 +599,7 @@ export default function Rehearsals() {
                 type="date"
                 value={filters.endDate}
                 onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
               />
             </div>
 
@@ -652,7 +652,7 @@ export default function Rehearsals() {
                   setSortBy(sort as any)
                   setSortOrder(order as any)
                 }}
-                className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="px-3 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-ring"
               >
                 <option value="date-asc">תאריך (עולה)</option>
                 <option value="date-desc">תאריך (יורד)</option>
@@ -786,7 +786,7 @@ export default function Rehearsals() {
               <select
                 value={bulkDeleteData.orchestraId}
                 onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, orchestraId: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                 required
               >
                 <option value="">בחר תזמורת</option>
@@ -808,7 +808,7 @@ export default function Rehearsals() {
                   type="date"
                   value={bulkDeleteData.startDate}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, startDate: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 />
               </div>
@@ -821,7 +821,7 @@ export default function Rehearsals() {
                   type="date"
                   value={bulkDeleteData.endDate}
                   onChange={(e) => setBulkDeleteData({ ...bulkDeleteData, endDate: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                   required
                 />
               </div>

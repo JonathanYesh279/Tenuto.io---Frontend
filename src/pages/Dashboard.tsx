@@ -577,7 +577,7 @@ function AdminHoursOverview({
   if (loading) {
     return (
       <div className="text-center py-12 text-gray-500">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
         טוען נתוני שעות...
       </div>
     )
@@ -592,7 +592,7 @@ function AdminHoursOverview({
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={onLoad}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
           >
             <RefreshCw className="w-4 h-4" />
             נסה שוב
@@ -609,7 +609,7 @@ function AdminHoursOverview({
         <button
           onClick={onRecalculateAll}
           disabled={isRecalculating}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-primary-50 text-primary-700 border border-primary-200 rounded-lg hover:bg-primary-100 disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 text-sm bg-muted text-foreground border border-border rounded-lg hover:bg-muted/80 disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
           {isRecalculating ? 'מחשב...' : 'חשב מחדש הכל'}
@@ -639,7 +639,7 @@ function AdminHoursOverview({
                 <tr key={summary.teacherId} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-gray-900 font-medium">{summary.teacherName}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-primary-100 text-primary-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-muted text-foreground">
                       {summary.totals.totalWeeklyHours}
                     </span>
                   </td>

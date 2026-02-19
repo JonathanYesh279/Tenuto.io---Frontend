@@ -391,7 +391,7 @@ export default function Orchestras() {
               type="checkbox"
               checked={filters.isActive === true}
               onChange={(e) => setFilters(prev => ({ ...prev, isActive: e.target.checked ? true : undefined }))}
-              className="w-4 h-4 text-primary-600 border-gray-300 rounded ml-2"
+              className="w-4 h-4 text-primary border-border rounded ml-2"
             />
             רק פעילות
           </label>

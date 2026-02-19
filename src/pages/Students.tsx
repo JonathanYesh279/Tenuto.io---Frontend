@@ -326,11 +326,11 @@ export default function Students() {
                   }
                   setSelectedStudents(newSelected)
                 }}
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-border text-primary focus:ring-ring"
               />
             )}
             <button 
-              className="p-1.5 text-primary-600 hover:text-primary-900 hover:bg-primary-100 rounded transition-colors"
+              className="p-1.5 text-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
               onClick={(e) => {
                 e.stopPropagation() // Prevent row click
                 console.log('Eye icon clicked for student:', student.id)
@@ -677,7 +677,7 @@ export default function Students() {
               setSelectedStudents(new Set())
             }
           }}
-          className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 cursor-pointer"
+          className="w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-ring cursor-pointer"
         />
       ),
       render: (student: any) => (
@@ -695,7 +695,7 @@ export default function Students() {
             setSelectedStudents(newSelected)
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-500 cursor-pointer"
+          className="w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-ring cursor-pointer"
         />
       ),
       width: '60px',
@@ -845,7 +845,7 @@ export default function Students() {
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {loadingStudentData ? (
               <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
                 <p className="text-gray-600">טוען נתוני תלמיד...</p>
               </div>
             ) : (
@@ -884,7 +884,7 @@ export default function Students() {
         <select
           value={filters.orchestra}
           onChange={(e) => setFilters(prev => ({ ...prev, orchestra: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+          className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
         >
           <option value="">כל התזמורות</option>
           <option value="תזמורת">תזמורת</option>
@@ -893,7 +893,7 @@ export default function Students() {
         <select
           value={filters.instrument}
           onChange={(e) => setFilters(prev => ({ ...prev, instrument: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+          className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
         >
           <option value="">כל הכלים</option>
           <option value="חלילית">חלילית</option>
@@ -919,7 +919,7 @@ export default function Students() {
         <select
           value={filters.stageLevel}
           onChange={(e) => setFilters(prev => ({ ...prev, stageLevel: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+          className="px-3 py-1.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
         >
           <option value="">כל השלבים</option>
           {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
@@ -937,12 +937,12 @@ export default function Students() {
           {searchTerm || filters.orchestra || filters.instrument || filters.stageLevel ? (
             <span>
               מציג {students.length} תלמידים מתוך {totalStudents} סה"כ
-              {hasMore && <span className="text-primary-600 font-medium"> (טען עוד לתוצאות נוספות)</span>}
+              {hasMore && <span className="text-primary font-medium"> (טען עוד לתוצאות נוספות)</span>}
             </span>
           ) : (
             <span>
               מציג {students.length} מתוך {totalStudents} תלמידים
-              {hasMore && <span className="text-primary-600 font-medium"> (טען עוד לצפייה בנוספים)</span>}
+              {hasMore && <span className="text-primary font-medium"> (טען עוד לצפייה בנוספים)</span>}
             </span>
           )}
         </div>
@@ -977,7 +977,7 @@ export default function Students() {
             onClick={() => setViewMode('table')}
             className={`relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
               viewMode === 'table'
-                ? 'bg-white text-primary-700 shadow-sm border border-gray-200 ring-1 ring-primary-500/20'
+                ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
             }`}
             aria-pressed={viewMode === 'table'}
@@ -986,14 +986,14 @@ export default function Students() {
             <List className="w-4 h-4" />
             <span className="hidden sm:inline">טבלה</span>
             {viewMode === 'table' && (
-              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-primary-500/5 to-primary-600/5 pointer-events-none" />
+              <div className="absolute inset-0 rounded-md bg-muted/40 pointer-events-none" />
             )}
           </button>
           <button
             onClick={() => setViewMode('grid')}
             className={`relative px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
               viewMode === 'grid'
-                ? 'bg-white text-primary-700 shadow-sm border border-gray-200 ring-1 ring-primary-500/20'
+                ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
             }`}
             aria-pressed={viewMode === 'grid'}
@@ -1002,7 +1002,7 @@ export default function Students() {
             <Grid className="w-4 h-4" />
             <span className="hidden sm:inline">רשת</span>
             {viewMode === 'grid' && (
-              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-primary-500/5 to-primary-600/5 pointer-events-none" />
+              <div className="absolute inset-0 rounded-md bg-muted/40 pointer-events-none" />
             )}
           </button>
         </div>
@@ -1014,7 +1014,7 @@ export default function Students() {
         {searchLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
             <div className="text-center">
-              <Loader className="w-6 h-6 animate-spin mx-auto mb-2 text-primary-600" />
+              <Loader className="w-6 h-6 animate-spin mx-auto mb-2 text-primary" />
               <div className="text-sm text-gray-600">מחפש תלמידים...</div>
             </div>
           </div>
@@ -1133,7 +1133,7 @@ export default function Students() {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingMore ? (
               <>

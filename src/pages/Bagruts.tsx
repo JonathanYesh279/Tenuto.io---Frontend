@@ -381,7 +381,7 @@ export default function Bagruts() {
               e.stopPropagation()
               handleViewBagrut(bagrut._id)
             }}
-            className="p-1.5 text-primary-600 hover:text-primary-900 hover:bg-primary-100 rounded transition-colors"
+            className="p-1.5 text-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
             title="צפה בפרטים"
           >
             <Eye className="w-4 h-4" />
@@ -425,7 +425,7 @@ export default function Bagruts() {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary-600" />
+          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
           <div className="text-lg text-gray-600">טוען נתוני בגרויות...</div>
         </div>
       </div>
@@ -443,7 +443,7 @@ export default function Bagruts() {
             clearError()
             loadData()
           }}
-          className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800"
         >
           נסה שוב
         </button>
@@ -467,7 +467,7 @@ export default function Bagruts() {
         {!isTeacherRole && (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors"
           >
             <Plus className="w-4 h-4 ml-2" />
             בגרות חדשה
@@ -518,7 +518,7 @@ export default function Bagruts() {
                 placeholder="חיפוש לפי שם תלמיד, מורה או קונסרבטוריון..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pr-10 pl-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -527,7 +527,7 @@ export default function Bagruts() {
             <select
               value={filters.status}
               onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">כל הסטטוסים</option>
               <option value="completed">הושלם</option>
@@ -537,7 +537,7 @@ export default function Bagruts() {
             <select
               value={filters.teacherId}
               onChange={(e) => setFilters(prev => ({ ...prev, teacherId: e.target.value }))}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">כל המורים</option>
               {teachers.map(teacher => (
@@ -550,7 +550,7 @@ export default function Bagruts() {
             <select
               value={filters.conservatory}
               onChange={(e) => setFilters(prev => ({ ...prev, conservatory: e.target.value }))}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">כל הקונסרבטוריונים</option>
               {[...new Set(bagruts.map(b => b.conservatoryName).filter(Boolean))].map(name => (
@@ -572,7 +572,7 @@ export default function Bagruts() {
             onClick={() => setViewMode('table')}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
               viewMode === 'table'
-                ? 'bg-white text-primary-700 shadow-sm border border-gray-200'
+                ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -583,7 +583,7 @@ export default function Bagruts() {
             onClick={() => setViewMode('grid')}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
               viewMode === 'grid'
-                ? 'bg-white text-primary-700 shadow-sm border border-gray-200'
+                ? 'bg-white text-foreground shadow-sm border border-border'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >

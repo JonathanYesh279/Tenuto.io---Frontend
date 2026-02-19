@@ -232,7 +232,7 @@ export default function MinistryReports() {
       {/* Page Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
             <FileText className="w-5 h-5 text-primary" />
           </div>
           <div>
@@ -357,8 +357,8 @@ export default function MinistryReports() {
             <Card key={section.key} hover>
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg bg-${section.color === 'blue' ? 'primary' : section.color}-100 flex items-center justify-center`}>
-                    <Icon className={`w-5 h-5 text-${section.color === 'blue' ? 'primary' : section.color}-600`} />
+                  <div className={`w-10 h-10 rounded-lg ${section.color === 'blue' ? 'bg-muted' : `bg-${section.color}-100`} flex items-center justify-center`}>
+                    <Icon className={`w-5 h-5 ${section.color === 'blue' ? 'text-primary' : `text-${section.color}-600`}`} />
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">{section.title}</h3>

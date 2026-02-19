@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 22-visual-architecture-rewrite
-Plan: 22-08 (7/15 complete)
+Plan: 22-10 (9/15 complete)
 Status: In progress
-Last activity: 2026-02-19 — 22-07 Bagrut module token migration complete (24 files)
+Last activity: 2026-02-19 — 22-09 Final bulk component sweep complete (37 files: deletion module, entity cards, modals, schedule, misc)
 
-Progress: [████░░░░░░] 47% (v3.0)
+Progress: [█████░░░░░] 60% (v3.0)
 
 ## Performance Metrics
 
@@ -28,8 +28,8 @@ Progress: [████░░░░░░] 47% (v3.0)
 - v1.1: 5 phases, 7 plans, ~3.5 hours
 - v2.0: 10 phases, 22 plans, ~2.3 hours
 - v2.1: 6 phases, 13 plans
-- v3.0: 1 phase in progress, 7 plans complete (22-01: 2 min, 22-02: 2 min, 22-07: 2 min)
-- Total: 21+ phases, 44 plans
+- v3.0: 1 phase in progress, 9 plans complete (22-01: 2 min, 22-02: 2 min, 22-07: 2 min, 22-09: 3 min)
+- Total: 21+ phases, 46 plans
 
 ## Accumulated Context
 
@@ -58,11 +58,14 @@ Key decisions for v3.0:
 - [22-07 Bagrut]: rounded-lg removed throughout bagrut module — all container rounding reduced to rounded (2px sharp identity)
 - [22-07 Bagrut]: Modal Card wrappers preserved (ConflictResolutionModal, MigrationWarningModal) — floating content keeps Card
 - [22-07 Bagrut]: bg-primary-50/100 backgrounds replaced with bg-muted — tonal neutral, not warm tint
-
 - [22-05 Forms]: rounded-lg → rounded in all form contexts — 2px sharp corners match locked architectural identity
 - [22-05 Forms]: focus:ring-primary-500 → focus:ring-ring — semantic ring token, not hardcoded hue
 - [22-05 Forms]: border-gray-300 → border-input in form primitives — consistent functional border token
 - [22-05 Forms]: SimplifiedBagrutForm gradient progress bar eliminated — no decorative gradients per architectural rules
+- [22-09 Components]: rounded-lg → rounded across all 37 deletion/modal/entity-card/schedule/misc files
+- [22-09 Components]: Modal Card wrappers preserved — DeletionImpactModal, BatchDeletionModal, SafeDeleteModal, PresentationDetailsModal, PerformanceDetailsModal, AdditionalRehearsalsModal, OrchestraDetailsModal all keep Card for floating overlay context
+- [22-09 Components]: hover:bg-primary → hover:bg-neutral-800 for primary action buttons — visible lighter shift on black buttons
+- [22-09 Components]: The full deletion module (12 files) is now semantically clean — primary-NNN purged
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -77,9 +80,10 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 - [WSL constraint]: npm install on /mnt/c/ NTFS mount causes EIO errors — build verification from Windows PowerShell or CI only.
 - [v2.1 carryover]: 1,211 primary-NNN hex classes across 134 files — migration deferred, may be addressed in v3.0.
 - [v2.1 audit]: TeacherForm.tsx and StudentForm.tsx accent bars orphaned — form routing doesn't reach them. Will be addressed or superseded by Phase 22 restructuring.
+- [22-09 Remaining]: ~152 bg-primary-NNN, ~140 text-primary-NNN, ~94 rounded-xl remain in OTHER src/ files (dashboard/charts, feedback, analytics, schedule, accessibility, OrchestraEnrollmentManager root-level) — outside plan 22-09 scope. May need follow-up plan.
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-05-PLAN.md — Form components sweep (22 files, primary-NNN and rounded-lg eliminated)
+Stopped at: Completed 22-09-PLAN.md — Final bulk component sweep (37 files, deletion module + entity cards + modals + schedule + misc)
 Resume file: None

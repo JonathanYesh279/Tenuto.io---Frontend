@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-20)
 ## Current Position
 
 Phase: 23-dashboard-visual-redesign
-Plan: 03/06
+Plan: 05/06
 Status: Executing
-Last activity: 2026-02-19 — Completed 23-03: Admin dashboard rebuilt with v4.0 grid layout and stat cards
+Last activity: 2026-02-19 — Completed 23-05: Teacher performance table and sidebar widgets (calendar, agenda, messages)
 
-Progress: [█████░░░░░] 50.0% (v4.0 — 3/6 plans complete)
+Progress: [████████░░] 83.3% (v4.0 — 5/6 plans complete)
 
 ## Performance Metrics
 
@@ -29,8 +29,8 @@ Progress: [█████░░░░░] 50.0% (v4.0 — 3/6 plans complete)
 - v2.0: 10 phases, 22 plans, ~2.3 hours
 - v2.1: 6 phases, 13 plans
 - v3.0: 1 phase, 15 plans (22-01: 2 min, 22-02: 2 min, 22-07: 2 min, 22-09: 3 min, 22-12: 2 min)
-- v4.0: 1 phase, 3/6 plans (23-01: 3 min, 23-02: 2 min, 23-03: 3 min)
-- Total: 22+ phases, 60 plans
+- v4.0: 1 phase, 5/6 plans (23-01: 3 min, 23-02: 2 min, 23-03: 3 min, 23-04: 3 min, 23-05: 3 min)
+- Total: 22+ phases, 61 plans
 
 ## Accumulated Context
 
@@ -56,6 +56,11 @@ Key decisions for v4.0:
 - [23-03 Dashboard grid]: 12-col grid with 9:3 split establishes main content and sidebar zones
 - [23-03 Entity colors]: Stat cards use entity color coding (students=indigo, teachers=amber, orchestras=sky, rehearsals=emerald)
 - [23-03 Dark mode toggle]: FAB toggle with localStorage persistence enables immediate dark mode testing
+- [23-04 Recharts library]: Recharts over Chart.js for v4.0 dashboard — SVG-based, better RTL support, composable API
+- [23-04 Custom tooltips]: Chart tooltips styled to match v4.0 aesthetic (rounded corners, shadows, white background)
+- [23-04 Mock data strategy]: Financial trends use mock data with TODO comment for /api/dashboard/financial-trends endpoint
+- [23-05 Teacher table data]: Teacher performance table wired to real teacher data from Dashboard.tsx loadDashboardData
+- [23-05 Widget data sources]: Agenda wired to upcomingRehearsals data, MessagesWidget uses mock data with TODO
 
 Archived v3.0 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -72,6 +77,6 @@ Archived v3.0 decisions: see milestones/ or git history for STATE.md prior versi
 
 ## Session Continuity
 
-Last session: 2026-02-19T23:14:08Z
-Stopped at: Completed 23-02-PLAN.md — Sidebar and Header redesigned for v4.0 (white/light sidebar, indigo active pills, search bar, notification bell)
+Last session: 2026-02-19T23:20:47Z
+Stopped at: Completed 23-05-PLAN.md — Teacher performance table and sidebar widgets (calendar, agenda, messages)
 Resume file: None

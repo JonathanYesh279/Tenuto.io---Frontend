@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-18)
 ## Current Position
 
 Phase: 22-visual-architecture-rewrite
-Plan: 22-03 (2/15 complete)
+Plan: 22-08 (7/15 complete)
 Status: In progress
-Last activity: 2026-02-19 — 22-02 Phosphor Icons install + Sidebar dark theme rewrite complete
+Last activity: 2026-02-19 — 22-07 Bagrut module token migration complete (24 files)
 
-Progress: [██░░░░░░░░] 13% (v3.0)
+Progress: [████░░░░░░] 47% (v3.0)
 
 ## Performance Metrics
 
@@ -28,7 +28,7 @@ Progress: [██░░░░░░░░] 13% (v3.0)
 - v1.1: 5 phases, 7 plans, ~3.5 hours
 - v2.0: 10 phases, 22 plans, ~2.3 hours
 - v2.1: 6 phases, 13 plans
-- v3.0: 1 phase in progress, 2 plans complete (22-01: 2 min, 22-02: 2 min)
+- v3.0: 1 phase in progress, 7 plans complete (22-01: 2 min, 22-02: 2 min, 22-07: 2 min)
 - Total: 21+ phases, 44 plans
 
 ## Accumulated Context
@@ -55,6 +55,9 @@ Key decisions for v3.0:
 - [22-02 Icons]: @phosphor-icons/react installed; Sidebar.tsx is the first Phosphor-migrated component — fill/regular weight toggle for active/inactive nav items
 - [22-02 Icons]: ListIcon is the Phosphor equivalent of Lucide Menu icon — no MenuIcon exists in Phosphor
 - [22-02 Icons]: Role badges in dark sidebar need inverted colors (bg-red-900/40 text-red-300, not bg-red-100 text-red-700)
+- [22-07 Bagrut]: rounded-lg removed throughout bagrut module — all container rounding reduced to rounded (2px sharp identity)
+- [22-07 Bagrut]: Modal Card wrappers preserved (ConflictResolutionModal, MigrationWarningModal) — floating content keeps Card
+- [22-07 Bagrut]: bg-primary-50/100 backgrounds replaced with bg-muted — tonal neutral, not warm tint
 
 Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versions.
 
@@ -73,5 +76,5 @@ Archived v2.1 decisions: see milestones/ or git history for STATE.md prior versi
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-02-PLAN.md — Phosphor Icons install + Sidebar dark theme rewrite
+Stopped at: Completed 22-07-PLAN.md — Bagrut module token migration (24 files, primary-NNN eliminated)
 Resume file: None

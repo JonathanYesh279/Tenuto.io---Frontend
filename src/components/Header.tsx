@@ -4,7 +4,7 @@ import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
-import { HouseIcon, SignOutIcon, UserIcon } from '@phosphor-icons/react'
+import { HouseIcon, SignOutIcon, UserIcon, MagnifyingGlassIcon, BellIcon } from '@phosphor-icons/react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 export default function Header() {
@@ -93,54 +93,85 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 h-16 bg-white border-b border-border flex items-center justify-between z-[45] transition-all duration-300"
+      className="fixed top-0 left-0 h-20 bg-white dark:bg-sidebar-dark border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0 z-[45] transition-all duration-300"
       style={{
         direction: 'rtl',
         width: hasSidebar && !isMobile && isDesktopOpen ? 'calc(100% - 280px)' : '100%',
-        paddingLeft: '1.5rem',
-        paddingRight: hasSidebar && !isMobile && !isDesktopOpen ? '4rem' : '1.5rem'
       }}
     >
-      {/* Right side (RTL) - Brand/Logo */}
-      <div className="flex items-center gap-4">
+      {/* Right side (RTL) - Brand/Logo + Search */}
+      <div className="flex items-center gap-6">
         <img
           src="/logo.png"
           alt="Logo"
           className="h-10 w-auto object-contain"
         />
 
-        {/* School Year Selector */}
-        <SchoolYearSelector />
+        {/* Search input - Desktop only */}
+        {!isMobile && (
+          <div className="relative w-96">
+            <MagnifyingGlassIcon
+              size={18}
+              weight="regular"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+            />
+            <input
+              type="text"
+              placeholder="חיפוש שיעורים, תלמידים..."
+              className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-2xl py-2.5 pr-11 pl-4 focus:ring-2 focus:ring-primary text-sm transition-all text-right font-reisinger-yonatan placeholder:text-slate-400"
+              // TODO: wire to global search
+            />
+          </div>
+        )}
       </div>
 
-      {/* Left side (RTL) - UserIcon Controls */}
+      {/* Left side (RTL) - School Year + Bell + Profile */}
       <div className="flex items-center gap-4" style={{ direction: 'ltr' }}>
-        {/* Desktop - Individual Icons */}
-        {!isMobile && (
-          <>
-            {/* Dashboard Icon for non-admin users */}
-            {!isAdmin && (
-              <button
-                onClick={handleDashboardClick}
-                className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center hover:bg-primary/15 hover:border-primary/30 transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                title="לוח בקרה"
-              >
-                <HouseIcon className="w-5 h-5 text-primary" />
-              </button>
-            )}
-          </>
+        {/* School Year Selector - muted styling */}
+        <div className="text-xs">
+          <SchoolYearSelector />
+        </div>
+
+        {/* Notification bell */}
+        <button
+          className="relative text-slate-500 hover:text-primary transition-colors"
+          aria-label="התראות"
+          // TODO: wire to notifications API
+        >
+          <BellIcon size={22} weight="regular" />
+          <span className="absolute top-0 left-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-sidebar-dark"></span>
+        </button>
+
+        {/* Divider */}
+        <div className="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
+
+        {/* Desktop - Dashboard Icon for non-admin users */}
+        {!isMobile && !isAdmin && (
+          <button
+            onClick={handleDashboardClick}
+            className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center hover:bg-primary/15 hover:border-primary/30 transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            title="לוח בקרה"
+          >
+            <HouseIcon className="w-5 h-5 text-primary" />
+          </button>
         )}
 
-        {/* UserIcon Avatar with Profile Dropdown — shadcn DropdownMenu */}
+        {/* User profile section with DropdownMenu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl"
               aria-label="תפריט פרופיל"
             >
-              <span className="text-sm font-semibold text-white font-reisinger-yonatan">
-                {getInitials()}
-              </span>
+              <div className="text-left">
+                <div className="text-sm font-bold font-reisinger-yonatan">{getUserFullName()}</div>
+                <div className="text-[11px] font-semibold text-slate-400 uppercase">{getUserRole()}</div>
+              </div>
+              <div className="w-10 h-10 rounded-xl object-cover ring-2 ring-white dark:ring-slate-800 bg-primary flex items-center justify-center">
+                <span className="text-sm font-semibold text-white font-reisinger-yonatan">
+                  {getInitials()}
+                </span>
+              </div>
             </button>
           </DropdownMenuTrigger>
 

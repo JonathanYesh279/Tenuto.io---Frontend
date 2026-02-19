@@ -9,6 +9,13 @@ import TeacherDashboard from '../components/dashboard/TeacherDashboard'
 import TheoryTeacherDashboard from '../components/dashboard/TheoryTeacherDashboard'
 import SuperAdminDashboard from '../components/dashboard/SuperAdminDashboard'
 import { StatCard } from '../components/dashboard/v4/StatCard'
+import { FinancialTrendsChart } from '../components/dashboard/v4/FinancialTrendsChart'
+import { AttendanceBarChart } from '../components/dashboard/v4/AttendanceBarChart'
+import { StudentDemographicsChart } from '../components/dashboard/v4/StudentDemographicsChart'
+import { TeacherPerformanceTable } from '../components/dashboard/v4/TeacherPerformanceTable'
+import { CalendarWidget } from '../components/dashboard/v4/CalendarWidget'
+import { AgendaWidget } from '../components/dashboard/v4/AgendaWidget'
+import { MessagesWidget } from '../components/dashboard/v4/MessagesWidget'
 
 interface TeacherHoursSummary {
   teacherId: string
@@ -36,7 +43,8 @@ export default function Dashboard() {
     weeklyRehearsals: 0,
     studentsTrend: 0,
     activeBagruts: 0,
-    theoryLessonsThisWeek: 0
+    theoryLessonsThisWeek: 0,
+    genderStats: { male: 0, female: 0 }
   })
   const [recentActivities, setRecentActivities] = useState<any[]>([])
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
@@ -44,6 +52,8 @@ export default function Dashboard() {
   const [hoursLoading, setHoursLoading] = useState(false)
   const [hoursError, setHoursError] = useState<string | null>(null)
   const [isRecalculating, setIsRecalculating] = useState(false)
+  const [teacherTableData, setTeacherTableData] = useState<any[]>([])
+  const [agendaData, setAgendaData] = useState<any[]>([])
 
   // Dark mode initialization
   useEffect(() => {
@@ -125,6 +135,16 @@ export default function Dashboard() {
       // Active bagruts
       const activeBagruts = bagrutsData.filter((b: any) => !b.isCompleted && b.isActive !== false).length
 
+      // Calculate gender stats
+      const maleCount = studentsData.filter((s: any) =>
+        s.personalInfo?.gender === 'male' ||
+        s.personalInfo?.gender === 'זכר'
+      ).length
+      const femaleCount = studentsData.filter((s: any) =>
+        s.personalInfo?.gender === 'female' ||
+        s.personalInfo?.gender === 'נקבה'
+      ).length
+
       setStats({
         activeStudents,
         totalStudents,
@@ -133,7 +153,8 @@ export default function Dashboard() {
         weeklyRehearsals,
         studentsTrend,
         activeBagruts,
-        theoryLessonsThisWeek: weeklyTheory
+        theoryLessonsThisWeek: weeklyTheory,
+        genderStats: { male: maleCount, female: femaleCount }
       })
 
       // Generate recent activities
@@ -321,22 +342,19 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Financial trends chart — full width (placeholder for Plan 04) */}
-          <div id="financial-chart-slot" className="bg-white dark:bg-sidebar-dark p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[320px] flex items-center justify-center text-slate-400">
-            {/* FinancialTrendsChart will be placed here in Plan 04 */}
-            <span className="text-sm">מגמות פיננסיות — טוען...</span>
-          </div>
+          {/* Financial trends chart — full width */}
+          <FinancialTrendsChart />
 
           {/* Charts section — 2 columns */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            {/* Attendance chart placeholder (Plan 04) */}
-            <div id="attendance-chart-slot" className="bg-white dark:bg-sidebar-dark p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[280px] flex items-center justify-center text-slate-400">
-              <span className="text-sm">נוכחות — טוען...</span>
-            </div>
-            {/* Demographics chart placeholder (Plan 04) */}
-            <div id="demographics-chart-slot" className="bg-white dark:bg-sidebar-dark p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 min-h-[280px] flex items-center justify-center text-slate-400">
-              <span className="text-sm">תלמידים — טוען...</span>
-            </div>
+            {/* Attendance chart */}
+            <AttendanceBarChart />
+            {/* Demographics chart */}
+            <StudentDemographicsChart
+              genderStats={stats.genderStats}
+              totalStudents={stats.totalStudents}
+              loading={loading}
+            />
           </div>
 
           {/* Teacher performance table placeholder (Plan 05) */}

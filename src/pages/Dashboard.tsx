@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ClockIcon, ArrowsClockwiseIcon, WarningCircleIcon, MoonIcon, UsersIcon, GraduationCapIcon, MusicNotesIcon, CalendarCheckIcon } from '@phosphor-icons/react'
+import { ClockIcon, ArrowsClockwiseIcon, WarningCircleIcon, MoonIcon } from '@phosphor-icons/react'
 import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
@@ -330,42 +330,41 @@ export default function Dashboard() {
         {/* Main content — 9 columns */}
         <div className="col-span-12 lg:col-span-9 space-y-8">
 
-          {/* Stat cards row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-            <StatCard
-              entity="students"
-              value={stats.activeStudents}
-              label="תלמידים פעילים"
-              trend={stats.studentsTrend > 0 ? `+${stats.studentsTrend}%` : undefined}
-              icon={<UsersIcon size={28} weight="duotone" />}
-              loading={loading}
-            />
-            <StatCard
-              entity="teachers"
-              value={stats.staffMembers}
-              label="סגל הוראה"
-              icon={<GraduationCapIcon size={28} weight="duotone" />}
-              loading={loading}
-            />
-            <StatCard
-              entity="orchestras"
-              value={stats.activeOrchestras}
-              label="הרכבים פעילים"
-              icon={<MusicNotesIcon size={28} weight="duotone" />}
-              loading={loading}
-            />
-            <StatCard
-              entity="rehearsals"
-              value={stats.weeklyRehearsals}
-              label="חזרות שבועיות"
-              trend="שבועי"
-              icon={<CalendarCheckIcon size={28} weight="duotone" />}
-              loading={loading}
-            />
-          </div>
+          {/* Top section: 2x2 stat cards + financial chart side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Stat cards — 2x2 grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <StatCard
+                entity="students"
+                value={stats.activeStudents}
+                label="תלמידים פעילים"
+                trend={stats.studentsTrend > 0 ? `${stats.studentsTrend}%` : undefined}
+                loading={loading}
+              />
+              <StatCard
+                entity="teachers"
+                value={stats.staffMembers}
+                label="סגל הוראה"
+                loading={loading}
+              />
+              <StatCard
+                entity="orchestras"
+                value={stats.activeOrchestras}
+                label="הרכבים פעילים"
+                loading={loading}
+              />
+              <StatCard
+                entity="rehearsals"
+                value={stats.weeklyRehearsals}
+                label="חזרות שבועיות"
+                trend="שבועי"
+                loading={loading}
+              />
+            </div>
 
-          {/* Financial trends chart — full width */}
-          <FinancialTrendsChart />
+            {/* Financial trends chart */}
+            <FinancialTrendsChart />
+          </div>
 
           {/* Charts section — 2 columns */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">

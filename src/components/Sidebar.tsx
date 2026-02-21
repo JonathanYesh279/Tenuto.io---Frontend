@@ -28,7 +28,6 @@ import {
   CalendarPlusIcon,
   CheckSquareIcon,
   ShieldIcon,
-  CaretDownIcon,
   BuildingsIcon,
 } from '@phosphor-icons/react'
 import type { Icon } from '@phosphor-icons/react'
@@ -127,7 +126,7 @@ export default function Sidebar() {
   const { isDesktopOpen, setIsDesktopOpen, isMobile } = useSidebar()
   const [searchQuery, setSearchQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(new Set())
+  // Category collapse removed — flat label display
 
   // Modal states
   const [showStudentForm, setShowStudentForm] = useState(false)
@@ -337,17 +336,6 @@ export default function Sidebar() {
     }
   }, [isMobile])
 
-  const toggleCategory = useCallback((categoryKey: string) => {
-    setCollapsedCategories(prev => {
-      const newCollapsed = new Set(prev)
-      if (newCollapsed.has(categoryKey)) {
-        newCollapsed.delete(categoryKey)
-      } else {
-        newCollapsed.add(categoryKey)
-      }
-      return newCollapsed
-    })
-  }, [])
 
   // Get role display labels
   const getRoleLabel = (role: string): string => {
@@ -362,11 +350,11 @@ export default function Sidebar() {
 
   const getRoleBadgeColor = (role: string): string => {
     switch (role) {
-      case 'admin': return 'bg-red-900/40 text-red-300'
-      case 'teacher': return 'bg-blue-900/40 text-blue-300'
-      case 'conductor': return 'bg-green-900/40 text-green-300'
-      case 'theory-teacher': return 'bg-yellow-900/40 text-yellow-300'
-      default: return 'bg-sidebar-active-bg text-sidebar-foreground/70'
+      case 'admin': return 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
+      case 'teacher': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+      case 'conductor': return 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
+      case 'theory-teacher': return 'bg-amber-100 text-amber-700 dark:bg-yellow-900/40 dark:text-yellow-300'
+      default: return 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
     }
   }
 
@@ -551,90 +539,76 @@ export default function Sidebar() {
             <>
               {/* Grouped Navigation */}
               {groupedNavigation.map((category, categoryIndex) => (
-                <div key={category.key} className={categoryIndex > 0 ? 'mt-6' : ''}>
-                  <div className="px-3 mb-2">
-                    <button
-                      onClick={() => toggleCategory(category.key)}
-                      className="flex items-center justify-between w-full text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest hover:text-slate-500 dark:hover:text-slate-400 transition-colors"
-                    >
-                      <span>{category.label}</span>
-                      <CaretDownIcon
-                        size={12}
-                        weight="bold"
-                        className={`transition-transform ${
-                          collapsedCategories.has(category.key) ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </button>
-                  </div>
-
-                  {!collapsedCategories.has(category.key) && (
-                    <div className="space-y-1">
-                      {category.items.map((item) => {
-                        return (
-                          <NavLink
-                            key={`${category.key}-${item.href}-${item.name}`}
-                            to={item.href}
-                            end={item.href === '/dashboard'}
-                            onClick={closeMobileMenu}
-                            className={({ isActive: active }) =>
-                              `flex items-center gap-3 px-3 py-3 rounded-xl transition-all font-reisinger-yonatan ${
-                                active
-                                  ? 'bg-primary/10 text-primary font-bold'
-                                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium'
-                              }`
-                            }
-                          >
-                            {({ isActive: active }) => (
-                              <>
-                                <item.Icon
-                                  size={20}
-                                  weight={active ? 'fill' : 'regular'}
-                                  className="flex-shrink-0"
-                                />
-                                <div className="flex items-center gap-2 flex-1">
-                                  <span className="text-right">{item.name}</span>
-                                  {/* Show role badge for multi-role users */}
-                                  {hasMultipleRoles && item.roles && item.roles.length === 1 && (
-                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${getRoleBadgeColor(item.roles[0])}`}>
-                                      {getRoleLabel(item.roles[0])}
-                                    </span>
-                                  )}
-                                </div>
-                              </>
-                            )}
-                          </NavLink>
-                        )
-                      })}
-                    </div>
+                <div key={category.key} className={categoryIndex > 0 ? 'mt-5' : ''}>
+                  {/* Category label — static, no collapse */}
+                  {categoryIndex > 0 && (
+                    <p className="px-3 mb-2 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                      {category.label}
+                    </p>
                   )}
+
+                  <div className="space-y-0.5">
+                    {category.items.map((item) => {
+                      return (
+                        <NavLink
+                          key={`${category.key}-${item.href}-${item.name}`}
+                          to={item.href}
+                          end={item.href === '/dashboard'}
+                          onClick={closeMobileMenu}
+                          className={({ isActive: active }) =>
+                            `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                              active
+                                ? 'bg-primary/10 text-primary font-bold'
+                                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium'
+                            }`
+                          }
+                        >
+                          {({ isActive: active }) => (
+                            <>
+                              <item.Icon
+                                size={20}
+                                weight={active ? 'fill' : 'duotone'}
+                                className="flex-shrink-0"
+                              />
+                              <div className="flex items-center gap-2 flex-1">
+                                <span className="text-sm text-right">{item.name}</span>
+                                {hasMultipleRoles && item.roles && item.roles.length === 1 && (
+                                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(item.roles[0])}`}>
+                                    {getRoleLabel(item.roles[0])}
+                                  </span>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </NavLink>
+                      )
+                    })}
+                  </div>
                 </div>
               ))}
 
               {/* Quick Actions */}
               {quickActions.length > 0 && (
-                <div className="space-y-1 border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">
-                  <h3 className="px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">
+                <div className="space-y-0.5 border-t border-slate-200 dark:border-slate-800 pt-5 mt-5">
+                  <p className="px-3 mb-2 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
                     פעולות מהירות
-                  </h3>
+                  </p>
                   {quickActions.map((action) => {
                     return (
                       <button
                         key={`${action.href}-${action.name}-${action.role}`}
                         onClick={() => handleQuickActionClick(action.name, action.href)}
-                        className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-medium font-reisinger-yonatan group"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all font-medium group"
                       >
-                        <PlusIcon size={20} weight="regular" className="flex-shrink-0" />
+                        <PlusIcon size={18} weight="bold" className="flex-shrink-0 text-primary/60" />
                         <div className="flex items-center gap-2 flex-1">
-                          <span className="text-right">{action.name}</span>
-                          {/* Show role badge for multi-role quick actions */}
+                          <span className="text-sm text-right">{action.name}</span>
                           {hasMultipleRoles && action.role && (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded ${getRoleBadgeColor(action.role)}`}>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(action.role)}`}>
                               {getRoleLabel(action.role)}
                             </span>
                           )}
                         </div>
-                        <action.Icon size={14} weight="regular" className="flex-shrink-0" />
                       </button>
                     )
                   })}

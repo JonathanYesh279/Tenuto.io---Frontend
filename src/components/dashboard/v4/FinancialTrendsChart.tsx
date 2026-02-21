@@ -46,14 +46,14 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const CustomLegend = () => {
   return (
-    <div className="flex gap-6 text-sm">
-      <div className="flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#BAE6FD' }}></div>
-        <span className="text-slate-600 dark:text-slate-300 font-medium">הכנסות</span>
+    <div className="flex gap-4 text-xs">
+      <div className="flex items-center gap-1.5">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#FBBF24' }}></div>
+        <span className="text-slate-500 dark:text-slate-400 font-medium">הכנסות</span>
       </div>
-      <div className="flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#C7D2FE' }}></div>
-        <span className="text-slate-600 dark:text-slate-300 font-medium">הוצאות</span>
+      <div className="flex items-center gap-1.5">
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#D1D5DB' }}></div>
+        <span className="text-slate-500 dark:text-slate-400 font-medium">הוצאות</span>
       </div>
     </div>
   )
@@ -61,20 +61,20 @@ const CustomLegend = () => {
 
 export function FinancialTrendsChart() {
   return (
-    <div className="bg-white dark:bg-sidebar-dark p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+    <div className="bg-white dark:bg-sidebar-dark p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col">
       {/* Title row */}
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-4">
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">מגמות פיננסיות</h3>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">גביית שכר לימוד</h3>
           <CustomLegend />
         </div>
         <button className="text-slate-400 hover:text-slate-600 transition-colors">
-          <DotsThreeIcon size={24} weight="bold" />
+          <DotsThreeIcon size={20} weight="bold" />
         </button>
       </div>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height={256}>
+      <ResponsiveContainer width="100%" height={200}>
         <LineChart data={MOCK_FINANCIAL_DATA} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid stroke="#e2e8f0" strokeDasharray="4 4" vertical={false} />
           <XAxis
@@ -88,18 +88,19 @@ export function FinancialTrendsChart() {
           <Line
             type="monotone"
             dataKey="income"
-            stroke="#BAE6FD"
-            strokeWidth={3}
+            stroke="#FBBF24"
+            strokeWidth={2.5}
             dot={false}
             name="הכנסות"
           />
           <Line
             type="monotone"
             dataKey="expenses"
-            stroke="#C7D2FE"
-            strokeWidth={3}
+            stroke="#D1D5DB"
+            strokeWidth={2}
             dot={false}
             name="הוצאות"
+            strokeDasharray="6 3"
           />
         </LineChart>
       </ResponsiveContainer>

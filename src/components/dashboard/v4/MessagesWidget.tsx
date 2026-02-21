@@ -1,4 +1,4 @@
-import { UserCircleIcon } from '@phosphor-icons/react'
+import { UserIcon } from '@phosphor-icons/react'
 
 interface Message {
   name: string
@@ -61,17 +61,9 @@ export function MessagesWidget({ messages, loading }: MessagesWidgetProps) {
       <div className="space-y-6">
         {displayMessages.map((message, index) => (
           <div key={index} className="flex gap-3">
-            {message.avatar ? (
-              <img
-                src={message.avatar}
-                alt={message.name}
-                className="w-10 h-10 rounded-xl object-cover shrink-0"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-xl shrink-0 text-slate-300 dark:text-slate-600">
-                <UserCircleIcon size={40} weight="fill" />
-              </div>
-            )}
+            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center shrink-0">
+              <UserIcon size={20} weight="regular" className="text-slate-400 dark:text-slate-500" />
+            </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-bold truncate">{message.name}</span>

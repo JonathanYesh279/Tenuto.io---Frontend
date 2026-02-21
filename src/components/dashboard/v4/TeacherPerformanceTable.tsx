@@ -64,8 +64,8 @@ export function TeacherPerformanceTable({ teachers, loading }: TeacherPerformanc
               <tr key={teacher.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
                 <td className="px-8 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center shrink-0">
-                      <UserIcon size={16} weight="regular" className="text-slate-400 dark:text-slate-500" />
+                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center shrink-0">
+                      <UserIcon size={20} weight="regular" className="text-slate-400 dark:text-slate-500" />
                     </div>
                     <span className="text-sm font-bold">{teacher.name}</span>
                   </div>

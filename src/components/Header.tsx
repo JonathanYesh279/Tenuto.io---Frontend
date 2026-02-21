@@ -4,7 +4,7 @@ import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
-import { HouseIcon, SignOutIcon, UserIcon, MagnifyingGlassIcon, BellIcon } from '@phosphor-icons/react'
+import { HouseIcon, SignOutIcon, UserIcon, UserCircleIcon, MagnifyingGlassIcon, BellIcon } from '@phosphor-icons/react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 export default function Header() {
@@ -167,8 +167,8 @@ export default function Header() {
                 <div className="text-sm font-bold font-reisinger-yonatan">{getUserFullName()}</div>
                 <div className="text-[11px] font-semibold text-slate-400 uppercase">{getUserRole()}</div>
               </div>
-              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center">
-                <UserIcon size={20} weight="regular" className="text-slate-400 dark:text-slate-500" />
+              <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
+                <UserCircleIcon size={40} weight="fill" />
               </div>
             </button>
           </DropdownMenuTrigger>

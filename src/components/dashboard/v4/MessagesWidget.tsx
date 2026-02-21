@@ -1,46 +1,26 @@
-import { UserCircleIcon } from '@phosphor-icons/react'
+import { UserCircleIcon, MusicNotesIcon } from '@phosphor-icons/react'
 
-interface Message {
-  name: string
-  avatar?: string | null
+interface Activity {
+  type: string
+  title: string
+  description: string
   time: string
-  preview: string
+  color: string
 }
 
 interface MessagesWidgetProps {
-  messages?: Message[]
+  activities?: Activity[]
   loading?: boolean
+  // Legacy props for backwards compat
+  messages?: any[]
 }
 
-// TODO: Wire to notifications/messages API when available
-const MOCK_MESSAGES: Message[] = [
-  {
-    name: 'שרה כהן',
-    time: 'לפני 2 דק\'',
-    preview: 'התווים להרכב הצ\'לו עודכנו בספרייה.'
-  },
-  {
-    name: 'דוד לוי',
-    time: 'לפני שעה',
-    preview: 'נוכל לדחות את ישיבת הסגל?'
-  },
-  {
-    name: 'מיכל אברהם',
-    time: 'לפני 3 שעות',
-    preview: 'קיבלתי את הרשימה המעודכנת של תלמידי התזמורת. תודה רבה!'
-  }
-]
-
-export function MessagesWidget({ messages, loading }: MessagesWidgetProps) {
-  // Use mock data since there's no messages API yet
-  const displayMessages = messages && messages.length > 0 ? messages : MOCK_MESSAGES
-
+export function MessagesWidget({ activities, loading }: MessagesWidgetProps) {
   if (loading) {
     return (
       <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="font-bold text-sm">הודעות</h3>
-          <span className="text-primary text-[11px] font-bold uppercase">הצג הכל</span>
+          <h3 className="font-bold text-sm">פעילות אחרונה</h3>
         </div>
         <div className="flex items-center justify-center h-32 text-slate-400">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -49,28 +29,42 @@ export function MessagesWidget({ messages, loading }: MessagesWidgetProps) {
     )
   }
 
+  const displayItems = activities && activities.length > 0 ? activities.slice(0, 4) : []
+
+  if (displayItems.length === 0) {
+    return (
+      <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="font-bold text-sm">פעילות אחרונה</h3>
+        </div>
+        <p className="text-center text-sm text-slate-400 py-8">אין פעילות אחרונה</p>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="font-bold text-sm">הודעות</h3>
-        <button className="text-primary text-[11px] font-bold uppercase hover:underline">
-          הצג הכל
-        </button>
+        <h3 className="font-bold text-sm">פעילות אחרונה</h3>
       </div>
 
       <div className="space-y-6">
-        {displayMessages.map((message, index) => (
+        {displayItems.map((item, index) => (
           <div key={index} className="flex gap-3">
             <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
-              <UserCircleIcon size={40} weight="fill" />
+              {item.type === 'student' ? (
+                <UserCircleIcon size={40} weight="fill" />
+              ) : (
+                <MusicNotesIcon size={40} weight="fill" />
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-bold truncate">{message.name}</span>
-                <span className="text-[9px] text-slate-400 shrink-0">{message.time}</span>
+                <span className="text-xs font-bold truncate">{item.title}</span>
+                <span className="text-[9px] text-slate-400 shrink-0">{item.time}</span>
               </div>
               <p className="text-[11px] text-slate-500 line-clamp-2">
-                {message.preview}
+                {item.description}
               </p>
             </div>
           </div>

@@ -480,13 +480,10 @@ export default function Sidebar() {
         {/* Brand Logo */}
         <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/30">
-              <MusicNotesIcon weight="fill" className="text-white" size={20} />
-            </div>
-            <div className="flex flex-col">
-              <h2 className="font-extrabold text-xl tracking-tight text-foreground">קונסרבטוריון</h2>
-              <span className="text-[10px] uppercase tracking-widest font-bold text-primary/70">v4.0</span>
-            </div>
+            <img src="/logo.png" alt="Logo" className="h-9 w-auto object-contain" />
+            <h2 className="font-bold text-base tracking-tight text-foreground truncate">
+              {user?.tenantName || user?.schoolName || 'Tenuto'}
+            </h2>
           </div>
         </div>
         {/* Search */}

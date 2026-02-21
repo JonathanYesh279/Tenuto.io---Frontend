@@ -8,14 +8,15 @@ interface StatCardProps {
   loading?: boolean
 }
 
-function WaveIcon() {
+function StockIcon() {
   return (
-    <svg width="36" height="18" viewBox="0 0 36 18" fill="none" className="text-white/40">
+    <svg width="40" height="22" viewBox="0 0 40 22" fill="none" className="text-white/50">
       <path
-        d="M2 9C5 3 8 15 12 9C16 3 19 15 23 9C27 3 30 15 34 9"
+        d="M2 18L8 14L13 16L18 8L23 10L28 4L34 6L38 2"
         stroke="currentColor"
         strokeWidth="2.5"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
@@ -44,7 +45,7 @@ export function StatCard({ entity, value, label, trend, loading = false }: StatC
           </span>
         )}
         {!trend && <span />}
-        <WaveIcon />
+        <StockIcon />
       </div>
       <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-0.5">
         {typeof value === 'number' ? value.toLocaleString('he-IL') : value}

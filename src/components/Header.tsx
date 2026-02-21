@@ -167,10 +167,8 @@ export default function Header() {
                 <div className="text-sm font-bold font-reisinger-yonatan">{getUserFullName()}</div>
                 <div className="text-[11px] font-semibold text-slate-400 uppercase">{getUserRole()}</div>
               </div>
-              <div className="w-10 h-10 rounded-xl object-cover ring-2 ring-white dark:ring-slate-800 bg-primary flex items-center justify-center">
-                <span className="text-sm font-semibold text-white font-reisinger-yonatan">
-                  {getInitials()}
-                </span>
+              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center">
+                <UserIcon size={20} weight="regular" className="text-slate-400 dark:text-slate-500" />
               </div>
             </button>
           </DropdownMenuTrigger>

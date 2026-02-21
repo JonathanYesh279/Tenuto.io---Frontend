@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { EyeIcon, PencilSimpleIcon, FunnelIcon, CircleNotchIcon, XIcon, SquaresFourIcon, ListIcon, TrashIcon, CaretUpIcon, CaretDownIcon, WarningIcon, ShieldIcon, ArchiveIcon, ClockIcon, UsersIcon, GraduationCapIcon, UserCheckIcon, UserCircleMinusIcon, BookOpenIcon } from '@phosphor-icons/react'
+import { ArrowUpRightIcon, PencilLineIcon, FunnelIcon, CircleNotchIcon, XIcon, SquaresFourIcon, ListIcon, TrashIcon, CaretUpIcon, CaretDownIcon, WarningIcon, ShieldIcon, ArchiveIcon, ClockIcon, UsersIcon, GraduationCapIcon, UserCheckIcon, UserCircleMinusIcon, BookOpenIcon, UserCircleIcon } from '@phosphor-icons/react'
 import { PlusIcon } from '@phosphor-icons/react'
 import { clsx } from 'clsx'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import { Badge } from '../components/ui/badge'
-import { StatusBadge, InstrumentBadge, AvatarInitials } from '../components/domain'
+import { StatusBadge, InstrumentBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/forms/StudentForm'
@@ -23,6 +23,7 @@ import BatchDeletionModal from '../components/BatchDeletionModal'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
+
 
 export default function Students() {
   const navigate = useNavigate()
@@ -311,7 +312,7 @@ export default function Students() {
         // Add the original API response data for StudentCard compatibility
         originalStudent: response.find(s => s._id === student.id),
         actions: (
-          <div className="flex space-x-2 space-x-reverse">
+          <div className="flex items-center gap-0.5">
             {isSelectMode && (
               <input
                 type="checkbox"
@@ -329,48 +330,47 @@ export default function Students() {
                 className="rounded border-border text-primary focus:ring-ring"
               />
             )}
-            <button 
-              className="p-1.5 text-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
+            <button
+              className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-700/50 transition-colors"
               onClick={(e) => {
-                e.stopPropagation() // Prevent row click
-                console.log('Eye icon clicked for student:', student.id)
+                e.stopPropagation()
                 handleViewStudent(student.id)
               }}
               title="צפה בפרטי התלמיד"
             >
-              <EyeIcon size={16} weight="regular" />
+              <ArrowUpRightIcon size={15} weight="regular" />
             </button>
             <button
-              className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+              className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-700/50 transition-colors"
               onClick={(e) => {
-                e.stopPropagation() // Prevent row click
+                e.stopPropagation()
                 handleEditStudent(student.id)
               }}
               title="ערוך פרטי התלמיד"
             >
-              <PencilSimpleIcon size={16} weight="regular" />
+              <PencilLineIcon size={15} weight="regular" />
             </button>
             {(student.referenceCount || student.rawData?.referenceCount || 0) > 0 ? (
-              <button 
-                className="p-1.5 text-orange-600 hover:text-orange-900 hover:bg-orange-50 rounded transition-colors"
+              <button
+                className="p-1.5 rounded-md text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors"
                 onClick={(e) => {
-                  e.stopPropagation() // Prevent row click
+                  e.stopPropagation()
                   handleSafeDeleteClick(student.id, student.name)
                 }}
                 title="מחיקה מאובטחת"
               >
-                <ShieldIcon size={16} weight="regular" />
+                <ShieldIcon size={15} weight="regular" />
               </button>
             ) : (
-              <button 
-                className="p-1.5 text-red-600 hover:text-red-900 hover:bg-red-50 rounded transition-colors"
+              <button
+                className="p-1.5 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                 onClick={(e) => {
-                  e.stopPropagation() // Prevent row click
+                  e.stopPropagation()
                   handleDeleteClick(student.id, student.name)
                 }}
                 title="מחק תלמיד"
               >
-                <TrashIcon size={16} weight="fill" />
+                <TrashIcon size={15} weight="regular" />
               </button>
             )}
           </div>
@@ -652,6 +652,10 @@ export default function Students() {
   // Use totalStudentsCount from pagination when available, otherwise use loaded students length
   const totalStudents = totalStudentsCount > 0 ? totalStudentsCount : students.length
   const activeStudents = students.filter(s => s.rawData?.isActive).length
+  const studentsInOrchestras = students.filter(s => s.rawData?.orchestraIds?.length > 0).length
+  const avgStageLevel = students.length > 0
+    ? Math.round(students.reduce((sum, s) => sum + (s.stageLevel || 0), 0) / students.length * 10) / 10
+    : 0
 
   const columns = [
     ...(isSelectMode ? [{
@@ -696,13 +700,10 @@ export default function Students() {
       header: 'שם התלמיד',
       render: (row: any) => (
         <div className="flex items-center gap-3">
-          <AvatarInitials
-            firstName={row.rawData?.personalInfo?.firstName}
-            lastName={row.rawData?.personalInfo?.lastName}
-            size="sm"
-            colorClassName="bg-students-bg text-students-fg"
-          />
-          <span className="font-medium text-gray-900">{row.name}</span>
+          <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
+            <UserCircleIcon size={40} weight="fill" />
+          </div>
+          <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{row.name}</span>
         </div>
       )
     },
@@ -828,15 +829,15 @@ export default function Students() {
   }
 
   return (
-    <div className="relative">
-      
+    <div className="flex flex-col gap-2 h-full overflow-hidden relative">
+
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {loadingStudentData ? (
               <div className="p-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">טוען נתוני תלמיד...</p>
+                <p className="text-slate-500">טוען נתוני תלמיד...</p>
               </div>
             ) : (
               <StudentForm
@@ -849,300 +850,309 @@ export default function Students() {
           </div>
         </div>
       )}
-      {/* Compact identity strip */}
-      <div className="flex items-center justify-between py-3 border-b border-border">
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold text-foreground">תלמידים</h1>
-          <span className="text-sm text-muted-foreground">{activeStudents} פעילים</span>
+
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">תלמידים</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{activeStudents} פעילים מתוך {totalStudents}</p>
         </div>
         <button
           onClick={handleAddStudent}
-          className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-neutral-800 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:bg-neutral-800 transition-colors shadow-sm"
         >
-          <PlusIcon size={14} weight="fill" />
+          <PlusIcon size={16} weight="bold" />
           הוסף תלמיד
         </button>
       </div>
 
-      {/* Compact Filter Toolbar — flush with table, no gap below */}
-      <div className="flex items-center gap-3 pt-2 pb-2 border-b border-border flex-wrap">
-        <div className="w-64 flex-none">
-          <SearchInput
-            value={searchTerm}
-            onChange={(value) => setSearchTerm(value)}
-            onClear={() => setSearchTerm('')}
-            placeholder="חיפוש תלמידים..."
-            isLoading={searchLoading}
-          />
-        </div>
-        <select
-          value={filters.orchestra}
-          onChange={(e) => setFilters(prev => ({ ...prev, orchestra: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
-        >
-          <option value="">כל התזמורות</option>
-          <option value="תזמורת">תזמורת</option>
-          <option value="ללא תזמורת">ללא תזמורת</option>
-        </select>
-        <select
-          value={filters.instrument}
-          onChange={(e) => setFilters(prev => ({ ...prev, instrument: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
-        >
-          <option value="">כל הכלים</option>
-          <option value="חלילית">חלילית</option>
-          <option value="חליל צד">חליל צד</option>
-          <option value="אבוב">אבוב</option>
-          <option value="בסון">בסון</option>
-          <option value="סקסופון">סקסופון</option>
-          <option value="קלרינט">קלרינט</option>
-          <option value="חצוצרה">חצוצרה</option>
-          <option value="קרן יער">קרן יער</option>
-          <option value="טרומבון">טרומבון</option>
-          <option value="טובה/בריטון">טובה/בריטון</option>
-          <option value="שירה">שירה</option>
-          <option value="כינור">כינור</option>
-          <option value="ויולה">ויולה</option>
-          <option value="צ'לו">צ'לו</option>
-          <option value="קונטרבס">קונטרבס</option>
-          <option value="פסנתר">פסנתר</option>
-          <option value="גיטרה">גיטרה</option>
-          <option value="גיטרה בס">גיטרה בס</option>
-          <option value="תופים">תופים</option>
-        </select>
-        <select
-          value={filters.stageLevel}
-          onChange={(e) => setFilters(prev => ({ ...prev, stageLevel: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
-        >
-          <option value="">כל השלבים</option>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
-            <option key={level} value={level}>שלב {level}</option>
-          ))}
-        </select>
-        <span className="text-sm text-muted-foreground mr-auto">
-          {totalStudents} תלמידים
-        </span>
+      {/* Analytics Section: 3 columns — Stats | Instrument Pie | Stage Distribution */}
+      {/* Analytics: 4 stat cards in a row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          { value: totalStudents, label: 'סה״כ תלמידים' },
+          { value: activeStudents, label: 'תלמידים פעילים' },
+          { value: studentsInOrchestras, label: 'רשומים לתזמורות' },
+          { value: avgStageLevel, label: 'ממוצע שלב לימוד' },
+        ].map((s) => (
+          <div key={s.label} className="bg-gradient-to-br from-sky-400 to-cyan-400 dark:from-sky-900/40 dark:to-cyan-900/40 rounded-xl flex flex-col items-center justify-center py-3">
+            <h3 className="text-xl font-extrabold text-white leading-none flex items-center gap-2">
+              {typeof s.value === 'number' ? s.value.toLocaleString('he-IL') : s.value}
+              <svg width="28" height="14" viewBox="0 0 40 20" fill="none" className="opacity-40">
+                <polyline points="0,12 5,8 10,14 15,4 20,10 25,6 30,16 35,9 40,11" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
+            </h3>
+            <p className="text-[11px] font-bold text-white/70 dark:text-sky-300/50 mt-1.5">{s.label}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Results Info */}
-      <div className="py-2 flex items-center justify-between">
-        <div className="text-sm text-gray-600">
-          {searchTerm || filters.orchestra || filters.instrument || filters.stageLevel ? (
-            <span>
-              מציג {students.length} תלמידים מתוך {totalStudents} סה"כ
-              {hasMore && <span className="text-primary font-medium"> (טען עוד לתוצאות נוספות)</span>}
-            </span>
-          ) : (
-            <span>
-              מציג {students.length} מתוך {totalStudents} תלמידים
-              {hasMore && <span className="text-primary font-medium"> (טען עוד לצפייה בנוספים)</span>}
-            </span>
-          )}
-        </div>
-        
-        {/* View Mode Toggle and Selection Controls */}
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={handleToggleSelectMode}
-            className={`flex items-center px-3 py-1 rounded text-xs transition-colors ${
-              isSelectMode 
-                ? 'bg-gray-500 text-white hover:bg-gray-600' 
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
-            title={isSelectMode ? 'בטל בחירה מרובה' : 'הפעל בחירה מרובה'}
-          >
-            <UsersIcon size={12} weight="regular" className="ml-1" />
-            {isSelectMode ? 'בטל בחירה' : 'בחירה מרובה'}
-          </button>
-          
-          {isSelectMode && selectedStudents.size > 0 && (
-            <button 
-              onClick={handleBatchDelete}
-              className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs"
+      {/* Table Card Container — fills remaining height */}
+      <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden flex-1 min-h-0 flex flex-col">
+        {/* Card Header: Filters + Selection + View Toggle */}
+        <div className="p-5 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="w-64 flex-none">
+              <SearchInput
+                value={searchTerm}
+                onChange={(value) => setSearchTerm(value)}
+                onClear={() => setSearchTerm('')}
+                placeholder="חיפוש תלמידים..."
+                isLoading={searchLoading}
+              />
+            </div>
+            <select
+              value={filters.orchestra}
+              onChange={(e) => setFilters(prev => ({ ...prev, orchestra: e.target.value }))}
+              className="px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
             >
-              <TrashIcon size={12} weight="fill" className="ml-1" />
-              מחק נבחרים ({selectedStudents.size})
-            </button>
-          )}
-          
-          <div className="flex items-center bg-gray-50 p-1 rounded border border-gray-200">
-          <button
-            onClick={() => setViewMode('table')}
-            className={`relative px-3 py-2 rounded text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
-              viewMode === 'table'
-                ? 'bg-white text-foreground shadow-sm border border-border'
-                : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
-            }`}
-            aria-pressed={viewMode === 'table'}
-            aria-label="תצוגת טבלה"
-          >
-            <ListIcon size={16} weight="regular" />
-            <span className="hidden sm:inline">טבלה</span>
-            {viewMode === 'table' && (
-              <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
-            )}
-          </button>
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`relative px-3 py-2 rounded text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
-              viewMode === 'grid'
-                ? 'bg-white text-foreground shadow-sm border border-border'
-                : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
-            }`}
-            aria-pressed={viewMode === 'grid'}
-            aria-label="תצוגת רשת"
-          >
-            <SquaresFourIcon size={16} weight="regular" />
-            <span className="hidden sm:inline">רשת</span>
-            {viewMode === 'grid' && (
-              <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
-            )}
-          </button>
-        </div>
-        </div>
-      </div>
+              <option value="">כל התזמורות</option>
+              <option value="תזמורת">תזמורת</option>
+              <option value="ללא תזמורת">ללא תזמורת</option>
+            </select>
+            <select
+              value={filters.instrument}
+              onChange={(e) => setFilters(prev => ({ ...prev, instrument: e.target.value }))}
+              className="px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
+            >
+              <option value="">כל הכלים</option>
+              <option value="חלילית">חלילית</option>
+              <option value="חליל צד">חליל צד</option>
+              <option value="אבוב">אבוב</option>
+              <option value="בסון">בסון</option>
+              <option value="סקסופון">סקסופון</option>
+              <option value="קלרינט">קלרינט</option>
+              <option value="חצוצרה">חצוצרה</option>
+              <option value="קרן יער">קרן יער</option>
+              <option value="טרומבון">טרומבון</option>
+              <option value="טובה/בריטון">טובה/בריטון</option>
+              <option value="שירה">שירה</option>
+              <option value="כינור">כינור</option>
+              <option value="ויולה">ויולה</option>
+              <option value="צ'לו">צ'לו</option>
+              <option value="קונטרבס">קונטרבס</option>
+              <option value="פסנתר">פסנתר</option>
+              <option value="גיטרה">גיטרה</option>
+              <option value="גיטרה בס">גיטרה בס</option>
+              <option value="תופים">תופים</option>
+            </select>
+            <select
+              value={filters.stageLevel}
+              onChange={(e) => setFilters(prev => ({ ...prev, stageLevel: e.target.value }))}
+              className="px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
+            >
+              <option value="">כל השלבים</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
+                <option key={level} value={level}>שלב {level}</option>
+              ))}
+            </select>
 
-      {/* Students Display */}
-      <div className="relative">
-        {searchLoading && (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded">
-            <div className="text-center">
-              <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto mb-2 text-primary" />
-              <div className="text-sm text-gray-600">מחפש תלמידים...</div>
+            <div className="mr-auto flex items-center gap-3">
+              {/* Selection Controls */}
+              <button
+                onClick={handleToggleSelectMode}
+                className={`flex items-center px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-colors ${
+                  isSelectMode
+                    ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300'
+                    : 'bg-primary/10 text-primary hover:bg-primary/20'
+                }`}
+                title={isSelectMode ? 'בטל בחירה מרובה' : 'הפעל בחירה מרובה'}
+              >
+                <UsersIcon size={12} weight="bold" className="ml-1" />
+                {isSelectMode ? 'בטל בחירה' : 'בחירה מרובה'}
+              </button>
+
+              {isSelectMode && selectedStudents.size > 0 && (
+                <button
+                  onClick={handleBatchDelete}
+                  className="flex items-center px-2.5 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-[10px] font-bold"
+                >
+                  <TrashIcon size={12} weight="bold" className="ml-1" />
+                  מחק נבחרים ({selectedStudents.size})
+                </button>
+              )}
+
+              <span className="text-xs font-medium text-slate-400">
+                {searchTerm || filters.orchestra || filters.instrument || filters.stageLevel
+                  ? `${students.length} מתוך ${totalStudents}`
+                  : `${students.length} מתוך ${totalStudents}`}
+                {hasMore && ' +'}
+              </span>
+
+              {/* View Mode Toggle */}
+              <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    viewMode === 'table'
+                      ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-600'
+                  }`}
+                  aria-pressed={viewMode === 'table'}
+                  aria-label="תצוגת טבלה"
+                >
+                  <ListIcon size={14} weight="bold" />
+                  <span className="hidden sm:inline">טבלה</span>
+                </button>
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    viewMode === 'grid'
+                      ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-600'
+                  }`}
+                  aria-pressed={viewMode === 'grid'}
+                  aria-label="תצוגת רשת"
+                >
+                  <SquaresFourIcon size={14} weight="bold" />
+                  <span className="hidden sm:inline">רשת</span>
+                </button>
+              </div>
             </div>
           </div>
-        )}
+        </div>
 
-      {viewMode === 'table' ? (
-        <Table
-          columns={columns}
-          data={filteredStudents}
-          onRowClick={(row) => {
-            if (isSelectMode) {
-              // In select mode, clicking row toggles selection
-              const newSelected = new Set(selectedStudents)
-              if (newSelected.has(row.id)) {
-                newSelected.delete(row.id)
-              } else {
-                newSelected.add(row.id)
-              }
-              setSelectedStudents(newSelected)
-            } else {
-              // In normal mode, navigate to student details
-              handleViewStudent(row.id)
-            }
-          }}
-          rowClassName={(row) => {
-            const isSelected = selectedStudents.has(row.id)
-            return clsx(
-              'cursor-pointer transition-all duration-150',
-              isSelected
-                ? 'bg-blue-50 hover:bg-blue-100 border-l-4 border-blue-500'
-                : 'hover:bg-muted'
-            )
-          }}
-        />
-      ) : (
-        <div>
-          {/* Grid Select All Header */}
-          {isSelectMode && (
-            <div className="mb-4 p-3 bg-gray-50 rounded border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedStudents(new Set(filteredStudents.map(s => s.id)))
-                      } else {
-                        setSelectedStudents(new Set())
-                      }
-                    }}
-                    className="w-4 h-4 text-blue-600 bg-white border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    בחר הכל ({filteredStudents.length} תלמידים)
-                  </span>
-                </div>
-                {selectedStudents.size > 0 && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <span>נבחרו: {selectedStudents.size}</span>
-                    <button
-                      onClick={() => setSelectedStudents(new Set())}
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      נקה בחירה
-                    </button>
-                  </div>
-                )}
+        {/* Table / Grid Content — scrolls internally, load-more stays visible */}
+        <div className="relative flex-1 min-h-0">
+          {searchLoading && (
+            <div className="absolute inset-0 bg-white/75 dark:bg-sidebar-dark/75 flex items-center justify-center z-10">
+              <div className="text-center">
+                <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto mb-2 text-primary" />
+                <div className="text-sm text-slate-500">מחפש תלמידים...</div>
               </div>
             </div>
           )}
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {filteredStudents.map((student) => (
-            <StudentCard
-              key={student.id}
-              student={student.originalStudent}
-              showInstruments={true}
-              showTeacherAssignments={true}
-              showParentContact={false}
-              onClick={() => {
+
+          {viewMode === 'table' ? (
+            <Table
+              columns={columns}
+              data={filteredStudents}
+              onRowClick={(row) => {
                 if (isSelectMode) {
-                  handleStudentSelection(student.id, !selectedStudents.has(student.id))
+                  const newSelected = new Set(selectedStudents)
+                  if (newSelected.has(row.id)) {
+                    newSelected.delete(row.id)
+                  } else {
+                    newSelected.add(row.id)
+                  }
+                  setSelectedStudents(newSelected)
                 } else {
-                  handleViewStudent(student.id)
+                  handleViewStudent(row.id)
                 }
               }}
-              onDelete={handleDeleteStudent}
-              className="h-full hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1"
-              isSelectMode={isSelectMode}
-              isSelected={selectedStudents.has(student.id)}
-              onSelectionChange={handleStudentSelection}
+              rowClassName={(row) => {
+                const isSelected = selectedStudents.has(row.id)
+                return clsx(
+                  'cursor-pointer transition-all duration-150',
+                  isSelected
+                    ? 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 border-l-4 border-blue-500'
+                    : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20'
+                )
+              }}
             />
-          ))}
-        </div>
-        </div>
-      )}
+          ) : (
+            <div className="p-5">
+              {/* Grid Select All Header */}
+              {isSelectMode && (
+                <div className="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedStudents(new Set(filteredStudents.map(s => s.id)))
+                          } else {
+                            setSelectedStudents(new Set())
+                          }
+                        }}
+                        className="w-4 h-4 text-primary bg-white border-2 border-slate-300 rounded focus:ring-primary focus:ring-2"
+                      />
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        בחר הכל ({filteredStudents.length} תלמידים)
+                      </span>
+                    </div>
+                    {selectedStudents.size > 0 && (
+                      <div className="flex items-center gap-2 text-sm text-slate-500">
+                        <span>נבחרו: {selectedStudents.size}</span>
+                        <button
+                          onClick={() => setSelectedStudents(new Set())}
+                          className="text-primary hover:underline font-medium"
+                        >
+                          נקה בחירה
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
-      {filteredStudents.length === 0 && !loading && !searchLoading && (
-        searchTerm || filters.orchestra || filters.instrument || filters.stageLevel ? (
-          <div className="text-center py-12 text-muted-foreground">לא נמצאו תלמידים התואמים לחיפוש</div>
-        ) : (
-          <EmptyState
-            title="אין תלמידים עדיין"
-            description="הוסף תלמידים לקונסרבטוריון כדי להתחיל"
-            icon={<GraduationCapIcon size={48} weight="regular" />}
-            action={{ label: 'הוסף תלמיד', onClick: () => setShowForm(true) }}
-          />
-        )
-      )}
-      </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                {filteredStudents.map((student) => (
+                  <StudentCard
+                    key={student.id}
+                    student={student.originalStudent}
+                    showInstruments={true}
+                    showTeacherAssignments={true}
+                    showParentContact={false}
+                    onClick={() => {
+                      if (isSelectMode) {
+                        handleStudentSelection(student.id, !selectedStudents.has(student.id))
+                      } else {
+                        handleViewStudent(student.id)
+                      }
+                    }}
+                    onDelete={handleDeleteStudent}
+                    className="h-full hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1"
+                    isSelectMode={isSelectMode}
+                    isSelected={selectedStudents.has(student.id)}
+                    onSelectionChange={handleStudentSelection}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
-      {/* Load More Button */}
-      {hasMore && filteredStudents.length > 0 && !loading && (
-        <div className="flex justify-center mt-8 mb-6">
-          <button
-            onClick={handleLoadMore}
-            disabled={loadingMore}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loadingMore ? (
-              <>
-                <CircleNotchIcon size={20} weight="regular" className="animate-spin" />
-                <span>טוען עוד תלמידים...</span>
-              </>
+          {filteredStudents.length === 0 && !loading && !searchLoading && (
+            searchTerm || filters.orchestra || filters.instrument || filters.stageLevel ? (
+              <div className="text-center py-12 text-slate-400">לא נמצאו תלמידים התואמים לחיפוש</div>
             ) : (
-              <>
-                <CaretDownIcon size={20} weight="regular" />
-                <span>טען עוד תלמידים</span>
-              </>
-            )}
-          </button>
+              <div className="p-5">
+                <EmptyState
+                  title="אין תלמידים עדיין"
+                  description="הוסף תלמידים לקונסרבטוריון כדי להתחיל"
+                  icon={<GraduationCapIcon size={48} weight="regular" />}
+                  action={{ label: 'הוסף תלמיד', onClick: () => setShowForm(true) }}
+                />
+              </div>
+            )
+          )}
         </div>
-      )}
+
+        {/* Load More inside card */}
+        {hasMore && filteredStudents.length > 0 && !loading && (
+          <div className="flex justify-center py-5 border-t border-slate-100 dark:border-slate-800">
+            <button
+              onClick={handleLoadMore}
+              disabled={loadingMore}
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-primary hover:bg-primary/5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loadingMore ? (
+                <>
+                  <CircleNotchIcon size={18} weight="regular" className="animate-spin" />
+                  <span>טוען עוד תלמידים...</span>
+                </>
+              ) : (
+                <>
+                  <CaretDownIcon size={18} weight="bold" />
+                  <span>טען עוד תלמידים</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Delete confirmation modal */}
       <ConfirmationModal
@@ -1160,7 +1170,7 @@ export default function Students() {
       <ConfirmationModal
         isOpen={!!stageLevelConfirm}
         title="עדכון שלב התלמיד"
-        message={stageLevelConfirm ? 
+        message={stageLevelConfirm ?
           `האם אתה בטוח שברצונך לשנות את שלב התלמיד "${stageLevelConfirm.studentName}" משלב ${stageLevelConfirm.currentLevel} לשלב ${stageLevelConfirm.newLevel}?`
           : ''
         }
@@ -1170,7 +1180,7 @@ export default function Students() {
         onCancel={handleCancelStageLevelUpdate}
         variant="primary"
       />
-      
+
       {/* Safe Delete Modal */}
       <SafeDeleteModal
         isOpen={showSafeDeleteModal}
@@ -1179,14 +1189,14 @@ export default function Students() {
         onClose={() => setShowSafeDeleteModal(false)}
         onConfirm={handleSafeDelete}
       />
-      
+
       {/* Deletion Impact Modal */}
       <DeletionImpactModal
         isOpen={showDeletionImpactModal}
         preview={deletionPreview}
         onClose={() => setShowDeletionImpactModal(false)}
       />
-      
+
       {/* Batch Deletion Modal */}
       <BatchDeletionModal
         isOpen={showBatchDeletionModal}

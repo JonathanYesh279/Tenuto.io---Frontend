@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { clsx } from 'clsx'
-import { EyeIcon, TrashIcon } from '@phosphor-icons/react'
+import { ArrowUpRightIcon, TrashIcon } from '@phosphor-icons/react'
 
 interface Column {
   key: string
@@ -62,9 +62,9 @@ export default function Table({
   actionLabels = { view: 'צפה', delete: 'מחק' }
 }: TableProps) {
   return (
-    <div className={clsx('overflow-hidden bg-background border border-border', className)}>
-      <div className="overflow-x-auto">
-        <div className="max-h-[calc(100vh-380px)] overflow-y-auto">
+    <div className={clsx('overflow-hidden bg-background border border-border flex flex-col h-full', className)}>
+      <div className="overflow-x-auto flex-1 min-h-0">
+        <div className="overflow-y-auto h-full">
           <table className="min-w-full divide-y divide-border">
             <thead className="bg-muted sticky top-0 z-10 shadow-[0_1px_0_0_theme(colors.border)]">
               <tr>
@@ -136,17 +136,17 @@ export default function Table({
                     ))}
                     {actions && (
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-end">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-0.5">
                           {onView && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation()
                                 onView(row)
                               }}
-                              className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
+                              className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-700/50 transition-colors"
                               title={actionLabels.view}
                             >
-                              <EyeIcon className="w-4 h-4" weight="regular" />
+                              <ArrowUpRightIcon size={15} weight="regular" />
                             </button>
                           )}
                           {onDelete && (
@@ -155,10 +155,10 @@ export default function Table({
                                 e.stopPropagation()
                                 onDelete(row)
                               }}
-                              className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors"
+                              className="p-1.5 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                               title={actionLabels.delete}
                             >
-                              <TrashIcon className="w-4 h-4" weight="regular" />
+                              <TrashIcon size={15} weight="regular" />
                             </button>
                           )}
                         </div>

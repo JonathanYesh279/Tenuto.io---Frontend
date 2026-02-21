@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { PlusIcon, CircleNotchIcon, UsersIcon, XIcon, SquaresFourIcon, ListIcon, EyeIcon, PencilSimpleIcon, TrashIcon, CaretDownIcon } from '@phosphor-icons/react'
+import { PlusIcon, CircleNotchIcon, UsersIcon, XIcon, SquaresFourIcon, ListIcon, ArrowUpRightIcon, PencilLineIcon, TrashIcon, CaretDownIcon, UserCircleIcon } from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
-import { StatusBadge, InstrumentBadge, AvatarInitials } from '../components/domain'
+import { StatusBadge, InstrumentBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import TeacherCard from '../components/TeacherCard'
 import AddTeacherModal from '../components/modals/AddTeacherModal'
@@ -15,6 +15,7 @@ import { getDisplayName } from '../utils/nameUtils'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
+import { RoleDistributionPanel } from '../components/teachers/RoleDistributionPanel'
 
 interface Teacher {
   id: string
@@ -400,6 +401,10 @@ export default function Teachers() {
   // Use totalTeachersCount from pagination when available, otherwise use loaded teachers length
   const totalTeachers = totalTeachersCount > 0 ? totalTeachersCount : teachers.length
   const activeTeachers = teachers.filter(t => t.isActive).length
+  const avgStudentsPerTeacher = activeTeachers > 0
+    ? Math.round(teachers.reduce((sum, t) => sum + t.studentCount, 0) / activeTeachers * 10) / 10
+    : 0
+  const totalTeachingHours = Math.round(teachers.reduce((sum, t) => sum + t.totalTeachingHours, 0) * 10) / 10
 
   // Table columns definition
   const columns = [
@@ -408,13 +413,10 @@ export default function Teachers() {
       header: 'שם המורה',
       render: (row: any) => (
         <div className="flex items-center gap-3">
-          <AvatarInitials
-            firstName={row.rawData?.personalInfo?.firstName}
-            lastName={row.rawData?.personalInfo?.lastName}
-            size="sm"
-            colorClassName="bg-teachers-bg text-teachers-fg"
-          />
-          <span className="font-medium text-gray-900">{row.name}</span>
+          <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
+            <UserCircleIcon size={40} weight="fill" />
+          </div>
+          <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{row.name}</span>
         </div>
       )
     },
@@ -434,36 +436,36 @@ export default function Teachers() {
       align: 'center' as const,
       width: '100px',
       render: (row: any) => (
-        <div className="flex space-x-2 space-x-reverse justify-center">
+        <div className="flex items-center gap-0.5 justify-center">
           <button
-            className="p-1.5 text-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-700/50 transition-colors"
             onClick={(e) => {
               e.stopPropagation()
               handleViewTeacher(row.id)
             }}
             title="צפה בפרטי המורה"
           >
-            <EyeIcon size={16} weight="regular" />
+            <ArrowUpRightIcon size={15} weight="regular" />
           </button>
           <button
-            className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-700/50 transition-colors"
             onClick={(e) => {
               e.stopPropagation()
               handleEditTeacher(row.id)
             }}
             title="ערוך פרטי המורה"
           >
-            <PencilSimpleIcon size={16} weight="regular" />
+            <PencilLineIcon size={15} weight="regular" />
           </button>
           <button
-            className="p-1.5 text-red-600 hover:text-red-900 hover:bg-red-100 rounded transition-colors"
+            className="p-1.5 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
             onClick={(e) => {
               e.stopPropagation()
               handleDeleteTeacher(row.id)
             }}
             title="מחק מורה"
           >
-            <TrashIcon size={16} weight="regular" />
+            <TrashIcon size={15} weight="regular" />
           </button>
         </div>
       )
@@ -563,252 +565,280 @@ export default function Teachers() {
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       {renderSchedule()}
 
-      {/* Compact identity strip */}
-      <div className="flex items-center justify-between py-3 border-b border-border">
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold text-foreground">מורים</h1>
-          <span className="text-sm text-muted-foreground">{activeTeachers} פעילים</span>
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">מורים</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{activeTeachers} פעילים מתוך {totalTeachers}</p>
         </div>
         {isUserAdmin(user) && (
           <button
             onClick={handleAddTeacher}
-            className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-neutral-800 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:bg-neutral-800 transition-colors shadow-sm"
           >
-            <PlusIcon size={14} weight="fill" />
+            <PlusIcon size={16} weight="bold" />
             הוסף מורה
           </button>
         )}
       </div>
 
-      {/* Compact Filter Toolbar — flush with table, no gap below */}
-      <div className="flex items-center gap-3 pt-2 pb-2 border-b border-border flex-wrap">
-        <div className="w-64 flex-none">
-          <SearchInput
-            value={searchTerm}
-            onChange={(value) => setSearchTerm(value)}
-            onClear={() => setSearchTerm('')}
-            placeholder="חיפוש מורים..."
-            isLoading={searchLoading}
-          />
+      {/* Analytics Section: 3 columns — Stats | Top Teachers | Role Distribution */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 h-[160px]">
+        {/* RIGHT: 2x2 Stat Cards */}
+        <div className="grid grid-cols-2 grid-rows-2 gap-2 h-full">
+          {[
+            { value: totalTeachers, label: 'סה״כ מורים' },
+            { value: activeTeachers, label: 'מורים פעילים' },
+            { value: avgStudentsPerTeacher, label: 'ממוצע תלמידים/מורה' },
+            { value: totalTeachingHours, label: 'שעות הוראה' },
+          ].map((s) => (
+            <div key={s.label} className="bg-gradient-to-br from-sky-100 to-cyan-100 dark:from-sky-900/40 dark:to-cyan-900/40 rounded-xl flex flex-col items-center justify-center">
+              <h3 className="text-lg font-extrabold text-slate-900 dark:text-white leading-none">{typeof s.value === 'number' ? s.value.toLocaleString('he-IL') : s.value}</h3>
+              <p className="text-[10px] font-bold text-sky-800/50 dark:text-sky-300/50 mt-1">{s.label}</p>
+            </div>
+          ))}
         </div>
-        {/* Instrument searchable dropdown */}
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="כלי נגינה..."
-            value={instrumentSearchTerm}
-            onChange={(e) => handleInstrumentSearchChange(e.target.value)}
-            onFocus={() => setShowInstrumentDropdown(true)}
-            onBlur={() => setTimeout(() => setShowInstrumentDropdown(false), 200)}
-            className="w-40 px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder-muted-foreground"
-          />
-          {instrumentSearchTerm && (
-            <button
-              onClick={() => { setInstrumentSearchTerm(''); setFilters(prev => ({ ...prev, instrument: '' })); setShowInstrumentDropdown(false) }}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              <XIcon size={12} weight="regular" />
-            </button>
-          )}
-          {showInstrumentDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50 direction-rtl">
-              {/* "All instruments" option */}
-              <button
-                onClick={() => handleInstrumentSelect('', 'כל הכלים')}
-                className={`w-full text-right px-3 py-2 hover:bg-gray-50 border-b border-gray-100 direction-rtl ${
-                  filters.instrument === '' ? 'bg-muted text-primary' : 'text-foreground'
-                }`}
-              >
-                כל הכלים
-              </button>
-              {filteredInstruments.map(instrument => (
+
+        {/* MIDDLE: Top Teachers by Student Count */}
+        <div className="bg-white dark:bg-sidebar-dark rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 px-4 py-3 flex flex-col h-full overflow-hidden">
+          <h3 className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2">מורים מובילים</h3>
+          <div className="space-y-1.5 flex-1 overflow-y-auto">
+            {(() => {
+              const top = [...teachers].sort((a, b) => b.studentCount - a.studentCount).slice(0, 5)
+              if (top.length === 0) return <p className="text-[10px] text-slate-400 text-center py-2">אין נתונים</p>
+              const maxSc = top[0]?.studentCount || 1
+              return top.map((t, i) => (
+                <div key={t.id} className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-300 dark:text-slate-600 w-3 shrink-0">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-[10px] font-medium text-slate-700 dark:text-slate-200 truncate">{t.name}</span>
+                      <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0 mr-1">{t.studentCount}</span>
+                    </div>
+                    <div className="h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full bg-indigo-400 dark:bg-indigo-500 transition-all duration-500" style={{ width: `${Math.round((t.studentCount / maxSc) * 100)}%` }} />
+                    </div>
+                  </div>
+                </div>
+              ))
+            })()}
+          </div>
+        </div>
+
+        {/* LEFT: Role Distribution Panel */}
+        <RoleDistributionPanel teachers={teachers} loading={loading} />
+      </div>
+
+      {/* Table Card Container */}
+      <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+        {/* Card Header: Filters + View Toggle */}
+        <div className="p-5 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="w-64 flex-none">
+              <SearchInput
+                value={searchTerm}
+                onChange={(value) => setSearchTerm(value)}
+                onClear={() => setSearchTerm('')}
+                placeholder="חיפוש מורים..."
+                isLoading={searchLoading}
+              />
+            </div>
+            {/* Instrument searchable dropdown */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="כלי נגינה..."
+                value={instrumentSearchTerm}
+                onChange={(e) => handleInstrumentSearchChange(e.target.value)}
+                onFocus={() => setShowInstrumentDropdown(true)}
+                onBlur={() => setTimeout(() => setShowInstrumentDropdown(false), 200)}
+                className="w-40 px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground placeholder-muted-foreground"
+              />
+              {instrumentSearchTerm && (
                 <button
-                  key={instrument}
-                  onClick={() => handleInstrumentSelect(instrument, instrument)}
-                  className={`w-full text-right px-3 py-2 hover:bg-gray-50 direction-rtl ${
-                    filters.instrument === instrument ? 'bg-muted text-primary' : 'text-foreground'
-                  }`}
+                  onClick={() => { setInstrumentSearchTerm(''); setFilters(prev => ({ ...prev, instrument: '' })); setShowInstrumentDropdown(false) }}
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
-                  {instrument}
+                  <XIcon size={12} weight="regular" />
                 </button>
-              ))}
-              {filteredInstruments.length === 0 && instrumentSearchTerm && (
-                <div className="px-3 py-2 text-gray-500 text-center">
-                  לא נמצאו כלים
+              )}
+              {showInstrumentDropdown && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg max-h-60 overflow-y-auto z-50 direction-rtl">
+                  <button
+                    onClick={() => handleInstrumentSelect('', 'כל הכלים')}
+                    className={`w-full text-right px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-700 direction-rtl ${
+                      filters.instrument === '' ? 'bg-primary/5 text-primary font-medium' : 'text-foreground'
+                    }`}
+                  >
+                    כל הכלים
+                  </button>
+                  {filteredInstruments.map(instrument => (
+                    <button
+                      key={instrument}
+                      onClick={() => handleInstrumentSelect(instrument, instrument)}
+                      className={`w-full text-right px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 direction-rtl ${
+                        filters.instrument === instrument ? 'bg-primary/5 text-primary font-medium' : 'text-foreground'
+                      }`}
+                    >
+                      {instrument}
+                    </button>
+                  ))}
+                  {filteredInstruments.length === 0 && instrumentSearchTerm && (
+                    <div className="px-3 py-2 text-slate-400 text-center text-sm">לא נמצאו כלים</div>
+                  )}
                 </div>
               )}
             </div>
-          )}
-        </div>
-        <select
-          value={filters.role}
-          onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
-          className="px-3 py-1.5 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
-        >
-          <option value="">כל התפקידים</option>
-          <option value="מורה">מורה</option>
-          <option value="מנצח">מנצח</option>
-          <option value="מדריך הרכב">מדריך הרכב</option>
-          <option value="מנהל">מנהל</option>
-          <option value="מורה תאוריה">מורה תאוריה</option>
-          <option value="מגמה">מגמה</option>
-        </select>
-        <span className="text-sm text-muted-foreground mr-auto">
-          {totalTeachers} מורים
-        </span>
-      </div>
+            <select
+              value={filters.role}
+              onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
+              className="px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
+            >
+              <option value="">כל התפקידים</option>
+              <option value="מורה">מורה</option>
+              <option value="מנצח">מנצח</option>
+              <option value="מדריך הרכב">מדריך הרכב</option>
+              <option value="מנהל">מנהל</option>
+              <option value="מורה תאוריה">מורה תאוריה</option>
+              <option value="מגמה">מגמה</option>
+            </select>
 
-      {/* Results Info and View Toggle */}
-      <div className="py-2 flex items-center justify-between">
-        <div className="text-sm text-gray-600">
-          {searchTerm || filters.instrument || filters.role ? (
-            <span>
-              מציג {filteredTeachers.length} מורים מתוך {totalTeachers} סה"כ
-              {hasMore && <span className="text-primary font-medium"> (טען עוד לתוצאות נוספות)</span>}
-            </span>
-          ) : (
-            <span>
-              מציג {teachers.length} מתוך {totalTeachers} מורים
-              {hasMore && <span className="text-primary font-medium"> (טען עוד לצפייה בנוספים)</span>}
-            </span>
-          )}
-        </div>
-
-        {/* View Mode Toggle */}
-        <div className="flex items-center bg-gray-50 p-1 rounded border border-gray-200">
-          <button
-            onClick={() => setViewMode('table')}
-            className={`relative px-3 py-2 rounded text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
-              viewMode === 'table'
-                ? 'bg-white text-foreground shadow-sm border border-border'
-                : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
-            }`}
-            aria-pressed={viewMode === 'table'}
-            aria-label="תצוגת טבלה"
-          >
-            <ListIcon size={16} weight="regular" />
-            <span className="hidden sm:inline">טבלה</span>
-            {viewMode === 'table' && (
-              <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
-            )}
-          </button>
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`relative px-3 py-2 rounded text-sm font-medium transition-all duration-200 ease-in-out flex items-center gap-2 ${
-              viewMode === 'grid'
-                ? 'bg-white text-foreground shadow-sm border border-border'
-                : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100/50'
-            }`}
-            aria-pressed={viewMode === 'grid'}
-            aria-label="תצוגת רשת"
-          >
-            <SquaresFourIcon size={16} weight="regular" />
-            <span className="hidden sm:inline">רשת</span>
-            {viewMode === 'grid' && (
-              <div className="absolute inset-0 rounded bg-muted/40 pointer-events-none" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Teachers Display */}
-      <div className="relative">
-        {searchLoading && (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded">
-            <div className="text-center">
-              <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto mb-2 text-primary" />
-              <div className="text-sm text-gray-600">מחפש מורים...</div>
+            <div className="mr-auto flex items-center gap-3">
+              <span className="text-xs font-medium text-slate-400">
+                {searchTerm || filters.instrument || filters.role
+                  ? `${filteredTeachers.length} מתוך ${totalTeachers}`
+                  : `${teachers.length} מתוך ${totalTeachers}`}
+                {hasMore && ' +'}
+              </span>
+              {/* View Mode Toggle */}
+              <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    viewMode === 'table'
+                      ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-600'
+                  }`}
+                  aria-pressed={viewMode === 'table'}
+                  aria-label="תצוגת טבלה"
+                >
+                  <ListIcon size={14} weight="bold" />
+                  <span className="hidden sm:inline">טבלה</span>
+                </button>
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    viewMode === 'grid'
+                      ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-600'
+                  }`}
+                  aria-pressed={viewMode === 'grid'}
+                  aria-label="תצוגת רשת"
+                >
+                  <SquaresFourIcon size={14} weight="bold" />
+                  <span className="hidden sm:inline">רשת</span>
+                </button>
+              </div>
             </div>
           </div>
-        )}
-
-      {viewMode === 'table' ? (
-        <Table
-          columns={columns}
-          data={filteredTeachers}
-          onRowClick={(row) => {
-            handleViewTeacher(row.id)
-          }}
-          rowClassName="hover:bg-muted cursor-pointer transition-colors"
-        />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-          {filteredTeachers.map((teacher) => {
-            // Transform teacher data to match TeacherCard interface
-            const teacherForCard = {
-              _id: teacher.id,
-              personalInfo: {
-                firstName: teacher.rawData?.personalInfo?.firstName || teacher.name,
-                lastName: teacher.rawData?.personalInfo?.lastName || '',
-                phone: teacher.phone,
-                email: teacher.email
-              },
-              roles: teacher.roles || [],
-              professionalInfo: {
-                instrument: teacher.specialization,
-                isActive: teacher.isActive // Use the computed isActive from API
-              },
-              studentCount: teacher.studentCount || 0,
-              teaching: {
-                schedule: [] // Will be populated if needed
-              },
-              isActive: teacher.isActive
-            }
-
-            return (
-              <TeacherCard
-                key={teacher.id}
-                teacher={teacherForCard}
-                showStudentCount={true}
-                showSchedule={false}
-                showContact={false}
-                onClick={() => handleViewTeacher(teacher.id)}
-                className="h-full hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1"
-              />
-            )
-          })}
         </div>
-      )}
 
-      {filteredTeachers.length === 0 && !loading && !searchLoading && (
-        searchTerm || filters.instrument || filters.role ? (
-          <div className="text-center py-12 text-muted-foreground">לא נמצאו מורים התואמים לחיפוש</div>
-        ) : (
-          <EmptyState
-            title="אין מורים עדיין"
-            description="הוסף מורים לקונסרבטוריון כדי להתחיל"
-            icon={<UsersIcon size={48} weight="regular" />}
-            action={{ label: 'הוסף מורה', onClick: () => setShowAddTeacherModal(true) }}
-          />
-        )
-      )}
-      </div>
+        {/* Table / Grid Content */}
+        <div className="relative">
+          {searchLoading && (
+            <div className="absolute inset-0 bg-white/75 dark:bg-sidebar-dark/75 flex items-center justify-center z-10">
+              <div className="text-center">
+                <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto mb-2 text-primary" />
+                <div className="text-sm text-slate-500">מחפש מורים...</div>
+              </div>
+            </div>
+          )}
 
-      {/* Load More Button */}
-      {hasMore && filteredTeachers.length > 0 && !loading && (
-        <div className="flex justify-center mt-8 mb-6">
-          <button
-            onClick={handleLoadMore}
-            disabled={loadingMore}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loadingMore ? (
-              <>
-                <CircleNotchIcon size={20} weight="regular" className="animate-spin" />
-                <span>טוען עוד מורים...</span>
-              </>
+          {viewMode === 'table' ? (
+            <Table
+              columns={columns}
+              data={filteredTeachers}
+              onRowClick={(row) => handleViewTeacher(row.id)}
+              rowClassName="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 cursor-pointer transition-colors"
+            />
+          ) : (
+            <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {filteredTeachers.map((teacher) => {
+                const teacherForCard = {
+                  _id: teacher.id,
+                  personalInfo: {
+                    firstName: teacher.rawData?.personalInfo?.firstName || teacher.name,
+                    lastName: teacher.rawData?.personalInfo?.lastName || '',
+                    phone: teacher.phone,
+                    email: teacher.email
+                  },
+                  roles: teacher.roles || [],
+                  professionalInfo: {
+                    instrument: teacher.specialization,
+                    isActive: teacher.isActive
+                  },
+                  studentCount: teacher.studentCount || 0,
+                  teaching: { schedule: [] },
+                  isActive: teacher.isActive
+                }
+
+                return (
+                  <TeacherCard
+                    key={teacher.id}
+                    teacher={teacherForCard}
+                    showStudentCount={true}
+                    showSchedule={false}
+                    showContact={false}
+                    onClick={() => handleViewTeacher(teacher.id)}
+                    className="h-full hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1"
+                  />
+                )
+              })}
+            </div>
+          )}
+
+          {filteredTeachers.length === 0 && !loading && !searchLoading && (
+            searchTerm || filters.instrument || filters.role ? (
+              <div className="text-center py-12 text-slate-400">לא נמצאו מורים התואמים לחיפוש</div>
             ) : (
-              <>
-                <CaretDownIcon size={20} weight="regular" />
-                <span>טען עוד מורים</span>
-              </>
-            )}
-          </button>
+              <div className="p-5">
+                <EmptyState
+                  title="אין מורים עדיין"
+                  description="הוסף מורים לקונסרבטוריון כדי להתחיל"
+                  icon={<UsersIcon size={48} weight="regular" />}
+                  action={{ label: 'הוסף מורה', onClick: () => setShowAddTeacherModal(true) }}
+                />
+              </div>
+            )
+          )}
         </div>
-      )}
+
+        {/* Load More inside card */}
+        {hasMore && filteredTeachers.length > 0 && !loading && (
+          <div className="flex justify-center py-5 border-t border-slate-100 dark:border-slate-800">
+            <button
+              onClick={handleLoadMore}
+              disabled={loadingMore}
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-primary hover:bg-primary/5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loadingMore ? (
+                <>
+                  <CircleNotchIcon size={18} weight="regular" className="animate-spin" />
+                  <span>טוען עוד מורים...</span>
+                </>
+              ) : (
+                <>
+                  <CaretDownIcon size={18} weight="bold" />
+                  <span>טען עוד מורים</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Add/Edit Teacher Modal */}
       <AddTeacherModal

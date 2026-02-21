@@ -67,6 +67,7 @@ export default function AuditTrail() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('deletion-log')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
 
   // Deletion Log state
   const [auditLog, setAuditLog] = useState<AuditLogResponse | null>(null)
@@ -82,70 +83,87 @@ export default function AuditTrail() {
   const [activitiesPagination, setActivitiesPagination] = useState<PaginationData | null>(null)
 
   useEffect(() => {
+    let cancelled = false
+
+    const loadAuditLog = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const params: Record<string, any> = {
+          page: auditPage,
+          limit: 20,
+        }
+
+        if (startDate) params.startDate = startDate
+        if (endDate) params.endDate = endDate
+        if (entityType !== 'all') params.entityType = entityType
+
+        const response = await adminAuditService.getAuditLog(params)
+        if (!cancelled) {
+          setAuditLog(response.data)
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          console.error('Error loading audit log:', err)
+          setError('שגיאה בטעינת יומן המחיקות')
+          toast.error('שגיאה בטעינת יומן המחיקות')
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
+    }
+
+    const loadPastActivities = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const params: Record<string, any> = {
+          page: activitiesPage,
+          limit: 20,
+        }
+
+        if (activityType !== 'all') {
+          params.type = activityType
+        }
+
+        const response = await adminAuditService.getPastActivities(params)
+        if (!cancelled) {
+          setPastActivities(response.data || [])
+          setActivitiesPagination(response.pagination ? {
+            page: response.pagination.currentPage,
+            limit: 20,
+            total: response.pagination.totalCount,
+            pages: response.pagination.totalPages,
+          } : null)
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          console.error('Error loading past activities:', err)
+          setError('שגיאה בטעינת פעילויות עבר')
+          toast.error('שגיאה בטעינת פעילויות עבר')
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
+    }
+
     if (activeTab === 'deletion-log') {
       loadAuditLog()
     } else {
       loadPastActivities()
     }
-  }, [activeTab, startDate, endDate, entityType, auditPage, activityType, activitiesPage])
 
-  const loadAuditLog = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const params: Record<string, any> = {
-        page: auditPage,
-        limit: 20,
-      }
-
-      if (startDate) params.startDate = startDate
-      if (endDate) params.endDate = endDate
-      if (entityType !== 'all') params.entityType = entityType
-
-      const response = await adminAuditService.getAuditLog(params)
-      setAuditLog(response.data)
-    } catch (err: any) {
-      console.error('Error loading audit log:', err)
-      setError('שגיאה בטעינת יומן המחיקות')
-      toast.error('שגיאה בטעינת יומן המחיקות')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const loadPastActivities = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const params: Record<string, any> = {
-        page: activitiesPage,
-        limit: 20,
-      }
-
-      if (activityType !== 'all') {
-        params.type = activityType
-      }
-
-      const response = await adminAuditService.getPastActivities(params)
-      setPastActivities(response.data?.activities || [])
-      setActivitiesPagination(response.data?.pagination || null)
-    } catch (err: any) {
-      console.error('Error loading past activities:', err)
-      setError('שגיאה בטעינת פעילויות עבר')
-      toast.error('שגיאה בטעינת פעילויות עבר')
-    } finally {
-      setLoading(false)
-    }
-  }
+    return () => { cancelled = true }
+  }, [activeTab, startDate, endDate, entityType, auditPage, activityType, activitiesPage, retryCount])
 
   const handleRetry = () => {
-    if (activeTab === 'deletion-log') {
-      loadAuditLog()
-    } else {
-      loadPastActivities()
-    }
+    setRetryCount(c => c + 1)
   }
 
   const formatDate = (dateString: string) => {
@@ -188,10 +206,15 @@ export default function AuditTrail() {
 
   const pastActivitiesColumns = [
     { key: 'date', label: 'תאריך', render: (row: any) => formatDate(row.date) },
-    { key: 'type', label: 'סוג', render: (row: any) => getActivityTypeLabel(row.type) },
-    { key: 'details', label: 'פרטים' },
-    { key: 'teacher', label: 'מורה', render: (row: any) => row.teacher ? `${row.teacher.firstName} ${row.teacher.lastName}` : '-' },
-    { key: 'students', label: 'תלמידים', render: (row: any) => row.students?.length > 0 ? row.students.map((s: any) => `${s.firstName} ${s.lastName}`).join(', ') : '-' },
+    { key: 'activityType', label: 'סוג', render: (row: any) => getActivityTypeLabel(row.activityType) },
+    { key: 'title', label: 'פרטים', render: (row: any) => {
+      const parts = [row.title]
+      if (row.orchestraName) parts.push(row.orchestraName)
+      if (row.location) parts.push(row.location)
+      return parts.filter(Boolean).join(' · ') || '-'
+    }},
+    { key: 'conductorName', label: 'מורה/מנצח', render: (row: any) => row.conductorName || row.teacherName || '-' },
+    { key: 'time', label: 'שעה', render: (row: any) => row.time || '-' },
   ]
 
   return (

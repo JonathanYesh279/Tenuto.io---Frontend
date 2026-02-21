@@ -5308,10 +5308,10 @@ export const superAdminService = {
  * Backend endpoints: /api/admin/deletion/*, /api/admin/past-activities*
  */
 export const adminAuditService = {
-  getAuditLog: (params) => api.get('/admin/deletion/audit-log', { params }),
-  getPastActivities: (params) => api.get('/admin/past-activities', { params }),
-  getPastActivitiesByType: (type, params) => api.get(`/admin/past-activities/${type}`, { params }),
-  getSnapshots: () => api.get('/admin/deletion/snapshots'),
+  getAuditLog: (params) => apiClient.get('/admin/deletion/audit-log', params),
+  getPastActivities: (params) => apiClient.get('/admin/past-activities', params),
+  getPastActivitiesByType: (type, params) => apiClient.get(`/admin/past-activities/${type}`, params),
+  getSnapshots: () => apiClient.get('/admin/deletion/snapshots'),
 };
 
 /**

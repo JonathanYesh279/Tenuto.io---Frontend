@@ -60,11 +60,11 @@ interface SchoolYear {
 }
 
 const REPORT_SECTIONS = [
-  { key: 'teachers', title: 'מצבת כח-אדם להוראה', icon: GraduationCap, color: 'blue' as const },
-  { key: 'students', title: 'נתוני תלמידים', icon: Users, color: 'green' as const },
-  { key: 'orchestras', title: 'שיבוץ תלמידים להרכבים', icon: Music, color: 'purple' as const },
-  { key: 'theory', title: 'תורת המוזיקה', icon: BookOpen, color: 'orange' as const },
-  { key: 'schedule', title: 'לוח הרכבי ביצוע', icon: Calendar, color: 'teal' as const },
+  { key: 'teachers', title: 'מצבת כח-אדם להוראה', icon: GraduationCapIcon, color: 'blue' as const },
+  { key: 'students', title: 'נתוני תלמידים', icon: UsersIcon, color: 'green' as const },
+  { key: 'orchestras', title: 'שיבוץ תלמידים להרכבים', icon: MusicNoteIcon, color: 'purple' as const },
+  { key: 'theory', title: 'תורת המוזיקה', icon: BookOpenIcon, color: 'orange' as const },
+  { key: 'schedule', title: 'לוח הרכבי ביצוע', icon: CalendarIcon, color: 'teal' as const },
 ]
 
 export default function MinistryReports() {

@@ -15,7 +15,6 @@ import { getDisplayName } from '../utils/nameUtils'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
-import { RoleDistributionPanel } from '../components/teachers/RoleDistributionPanel'
 
 interface Teacher {
   id: string
@@ -565,7 +564,7 @@ export default function Teachers() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-2 h-full overflow-hidden relative">
       {renderSchedule()}
 
       {/* Page Header */}
@@ -585,55 +584,28 @@ export default function Teachers() {
         )}
       </div>
 
-      {/* Analytics Section: 3 columns — Stats | Top Teachers | Role Distribution */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 h-[160px]">
-        {/* RIGHT: 2x2 Stat Cards */}
-        <div className="grid grid-cols-2 grid-rows-2 gap-2 h-full">
-          {[
-            { value: totalTeachers, label: 'סה״כ מורים' },
-            { value: activeTeachers, label: 'מורים פעילים' },
-            { value: avgStudentsPerTeacher, label: 'ממוצע תלמידים/מורה' },
-            { value: totalTeachingHours, label: 'שעות הוראה' },
-          ].map((s) => (
-            <div key={s.label} className="bg-gradient-to-br from-sky-100 to-cyan-100 dark:from-sky-900/40 dark:to-cyan-900/40 rounded-xl flex flex-col items-center justify-center">
-              <h3 className="text-lg font-extrabold text-slate-900 dark:text-white leading-none">{typeof s.value === 'number' ? s.value.toLocaleString('he-IL') : s.value}</h3>
-              <p className="text-[10px] font-bold text-sky-800/50 dark:text-sky-300/50 mt-1">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* MIDDLE: Top Teachers by Student Count */}
-        <div className="bg-white dark:bg-sidebar-dark rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 px-4 py-3 flex flex-col h-full overflow-hidden">
-          <h3 className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2">מורים מובילים</h3>
-          <div className="space-y-1.5 flex-1 overflow-y-auto">
-            {(() => {
-              const top = [...teachers].sort((a, b) => b.studentCount - a.studentCount).slice(0, 5)
-              if (top.length === 0) return <p className="text-[10px] text-slate-400 text-center py-2">אין נתונים</p>
-              const maxSc = top[0]?.studentCount || 1
-              return top.map((t, i) => (
-                <div key={t.id} className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-300 dark:text-slate-600 w-3 shrink-0">{i + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <span className="text-[10px] font-medium text-slate-700 dark:text-slate-200 truncate">{t.name}</span>
-                      <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0 mr-1">{t.studentCount}</span>
-                    </div>
-                    <div className="h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full bg-indigo-400 dark:bg-indigo-500 transition-all duration-500" style={{ width: `${Math.round((t.studentCount / maxSc) * 100)}%` }} />
-                    </div>
-                  </div>
-                </div>
-              ))
-            })()}
+      {/* Analytics: 4 stat cards in a row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          { value: totalTeachers, label: 'סה״כ מורים' },
+          { value: activeTeachers, label: 'מורים פעילים' },
+          { value: avgStudentsPerTeacher, label: 'ממוצע תלמידים/מורה' },
+          { value: totalTeachingHours, label: 'שעות הוראה' },
+        ].map((s) => (
+          <div key={s.label} className="bg-gradient-to-br from-sky-400 to-cyan-400 dark:from-sky-900/40 dark:to-cyan-900/40 rounded-xl flex flex-col items-center justify-center py-3">
+            <h3 className="text-xl font-extrabold text-white leading-none flex items-center gap-2">
+              {typeof s.value === 'number' ? s.value.toLocaleString('he-IL') : s.value}
+              <svg width="28" height="14" viewBox="0 0 40 20" fill="none" className="opacity-40">
+                <polyline points="0,12 5,8 10,14 15,4 20,10 25,6 30,16 35,9 40,11" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
+            </h3>
+            <p className="text-[11px] font-bold text-white/70 dark:text-sky-300/50 mt-1.5">{s.label}</p>
           </div>
-        </div>
-
-        {/* LEFT: Role Distribution Panel */}
-        <RoleDistributionPanel teachers={teachers} loading={loading} />
+        ))}
       </div>
 
-      {/* Table Card Container */}
-      <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+      {/* Table Card Container — fills remaining height */}
+      <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden flex-1 min-h-0 flex flex-col">
         {/* Card Header: Filters + View Toggle */}
         <div className="p-5 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3 flex-wrap">
@@ -746,8 +718,8 @@ export default function Teachers() {
           </div>
         </div>
 
-        {/* Table / Grid Content */}
-        <div className="relative">
+        {/* Table / Grid Content — scrolls internally, load-more stays visible */}
+        <div className="relative flex-1 min-h-0">
           {searchLoading && (
             <div className="absolute inset-0 bg-white/75 dark:bg-sidebar-dark/75 flex items-center justify-center z-10">
               <div className="text-center">

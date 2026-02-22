@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 24-ministry-excel-import
-Plan: 03 (completed)
-Status: Executing
-Last activity: 2026-02-22 — Plan 24-03 completed (file structure guide and v4.0 upload UI)
+Plan: 04 (completed)
+Status: Complete
+Last activity: 2026-02-22 — Plan 24-04 completed (preview and results redesign with create/update distinction)
 
-Progress: [███████░░░] 75% (v5.0 — 3/4 plans)
+Progress: [██████████] 100% (v5.0 — 4/4 plans)
 
 ## Performance Metrics
 
@@ -30,8 +30,8 @@ Progress: [███████░░░] 75% (v5.0 — 3/4 plans)
 - v2.1: 6 phases, 13 plans
 - v3.0: 1 phase, 15 plans
 - v4.0: 1 phase, 6 plans
-- v5.0: 3 plans (10 min)
-- Total: 23 phases, 66 plans
+- v5.0: 1 phase, 4 plans (~14 min)
+- Total: 23 phases, 67 plans
 
 ## Accumulated Context
 
@@ -54,6 +54,10 @@ Key decisions for v5.0:
 - [24-02] New students get defaults: studyYears=1, extraHour=false, isActive=true
 - [24-03] File structure guide only shows for students tab (teachers have simpler columns)
 - [24-03] All v4.0 color references use explicit -500/-600 suffix to avoid CSS var resolution issues
+- [24-04] Badge colors: green (update/matched), blue (create/not_found), red (error)
+- [24-04] Preview stat cards use v4.0 gradient style matching Dashboard design language
+- [24-04] Execute button enables when matched OR notFound has entries (not just matched)
+- [24-04] Toast shows breakdown: "X עודכנו, Y נוצרו" for create+update operations
 
 ### Pending Todos
 
@@ -68,5 +72,7 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 24-03-PLAN.md — frontend upload UI with file structure guide and Ministry banner
+Stopped at: Completed Phase 24 (4/4 plans) — Ministry Excel Import Fix & Redesign complete
 Resume file: None
+
+**Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)

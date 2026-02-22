@@ -136,7 +136,7 @@ Plans:
 | 22. Visual Architecture Rewrite | v3.0 | 15/15 | Complete | 2026-02-20 |
 | 23. Dashboard Visual Redesign | v4.0 | 6/6 | Complete | 2026-02-20 |
 | 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
-| 25. Ministry Excel-Import Upgrade: Teacher Import | v5.0 | 3/3 | Complete | 2026-02-22 |
+| 25. Ministry Excel-Import Upgrade: Teacher Import | v5.1 | 3/3 | Complete | 2026-02-22 |
 
 ### Phase 25: Ministry Excel-Import Upgrade: Teacher Import
 
@@ -150,5 +150,59 @@ Plans:
 - [x] 25-03-PLAN.md — Frontend: Teacher file structure guide (3 categories), VALID_ROLES update
 
 ---
+
+#### Phase 26: Cell Fill Color Detection for Import
+
+**Goal:** Switch import Excel parsing from `xlsx` (text-only) to `exceljs` (reads cell styles) so that Ministry instrument columns and teaching subject columns marked by cell background fill color (non-white = selected) are correctly detected. Currently all instrument and role detections fail on real Ministry files because they check text values but cells have colored fills instead.
+**Depends on:** Phase 25
+**Files:** Backend `import.service.js`
+**Success Criteria** (what must be TRUE):
+  1. Import parsing uses `exceljs` instead of `xlsx` for reading Excel buffers
+  2. Instrument abbreviation columns detect non-white cell fill as "selected" (not text-based TRUTHY_VALUES)
+  3. Teaching subject/role columns (מקצועות הוראה) detect non-white cell fill as "selected"
+  4. Text-based TRUTHY_VALUES still works as fallback for non-Ministry files
+  5. Student import (department columns) also benefits from cell fill detection
+  6. Ministry teacher file (`מצבת כח-אדם בהוראה` sheet) correctly detects instruments from colored cells
+  7. Header detection still works correctly with exceljs parsing
+  8. Preview shows detected instruments and roles from colored cells
+**Plans:** 1 plan
+
+Plans:
+- [ ] 26-01-PLAN.md — Backend: Switch to exceljs parsing with cell fill color detection for instruments and roles
+
+---
+
+## Progress
+
+| Phase | Milestone | Plans | Status | Completed |
+|-------|-----------|-------|--------|-----------|
+| 1. Quick Fixes | v1.1 | 1/1 | Complete | 2026-02-13 |
+| 2. Backend Instrument Sync | v1.1 | 1/1 | Complete | 2026-02-13 |
+| 3. Audit Trail Page | v1.1 | 1/1 | Complete | 2026-02-13 |
+| 4. Ministry Reports Polish | v1.1 | 1/1 | Complete | 2026-02-13 |
+| 5. Audit Claude Skills & GSD Agents | v1.1 | 3/3 | Complete | 2026-02-14 |
+| 6. Foundation | v2.0 | 2/2 | Complete | 2026-02-17 |
+| 7. Primitives | v2.0 | 2/2 | Complete | 2026-02-17 |
+| 8. Domain Components & Loading | v2.0 | 3/3 | Complete | 2026-02-17 |
+| 9. Form System | v2.0 | 3/3 | Complete | 2026-02-18 |
+| 10. List Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
+| 11. Detail Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
+| 12. Layout & Dashboard | v2.0 | 2/2 | Complete | 2026-02-18 |
+| 13. Special Pages | v2.0 | 2/2 | Complete | 2026-02-18 |
+| 14. Requirement Gap Closure | v2.0 | 3/3 | Complete | 2026-02-18 |
+| 15. Tech Debt Sweep | v2.0 | 1/1 | Complete | 2026-02-18 |
+| 16. Token Foundation | v2.1 | 2/2 | Complete | 2026-02-18 |
+| 17. Primitive Component Layer | v2.1 | 2/2 | Complete | 2026-02-18 |
+| 18. Layout Shell and Color System Reset | v2.1 | 3/3 | Complete | 2026-02-18 |
+| 19. Dashboard Transformation | v2.1 | 2/2 | Complete | 2026-02-18 |
+| 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
+| 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
+| 22. Visual Architecture Rewrite | v3.0 | 15/15 | Complete | 2026-02-20 |
+| 23. Dashboard Visual Redesign | v4.0 | 6/6 | Complete | 2026-02-20 |
+| 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
+| 25. Ministry Excel-Import Upgrade: Teacher Import | v5.1 | 3/3 | Complete | 2026-02-22 |
+| 26. Cell Fill Color Detection for Import | v5.2 | 0/1 | Planned | — |
+
+---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-22 — Phase 25 complete (teacher import upgrade shipped)*
+*Last updated: 2026-02-22 — Phase 26 planned (1 plan, cell fill color detection)*

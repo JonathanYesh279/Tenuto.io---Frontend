@@ -190,7 +190,11 @@ Plans:
   5. Teaching hours from formula cells (SUMIF results) correctly extracted
   6. Re-import same Ministry file → teachers have correct instruments, roles, and hours
   7. Simple Excel files (single-row headers) still work correctly
-**Plans:** TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 27-01-PLAN.md — Constants (CM abbreviation) + header backfill improvements (composite headers, short fragment variants)
+- [ ] 27-02-PLAN.md — Position-based filtering for mapColumns and detectInstrumentColumns (collision avoidance)
 
 ---
 
@@ -224,7 +228,7 @@ Plans:
 | 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
 | 25. Ministry Excel-Import Upgrade: Teacher Import | v5.1 | 3/3 | Complete | 2026-02-22 |
 | 26. Cell Fill Color Detection for Import | v5.2 | 1/1 | Complete | 2026-02-22 |
-| 27. Ministry Import Fix — Multi-Row Headers | v5.3 | 0/? | Planned | — |
+| 27. Ministry Import Fix — Multi-Row Headers | v5.3 | 0/2 | Planned | — |
 
 ---
 *Roadmap created: 2026-02-13*

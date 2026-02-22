@@ -87,7 +87,7 @@ interface TeacherFormData {
   ensemblesIds: string[]
 }
 
-const VALID_ROLES = ['מורה', 'מנצח', 'מדריך הרכב', 'מנהל', 'מורה תאוריה', 'מגמה']
+const VALID_ROLES = ['מורה', 'ניצוח', 'מדריך הרכב', 'מנהל', 'תאוריה', 'מגמה', 'ליווי פסנתר', 'הלחנה']
 const VALID_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי']
 
 const DEFAULT_FORM_VALUES: TeacherFormData = {

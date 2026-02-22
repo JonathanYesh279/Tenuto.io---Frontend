@@ -420,11 +420,13 @@ export const WORKING_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי',
 // Must match backend TEACHER_ROLES constant and VALID_ROLES in validationUtils.ts
 export const TEACHER_ROLES = [
   'מורה',
-  'מנצח',
+  'ניצוח',
   'מדריך הרכב',
   'מנהל',
-  'מורה תאוריה',
+  'תאוריה',
   'מגמה',
+  'ליווי פסנתר',
+  'הלחנה',
 ] as const;
 
 export const INSTRUMENTS = [

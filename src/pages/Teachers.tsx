@@ -671,11 +671,13 @@ export default function Teachers() {
             >
               <option value="">כל התפקידים</option>
               <option value="מורה">מורה</option>
-              <option value="מנצח">מנצח</option>
+              <option value="ניצוח">ניצוח</option>
               <option value="מדריך הרכב">מדריך הרכב</option>
               <option value="מנהל">מנהל</option>
-              <option value="מורה תאוריה">מורה תאוריה</option>
+              <option value="תאוריה">תאוריה</option>
               <option value="מגמה">מגמה</option>
+              <option value="ליווי פסנתר">ליווי פסנתר</option>
+              <option value="הלחנה">הלחנה</option>
             </select>
 
             <div className="mr-auto flex items-center gap-3">

@@ -72,7 +72,8 @@ export const ROLE_COLORS = {
     text: 'text-blue-800',
     ring: 'ring-blue-200'
   },
-  'מנצח': {
+  // New role names (Ministry-aligned)
+  'ניצוח': {
     bg: 'bg-purple-500',
     bgLight: 'bg-purple-100',
     text: 'text-purple-800',
@@ -90,7 +91,7 @@ export const ROLE_COLORS = {
     text: 'text-red-800',
     ring: 'ring-red-200'
   },
-  'מורה תאוריה': {
+  'תאוריה': {
     bg: 'bg-yellow-500',
     bgLight: 'bg-yellow-100',
     text: 'text-yellow-800',
@@ -101,6 +102,31 @@ export const ROLE_COLORS = {
     bgLight: 'bg-indigo-100',
     text: 'text-indigo-800',
     ring: 'ring-indigo-200'
+  },
+  'ליווי פסנתר': {
+    bg: 'bg-pink-500',
+    bgLight: 'bg-pink-100',
+    text: 'text-pink-800',
+    ring: 'ring-pink-200'
+  },
+  'הלחנה': {
+    bg: 'bg-amber-500',
+    bgLight: 'bg-amber-100',
+    text: 'text-amber-800',
+    ring: 'ring-amber-200'
+  },
+  // Backward compatibility aliases (old names → same colors)
+  'מנצח': {
+    bg: 'bg-purple-500',
+    bgLight: 'bg-purple-100',
+    text: 'text-purple-800',
+    ring: 'ring-purple-200'
+  },
+  'מורה תאוריה': {
+    bg: 'bg-yellow-500',
+    bgLight: 'bg-yellow-100',
+    text: 'text-yellow-800',
+    ring: 'ring-yellow-200'
   }
 } as const
 

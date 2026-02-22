@@ -23,7 +23,7 @@ export const VALID_INSTRUMENTS = [
   // קולי
   'שירה',
   // כלים אתניים
-  'עוד', 'כלים אתניים',
+  'עוד', 'כלים אתניים', 'VM', 'NA', 'SI',
   // כלים עממיים
   'מנדולינה', 'אקורדיון',
   // אחר
@@ -32,7 +32,7 @@ export const VALID_INSTRUMENTS = [
 export const VALID_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי']
 export const VALID_DURATIONS = [30, 45, 60]
 export const VALID_STAGES = [1, 2, 3, 4, 5, 6, 7, 8]
-export const VALID_ROLES = ['מורה', 'מנצח', 'מדריך הרכב', 'מנהל', 'מורה תאוריה', 'מגמה']
+export const VALID_ROLES = ['מורה', 'ניצוח', 'מדריך הרכב', 'מנהל', 'תאוריה', 'מגמה', 'ליווי פסנתר', 'הלחנה']
 export const TEST_STATUSES = ['לא נבחן', 'עבר/ה', 'לא עבר/ה', 'עבר/ה בהצטיינות', 'עבר/ה בהצטיינות יתרה']
 
 // Validation patterns

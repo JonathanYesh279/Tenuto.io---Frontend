@@ -57,18 +57,23 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
   const getRoleColor = (role: string): string => {
     const colors = {
       'מורה': 'bg-blue-100 text-blue-800',
-      'מנצח': 'bg-purple-100 text-purple-800',
+      'ניצוח': 'bg-purple-100 text-purple-800',
       'מדריך הרכב': 'bg-green-100 text-green-800',
       'מנהל': 'bg-red-100 text-red-800',
-      'מורה תאוריה': 'bg-yellow-100 text-yellow-800',
-      'מגמה': 'bg-indigo-100 text-indigo-800'
+      'תאוריה': 'bg-yellow-100 text-yellow-800',
+      'מגמה': 'bg-indigo-100 text-indigo-800',
+      'ליווי פסנתר': 'bg-pink-100 text-pink-800',
+      'הלחנה': 'bg-amber-100 text-amber-800',
+      // Backward compatibility
+      'מנצח': 'bg-purple-100 text-purple-800',
+      'מורה תאוריה': 'bg-yellow-100 text-yellow-800'
     }
     return colors[role as keyof typeof colors] || 'bg-gray-100 text-gray-800'
   }
 
   // Get primary role for avatar color
   const getPrimaryRole = (): string => {
-    const roleOrder = ['מנהל', 'מנצח', 'מדריך הרכב', 'מורה תאוריה', 'מגמה', 'מורה']
+    const roleOrder = ['מנהל', 'ניצוח', 'מנצח', 'מדריך הרכב', 'תאוריה', 'מורה תאוריה', 'מגמה', 'ליווי פסנתר', 'הלחנה', 'מורה']
     const roles = teacher.roles || []
     return roles.find(role => roleOrder.includes(role)) || roles[0] || 'מורה'
   }
@@ -77,11 +82,16 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
   const getAvatarColor = (role: string): string => {
     const colors = {
       'מורה': 'bg-blue-500',
-      'מנצח': 'bg-purple-500',
+      'ניצוח': 'bg-purple-500',
       'מדריך הרכב': 'bg-green-500',
       'מנהל': 'bg-red-500',
-      'מורה תאוריה': 'bg-yellow-500',
-      'מגמה': 'bg-indigo-500'
+      'תאוריה': 'bg-yellow-500',
+      'מגמה': 'bg-indigo-500',
+      'ליווי פסנתר': 'bg-pink-500',
+      'הלחנה': 'bg-amber-500',
+      // Backward compatibility
+      'מנצח': 'bg-purple-500',
+      'מורה תאוריה': 'bg-yellow-500'
     }
     return colors[role as keyof typeof colors] || 'bg-blue-500'
   }

@@ -8,6 +8,7 @@
 - ✅ **v3.0 Visual Architecture Rewrite** — Phase 22 (shipped 2026-02-20)
 - ✅ **v4.0 Visual Redesign** — Phase 23 (shipped 2026-02-20)
 - ✅ **v5.0 Ministry Import Overhaul** — Phase 24 (shipped 2026-02-22)
+- ✅ **v5.2 Cell Fill Color Detection** — Phase 26 (shipped 2026-02-22)
 
 ## Phases
 
@@ -168,7 +169,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 26-01-PLAN.md — Backend: Switch to exceljs parsing with cell fill color detection for instruments and roles
+- [x] 26-01-PLAN.md — Backend: Switch to exceljs parsing with cell fill color detection for instruments and roles
 
 ---
 
@@ -201,8 +202,8 @@ Plans:
 | 23. Dashboard Visual Redesign | v4.0 | 6/6 | Complete | 2026-02-20 |
 | 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
 | 25. Ministry Excel-Import Upgrade: Teacher Import | v5.1 | 3/3 | Complete | 2026-02-22 |
-| 26. Cell Fill Color Detection for Import | v5.2 | 0/1 | Planned | — |
+| 26. Cell Fill Color Detection for Import | v5.2 | 1/1 | Complete | 2026-02-22 |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-22 — Phase 26 planned (1 plan, cell fill color detection)*
+*Last updated: 2026-02-22 — Phase 26 complete (cell fill color detection shipped)*

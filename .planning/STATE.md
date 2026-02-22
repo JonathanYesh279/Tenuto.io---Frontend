@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 24-ministry-excel-import
-Plan: 02 (completed)
+Plan: 03 (completed)
 Status: Executing
-Last activity: 2026-02-22 — Plan 24-02 completed (student creation for unmatched rows)
+Last activity: 2026-02-22 — Plan 24-03 completed (file structure guide and v4.0 upload UI)
 
-Progress: [█████░░░░░] 50% (v5.0 — 2/4 plans)
+Progress: [███████░░░] 75% (v5.0 — 3/4 plans)
 
 ## Performance Metrics
 
@@ -30,8 +30,8 @@ Progress: [█████░░░░░] 50% (v5.0 — 2/4 plans)
 - v2.1: 6 phases, 13 plans
 - v3.0: 1 phase, 15 plans
 - v4.0: 1 phase, 6 plans
-- v5.0: 2 plans (7 min)
-- Total: 23 phases, 65 plans
+- v5.0: 3 plans (10 min)
+- Total: 23 phases, 66 plans
 
 ## Accumulated Context
 
@@ -52,6 +52,8 @@ Key decisions for v5.0:
 - [24-02] createdCount field added to both teacher and student execute results for consistent API shape
 - [24-02] Status uses totalSuccess = successCount + createdCount for accurate completion state
 - [24-02] New students get defaults: studyYears=1, extraHour=false, isActive=true
+- [24-03] File structure guide only shows for students tab (teachers have simpler columns)
+- [24-03] All v4.0 color references use explicit -500/-600 suffix to avoid CSS var resolution issues
 
 ### Pending Todos
 
@@ -66,5 +68,5 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 24-02-PLAN.md — backend student creation for unmatched rows
+Stopped at: Completed 24-03-PLAN.md — frontend upload UI with file structure guide and Ministry banner
 Resume file: None

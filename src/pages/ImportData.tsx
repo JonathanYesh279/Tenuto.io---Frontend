@@ -33,19 +33,25 @@ interface PreviewData {
   importLogId: string
   preview: {
     totalRows: number
-    matched: PreviewRow[]
-    notFound: PreviewRow[]
-    errors: PreviewRow[]
-    warnings: string[]
+    matched: any[]      // Backend returns full objects, not just PreviewRow
+    notFound: any[]
+    errors: any[]
+    warnings: any[]
+    headerRowIndex?: number     // NEW: detected header row (0 = standard)
+    matchedColumns?: number     // NEW: how many columns matched
+    instrumentColumnsDetected?: string[]  // existing for teachers
   }
 }
 
 interface ImportResult {
   totalRows: number
   successCount: number
+  createdCount: number       // NEW: count of created students
   errorCount: number
   skippedCount: number
-  errors: Array<{ row: number; message: string }>
+  matchedCount: number       // NEW: total matched rows
+  notFoundCount: number      // NEW: total unmatched rows
+  errors: Array<{ row?: number; message?: string; error?: string; studentName?: string }>
 }
 
 const IMPORT_STEPS = [
@@ -142,7 +148,12 @@ export default function ImportData() {
       const result = await importService.executeImport(previewData.importLogId)
       setResults(result)
       setImportState('results')
-      toast.success(`הייבוא הושלם: ${result.successCount} עודכנו`)
+
+      // Show breakdown toast
+      const parts = []
+      if (result.successCount > 0) parts.push(`${result.successCount} עודכנו`)
+      if (result.createdCount > 0) parts.push(`${result.createdCount} נוצרו`)
+      toast.success(`הייבוא הושלם: ${parts.join(', ')}`)
     } catch (error: any) {
       console.error('Error executing import:', error)
       toast.error(error.message || 'שגיאה בביצוע הייבוא')
@@ -151,36 +162,40 @@ export default function ImportData() {
     }
   }
 
-  const getRowStatusColor = (status: string) => {
+  const getRowStatusBadge = (status: string) => {
     switch (status) {
-      case 'matched': return 'bg-green-50 border-green-200'
-      case 'not_found': return 'bg-yellow-50 border-yellow-200'
-      case 'error': return 'bg-red-50 border-red-200'
-      default: return 'bg-white'
+      case 'matched':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+            <CheckCircleIcon size={12} weight="fill" />
+            עדכון
+          </span>
+        )
+      case 'not_found':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+            <PlusIcon size={12} weight="bold" />
+            יצירה
+          </span>
+        )
+      case 'error':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+            <XCircleIcon size={12} weight="fill" />
+            שגיאה
+          </span>
+        )
+      default:
+        return null
     }
   }
 
-  const getRowStatusLabel = (status: string) => {
-    switch (status) {
-      case 'matched': return 'יעודכן'
-      case 'not_found': return 'לא נמצא'
-      case 'error': return 'שגיאה'
-      default: return status
-    }
-  }
-
-  const getRowStatusIcon = (status: string) => {
-    switch (status) {
-      case 'matched': return <CheckCircleIcon size={16} weight="fill" className="text-green-600" />
-      case 'not_found': return <WarningIcon size={16} weight="fill" className="text-yellow-600" />
-      case 'error': return <XCircleIcon size={16} weight="fill" className="text-red-600" />
-      default: return null
-    }
-  }
-
-  const allPreviewRows: PreviewRow[] = previewData
-    ? [...previewData.preview.matched, ...previewData.preview.notFound, ...previewData.preview.errors]
-        .sort((a, b) => a.row - b.row)
+  const allPreviewRows = previewData
+    ? [
+        ...previewData.preview.matched.map((r: any) => ({ ...r, status: 'matched' as const, name: r.importedName || r.studentName || r.teacherName })),
+        ...previewData.preview.notFound.map((r: any) => ({ ...r, status: 'not_found' as const, name: r.importedName })),
+        ...previewData.preview.errors.map((r: any) => ({ ...r, status: 'error' as const, name: '', error: r.message })),
+      ].sort((a, b) => (a.row || 0) - (b.row || 0))
     : []
 
   return (
@@ -449,7 +464,7 @@ export default function ImportData() {
             </button>
             <button
               onClick={handleExecute}
-              disabled={executing || previewData.preview.matched.length === 0}
+              disabled={executing || (previewData.preview.matched.length === 0 && previewData.preview.notFound.length === 0)}
               className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {executing ? (
@@ -460,7 +475,7 @@ export default function ImportData() {
               ) : (
                 <>
                   <CheckCircleIcon size={16} weight="fill" />
-                  אשר ייבוא ({previewData.preview.matched.length} שורות)
+                  אשר ייבוא ({previewData.preview.matched.length + previewData.preview.notFound.length} שורות)
                 </>
               )}
             </button>

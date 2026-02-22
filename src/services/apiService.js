@@ -180,10 +180,11 @@ class ApiClient {
    */
   async _makeRequest(method, endpoint, options = {}) {
     const url = this.buildUrl(endpoint);
+    const { timeout, ...fetchOptions } = options;
     const config = {
       method,
       headers: this.getHeaders(),
-      ...options,
+      ...fetchOptions,
     };
 
     // Add body for POST/PUT/PATCH/DELETE requests
@@ -199,7 +200,8 @@ class ApiClient {
       }
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT);
+      const timeoutMs = timeout || API_CONFIG.TIMEOUT;
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
       
       config.signal = controller.signal;
       
@@ -5132,7 +5134,7 @@ export const importService = {
   async executeImport(importLogId) {
     try {
       console.log(`📥 Executing import ${importLogId}`);
-      const response = await apiClient.post(`/import/execute/${importLogId}`);
+      const response = await apiClient.request('POST', `/import/execute/${importLogId}`, { timeout: 120000 });
       console.log('✅ Import executed successfully');
       return response;
     } catch (error) {

@@ -11,16 +11,16 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Goal:** Upgrade teacher import to match Ministry Excel format with new roles, teaching hours, and instrument handling.
 **Files:** Backend `constants.js`, `teacher.validation.js`, `import.service.js`
-**Phases:** 25
+**Phases:** 25, 26
 
 ## Current Position
 
-Phase: 25-ministry-excel-import-upgrade-teacher-import
-Plan: 03 (completed)
+Phase: 26-cell-fill-color-detection
+Plan: 01 (completed)
 Status: Complete
-Last activity: 2026-02-22 — Plan 25-03 completed (teacher file structure guide and frontend role validation)
+Last activity: 2026-02-22 — Plan 26-01 completed (cell fill color detection for import)
 
-Progress: [██████████] 100% (v5.1 — 3/3 plans)
+Progress: [██████████] 100% (v5.1 — 1/1 plans)
 
 ## Performance Metrics
 
@@ -31,8 +31,8 @@ Progress: [██████████] 100% (v5.1 — 3/3 plans)
 - v3.0: 1 phase, 15 plans
 - v4.0: 1 phase, 6 plans
 - v5.0: 1 phase, 4 plans (~14 min)
-- v5.1: 1 phase, 3 plans (~8 min)
-- Total: 25 phases, 70 plans
+- v5.1: 2 phases, 4 plans (~12 min)
+- Total: 26 phases, 71 plans
 
 ## Accumulated Context
 
@@ -62,10 +62,14 @@ Key decisions for v5.0:
 - [25-01] Force-add migration file with git add -f to override migrations/ gitignore (critical for version control)
 - [Phase 25]: Badge color scheme for file structure guide: red (required), gray (optional), indigo (auto-detected)
 - [Phase 25]: Maintain backward compatibility for old role names ('מנצח', 'מורה תאוריה') in color mappings
+- [26-01] Switch Excel parsing from xlsx to exceljs for cell style reading (Ministry uses colored cells)
+- [26-01] Color detection first, text fallback second — any non-white fill = selected
+- [26-01] Black fills (FF000000) count as selected (not excluded from NO_COLOR list)
 
 ### Roadmap Evolution
 
 - Phase 25 added: Ministry Excel-Import Upgrade: Teacher Import
+- Phase 26 added: Cell Fill Color Detection for Import
 
 ### Pending Todos
 
@@ -80,9 +84,11 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed Phase 25 (3/3 plans) — Ministry Excel Teacher Import Upgrade complete
+Stopped at: Completed Phase 26 (1/1 plans) — Cell Fill Color Detection for Import complete
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)
 
 **Phase 25 Complete:** Backend TEACHER_ROLES renamed to Ministry naming (ניצוח, תאוריה), INSTRUMENT_MAP expanded (+4 instruments), managementInfo schema extended (+6 teaching hour fields), frontend teacher file structure guide added, VALID_ROLES updated to 8 items with backward compatibility
+
+**Phase 26 Complete:** Backend Excel parsing switched from xlsx to exceljs with cell fill color detection — Ministry instrument/role columns marked by colored cells now correctly detected, text-based TRUTHY_VALUES still works as fallback

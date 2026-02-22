@@ -7,7 +7,7 @@
 - ✅ **v2.1 Production-Grade Visual Identity** — Phases 16-21 (shipped 2026-02-18)
 - ✅ **v3.0 Visual Architecture Rewrite** — Phase 22 (shipped 2026-02-20)
 - ✅ **v4.0 Visual Redesign** — Phase 23 (shipped 2026-02-20)
-- 🔨 **v5.0 Ministry Import Overhaul** — Phase 24 (active)
+- ✅ **v5.0 Ministry Import Overhaul** — Phase 24 (shipped 2026-02-22)
 
 ## Phases
 
@@ -101,10 +101,10 @@ Full details: `milestones/v4.0-ROADMAP.md`
 **Plans:** 4 plans
 
 Plans:
-- [ ] 24-01-PLAN.md — Backend: Smart header detection + column mapping + instrument detection
-- [ ] 24-02-PLAN.md — Backend: Create functionality for unmatched rows + validation improvements
-- [ ] 24-03-PLAN.md — Frontend: File structure guide + Ministry banner + upload zone redesign
-- [ ] 24-04-PLAN.md — Frontend: Preview redesign with create/update distinction + stat cards + results
+- [x] 24-01-PLAN.md — Backend: Smart header detection + column mapping + instrument detection
+- [x] 24-02-PLAN.md — Backend: Create functionality for unmatched rows + validation improvements
+- [x] 24-03-PLAN.md — Frontend: File structure guide + Ministry banner + upload zone redesign
+- [x] 24-04-PLAN.md — Frontend: Preview redesign with create/update distinction + stat cards + results
 
 ---
 
@@ -135,8 +135,8 @@ Plans:
 | 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 22. Visual Architecture Rewrite | v3.0 | 15/15 | Complete | 2026-02-20 |
 | 23. Dashboard Visual Redesign | v4.0 | 6/6 | Complete | 2026-02-20 |
-| 24. Ministry Excel Import — Fix & Redesign | v5.0 | 0/4 | Planned | — |
+| 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-22 — v5.0 milestone started, Phase 24 planned with 4 plans*
+*Last updated: 2026-02-22 — v5.0 Ministry Import Overhaul shipped, Phase 24 complete (4/4 plans)*

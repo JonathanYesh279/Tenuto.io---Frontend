@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v5.0 Ministry Import Overhaul — Phase 24: Ministry Excel Import Fix & Redesign
+**Current focus:** v5.0 Ministry Import Overhaul — Phase 25: Teacher Import (complete)
 
 ## Current Milestone: v5.1 Teacher Import Upgrade
 

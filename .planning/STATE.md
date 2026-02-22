@@ -7,20 +7,20 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 **Core value:** Administrators can efficiently manage their conservatory
 **Current focus:** v5.0 Ministry Import Overhaul — Phase 24: Ministry Excel Import Fix & Redesign
 
-## Current Milestone: v5.0 Ministry Import Overhaul
+## Current Milestone: v5.1 Teacher Import Upgrade
 
-**Goal:** Fix Ministry Excel import (1284 errors → working) and redesign ImportData page with v4.0 styling.
-**Files:** Backend `import.service.js`, Frontend `ImportData.tsx`
-**Phases:** 24
+**Goal:** Upgrade teacher import to match Ministry Excel format with new roles, teaching hours, and instrument handling.
+**Files:** Backend `constants.js`, `teacher.validation.js`, `import.service.js`
+**Phases:** 25
 
 ## Current Position
 
-Phase: 24-ministry-excel-import
-Plan: 04 (completed)
-Status: Complete
-Last activity: 2026-02-22 — Plan 24-04 completed (preview and results redesign with create/update distinction)
+Phase: 25-ministry-excel-import-upgrade-teacher-import
+Plan: 01 (completed)
+Status: In Progress
+Last activity: 2026-02-22 — Plan 25-01 completed (backend constants and schema foundation)
 
-Progress: [██████████] 100% (v5.0 — 4/4 plans)
+Progress: [███░░░░░░░] 33% (v5.1 — 1/3 plans)
 
 ## Performance Metrics
 
@@ -31,7 +31,8 @@ Progress: [██████████] 100% (v5.0 — 4/4 plans)
 - v3.0: 1 phase, 15 plans
 - v4.0: 1 phase, 6 plans
 - v5.0: 1 phase, 4 plans (~14 min)
-- Total: 23 phases, 67 plans
+- v5.1: 1 phase, 1/3 plans (~3 min)
+- Total: 24 phases, 68 plans
 
 ## Accumulated Context
 
@@ -58,6 +59,11 @@ Key decisions for v5.0:
 - [24-04] Preview stat cards use v4.0 gradient style matching Dashboard design language
 - [24-04] Execute button enables when matched OR notFound has entries (not just matched)
 - [24-04] Toast shows breakdown: "X עודכנו, Y נוצרו" for create+update operations
+- [25-01] Force-add migration file with git add -f to override migrations/ gitignore (critical for version control)
+
+### Roadmap Evolution
+
+- Phase 25 added: Ministry Excel-Import Upgrade: Teacher Import
 
 ### Pending Todos
 
@@ -72,7 +78,9 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed Phase 24 (4/4 plans) — Ministry Excel Import Fix & Redesign complete
+Stopped at: Completed Phase 25 Plan 01 (1/3 plans) — Backend constants and schema foundation for teacher import upgrade
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)
+
+**Phase 25 In Progress:** Plan 01 complete (TEACHER_ROLES renamed to Ministry naming, INSTRUMENT_MAP expanded with 4 instruments, managementInfo schema extended with 6 teaching hour fields, migration script created)

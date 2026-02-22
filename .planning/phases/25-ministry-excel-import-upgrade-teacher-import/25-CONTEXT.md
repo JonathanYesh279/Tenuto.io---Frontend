@@ -1,14 +1,14 @@
 # Phase 25: Ministry Excel-Import Upgrade: Teacher Import - Context
 
-**Gathered:** 2026-02-22
-**Status:** Ready for planning
+**Gathered:** 2026-02-22 (updated 2026-02-22)
+**Status:** Updated — cell fill color detection bug identified
 
 <domain>
 ## Phase Boundary
 
 Extend the Ministry Excel import system to fully support teachers. Currently teacher import is update-only with no create functionality, no file structure guide, and no instrument detection. Phase 25 adds teacher creation from import, instrument abbreviation mapping, role system alignment with Ministry naming, teaching hours import, and a teacher-specific file structure guide. The frontend ImportData page already has a teacher tab — this phase upgrades the backend logic and frontend guide.
 
-Reference file: `/מידע/מורים - משרד החינוך.xlsx` — multi-row headers (rows 6-10), instrument abbreviation columns, teaching subject boolean columns.
+Reference file: `/מידע/מורים - משרד החינוך.xlsx` — multi-row headers (rows 6-10), instrument abbreviation columns, teaching subject columns. **CRITICAL:** Instruments and teaching subjects are marked by **cell fill color** (not text values).
 
 </domain>
 
@@ -34,9 +34,10 @@ Reference file: `/מידע/מורים - משרד החינוך.xlsx` — multi-ro
 - **Add new roles from Ministry:**
   - `ליווי פסנתר` (piano accompaniment)
   - `הלחנה` (composition)
-- **Final TEACHER_ROLES:** `['מורה', 'ניצוח', 'מדריך הרכב', 'מנהל', 'תאוריה', 'מגמה', 'ליווי פסנתר', 'הלחנה']`
+- **Final TEACHER_ROLES:** `['מורה', 'ניצוח', 'מדריך הרכב', 'מנהל', 'תאוריה', 'מגמה', 'ליווי פסנתר', 'הלחנה']` — confirmed correct
 - Ministry column `מקצועות הוראה (מעשי/עיוני)` maps to TEACHER_ROLES (not TEACHING_SUBJECTS)
-- These are boolean columns in the Ministry file — a teacher can have multiple roles
+- These are **color-filled columns** in the Ministry file — non-white fill = selected (same rule as instruments)
+- A teacher can have multiple roles
 - **Database migration required:** Update all existing teachers with old role names to new names
 - Backend constants, frontend constants, and validation all need updating
 
@@ -46,9 +47,16 @@ Reference file: `/מידע/מורים - משרד החינוך.xlsx` — multi-ro
 - Management role is a sub-property connected to the teacher's broader role (רכזות)
 
 ### Instrument Handling
-- Map Ministry instrument abbreviation columns (boolean) to teacher instruments
+- Map Ministry instrument abbreviation columns to teacher instruments
 - Teacher instrument field changes from single string to **array** (support multiple instruments)
 - Schema migration needed: `professionalInfo.instrument` (string) → `professionalInfo.instruments` (array)
+- **CRITICAL BUG FIX: Cell fill color detection**
+  - Ministry file marks instruments with **cell background fill color** (lavender/blue cells), NOT text values
+  - Current backend uses `xlsx` library which only reads text → **all instruments are missed**
+  - Must switch to `exceljs` (already in dependencies, used for export) which reads cell styles/fills
+  - **Detection rule:** Any non-white cell fill = instrument is selected (regardless of text content like "FALSE")
+  - Same rule applies to teaching subjects (מקצועות הוראה מעשי/עיוני) — non-white fill = selected
+  - Text-based TRUTHY_VALUES should still work as fallback for non-Ministry files
 - **Instrument abbreviation mapping:**
   - Strings: Vi=כינור, VL=ויולה, CH=צ'לו, CB=קונטרבס
   - Winds: FL=חליל, OB=אבוב, CL=קלרינט, BS=בסון, SX=סקסופון, HR=קרן, TR=חצוצרה, TB=טרומבון, BR=בריטון, TU=טובה
@@ -90,6 +98,7 @@ Reference file: `/מידע/מורים - משרד החינוך.xlsx` — multi-ro
 - Same smart header detection pattern, just different column map
 
 ### Claude's Discretion
+- Whether to switch import from `xlsx` to `exceljs` or add a parallel cell-style reader (Claude recommends exceljs)
 - Exact schema structure for teaching hours storage
 - How to handle the multi-row Ministry header (rows 6-10) within the existing detection framework
 - Temporary password length (123456 vs 12345678) based on backend password requirements
@@ -103,7 +112,8 @@ Reference file: `/מידע/מורים - משרד החינוך.xlsx` — multi-ro
 - Ministry teacher file reference: `/מידע/מורים - משרד החינוך.xlsx` — use this as the test case
 - The file has rows 0-5 as metadata, rows 6-10 as multi-row headers, data starts at row 11
 - Sheet name: `מצבת כח-אדם בהוראה`
-- First data row example: teacher "סווטלנה אברהם", classification ממשיך, degree תואר שני, 15 years experience, Vi=true (violin teacher)
+- First data row example: teacher "סווטלנה אברהם", classification ממשיך, degree תואר שני, 15 years experience, Vi cell has blue fill (violin teacher)
+- Screenshot reference: `/mnt/c/Users/yona2/Pictures/Screenshots/צילום מסך 2026-02-22 225656.png` — shows colored cell fills marking instruments
 - "I want this data to be in the app after import — no partial data just because the app didn't know how to save it"
 - Management role (רכזות) should be clearly connected as a sub-property of the teacher's role
 

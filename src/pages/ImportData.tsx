@@ -59,6 +59,182 @@ const IMPORT_STEPS = [
   { id: 'results', label: 'תוצאות' },
 ] as const
 
+function TeacherFileStructureGuide() {
+  return (
+    <div className="rounded-3xl shadow-sm bg-white p-6">
+      <h3 className="text-lg font-bold text-gray-900 mb-4">מבנה הקובץ הנדרש</h3>
+
+      {/* Ministry compatibility banner */}
+      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4">
+        <div className="flex items-start gap-2">
+          <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-blue-900">תומך בקבצי מימשק משרד החינוך</p>
+            <p className="text-xs text-blue-700 mt-0.5">המערכת מזהה אוטומטית שורות מטא-דאטה, עמודות כלי נגינה, ותפקידי הוראה</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Column guide table */}
+      <div className="space-y-0 text-sm">
+        {/* Header row */}
+        <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+          <span className="font-medium text-gray-700 w-28">עמודה</span>
+          <span className="font-medium text-gray-700 flex-1">שמות אפשריים</span>
+          <span className="font-medium text-gray-700 w-24 text-center">סטטוס</span>
+        </div>
+
+        {/* --- Personal Info Section --- */}
+        <div className="pt-3 pb-1">
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">מידע אישי</span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">שם מורה</span>
+          <span className="text-gray-500 flex-1 text-xs">שם פרטי + שם משפחה, או שם ומשפחה</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-700">חובה</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ת.ז.</span>
+          <span className="text-gray-500 flex-1 text-xs">מספר זהות, ת.ז., תעודת זהות</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">שנת לידה</span>
+          <span className="text-gray-500 flex-1 text-xs">שנת לידה</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">טלפון</span>
+          <span className="text-gray-500 flex-1 text-xs">טלפון, נייד</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">דוא"ל</span>
+          <span className="text-gray-500 flex-1 text-xs">דוא"ל, email, מייל</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        {/* --- Professional Info Section --- */}
+        <div className="pt-4 pb-1">
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">מידע מקצועי</span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">סיווג</span>
+          <span className="text-gray-500 flex-1 text-xs">ממשיך / חדש</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">תואר</span>
+          <span className="text-gray-500 flex-1 text-xs">תואר שני, תואר ראשון, מוסמך, בלתי מוסמך</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ותק</span>
+          <span className="text-gray-500 flex-1 text-xs">ותק, שנות ותק, ותק בהוראה</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">תעודת הוראה</span>
+          <span className="text-gray-500 flex-1 text-xs">V / ✓ = יש תעודה</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ארגון עובדים</span>
+          <span className="text-gray-500 flex-1 text-xs">חבר ארגון, ארגון עובדים</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">כלי נגינה</span>
+          <span className="text-gray-500 flex-1 text-xs">עמודות קיצור: Vi, VL, CH, FL, PI, GI וכו' (V = מלמד)</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-indigo-100 text-indigo-700">אוטומטי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">תפקידי הוראה</span>
+          <span className="text-gray-500 flex-1 text-xs">הוראה, ניצוח, הרכב, תאוריה, מגמה, ליווי פסנתר, הלחנה (V = פעיל)</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-indigo-100 text-indigo-700">אוטומטי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">תיאור תפקיד</span>
+          <span className="text-gray-500 flex-1 text-xs">ריכוז פדגוגי, ריכוז מחלקה, סגן מנהל, ריכוז אחר</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        {/* --- Hours Section --- */}
+        <div className="pt-4 pb-1">
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">שעות הוראה</span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">שעות הוראה</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות הוראה שבועיות</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ליווי פסנתר</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות ליווי פסנתר</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">הרכב ביצוע</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות הרכב ביצוע</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ריכוז הרכב</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות ריכוז הרכב</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">תאוריה</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות תאוריה</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ניהול</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות ניהול</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ריכוז</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות ריכוז</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
+          <span className="text-gray-700 w-28 font-medium">ביטול זמן</span>
+          <span className="text-gray-500 flex-1 text-xs">שעות ביטול זמן</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+
+        <div className="flex items-center gap-2 py-2.5">
+          <span className="text-gray-700 w-28 font-medium">סה"כ ש"ש</span>
+          <span className="text-gray-500 flex-1 text-xs">סה"כ שעות שבועיות</span>
+          <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ImportData() {
   const [activeTab, setActiveTab] = useState<ImportTab>('teachers')
   const [importState, setImportState] = useState<ImportState>('upload')
@@ -247,7 +423,7 @@ export default function ImportData() {
       {/* Upload State */}
       {importState === 'upload' && (
         <div className="space-y-6">
-          {/* File Structure Guide — only show for students tab */}
+          {/* File Structure Guide — show for both tabs */}
           {activeTab === 'students' && (
             <div className="rounded-3xl shadow-sm bg-white p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">מבנה הקובץ הנדרש</h3>
@@ -308,6 +484,10 @@ export default function ImportData() {
                 </div>
               </div>
             </div>
+          )}
+
+          {activeTab === 'teachers' && (
+            <TeacherFileStructureGuide />
           )}
 
           {/* Upload Zone */}

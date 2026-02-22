@@ -30,16 +30,22 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 - ✓ **v2.0 Layout & Dashboard** — Dark warm sidebar, personalized greeting, warm StatsCards, music identity — v2.0
 - ✓ **v2.0 Special Pages** — Auth warm branding, StepProgress, print styles, RTL-correct toast system — v2.0
 
-### Active — v2.1 Production-Grade Visual Identity
+- ✓ **v2.1 Visual Identity** — Surface hierarchy, evolved color system, typography, micro-interactions, section contrast — v2.1
+- ✓ **v3.0 Architecture Rewrite** — Cool neutrals, black primary, Phosphor icons (217 files), mechanical style sweep, page archetypes — v3.0
+- ✓ **v4.0 Visual Redesign** — Indigo primary, Assistant font, rounded surfaces, Recharts charts, dashboard 12-col grid, dark mode toggle — v4.0
+
+### Active — v5.0 Ministry Import Overhaul
 
 <!-- Current scope. Building toward these. -->
 
-- [ ] Surface hierarchy rethink — distinct elevation zones for sidebar, header, and content areas
-- [ ] Evolved color system — coral as accent (not dominant), deeper neutrals, broader expressive palette
-- [ ] Confident typography scale — bold headings, tight UI text, deliberate spacing rhythm
-- [ ] Selective information density — dense data pages (tables/lists), breathing room on forms/details
-- [ ] Dynamic micro-interactions — spring-based animations, staggered lists, powerful modern SaaS feel
-- [ ] Stronger section contrast — clear visual separation between layout zones
+- [ ] Smart header detection — auto-detect Ministry Excel header rows (skip metadata)
+- [ ] Expanded column mappings — recognize Ministry column variants (שם ומשפחה, המורה, שלב, etc.)
+- [ ] Instrument detection from department columns — extract instruments from כלי קשת/נשיפה/פריטה columns
+- [ ] Create new students from import — unmatched rows become new student records, not just errors
+- [ ] Ministry field validation — stage (א/ב/ג), age range, weekly hours → minutes conversion
+- [ ] File structure guide UI — collapsible guide showing required/optional/auto-detected columns
+- [ ] Preview redesign — create vs update distinction, v4.0 stat cards, styled preview table
+- [ ] Ministry compatibility banner — visual indicators for detected Ministry file format
 
 ### Out of Scope
 
@@ -49,8 +55,8 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 - Mobile app — web-first
 - Real-time notifications — not needed yet
 - Backend export endpoints — not yet implemented on backend side
-- Dark mode — Hebrew fonts not dark-mode tested, warm identity works against it
-- Animated charts/data viz — no active chart usage yet
+- Dark mode full rollout — toggle exists but not tested across all pages yet
+- Teacher/student scheduling — lesson calendar, availability management
 
 ## Context
 
@@ -60,7 +66,7 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 - **Patterns:** RTL-first, Hebrew hardcoded, feature modules at `src/features/[module]/details/`
 - **CI:** GitHub Actions pipeline with 6 progressive stages (Build -> TypeScript -> Lint -> Tests -> Deploy)
 - **Codebase map:** `.planning/codebase/` (7 documents)
-- **Shipped:** v2.0 (2026-02-18) — full UI/UX redesign with warm music school identity
+- **Shipped:** v4.0 (2026-02-20) — indigo visual redesign with charts, dark mode, Assistant font
 - **Known tech debt:** Pre-existing TypeScript errors in 6 utility files (bagrutMigration, cascadeErrorHandler, errorRecovery, memoryManager, performanceEnhancements, securityUtils) — unrelated to UI, blocks CI typecheck stage
 - **WSL constraint:** npm install on NTFS mount causes EIO errors — build verification from Windows PowerShell or CI only
 
@@ -88,4 +94,4 @@ Administrators can efficiently manage their conservatory's teachers, students, o
 | Modal migration atomic (Phase 7) | All 4 custom modal variants replaced at once — clean transition | ✓ Good (v2.0) |
 
 ---
-*Last updated: 2026-02-18 after v2.1 milestone started*
+*Last updated: 2026-02-22 after v5.0 milestone started*

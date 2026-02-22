@@ -6,7 +6,8 @@
 - ✅ **v2.0 UI/UX Redesign** — Phases 6-15 (shipped 2026-02-18)
 - ✅ **v2.1 Production-Grade Visual Identity** — Phases 16-21 (shipped 2026-02-18)
 - ✅ **v3.0 Visual Architecture Rewrite** — Phase 22 (shipped 2026-02-20)
-- 🔨 **v4.0 Visual Redesign** — Phase 23+ (active)
+- ✅ **v4.0 Visual Redesign** — Phase 23 (shipped 2026-02-20)
+- 🔨 **v5.0 Ministry Import Overhaul** — Phase 24 (active)
 
 ## Phases
 
@@ -64,42 +65,46 @@ Full details: `milestones/v3.0-ROADMAP.md`
 
 </details>
 
+<details>
+<summary>✅ v4.0 Visual Redesign (Phase 23) — SHIPPED 2026-02-20</summary>
+
+- [x] Phase 23: Dashboard Visual Redesign (6 plans) — indigo token reset, light sidebar, 12-col dashboard grid, Recharts charts, right sidebar widgets, dark mode toggle
+
+Full details: `milestones/v4.0-ROADMAP.md`
+
+</details>
+
 ---
 
-### v4.0 Visual Redesign
+### v5.0 Ministry Import Overhaul
 
-**Milestone Goal:** Complete visual redesign matching reference UI mockups. New indigo primary color, rounded surfaces (12-32px), card-based layouts with shadows, Assistant font, light sidebar, implemented charts with real data. Dashboard redesigned first, then other pages as references are provided.
-
-**Reference:** `.planning/phases/22-visual-architecture-rewrite/22-REFERENCE-UI.md`
+**Milestone Goal:** Fix Ministry Excel import (currently 1284 errors, 0 matches) by adding smart header detection, expanded column mappings, instrument detection from department columns, and student creation for unmatched rows. Redesign the ImportData page with v4.0 styling: file structure guide, Ministry compatibility banner, create/update preview distinction, and gradient stat cards.
 
 ---
 
-#### Phase 23: Dashboard Visual Redesign
+#### Phase 24: Ministry Excel Import — Fix & Redesign
 
-**Goal:** Complete visual redesign of the dashboard page and underlying token system to match the reference UI. New indigo primary, rounded cards with shadows, Assistant font, light sidebar, 12-col grid with 9:3 split, entity-colored stat cards, implemented charts (financial, attendance, demographics), and right sidebar widgets (calendar, agenda, messages).
-**Depends on:** Phase 22 (v3.0 complete)
-**Context:** `.planning/phases/23-dashboard-visual-redesign/23-CONTEXT.md`
+**Goal:** Make Ministry "mimshak" Excel files import correctly (auto-detect headers, map Ministry columns, detect instruments from departments, create new students) and redesign the ImportData page with v4.0 visual language (file structure guide, styled preview, create vs update badges).
+**Depends on:** Phase 23 (v4.0 complete)
+**Files:** Backend `import.service.js`, Frontend `ImportData.tsx`
+**Requirements:** IMP-B01 through IMP-B06, IMP-F01 through IMP-F08 (14 total)
 **Success Criteria** (what must be TRUE):
-  1. Token system reset: indigo primary (#6366f1), 12-32px radius scale, decorative shadows, Assistant + Plus Jakarta Sans fonts
-  2. Dashboard layout: 12-col grid with 9:3 split — main content area + right sidebar column
-  3. Stat cards: 4 entity-colored pastel cards (indigo/amber/sky/emerald) with rounded-3xl, trend badges
-  4. Financial trends chart: SVG line chart with real monthly income/expenses data
-  5. Attendance chart: bar chart with real daily present/absent data
-  6. Student demographics chart: donut chart with real category data
-  7. Teacher performance table: avatars, departments, student counts, star ratings, status badges
-  8. Right sidebar: functional calendar widget, agenda with upcoming events, messages panel
-  9. Sidebar: white/light with indigo active state pill, category labels, Phosphor icons
-  10. Header: search input, notification bell, user profile section
-  11. Dark mode support with toggle button
-**Plans:** 6 plans
+  1. Ministry Excel files with metadata rows auto-detected (header row found in rows 0-10)
+  2. Ministry column variants recognized (שם ומשפחה, המורה, שלב, זמן שעור, etc.)
+  3. Instruments extracted from department columns (כלי קשת, כלי נשיפה, כלי פריטה)
+  4. Unmatched students created as new records (not just errors)
+  5. File structure guide shows required/optional/auto-detected badges before upload
+  6. Preview distinguishes create (blue) vs update (green) vs error (red) rows
+  7. Summary stat cards in v4.0 gradient style
+  8. Re-upload same file → students now match as "update" (backward compatible)
+  9. Simple Excel files (headers on row 0) still work
+**Plans:** 4 plans
 
 Plans:
-- [ ] 23-01-PLAN.md — Token system reset (indigo primary, 12-32px radius, Assistant font, chart colors, dark mode)
-- [ ] 23-02-PLAN.md — Sidebar + Header visual redesign (white sidebar, indigo active, search bar, bell)
-- [ ] 23-03-PLAN.md — Dashboard layout + StatCard component (12-col grid, 9:3 split, 4 entity cards, FAB)
-- [ ] 23-04-PLAN.md — Charts (Recharts install, financial line, attendance bar, demographics donut)
-- [ ] 23-05-PLAN.md — Teacher table + right sidebar widgets (calendar, agenda, messages)
-- [ ] 23-06-PLAN.md — Visual verification checkpoint
+- [ ] 24-01-PLAN.md — Backend: Smart header detection + column mapping + instrument detection
+- [ ] 24-02-PLAN.md — Backend: Create functionality for unmatched rows + validation improvements
+- [ ] 24-03-PLAN.md — Frontend: File structure guide + Ministry banner + upload zone redesign
+- [ ] 24-04-PLAN.md — Frontend: Preview redesign with create/update distinction + stat cards + results
 
 ---
 
@@ -129,8 +134,9 @@ Plans:
 | 20. List Pages and Table System | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 21. Detail Pages and Forms | v2.1 | 2/2 | Complete | 2026-02-18 |
 | 22. Visual Architecture Rewrite | v3.0 | 15/15 | Complete | 2026-02-20 |
-| 23. Dashboard Visual Redesign | v4.0 | 0/6 | Planned | — |
+| 23. Dashboard Visual Redesign | v4.0 | 6/6 | Complete | 2026-02-20 |
+| 24. Ministry Excel Import — Fix & Redesign | v5.0 | 0/4 | Planned | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-20 — Phase 23 planned with 6 plans in 4 waves*
+*Last updated: 2026-02-22 — v5.0 milestone started, Phase 24 planned with 4 plans*

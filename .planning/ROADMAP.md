@@ -136,7 +136,19 @@ Plans:
 | 22. Visual Architecture Rewrite | v3.0 | 15/15 | Complete | 2026-02-20 |
 | 23. Dashboard Visual Redesign | v4.0 | 6/6 | Complete | 2026-02-20 |
 | 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
+| 25. Ministry Excel-Import Upgrade: Teacher Import | v5.0 | 0/3 | Not started | — |
+
+### Phase 25: Ministry Excel-Import Upgrade: Teacher Import
+
+**Goal:** Extend Ministry Excel import to fully support teachers: creation from unmatched rows (with password), role system rename to Ministry naming (מנצח→ניצוח, מורה תאוריה→תאוריה, +ליווי פסנתר, +הלחנה), instrument abbreviation mapping (Vi/FL/PI etc.), teaching hours import (9 hour types), and teacher file structure guide.
+**Depends on:** Phase 24
+**Plans:** 3 plans
+
+Plans:
+- [ ] 25-01-PLAN.md — Backend: Constants update (TEACHER_ROLES rename, INSTRUMENT_MAP expand), schema extension (teaching hours), migration script
+- [ ] 25-02-PLAN.md — Backend: Teacher import logic (column map expansion, role/hours detection, teacher creation with password)
+- [ ] 25-03-PLAN.md — Frontend: Teacher file structure guide (3 categories), VALID_ROLES update
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-22 — v5.0 Ministry Import Overhaul shipped, Phase 24 complete (4/4 plans)*
+*Last updated: 2026-02-22 — Phase 25 planned (3 plans in 2 waves)*

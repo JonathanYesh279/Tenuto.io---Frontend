@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 24-ministry-excel-import
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-22 — Milestone v5.0 started
+Plan: 01 (completed)
+Status: Executing
+Last activity: 2026-02-22 — Plan 24-01 completed (smart header detection + column mappings)
 
-Progress: [░░░░░░░░░░] 0% (v5.0 — 0/4 plans)
+Progress: [██░░░░░░░░] 25% (v5.0 — 1/4 plans)
 
 ## Performance Metrics
 
@@ -30,7 +30,8 @@ Progress: [░░░░░░░░░░] 0% (v5.0 — 0/4 plans)
 - v2.1: 6 phases, 13 plans
 - v3.0: 1 phase, 15 plans
 - v4.0: 1 phase, 6 plans
-- Total: 23 phases, 63 plans
+- v5.0: 1 plan (6 min)
+- Total: 23 phases, 64 plans
 
 ## Accumulated Context
 
@@ -43,6 +44,10 @@ Key decisions for v5.0:
 - [Header detection]: Scan rows 0-10, score by column name matches, fallback to row 0
 - [Create functionality]: Unmatched rows become new students with minimal fields
 - [Styling]: v4.0 design language (indigo, rounded-3xl, shadow-sm, Assistant font)
+- [24-01] Header detection scans max 10 rows (not entire sheet) for performance
+- [24-01] Department columns with single instrument auto-assign, multiple instruments warn
+- [24-01] lessonDuration >2.0 treated as direct minutes, <=2.0 as weekly hours (Ministry uses 0.75)
+- [24-01] Combined 'כלי נשיפה' department maps to all woodwinds + brass (Ministry sometimes merges departments)
 
 ### Pending Todos
 
@@ -57,5 +62,5 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Milestone v5.0 initialized, ready for Phase 24 execution
+Stopped at: Completed 24-01-PLAN.md — backend smart header detection + column mappings
 Resume file: None

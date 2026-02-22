@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 25-ministry-excel-import-upgrade-teacher-import
-Plan: 01 (completed)
-Status: In Progress
-Last activity: 2026-02-22 — Plan 25-01 completed (backend constants and schema foundation)
+Plan: 03 (completed)
+Status: Complete
+Last activity: 2026-02-22 — Plan 25-03 completed (teacher file structure guide and frontend role validation)
 
-Progress: [███░░░░░░░] 33% (v5.1 — 1/3 plans)
+Progress: [██████████] 100% (v5.1 — 3/3 plans)
 
 ## Performance Metrics
 
@@ -31,8 +31,8 @@ Progress: [███░░░░░░░] 33% (v5.1 — 1/3 plans)
 - v3.0: 1 phase, 15 plans
 - v4.0: 1 phase, 6 plans
 - v5.0: 1 phase, 4 plans (~14 min)
-- v5.1: 1 phase, 1/3 plans (~3 min)
-- Total: 24 phases, 68 plans
+- v5.1: 1 phase, 3 plans (~8 min)
+- Total: 25 phases, 70 plans
 
 ## Accumulated Context
 
@@ -60,6 +60,8 @@ Key decisions for v5.0:
 - [24-04] Execute button enables when matched OR notFound has entries (not just matched)
 - [24-04] Toast shows breakdown: "X עודכנו, Y נוצרו" for create+update operations
 - [25-01] Force-add migration file with git add -f to override migrations/ gitignore (critical for version control)
+- [Phase 25]: Badge color scheme for file structure guide: red (required), gray (optional), indigo (auto-detected)
+- [Phase 25]: Maintain backward compatibility for old role names ('מנצח', 'מורה תאוריה') in color mappings
 
 ### Roadmap Evolution
 
@@ -78,9 +80,9 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed Phase 25 Plan 01 (1/3 plans) — Backend constants and schema foundation for teacher import upgrade
+Stopped at: Completed Phase 25 (3/3 plans) — Ministry Excel Teacher Import Upgrade complete
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)
 
-**Phase 25 In Progress:** Plan 01 complete (TEACHER_ROLES renamed to Ministry naming, INSTRUMENT_MAP expanded with 4 instruments, managementInfo schema extended with 6 teaching hour fields, migration script created)
+**Phase 25 Complete:** Backend TEACHER_ROLES renamed to Ministry naming (ניצוח, תאוריה), INSTRUMENT_MAP expanded (+4 instruments), managementInfo schema extended (+6 teaching hour fields), frontend teacher file structure guide added, VALID_ROLES updated to 8 items with backward compatibility

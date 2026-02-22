@@ -9,6 +9,7 @@
 - ✅ **v4.0 Visual Redesign** — Phase 23 (shipped 2026-02-20)
 - ✅ **v5.0 Ministry Import Overhaul** — Phase 24 (shipped 2026-02-22)
 - ✅ **v5.2 Cell Fill Color Detection** — Phase 26 (shipped 2026-02-22)
+- ✅ **v5.3 Ministry Import Fix — Multi-Row Headers & Column Mapping** — Phase 27 (shipped 2026-02-23)
 
 ### v5.3 Ministry Import Fix — Multi-Row Headers & Column Mapping
 
@@ -193,8 +194,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 27-01-PLAN.md — Constants (CM abbreviation) + header backfill improvements (composite headers, short fragment variants)
-- [ ] 27-02-PLAN.md — Position-based filtering for mapColumns and detectInstrumentColumns (collision avoidance)
+- [x] 27-01-PLAN.md — Constants (CM abbreviation) + header backfill improvements (composite headers, short fragment variants)
+- [x] 27-02-PLAN.md — Position-based filtering for mapColumns and detectInstrumentColumns (collision avoidance)
 
 ---
 
@@ -228,7 +229,7 @@ Plans:
 | 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
 | 25. Ministry Excel-Import Upgrade: Teacher Import | v5.1 | 3/3 | Complete | 2026-02-22 |
 | 26. Cell Fill Color Detection for Import | v5.2 | 1/1 | Complete | 2026-02-22 |
-| 27. Ministry Import Fix — Multi-Row Headers | v5.3 | 0/2 | Planned | — |
+| 27. Ministry Import Fix — Multi-Row Headers | v5.3 | 2/2 | Complete | 2026-02-23 |
 
 ---
 *Roadmap created: 2026-02-13*

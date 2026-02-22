@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 27-import-header-fix
-Plan: None yet
-Status: Context gathered, ready for planning
-Last activity: 2026-02-23 — Phase 27 created after diagnostic investigation
+Plan: 01 complete, 02 remaining
+Status: Executing phase plans
+Last activity: 2026-02-22 — Plan 27-01 completed (multi-row header fix)
 
-Progress: [░░░░░░░░░░] 0% (v5.3 — 0/? plans)
+Progress: [█████░░░░░] 50% (v5.3 — 1/2 plans)
 
 ## Performance Metrics
 
@@ -32,7 +32,8 @@ Progress: [░░░░░░░░░░] 0% (v5.3 — 0/? plans)
 - v4.0: 1 phase, 6 plans
 - v5.0: 1 phase, 4 plans (~14 min)
 - v5.1: 2 phases, 4 plans (~12 min)
-- Total: 26 phases, 71 plans
+- v5.3: 1 phase (in progress), 1 plan complete (~2 min)
+- Total: 26 phases, 72 plans
 
 ## Accumulated Context
 
@@ -65,6 +66,11 @@ Key decisions for v5.0:
 - [26-01] Switch Excel parsing from xlsx to exceljs for cell style reading (Ministry uses colored cells)
 - [26-01] Color detection first, text fallback second — any non-white fill = selected
 - [26-01] Black fills (FF000000) count as selected (not excluded from NO_COLOR list)
+- [27-01] CM abbreviation added to INSTRUMENT_MAP for Cembalo/Harpsichord (Ministry uses CM)
+- [27-01] Multi-row header disambiguation: use parent row keywords (בפועל vs ריכוז) to resolve duplicate "ביצוע" headers
+- [27-01] Composite header construction: "פסנתר" with "ליווי" parent → "ליווי פסנתר" (accomp hours)
+- [27-01] Short header variants added for Ministry fragments: שבועיות→theoryHours, זמן→breakTimeHours, שעות→totalWeeklyHours
+- [27-01] Two-pass header processing: backfill first, then disambiguation/composition second
 
 ### Roadmap Evolution
 
@@ -84,8 +90,8 @@ Key decisions for v5.0:
 
 ## Session Continuity
 
-Last session: 2026-02-23
-Stopped at: Phase 27 context gathered — ready for planning
+Last session: 2026-02-22
+Stopped at: Plan 27-01 complete — ready for Plan 27-02 (position-based filtering)
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)

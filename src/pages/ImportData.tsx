@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { importService } from '../services/apiService'
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { StepProgress } from '../components/feedback/ProgressIndicators'
 import toast from 'react-hot-toast'
 import {
@@ -352,112 +351,134 @@ export default function ImportData() {
 
       {/* Preview State */}
       {importState === 'preview' && previewData && (
-        <div className="space-y-4">
-          {/* Summary Stats */}
+        <div className="space-y-6">
+          {/* Header Detection Banner — only show when header row > 0 */}
+          {previewData.preview.headerRowIndex != null && previewData.preview.headerRowIndex > 0 && (
+            <div className="rounded-xl bg-blue-50 border border-blue-200 p-4">
+              <div className="flex items-start gap-2">
+                <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">
+                    שורת כותרות זוהתה בשורה {previewData.preview.headerRowIndex + 1}
+                  </p>
+                  <p className="text-xs text-blue-700 mt-0.5">
+                    {previewData.preview.headerRowIndex} שורות מטא-דאטה דולגו אוטומטית
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Summary Stat Cards — v4.0 gradient style */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">{previewData.preview.totalRows}</p>
-                  <p className="text-sm text-gray-500">סה"כ שורות</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-green-600">{previewData.preview.matched.length}</p>
-                  <p className="text-sm text-gray-500">נמצאו</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-yellow-600">{previewData.preview.notFound.length}</p>
-                  <p className="text-sm text-gray-500">לא נמצאו</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-4 pb-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-red-600">{previewData.preview.errors.length}</p>
-                  <p className="text-sm text-gray-500">שגיאות</p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Total Rows */}
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-indigo-500/10 to-indigo-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{previewData.preview.totalRows}</p>
+                <p className="text-sm text-gray-500">סה"כ שורות</p>
+              </div>
+            </div>
+
+            {/* Updates (matched) */}
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">{previewData.preview.matched.length}</p>
+                <p className="text-sm text-gray-500">עדכונים</p>
+              </div>
+            </div>
+
+            {/* Creates (notFound) */}
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-blue-500/10 to-blue-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">{previewData.preview.notFound.length}</p>
+                <p className="text-sm text-gray-500">יצירות חדשות</p>
+              </div>
+            </div>
+
+            {/* Errors */}
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-red-500/10 to-red-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-red-600">{previewData.preview.errors.length}</p>
+                <p className="text-sm text-gray-500">שגיאות</p>
+              </div>
+            </div>
           </div>
 
           {/* Warnings */}
           {previewData.preview.warnings.length > 0 && (
-            <Card className="border-amber-200 bg-amber-50">
-              <CardContent className="pt-4 pb-4">
-                <div className="flex items-start gap-2">
-                  <WarningIcon size={20} weight="fill" className="text-amber-600 mt-0.5 flex-shrink-0" />
-                  <div className="space-y-1">
-                    {previewData.preview.warnings.map((w, i) => (
-                      <p key={i} className="text-sm text-amber-700">{w}</p>
-                    ))}
-                  </div>
+            <div className="rounded-3xl shadow-sm bg-amber-50 border border-amber-200 p-6">
+              <div className="flex items-start gap-2">
+                <WarningIcon size={20} weight="fill" className="text-amber-600 mt-0.5 flex-shrink-0" />
+                <div className="space-y-1">
+                  {previewData.preview.warnings.slice(0, 10).map((w: any, i: number) => (
+                    <p key={i} className="text-sm text-amber-700">
+                      {typeof w === 'string' ? w : `שורה ${w.row}: ${w.message}`}
+                    </p>
+                  ))}
+                  {previewData.preview.warnings.length > 10 && (
+                    <p className="text-xs text-amber-500">
+                      ועוד {previewData.preview.warnings.length - 10} אזהרות...
+                    </p>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
           {/* Preview Table */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">תצוגה מקדימה</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-right py-3 px-3 font-medium text-gray-700">שורה</th>
-                      <th className="text-right py-3 px-3 font-medium text-gray-700">סטטוס</th>
-                      <th className="text-right py-3 px-3 font-medium text-gray-700">שם</th>
-                      <th className="text-right py-3 px-3 font-medium text-gray-700">שינויים / הערות</th>
+          <div className="rounded-3xl shadow-sm bg-white overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-gray-900">תצוגה מקדימה</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-gray-50/80">
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שורה</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">סטטוס</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שם</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שינויים / הערות</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {allPreviewRows.slice(0, 50).map((row: any, idx: number) => (
+                    <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="py-2.5 px-4 text-gray-500 font-mono text-xs">{row.row}</td>
+                      <td className="py-2.5 px-4">{getRowStatusBadge(row.status)}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-900">{row.name || '---'}</td>
+                      <td className="py-2.5 px-4 text-gray-600 text-xs">
+                        {row.changes && row.changes.length > 0 && (
+                          <span>{row.changes.map((c: any) => c.field || c).join(', ')}</span>
+                        )}
+                        {row.status === 'not_found' && !row.error && (
+                          <span className="text-blue-600">תלמיד חדש - ייווצר ברשומה חדשה</span>
+                        )}
+                        {row.error && (
+                          <span className="text-red-600">{row.error}</span>
+                        )}
+                        {row.status === 'matched' && (!row.changes || row.changes.length === 0) && (
+                          <span className="text-gray-400">אין שינויים</span>
+                        )}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {allPreviewRows.slice(0, 50).map((row, idx) => (
-                      <tr key={idx} className={`border-b border-gray-100 ${getRowStatusColor(row.status)}`}>
-                        <td className="py-2 px-3 text-gray-600">{row.row}</td>
-                        <td className="py-2 px-3">
-                          <div className="flex items-center gap-1.5">
-                            {getRowStatusIcon(row.status)}
-                            <span className="text-xs font-medium">{getRowStatusLabel(row.status)}</span>
-                          </div>
-                        </td>
-                        <td className="py-2 px-3 font-medium text-gray-900">{row.name || '—'}</td>
-                        <td className="py-2 px-3 text-gray-600">
-                          {row.changes && row.changes.length > 0 && (
-                            <span className="text-xs">{row.changes.join(', ')}</span>
-                          )}
-                          {row.error && (
-                            <span className="text-xs text-red-600">{row.error}</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {allPreviewRows.length > 50 && (
-                  <p className="text-sm text-gray-400 text-center py-3">
+                  ))}
+                </tbody>
+              </table>
+              {allPreviewRows.length > 50 && (
+                <div className="text-center py-3 border-t border-gray-100">
+                  <p className="text-sm text-gray-400">
                     מוצגות 50 מתוך {allPreviewRows.length} שורות
                   </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Action Buttons */}
           <div className="flex items-center justify-between">
             <button
               onClick={resetState}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
             >
               <ArrowLeftIcon size={16} weight="regular" />
               ביטול
@@ -465,7 +486,7 @@ export default function ImportData() {
             <button
               onClick={handleExecute}
               disabled={executing || (previewData.preview.matched.length === 0 && previewData.preview.notFound.length === 0)}
-              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded-xl hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm"
             >
               {executing ? (
                 <>
@@ -485,62 +506,65 @@ export default function ImportData() {
 
       {/* Results State */}
       {importState === 'results' && results && (
-        <div className="space-y-4">
-          {/* Results Summary */}
-          <Card className="border-green-200 bg-green-50">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3 mb-4">
-                <CheckCircleIcon size={32} weight="fill" className="text-green-600" />
-                <h2 className="text-xl font-bold text-green-800">הייבוא הושלם</h2>
+        <div className="space-y-6">
+          {/* Results Header */}
+          <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <CheckCircleIcon size={32} weight="fill" className="text-green-600" />
+              <h2 className="text-xl font-bold text-green-800">הייבוא הושלם</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{results.totalRows}</p>
+                <p className="text-sm text-gray-600">סה"כ שורות</p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900">{results.totalRows}</p>
-                  <p className="text-sm text-gray-600">סה"כ שורות</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-green-600">{results.successCount}</p>
-                  <p className="text-sm text-gray-600">עודכנו</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-yellow-600">{results.skippedCount}</p>
-                  <p className="text-sm text-gray-600">דולגו</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-red-600">{results.errorCount}</p>
-                  <p className="text-sm text-gray-600">שגיאות</p>
-                </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">{results.successCount}</p>
+                <p className="text-sm text-gray-600">עודכנו</p>
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">{results.createdCount || 0}</p>
+                <p className="text-sm text-gray-600">נוצרו</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-400">{results.skippedCount}</p>
+                <p className="text-sm text-gray-600">דולגו</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-red-600">{results.errorCount}</p>
+                <p className="text-sm text-gray-600">שגיאות</p>
+              </div>
+            </div>
+          </div>
 
           {/* Error Details */}
           {results.errors.length > 0 && (
-            <Card className="border-red-200">
-              <CardHeader>
+            <div className="rounded-3xl shadow-sm bg-white border border-red-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-red-100 bg-red-50/50">
                 <div className="flex items-center gap-2">
                   <XCircleIcon size={20} weight="fill" className="text-red-500" />
-                  <CardTitle className="text-lg">פרטי שגיאות</CardTitle>
+                  <h3 className="text-lg font-bold text-gray-900">פרטי שגיאות</h3>
                 </div>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div className="p-6">
                 <ul className="space-y-2">
-                  {results.errors.map((err, idx) => (
+                  {results.errors.map((err: any, idx: number) => (
                     <li key={idx} className="flex items-start gap-2 text-sm">
-                      <span className="text-gray-500 font-mono">שורה {err.row}:</span>
-                      <span className="text-red-600">{err.message}</span>
+                      {err.row && <span className="text-gray-400 font-mono text-xs">שורה {err.row}:</span>}
+                      {err.studentName && <span className="text-gray-600 font-medium">{err.studentName}</span>}
+                      <span className="text-red-600">{err.message || err.error}</span>
                     </li>
                   ))}
                 </ul>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
           {/* Reset Button */}
           <div className="flex justify-center pt-4 pb-8">
             <button
               onClick={resetState}
-              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded hover:bg-primary-600 transition-colors font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded-xl hover:bg-primary-600 transition-colors font-medium shadow-sm"
             >
               <UploadIcon size={16} weight="regular" />
               ייבוא קובץ נוסף

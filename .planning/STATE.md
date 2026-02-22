@@ -16,11 +16,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 27-import-header-fix
-Plan: 01 complete, 02 remaining
-Status: Executing phase plans
-Last activity: 2026-02-22 — Plan 27-01 completed (multi-row header fix)
+Plan: 02 complete (all plans complete)
+Status: Phase complete — ready for testing
+Last activity: 2026-02-22 — Plan 27-02 completed (position-based filtering)
 
-Progress: [█████░░░░░] 50% (v5.3 — 1/2 plans)
+Progress: [██████████] 100% (v5.3 — 2/2 plans)
 
 ## Performance Metrics
 
@@ -32,8 +32,8 @@ Progress: [█████░░░░░] 50% (v5.3 — 1/2 plans)
 - v4.0: 1 phase, 6 plans
 - v5.0: 1 phase, 4 plans (~14 min)
 - v5.1: 2 phases, 4 plans (~12 min)
-- v5.3: 1 phase (in progress), 1 plan complete (~2 min)
-- Total: 26 phases, 72 plans
+- v5.3: 1 phase, 2 plans complete (~4 min)
+- Total: 26 phases, 73 plans
 
 ## Accumulated Context
 
@@ -71,6 +71,10 @@ Key decisions for v5.0:
 - [27-01] Composite header construction: "פסנתר" with "ליווי" parent → "ליווי פסנתר" (accomp hours)
 - [27-01] Short header variants added for Ministry fragments: שבועיות→theoryHours, זמן→breakTimeHours, שעות→totalWeeklyHours
 - [27-01] Two-pass header processing: backfill first, then disambiguation/composition second
+- [27-02] Position-based filtering uses column index > 24 threshold to distinguish role from hours columns
+- [27-02] Instrument detection filtered to columns >= 24 only (prevents "פסנתר" at C15 from triggering piano detection)
+- [27-02] HOURS_FIELDS_WITH_ROLE_COLLISION set prevents role boolean values from overwriting teaching hours
+- [27-02] headerColMap parameter made optional for backward compatibility (student import unchanged)
 
 ### Roadmap Evolution
 
@@ -91,7 +95,7 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Plan 27-01 complete — ready for Plan 27-02 (position-based filtering)
+Stopped at: Phase 27 complete — all Ministry import bugs fixed (multi-row headers, header collisions, position-based filtering)
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)
@@ -99,3 +103,5 @@ Resume file: None
 **Phase 25 Complete:** Backend TEACHER_ROLES renamed to Ministry naming (ניצוח, תאוריה), INSTRUMENT_MAP expanded (+4 instruments), managementInfo schema extended (+6 teaching hour fields), frontend teacher file structure guide added, VALID_ROLES updated to 8 items with backward compatibility
 
 **Phase 26 Complete:** Backend Excel parsing switched from xlsx to exceljs with cell fill color detection — Ministry instrument/role columns marked by colored cells now correctly detected, text-based TRUTHY_VALUES still works as fallback
+
+**Phase 27 Complete:** Backend import.service.js fixed for Ministry multi-row headers and column collisions — all 9 teaching hour columns now parse correctly, CM instrument added, duplicate/short headers resolved, position-based filtering prevents role booleans from overwriting hours values

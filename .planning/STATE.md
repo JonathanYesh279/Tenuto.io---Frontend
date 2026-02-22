@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v5.0 Ministry Import Overhaul — Phase 25: Teacher Import (complete)
+**Current focus:** v5.3 Ministry Import Fix — Phase 27: Multi-Row Headers & Column Mapping
 
-## Current Milestone: v5.1 Teacher Import Upgrade
+## Current Milestone: v5.3 Ministry Import Fix
 
-**Goal:** Upgrade teacher import to match Ministry Excel format with new roles, teaching hours, and instrument handling.
-**Files:** Backend `constants.js`, `teacher.validation.js`, `import.service.js`
-**Phases:** 25, 26
+**Goal:** Fix 6 bugs in Ministry Excel teacher import: multi-row header fragments, header collision, instrument detection, CM abbreviation, conditional formatting, formula results.
+**Files:** Backend `import.service.js`, `config/constants.js`
+**Phases:** 27
 
 ## Current Position
 
-Phase: 26-cell-fill-color-detection
-Plan: 01 (completed)
-Status: Complete
-Last activity: 2026-02-22 — Plan 26-01 completed (cell fill color detection for import)
+Phase: 27-import-header-fix
+Plan: None yet
+Status: Context gathered, ready for planning
+Last activity: 2026-02-23 — Phase 27 created after diagnostic investigation
 
-Progress: [██████████] 100% (v5.1 — 1/1 plans)
+Progress: [░░░░░░░░░░] 0% (v5.3 — 0/? plans)
 
 ## Performance Metrics
 
@@ -70,6 +70,7 @@ Key decisions for v5.0:
 
 - Phase 25 added: Ministry Excel-Import Upgrade: Teacher Import
 - Phase 26 added: Cell Fill Color Detection for Import
+- Phase 27 added: Ministry Import Fix — Multi-Row Headers & Column Mapping
 
 ### Pending Todos
 
@@ -83,8 +84,8 @@ Key decisions for v5.0:
 
 ## Session Continuity
 
-Last session: 2026-02-22
-Stopped at: Completed Phase 26 (1/1 plans) — Cell Fill Color Detection for Import complete
+Last session: 2026-02-23
+Stopped at: Phase 27 context gathered — ready for planning
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)

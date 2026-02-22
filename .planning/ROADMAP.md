@@ -10,6 +10,10 @@
 - ✅ **v5.0 Ministry Import Overhaul** — Phase 24 (shipped 2026-02-22)
 - ✅ **v5.2 Cell Fill Color Detection** — Phase 26 (shipped 2026-02-22)
 
+### v5.3 Ministry Import Fix — Multi-Row Headers & Column Mapping
+
+**Milestone Goal:** Fix 6 issues preventing Ministry Excel teacher import from correctly reading instruments, teaching hours, and roles. Root cause: multi-row merged headers produce short fragments that don't match TEACHER_COLUMN_MAP keys, plus header collisions between role boolean columns and hours columns.
+
 ## Phases
 
 <details>
@@ -173,6 +177,23 @@ Plans:
 
 ---
 
+#### Phase 27: Ministry Import Fix — Multi-Row Headers & Column Mapping
+
+**Goal:** Fix 6 issues preventing Ministry Excel teacher import from correctly reading instruments, teaching hours, and roles: (1) add short header variants to TEACHER_COLUMN_MAP for multi-row merged headers, (2) resolve header collision between role boolean columns and hours columns, (3) fix "פסנתר" instrument detection false positive, (4) add CM=צ'מבלו to INSTRUMENT_MAP, (5) improve multi-row header assembly strategy, (6) handle formula cells with null results.
+**Depends on:** Phase 26
+**Files:** Backend `import.service.js`, `config/constants.js`
+**Success Criteria** (what must be TRUE):
+  1. All 9 Ministry hour columns (הוראה, ליווי פסנתר, הרכב ביצוע, ריכוז הרכב, תאוריה, ניהול, ריכוז, ביטול זמן, סה"כ ש"ש) correctly mapped from multi-row headers
+  2. Role boolean columns (C57-C60) no longer collide with hours column mapping
+  3. Instrument columns correctly detect TRUE/FALSE values (instruments populated in created teachers)
+  4. CM abbreviation maps to צ'מבלו in INSTRUMENT_MAP
+  5. Teaching hours from formula cells (SUMIF results) correctly extracted
+  6. Re-import same Ministry file → teachers have correct instruments, roles, and hours
+  7. Simple Excel files (single-row headers) still work correctly
+**Plans:** TBD
+
+---
+
 ## Progress
 
 | Phase | Milestone | Plans | Status | Completed |
@@ -203,7 +224,8 @@ Plans:
 | 24. Ministry Excel Import — Fix & Redesign | v5.0 | 4/4 | Complete | 2026-02-22 |
 | 25. Ministry Excel-Import Upgrade: Teacher Import | v5.1 | 3/3 | Complete | 2026-02-22 |
 | 26. Cell Fill Color Detection for Import | v5.2 | 1/1 | Complete | 2026-02-22 |
+| 27. Ministry Import Fix — Multi-Row Headers | v5.3 | 0/? | Planned | — |
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-22 — Phase 26 complete (cell fill color detection shipped)*
+*Last updated: 2026-02-23 — Phase 27 added (Ministry import multi-row header fix)*

@@ -59,6 +59,160 @@ const IMPORT_STEPS = [
   { id: 'results', label: 'תוצאות' },
 ] as const
 
+// Helper: Format teaching hours object to Hebrew labels
+function formatTeachingHours(hours: Record<string, number>): string {
+  const labels: Record<string, string> = {
+    teachingHours: 'הוראה',
+    accompHours: 'ליווי',
+    ensembleHours: 'הרכב',
+    ensembleCoordHours: 'ריכוז הרכב',
+    theoryHours: 'תאוריה',
+    managementHours: 'ניהול',
+    coordinationHours: 'ריכוז',
+    breakTimeHours: 'ביטול זמן',
+    totalWeeklyHours: 'סה"כ',
+  }
+
+  const parts = Object.entries(hours)
+    .filter(([_, value]) => value && value > 0)
+    .map(([key, value]) => `${labels[key] || key}: ${value}`)
+
+  return parts.join(', ')
+}
+
+// Helper: Format a single teacher change with Hebrew field labels
+function formatTeacherChange(change: any): string {
+  const field = change.field || change.path || ''
+  const newValue = change.newValue
+
+  // Personal info fields
+  if (field.startsWith('personalInfo.')) {
+    const subField = field.replace('personalInfo.', '')
+    const personalLabels: Record<string, string> = {
+      firstName: 'שם פרטי',
+      lastName: 'שם משפחה',
+      email: 'דוא"ל',
+      phone: 'טלפון',
+      idNumber: 'ת.ז.',
+      birthYear: 'שנת לידה',
+    }
+    const label = personalLabels[subField] || subField
+    return `${label}: ${newValue}`
+  }
+
+  // Professional info fields
+  if (field.startsWith('professionalInfo.')) {
+    const subField = field.replace('professionalInfo.', '')
+    const professionalLabels: Record<string, string> = {
+      classification: 'סיווג',
+      degree: 'תואר',
+      teachingExperienceYears: 'ותק',
+      hasTeachingCertificate: 'תעודת הוראה',
+      isUnionMember: 'ארגון עובדים',
+    }
+    if (subField === 'instruments') {
+      return `כלים: ${Array.isArray(newValue) ? newValue.join(', ') : newValue}`
+    }
+    const label = professionalLabels[subField] || subField
+    return `${label}: ${newValue}`
+  }
+
+  // Management info fields (includes teaching hours)
+  if (field.startsWith('managementInfo.')) {
+    const subField = field.replace('managementInfo.', '')
+    const managementLabels: Record<string, string> = {
+      role: 'תפקיד ניהולי',
+      teachingHours: 'הוראה',
+      accompHours: 'ליווי',
+      ensembleHours: 'הרכב',
+      ensembleCoordHours: 'ריכוז הרכב',
+      theoryHours: 'תאוריה',
+      managementHours: 'ניהול',
+      coordinationHours: 'ריכוז',
+      breakTimeHours: 'ביטול זמן',
+      totalWeeklyHours: 'סה"כ',
+    }
+    const label = managementLabels[subField] || subField
+    return `${label}: ${newValue}`
+  }
+
+  // Direct fields
+  if (field === 'roles') {
+    const rolesValue = Array.isArray(newValue) ? newValue.join(', ') : newValue
+    return `תפקידים: ${rolesValue}`
+  }
+
+  // Default fallback
+  return `${field}: ${newValue}`
+}
+
+// Helper: Generate teacher row details JSX for preview table
+function getTeacherRowDetails(row: any): React.ReactNode {
+  // Error case
+  if (row.error) {
+    return <span className="text-red-600">{row.error}</span>
+  }
+
+  // Not found (create) case
+  if (row.status === 'not_found') {
+    const instruments = row.data?.instruments || row.instruments
+    const roles = row.data?.roles || row.roles
+    const teachingHours = row.data?.teachingHours || row.teachingHours
+
+    return (
+      <div className="space-y-1 text-xs">
+        <div className="text-blue-600 font-medium">מורה חדש - ייווצר ברשומה חדשה</div>
+        {instruments && instruments.length > 0 && (
+          <div className="text-gray-600">כלים: {instruments.join(', ')}</div>
+        )}
+        {roles && roles.length > 0 && (
+          <div className="text-gray-600">תפקידים: {roles.join(', ')}</div>
+        )}
+        {teachingHours && Object.keys(teachingHours).some(k => teachingHours[k] > 0) && (
+          <div className="text-gray-600">שעות: {formatTeachingHours(teachingHours)}</div>
+        )}
+      </div>
+    )
+  }
+
+  // Matched (update) case
+  if (row.status === 'matched') {
+    const changes = row.changes || []
+    const instruments = row.data?.instruments || row.instruments
+    const roles = row.data?.roles || row.roles
+    const teachingHours = row.data?.teachingHours || row.teachingHours
+
+    const hasChanges = changes.length > 0
+    const hasInstruments = instruments && instruments.length > 0
+    const hasRoles = roles && roles.length > 0
+    const hasHours = teachingHours && Object.keys(teachingHours).some(k => teachingHours[k] > 0)
+
+    // If no changes and no additional info, show "אין שינויים"
+    if (!hasChanges && !hasInstruments && !hasRoles && !hasHours) {
+      return <span className="text-gray-400">אין שינויים</span>
+    }
+
+    return (
+      <div className="space-y-1 text-xs">
+        {hasChanges && changes.map((change: any, idx: number) => (
+          <div key={idx} className="text-gray-700">{formatTeacherChange(change)}</div>
+        ))}
+        {hasInstruments && (
+          <div className="text-gray-600">כלים: {instruments.join(', ')}</div>
+        )}
+        {hasRoles && (
+          <div className="text-gray-600">תפקידים: {roles.join(', ')}</div>
+        )}
+        {hasHours && (
+          <div className="text-gray-600">שעות: {formatTeachingHours(teachingHours)}</div>
+        )}
+      </div>
+    )
+  }
+
+  return null
+}
+
 function TeacherFileStructureGuide() {
   return (
     <div className="rounded-3xl shadow-sm bg-white p-6">
@@ -627,17 +781,23 @@ export default function ImportData() {
                       <td className="py-2.5 px-4">{getRowStatusBadge(row.status)}</td>
                       <td className="py-2.5 px-4 font-medium text-gray-900">{row.name || '---'}</td>
                       <td className="py-2.5 px-4 text-gray-600 text-xs">
-                        {row.changes && row.changes.length > 0 && (
-                          <span>{row.changes.map((c: any) => c.field || c).join(', ')}</span>
-                        )}
-                        {row.status === 'not_found' && !row.error && (
-                          <span className="text-blue-600">{activeTab === 'teachers' ? 'מורה חדש' : 'תלמיד חדש'} - ייווצר ברשומה חדשה</span>
-                        )}
-                        {row.error && (
-                          <span className="text-red-600">{row.error}</span>
-                        )}
-                        {row.status === 'matched' && (!row.changes || row.changes.length === 0) && (
-                          <span className="text-gray-400">אין שינויים</span>
+                        {activeTab === 'teachers' ? (
+                          getTeacherRowDetails(row)
+                        ) : (
+                          <>
+                            {row.changes && row.changes.length > 0 && (
+                              <span>{row.changes.map((c: any) => c.field || c).join(', ')}</span>
+                            )}
+                            {row.status === 'not_found' && !row.error && (
+                              <span className="text-blue-600">תלמיד חדש - ייווצר ברשומה חדשה</span>
+                            )}
+                            {row.error && (
+                              <span className="text-red-600">{row.error}</span>
+                            )}
+                            {row.status === 'matched' && (!row.changes || row.changes.length === 0) && (
+                              <span className="text-gray-400">אין שינויים</span>
+                            )}
+                          </>
                         )}
                       </td>
                     </tr>
@@ -731,7 +891,7 @@ export default function ImportData() {
                   {results.errors.map((err: any, idx: number) => (
                     <li key={idx} className="flex items-start gap-2 text-sm">
                       {err.row && <span className="text-gray-400 font-mono text-xs">שורה {err.row}:</span>}
-                      {err.studentName && <span className="text-gray-600 font-medium">{err.studentName}</span>}
+                      {(err.studentName || err.teacherName) && <span className="text-gray-600 font-medium">{err.studentName || err.teacherName}</span>}
                       <span className="text-red-600">{err.message || err.error}</span>
                     </li>
                   ))}

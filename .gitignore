@@ -107,6 +107,7 @@ temp/
 .claude/
 claude.md
 CLAUDE.md
+.planning/
 
 # Root-level dev notes / summaries (not source code)
 /*.md

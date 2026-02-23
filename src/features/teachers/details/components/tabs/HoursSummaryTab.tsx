@@ -79,7 +79,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       const result = await hoursSummaryService.getTeacherSummary(teacherId)
       setData(result)
     } catch (err: any) {
-      if (err.status === 404 || err.message?.includes('404')) {
+      if (err.status === 404 || err.message?.includes('404') || err.message === 'Resource not found.') {
         setData(null)
       } else {
         setError(err.message || 'שגיאה בטעינת נתוני שעות')

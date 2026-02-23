@@ -11,6 +11,11 @@
 - ✅ **v5.2 Cell Fill Color Detection** — Phase 26 (shipped 2026-02-22)
 - ✅ **v5.3 Ministry Import Fix — Multi-Row Headers & Column Mapping** — Phase 27 (shipped 2026-02-23)
 - ✅ **v5.4 Teacher Import UI Fix** — Phase 28 (shipped 2026-02-23)
+- ✅ **v5.5 Ministry Direct Parser** — Phase 29 (shipped 2026-02-23)
+
+### v5.5 Ministry Direct Parser
+
+**Milestone Goal:** Replace color-based instrument detection with direct boolean cell value parsing for Ministry Excel files. The Ministry file uses boolean `true`/`false` values (not colored cells) for instruments and teaching subjects. Added `parseMinistryTeacherSheet()` as primary parser with existing generic parser as fallback.
 
 ### v5.3 Ministry Import Fix — Multi-Row Headers & Column Mapping
 

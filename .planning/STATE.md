@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v5.4 Teacher Import UI Fix — Phase 28: Fix teachers import feature
+**Current focus:** v5.5 Ministry Direct Parser — Phase 29: Rewrite Teacher Import with Direct Boolean Parsing
 
-## Current Milestone: v5.4 Teacher Import UI Fix
+## Current Milestone: v5.5 Ministry Direct Parser
 
-**Goal:** Fix frontend ImportData.tsx to show teacher-specific fields (instruments, roles, teaching hours) in preview and results display
-**Files:** Frontend `src/pages/ImportData.tsx`
-**Phases:** 28
+**Goal:** Replace color-based instrument detection with direct boolean cell value parsing for Ministry Excel files
+**Files:** Backend `api/import/import.service.js`, Frontend `src/pages/ImportData.tsx`
+**Phases:** 29
 
 ## Current Position
 
-Phase: 28-fix-teachers-import-feature
-Plan: 01 complete (all plans complete)
+Phase: 29-rewrite-teacher-import-direct-boolean-parsing
+Plan: 01+02 complete (backend ministry parser + frontend display)
 Status: Phase complete — ready for testing
-Last activity: 2026-02-23 — Plan 28-01 completed (teacher preview display)
+Last activity: 2026-02-23 — Phase 29 completed (ministry direct parser + teaching subjects)
 
-Progress: [██████████] 100% (v5.4 — 1/1 plans)
+Progress: [██████████] 100% (v5.5 — 2/2 plans)
 
 ## Performance Metrics
 
@@ -34,7 +34,8 @@ Progress: [██████████] 100% (v5.4 — 1/1 plans)
 - v5.1: 2 phases, 4 plans (~12 min)
 - v5.3: 1 phase, 2 plans (~4 min)
 - v5.4: 1 phase, 1 plan (~5 min)
-- Total: 27 phases, 74 plans
+- v5.5: 1 phase, 2 plans
+- Total: 28 phases, 76 plans
 
 ## Accumulated Context
 
@@ -86,6 +87,7 @@ Key decisions for v5.0:
 - Phase 26 added: Cell Fill Color Detection for Import
 - Phase 27 added: Ministry Import Fix — Multi-Row Headers & Column Mapping
 - Phase 28 added: Fix teachers import feature
+- Phase 29 added: Rewrite Teacher Import — Direct Boolean Parsing
 
 ### Pending Todos
 
@@ -100,7 +102,7 @@ Key decisions for v5.0:
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Phase 28 complete — teacher import preview shows instruments, roles, and teaching hours with Hebrew labels
+Stopped at: Phase 29 complete — Ministry direct parser with boolean instrument detection + teaching subjects
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)
@@ -112,3 +114,5 @@ Resume file: None
 **Phase 27 Complete:** Backend import.service.js fixed for Ministry multi-row headers and column collisions — all 9 teaching hour columns now parse correctly, CM instrument added, duplicate/short headers resolved, position-based filtering prevents role booleans from overwriting hours values
 
 **Phase 28 Complete:** Frontend ImportData.tsx enhanced with teacher-specific preview display — teacher rows show instruments, roles, and teaching hours with Hebrew labels; formatTeachingHours/formatTeacherChange/getTeacherRowDetails helpers added; student preview unchanged for backward compatibility
+
+**Phase 29 Complete:** Backend import.service.js rewritten with Ministry direct parser — parseMinistryTeacherSheet reads boolean true/false cell values for instruments and teaching subjects, position-based column disambiguation (before instrument section = hours, after = teaching subjects). previewTeacherImport refactored with two-strategy approach (ministry direct → generic fallback). normalizeTeacherMapped and buildImportTeacherDocument now propagate teachingSubjects. Frontend shows מקצועות הוראה in preview.

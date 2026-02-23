@@ -113,6 +113,9 @@ function formatTeacherChange(change: any): string {
     if (subField === 'instruments') {
       return `כלים: ${Array.isArray(newValue) ? newValue.join(', ') : newValue}`
     }
+    if (subField === 'teachingSubjects') {
+      return `מקצועות הוראה: ${Array.isArray(newValue) ? newValue.join(', ') : newValue}`
+    }
     const label = professionalLabels[subField] || subField
     return `${label}: ${newValue}`
   }
@@ -158,12 +161,16 @@ function getTeacherRowDetails(row: any): React.ReactNode {
     const instruments = row.data?.instruments || row.instruments
     const roles = row.data?.roles || row.roles
     const teachingHours = row.data?.teachingHours || row.teachingHours
+    const teachingSubjects = row.data?.teachingSubjects || row.teachingSubjects
 
     return (
       <div className="space-y-1 text-xs">
         <div className="text-blue-600 font-medium">מורה חדש - ייווצר ברשומה חדשה</div>
         {instruments && instruments.length > 0 && (
           <div className="text-gray-600">כלים: {instruments.join(', ')}</div>
+        )}
+        {teachingSubjects && teachingSubjects.length > 0 && (
+          <div className="text-gray-600">מקצועות הוראה: {teachingSubjects.join(', ')}</div>
         )}
         {roles && roles.length > 0 && (
           <div className="text-gray-600">תפקידים: {roles.join(', ')}</div>
@@ -181,14 +188,16 @@ function getTeacherRowDetails(row: any): React.ReactNode {
     const instruments = row.data?.instruments || row.instruments
     const roles = row.data?.roles || row.roles
     const teachingHours = row.data?.teachingHours || row.teachingHours
+    const teachingSubjects = row.data?.teachingSubjects || row.teachingSubjects
 
     const hasChanges = changes.length > 0
     const hasInstruments = instruments && instruments.length > 0
     const hasRoles = roles && roles.length > 0
     const hasHours = teachingHours && Object.keys(teachingHours).some(k => teachingHours[k] > 0)
+    const hasSubjects = teachingSubjects && teachingSubjects.length > 0
 
     // If no changes and no additional info, show "אין שינויים"
-    if (!hasChanges && !hasInstruments && !hasRoles && !hasHours) {
+    if (!hasChanges && !hasInstruments && !hasRoles && !hasHours && !hasSubjects) {
       return <span className="text-gray-400">אין שינויים</span>
     }
 
@@ -199,6 +208,9 @@ function getTeacherRowDetails(row: any): React.ReactNode {
         ))}
         {hasInstruments && (
           <div className="text-gray-600">כלים: {instruments.join(', ')}</div>
+        )}
+        {hasSubjects && (
+          <div className="text-gray-600">מקצועות הוראה: {teachingSubjects.join(', ')}</div>
         )}
         {hasRoles && (
           <div className="text-gray-600">תפקידים: {roles.join(', ')}</div>

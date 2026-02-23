@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react'
 import { Teacher } from '../../types'
 import { hoursSummaryService } from '../../../../../services/apiService'
 import { useAuth } from '../../../../../services/authContext.jsx'
-import { ArrowsClockwiseIcon, BookOpenIcon, BriefcaseIcon, CarIcon, ClockIcon, MusicNotesIcon, StackIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import { ArrowsClockwiseIcon, BookOpenIcon, BriefcaseIcon, CarIcon, ClockIcon, HourglassIcon, MusicNotesIcon, PathIcon, StackIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
 
 interface HoursSummaryTabProps {
   teacher: Teacher
@@ -25,6 +25,8 @@ interface HoursTotals {
   management: number
   accompaniment: number
   ensembleCoordination: number
+  coordination: number
+  breakTime: number
   travelTime: number
 }
 
@@ -178,6 +180,8 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
     { label: 'ניהול', value: totals.management, icon: BriefcaseIcon, color: 'amber' },
     { label: 'ליווי', value: totals.accompaniment, icon: StackIcon, color: 'pink' },
     { label: 'תיאום הרכבים', value: totals.ensembleCoordination, icon: StackIcon, color: 'indigo' },
+    { label: 'ריכוז', value: totals.coordination, icon: PathIcon, color: 'blue' },
+    { label: 'ביטול זמן', value: totals.breakTime, icon: HourglassIcon, color: 'gray' },
     { label: 'נסיעות', value: totals.travelTime, icon: CarIcon, color: 'gray' },
   ]
 
@@ -237,7 +241,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
 
       {/* Category breakdown — grid of small cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {categoryCards.map((cat) => {
+        {categoryCards.filter(cat => cat.value > 0).map((cat) => {
           const Icon = cat.icon
           return (
             <div

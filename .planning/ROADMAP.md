@@ -10,6 +10,7 @@
 - ✅ **v5.0 Ministry Import Overhaul** — Phase 24 (shipped 2026-02-22)
 - ✅ **v5.2 Cell Fill Color Detection** — Phase 26 (shipped 2026-02-22)
 - ✅ **v5.3 Ministry Import Fix — Multi-Row Headers & Column Mapping** — Phase 27 (shipped 2026-02-23)
+- ✅ **v5.4 Teacher Import UI Fix** — Phase 28 (shipped 2026-02-23)
 
 ### v5.3 Ministry Import Fix — Multi-Row Headers & Column Mapping
 
@@ -230,6 +231,7 @@ Plans:
 | 25. Ministry Excel-Import Upgrade: Teacher Import | v5.1 | 3/3 | Complete | 2026-02-22 |
 | 26. Cell Fill Color Detection for Import | v5.2 | 1/1 | Complete | 2026-02-22 |
 | 27. Ministry Import Fix — Multi-Row Headers | v5.3 | 2/2 | Complete | 2026-02-23 |
+| 28. Fix Teachers Import Feature | v5.4 | 1/1 | Complete | 2026-02-23 |
 
 ### Phase 28: Fix teachers import feature
 
@@ -247,8 +249,8 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 28-01-PLAN.md — Add teacher formatting helpers and conditional preview/results display
+- [x] 28-01-PLAN.md — Add teacher formatting helpers and conditional preview/results display
 
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-23 — Phase 28 planned (fix teachers import feature)*
+*Last updated: 2026-02-23 — Phase 28 complete (fix teachers import feature)*

@@ -231,6 +231,24 @@ Plans:
 | 26. Cell Fill Color Detection for Import | v5.2 | 1/1 | Complete | 2026-02-22 |
 | 27. Ministry Import Fix — Multi-Row Headers | v5.3 | 2/2 | Complete | 2026-02-23 |
 
+### Phase 28: Fix teachers import feature
+
+**Goal:** Update ImportData.tsx preview and results states to display teacher-specific fields (instruments, roles, teaching hours) that the backend already returns. Currently the preview shows student-specific text ("תלמיד חדש") for teachers and ignores instruments/roles/hours data.
+**Depends on:** Phase 27
+**Files:** Frontend `src/pages/ImportData.tsx`
+**Success Criteria** (what must be TRUE):
+  1. Teacher preview shows detected instruments for each row
+  2. Teacher preview shows detected roles for each row
+  3. Teacher preview shows teaching hours summary with Hebrew labels
+  4. Not-found teachers show "מורה חדש" with creation details (not "תלמיד חדש")
+  5. Matched teachers show formatted change labels in Hebrew
+  6. Student preview unchanged (no regression)
+  7. Error details display teacher names when available
+**Plans:** 1 plan
+
+Plans:
+- [ ] 28-01-PLAN.md — Add teacher formatting helpers and conditional preview/results display
+
 ---
 *Roadmap created: 2026-02-13*
-*Last updated: 2026-02-23 — Phase 27 added (Ministry import multi-row header fix)*
+*Last updated: 2026-02-23 — Phase 28 planned (fix teachers import feature)*

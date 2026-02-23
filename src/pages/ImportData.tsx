@@ -132,7 +132,7 @@ function TeacherFileStructureGuide() {
 
         <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
           <span className="text-gray-700 w-28 font-medium">תואר</span>
-          <span className="text-gray-500 flex-1 text-xs">תואר שני, תואר ראשון, מוסמך, בלתי מוסמך</span>
+          <span className="text-gray-500 flex-1 text-xs">תואר שלישי, תואר שני, תואר ראשון, מוסמך בכיר, מוסמך, בלתי מוסמך</span>
           <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
         </div>
 
@@ -168,7 +168,7 @@ function TeacherFileStructureGuide() {
 
         <div className="flex items-center gap-2 py-2.5 border-b border-gray-100">
           <span className="text-gray-700 w-28 font-medium">תיאור תפקיד</span>
-          <span className="text-gray-500 flex-1 text-xs">ריכוז פדגוגי, ריכוז מחלקה, סגן מנהל, ריכוז אחר</span>
+          <span className="text-gray-500 flex-1 text-xs">ריכוז פדגוגי, ריכוז מחלקה, סגן מנהל, ריכוז אחר, ריכוז אחר (פרט), תיאור תפקיד</span>
           <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
         </div>
 
@@ -631,7 +631,7 @@ export default function ImportData() {
                           <span>{row.changes.map((c: any) => c.field || c).join(', ')}</span>
                         )}
                         {row.status === 'not_found' && !row.error && (
-                          <span className="text-blue-600">תלמיד חדש - ייווצר ברשומה חדשה</span>
+                          <span className="text-blue-600">{activeTab === 'teachers' ? 'מורה חדש' : 'תלמיד חדש'} - ייווצר ברשומה חדשה</span>
                         )}
                         {row.error && (
                           <span className="text-red-600">{row.error}</span>

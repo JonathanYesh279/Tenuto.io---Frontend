@@ -8,11 +8,11 @@ export const CLASSIFICATIONS = ['ממשיך', 'חדש'] as const;
 export type Classification = typeof CLASSIFICATIONS[number];
 
 // Teacher degree
-export const DEGREES = ['תואר שני', 'תואר ראשון', 'מוסמך', 'בלתי מוסמך'] as const;
+export const DEGREES = ['תואר שלישי', 'תואר שני', 'תואר ראשון', 'מוסמך בכיר', 'מוסמך', 'בלתי מוסמך'] as const;
 export type Degree = typeof DEGREES[number];
 
 // Management roles
-export const MANAGEMENT_ROLES = ['ריכוז פדגוגי', 'ריכוז מחלקה', 'סגן מנהל', 'ריכוז אחר'] as const;
+export const MANAGEMENT_ROLES = ['ריכוז פדגוגי', 'ריכוז מחלקה', 'סגן מנהל', 'ריכוז אחר', 'ריכוז אחר (פרט)', 'תיאור תפקיד'] as const;
 export type ManagementRole = typeof MANAGEMENT_ROLES[number];
 
 // Teaching subjects (beyond instrument teaching)

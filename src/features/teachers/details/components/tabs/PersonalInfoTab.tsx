@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { Teacher } from '../../types'
 import { teacherDetailsApi } from '../../../../../services/teacherDetailsApi'
 import { getDisplayName, formatAddress } from '../../../../../utils/nameUtils'
-import { CalendarIcon, CheckCircleIcon, EnvelopeIcon, FloppyDiskIcon, MapPinIcon, MedalIcon, PencilIcon, PhoneIcon, UserIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { CalendarIcon, CertificateIcon, CheckCircleIcon, EnvelopeIcon, FloppyDiskIcon, GraduationCapIcon, IdentificationCardIcon, MapPinIcon, MedalIcon, MusicNoteIcon, PencilIcon, PhoneIcon, UserIcon, UsersThreeIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
 
 interface PersonalInfoTabProps {
   teacher: Teacher
@@ -397,20 +397,65 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
               <p className="text-gray-900">{formatAddress(teacher.personalInfo?.address) || 'לא צוין'}</p>
             )}
           </div>
+
+          {/* ID Number */}
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+              <IdentificationCardIcon className="w-4 h-4" />
+              ת.ז.
+            </label>
+            <p className="text-gray-900">{teacher.personalInfo?.idNumber || 'לא צוין'}</p>
+          </div>
+
+          {/* Birth Year */}
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+              <CalendarIcon className="w-4 h-4" />
+              שנת לידה
+            </label>
+            <p className="text-gray-900">{teacher.personalInfo?.birthYear || 'לא צוין'}</p>
+          </div>
         </div>
 
         {/* Professional Information */}
         <div className="space-y-4">
           <h3 className="text-md font-medium text-gray-700 border-b pb-2">מידע מקצועי</h3>
           
-          {/* Instrument */}
+          {/* Instruments */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <MedalIcon className="w-4 h-4" />
+              <MusicNoteIcon className="w-4 h-4" />
               כלי נגינה
             </label>
-            <p className="text-gray-900">{teacher.professionalInfo?.instrument || 'לא צוין'}</p>
+            {teacher.professionalInfo?.instruments && teacher.professionalInfo.instruments.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5">
+                {teacher.professionalInfo.instruments.map((inst, idx) => (
+                  <span key={idx} className="px-2.5 py-0.5 bg-indigo-100 text-indigo-800 rounded-full text-sm">
+                    {inst}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-900">{teacher.professionalInfo?.instrument || 'לא צוין'}</p>
+            )}
           </div>
+
+          {/* Teaching Subjects */}
+          {teacher.professionalInfo?.teachingSubjects && teacher.professionalInfo.teachingSubjects.length > 0 && (
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <GraduationCapIcon className="w-4 h-4" />
+                מקצועות הוראה
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {teacher.professionalInfo.teachingSubjects.map((subj, idx) => (
+                  <span key={idx} className="px-2.5 py-0.5 bg-purple-100 text-purple-800 rounded-full text-sm">
+                    {subj}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Roles */}
           <div className="space-y-2">
@@ -426,6 +471,67 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
               )) || <span className="text-gray-500">אין תפקידים</span>}
             </div>
           </div>
+
+          {/* Classification */}
+          {teacher.professionalInfo?.classification && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-600">סיווג</label>
+              <p className="text-gray-900">{teacher.professionalInfo.classification}</p>
+            </div>
+          )}
+
+          {/* Degree */}
+          {teacher.professionalInfo?.degree && (
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <MedalIcon className="w-4 h-4" />
+                תואר
+              </label>
+              <p className="text-gray-900">{teacher.professionalInfo.degree}</p>
+            </div>
+          )}
+
+          {/* Teaching Experience */}
+          {teacher.professionalInfo?.teachingExperienceYears != null && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-600">ותק בהוראה</label>
+              <p className="text-gray-900">{teacher.professionalInfo.teachingExperienceYears} שנים</p>
+            </div>
+          )}
+
+          {/* Teaching Certificate */}
+          {teacher.professionalInfo?.hasTeachingCertificate != null && (
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <CertificateIcon className="w-4 h-4" />
+                תעודת הוראה
+              </label>
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
+                teacher.professionalInfo.hasTeachingCertificate
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-gray-100 text-gray-600'
+              }`}>
+                {teacher.professionalInfo.hasTeachingCertificate ? 'כן' : 'לא'}
+              </span>
+            </div>
+          )}
+
+          {/* Union Member */}
+          {teacher.professionalInfo?.isUnionMember != null && (
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <UsersThreeIcon className="w-4 h-4" />
+                חבר ארגון עובדים
+              </label>
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
+                teacher.professionalInfo.isUnionMember
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-gray-100 text-gray-600'
+              }`}>
+                {teacher.professionalInfo.isUnionMember ? 'כן' : 'לא'}
+              </span>
+            </div>
+          )}
 
           {/* Active Status */}
           <div className="space-y-2">

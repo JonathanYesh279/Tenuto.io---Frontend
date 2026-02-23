@@ -158,6 +158,7 @@ function getTeacherRowDetails(row: any): React.ReactNode {
 
   // Not found (create) case
   if (row.status === 'not_found') {
+    const mapped = row.data?.mapped || row.mapped || {}
     const instruments = row.data?.instruments || row.instruments
     const roles = row.data?.roles || row.roles
     const teachingHours = row.data?.teachingHours || row.teachingHours
@@ -178,12 +179,28 @@ function getTeacherRowDetails(row: any): React.ReactNode {
         {teachingHours && Object.keys(teachingHours).some(k => teachingHours[k] > 0) && (
           <div className="text-gray-600">שעות: {formatTeachingHours(teachingHours)}</div>
         )}
+        {mapped.classification && (
+          <div className="text-gray-600">סיווג: {mapped.classification}</div>
+        )}
+        {mapped.degree && (
+          <div className="text-gray-600">תואר: {mapped.degree}</div>
+        )}
+        {mapped.experience != null && (
+          <div className="text-gray-600">ותק: {mapped.experience} שנים</div>
+        )}
+        {mapped.teachingCertificate != null && (
+          <div className="text-gray-600">תעודת הוראה: {mapped.teachingCertificate ? 'כן' : 'לא'}</div>
+        )}
+        {mapped.isUnionMember != null && (
+          <div className="text-gray-600">חבר ארגון: {mapped.isUnionMember ? 'כן' : 'לא'}</div>
+        )}
       </div>
     )
   }
 
   // Matched (update) case
   if (row.status === 'matched') {
+    const mapped = row.data?.mapped || row.mapped || {}
     const changes = row.changes || []
     const instruments = row.data?.instruments || row.instruments
     const roles = row.data?.roles || row.roles
@@ -195,9 +212,10 @@ function getTeacherRowDetails(row: any): React.ReactNode {
     const hasRoles = roles && roles.length > 0
     const hasHours = teachingHours && Object.keys(teachingHours).some(k => teachingHours[k] > 0)
     const hasSubjects = teachingSubjects && teachingSubjects.length > 0
+    const hasProfessional = mapped.classification || mapped.degree || mapped.experience != null || mapped.teachingCertificate != null || mapped.isUnionMember != null
 
     // If no changes and no additional info, show "אין שינויים"
-    if (!hasChanges && !hasInstruments && !hasRoles && !hasHours && !hasSubjects) {
+    if (!hasChanges && !hasInstruments && !hasRoles && !hasHours && !hasSubjects && !hasProfessional) {
       return <span className="text-gray-400">אין שינויים</span>
     }
 
@@ -217,6 +235,21 @@ function getTeacherRowDetails(row: any): React.ReactNode {
         )}
         {hasHours && (
           <div className="text-gray-600">שעות: {formatTeachingHours(teachingHours)}</div>
+        )}
+        {mapped.classification && (
+          <div className="text-gray-600">סיווג: {mapped.classification}</div>
+        )}
+        {mapped.degree && (
+          <div className="text-gray-600">תואר: {mapped.degree}</div>
+        )}
+        {mapped.experience != null && (
+          <div className="text-gray-600">ותק: {mapped.experience} שנים</div>
+        )}
+        {mapped.teachingCertificate != null && (
+          <div className="text-gray-600">תעודת הוראה: {mapped.teachingCertificate ? 'כן' : 'לא'}</div>
+        )}
+        {mapped.isUnionMember != null && (
+          <div className="text-gray-600">חבר ארגון: {mapped.isUnionMember ? 'כן' : 'לא'}</div>
         )}
       </div>
     )

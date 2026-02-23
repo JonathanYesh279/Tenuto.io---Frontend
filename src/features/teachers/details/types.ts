@@ -34,11 +34,32 @@ export interface Teacher {
     phone: string
     email: string
     address: string
+    idNumber?: string | null
+    birthYear?: number | null
   }
   roles: string[]
   professionalInfo: {
     instrument: string
+    instruments?: string[]
     isActive: boolean
+    classification?: string | null
+    degree?: string | null
+    hasTeachingCertificate?: boolean | null
+    teachingExperienceYears?: number | null
+    isUnionMember?: boolean | null
+    teachingSubjects?: string[]
+  }
+  managementInfo?: {
+    role?: string | null
+    teachingHours?: number | null
+    accompHours?: number | null
+    ensembleHours?: number | null
+    ensembleCoordHours?: number | null
+    theoryHours?: number | null
+    managementHours?: number | null
+    coordinationHours?: number | null
+    breakTimeHours?: number | null
+    totalWeeklyHours?: number | null
   }
   isActive: boolean
   conducting: {
@@ -60,6 +81,7 @@ export interface Teacher {
     passwordSetAt?: string
     lastLogin?: string
   }
+  studentCount?: number
   createdAt: string
   updatedAt: string
 }

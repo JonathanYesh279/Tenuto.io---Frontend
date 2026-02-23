@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Administrators can efficiently manage their conservatory
-**Current focus:** v5.3 Ministry Import Fix — Phase 27: Multi-Row Headers & Column Mapping
+**Current focus:** v5.4 Teacher Import UI Fix — Phase 28: Fix teachers import feature
 
-## Current Milestone: v5.3 Ministry Import Fix
+## Current Milestone: v5.4 Teacher Import UI Fix
 
-**Goal:** Fix 6 bugs in Ministry Excel teacher import: multi-row header fragments, header collision, instrument detection, CM abbreviation, conditional formatting, formula results.
-**Files:** Backend `import.service.js`, `config/constants.js`
-**Phases:** 27
+**Goal:** Fix frontend ImportData.tsx to show teacher-specific fields (instruments, roles, teaching hours) in preview and results display
+**Files:** Frontend `src/pages/ImportData.tsx`
+**Phases:** 28
 
 ## Current Position
 
-Phase: 27-import-header-fix
-Plan: 02 complete (all plans complete)
+Phase: 28-fix-teachers-import-feature
+Plan: 01 complete (all plans complete)
 Status: Phase complete — ready for testing
-Last activity: 2026-02-22 — Plan 27-02 completed (position-based filtering)
+Last activity: 2026-02-23 — Plan 28-01 completed (teacher preview display)
 
-Progress: [██████████] 100% (v5.3 — 2/2 plans)
+Progress: [██████████] 100% (v5.4 — 1/1 plans)
 
 ## Performance Metrics
 
@@ -32,8 +32,9 @@ Progress: [██████████] 100% (v5.3 — 2/2 plans)
 - v4.0: 1 phase, 6 plans
 - v5.0: 1 phase, 4 plans (~14 min)
 - v5.1: 2 phases, 4 plans (~12 min)
-- v5.3: 1 phase, 2 plans complete (~4 min)
-- Total: 26 phases, 73 plans
+- v5.3: 1 phase, 2 plans (~4 min)
+- v5.4: 1 phase, 1 plan (~5 min)
+- Total: 27 phases, 74 plans
 
 ## Accumulated Context
 
@@ -75,12 +76,16 @@ Key decisions for v5.0:
 - [27-02] Instrument detection filtered to columns >= 24 only (prevents "פסנתר" at C15 from triggering piano detection)
 - [27-02] HOURS_FIELDS_WITH_ROLE_COLLISION set prevents role boolean values from overwriting teaching hours
 - [27-02] headerColMap parameter made optional for backward compatibility (student import unchanged)
+- [Phase 28-01]: Teacher preview shows all three teacher-specific fields: instruments, roles, teaching hours
+- [Phase 28-01]: Student preview unchanged to avoid regression
+- [Phase 28-01]: Error details show both teacherName and studentName for entity-appropriate display
 
 ### Roadmap Evolution
 
 - Phase 25 added: Ministry Excel-Import Upgrade: Teacher Import
 - Phase 26 added: Cell Fill Color Detection for Import
 - Phase 27 added: Ministry Import Fix — Multi-Row Headers & Column Mapping
+- Phase 28 added: Fix teachers import feature
 
 ### Pending Todos
 
@@ -94,8 +99,8 @@ Key decisions for v5.0:
 
 ## Session Continuity
 
-Last session: 2026-02-22
-Stopped at: Phase 27 complete — all Ministry import bugs fixed (multi-row headers, header collisions, position-based filtering)
+Last session: 2026-02-23
+Stopped at: Phase 28 complete — teacher import preview shows instruments, roles, and teaching hours with Hebrew labels
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)
@@ -105,3 +110,5 @@ Resume file: None
 **Phase 26 Complete:** Backend Excel parsing switched from xlsx to exceljs with cell fill color detection — Ministry instrument/role columns marked by colored cells now correctly detected, text-based TRUTHY_VALUES still works as fallback
 
 **Phase 27 Complete:** Backend import.service.js fixed for Ministry multi-row headers and column collisions — all 9 teaching hour columns now parse correctly, CM instrument added, duplicate/short headers resolved, position-based filtering prevents role booleans from overwriting hours values
+
+**Phase 28 Complete:** Frontend ImportData.tsx enhanced with teacher-specific preview display — teacher rows show instruments, roles, and teaching hours with Hebrew labels; formatTeachingHours/formatTeacherChange/getTeacherRowDetails helpers added; student preview unchanged for backward compatibility

@@ -1,5 +1,6 @@
 import Sidebar from './Sidebar'
 import Header from './Header'
+import ImpersonationBanner from './ImpersonationBanner'
 import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 
@@ -44,6 +45,9 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="h-screen overflow-hidden bg-background" dir="rtl">
+      {/* Impersonation Banner - always rendered, self-hides when not impersonating */}
+      <ImpersonationBanner />
+
       {/* Sidebar - Show for all users with roles */}
       {shouldShowSidebar && <div className="no-print"><Sidebar /></div>}
 

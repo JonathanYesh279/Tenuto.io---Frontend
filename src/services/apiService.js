@@ -5309,7 +5309,29 @@ export const superAdminService = {
       console.error('Error fetching analytics:', error);
       throw error;
     }
-  }
+  },
+
+  async startImpersonation(tenantId) {
+    try {
+      const response = await apiClient.post(`/super-admin/impersonate/${tenantId}`);
+      console.log('Impersonation started for tenant:', tenantId);
+      return response;
+    } catch (error) {
+      console.error('Error starting impersonation:', error);
+      throw error;
+    }
+  },
+
+  async stopImpersonation(sessionId) {
+    try {
+      const response = await apiClient.post('/super-admin/stop-impersonation', { sessionId });
+      console.log('Impersonation stopped');
+      return response;
+    } catch (error) {
+      console.error('Error stopping impersonation:', error);
+      throw error;
+    }
+  },
 };
 
 // ==================== Admin Audit Service ====================

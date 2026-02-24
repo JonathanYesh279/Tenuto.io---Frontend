@@ -131,6 +131,45 @@ export const AuthProvider = ({ children }) => {
           return
         }
 
+        // Impersonation: validate the impersonation token and restore banner state
+        else if (loginType === 'impersonation') {
+          console.log('AUTH CONTEXT - Impersonation token found, validating')
+          try {
+            const validation = await apiService.auth.validateToken()
+            if (!mountedRef.current) return
+
+            const teacherData = validation?.data?.user || validation?.user || validation?.data || validation
+            const impersonationContext = JSON.parse(localStorage.getItem('impersonationContext') || '{}')
+
+            setIsAuthenticated(true)
+            setUser({
+              ...teacherData,
+              isImpersonating: true,
+            })
+            setLastValidation(now)
+            console.log('AUTH CONTEXT - Impersonation session restored after refresh')
+          } catch (err) {
+            console.error('AUTH CONTEXT - Impersonation token validation failed:', err)
+            // Auto-exit impersonation and try to restore super admin
+            const savedToken = sessionStorage.getItem('preImpersonation_authToken')
+            if (savedToken) {
+              apiService.client.setToken(savedToken)
+              localStorage.setItem('loginType', sessionStorage.getItem('preImpersonation_loginType') || 'super_admin')
+              localStorage.removeItem('impersonationContext')
+              sessionStorage.removeItem('preImpersonation_authToken')
+              sessionStorage.removeItem('preImpersonation_loginType')
+              sessionStorage.removeItem('preImpersonation_superAdminUser')
+              // Re-run auth check as super admin
+              await checkAuthStatus(true)
+            } else {
+              setIsAuthenticated(false)
+              setUser(null)
+            }
+            setLastValidation(now)
+          }
+          return
+        }
+
         console.log('🔐 AUTH CONTEXT - Token found, validating with server')
 
         // Validate the token with the server
@@ -397,6 +436,133 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const startImpersonation = async (tenantId) => {
+    try {
+      setIsLoading(true)
+
+      // Call backend to get impersonation token
+      const response = await superAdminService.startImpersonation(tenantId)
+      const data = response?.data || response
+
+      if (!data?.accessToken) {
+        throw new Error('No impersonation token received')
+      }
+
+      // 1. Stash current super admin state in sessionStorage
+      const currentToken = localStorage.getItem('authToken')
+      const currentLoginType = localStorage.getItem('loginType')
+      const currentSuperAdminUser = localStorage.getItem('superAdminUser')
+
+      sessionStorage.setItem('preImpersonation_authToken', currentToken)
+      sessionStorage.setItem('preImpersonation_loginType', currentLoginType)
+      sessionStorage.setItem('preImpersonation_superAdminUser', currentSuperAdminUser)
+
+      // 2. Set impersonation state in localStorage
+      apiService.client.setToken(data.accessToken)
+      localStorage.setItem('loginType', 'impersonation')
+      localStorage.setItem('impersonationContext', JSON.stringify({
+        superAdminId: data.sessionId, // sessionId doubles as identifier
+        sessionId: data.sessionId,
+        tenantId: data.tenant._id,
+        tenantName: data.tenant.name,
+        impersonatedAdminName: data.impersonatedAdmin.name,
+        impersonatedAdminEmail: data.impersonatedAdmin.email,
+        startedAt: new Date().toISOString(),
+      }))
+
+      // 3. Validate the impersonation token to get full teacher data
+      const validation = await apiService.auth.validateToken()
+      if (!mountedRef.current) return
+
+      const teacherData = validation?.data?.user || validation?.user || validation?.data || validation
+
+      // 4. Update auth state to reflect impersonated admin
+      setIsAuthenticated(true)
+      setUser({
+        ...teacherData,
+        isImpersonating: true,
+      })
+      setLastValidation(Date.now())
+
+      console.log('AUTH CONTEXT - Impersonation started:', {
+        tenantName: data.tenant.name,
+        adminName: data.impersonatedAdmin.name,
+      })
+
+      return { success: true }
+    } catch (error) {
+      console.error('AUTH CONTEXT - Start impersonation failed:', error)
+      if (mountedRef.current) {
+        setAuthError(error.message)
+      }
+      throw error
+    } finally {
+      if (mountedRef.current) {
+        setIsLoading(false)
+      }
+    }
+  }
+
+  const stopImpersonation = async () => {
+    try {
+      setIsLoading(true)
+
+      // 1. Log the end of impersonation on the backend
+      const impersonationContext = JSON.parse(localStorage.getItem('impersonationContext') || '{}')
+      if (impersonationContext.sessionId) {
+        try {
+          await superAdminService.stopImpersonation(impersonationContext.sessionId)
+        } catch (err) {
+          console.warn('AUTH CONTEXT - Stop impersonation API call failed:', err)
+          // Continue with local cleanup regardless
+        }
+      }
+
+      // 2. Restore super admin state from sessionStorage
+      const savedToken = sessionStorage.getItem('preImpersonation_authToken')
+      const savedLoginType = sessionStorage.getItem('preImpersonation_loginType')
+      const savedUser = sessionStorage.getItem('preImpersonation_superAdminUser')
+
+      if (savedToken) {
+        apiService.client.setToken(savedToken)
+        localStorage.setItem('loginType', savedLoginType || 'super_admin')
+        if (savedUser) {
+          localStorage.setItem('superAdminUser', savedUser)
+        }
+      }
+
+      // 3. Clean up impersonation state
+      localStorage.removeItem('impersonationContext')
+      sessionStorage.removeItem('preImpersonation_authToken')
+      sessionStorage.removeItem('preImpersonation_loginType')
+      sessionStorage.removeItem('preImpersonation_superAdminUser')
+
+      // 4. Restore super admin user in auth context
+      if (savedUser) {
+        const superAdminUser = JSON.parse(savedUser)
+        setIsAuthenticated(true)
+        setUser(superAdminUser)
+        setLastValidation(Date.now())
+      } else {
+        // Fallback: force re-check
+        await checkAuthStatus(true)
+      }
+
+      console.log('AUTH CONTEXT - Impersonation stopped, super admin session restored')
+
+      return { success: true }
+    } catch (error) {
+      console.error('AUTH CONTEXT - Stop impersonation failed:', error)
+      // If restoration fails, force a full re-auth
+      await logout()
+      throw error
+    } finally {
+      if (mountedRef.current) {
+        setIsLoading(false)
+      }
+    }
+  }
+
   const logout = async () => {
     const loginType = localStorage.getItem('loginType')
     try {
@@ -413,6 +579,11 @@ export const AuthProvider = ({ children }) => {
       // Clean up super admin data
       localStorage.removeItem('loginType')
       localStorage.removeItem('superAdminUser')
+      // Clean up impersonation data
+      localStorage.removeItem('impersonationContext')
+      sessionStorage.removeItem('preImpersonation_authToken')
+      sessionStorage.removeItem('preImpersonation_loginType')
+      sessionStorage.removeItem('preImpersonation_superAdminUser')
       if (mountedRef.current) {
         setIsAuthenticated(false)
         setUser(null)
@@ -428,6 +599,14 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('AUTH CONTEXT - Attempting token refresh')
       const loginType = localStorage.getItem('loginType')
+
+      if (loginType === 'impersonation') {
+        // During impersonation, if token expires, exit impersonation
+        // (impersonation tokens have no refresh mechanism by design)
+        console.log('AUTH CONTEXT - Impersonation token expired, exiting impersonation')
+        await stopImpersonation()
+        return false
+      }
 
       if (loginType === 'super_admin') {
         // Super admin refresh: call dedicated endpoint (reads httpOnly cookie)
@@ -472,6 +651,8 @@ export const AuthProvider = ({ children }) => {
     authError,
     login,
     loginAsSuperAdmin,
+    startImpersonation,
+    stopImpersonation,
     logout,
     checkAuthStatus,
     refreshToken,

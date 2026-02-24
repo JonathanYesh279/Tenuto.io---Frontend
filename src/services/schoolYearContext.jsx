@@ -19,7 +19,7 @@ export const useSchoolYear = () => {
 }
 
 export const SchoolYearProvider = ({ children }) => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const [currentSchoolYear, setCurrentSchoolYear] = useState(null)
   const [schoolYears, setSchoolYears] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -28,6 +28,14 @@ export const SchoolYearProvider = ({ children }) => {
   // Load school years only when authenticated
   useEffect(() => {
     if (isAuthenticated) {
+      // Super admin has no school years -- skip tenant-scoped loading
+      if (user?.isSuperAdmin) {
+        setCurrentSchoolYear(null)
+        setSchoolYears([])
+        setIsLoading(false)
+        setError(null)
+        return
+      }
       loadSchoolYears()
     } else {
       // Clear data when not authenticated
@@ -36,7 +44,7 @@ export const SchoolYearProvider = ({ children }) => {
       setIsLoading(false)
       setError(null)
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, user?.isSuperAdmin])
 
   const loadSchoolYears = async () => {
     try {

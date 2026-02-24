@@ -95,7 +95,32 @@ export const AuthProvider = ({ children }) => {
               throw new Error('Super admin user data not found')
             }
           } catch (err) {
-            console.error('🔐 AUTH CONTEXT - Super admin validation failed:', err)
+            console.error('AUTH CONTEXT - Super admin validation failed:', err)
+
+            // Attempt token refresh before giving up
+            try {
+              const refreshResponse = await superAdminService.refreshToken()
+              const newToken = refreshResponse?.data?.accessToken || refreshResponse?.accessToken
+              if (newToken) {
+                apiService.client.setToken(newToken)
+                // Re-validate with new token
+                await superAdminService.getTenants()
+                if (!mountedRef.current) return
+                const storedUser = localStorage.getItem('superAdminUser')
+                if (storedUser) {
+                  const superAdminUser = JSON.parse(storedUser)
+                  setIsAuthenticated(true)
+                  setUser(superAdminUser)
+                  setLastValidation(now)
+                  console.log('AUTH CONTEXT - Super admin session refreshed')
+                  return
+                }
+              }
+            } catch (refreshErr) {
+              console.error('AUTH CONTEXT - Super admin refresh also failed:', refreshErr)
+            }
+
+            // Refresh failed -- clear auth state
             localStorage.removeItem('loginType')
             localStorage.removeItem('superAdminUser')
             apiService.client.removeToken()
@@ -401,15 +426,27 @@ export const AuthProvider = ({ children }) => {
   // Token refresh mechanism
   const refreshToken = useCallback(async () => {
     try {
-      console.log('🔐 AUTH CONTEXT - Attempting token refresh')
-      
-      // For now, we'll implement a basic refresh by re-validating
-      // This can be enhanced when backend supports refresh tokens
+      console.log('AUTH CONTEXT - Attempting token refresh')
+      const loginType = localStorage.getItem('loginType')
+
+      if (loginType === 'super_admin') {
+        // Super admin refresh: call dedicated endpoint (reads httpOnly cookie)
+        const response = await superAdminService.refreshToken()
+        const newToken = response?.data?.accessToken || response?.accessToken
+
+        if (newToken) {
+          apiService.client.setToken(newToken)
+          console.log('AUTH CONTEXT - Super admin token refreshed successfully')
+          return true
+        }
+        throw new Error('No access token in refresh response')
+      }
+
+      // Regular auth refresh: re-validate (existing behavior)
       await checkAuthStatus(true)
-      
       return isAuthenticated
     } catch (error) {
-      console.error('🔐 AUTH CONTEXT - Token refresh failed:', error)
+      console.error('AUTH CONTEXT - Token refresh failed:', error)
       await logout()
       return false
     }

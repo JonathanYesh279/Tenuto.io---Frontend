@@ -5291,12 +5291,22 @@ export const superAdminService = {
     }
   },
 
+  async refreshToken() {
+    try {
+      const response = await apiClient.post('/super-admin/auth/refresh');
+      return response;
+    } catch (error) {
+      console.error('Super admin token refresh failed:', error);
+      throw error;
+    }
+  },
+
   async getAnalytics() {
     try {
       const response = await apiClient.get('/super-admin/analytics');
       return response;
     } catch (error) {
-      console.error('❌ Error fetching analytics:', error);
+      console.error('Error fetching analytics:', error);
       throw error;
     }
   }

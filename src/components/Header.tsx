@@ -23,6 +23,8 @@ export default function Header() {
   // Check if user should see the sidebar (all users with roles now get sidebar)
   // Support both English and Hebrew role names
   const hasSidebar = user && (
+    // Super admin
+    user.isSuperAdmin ||
     // Admin
     user.role === 'admin' ||
     user.roles?.includes('admin') ||
@@ -48,6 +50,8 @@ export default function Header() {
     // Implicit roles
     user.conducting?.orchestraIds?.length > 0
   )
+
+  const isSuperAdmin = !!user?.isSuperAdmin
 
   const handleProfileClick = () => {
     navigate('/profile')
@@ -76,6 +80,7 @@ export default function Header() {
   }
 
   const getUserRole = () => {
+    if (user?.isSuperAdmin) return 'מנהל-על'
     const role = user?.role || user?.roles?.[0] || ''
     // Handle Hebrew role names from backend
     switch (role) {
@@ -107,8 +112,8 @@ export default function Header() {
           className="h-10 w-auto object-contain"
         />
 
-        {/* Search input - Desktop only */}
-        {!isMobile && (
+        {/* Search input - Desktop only, hidden for super admin */}
+        {!isMobile && !isSuperAdmin && (
           <div className="relative w-96">
             <MagnifyingGlassIcon
               size={18}
@@ -127,10 +132,12 @@ export default function Header() {
 
       {/* Left side (RTL) - School Year + Bell + Profile */}
       <div className="flex items-center gap-4" style={{ direction: 'ltr' }}>
-        {/* School Year Selector - muted styling */}
-        <div className="text-xs">
-          <SchoolYearSelector />
-        </div>
+        {/* School Year Selector - muted styling, hidden for super admin */}
+        {!isSuperAdmin && (
+          <div className="text-xs">
+            <SchoolYearSelector />
+          </div>
+        )}
 
         {/* Notification bell */}
         <button
@@ -185,13 +192,15 @@ export default function Header() {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem
-              onClick={handleProfileClick}
-              className="flex items-center justify-between cursor-pointer"
-            >
-              <span className="font-reisinger-yonatan">עמוד אישי</span>
-              <UserIcon className="w-4 h-4 text-muted-foreground" />
-            </DropdownMenuItem>
+            {!isSuperAdmin && (
+              <DropdownMenuItem
+                onClick={handleProfileClick}
+                className="flex items-center justify-between cursor-pointer"
+              >
+                <span className="font-reisinger-yonatan">עמוד אישי</span>
+                <UserIcon className="w-4 h-4 text-muted-foreground" />
+              </DropdownMenuItem>
+            )}
 
             <DropdownMenuItem
               onClick={handleLogout}

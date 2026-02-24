@@ -14,6 +14,8 @@ export default function Layout({ children }: LayoutProps) {
   // Check if user should see the sidebar (all users with roles)
   // Support both English and Hebrew role names
   const shouldShowSidebar = user && (
+    // Super admin
+    user.isSuperAdmin ||
     // Admin - English and Hebrew
     user.role === 'admin' ||
     user.roles?.includes('admin') ||

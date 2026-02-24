@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import React, { Suspense, useEffect } from 'react'
 import { AuthProvider, useAuth } from './services/authContext.jsx'
 import { SchoolYearProvider } from './services/schoolYearContext.jsx'
@@ -78,6 +78,7 @@ interface ProtectedRouteProps {
 
 function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading, authError, checkAuthStatus, user } = useAuth()
+  const location = useLocation()
   const [retryAttempts, setRetryAttempts] = React.useState(0)
   const maxRetries = 2
 
@@ -85,6 +86,7 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const hasRequiredRole = () => {
     if (!allowedRoles || allowedRoles.length === 0) return true
     if (!user) return false
+    if (user.isSuperAdmin) return true // super admin bypasses role checks
 
     const userRole = user.role || user.roles?.[0] || ''
     const userRoles = user.roles || [userRole]
@@ -147,6 +149,12 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
+  }
+
+  // Super admin can only access these paths
+  const SUPER_ADMIN_ALLOWED_PATHS = ['/dashboard', '/settings']
+  if (user?.isSuperAdmin && !SUPER_ADMIN_ALLOWED_PATHS.some(p => location.pathname.startsWith(p))) {
+    return <Navigate to="/dashboard" replace />
   }
 
   // Check role permissions

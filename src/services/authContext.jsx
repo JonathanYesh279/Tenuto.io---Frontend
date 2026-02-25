@@ -507,18 +507,8 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true)
 
-      // 1. Log the end of impersonation on the backend
-      const impersonationContext = JSON.parse(localStorage.getItem('impersonationContext') || '{}')
-      if (impersonationContext.sessionId) {
-        try {
-          await superAdminService.stopImpersonation(impersonationContext.sessionId)
-        } catch (err) {
-          console.warn('AUTH CONTEXT - Stop impersonation API call failed:', err)
-          // Continue with local cleanup regardless
-        }
-      }
-
-      // 2. Restore super admin state from sessionStorage
+      // 1. Restore super admin token FIRST so the stop-impersonation API call
+      //    authenticates as super admin (the route requires authenticateSuperAdmin)
       const savedToken = sessionStorage.getItem('preImpersonation_authToken')
       const savedLoginType = sessionStorage.getItem('preImpersonation_loginType')
       const savedUser = sessionStorage.getItem('preImpersonation_superAdminUser')
@@ -528,6 +518,17 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('loginType', savedLoginType || 'super_admin')
         if (savedUser) {
           localStorage.setItem('superAdminUser', savedUser)
+        }
+      }
+
+      // 2. Log the end of impersonation on the backend (now using super admin JWT)
+      const impersonationContext = JSON.parse(localStorage.getItem('impersonationContext') || '{}')
+      if (impersonationContext.sessionId) {
+        try {
+          await superAdminService.stopImpersonation(impersonationContext.sessionId)
+        } catch (err) {
+          console.warn('AUTH CONTEXT - Stop impersonation API call failed:', err)
+          // Continue with local cleanup regardless
         }
       }
 

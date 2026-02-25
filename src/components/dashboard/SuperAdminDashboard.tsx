@@ -1,38 +1,33 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 import StatsCard from '../ui/StatsCard'
 import { superAdminService } from '../../services/apiService'
-import { ArrowsClockwiseIcon, BuildingsIcon, CaretLeftIcon, ChartBarIcon, GraduationCapIcon, ShieldIcon, ToggleLeftIcon, ToggleRightIcon, UsersIcon } from '@phosphor-icons/react'
+import type { Tenant, PlatformAnalytics } from '../../types/super-admin.types'
+import {
+  ArrowsClockwiseIcon,
+  BuildingsIcon,
+  ChartBarIcon,
+  GraduationCapIcon,
+  ShieldIcon,
+  ToggleLeftIcon,
+  ToggleRightIcon,
+  UsersIcon,
+  WarningCircleIcon,
+} from '@phosphor-icons/react'
 
-interface TenantWithStats {
-  _id: string
-  tenantId?: string
-  name: string
-  slug?: string
-  isActive: boolean
-  subscription?: {
-    plan?: string
-    expiresAt?: string
-  }
-  stats?: {
-    teacherCount: number
-    studentCount: number
-  }
-  createdAt?: string
-}
-
-interface PlatformAnalytics {
-  totalTenants: number
-  activeTenants: number
-  totalTeachers: number
-  totalStudents: number
-  subscriptionsByPlan: Record<string, number>
+interface Alert {
+  type: string
+  severity: 'critical' | 'warning' | 'info'
+  tenantId: string
+  tenantName: string
 }
 
 export default function SuperAdminDashboard() {
   const [loading, setLoading] = useState(true)
-  const [tenants, setTenants] = useState<TenantWithStats[]>([])
+  const [tenants, setTenants] = useState<Tenant[]>([])
   const [analytics, setAnalytics] = useState<PlatformAnalytics | null>(null)
+  const [alerts, setAlerts] = useState<Alert[]>([])
   const [error, setError] = useState<string | null>(null)
   const [togglingId, setTogglingId] = useState<string | null>(null)
 
@@ -45,20 +40,12 @@ export default function SuperAdminDashboard() {
       setLoading(true)
       setError(null)
 
-      const [tenantsRes, analyticsRes] = await Promise.allSettled([
-        superAdminService.getTenants(),
-        superAdminService.getAnalytics()
-      ])
+      const res = await superAdminService.getReportingDashboard()
+      const dashboard = res?.data || res || {}
 
-      if (tenantsRes.status === 'fulfilled') {
-        const data = tenantsRes.value?.data || tenantsRes.value || []
-        setTenants(Array.isArray(data) ? data : [])
-      }
-
-      if (analyticsRes.status === 'fulfilled') {
-        const data = analyticsRes.value?.data || analyticsRes.value || null
-        setAnalytics(data)
-      }
+      setAnalytics(dashboard.overview || null)
+      setTenants(Array.isArray(dashboard.tenantHealth) ? dashboard.tenantHealth : [])
+      setAlerts(Array.isArray(dashboard.alerts) ? dashboard.alerts : [])
     } catch (err: any) {
       console.error('Failed to load super admin data:', err)
       setError(err.message || 'שגיאה בטעינת נתונים')
@@ -70,8 +57,8 @@ export default function SuperAdminDashboard() {
   const getPlanLabel = (plan?: string) => {
     const labels: Record<string, string> = {
       basic: 'בסיסי',
-      professional: 'מקצועי',
-      enterprise: 'ארגוני'
+      standard: 'סטנדרטי',
+      premium: 'פרימיום',
     }
     return labels[plan || 'basic'] || plan || 'בסיסי'
   }
@@ -156,11 +143,43 @@ export default function SuperAdminDashboard() {
         />
       </div>
 
+      {/* Alerts Section */}
+      {alerts.length > 0 && (
+        <section className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">התראות</h3>
+          <div className="space-y-2">
+            {alerts.slice(0, 5).map((alert, i) => (
+              <div key={i} className={`flex items-center gap-3 p-3 rounded border ${
+                alert.severity === 'critical' ? 'bg-red-50 border-red-200' :
+                alert.severity === 'warning' ? 'bg-amber-50 border-amber-200' :
+                'bg-blue-50 border-blue-200'
+              }`}>
+                <WarningCircleIcon className={`w-5 h-5 flex-shrink-0 ${
+                  alert.severity === 'critical' ? 'text-red-500' :
+                  alert.severity === 'warning' ? 'text-amber-500' :
+                  'text-blue-500'
+                }`} />
+                <span className="text-sm text-gray-700">
+                  <span className="font-medium">{alert.tenantName}</span>
+                  {' — '}
+                  {alert.type === 'subscription_expiring' ? 'מנוי פג תוקף בקרוב' :
+                   alert.type === 'over_limit' ? 'חריגה ממגבלות' :
+                   alert.type === 'inactive_tenant' ? 'מוסד לא פעיל' :
+                   alert.type}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Tenants List */}
       <section className="py-4">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-900">מוסדות</h3>
-          <span className="text-sm text-gray-500">{tenants.length} מוסדות</span>
+          <Link to="/tenants" className="text-sm text-blue-600 hover:text-blue-800 hover:underline">
+            הצג הכל ({tenants.length})
+          </Link>
         </div>
 
         {loading ? (
@@ -175,7 +194,7 @@ export default function SuperAdminDashboard() {
           </div>
         ) : (
           <div className="space-y-3">
-            {tenants.map((tenant) => (
+            {tenants.slice(0, 5).map((tenant) => (
               <div
                 key={tenant._id}
                 className="flex items-center justify-between p-4 bg-gray-50 rounded border border-gray-100 hover:bg-gray-100 transition-colors"

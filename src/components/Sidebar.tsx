@@ -90,7 +90,8 @@ const theoryTeacherNavigation: NavigationItem[] = [
 // Super admin navigation (platform-level)
 const superAdminNavigation: NavigationItem[] = [
   { name: 'לוח בקרה', href: '/dashboard', Icon: HouseIcon, category: 'general' },
-  { name: 'ניהול מוסדות', href: '/dashboard', Icon: BuildingsIcon, category: 'management' },
+  { name: 'ניהול מוסדות', href: '/tenants', Icon: BuildingsIcon, category: 'management' },
+  { name: 'מנהלי-על', href: '/super-admins', Icon: ShieldIcon, category: 'management' },
   { name: 'הגדרות', href: '/settings', Icon: GearIcon, category: 'system' },
 ]
 

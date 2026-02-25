@@ -33,6 +33,12 @@ const AuditTrail = lazyWithRetry(() => import('./pages/AuditTrail'), 'AuditTrail
 const ConductorAttendance = lazyWithRetry(() => import('./components/rehearsal/RehearsalAttendance'), 'ConductorAttendance')
 const OrchestraEnrollmentManager = lazyWithRetry(() => import('./components/enrollment/OrchestraEnrollmentManager'), 'OrchestraEnrollmentManager')
 
+// Super admin pages
+const TenantListPage = lazyWithRetry(() => import('./pages/super-admin/TenantListPage'), 'TenantListPage')
+const TenantDetailPage = lazyWithRetry(() => import('./pages/super-admin/TenantDetailPage'), 'TenantDetailPage')
+const TenantFormPage = lazyWithRetry(() => import('./pages/super-admin/TenantFormPage'), 'TenantFormPage')
+const SuperAdminManagementPage = lazyWithRetry(() => import('./pages/super-admin/SuperAdminManagementPage'), 'SuperAdminManagementPage')
+
 // Lazy load detail pages with optimization
 const StudentDetailsPage = lazyWithRetry(
   () => import('./features/students/details/components/StudentDetailsPageSimple'), 
@@ -152,7 +158,7 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   }
 
   // Super admin can only access these paths
-  const SUPER_ADMIN_ALLOWED_PATHS = ['/dashboard', '/settings']
+  const SUPER_ADMIN_ALLOWED_PATHS = ['/dashboard', '/settings', '/tenants', '/super-admins']
   if (user?.isSuperAdmin && !SUPER_ADMIN_ALLOWED_PATHS.some(p => location.pathname.startsWith(p))) {
     return <Navigate to="/dashboard" replace />
   }
@@ -524,6 +530,13 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* Super admin pages */}
+        <Route path="/tenants" element={createProtectedRoute(TenantListPage, 'loading tenants...')} />
+        <Route path="/tenants/new" element={createProtectedRoute(TenantFormPage, 'loading form...')} />
+        <Route path="/tenants/:tenantId" element={createProtectedRoute(TenantDetailPage, 'loading tenant...')} />
+        <Route path="/tenants/:tenantId/edit" element={createProtectedRoute(TenantFormPage, 'loading form...')} />
+        <Route path="/super-admins" element={createProtectedRoute(SuperAdminManagementPage, 'loading admins...')} />
 
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

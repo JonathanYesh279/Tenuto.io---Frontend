@@ -5332,6 +5332,130 @@ export const superAdminService = {
       throw error;
     }
   },
+
+  // Tenant Lifecycle
+  async getDeletionPreview(tenantId) {
+    try {
+      const response = await apiClient.get(`/super-admin/tenants/${tenantId}/deletion-preview`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching deletion preview:', error);
+      throw error;
+    }
+  },
+
+  async softDeleteTenant(tenantId, data = {}) {
+    try {
+      const response = await apiClient.post(`/super-admin/tenants/${tenantId}/soft-delete`, data);
+      return response;
+    } catch (error) {
+      console.error('Error soft-deleting tenant:', error);
+      throw error;
+    }
+  },
+
+  async cancelDeletion(tenantId) {
+    try {
+      const response = await apiClient.post(`/super-admin/tenants/${tenantId}/cancel-deletion`);
+      return response;
+    } catch (error) {
+      console.error('Error cancelling deletion:', error);
+      throw error;
+    }
+  },
+
+  async purgeTenant(tenantId, confirmTenantName) {
+    try {
+      const response = await apiClient.post(`/super-admin/tenants/${tenantId}/purge`, { confirmTenantName });
+      return response;
+    } catch (error) {
+      console.error('Error purging tenant:', error);
+      throw error;
+    }
+  },
+
+  // Admin Management
+  async getAdmins() {
+    try {
+      const response = await apiClient.get('/super-admin/admins');
+      return response;
+    } catch (error) {
+      console.error('Error fetching admins:', error);
+      throw error;
+    }
+  },
+
+  async createAdmin(data) {
+    try {
+      const response = await apiClient.post('/super-admin/admins', data);
+      return response;
+    } catch (error) {
+      console.error('Error creating admin:', error);
+      throw error;
+    }
+  },
+
+  async updateAdmin(id, data) {
+    try {
+      const response = await apiClient.put(`/super-admin/admins/${id}`, data);
+      return response;
+    } catch (error) {
+      console.error('Error updating admin:', error);
+      throw error;
+    }
+  },
+
+  // Reporting
+  async getReportingDashboard() {
+    try {
+      const response = await apiClient.get('/super-admin/reporting/dashboard');
+      return response;
+    } catch (error) {
+      console.error('Error fetching reporting dashboard:', error);
+      throw error;
+    }
+  },
+
+  async getReportingTenants() {
+    try {
+      const response = await apiClient.get('/super-admin/reporting/tenants');
+      return response;
+    } catch (error) {
+      console.error('Error fetching reporting tenants:', error);
+      throw error;
+    }
+  },
+
+  async getReportingTenantById(tenantId) {
+    try {
+      const response = await apiClient.get(`/super-admin/reporting/tenants/${tenantId}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching tenant report:', error);
+      throw error;
+    }
+  },
+
+  // Audit Log
+  async getAuditLog(params = {}) {
+    try {
+      const response = await apiClient.get('/super-admin/audit-log', params);
+      return response;
+    } catch (error) {
+      console.error('Error fetching audit log:', error);
+      throw error;
+    }
+  },
+
+  async getTenantAuditLog(tenantId, params = {}) {
+    try {
+      const response = await apiClient.get(`/super-admin/audit-log/${tenantId}`, params);
+      return response;
+    } catch (error) {
+      console.error('Error fetching tenant audit log:', error);
+      throw error;
+    }
+  },
 };
 
 // ==================== Admin Audit Service ====================

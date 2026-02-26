@@ -52,8 +52,8 @@ const DialogContent = React.forwardRef<
       <DialogOverlay />
       <MotionContent
         ref={ref}
-        initial={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.95, y: -8 }}
-        animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
+        initial={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.95, x: '-50%', y: 'calc(-50% - 8px)' }}
+        animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
         transition={shouldReduceMotion ? undefined : smooth}
         className={cn(
           "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-4 duration-200",

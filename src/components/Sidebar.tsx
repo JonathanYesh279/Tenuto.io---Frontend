@@ -247,6 +247,7 @@ export default function Sidebar() {
 
   // Get quick actions for all user roles
   const getQuickActions = () => {
+    if (isSuperAdmin) return []
     const actions: typeof quickActionsByRole.admin = []
     const actionMap = new Map<string, boolean>()
 

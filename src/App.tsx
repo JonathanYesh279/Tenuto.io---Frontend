@@ -38,6 +38,7 @@ const TenantListPage = lazyWithRetry(() => import('./pages/super-admin/TenantLis
 const TenantDetailPage = lazyWithRetry(() => import('./pages/super-admin/TenantDetailPage'), 'TenantDetailPage')
 const TenantFormPage = lazyWithRetry(() => import('./pages/super-admin/TenantFormPage'), 'TenantFormPage')
 const SuperAdminManagementPage = lazyWithRetry(() => import('./pages/super-admin/SuperAdminManagementPage'), 'SuperAdminManagementPage')
+const SuperAdminSettingsPage = lazyWithRetry(() => import('./pages/super-admin/SuperAdminSettingsPage'), 'SuperAdminSettingsPage')
 
 // Lazy load detail pages with optimization
 const StudentDetailsPage = lazyWithRetry(
@@ -184,6 +185,16 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   }
 
   return <>{children}</>
+}
+
+// Settings page router — renders super admin or tenant settings based on user type
+function SettingsPageRouter() {
+  const { user } = useAuth()
+  return (
+    <Suspense fallback={<PageLoadingFallback message="טוען הגדרות..." />}>
+      {user?.isSuperAdmin ? <SuperAdminSettingsPage /> : <Settings />}
+    </Suspense>
+  )
 }
 
 // App Routes Component
@@ -381,15 +392,13 @@ function AppRoutes() {
           }
         />
 
-        {/* Admin-only pages */}
+        {/* Settings — renders super admin settings or tenant settings based on user type */}
         <Route
           path="/settings"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <Layout>
-                <Suspense fallback={<PageLoadingFallback message="טוען הגדרות..." />}>
-                  <Settings />
-                </Suspense>
+                <SettingsPageRouter />
               </Layout>
             </ProtectedRoute>
           }

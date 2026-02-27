@@ -914,6 +914,39 @@ export default function ImportData() {
             </div>
           </div>
 
+          {/* Teacher Match Summary Cards — student tab only */}
+          {activeTab === 'students' && (previewData.preview as any).teacherMatchSummary &&
+            ((previewData.preview as any).teacherMatchSummary.resolved > 0 ||
+             (previewData.preview as any).teacherMatchSummary.unresolved > 0 ||
+             (previewData.preview as any).teacherMatchSummary.ambiguous > 0) && (
+            <div className="grid grid-cols-3 gap-4">
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-green-600">
+                    {(previewData.preview as any).teacherMatchSummary.resolved}
+                  </p>
+                  <p className="text-xs text-gray-500">מורים שובצו</p>
+                </div>
+              </div>
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-red-500/10 to-red-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-red-600">
+                    {(previewData.preview as any).teacherMatchSummary.unresolved}
+                  </p>
+                  <p className="text-xs text-gray-500">מורים לא נמצאו</p>
+                </div>
+              </div>
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-amber-500/10 to-amber-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-amber-600">
+                    {(previewData.preview as any).teacherMatchSummary.ambiguous}
+                  </p>
+                  <p className="text-xs text-gray-500">מורים מעורפלים</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Warnings */}
           {previewData.preview.warnings.length > 0 && (
             <div className="rounded-3xl shadow-sm bg-amber-50 border border-amber-200 p-6">
@@ -960,20 +993,7 @@ export default function ImportData() {
                         {activeTab === 'teachers' ? (
                           getTeacherRowDetails(row)
                         ) : (
-                          <>
-                            {row.changes && row.changes.length > 0 && (
-                              <span>{row.changes.map((c: any) => c.field || c).join(', ')}</span>
-                            )}
-                            {row.status === 'not_found' && !row.error && (
-                              <span className="text-blue-600">תלמיד חדש - ייווצר ברשומה חדשה</span>
-                            )}
-                            {row.error && (
-                              <span className="text-red-600">{row.error}</span>
-                            )}
-                            {row.status === 'matched' && (!row.changes || row.changes.length === 0) && (
-                              <span className="text-gray-400">אין שינויים</span>
-                            )}
-                          </>
+                          getStudentRowDetails(row)
                         )}
                       </td>
                     </tr>

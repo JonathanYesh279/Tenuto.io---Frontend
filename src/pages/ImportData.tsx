@@ -14,10 +14,34 @@ import {
   ArrowLeftIcon,
   PlusIcon,
   InfoIcon,
+  BuildingsIcon,
 } from '@phosphor-icons/react'
 
-type ImportTab = 'teachers' | 'students'
+type ImportTab = 'teachers' | 'students' | 'conservatory'
 type ImportState = 'upload' | 'preview' | 'results'
+
+interface ConservatoryPreviewField {
+  field: string
+  label: string
+  currentValue: string | null
+  importedValue: string | null
+  changed: boolean
+}
+
+interface ConservatoryPreviewData {
+  importLogId: string
+  preview: {
+    fields: ConservatoryPreviewField[]
+    changedCount: number
+    unchangedCount: number
+    warnings: any[]
+  }
+}
+
+interface ConservatoryImportResult {
+  success: boolean
+  updatedFields: number
+}
 
 interface PreviewRow {
   row: number
@@ -565,6 +589,49 @@ function TeacherFileStructureGuide() {
   )
 }
 
+function ConservatoryFileGuide() {
+  return (
+    <div className="rounded-3xl shadow-sm bg-white p-6">
+      <h3 className="text-lg font-bold text-gray-900 mb-4">קובץ פרטי קונסרבטוריון</h3>
+      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4">
+        <div className="flex items-start gap-2">
+          <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-blue-900">קובץ מימשק משרד החינוך - פרטי קונסרבטוריון</p>
+            <p className="text-xs text-blue-700 mt-0.5">
+              יש להעלות את קובץ ה-Excel של פרטי הקונסרבטוריון כפי שהתקבל ממשרד החינוך.
+              הקובץ מכיל גיליון אחד עם פרטי המוסד בפורמט טופס (לא טבלה).
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="text-sm text-gray-600 space-y-2">
+        <p>השדות שייקראו מהקובץ:</p>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-gray-500">
+          <span>שם קונסרבטוריון</span>
+          <span>קוד קונסרבטוריון</span>
+          <span>שם בעלות / רשות</span>
+          <span>אשכול חברתי</span>
+          <span>סטטוס</span>
+          <span>יחידה מקדמת</span>
+          <span>מספר עוסק (ח.פ.)</span>
+          <span>שלב קונסרבטוריון</span>
+          <span>מנהל/ת</span>
+          <span>סמל ישוב</span>
+          <span>טלפון משרד / נייד</span>
+          <span>רשות גדולה / קטנה</span>
+          <span>דוא"ל</span>
+          <span>מחלקה עיקרית</span>
+          <span>כתובת</span>
+          <span>סטטוס פיקוח</span>
+          <span>מחוז</span>
+          <span>מקדם עיר מעורבת</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ImportData() {
   const [activeTab, setActiveTab] = useState<ImportTab>('teachers')
   const [importState, setImportState] = useState<ImportState>('upload')
@@ -573,12 +640,16 @@ export default function ImportData() {
   const [previewData, setPreviewData] = useState<PreviewData | null>(null)
   const [results, setResults] = useState<ImportResult | null>(null)
   const [dragActive, setDragActive] = useState(false)
+  const [conservatoryPreview, setConservatoryPreview] = useState<ConservatoryPreviewData | null>(null)
+  const [conservatoryResults, setConservatoryResults] = useState<ConservatoryImportResult | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const resetState = () => {
     setImportState('upload')
     setPreviewData(null)
     setResults(null)
+    setConservatoryPreview(null)
+    setConservatoryResults(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -609,11 +680,15 @@ export default function ImportData() {
 
     try {
       setLoading(true)
-      const result = activeTab === 'teachers'
-        ? await importService.previewTeacherImport(file)
-        : await importService.previewStudentImport(file)
-
-      setPreviewData(result)
+      if (activeTab === 'conservatory') {
+        const result = await importService.previewConservatoryImport(file)
+        setConservatoryPreview(result)
+      } else {
+        const result = activeTab === 'teachers'
+          ? await importService.previewTeacherImport(file)
+          : await importService.previewStudentImport(file)
+        setPreviewData(result)
+      }
       setImportState('preview')
     } catch (error: any) {
       console.error('Error previewing import:', error)
@@ -646,19 +721,29 @@ export default function ImportData() {
   }
 
   const handleExecute = async () => {
-    if (!previewData?.importLogId) return
+    const importLogId = activeTab === 'conservatory'
+      ? conservatoryPreview?.importLogId
+      : previewData?.importLogId
+    if (!importLogId) return
 
     try {
       setExecuting(true)
-      const result = await importService.executeImport(previewData.importLogId)
-      setResults(result)
-      setImportState('results')
+      const result = await importService.executeImport(importLogId)
 
-      // Show breakdown toast
-      const parts = []
-      if (result.successCount > 0) parts.push(`${result.successCount} עודכנו`)
-      if (result.createdCount > 0) parts.push(`${result.createdCount} נוצרו`)
-      toast.success(`הייבוא הושלם: ${parts.join(', ')}`)
+      if (activeTab === 'conservatory') {
+        setConservatoryResults(result)
+        setImportState('results')
+        toast.success(`הנתונים עודכנו בהצלחה: ${result.updatedFields} שדות עודכנו`)
+      } else {
+        setResults(result)
+        setImportState('results')
+
+        // Show breakdown toast
+        const parts = []
+        if (result.successCount > 0) parts.push(`${result.successCount} עודכנו`)
+        if (result.createdCount > 0) parts.push(`${result.createdCount} נוצרו`)
+        toast.success(`הייבוא הושלם: ${parts.join(', ')}`)
+      }
     } catch (error: any) {
       console.error('Error executing import:', error)
       toast.error(error.message || 'שגיאה בביצוע הייבוא')
@@ -695,7 +780,7 @@ export default function ImportData() {
     }
   }
 
-  const allPreviewRows = previewData
+  const allPreviewRows = (activeTab !== 'conservatory' && previewData)
     ? [
         ...previewData.preview.matched.map((r: any) => ({ ...r, status: 'matched' as const, name: r.importedName || r.studentName || r.teacherName })),
         ...previewData.preview.notFound.map((r: any) => ({ ...r, status: 'not_found' as const, name: r.importedName })),
@@ -712,7 +797,11 @@ export default function ImportData() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">ייבוא נתונים</h1>
-          <p className="text-sm text-gray-500">ייבוא מורים ותלמידים מקובץ Excel</p>
+          <p className="text-sm text-gray-500">
+            {activeTab === 'teachers' && 'ייבוא מורים מקובץ Excel'}
+            {activeTab === 'students' && 'ייבוא תלמידים מקובץ Excel'}
+            {activeTab === 'conservatory' && 'ייבוא פרטי קונסרבטוריון מקובץ Excel'}
+          </p>
         </div>
       </div>
 
@@ -739,6 +828,17 @@ export default function ImportData() {
         >
           <UsersIcon size={16} weight="regular" />
           ייבוא תלמידים
+        </button>
+        <button
+          onClick={() => handleTabChange('conservatory')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+            activeTab === 'conservatory'
+              ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
+              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+          }`}
+        >
+          <BuildingsIcon size={16} weight="regular" />
+          פרטי קונסרבטוריון
         </button>
       </div>
 
@@ -820,6 +920,10 @@ export default function ImportData() {
             <TeacherFileStructureGuide />
           )}
 
+          {activeTab === 'conservatory' && (
+            <ConservatoryFileGuide />
+          )}
+
           {/* Upload Zone */}
           <div className="rounded-3xl shadow-sm bg-white p-6">
             {loading ? (
@@ -859,8 +963,109 @@ export default function ImportData() {
         </div>
       )}
 
-      {/* Preview State */}
-      {importState === 'preview' && previewData && (
+      {/* Preview State — Conservatory */}
+      {importState === 'preview' && activeTab === 'conservatory' && conservatoryPreview && (
+        <div className="space-y-6">
+          {/* Summary Stat Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-amber-500/10 to-amber-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-amber-600">{conservatoryPreview.preview.changedCount}</p>
+                <p className="text-sm text-gray-500">שדות שישתנו</p>
+              </div>
+            </div>
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-gray-500/10 to-gray-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-400">{conservatoryPreview.preview.unchangedCount}</p>
+                <p className="text-sm text-gray-500">ללא שינוי</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Warnings */}
+          {conservatoryPreview.preview.warnings.length > 0 && (
+            <div className="rounded-3xl shadow-sm bg-amber-50 border border-amber-200 p-6">
+              <div className="flex items-start gap-2">
+                <WarningIcon size={20} weight="fill" className="text-amber-600 mt-0.5 flex-shrink-0" />
+                <div className="space-y-1">
+                  {conservatoryPreview.preview.warnings.slice(0, 10).map((w: any, i: number) => (
+                    <p key={i} className="text-sm text-amber-700">
+                      {typeof w === 'string' ? w : w.message || String(w)}
+                    </p>
+                  ))}
+                  {conservatoryPreview.preview.warnings.length > 10 && (
+                    <p className="text-xs text-amber-500">
+                      ועוד {conservatoryPreview.preview.warnings.length - 10} אזהרות...
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Diff Table */}
+          <div className="rounded-3xl shadow-sm bg-white overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-gray-900">השוואת נתונים</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-gray-50/80">
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שדה</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">ערך נוכחי</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">ערך מיובא</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {conservatoryPreview.preview.fields.map((f) => (
+                    <tr key={f.field} className={`transition-colors ${f.changed ? 'bg-amber-50/60' : 'hover:bg-gray-50/50'}`}>
+                      <td className="py-3 px-4 font-medium text-gray-700">{f.label}</td>
+                      <td className={`py-3 px-4 ${f.changed ? 'text-red-500 line-through' : 'text-gray-500'}`}>
+                        {f.currentValue || <span className="text-gray-300">---</span>}
+                      </td>
+                      <td className={`py-3 px-4 ${f.changed ? 'text-green-700 font-medium' : 'text-gray-500'}`}>
+                        {f.importedValue || <span className="text-gray-300">---</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={resetState}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              <ArrowLeftIcon size={16} weight="regular" />
+              ביטול
+            </button>
+            <button
+              onClick={handleExecute}
+              disabled={executing || conservatoryPreview.preview.changedCount === 0}
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded-xl hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm"
+            >
+              {executing ? (
+                <>
+                  <ArrowsClockwiseIcon size={16} weight="regular" className="animate-spin" />
+                  מעדכן נתונים...
+                </>
+              ) : (
+                <>
+                  <CheckCircleIcon size={16} weight="fill" />
+                  עדכן {conservatoryPreview.preview.changedCount} שדות
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Preview State — Teachers/Students */}
+      {importState === 'preview' && activeTab !== 'conservatory' && previewData && (
         <div className="space-y-6">
           {/* Header Detection Banner — only show when header row > 0 */}
           {previewData.preview.headerRowIndex != null && previewData.preview.headerRowIndex > 0 && (
@@ -1040,8 +1245,35 @@ export default function ImportData() {
         </div>
       )}
 
-      {/* Results State */}
-      {importState === 'results' && results && (
+      {/* Results State — Conservatory */}
+      {importState === 'results' && activeTab === 'conservatory' && conservatoryResults && (
+        <div className="space-y-6">
+          <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <CheckCircleIcon size={32} weight="fill" className="text-green-600" />
+              <h2 className="text-xl font-bold text-green-800">הייבוא הושלם</h2>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-gray-900">{conservatoryResults.updatedFields}</p>
+              <p className="text-sm text-gray-600">שדות עודכנו</p>
+              <p className="text-sm text-gray-500 mt-2">פרטי הקונסרבטוריון עודכנו בהצלחה</p>
+            </div>
+          </div>
+
+          <div className="flex justify-center pt-4 pb-8">
+            <button
+              onClick={resetState}
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded-xl hover:bg-primary-600 transition-colors font-medium shadow-sm"
+            >
+              <UploadIcon size={16} weight="regular" />
+              ייבוא קובץ נוסף
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Results State — Teachers/Students */}
+      {importState === 'results' && activeTab !== 'conservatory' && results && (
         <div className="space-y-6">
           {/* Results Header */}
           <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-8">

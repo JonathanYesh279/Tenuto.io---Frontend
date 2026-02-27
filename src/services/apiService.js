@@ -5131,6 +5131,37 @@ export const importService = {
     }
   },
 
+  async previewConservatoryImport(file) {
+    try {
+      console.log('Uploading conservatory import file for preview');
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(
+        `${apiClient.baseURL}/import/conservatory/preview`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiClient.getStoredToken()}`
+          },
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error importing conservatory file');
+      }
+
+      const result = await response.json();
+      console.log('Conservatory import preview ready');
+      return result;
+    } catch (error) {
+      console.error('Error previewing conservatory import:', error);
+      throw error;
+    }
+  },
+
   async executeImport(importLogId) {
     try {
       console.log(`📥 Executing import ${importLogId}`);

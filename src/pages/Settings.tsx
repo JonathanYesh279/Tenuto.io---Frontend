@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../services/authContext.jsx'
 import { tenantService, teacherService } from '../services/apiService'
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { Input } from '../components/ui/input'
 import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
 import {
-  GearIcon, BuildingIcon, UserIcon, BankIcon, SlidersHorizontalIcon,
-  FloppyDiskIcon, IdentificationCardIcon, TagIcon, PhoneIcon, MapPinIcon,
-  NotepadIcon,
+  GearIcon, FloppyDiskIcon,
 } from '@phosphor-icons/react'
 
 interface ConservatoryProfile {
@@ -82,6 +79,15 @@ const MONTHS = [
   { value: 12, label: 'דצמבר' },
 ]
 
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-gray-500 mb-1">{label}</label>
+      {children}
+    </div>
+  )
+}
+
 export default function Settings() {
   const { user } = useAuth()
   const [loading, setLoading] = useState(true)
@@ -110,12 +116,15 @@ export default function Settings() {
         return
       }
 
-      const [tenantData, teacherList] = await Promise.all([
+      const [tenantResponse, teacherList] = await Promise.all([
         tenantService.getTenantById(tenantId),
         teacherService.getTeachers(),
       ])
 
+      // API returns { success, data } — unwrap
+      const tenantData = tenantResponse?.data || tenantResponse || {}
       const cp = tenantData.conservatoryProfile || {}
+
       setFormData({
         _id: tenantData._id || '',
         name: tenantData.name || '',
@@ -213,342 +222,203 @@ export default function Settings() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto" dir="rtl">
-      {/* Page Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
-          <GearIcon size={20} weight="regular" className="text-primary" />
+    <div className="p-6 max-w-6xl mx-auto" dir="rtl">
+      {/* Page Header + Save */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <GearIcon size={20} weight="regular" className="text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">הגדרות קונסרבטוריון</h1>
+            <p className="text-sm text-gray-500">ניהול פרטי המוסד וההגדרות</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">הגדרות קונסרבטוריון</h1>
-          <p className="text-sm text-gray-500">ניהול פרטי המוסד וההגדרות</p>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium shadow-sm"
+        >
+          <FloppyDiskIcon size={16} weight="regular" />
+          {saving ? 'שומר...' : 'שמור הגדרות'}
+        </button>
+      </div>
+
+      {/* Top row: General + Director + Ministry side by side */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        {/* General Info */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-5">
+          <h3 className="text-sm font-bold text-gray-800 mb-3">פרטים כלליים</h3>
+          <div className="space-y-3">
+            <Field label="שם המוסד">
+              <Input type="text" value={formData.name} onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))} className="text-right text-sm" placeholder="שם הקונסרבטוריון" />
+            </Field>
+            <Field label="עיר">
+              <Input type="text" value={formData.city} onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))} className="text-right text-sm" placeholder="עיר" />
+            </Field>
+          </div>
+        </div>
+
+        {/* Director */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-5">
+          <h3 className="text-sm font-bold text-gray-800 mb-3">מנהל/ת</h3>
+          <div className="space-y-3">
+            <Field label="שם המנהל/ת">
+              <Input type="text" value={formData.director.name} onChange={e => setFormData(prev => ({ ...prev, director: { ...prev.director, name: e.target.value } }))} className="text-right text-sm" placeholder="שם מלא" />
+            </Field>
+            <Field label="מורה משויך">
+              <select
+                value={formData.director.teacherId}
+                onChange={e => setFormData(prev => ({ ...prev, director: { ...prev.director, teacherId: e.target.value } }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-ring focus:border-transparent text-right"
+              >
+                <option value="">-- בחר מורה --</option>
+                {teachers.map(t => (
+                  <option key={t._id} value={t._id}>{t.displayName}</option>
+                ))}
+              </select>
+            </Field>
+          </div>
+        </div>
+
+        {/* Ministry Info */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-5">
+          <h3 className="text-sm font-bold text-gray-800 mb-3">פרטי משרד החינוך</h3>
+          <div className="space-y-3">
+            <Field label="קוד מוסד">
+              <Input type="text" value={formData.ministryInfo.institutionCode} onChange={e => setFormData(prev => ({ ...prev, ministryInfo: { ...prev.ministryInfo, institutionCode: e.target.value } }))} className="text-right text-sm" placeholder="קוד מוסד" />
+            </Field>
+            <Field label="שם מחוז">
+              <Input type="text" value={formData.ministryInfo.districtName} onChange={e => setFormData(prev => ({ ...prev, ministryInfo: { ...prev.ministryInfo, districtName: e.target.value } }))} className="text-right text-sm" placeholder="שם המחוז" />
+            </Field>
+          </div>
         </div>
       </div>
 
-      <div className="space-y-6">
-        {/* General Info */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <BuildingIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">פרטים כלליים</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">שם המוסד</label>
-                <Input
-                  type="text"
-                  value={formData.name}
-                  onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="text-right"
-                  placeholder="שם הקונסרבטוריון"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">עיר</label>
-                <Input
-                  type="text"
-                  value={formData.city}
-                  onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))}
-                  className="text-right"
-                  placeholder="עיר"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Conservatory Profile — compact grid */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4">
+        <h3 className="text-sm font-bold text-gray-800 mb-4">פרופיל קונסרבטוריון</h3>
 
-        {/* Director */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <UserIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">מנהל/ת</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">שם המנהל/ת</label>
-                <Input
-                  type="text"
-                  value={formData.director.name}
-                  onChange={e => setFormData(prev => ({
-                    ...prev,
-                    director: { ...prev.director, name: e.target.value },
-                  }))}
-                  className="text-right"
-                  placeholder="שם מלא"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">מורה משויך</label>
-                <select
-                  value={formData.director.teacherId}
-                  onChange={e => setFormData(prev => ({
-                    ...prev,
-                    director: { ...prev.director, teacherId: e.target.value },
-                  }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-right"
-                >
-                  <option value="">-- בחר מורה --</option>
-                  {teachers.map(t => (
-                    <option key={t._id} value={t._id}>{t.displayName}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Identification row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+          <Field label="קוד קונסרבטוריון">
+            <Input type="text" value={formData.conservatoryProfile.code} onChange={e => updateProfile('code', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="שם בעלות / רשות">
+            <Input type="text" value={formData.conservatoryProfile.ownershipName} onChange={e => updateProfile('ownershipName', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="מספר עוסק (ח.פ.)">
+            <Input type="text" value={formData.conservatoryProfile.businessNumber} onChange={e => updateProfile('businessNumber', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="סטטוס">
+            <Input type="text" value={formData.conservatoryProfile.status} onChange={e => updateProfile('status', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+        </div>
 
-        {/* Identification — conservatoryProfile */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <IdentificationCardIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">זיהוי וסיווג</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">קוד קונסרבטוריון</label>
-                <Input type="text" value={formData.conservatoryProfile.code} onChange={e => updateProfile('code', e.target.value)} className="text-right" placeholder="קוד" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">שם בעלות / רשות</label>
-                <Input type="text" value={formData.conservatoryProfile.ownershipName} onChange={e => updateProfile('ownershipName', e.target.value)} className="text-right" placeholder="שם בעלות / רשות" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">מספר עוסק (ח.פ.)</label>
-                <Input type="text" value={formData.conservatoryProfile.businessNumber} onChange={e => updateProfile('businessNumber', e.target.value)} className="text-right" placeholder="ח.פ." />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">סטטוס</label>
-                <Input type="text" value={formData.conservatoryProfile.status} onChange={e => updateProfile('status', e.target.value)} className="text-right" placeholder="סטטוס" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Classification row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+          <Field label="אשכול חברתי">
+            <Input type="text" value={formData.conservatoryProfile.socialCluster} onChange={e => updateProfile('socialCluster', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="יחידה מקדמת">
+            <Input type="text" value={formData.conservatoryProfile.supportUnit} onChange={e => updateProfile('supportUnit', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="שלב (קוד)">
+            <Input type="text" value={formData.conservatoryProfile.stage} onChange={e => updateProfile('stage', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="שלב (תיאור)">
+            <Input type="text" value={formData.conservatoryProfile.stageDescription} onChange={e => updateProfile('stageDescription', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+        </div>
 
-        {/* Classification — conservatoryProfile */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <TagIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">סיווג משרד החינוך</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">אשכול חברתי</label>
-                <Input type="text" value={formData.conservatoryProfile.socialCluster} onChange={e => updateProfile('socialCluster', e.target.value)} className="text-right" placeholder="אשכול" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">יחידה מקדמת</label>
-                <Input type="text" value={formData.conservatoryProfile.supportUnit} onChange={e => updateProfile('supportUnit', e.target.value)} className="text-right" placeholder="יחידה מקדמת" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">שלב (קוד)</label>
-                <Input type="text" value={formData.conservatoryProfile.stage} onChange={e => updateProfile('stage', e.target.value)} className="text-right" placeholder="קוד שלב" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">שלב (תיאור)</label>
-                <Input type="text" value={formData.conservatoryProfile.stageDescription} onChange={e => updateProfile('stageDescription', e.target.value)} className="text-right" placeholder="תיאור שלב" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">סטטוס פיקוח</label>
-                <Input type="text" value={formData.conservatoryProfile.supervisionStatus} onChange={e => updateProfile('supervisionStatus', e.target.value)} className="text-right" placeholder="סטטוס פיקוח" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">מחלקה עיקרית</label>
-                <Input type="text" value={formData.conservatoryProfile.mainDepartment} onChange={e => updateProfile('mainDepartment', e.target.value)} className="text-right" placeholder="מחלקה" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">מקדם עיר מעורבת</label>
-                <Input type="text" value={formData.conservatoryProfile.mixedCityFactor} onChange={e => updateProfile('mixedCityFactor', e.target.value)} className="text-right" placeholder="מקדם" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">רשות גדולה / קטנה</label>
-                <Input type="text" value={formData.conservatoryProfile.sizeCategory} onChange={e => updateProfile('sizeCategory', e.target.value)} className="text-right" placeholder="קטגוריה" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Supervision + classification row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+          <Field label="סטטוס פיקוח">
+            <Input type="text" value={formData.conservatoryProfile.supervisionStatus} onChange={e => updateProfile('supervisionStatus', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="מחלקה עיקרית">
+            <Input type="text" value={formData.conservatoryProfile.mainDepartment} onChange={e => updateProfile('mainDepartment', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="מקדם עיר מעורבת">
+            <Input type="text" value={formData.conservatoryProfile.mixedCityFactor} onChange={e => updateProfile('mixedCityFactor', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="רשות גדולה / קטנה">
+            <Input type="text" value={formData.conservatoryProfile.sizeCategory} onChange={e => updateProfile('sizeCategory', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+        </div>
 
-        {/* Contact — conservatoryProfile */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <PhoneIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">פרטי קשר</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">טלפון משרד</label>
-                <Input type="text" value={formData.conservatoryProfile.officePhone} onChange={e => updateProfile('officePhone', e.target.value)} className="text-right" placeholder="טלפון משרד" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">טלפון נייד</label>
-                <Input type="text" value={formData.conservatoryProfile.mobilePhone} onChange={e => updateProfile('mobilePhone', e.target.value)} className="text-right" placeholder="טלפון נייד" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">דוא"ל</label>
-                <Input type="text" value={formData.conservatoryProfile.email} onChange={e => updateProfile('email', e.target.value)} className="text-right" placeholder="דוא״ל" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">כתובת</label>
-                <Input type="text" value={formData.conservatoryProfile.address} onChange={e => updateProfile('address', e.target.value)} className="text-right" placeholder="כתובת" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Contact row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+          <Field label="טלפון משרד">
+            <Input type="text" value={formData.conservatoryProfile.officePhone} onChange={e => updateProfile('officePhone', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="טלפון נייד">
+            <Input type="text" value={formData.conservatoryProfile.mobilePhone} onChange={e => updateProfile('mobilePhone', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="דוא״ל">
+            <Input type="text" value={formData.conservatoryProfile.email} onChange={e => updateProfile('email', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="כתובת">
+            <Input type="text" value={formData.conservatoryProfile.address} onChange={e => updateProfile('address', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+        </div>
 
-        {/* Location & Admin — conservatoryProfile */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <MapPinIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">מיקום וניהול</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">מחוז</label>
-                <Input type="text" value={formData.conservatoryProfile.district} onChange={e => updateProfile('district', e.target.value)} className="text-right" placeholder="מחוז" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">סמל ישוב</label>
-                <Input type="text" value={formData.conservatoryProfile.cityCode} onChange={e => updateProfile('cityCode', e.target.value)} className="text-right" placeholder="סמל ישוב" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Location row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+          <Field label="מחוז">
+            <Input type="text" value={formData.conservatoryProfile.district} onChange={e => updateProfile('district', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <Field label="סמל ישוב">
+            <Input type="text" value={formData.conservatoryProfile.cityCode} onChange={e => updateProfile('cityCode', e.target.value)} className="text-right text-sm" placeholder="—" />
+          </Field>
+          <div className="md:col-span-2">
+            <Field label="הערות מנהל/ת">
+              <textarea
+                value={formData.conservatoryProfile.managerNotes}
+                onChange={e => updateProfile('managerNotes', e.target.value)}
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-ring focus:border-transparent text-right resize-y"
+                placeholder="—"
+              />
+            </Field>
+          </div>
+        </div>
+      </div>
 
-        {/* Manager Notes — conservatoryProfile */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <NotepadIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">הערות מנהל/ת</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <textarea
-              value={formData.conservatoryProfile.managerNotes}
-              onChange={e => updateProfile('managerNotes', e.target.value)}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-right text-sm resize-y"
-              placeholder="הערות"
-            />
-          </CardContent>
-        </Card>
-
-        {/* Ministry Info */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <BankIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">פרטי משרד החינוך</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">קוד מוסד</label>
-                <Input
-                  type="text"
-                  value={formData.ministryInfo.institutionCode}
-                  onChange={e => setFormData(prev => ({
-                    ...prev,
-                    ministryInfo: { ...prev.ministryInfo, institutionCode: e.target.value },
-                  }))}
-                  className="text-right"
-                  placeholder="קוד מוסד"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">שם מחוז</label>
-                <Input
-                  type="text"
-                  value={formData.ministryInfo.districtName}
-                  onChange={e => setFormData(prev => ({
-                    ...prev,
-                    ministryInfo: { ...prev.ministryInfo, districtName: e.target.value },
-                  }))}
-                  className="text-right"
-                  placeholder="שם המחוז"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Defaults */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <SlidersHorizontalIcon size={20} weight="regular" className="text-gray-500" />
-              <CardTitle className="text-lg">ברירות מחדל</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  משכי שיעור מותרים (דקות)
+      {/* Defaults */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-6">
+        <h3 className="text-sm font-bold text-gray-800 mb-3">ברירות מחדל</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-2">משכי שיעור מותרים (דקות)</label>
+            <div className="flex gap-4">
+              {AVAILABLE_DURATIONS.map(d => (
+                <label key={d} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.settings.lessonDurations.includes(d)}
+                    onChange={() => handleDurationToggle(d)}
+                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
+                  />
+                  <span className="text-sm text-gray-700">{d} דקות</span>
                 </label>
-                <div className="flex gap-4">
-                  {AVAILABLE_DURATIONS.map(d => (
-                    <label key={d} className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={formData.settings.lessonDurations.includes(d)}
-                        onChange={() => handleDurationToggle(d)}
-                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
-                      />
-                      <span className="text-sm text-gray-700">{d} דקות</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  חודש תחילת שנת לימודים
-                </label>
-                <select
-                  value={formData.settings.schoolStartMonth}
-                  onChange={e => setFormData(prev => ({
-                    ...prev,
-                    settings: { ...prev.settings, schoolStartMonth: Number(e.target.value) },
-                  }))}
-                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent text-right"
-                >
-                  {MONTHS.map(m => (
-                    <option key={m.value} value={m.value}>{m.label}</option>
-                  ))}
-                </select>
-              </div>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Save Button */}
-        <div className="flex justify-end pt-2 pb-8">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <FloppyDiskIcon size={16} weight="regular" />
-            {saving ? 'שומר...' : 'שמור הגדרות'}
-          </button>
+          </div>
+          <Field label="חודש תחילת שנת לימודים">
+            <select
+              value={formData.settings.schoolStartMonth}
+              onChange={e => setFormData(prev => ({
+                ...prev,
+                settings: { ...prev.settings, schoolStartMonth: Number(e.target.value) },
+              }))}
+              className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-ring focus:border-transparent text-right"
+            >
+              {MONTHS.map(m => (
+                <option key={m.value} value={m.value}>{m.label}</option>
+              ))}
+            </select>
+          </Field>
         </div>
       </div>
     </div>

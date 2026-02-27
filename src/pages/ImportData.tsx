@@ -258,6 +258,137 @@ function getTeacherRowDetails(row: any): React.ReactNode {
   return null
 }
 
+// Helper: Format a single student change with Hebrew field labels
+function formatStudentChange(change: any): string {
+  const field = change.field || change.path || ''
+  const oldValue = change.oldValue
+  const newValue = change.newValue
+
+  const fieldLabels: Record<string, string> = {
+    'academicInfo.class': 'כיתה',
+    'academicInfo.studyYears': 'שנות לימוד',
+    'academicInfo.extraHour': 'שעה נוספת',
+    'academicInfo.lessonDuration': 'זמן שיעור',
+    'academicInfo.isBagrutCandidate': 'מגמת בגרות',
+    'academicInfo.instrumentProgress': 'כלי נגינה',
+    'academicInfo.instrumentProgress[0].instrumentName': 'כלי נגינה',
+    'academicInfo.instrumentProgress[0].ministryStageLevel': 'שלב',
+    'academicInfo.instrumentProgress[0].currentStage': 'שלב',
+    'personalInfo.age': 'גיל',
+  }
+
+  const label = fieldLabels[field] || field
+
+  if (typeof newValue === 'boolean') {
+    return `${label}: ${newValue ? 'כן' : 'לא'}`
+  }
+
+  if (oldValue !== null && oldValue !== undefined) {
+    return `${label}: ${oldValue} \u2192 ${newValue}`
+  }
+
+  return `${label}: ${newValue}`
+}
+
+// Helper: Render teacher match badge for student preview rows
+function getTeacherMatchBadge(teacherMatch: any): React.ReactNode {
+  if (!teacherMatch || teacherMatch.status === 'none') {
+    return null
+  }
+
+  switch (teacherMatch.status) {
+    case 'resolved':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+          <CheckCircleIcon size={12} weight="fill" />
+          מורה: {teacherMatch.teacherName}
+        </span>
+      )
+    case 'unresolved':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+          <XCircleIcon size={12} weight="fill" />
+          מורה לא נמצא
+        </span>
+      )
+    case 'ambiguous':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+          <WarningIcon size={12} weight="fill" />
+          {teacherMatch.candidateCount} מורים אפשריים
+        </span>
+      )
+    default:
+      return null
+  }
+}
+
+// Helper: Generate student row details JSX for preview table
+function getStudentRowDetails(row: any): React.ReactNode {
+  // Error case
+  if (row.error) {
+    return <span className="text-red-600">{row.error}</span>
+  }
+
+  // Not found (create) case
+  if (row.status === 'not_found') {
+    const mapped = row.data?.mapped || row.mapped || {}
+    const teacherMatch = row.teacherMatch
+
+    return (
+      <div className="space-y-1 text-xs">
+        <div className="text-blue-600 font-medium">תלמיד חדש - ייווצר ברשומה חדשה</div>
+        {mapped.instrument && (
+          <div className="text-gray-600">כלי נגינה: {mapped.instrument}</div>
+        )}
+        {mapped.class && (
+          <div className="text-gray-600">כיתה: {mapped.class}</div>
+        )}
+        {mapped.studyYears != null && (
+          <div className="text-gray-600">שנות לימוד: {mapped.studyYears}</div>
+        )}
+        {mapped.ministryStageLevel && (
+          <div className="text-gray-600">שלב: {mapped.ministryStageLevel}</div>
+        )}
+        {mapped.isBagrutCandidate != null && (
+          <div className="text-gray-600">מגמת בגרות: {mapped.isBagrutCandidate ? 'כן' : 'לא'}</div>
+        )}
+        {mapped.lessonDuration != null && (
+          <div className="text-gray-600">זמן שיעור: {mapped.lessonDuration}</div>
+        )}
+        {mapped.extraHour && (
+          <div className="text-gray-600">שעה נוספת: {mapped.extraHour}</div>
+        )}
+        {mapped.departmentHint && (
+          <div className="text-gray-600">מחלקה: {mapped.departmentHint}</div>
+        )}
+        {getTeacherMatchBadge(teacherMatch)}
+      </div>
+    )
+  }
+
+  // Matched (update) case
+  if (row.status === 'matched') {
+    const changes = row.changes || []
+    const teacherMatch = row.teacherMatch
+
+    if (changes.length === 0 && (!teacherMatch || teacherMatch.status === 'none' || !teacherMatch.status)) {
+      return <span className="text-gray-400">אין שינויים</span>
+    }
+
+    return (
+      <div className="space-y-1 text-xs">
+        {changes.map((change: any, idx: number) => (
+          <div key={idx} className="text-gray-700">{formatStudentChange(change)}</div>
+        ))}
+        {getTeacherMatchBadge(teacherMatch)}
+      </div>
+    )
+  }
+
+  return null
+}
+
 function TeacherFileStructureGuide() {
   return (
     <div className="rounded-3xl shadow-sm bg-white p-6">

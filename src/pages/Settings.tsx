@@ -261,7 +261,7 @@ export default function Settings() {
 
         {/* Director */}
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
-          <h3 className="text-sm font-bold text-gray-800 mb-3">מנהל/ת</h3>
+          <h3 className="text-sm font-bold text-gray-800 mb-3">מנהל\ת הקונסרבטוריון</h3>
           <div className="space-y-3">
             <Field label="שם המנהל/ת">
               <Input type="text" value={formData.director.name} onChange={e => setFormData(prev => ({ ...prev, director: { ...prev.director, name: e.target.value } }))} className="text-right text-sm" placeholder="שם מלא" />
@@ -320,7 +320,7 @@ export default function Settings() {
           <Field label="אשכול חברתי">
             <Input type="text" value={formData.conservatoryProfile.socialCluster} onChange={e => updateProfile('socialCluster', e.target.value)} className="text-right text-sm" placeholder="—" />
           </Field>
-          <Field label="יחידה מקדמת">
+          <Field label="יחידה מקדמת לצורך תמיכה">
             <Input type="text" value={formData.conservatoryProfile.supportUnit} onChange={e => updateProfile('supportUnit', e.target.value)} className="text-right text-sm" placeholder="—" />
           </Field>
           <Field label="שלב (קוד)">
@@ -332,17 +332,14 @@ export default function Settings() {
         </div>
 
         {/* Supervision + classification row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
           <Field label="סטטוס פיקוח">
             <Input type="text" value={formData.conservatoryProfile.supervisionStatus} onChange={e => updateProfile('supervisionStatus', e.target.value)} className="text-right text-sm" placeholder="—" />
           </Field>
           <Field label="מחלקה עיקרית">
             <Input type="text" value={formData.conservatoryProfile.mainDepartment} onChange={e => updateProfile('mainDepartment', e.target.value)} className="text-right text-sm" placeholder="—" />
           </Field>
-          <Field label="מקדם עיר מעורבת">
-            <Input type="text" value={formData.conservatoryProfile.mixedCityFactor} onChange={e => updateProfile('mixedCityFactor', e.target.value)} className="text-right text-sm" placeholder="—" />
-          </Field>
-          <Field label="רשות גדולה / קטנה">
+          <Field label="רשות גדולה\קטנה">
             <Input type="text" value={formData.conservatoryProfile.sizeCategory} onChange={e => updateProfile('sizeCategory', e.target.value)} className="text-right text-sm" placeholder="—" />
           </Field>
         </div>
@@ -372,7 +369,7 @@ export default function Settings() {
             <Input type="text" value={formData.conservatoryProfile.cityCode} onChange={e => updateProfile('cityCode', e.target.value)} className="text-right text-sm" placeholder="—" />
           </Field>
           <div className="md:col-span-2">
-            <Field label="הערות מנהל/ת">
+            <Field label="הערות מנהל\ת">
               <textarea
                 value={formData.conservatoryProfile.managerNotes}
                 onChange={e => updateProfile('managerNotes', e.target.value)}

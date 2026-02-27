@@ -63,7 +63,7 @@ const EMPTY_PROFILE: ConservatoryProfile = {
   managerName: '', managerNotes: '', district: '',
 }
 
-const AVAILABLE_DURATIONS = [30, 45, 60]
+const AVAILABLE_DURATIONS = [30, 45, 60, 90, 120]
 const MONTHS = [
   { value: 1, label: 'ינואר' },
   { value: 2, label: 'פברואר' },

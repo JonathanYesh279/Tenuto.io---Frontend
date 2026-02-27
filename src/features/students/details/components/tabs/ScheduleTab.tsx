@@ -86,8 +86,11 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
     // Process teacher assignments into lesson data
     if (student?.teacherAssignments && student.teacherAssignments.length > 0) {
       student.teacherAssignments.forEach((assignment: any, index: number) => {
-        console.log(`Processing assignment ${index}:`, assignment) // Debug log
-        
+        // Skip assignments without schedule data (e.g., from ministry import with no time slot)
+        if (!assignment.scheduleSlotId && !assignment.day && !assignment.time && !assignment.startTime && !assignment.scheduleInfo) {
+          return
+        }
+
         // Map day names to day of week numbers
         const dayMapping: Record<string, number> = {
           'ראשון': 0,
@@ -98,7 +101,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ student, studentId, isLoading
           'שישי': 5,
           'שבת': 6
         }
-        
+
         // Get real data from the assignment
         const dayOfWeek = dayMapping[assignment.day] ?? 0
         const startTime = assignment.time || assignment.startTime || '14:30'

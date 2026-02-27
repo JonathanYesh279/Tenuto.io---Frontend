@@ -620,7 +620,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ student, studentId })
           <InfoRow label="כיתה" value={academicInfo.class} />
           <InfoRow
             label="תאריך התחלה"
-            value={primaryInstrument?.startDate ? new Date(primaryInstrument.startDate).toLocaleDateString('he-IL') : 'לא צוין'}
+            value={(primaryInstrument?.startDate || student?.startDate) ? new Date(primaryInstrument?.startDate || student.startDate).toLocaleDateString('he-IL') : 'לא צוין'}
           />
           <InfoRow label="כלי נגינה" value={primaryInstrument?.instrumentName} />
           <InfoRow

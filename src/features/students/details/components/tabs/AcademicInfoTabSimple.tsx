@@ -96,7 +96,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
     return {
       class: academicInfo.class || '',
       stage: academicInfo.stage || academicInfo.level || '',
-      startDate: academicInfo.startDate || '',
+      startDate: primaryInstrument?.startDate || student?.startDate || '',
       instrumentTests
     }
   }
@@ -357,7 +357,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         )}
 
         {/* Basic Info - GRID LAYOUT */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {/* Teacher - HIGHLIGHTED - First from right */}
           <div className="bg-muted/50 rounded-lg p-4 border border-border">
             <div className="text-sm text-primary mb-1 flex items-center gap-1">
@@ -403,6 +403,14 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
             </div>
           </div>
 
+          {/* Department */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="text-sm text-gray-500 mb-1">מחלקה</div>
+            <div className="text-base font-semibold text-gray-900">
+              {primaryInstrument?.department || <span className="text-gray-400">לא צוין</span>}
+            </div>
+          </div>
+
           {/* Stage */}
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="text-sm text-gray-500 mb-1">שלב</div>
@@ -423,7 +431,7 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                   className="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               ) : (
-                academicInfo.startDate ? new Date(academicInfo.startDate).toLocaleDateString('he-IL') : <span className="text-gray-400">לא צוין</span>
+                (primaryInstrument?.startDate || student?.startDate) ? new Date(primaryInstrument?.startDate || student?.startDate).toLocaleDateString('he-IL') : <span className="text-gray-400">לא צוין</span>
               )}
             </div>
           </div>

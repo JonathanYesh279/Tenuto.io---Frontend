@@ -67,7 +67,7 @@ export interface InstrumentProgress {
   currentStage: number;
   targetStage?: number; // frontend-only — not in backend schema
   ministryStageLevel?: string; // auto-calculated: א | ב | ג
-  startDate?: Date; // frontend-only — not in backend schema
+  startDate?: Date; // calculated from studyYears during import
   progressNotes?: string; // frontend-only — not in backend schema
   skillAssessments?: { // frontend-only — not in backend schema
     technique: number;
@@ -239,6 +239,7 @@ export interface StudentDetails {
     theoryClassIds: string[];
   };
   isActive: boolean;
+  startDate?: Date;
   registrationDate: Date;
   createdAt: Date;
   updatedAt: Date;

@@ -1227,73 +1227,107 @@ export default function ImportData() {
             </div>
           )}
 
-          {/* Ensemble Preview Table */}
+          {/* Ensemble Preview Cards */}
           <div className="rounded-3xl shadow-sm bg-white overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-bold text-gray-900">תצוגה מקדימה</h3>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gray-50/80">
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שורה</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">סטטוס</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שם הרכב</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">סוג</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">מנצח</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">משתתפים</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">לוח זמנים</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">ש"ש דיווח</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {ensemblePreview.preview.ensembles.slice(0, 50).map((ens, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="py-2.5 px-4 text-gray-500 font-mono text-xs">{ens.row}</td>
-                      <td className="py-2.5 px-4">{getOrchestraMatchBadge(ens.orchestraMatch)}</td>
-                      <td className="py-2.5 px-4">
-                        <div className="font-medium text-gray-900">{ens.name}</div>
-                        {(ens.subType || ens.performanceLevel) && (
-                          <div className="text-xs text-gray-500">
-                            {[ens.subType, ens.performanceLevel].filter(Boolean).join(' - ')}
-                          </div>
-                        )}
-                      </td>
-                      <td className="py-2.5 px-4">
-                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                          ens.type === '\u05EA\u05D6\u05DE\u05D5\u05E8\u05EA' /* תזמורת */
-                            ? 'bg-purple-100 text-purple-700'
-                            : 'bg-indigo-100 text-indigo-700'
-                        }`}>
-                          {ens.type}
+            <div className="divide-y divide-gray-100">
+              {ensemblePreview.preview.ensembles.slice(0, 50).map((ens, idx) => (
+                <div key={idx} className="px-6 py-4 hover:bg-gray-50/50 transition-colors">
+                  {/* Row 1: Name + badges */}
+                  <div className="flex items-center gap-2 flex-wrap mb-2">
+                    <span className="font-semibold text-gray-900">{ens.name}</span>
+                    {/* Type badge */}
+                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                      ens.type === 'תזמורת'
+                        ? 'bg-purple-100 text-purple-700'
+                        : 'bg-indigo-100 text-indigo-700'
+                    }`}>
+                      {ens.type}
+                    </span>
+                    {/* SubType badge */}
+                    {ens.subType && (
+                      <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                        {ens.subType}
+                      </span>
+                    )}
+                    {/* Performance level badge */}
+                    {ens.performanceLevel && (
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                        ens.performanceLevel === 'ייצוגי'
+                          ? 'bg-amber-100 text-amber-700'
+                          : ens.performanceLevel === 'ביניים'
+                            ? 'bg-sky-100 text-sky-700'
+                            : 'bg-emerald-100 text-emerald-700'
+                      }`}>
+                        {ens.performanceLevel}
+                      </span>
+                    )}
+                    {/* Orchestra match badge */}
+                    {getOrchestraMatchBadge(ens.orchestraMatch)}
+                    {/* Row number */}
+                    <span className="text-gray-400 font-mono text-xs mr-auto">#{ens.row}</span>
+                  </div>
+                  {/* Row 2: Details grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-1 text-sm">
+                    {/* Conductor */}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-gray-400 text-xs">מנצח:</span>
+                      {getConductorMatchBadge(ens.conductorMatch)}
+                    </div>
+                    {/* Participants */}
+                    <div>
+                      <span className="text-gray-400 text-xs">משתתפים: </span>
+                      <span className="text-gray-700 font-medium">{ens.participantCount || '---'}</span>
+                    </div>
+                    {/* Schedule */}
+                    <div>
+                      <span className="text-gray-400 text-xs">לוח זמנים: </span>
+                      {ens.schedule.activity1 ? (
+                        <span className="text-gray-700">
+                          {ens.schedule.activity1.day} {ens.schedule.activity1.startTime}-{ens.schedule.activity1.endTime}
+                          {ens.schedule.activity1.actualHours != null && (
+                            <span className="text-gray-400 text-xs"> ({ens.schedule.activity1.actualHours} ש')</span>
+                          )}
                         </span>
-                      </td>
-                      <td className="py-2.5 px-4">{getConductorMatchBadge(ens.conductorMatch)}</td>
-                      <td className="py-2.5 px-4 text-gray-700 text-center">{ens.participantCount}</td>
-                      <td className="py-2.5 px-4 text-xs text-gray-600">
-                        {ens.schedule.activity1 && (
-                          <div>{ens.schedule.activity1.dayOfWeek} {ens.schedule.activity1.startTime}-{ens.schedule.activity1.endTime}</div>
-                        )}
-                        {ens.schedule.activity2 && (
-                          <div>{ens.schedule.activity2.dayOfWeek} {ens.schedule.activity2.startTime}-{ens.schedule.activity2.endTime}</div>
-                        )}
-                        {!ens.schedule.activity1 && !ens.schedule.activity2 && (
-                          <span className="text-gray-300">---</span>
-                        )}
-                      </td>
-                      <td className="py-2.5 px-4 text-gray-700 text-center">{ens.hours.totalReporting ?? '---'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {ensemblePreview.preview.ensembles.length > 50 && (
-                <div className="text-center py-3 border-t border-gray-100">
-                  <p className="text-sm text-gray-400">
-                    מוצגות 50 מתוך {ensemblePreview.preview.ensembles.length} שורות
-                  </p>
+                      ) : (
+                        <span className="text-gray-300">---</span>
+                      )}
+                      {ens.schedule.activity2 && (
+                        <div className="mt-0.5">
+                          <span className="text-gray-400 text-xs">פעילות II: </span>
+                          <span className="text-gray-700">
+                            {ens.schedule.activity2.day} {ens.schedule.activity2.startTime}-{ens.schedule.activity2.endTime}
+                            {ens.schedule.activity2.actualHours != null && (
+                              <span className="text-gray-400 text-xs"> ({ens.schedule.activity2.actualHours} ש')</span>
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Hours summary */}
+                    <div>
+                      <span className="text-gray-400 text-xs">שעות: </span>
+                      <span className="text-gray-700">
+                        {[
+                          ens.hours.totalActual != null ? `${ens.hours.totalActual} בפועל` : null,
+                          ens.hours.coordinationHours != null ? `${ens.hours.coordinationHours} ריכוז` : null,
+                          ens.hours.totalReporting != null ? `${ens.hours.totalReporting} דיווח` : null,
+                        ].filter(Boolean).join(' · ') || '---'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
+            {ensemblePreview.preview.ensembles.length > 50 && (
+              <div className="text-center py-3 border-t border-gray-100">
+                <p className="text-sm text-gray-400">
+                  מוצגות 50 מתוך {ensemblePreview.preview.ensembles.length} שורות
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}

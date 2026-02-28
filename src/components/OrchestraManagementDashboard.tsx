@@ -268,10 +268,26 @@ export default function OrchestraManagementDashboard({
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-semibold text-gray-900 text-lg mb-2">{orchestra.name}</h3>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
                         {typeInfo.text}
                       </span>
+                      {orchestra.subType && (
+                        <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-600">
+                          {orchestra.subType}
+                        </span>
+                      )}
+                      {orchestra.performanceLevel && (
+                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                          orchestra.performanceLevel === 'ייצוגי'
+                            ? 'bg-amber-100 text-amber-700'
+                            : orchestra.performanceLevel === 'ביניים'
+                              ? 'bg-sky-100 text-sky-700'
+                              : 'bg-emerald-100 text-emerald-700'
+                        }`}>
+                          {orchestra.performanceLevel}
+                        </span>
+                      )}
                       <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
                         {status.text}
                       </span>
@@ -311,6 +327,11 @@ export default function OrchestraManagementDashboard({
                     <UsersIcon className="w-4 h-4 text-gray-400" />
                     <span className="text-gray-600">
                       {orchestra.memberDetails?.length || 0} חברים
+                      {orchestra.ministryData?.importedParticipantCount != null && orchestra.ministryData.importedParticipantCount > 0 && (
+                        <span className="text-gray-400 text-xs">
+                          {' '}(משרד: {orchestra.ministryData.importedParticipantCount})
+                        </span>
+                      )}
                       {instrumentsSummary.totalInstruments > 0 && (
                         <span className="text-gray-500 text-xs">
                           {' '}• {instrumentsSummary.totalInstruments} כלי נגינה
@@ -332,6 +353,50 @@ export default function OrchestraManagementDashboard({
                     </span>
                   </div>
                 </div>
+
+                {/* Schedule Slots */}
+                {orchestra.scheduleSlots && orchestra.scheduleSlots.length > 0 && (
+                  <div className="bg-blue-50/50 rounded p-3">
+                    <div className="flex items-center gap-1 mb-1.5">
+                      <ClockIcon className="w-4 h-4 text-blue-400" />
+                      <span className="text-sm font-medium text-gray-900">לוח זמנים</span>
+                    </div>
+                    <div className="space-y-1">
+                      {orchestra.scheduleSlots.map((slot: any, i: number) => {
+                        const dayName = slot.day || (['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][slot.dayOfWeek] ?? '')
+                        return (
+                          <div key={i} className="text-sm text-gray-700 flex items-center gap-2">
+                            <span className="font-medium">{dayName}</span>
+                            <span>{slot.startTime}-{slot.endTime}</span>
+                            {slot.actualHours != null && (
+                              <span className="text-gray-400 text-xs">({slot.actualHours} ש')</span>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Ministry Hours */}
+                {orchestra.ministryData && (orchestra.ministryData.totalReportingHours != null || orchestra.ministryData.coordinationHours != null) && (
+                  <div className="bg-gray-50 rounded p-3">
+                    <div className="flex items-center gap-2 text-sm flex-wrap">
+                      {orchestra.ministryData.totalReportingHours != null && (
+                        <span className="text-gray-700">
+                          <span className="text-gray-400 text-xs">ש"ש דיווח: </span>
+                          <span className="font-medium">{orchestra.ministryData.totalReportingHours}</span>
+                        </span>
+                      )}
+                      {orchestra.ministryData.coordinationHours != null && (
+                        <span className="text-gray-700">
+                          <span className="text-gray-400 text-xs">ש' ריכוז: </span>
+                          <span className="font-medium">{orchestra.ministryData.coordinationHours}</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Upcoming Rehearsals Preview */}
                 {orchestra.upcomingRehearsals && orchestra.upcomingRehearsals.length > 0 && (

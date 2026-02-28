@@ -29,6 +29,23 @@ export interface Orchestra {
   location: LocationType;
   isActive: boolean;
 
+  // Imported fields from ensemble import
+  subType?: string | null;
+  performanceLevel?: string | null;
+  scheduleSlots?: Array<{
+    day: string;
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+    actualHours: number | null;
+  }>;
+  ministryData?: {
+    coordinationHours?: number | null;
+    totalReportingHours?: number | null;
+    ministryUseCode?: number | null;
+    importedParticipantCount?: number | null;
+  };
+
   // Populated fields (may be present when fetched with population)
   conductor?: {
     _id: string;

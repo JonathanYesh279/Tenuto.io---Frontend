@@ -40,7 +40,12 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
   const [formData, setFormData] = useState<OrchestraFormData & {
     subType: string | null
     performanceLevel: string | null
-    ministryData: { coordinationHours: number | null }
+    ministryData: {
+      coordinationHours: number | null
+      totalReportingHours: number | null
+      importedParticipantCount: number | null
+      ministryUseCode: number | null
+    }
   }>({
     name: '',
     type: 'תזמורת',
@@ -49,7 +54,7 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
     conductorId: '',
     memberIds: [],
     location: 'חדר 1',
-    ministryData: { coordinationHours: null },
+    ministryData: { coordinationHours: null, totalReportingHours: null, importedParticipantCount: null, ministryUseCode: null },
     isActive: true
   })
 
@@ -68,7 +73,10 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
         memberIds: orchestra.memberIds || [],
         location: orchestra.location || 'חדר 1',
         ministryData: {
-          coordinationHours: (orchestra as any).ministryData?.coordinationHours ?? null
+          coordinationHours: (orchestra as any).ministryData?.coordinationHours ?? null,
+          totalReportingHours: (orchestra as any).ministryData?.totalReportingHours ?? null,
+          importedParticipantCount: (orchestra as any).ministryData?.importedParticipantCount ?? null,
+          ministryUseCode: (orchestra as any).ministryData?.ministryUseCode ?? null,
         },
         isActive: orchestra.isActive !== undefined ? orchestra.isActive : true
       })
@@ -120,11 +128,13 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
     }
   }
 
-  // Filter conductors (teachers with conductor role)
+  // Filter conductors (teachers with conductor role or assigned via import)
   const conductors = teachers.filter(teacher =>
     teacher.roles?.includes('מנצח') ||
     teacher.professionalInfo?.instrument === 'מנהיגות מוזיקלית' ||
-    teacher.conducting?.orchestraIds?.length > 0
+    teacher.conducting?.orchestraIds?.length > 0 ||
+    // Always include the current conductor when editing
+    (formData.conductorId && teacher._id === formData.conductorId)
   )
 
   return (
@@ -309,6 +319,33 @@ export default function OrchestraForm({ orchestra, teachers, onSubmit, onCancel 
               />
             </FormField>
           </div>
+
+          {/* Imported Ministry Data (read-only info) */}
+          {orchestra && (formData.ministryData.totalReportingHours != null || formData.ministryData.importedParticipantCount != null) && (
+            <div className="bg-muted/50 border border-border rounded p-3">
+              <p className="text-xs font-medium text-muted-foreground mb-2">נתונים מיובאים (מעודכנים דרך ייבוא נתונים)</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                {formData.ministryData.totalReportingHours != null && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">ש"ש דיווח: </span>
+                    <span className="font-medium">{formData.ministryData.totalReportingHours}</span>
+                  </div>
+                )}
+                {formData.ministryData.importedParticipantCount != null && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">משתתפים (משרד): </span>
+                    <span className="font-medium">{formData.ministryData.importedParticipantCount}</span>
+                  </div>
+                )}
+                {formData.ministryData.ministryUseCode != null && (
+                  <div>
+                    <span className="text-muted-foreground text-xs">קוד שימוש: </span>
+                    <span className="font-medium">{formData.ministryData.ministryUseCode}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Conductor Assignment */}
           <FormField label="מנצח" htmlFor="conductorId" error={errors.conductorId} required>

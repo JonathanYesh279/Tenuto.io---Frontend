@@ -51,10 +51,26 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">
                 {typeInfo.text}
               </span>
+              {orchestra.subType && (
+                <span className="text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-600">
+                  {orchestra.subType}
+                </span>
+              )}
+              {orchestra.performanceLevel && (
+                <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                  orchestra.performanceLevel === 'ייצוגי'
+                    ? 'bg-amber-100 text-amber-700'
+                    : orchestra.performanceLevel === 'ביניים'
+                      ? 'bg-sky-100 text-sky-700'
+                      : 'bg-emerald-100 text-emerald-700'
+                }`}>
+                  {orchestra.performanceLevel}
+                </span>
+              )}
               <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">
                 {status.text}
               </span>
@@ -113,6 +129,9 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
             <UsersIcon className="w-4 h-4 ml-2 text-gray-400" />
             <span className="font-medium text-gray-900 ml-1">חברים:</span>
             {formatMemberCount(stats.memberCount)}
+            {orchestra.ministryData?.importedParticipantCount != null && orchestra.ministryData.importedParticipantCount > 0 && (
+              <span className="text-gray-400 text-xs mr-1">(משרד: {orchestra.ministryData.importedParticipantCount})</span>
+            )}
           </div>
           <div className="flex items-center text-gray-600">
             <CalendarIcon className="w-4 h-4 ml-2 text-gray-400" />
@@ -120,6 +139,50 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
             {formatRehearsalCount(stats.rehearsalCount)}
           </div>
         </div>
+
+        {/* Schedule Slots */}
+        {orchestra.scheduleSlots && orchestra.scheduleSlots.length > 0 && (
+          <div className="bg-blue-50/50 rounded p-3">
+            <div className="flex items-center gap-1 mb-1.5">
+              <ClockIcon className="w-4 h-4 text-blue-400" />
+              <span className="text-sm font-medium text-gray-900">לוח זמנים</span>
+            </div>
+            <div className="space-y-1">
+              {orchestra.scheduleSlots.map((slot, i) => {
+                const dayName = slot.day || (['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][slot.dayOfWeek] ?? '')
+                return (
+                  <div key={i} className="text-sm text-gray-700 flex items-center gap-2">
+                    <span className="font-medium">{dayName}</span>
+                    <span>{slot.startTime}-{slot.endTime}</span>
+                    {slot.actualHours != null && (
+                      <span className="text-gray-400 text-xs">({slot.actualHours} ש')</span>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Ministry Hours */}
+        {orchestra.ministryData && (orchestra.ministryData.totalReportingHours != null || orchestra.ministryData.coordinationHours != null) && (
+          <div className="bg-gray-50 rounded p-3">
+            <div className="flex items-center gap-2 text-sm flex-wrap">
+              {orchestra.ministryData.totalReportingHours != null && (
+                <span className="text-gray-700">
+                  <span className="text-gray-400 text-xs">ש"ש דיווח: </span>
+                  <span className="font-medium">{orchestra.ministryData.totalReportingHours}</span>
+                </span>
+              )}
+              {orchestra.ministryData.coordinationHours != null && (
+                <span className="text-gray-700">
+                  <span className="text-gray-400 text-xs">ש' ריכוז: </span>
+                  <span className="font-medium">{orchestra.ministryData.coordinationHours}</span>
+                </span>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Instruments Summary */}
         {instrumentsSummary.totalInstruments > 0 && (

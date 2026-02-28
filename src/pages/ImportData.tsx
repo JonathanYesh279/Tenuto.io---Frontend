@@ -459,6 +459,29 @@ function getOrchestraMatchBadge(orchestraMatch: any): React.ReactNode {
   }
 }
 
+// Helper: Render orchestra match badges for student preview rows
+function getOrchestraLinkBadges(orchestraMatches: any[]): React.ReactNode {
+  if (!orchestraMatches || orchestraMatches.length === 0) return null
+
+  return (
+    <div className="flex flex-wrap gap-1 mt-1">
+      {orchestraMatches.map((match: any, idx: number) => (
+        match.status === 'resolved' ? (
+          <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+            <CheckCircleIcon size={12} weight="fill" />
+            {match.orchestraName}
+          </span>
+        ) : (
+          <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+            <WarningIcon size={12} weight="fill" />
+            {match.importedName} (לא נמצא)
+          </span>
+        )
+      ))}
+    </div>
+  )
+}
+
 // Helper: Generate student row details JSX for preview table
 function getStudentRowDetails(row: any): React.ReactNode {
   // Error case
@@ -499,6 +522,7 @@ function getStudentRowDetails(row: any): React.ReactNode {
           <div className="text-gray-600">מחלקה: {mapped.departmentHint}</div>
         )}
         {getTeacherMatchBadge(teacherMatch)}
+        {getOrchestraLinkBadges(mapped._orchestraMatches)}
       </div>
     )
   }
@@ -508,7 +532,8 @@ function getStudentRowDetails(row: any): React.ReactNode {
     const changes = row.changes || []
     const teacherMatch = row.teacherMatch
 
-    if (changes.length === 0 && (!teacherMatch || teacherMatch.status === 'none' || !teacherMatch.status)) {
+    const hasOrchestraMatches = (row.mapped?._orchestraMatches || []).length > 0;
+    if (changes.length === 0 && (!teacherMatch || teacherMatch.status === 'none' || !teacherMatch.status) && !hasOrchestraMatches) {
       return <span className="text-gray-400">אין שינויים</span>
     }
 
@@ -518,6 +543,7 @@ function getStudentRowDetails(row: any): React.ReactNode {
           <div key={idx} className="text-gray-700">{formatStudentChange(change)}</div>
         ))}
         {getTeacherMatchBadge(teacherMatch)}
+        {getOrchestraLinkBadges(row.mapped?._orchestraMatches)}
       </div>
     )
   }
@@ -1544,6 +1570,38 @@ export default function ImportData() {
                     {(previewData.preview as any).teacherMatchSummary.ambiguous}
                   </p>
                   <p className="text-xs text-gray-500">מורים מעורפלים</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Orchestra Match Summary Cards — student tab only */}
+          {activeTab === 'students' && (previewData.preview as any).orchestraMatchSummary &&
+            ((previewData.preview as any).orchestraMatchSummary.resolved > 0 ||
+             (previewData.preview as any).orchestraMatchSummary.unresolved > 0) && (
+            <div className="grid grid-cols-3 gap-4">
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-green-600">
+                    {(previewData.preview as any).orchestraMatchSummary.totalLinks}
+                  </p>
+                  <p className="text-xs text-gray-500">שיוכי הרכבים</p>
+                </div>
+              </div>
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-blue-500/10 to-blue-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-blue-600">
+                    {(previewData.preview as any).orchestraMatchSummary.resolved}
+                  </p>
+                  <p className="text-xs text-gray-500">הרכבים שובצו</p>
+                </div>
+              </div>
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-amber-500/10 to-amber-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-amber-600">
+                    {(previewData.preview as any).orchestraMatchSummary.unresolved}
+                  </p>
+                  <p className="text-xs text-gray-500">הרכבים לא נמצאו</p>
                 </div>
               </div>
             </div>

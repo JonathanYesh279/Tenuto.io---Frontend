@@ -1841,6 +1841,13 @@ export default function ImportData() {
                 <p className="text-2xl font-bold text-blue-600">{results.createdCount || 0}</p>
                 <p className="text-sm text-gray-600">נוצרו</p>
               </div>
+              {/* Orchestra Links */}
+              {(results as any).orchestraLinkCount > 0 && (
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-600">{(results as any).orchestraLinkCount}</p>
+                  <p className="text-sm text-gray-600">שויכו להרכבים</p>
+                </div>
+              )}
               <div className="text-center">
                 <p className="text-2xl font-bold text-gray-400">{results.skippedCount}</p>
                 <p className="text-sm text-gray-600">דולגו</p>

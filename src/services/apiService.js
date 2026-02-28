@@ -5162,6 +5162,37 @@ export const importService = {
     }
   },
 
+  async previewEnsembleImport(file) {
+    try {
+      console.log('Uploading ensemble import file for preview');
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(
+        `${apiClient.baseURL}/import/ensembles/preview`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiClient.getStoredToken()}`
+          },
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error importing ensemble file');
+      }
+
+      const result = await response.json();
+      console.log('Ensemble import preview ready');
+      return result;
+    } catch (error) {
+      console.error('Error previewing ensemble import:', error);
+      throw error;
+    }
+  },
+
   async executeImport(importLogId) {
     try {
       console.log(`📥 Executing import ${importLogId}`);

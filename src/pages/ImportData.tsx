@@ -15,9 +15,10 @@ import {
   PlusIcon,
   InfoIcon,
   BuildingsIcon,
+  MusicNotesIcon,
 } from '@phosphor-icons/react'
 
-type ImportTab = 'teachers' | 'students' | 'conservatory'
+type ImportTab = 'teachers' | 'students' | 'conservatory' | 'ensembles'
 type ImportState = 'upload' | 'preview' | 'results'
 
 interface ConservatoryPreviewField {
@@ -75,6 +76,58 @@ interface ImportResult {
   matchedCount: number       // NEW: total matched rows
   notFoundCount: number      // NEW: total unmatched rows
   errors: Array<{ row?: number; message?: string; error?: string; studentName?: string }>
+}
+
+interface EnsemblePreviewEnsemble {
+  row: number
+  rawName: string
+  name: string
+  type: string
+  subType: string | null
+  performanceLevel: string | null
+  participantCount: number
+  conductorMatch: {
+    status: 'resolved' | 'unresolved' | 'ambiguous' | 'none'
+    teacherId?: string
+    teacherName?: string
+    candidateCount?: number
+    importedName?: string
+  }
+  schedule: {
+    activity1: { day: string; dayOfWeek: string; startTime: string; endTime: string; actualHours: number } | null
+    activity2: { day: string; dayOfWeek: string; startTime: string; endTime: string; actualHours: number } | null
+  }
+  hours: { totalActual: number; coordinationHours: number; totalReporting: number }
+  ministryUseCode: number | null
+  orchestraMatch: {
+    status: 'new' | 'existing-updated' | 'existing-no-change'
+    orchestraId?: string
+    orchestraName?: string
+  }
+}
+
+interface EnsemblePreviewData {
+  importLogId: string
+  preview: {
+    totalRows: number
+    ensembles: EnsemblePreviewEnsemble[]
+    conductorSummary: { resolved: number; unresolved: number; ambiguous: number; none: number }
+    orchestraMatchSummary: { new: number; existingUpdated: number; existingNoChange: number }
+    analytics: any | null
+    warnings: Array<{ row: number; field: string; message: string }>
+    errors: any[]
+  }
+}
+
+interface EnsembleImportResult {
+  totalRows: number
+  createdCount: number
+  updatedCount: number
+  skippedCount: number
+  noChangeCount: number
+  errorCount: number
+  skipped: Array<{ row: number; name: string; reason: string }>
+  errors: Array<{ row: number; name: string; error: string }>
 }
 
 const IMPORT_STEPS = [
@@ -340,6 +393,65 @@ function getTeacherMatchBadge(teacherMatch: any): React.ReactNode {
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
           <WarningIcon size={12} weight="fill" />
           {teacherMatch.candidateCount} מורים אפשריים
+        </span>
+      )
+    default:
+      return null
+  }
+}
+
+// Helper: Render conductor match badge for ensemble preview rows
+function getConductorMatchBadge(conductorMatch: any): React.ReactNode {
+  if (!conductorMatch || conductorMatch.status === 'none') return null
+
+  switch (conductorMatch.status) {
+    case 'resolved':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+          <CheckCircleIcon size={12} weight="fill" />
+          {conductorMatch.teacherName}
+        </span>
+      )
+    case 'unresolved':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+          <XCircleIcon size={12} weight="fill" />
+          {conductorMatch.importedName ? `${conductorMatch.importedName} - לא נמצא` : 'מנצח לא נמצא'}
+        </span>
+      )
+    case 'ambiguous':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+          <WarningIcon size={12} weight="fill" />
+          {conductorMatch.candidateCount} מנצחים אפשריים
+        </span>
+      )
+    default:
+      return null
+  }
+}
+
+// Helper: Render orchestra match badge for ensemble preview rows
+function getOrchestraMatchBadge(orchestraMatch: any): React.ReactNode {
+  switch (orchestraMatch?.status) {
+    case 'new':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+          <PlusIcon size={12} weight="bold" />
+          חדש
+        </span>
+      )
+    case 'existing-updated':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+          <ArrowsClockwiseIcon size={12} weight="regular" />
+          עדכון
+        </span>
+      )
+    case 'existing-no-change':
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
+          ללא שינוי
         </span>
       )
     default:
@@ -632,6 +744,41 @@ function ConservatoryFileGuide() {
   )
 }
 
+function EnsembleFileGuide() {
+  return (
+    <div className="rounded-3xl shadow-sm bg-white p-6">
+      <h3 className="text-lg font-bold text-gray-900 mb-4">קובץ הרכבי ביצוע</h3>
+      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4">
+        <div className="flex items-start gap-2">
+          <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-blue-900">תומך בקבצי מימשק משרד החינוך - גיליון הרכבי ביצוע</p>
+            <p className="text-xs text-blue-700 mt-0.5">
+              המערכת מזהה אוטומטית את סוג ההרכב, מנצח, לוח זמנים ושעות דיווח
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="text-sm text-gray-600 space-y-2">
+        <p>יש להעלות את קובץ ה-Excel של הרכבי הביצוע כפי שהתקבל ממשרד החינוך. המערכת תזהה את הגיליון 'הרכבי ביצוע' אוטומטית.</p>
+        <p className="font-medium text-gray-700 mt-3">שדות שייקראו מהקובץ:</p>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-gray-500">
+          <span>שם הרכב</span>
+          <span>סוג (תזמורת/הרכב)</span>
+          <span>מנצח/מדריך</span>
+          <span>מספר משתתפים</span>
+          <span>יום פעילות</span>
+          <span>שעת התחלה</span>
+          <span>שעת סיום</span>
+          <span>שעות בפועל</span>
+          <span>שעות ריכוז</span>
+          <span>סה"כ שעות דיווח</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ImportData() {
   const [activeTab, setActiveTab] = useState<ImportTab>('teachers')
   const [importState, setImportState] = useState<ImportState>('upload')
@@ -642,6 +789,8 @@ export default function ImportData() {
   const [dragActive, setDragActive] = useState(false)
   const [conservatoryPreview, setConservatoryPreview] = useState<ConservatoryPreviewData | null>(null)
   const [conservatoryResults, setConservatoryResults] = useState<ConservatoryImportResult | null>(null)
+  const [ensemblePreview, setEnsemblePreview] = useState<EnsemblePreviewData | null>(null)
+  const [ensembleResults, setEnsembleResults] = useState<EnsembleImportResult | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const resetState = () => {
@@ -650,6 +799,8 @@ export default function ImportData() {
     setResults(null)
     setConservatoryPreview(null)
     setConservatoryResults(null)
+    setEnsemblePreview(null)
+    setEnsembleResults(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -680,7 +831,10 @@ export default function ImportData() {
 
     try {
       setLoading(true)
-      if (activeTab === 'conservatory') {
+      if (activeTab === 'ensembles') {
+        const result = await importService.previewEnsembleImport(file)
+        setEnsemblePreview(result)
+      } else if (activeTab === 'conservatory') {
         const result = await importService.previewConservatoryImport(file)
         setConservatoryPreview(result)
       } else {
@@ -721,16 +875,26 @@ export default function ImportData() {
   }
 
   const handleExecute = async () => {
-    const importLogId = activeTab === 'conservatory'
-      ? conservatoryPreview?.importLogId
-      : previewData?.importLogId
+    const importLogId = activeTab === 'ensembles'
+      ? ensemblePreview?.importLogId
+      : activeTab === 'conservatory'
+        ? conservatoryPreview?.importLogId
+        : previewData?.importLogId
     if (!importLogId) return
 
     try {
       setExecuting(true)
       const result = await importService.executeImport(importLogId)
 
-      if (activeTab === 'conservatory') {
+      if (activeTab === 'ensembles') {
+        setEnsembleResults(result)
+        setImportState('results')
+        const parts = []
+        if (result.createdCount > 0) parts.push(`${result.createdCount} נוצרו`)
+        if (result.updatedCount > 0) parts.push(`${result.updatedCount} עודכנו`)
+        if (result.noChangeCount > 0) parts.push(`${result.noChangeCount} ללא שינוי`)
+        toast.success(`ייבוא הרכבים הושלם: ${parts.join(', ')}`)
+      } else if (activeTab === 'conservatory') {
         setConservatoryResults(result)
         setImportState('results')
         toast.success(`הנתונים עודכנו בהצלחה: ${result.updatedFields} שדות עודכנו`)
@@ -780,7 +944,7 @@ export default function ImportData() {
     }
   }
 
-  const allPreviewRows = (activeTab !== 'conservatory' && previewData)
+  const allPreviewRows = (activeTab !== 'conservatory' && activeTab !== 'ensembles' && previewData)
     ? [
         ...previewData.preview.matched.map((r: any) => ({ ...r, status: 'matched' as const, name: r.importedName || r.studentName || r.teacherName })),
         ...previewData.preview.notFound.map((r: any) => ({ ...r, status: 'not_found' as const, name: r.importedName })),
@@ -801,6 +965,7 @@ export default function ImportData() {
             {activeTab === 'teachers' && 'ייבוא מורים מקובץ Excel'}
             {activeTab === 'students' && 'ייבוא תלמידים מקובץ Excel'}
             {activeTab === 'conservatory' && 'ייבוא פרטי קונסרבטוריון מקובץ Excel'}
+            {activeTab === 'ensembles' && 'ייבוא הרכבים מקובץ Excel'}
           </p>
         </div>
       </div>
@@ -839,6 +1004,17 @@ export default function ImportData() {
         >
           <BuildingsIcon size={16} weight="regular" />
           פרטי קונסרבטוריון
+        </button>
+        <button
+          onClick={() => handleTabChange('ensembles')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+            activeTab === 'ensembles'
+              ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
+              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+          }`}
+        >
+          <MusicNotesIcon size={16} weight="regular" />
+          הרכבים
         </button>
       </div>
 
@@ -924,6 +1100,10 @@ export default function ImportData() {
             <ConservatoryFileGuide />
           )}
 
+          {activeTab === 'ensembles' && (
+            <EnsembleFileGuide />
+          )}
+
           {/* Upload Zone */}
           <div className="rounded-3xl shadow-sm bg-white p-6">
             {loading ? (
@@ -959,6 +1139,189 @@ export default function ImportData() {
                 />
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Preview State — Ensembles */}
+      {importState === 'preview' && activeTab === 'ensembles' && ensemblePreview && (
+        <div className="space-y-6">
+          {/* Orchestra Match Summary Stat Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-indigo-500/10 to-indigo-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{ensemblePreview.preview.totalRows}</p>
+                <p className="text-sm text-gray-500">סה"כ הרכבים</p>
+              </div>
+            </div>
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-blue-500/10 to-blue-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">{ensemblePreview.preview.orchestraMatchSummary.new}</p>
+                <p className="text-sm text-gray-500">הרכבים חדשים</p>
+              </div>
+            </div>
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">{ensemblePreview.preview.orchestraMatchSummary.existingUpdated}</p>
+                <p className="text-sm text-gray-500">עדכונים</p>
+              </div>
+            </div>
+            <div className="rounded-3xl shadow-sm bg-gradient-to-br from-gray-500/10 to-gray-500/5 p-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-400">{ensemblePreview.preview.orchestraMatchSummary.existingNoChange}</p>
+                <p className="text-sm text-gray-500">ללא שינוי</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Conductor Summary Cards */}
+          {(ensemblePreview.preview.conductorSummary.resolved > 0 ||
+            ensemblePreview.preview.conductorSummary.unresolved > 0 ||
+            ensemblePreview.preview.conductorSummary.ambiguous > 0) && (
+            <div className="grid grid-cols-3 gap-4">
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-green-600">
+                    {ensemblePreview.preview.conductorSummary.resolved}
+                  </p>
+                  <p className="text-xs text-gray-500">מנצחים שובצו</p>
+                </div>
+              </div>
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-red-500/10 to-red-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-red-600">
+                    {ensemblePreview.preview.conductorSummary.unresolved}
+                  </p>
+                  <p className="text-xs text-gray-500">מנצחים לא נמצאו</p>
+                </div>
+              </div>
+              <div className="rounded-3xl shadow-sm bg-gradient-to-br from-amber-500/10 to-amber-500/5 p-4">
+                <div className="text-center">
+                  <p className="text-xl font-bold text-amber-600">
+                    {ensemblePreview.preview.conductorSummary.ambiguous}
+                  </p>
+                  <p className="text-xs text-gray-500">מנצחים מעורפלים</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Warnings */}
+          {ensemblePreview.preview.warnings.length > 0 && (
+            <div className="rounded-3xl shadow-sm bg-amber-50 border border-amber-200 p-6">
+              <div className="flex items-start gap-2">
+                <WarningIcon size={20} weight="fill" className="text-amber-600 mt-0.5 flex-shrink-0" />
+                <div className="space-y-1">
+                  {ensemblePreview.preview.warnings.slice(0, 10).map((w, i) => (
+                    <p key={i} className="text-sm text-amber-700">
+                      שורה {w.row}: {w.message}
+                    </p>
+                  ))}
+                  {ensemblePreview.preview.warnings.length > 10 && (
+                    <p className="text-xs text-amber-500">
+                      ועוד {ensemblePreview.preview.warnings.length - 10} אזהרות...
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Ensemble Preview Table */}
+          <div className="rounded-3xl shadow-sm bg-white overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-gray-900">תצוגה מקדימה</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-gray-50/80">
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שורה</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">סטטוס</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">שם הרכב</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">סוג</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">מנצח</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">משתתפים</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">לוח זמנים</th>
+                    <th className="text-right py-3 px-4 font-medium text-gray-600 text-xs uppercase tracking-wider">ש"ש דיווח</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {ensemblePreview.preview.ensembles.slice(0, 50).map((ens, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="py-2.5 px-4 text-gray-500 font-mono text-xs">{ens.row}</td>
+                      <td className="py-2.5 px-4">{getOrchestraMatchBadge(ens.orchestraMatch)}</td>
+                      <td className="py-2.5 px-4">
+                        <div className="font-medium text-gray-900">{ens.name}</div>
+                        {(ens.subType || ens.performanceLevel) && (
+                          <div className="text-xs text-gray-500">
+                            {[ens.subType, ens.performanceLevel].filter(Boolean).join(' - ')}
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-2.5 px-4">
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                          ens.type === '\u05EA\u05D6\u05DE\u05D5\u05E8\u05EA' /* תזמורת */
+                            ? 'bg-purple-100 text-purple-700'
+                            : 'bg-indigo-100 text-indigo-700'
+                        }`}>
+                          {ens.type}
+                        </span>
+                      </td>
+                      <td className="py-2.5 px-4">{getConductorMatchBadge(ens.conductorMatch)}</td>
+                      <td className="py-2.5 px-4 text-gray-700 text-center">{ens.participantCount}</td>
+                      <td className="py-2.5 px-4 text-xs text-gray-600">
+                        {ens.schedule.activity1 && (
+                          <div>{ens.schedule.activity1.dayOfWeek} {ens.schedule.activity1.startTime}-{ens.schedule.activity1.endTime}</div>
+                        )}
+                        {ens.schedule.activity2 && (
+                          <div>{ens.schedule.activity2.dayOfWeek} {ens.schedule.activity2.startTime}-{ens.schedule.activity2.endTime}</div>
+                        )}
+                        {!ens.schedule.activity1 && !ens.schedule.activity2 && (
+                          <span className="text-gray-300">---</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 px-4 text-gray-700 text-center">{ens.hours.totalReporting ?? '---'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {ensemblePreview.preview.ensembles.length > 50 && (
+                <div className="text-center py-3 border-t border-gray-100">
+                  <p className="text-sm text-gray-400">
+                    מוצגות 50 מתוך {ensemblePreview.preview.ensembles.length} שורות
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={resetState}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              <ArrowLeftIcon size={16} weight="regular" />
+              ביטול
+            </button>
+            <button
+              onClick={handleExecute}
+              disabled={executing || ensemblePreview.preview.ensembles.length === 0}
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded-xl hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm"
+            >
+              {executing ? (
+                <>
+                  <ArrowsClockwiseIcon size={16} weight="regular" className="animate-spin" />
+                  מבצע ייבוא...
+                </>
+              ) : (
+                <>
+                  <CheckCircleIcon size={16} weight="fill" />
+                  אשר ייבוא ({ensemblePreview.preview.ensembles.length} הרכבים)
+                </>
+              )}
+            </button>
           </div>
         </div>
       )}
@@ -1065,7 +1428,7 @@ export default function ImportData() {
       )}
 
       {/* Preview State — Teachers/Students */}
-      {importState === 'preview' && activeTab !== 'conservatory' && previewData && (
+      {importState === 'preview' && activeTab !== 'conservatory' && activeTab !== 'ensembles' && previewData && (
         <div className="space-y-6">
           {/* Header Detection Banner — only show when header row > 0 */}
           {previewData.preview.headerRowIndex != null && previewData.preview.headerRowIndex > 0 && (
@@ -1245,6 +1608,98 @@ export default function ImportData() {
         </div>
       )}
 
+      {/* Results State — Ensembles */}
+      {importState === 'results' && activeTab === 'ensembles' && ensembleResults && (
+        <div className="space-y-6">
+          {/* Success Header */}
+          <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <CheckCircleIcon size={32} weight="fill" className="text-green-600" />
+              <h2 className="text-xl font-bold text-green-800">ייבוא הרכבים הושלם</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{ensembleResults.totalRows}</p>
+                <p className="text-sm text-gray-600">סה"כ שורות</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-600">{ensembleResults.createdCount}</p>
+                <p className="text-sm text-gray-600">נוצרו</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">{ensembleResults.updatedCount}</p>
+                <p className="text-sm text-gray-600">עודכנו</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-400">{ensembleResults.noChangeCount}</p>
+                <p className="text-sm text-gray-600">ללא שינוי</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-red-600">{ensembleResults.errorCount}</p>
+                <p className="text-sm text-gray-600">שגיאות</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Skipped Details */}
+          {ensembleResults.skipped.length > 0 && (
+            <div className="rounded-3xl shadow-sm bg-white border border-amber-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-amber-100 bg-amber-50/50">
+                <div className="flex items-center gap-2">
+                  <WarningIcon size={20} weight="fill" className="text-amber-500" />
+                  <h3 className="text-lg font-bold text-gray-900">הרכבים שדולגו</h3>
+                </div>
+              </div>
+              <div className="p-6">
+                <ul className="space-y-2">
+                  {ensembleResults.skipped.map((s, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm">
+                      <span className="text-gray-400 font-mono text-xs">שורה {s.row}:</span>
+                      <span className="text-gray-600 font-medium">{s.name}</span>
+                      <span className="text-amber-600">{s.reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Error Details */}
+          {ensembleResults.errors.length > 0 && (
+            <div className="rounded-3xl shadow-sm bg-white border border-red-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-red-100 bg-red-50/50">
+                <div className="flex items-center gap-2">
+                  <XCircleIcon size={20} weight="fill" className="text-red-500" />
+                  <h3 className="text-lg font-bold text-gray-900">פרטי שגיאות</h3>
+                </div>
+              </div>
+              <div className="p-6">
+                <ul className="space-y-2">
+                  {ensembleResults.errors.map((e, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm">
+                      <span className="text-gray-400 font-mono text-xs">שורה {e.row}:</span>
+                      <span className="text-gray-600 font-medium">{e.name}</span>
+                      <span className="text-red-600">{e.error}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Reset Button */}
+          <div className="flex justify-center pt-4 pb-8">
+            <button
+              onClick={resetState}
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary-500 text-white rounded-xl hover:bg-primary-600 transition-colors font-medium shadow-sm"
+            >
+              <UploadIcon size={16} weight="regular" />
+              ייבוא קובץ נוסף
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Results State — Conservatory */}
       {importState === 'results' && activeTab === 'conservatory' && conservatoryResults && (
         <div className="space-y-6">
@@ -1273,7 +1728,7 @@ export default function ImportData() {
       )}
 
       {/* Results State — Teachers/Students */}
-      {importState === 'results' && activeTab !== 'conservatory' && results && (
+      {importState === 'results' && activeTab !== 'conservatory' && activeTab !== 'ensembles' && results && (
         <div className="space-y-6">
           {/* Results Header */}
           <div className="rounded-3xl shadow-sm bg-gradient-to-br from-green-500/10 to-green-500/5 p-8">

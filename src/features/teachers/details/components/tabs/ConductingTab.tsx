@@ -58,7 +58,7 @@ const ConductingTab: React.FC<ConductingTabProps> = ({ teacher, teacherId }) => 
         // Fetch orchestras
         if (teacher.conducting?.orchestraIds?.length > 0) {
           const orchestraPromises = teacher.conducting.orchestraIds.map(orchestraId =>
-            apiService.orchestras?.getOrchestraById(orchestraId)
+            apiService.orchestras?.getOrchestra(orchestraId)
           )
           if (orchestraPromises.length > 0) {
             try {

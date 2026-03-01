@@ -66,8 +66,10 @@ export default function Dashboard() {
   }, [])
 
   useEffect(() => {
+    // Super admin uses a dedicated dashboard — skip tenant-scoped API calls
+    if (user?.isSuperAdmin) return
     loadDashboardData()
-  }, [currentSchoolYear])
+  }, [currentSchoolYear, user?.isSuperAdmin])
 
   const loadDashboardData = async () => {
     try {

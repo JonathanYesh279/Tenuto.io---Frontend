@@ -162,9 +162,10 @@ export default function SuperAdminDashboard() {
                 <span className="text-sm text-gray-700">
                   <span className="font-medium">{alert.tenantName}</span>
                   {' — '}
-                  {alert.type === 'subscription_expiring' ? 'מנוי פג תוקף בקרוב' :
-                   alert.type === 'over_limit' ? 'חריגה ממגבלות' :
+                  {alert.type === 'subscription_expiring' || alert.type === 'expiring_soon' ? 'מנוי פג תוקף בקרוב' :
+                   alert.type === 'over_limit' || alert.type === 'over_limit_teachers' || alert.type === 'over_limit_students' ? 'חריגה ממגבלות' :
                    alert.type === 'inactive_tenant' ? 'מוסד לא פעיל' :
+                   alert.type === 'inactive_subscription' ? 'מנוי לא פעיל' :
                    alert.type}
                 </span>
               </div>

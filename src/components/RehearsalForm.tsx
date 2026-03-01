@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 import ConflictDetector from './ConflictDetector'
 import { CalendarIcon, ClockIcon, MapPinIcon, MinusIcon, PlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { VALID_LOCATIONS } from '../constants/locations'
 import {
   validateRehearsalForm,
   validateBulkRehearsalForm,
@@ -345,15 +346,18 @@ export default function RehearsalForm({
                     <MapPinIcon className="w-4 h-4 inline ml-1" />
                     מיקום <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={singleForm.location || ''}
                     onChange={(e) => handleSingleFormChange('location', e.target.value)}
-                    placeholder="כגון: אולם ערן, סטודיו קאמרי 1"
                     className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.location ? 'border-red-300' : 'border-gray-300'
                     }`}
-                  />
+                  >
+                    <option value="">בחר מיקום</option>
+                    {VALID_LOCATIONS.map(location => (
+                      <option key={location} value={location}>{location}</option>
+                    ))}
+                  </select>
                   {errors.location && (
                     <p className="text-red-600 text-sm mt-1">{errors.location}</p>
                   )}
@@ -498,15 +502,18 @@ export default function RehearsalForm({
                     <MapPinIcon className="w-4 h-4 inline ml-1" />
                     מיקום <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={bulkForm.location || ''}
                     onChange={(e) => handleBulkFormChange('location', e.target.value)}
-                    placeholder="כגון: אולם ערן, סטודיו קאמרי 1"
                     className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
                       errors.location ? 'border-red-300' : 'border-gray-300'
                     }`}
-                  />
+                  >
+                    <option value="">בחר מיקום</option>
+                    {VALID_LOCATIONS.map(location => (
+                      <option key={location} value={location}>{location}</option>
+                    ))}
+                  </select>
                   {errors.location && (
                     <p className="text-red-600 text-sm mt-1">{errors.location}</p>
                   )}

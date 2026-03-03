@@ -13,8 +13,17 @@ import CreateLessonDialog from '@/components/room-schedule/CreateLessonDialog'
 import type { CreateDialogState } from '@/components/room-schedule/CreateLessonDialog'
 import DragOverlayContent from '@/components/room-schedule/DragOverlayContent'
 import type { ActivityData } from '@/components/room-schedule/ActivityCell'
-import { timeToMinutes, minutesToTime, extractBlockId, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
+import { timeToMinutes, minutesToTime, extractBlockId, DAY_NAMES, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
+import ScheduleToolbar from '@/components/room-schedule/ScheduleToolbar'
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
 import toast from 'react-hot-toast'
+
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF
+  }
+}
 
 // Determine initial day: current weekday capped at Friday (5).
 // Saturday (6) wraps to Sunday (0).
@@ -94,6 +103,8 @@ export default function RoomSchedule() {
     startTime: '08:00',
     endTime: '08:30',
   })
+
+  const [viewMode, setViewMode] = useState<'day' | 'week'>('day')
 
   // Drag-and-drop state
   const [activeActivity, setActiveActivity] = useState<ActivityData | null>(null)
@@ -309,10 +320,75 @@ export default function RoomSchedule() {
     }
   }, [schedule, filteredRooms])
 
+  // Print handler -- relies on print:hidden classes on toolbar/filters and Layout.tsx no-print on sidebar/header
+  const handlePrint = useCallback(() => {
+    window.print()
+  }, [])
+
+  // PDF export handler
+  const handleExportPDF = useCallback(() => {
+    try {
+      const doc = new jsPDF({ orientation: 'landscape' })
+
+      const activityTypeLabels: Record<string, string> = {
+        timeBlock: 'שיעור פרטי',
+        rehearsal: 'חזרה',
+        theory: 'תאוריה',
+      }
+
+      // Title and metadata (right-aligned for Hebrew)
+      const pageWidth = doc.internal.pageSize.getWidth()
+      doc.setFontSize(16)
+      doc.text(`לוח חדרים - יום ${DAY_NAMES[selectedDay]}`, pageWidth - 14, 15, { align: 'right' })
+      doc.setFontSize(10)
+      doc.text(`תאריך: ${new Date().toLocaleDateString('he-IL')}`, pageWidth - 14, 22, { align: 'right' })
+      doc.text(
+        `חדרים: ${stats.totalRooms} | תפוסות: ${stats.occupiedSlots} | פנויות: ${stats.freeSlots} | התנגשויות: ${stats.conflictCount}`,
+        pageWidth - 14,
+        28,
+        { align: 'right' }
+      )
+
+      // Build table body from filtered rooms
+      const tableBody: string[][] = []
+      for (const room of filteredRooms) {
+        for (const activity of room.activities) {
+          tableBody.push([
+            room.room,
+            activity.startTime,
+            activity.endTime,
+            activity.teacherName,
+            activity.label,
+            activityTypeLabels[activity.source] || activity.source,
+            activity.hasConflict ? 'כן' : '',
+          ])
+        }
+      }
+
+      doc.autoTable({
+        startY: 33,
+        head: [['חדר', 'התחלה', 'סיום', 'מורה', 'תלמיד/קבוצה', 'סוג', 'התנגשות']],
+        body: tableBody,
+        styles: { fontSize: 8, cellPadding: 2, halign: 'right' },
+        headStyles: { fillColor: [63, 126, 223], halign: 'right' },
+        columnStyles: {
+          0: { cellWidth: 30 },
+          1: { cellWidth: 18 },
+          2: { cellWidth: 18 },
+          6: { cellWidth: 18 },
+        },
+      })
+
+      doc.save(`room-schedule-${DAY_NAMES[selectedDay]}.pdf`)
+    } catch {
+      toast.error('שגיאה בייצוא PDF')
+    }
+  }, [selectedDay, filteredRooms, stats])
+
   return (
     <div className="p-6 space-y-6">
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
         <h1 className="text-2xl font-bold text-gray-900">לוח חדרים</h1>
         <DaySelector
           selectedDay={selectedDay}
@@ -321,45 +397,67 @@ export default function RoomSchedule() {
         />
       </div>
 
-      {/* Filter controls */}
-      <FilterBar filters={filters} onFiltersChange={setFilters} rooms={roomNames} />
-
-      {/* Summary statistics bar */}
-      <SummaryBar
-        totalRooms={stats.totalRooms}
-        occupiedSlots={stats.occupiedSlots}
-        freeSlots={stats.freeSlots}
-        conflictCount={stats.conflictCount}
-        loading={loading}
+      {/* Schedule toolbar (print/export/view mode) */}
+      <ScheduleToolbar
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        onPrint={handlePrint}
+        onExportPDF={handleExportPDF}
       />
 
-      {/* Room grid with drag-and-drop */}
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <RoomGrid
-          rooms={filteredRooms}
-          loading={loading}
-          onEmptyCellClick={handleEmptyCellClick}
-          isDragEnabled={true}
-        />
-        <DragOverlay>
-          {activeActivity ? <DragOverlayContent activity={activeActivity} /> : null}
-        </DragOverlay>
-      </DndContext>
+      {/* Day view content */}
+      {viewMode === 'day' && (
+        <>
+          {/* Filter controls */}
+          <div className="print:hidden">
+            <FilterBar filters={filters} onFiltersChange={setFilters} rooms={roomNames} />
+          </div>
 
-      {/* Unassigned activities (no room) */}
-      <UnassignedRow activities={schedule?.unassigned || []} />
+          {/* Summary statistics bar */}
+          <SummaryBar
+            totalRooms={stats.totalRooms}
+            occupiedSlots={stats.occupiedSlots}
+            freeSlots={stats.freeSlots}
+            conflictCount={stats.conflictCount}
+            loading={loading}
+          />
 
-      {/* Create lesson dialog */}
-      <CreateLessonDialog
-        state={createDialogState}
-        onOpenChange={(open) => setCreateDialogState((prev) => ({ ...prev, open }))}
-        teachers={teachers}
-        onCreated={handleLessonCreated}
-      />
+          {/* Room grid with drag-and-drop */}
+          <div className="print:overflow-visible print:max-h-none">
+            <DndContext
+              sensors={sensors}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <RoomGrid
+                rooms={filteredRooms}
+                loading={loading}
+                onEmptyCellClick={handleEmptyCellClick}
+                isDragEnabled={true}
+              />
+              <DragOverlay>
+                {activeActivity ? <DragOverlayContent activity={activeActivity} /> : null}
+              </DragOverlay>
+            </DndContext>
+          </div>
+
+          {/* Unassigned activities (no room) */}
+          <UnassignedRow activities={schedule?.unassigned || []} />
+
+          {/* Create lesson dialog */}
+          <CreateLessonDialog
+            state={createDialogState}
+            onOpenChange={(open) => setCreateDialogState((prev) => ({ ...prev, open }))}
+            teachers={teachers}
+            onCreated={handleLessonCreated}
+          />
+        </>
+      )}
+
+      {/* Week view placeholder (to be implemented in Plan 35-02) */}
+      {viewMode === 'week' && (
+        <div className="text-center text-gray-500 py-12">Week view placeholder</div>
+      )}
     </div>
   )
 }

@@ -1,7 +1,10 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { roomScheduleService } from '@/services/apiService'
 import DaySelector from '@/components/room-schedule/DaySelector'
 import RoomGrid from '@/components/room-schedule/RoomGrid'
+import SummaryBar from '@/components/room-schedule/SummaryBar'
+import UnassignedRow from '@/components/room-schedule/UnassignedRow'
+import { timeToMinutes, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
 import toast from 'react-hot-toast'
 
 // Determine initial day: current weekday capped at Friday (5).
@@ -34,7 +37,15 @@ interface RoomScheduleResponse {
     }>
     hasConflicts: boolean
   }>
-  unassigned: Array<unknown>
+  unassigned: Array<{
+    id: string
+    source: 'timeBlock' | 'rehearsal' | 'theory'
+    startTime: string
+    endTime: string
+    teacherName: string
+    label: string
+    activityType: string
+  }>
   summary: {
     totalRooms: number
     totalActivities: number
@@ -77,6 +88,40 @@ export default function RoomSchedule() {
     loadSchedule()
   }, [loadSchedule])
 
+  // Compute summary statistics from API response
+  const stats = useMemo(() => {
+    if (!schedule) return { totalRooms: 0, occupiedSlots: 0, freeSlots: 0, conflictCount: 0 }
+
+    const totalRooms = schedule.summary.totalRooms
+    const totalSlots = totalRooms * TOTAL_SLOTS
+
+    // Count unique occupied slots per room (an activity spanning 2 slots = 2 occupied)
+    let occupiedSlotCount = 0
+    const gridStartMinutes = GRID_START_HOUR * 60
+
+    for (const room of schedule.rooms) {
+      const occupied = new Set<number>()
+      for (const activity of room.activities) {
+        const startMinutes = timeToMinutes(activity.startTime)
+        const endMinutes = timeToMinutes(activity.endTime)
+        for (let t = startMinutes; t < endMinutes; t += SLOT_DURATION) {
+          const slotIndex = Math.floor((t - gridStartMinutes) / SLOT_DURATION)
+          if (slotIndex >= 0 && slotIndex < TOTAL_SLOTS) {
+            occupied.add(slotIndex)
+          }
+        }
+      }
+      occupiedSlotCount += occupied.size
+    }
+
+    return {
+      totalRooms,
+      occupiedSlots: occupiedSlotCount,
+      freeSlots: totalSlots - occupiedSlotCount,
+      conflictCount: schedule.summary.conflictCount,
+    }
+  }, [schedule])
+
   return (
     <div className="p-6 space-y-6">
       {/* Page header */}
@@ -89,11 +134,23 @@ export default function RoomSchedule() {
         />
       </div>
 
+      {/* Summary statistics bar */}
+      <SummaryBar
+        totalRooms={stats.totalRooms}
+        occupiedSlots={stats.occupiedSlots}
+        freeSlots={stats.freeSlots}
+        conflictCount={stats.conflictCount}
+        loading={loading}
+      />
+
       {/* Room grid */}
       <RoomGrid
         rooms={schedule?.rooms || []}
         loading={loading}
       />
+
+      {/* Unassigned activities (no room) */}
+      <UnassignedRow activities={schedule?.unassigned || []} />
     </div>
   )
 }

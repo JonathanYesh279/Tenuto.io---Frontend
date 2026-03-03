@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import ActivityCell from './ActivityCell'
 import type { ActivityData } from './ActivityCell'
+import { timeToMinutes, GRID_START_HOUR, GRID_END_HOUR, SLOT_DURATION } from './utils'
 
 // ==================== Types ====================
 
@@ -23,9 +24,6 @@ interface RoomGridProps {
 
 // ==================== Constants ====================
 
-const GRID_START_HOUR = 8
-const GRID_END_HOUR = 20
-const SLOT_DURATION = 30
 const BASE_ROW_HEIGHT = 60 // px per non-conflicting row
 const STACKED_ITEM_HEIGHT = 32 // px per stacked conflict activity
 
@@ -38,11 +36,6 @@ for (let minutes = GRID_START_HOUR * 60; minutes < GRID_END_HOUR * 60; minutes +
 }
 
 // ==================== Helpers ====================
-
-function timeToMinutes(time: string): number {
-  const [hours, minutes] = time.split(':').map(Number)
-  return hours * 60 + minutes
-}
 
 function getActivityGridPlacement(startTime: string, endTime: string) {
   const startMinutes = timeToMinutes(startTime)

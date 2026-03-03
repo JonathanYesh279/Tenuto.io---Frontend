@@ -20,6 +20,7 @@ interface RoomScheduleRoom {
 interface RoomGridProps {
   rooms: RoomScheduleRoom[]
   loading: boolean
+  onEmptyCellClick?: (room: string, timeSlot: string) => void
 }
 
 // ==================== Constants ====================
@@ -105,7 +106,7 @@ function getRowMinHeight(activities: RoomScheduleActivity[]): number {
 
 // ==================== Component ====================
 
-export default function RoomGrid({ rooms, loading }: RoomGridProps) {
+export default function RoomGrid({ rooms, loading, onEmptyCellClick }: RoomGridProps) {
   // Precompute row heights for conflict stacking
   const rowHeights = useMemo(
     () => rooms.map((room) => getRowMinHeight(room.activities)),
@@ -194,6 +195,18 @@ export default function RoomGrid({ rooms, loading }: RoomGridProps) {
           const rowNumber = roomIdx + 2 // +2 because header is row 1, grid is 1-based
           const { conflictGroups, soloActivities } = groupByConflict(room.activities)
 
+          // Compute occupied slot indices for empty cell detection
+          const occupiedSlots = new Set<number>()
+          const gridStartMin = GRID_START_HOUR * 60
+          for (const activity of room.activities) {
+            const startMin = timeToMinutes(activity.startTime)
+            const endMin = timeToMinutes(activity.endTime)
+            for (let t = startMin; t < endMin; t += SLOT_DURATION) {
+              const idx = Math.floor((t - gridStartMin) / SLOT_DURATION)
+              if (idx >= 0 && idx < TIME_SLOTS.length) occupiedSlots.add(idx)
+            }
+          }
+
           return (
             <div key={room.room} className="contents">
               {/* Room name cell -- sticky on right (RTL) */}
@@ -204,18 +217,22 @@ export default function RoomGrid({ rooms, loading }: RoomGridProps) {
                 <span className="truncate">{room.room}</span>
               </div>
 
-              {/* Background cells for grid lines */}
-              {TIME_SLOTS.map((_, slotIdx) => (
-                <div
-                  key={slotIdx}
-                  className="border-b border-l"
-                  style={{
-                    gridColumn: `${slotIdx + 2}`,
-                    gridRow: `${rowNumber}`,
-                    minHeight: `${rowHeights[roomIdx]}px`,
-                  }}
-                />
-              ))}
+              {/* Background cells for grid lines -- empty cells are clickable */}
+              {TIME_SLOTS.map((slot, slotIdx) => {
+                const isEmpty = !occupiedSlots.has(slotIdx)
+                return (
+                  <div
+                    key={slotIdx}
+                    className={`border-b border-l${isEmpty && onEmptyCellClick ? ' cursor-pointer hover:bg-gray-50' : ''}`}
+                    style={{
+                      gridColumn: `${slotIdx + 2}`,
+                      gridRow: `${rowNumber}`,
+                      minHeight: `${rowHeights[roomIdx]}px`,
+                    }}
+                    onClick={isEmpty && onEmptyCellClick ? () => onEmptyCellClick(room.room, slot) : undefined}
+                  />
+                )
+              })}
 
               {/* Solo (non-conflicting) activity cells */}
               {soloActivities.map((activity) => {

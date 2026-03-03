@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { roomScheduleService, tenantService } from '@/services/apiService'
+import { roomScheduleService, tenantService, teacherService } from '@/services/apiService'
 import { useAuth } from '@/services/authContext'
 import DaySelector from '@/components/room-schedule/DaySelector'
 import RoomGrid from '@/components/room-schedule/RoomGrid'
@@ -7,7 +7,9 @@ import SummaryBar from '@/components/room-schedule/SummaryBar'
 import UnassignedRow from '@/components/room-schedule/UnassignedRow'
 import FilterBar from '@/components/room-schedule/FilterBar'
 import type { Filters } from '@/components/room-schedule/FilterBar'
-import { timeToMinutes, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
+import CreateLessonDialog from '@/components/room-schedule/CreateLessonDialog'
+import type { CreateDialogState } from '@/components/room-schedule/CreateLessonDialog'
+import { timeToMinutes, minutesToTime, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
 import toast from 'react-hot-toast'
 
 // Determine initial day: current weekday capped at Friday (5).
@@ -80,6 +82,24 @@ export default function RoomSchedule() {
   })
   const { user } = useAuth()
   const [tenantRooms, setTenantRooms] = useState<Array<{ name: string; isActive: boolean }>>([])
+  const [teachers, setTeachers] = useState<any[]>([])
+  const [createDialogState, setCreateDialogState] = useState<CreateDialogState>({
+    open: false,
+    room: '',
+    day: selectedDay,
+    startTime: '08:00',
+    endTime: '08:30',
+  })
+
+  // Fetch teachers for create dialog dropdown
+  useEffect(() => {
+    teacherService.getTeachers()
+      .then((result: any) => {
+        const list = Array.isArray(result) ? result : result?.data || result || []
+        setTeachers(list)
+      })
+      .catch((err: unknown) => console.error('Error fetching teachers:', err))
+  }, [])
 
   // Fetch tenant rooms for empty room display
   useEffect(() => {
@@ -104,6 +124,24 @@ export default function RoomSchedule() {
   }, [selectedDay])
 
   useEffect(() => {
+    loadSchedule()
+  }, [loadSchedule])
+
+  // Handle empty cell click -- open create lesson dialog
+  const handleEmptyCellClick = useCallback((room: string, timeSlot: string) => {
+    const startMinutes = timeToMinutes(timeSlot)
+    const endMinutes = startMinutes + 30
+    setCreateDialogState({
+      open: true,
+      room,
+      day: selectedDay,
+      startTime: timeSlot,
+      endTime: minutesToTime(endMinutes),
+    })
+  }, [selectedDay])
+
+  // Refresh grid after lesson creation
+  const handleLessonCreated = useCallback(() => {
     loadSchedule()
   }, [loadSchedule])
 
@@ -220,10 +258,19 @@ export default function RoomSchedule() {
       <RoomGrid
         rooms={filteredRooms}
         loading={loading}
+        onEmptyCellClick={handleEmptyCellClick}
       />
 
       {/* Unassigned activities (no room) */}
       <UnassignedRow activities={schedule?.unassigned || []} />
+
+      {/* Create lesson dialog */}
+      <CreateLessonDialog
+        state={createDialogState}
+        onOpenChange={(open) => setCreateDialogState((prev) => ({ ...prev, open }))}
+        teachers={teachers}
+        onCreated={handleLessonCreated}
+      />
     </div>
   )
 }

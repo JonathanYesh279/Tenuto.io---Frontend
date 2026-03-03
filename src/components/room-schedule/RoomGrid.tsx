@@ -1,20 +1,13 @@
-import { cn } from '@/lib/utils'
+import { useMemo } from 'react'
+import ActivityCell from './ActivityCell'
+import type { ActivityData } from './ActivityCell'
 
 // ==================== Types ====================
 
-interface RoomScheduleActivity {
-  id: string
-  source: 'timeBlock' | 'rehearsal' | 'theory'
+interface RoomScheduleActivity extends ActivityData {
   room: string
   day: number
-  startTime: string
-  endTime: string
-  teacherName: string
   teacherId: string
-  label: string
-  activityType: string
-  hasConflict: boolean
-  conflictGroupId: string | null
 }
 
 interface RoomScheduleRoom {
@@ -33,6 +26,8 @@ interface RoomGridProps {
 const GRID_START_HOUR = 8
 const GRID_END_HOUR = 20
 const SLOT_DURATION = 30
+const BASE_ROW_HEIGHT = 60 // px per non-conflicting row
+const STACKED_ITEM_HEIGHT = 32 // px per stacked conflict activity
 
 // Generate time slots array: ['08:00', '08:30', ..., '19:30'] (24 entries)
 const TIME_SLOTS: string[] = []
@@ -41,27 +36,6 @@ for (let minutes = GRID_START_HOUR * 60; minutes < GRID_END_HOUR * 60; minutes +
   const m = minutes % 60
   TIME_SLOTS.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`)
 }
-
-// Color map for activity source types
-const ACTIVITY_COLORS = {
-  timeBlock: {
-    bg: 'bg-blue-100',
-    border: 'border-blue-300',
-    text: 'text-blue-900',
-  },
-  rehearsal: {
-    bg: 'bg-purple-100',
-    border: 'border-purple-300',
-    text: 'text-purple-900',
-  },
-  theory: {
-    bg: 'bg-orange-100',
-    border: 'border-orange-300',
-    text: 'text-orange-900',
-  },
-} as const
-
-const CONFLICT_STYLE = 'border-2 border-red-500 ring-2 ring-red-200'
 
 // ==================== Helpers ====================
 
@@ -87,9 +61,64 @@ function getActivityGridPlacement(startTime: string, endTime: string) {
   return { startCol, endCol, span: endCol - startCol }
 }
 
+/**
+ * Group activities by conflictGroupId.
+ * Non-conflicting activities (no conflictGroupId) get their own solo group.
+ * Returns: { conflictGroups: Map<string, Activity[]>, soloActivities: Activity[] }
+ */
+function groupByConflict(activities: RoomScheduleActivity[]) {
+  const conflictGroups = new Map<string, RoomScheduleActivity[]>()
+  const soloActivities: RoomScheduleActivity[] = []
+
+  for (const activity of activities) {
+    if (activity.conflictGroupId) {
+      const group = conflictGroups.get(activity.conflictGroupId) || []
+      group.push(activity)
+      conflictGroups.set(activity.conflictGroupId, group)
+    } else {
+      soloActivities.push(activity)
+    }
+  }
+
+  return { conflictGroups, soloActivities }
+}
+
+/**
+ * Calculate the max conflict stack depth for a room.
+ * Used to determine row height expansion.
+ */
+function getMaxStackDepth(activities: RoomScheduleActivity[]): number {
+  const { conflictGroups } = groupByConflict(activities)
+  let maxDepth = 1
+
+  for (const group of conflictGroups.values()) {
+    if (group.length > maxDepth) {
+      maxDepth = group.length
+    }
+  }
+
+  return maxDepth
+}
+
+/**
+ * Calculate the row min-height in px based on max conflict depth.
+ */
+function getRowMinHeight(activities: RoomScheduleActivity[]): number {
+  const maxDepth = getMaxStackDepth(activities)
+  if (maxDepth <= 1) return BASE_ROW_HEIGHT
+  // Each stacked item needs STACKED_ITEM_HEIGHT px, plus some padding
+  return Math.max(BASE_ROW_HEIGHT, maxDepth * STACKED_ITEM_HEIGHT + 12)
+}
+
 // ==================== Component ====================
 
 export default function RoomGrid({ rooms, loading }: RoomGridProps) {
+  // Precompute row heights for conflict stacking
+  const rowHeights = useMemo(
+    () => rooms.map((room) => getRowMinHeight(room.activities)),
+    [rooms]
+  )
+
   // Loading skeleton
   if (loading) {
     return (
@@ -135,13 +164,18 @@ export default function RoomGrid({ rooms, loading }: RoomGridProps) {
     )
   }
 
+  // Build grid-template-rows with per-room heights
+  const rowTemplate = rowHeights
+    .map((h) => `minmax(${h}px, auto)`)
+    .join(' ')
+
   return (
     <div className="overflow-x-auto max-h-[calc(100vh-280px)] overflow-y-auto rounded-lg border border-gray-200">
       <div
         className="grid relative"
         style={{
           gridTemplateColumns: '120px repeat(24, minmax(80px, 1fr))',
-          gridTemplateRows: `auto repeat(${rooms.length}, minmax(60px, auto))`,
+          gridTemplateRows: `auto ${rowTemplate}`,
         }}
       >
         {/* ====== Header Row ====== */}
@@ -165,6 +199,7 @@ export default function RoomGrid({ rooms, loading }: RoomGridProps) {
         {/* ====== Room Rows ====== */}
         {rooms.map((room, roomIdx) => {
           const rowNumber = roomIdx + 2 // +2 because header is row 1, grid is 1-based
+          const { conflictGroups, soloActivities } = groupByConflict(room.activities)
 
           return (
             <div key={room.room} className="contents">
@@ -180,16 +215,17 @@ export default function RoomGrid({ rooms, loading }: RoomGridProps) {
               {TIME_SLOTS.map((_, slotIdx) => (
                 <div
                   key={slotIdx}
-                  className="border-b border-l min-h-[60px]"
+                  className="border-b border-l"
                   style={{
                     gridColumn: `${slotIdx + 2}`,
                     gridRow: `${rowNumber}`,
+                    minHeight: `${rowHeights[roomIdx]}px`,
                   }}
                 />
               ))}
 
-              {/* Activity cells */}
-              {room.activities.map((activity) => {
+              {/* Solo (non-conflicting) activity cells */}
+              {soloActivities.map((activity) => {
                 const { startCol, endCol, span } = getActivityGridPlacement(
                   activity.startTime,
                   activity.endTime
@@ -197,31 +233,48 @@ export default function RoomGrid({ rooms, loading }: RoomGridProps) {
 
                 if (span <= 0) return null
 
-                const colors = ACTIVITY_COLORS[activity.source] || ACTIVITY_COLORS.timeBlock
-
                 return (
                   <div
                     key={activity.id}
-                    className={cn(
-                      'rounded px-1.5 py-1 text-xs overflow-hidden mx-0.5 my-1 border',
-                      colors.bg,
-                      colors.border,
-                      colors.text,
-                      activity.hasConflict && CONFLICT_STYLE
-                    )}
+                    className="mx-0.5 my-1"
                     style={{
                       gridColumn: `${startCol} / ${endCol}`,
                       gridRow: `${rowNumber}`,
                       alignSelf: 'center',
                     }}
-                    title={`${activity.teacherName} - ${activity.label} (${activity.startTime}-${activity.endTime})`}
                   >
-                    <div className="font-medium truncate leading-tight">
-                      {activity.teacherName}
-                    </div>
-                    <div className="truncate leading-tight opacity-75">
-                      {activity.label}
-                    </div>
+                    <ActivityCell activity={activity} />
+                  </div>
+                )
+              })}
+
+              {/* Conflict group stacks */}
+              {Array.from(conflictGroups.entries()).map(([groupId, groupActivities]) => {
+                // Find the widest span that covers all activities in the group
+                const placements = groupActivities.map((a) =>
+                  getActivityGridPlacement(a.startTime, a.endTime)
+                )
+                const minStartCol = Math.min(...placements.map((p) => p.startCol))
+                const maxEndCol = Math.max(...placements.map((p) => p.endCol))
+
+                return (
+                  <div
+                    key={groupId}
+                    className="mx-0.5 my-1 flex flex-col gap-0.5"
+                    style={{
+                      gridColumn: `${minStartCol} / ${maxEndCol}`,
+                      gridRow: `${rowNumber}`,
+                      alignSelf: 'stretch',
+                    }}
+                  >
+                    {groupActivities.map((activity) => (
+                      <div
+                        key={activity.id}
+                        style={{ minHeight: `${STACKED_ITEM_HEIGHT}px` }}
+                      >
+                        <ActivityCell activity={activity} />
+                      </div>
+                    ))}
                   </div>
                 )
               })}

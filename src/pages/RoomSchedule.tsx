@@ -19,6 +19,7 @@ import WeekOverview from '@/components/room-schedule/WeekOverview'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import toast from 'react-hot-toast'
+import { registerHebrewFont } from '@/utils/pdfHebrewFont'
 
 declare module 'jspdf' {
   interface jsPDF {
@@ -407,9 +408,10 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
   }, [])
 
   // Tabular PDF export handler (activity rows -- existing format with week support)
-  const handleExportTabularPDF = useCallback(() => {
+  const handleExportTabularPDF = useCallback(async () => {
     try {
       const doc = new jsPDF({ orientation: 'landscape' })
+      await registerHebrewFont(doc)
       const pageWidth = doc.internal.pageSize.getWidth()
 
       const activityTypeLabels: Record<string, string> = {
@@ -471,15 +473,17 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
         exportTabularPage(filteredRooms, DAY_NAMES[selectedDay])
         doc.save(`room-schedule-${DAY_NAMES[selectedDay]}.pdf`)
       }
-    } catch {
+    } catch (err) {
+      console.error('PDF tabular export error:', err)
       toast.error('שגיאה בייצוא PDF')
     }
   }, [selectedDay, filteredRooms, viewMode, weekData, filters, tenantRooms])
 
   // Grid-style visual PDF export handler (rooms x time slots, color-coded)
-  const handleExportGridPDF = useCallback(() => {
+  const handleExportGridPDF = useCallback(async () => {
     try {
       const doc = new jsPDF({ orientation: 'landscape' })
+      await registerHebrewFont(doc)
       const pageWidth = doc.internal.pageSize.getWidth()
 
       // Generate time slot headers for the grid columns
@@ -579,7 +583,8 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
         exportGridPage(filteredRooms, DAY_NAMES[selectedDay])
         doc.save(`room-schedule-grid-${DAY_NAMES[selectedDay]}.pdf`)
       }
-    } catch {
+    } catch (err) {
+      console.error('PDF grid export error:', err)
       toast.error('שגיאה בייצוא PDF')
     }
   }, [selectedDay, filteredRooms, viewMode, weekData, filters, tenantRooms])

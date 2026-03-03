@@ -40,21 +40,24 @@ const ACTIVITY_COLORS = {
     border: 'border-blue-300',
     text: 'text-blue-900',
     label: 'שיעור פרטי',
-    borderAccent: 'border-r-4 border-r-blue-600',
+    borderAccent: 'border-r-[6px] border-r-blue-600',
+    borderAccentLeft: 'border-l-2 border-l-blue-400',
   },
   rehearsal: {
     bg: 'bg-purple-100',
     border: 'border-purple-300',
     text: 'text-purple-900',
     label: 'חזרה',
-    borderAccent: 'border-r-4 border-r-purple-600',
+    borderAccent: 'border-r-[6px] border-r-purple-600',
+    borderAccentLeft: 'border-l-2 border-l-purple-400',
   },
   theory: {
     bg: 'bg-orange-100',
     border: 'border-orange-300',
     text: 'text-orange-900',
     label: 'תאוריה',
-    borderAccent: 'border-r-4 border-r-orange-600',
+    borderAccent: 'border-r-[6px] border-r-orange-600',
+    borderAccentLeft: 'border-l-2 border-l-orange-400',
   },
 } as const
 
@@ -87,6 +90,7 @@ export default function ActivityCell({ activity, isDragEnabled, dragData }: Acti
         colors.bg,
         colors.text,
         colors.borderAccent,
+        colors.borderAccentLeft,
         activity.hasConflict ? CONFLICT_BORDER : colors.border
       )}
     >

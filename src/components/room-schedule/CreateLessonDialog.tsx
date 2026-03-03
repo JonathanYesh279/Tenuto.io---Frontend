@@ -114,12 +114,14 @@ export default function CreateLessonDialog({
       }
     }
 
-    // 2. Teacher double-booking: if a teacher is selected, check all rooms for same teacherId + overlapping time
+    // 2. Teacher double-booking: if a teacher is selected, check OTHER rooms for same teacherId + overlapping time
+    //    Skip state.room to avoid duplicating the room conflict warning above
     if (selectedTeacherId) {
       for (const room of scheduleData.rooms) {
+        if (room.room === state.room) continue // already reported as room conflict
         for (const activity of room.activities) {
           if (
-            activity.teacherId === selectedTeacherId &&
+            String(activity.teacherId) === String(selectedTeacherId) &&
             doTimesOverlap(state.startTime, endTime, activity.startTime, activity.endTime)
           ) {
             const selectedTeacher = teachers.find(t => t._id === selectedTeacherId)
@@ -224,7 +226,7 @@ export default function CreateLessonDialog({
             {/* Search input */}
             <input
               type="text"
-              placeholder="...\u05D7\u05D9\u05E4\u05D5\u05E9 \u05DE\u05D5\u05E8\u05D4"
+              placeholder={'\u05D7\u05D9\u05E4\u05D5\u05E9 \u05DE\u05D5\u05E8\u05D4...'}
               value={teacherSearch}
               onChange={(e) => setTeacherSearch(e.target.value)}
               className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

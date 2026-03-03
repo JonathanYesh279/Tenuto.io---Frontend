@@ -92,10 +92,10 @@ export default function ActivityCell({ activity, isDragEnabled, dragData }: Acti
     >
       {/* Content: 3 lines with prefix labels */}
       <div className="font-medium truncate leading-tight text-[11px]">
-        {activity.teacherName}
+        מורה: {activity.teacherName}
       </div>
       <div className="truncate leading-tight text-[10px] opacity-80">
-        {activity.label}
+        תלמיד: {activity.label}
       </div>
       <div className="truncate leading-tight text-[9px] opacity-60">
         {activity.startTime}-{activity.endTime}

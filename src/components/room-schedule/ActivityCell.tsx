@@ -1,3 +1,5 @@
+import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
 import { WarningCircle } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import {
@@ -15,6 +17,7 @@ export interface ActivityData {
   startTime: string
   endTime: string
   teacherName: string
+  teacherId: string
   label: string
   activityType: string
   hasConflict: boolean
@@ -23,6 +26,11 @@ export interface ActivityData {
 
 interface ActivityCellProps {
   activity: ActivityData
+  isDragEnabled?: boolean  // false by default, true when DndContext is active
+  dragData?: {             // extra data attached to the draggable for onDragEnd
+    room: string
+    teacherId: string
+  }
 }
 
 // ==================== Constants ====================
@@ -52,13 +60,28 @@ const CONFLICT_BORDER = 'border-2 border-red-500 ring-2 ring-red-200'
 
 // ==================== Component ====================
 
-export default function ActivityCell({ activity }: ActivityCellProps) {
+export default function ActivityCell({ activity, isDragEnabled, dragData }: ActivityCellProps) {
   const colors = ACTIVITY_COLORS[activity.source] || ACTIVITY_COLORS.timeBlock
+
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: activity.id,
+    data: { ...activity, ...dragData },
+    disabled: !isDragEnabled,
+  })
+
+  const style = transform ? {
+    transform: CSS.Transform.toString(transform),
+  } : undefined
 
   const card = (
     <div
+      ref={setNodeRef}
+      style={style}
+      {...(isDragEnabled ? { ...attributes, ...listeners } : {})}
       className={cn(
-        'rounded px-1.5 py-1 text-xs overflow-hidden h-full cursor-default border relative',
+        'rounded px-1.5 py-1 text-xs overflow-hidden h-full border relative',
+        isDragEnabled ? 'cursor-grab active:cursor-grabbing' : 'cursor-default',
+        isDragging && 'opacity-30',
         colors.bg,
         colors.text,
         activity.hasConflict ? CONFLICT_BORDER : colors.border

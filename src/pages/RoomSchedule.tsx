@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import { DndContext, DragOverlay, PointerSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core'
+import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core'
 import { roomScheduleService, tenantService, teacherService } from '@/services/apiService'
 import { useAuth } from '@/services/authContext'
 import DaySelector from '@/components/room-schedule/DaySelector'
@@ -9,7 +11,9 @@ import FilterBar from '@/components/room-schedule/FilterBar'
 import type { Filters } from '@/components/room-schedule/FilterBar'
 import CreateLessonDialog from '@/components/room-schedule/CreateLessonDialog'
 import type { CreateDialogState } from '@/components/room-schedule/CreateLessonDialog'
-import { timeToMinutes, minutesToTime, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
+import DragOverlayContent from '@/components/room-schedule/DragOverlayContent'
+import type { ActivityData } from '@/components/room-schedule/ActivityCell'
+import { timeToMinutes, minutesToTime, extractBlockId, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
 import toast from 'react-hot-toast'
 
 // Determine initial day: current weekday capped at Friday (5).
@@ -91,6 +95,17 @@ export default function RoomSchedule() {
     endTime: '08:30',
   })
 
+  // Drag-and-drop state
+  const [activeActivity, setActiveActivity] = useState<ActivityData | null>(null)
+
+  // Configure dnd-kit sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 },  // 8px before drag starts (prevents click/drag conflict)
+    }),
+    useSensor(KeyboardSensor)
+  )
+
   // Fetch teachers for create dialog dropdown
   useEffect(() => {
     teacherService.getTeachers()
@@ -143,6 +158,70 @@ export default function RoomSchedule() {
   // Refresh grid after lesson creation
   const handleLessonCreated = useCallback(() => {
     loadSchedule()
+  }, [loadSchedule])
+
+  // Drag start handler -- store the active activity for DragOverlay
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const activity = event.active.data.current as ActivityData
+    setActiveActivity(activity)
+  }, [])
+
+  // Drag end handler -- call move API and refresh grid
+  const handleDragEnd = useCallback(async (event: DragEndEvent) => {
+    const { active, over } = event
+    setActiveActivity(null)
+
+    if (!over) return  // dropped outside any droppable
+
+    const activity = active.data.current as ActivityData & { room: string; teacherId: string }
+    const droppableId = over.id as string
+
+    // Parse droppable ID: "roomName::HH:MM"
+    const separatorIndex = droppableId.lastIndexOf('::')
+    if (separatorIndex === -1) return
+    const targetRoom = droppableId.slice(0, separatorIndex)
+    const targetStartTime = droppableId.slice(separatorIndex + 2)
+
+    // Calculate target end time preserving activity duration
+    const durationMinutes = timeToMinutes(activity.endTime) - timeToMinutes(activity.startTime)
+    const targetEndMinutes = timeToMinutes(targetStartTime) + durationMinutes
+    const targetEndTime = minutesToTime(targetEndMinutes)
+
+    // Skip if dropped on same cell (same room and same start time)
+    if (targetRoom === activity.room && targetStartTime === activity.startTime) return
+
+    try {
+      const moveData: Record<string, string> = {
+        activityId: activity.id,
+        source: activity.source,
+        targetRoom,
+        targetStartTime,
+        targetEndTime,
+      }
+
+      // TimeBlock source requires teacherId and blockId
+      if (activity.source === 'timeBlock') {
+        moveData.teacherId = activity.teacherId
+        moveData.blockId = extractBlockId(activity.id)
+      }
+
+      await roomScheduleService.moveActivity(moveData)
+      toast.success('הפעילות הועברה בהצלחה')
+      loadSchedule()  // Refresh grid with server state
+    } catch (err: any) {
+      if (err?.code === 'CONFLICT' && err?.conflicts?.length > 0) {
+        // Show conflict details in Hebrew
+        const conflictNames = err.conflicts
+          .map((c: any) => `${c.teacherName} (${c.startTime}-${c.endTime})`)
+          .join(', ')
+        toast.error(`התנגשות בחדר: ${conflictNames}`)
+      } else if (err?.message === 'Resource not found.') {
+        toast.error('הפעילות לא נמצאה')
+      } else {
+        toast.error('שגיאה בהעברת הפעילות')
+      }
+      loadSchedule()  // Reload to reset to server state
+    }
   }, [loadSchedule])
 
   // Room names for FilterBar dropdown (schedule rooms + active tenant rooms)
@@ -254,12 +333,22 @@ export default function RoomSchedule() {
         loading={loading}
       />
 
-      {/* Room grid */}
-      <RoomGrid
-        rooms={filteredRooms}
-        loading={loading}
-        onEmptyCellClick={handleEmptyCellClick}
-      />
+      {/* Room grid with drag-and-drop */}
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <RoomGrid
+          rooms={filteredRooms}
+          loading={loading}
+          onEmptyCellClick={handleEmptyCellClick}
+          isDragEnabled={true}
+        />
+        <DragOverlay>
+          {activeActivity ? <DragOverlayContent activity={activeActivity} /> : null}
+        </DragOverlay>
+      </DndContext>
 
       {/* Unassigned activities (no room) */}
       <UnassignedRow activities={schedule?.unassigned || []} />

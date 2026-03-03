@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import ActivityCell from './ActivityCell'
 import type { ActivityData } from './ActivityCell'
+import DroppableCell from './DroppableCell'
 import { timeToMinutes, GRID_START_HOUR, GRID_END_HOUR, SLOT_DURATION } from './utils'
 
 // ==================== Types ====================
@@ -21,6 +22,7 @@ interface RoomGridProps {
   rooms: RoomScheduleRoom[]
   loading: boolean
   onEmptyCellClick?: (room: string, timeSlot: string) => void
+  isDragEnabled?: boolean  // passed down from DndContext in RoomSchedule
 }
 
 // ==================== Constants ====================
@@ -106,7 +108,7 @@ function getRowMinHeight(activities: RoomScheduleActivity[]): number {
 
 // ==================== Component ====================
 
-export default function RoomGrid({ rooms, loading, onEmptyCellClick }: RoomGridProps) {
+export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabled }: RoomGridProps) {
   // Precompute row heights for conflict stacking
   const rowHeights = useMemo(
     () => rooms.map((room) => getRowMinHeight(room.activities)),
@@ -217,20 +219,30 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick }: RoomGridP
                 <span className="truncate">{room.room}</span>
               </div>
 
-              {/* Background cells for grid lines -- empty cells are clickable */}
+              {/* Background cells wrapped in DroppableCell for drag-and-drop targeting */}
               {TIME_SLOTS.map((slot, slotIdx) => {
                 const isEmpty = !occupiedSlots.has(slotIdx)
                 return (
                   <div
                     key={slotIdx}
-                    className={`border-b border-l${isEmpty && onEmptyCellClick ? ' cursor-pointer hover:bg-gray-50' : ''}`}
+                    className="border-b border-l"
                     style={{
                       gridColumn: `${slotIdx + 2}`,
                       gridRow: `${rowNumber}`,
                       minHeight: `${rowHeights[roomIdx]}px`,
                     }}
-                    onClick={isEmpty && onEmptyCellClick ? () => onEmptyCellClick(room.room, slot) : undefined}
-                  />
+                  >
+                    <DroppableCell
+                      room={room.room}
+                      timeSlot={slot}
+                      isEmpty={isEmpty}
+                      onClick={
+                        isEmpty && onEmptyCellClick
+                          ? () => onEmptyCellClick(room.room, slot)
+                          : undefined
+                      }
+                    />
+                  </div>
                 )
               })}
 
@@ -246,14 +258,18 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick }: RoomGridP
                 return (
                   <div
                     key={activity.id}
-                    className="mx-0.5 my-1"
+                    className="mx-0.5 my-1 pointer-events-auto"
                     style={{
                       gridColumn: `${startCol} / ${endCol}`,
                       gridRow: `${rowNumber}`,
                       alignSelf: 'center',
                     }}
                   >
-                    <ActivityCell activity={activity} />
+                    <ActivityCell
+                      activity={activity}
+                      isDragEnabled={isDragEnabled}
+                      dragData={{ room: room.room, teacherId: activity.teacherId }}
+                    />
                   </div>
                 )
               })}
@@ -270,7 +286,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick }: RoomGridP
                 return (
                   <div
                     key={groupId}
-                    className="mx-0.5 my-1 flex flex-col gap-0.5"
+                    className="mx-0.5 my-1 flex flex-col gap-0.5 pointer-events-auto"
                     style={{
                       gridColumn: `${minStartCol} / ${maxEndCol}`,
                       gridRow: `${rowNumber}`,
@@ -282,7 +298,11 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick }: RoomGridP
                         key={activity.id}
                         style={{ minHeight: `${STACKED_ITEM_HEIGHT}px` }}
                       >
-                        <ActivityCell activity={activity} />
+                        <ActivityCell
+                          activity={activity}
+                          isDragEnabled={isDragEnabled}
+                          dragData={{ room: room.room, teacherId: activity.teacherId }}
+                        />
                       </div>
                     ))}
                   </div>

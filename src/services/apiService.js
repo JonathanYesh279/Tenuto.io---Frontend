@@ -119,6 +119,13 @@ class ApiClient {
           return null;
         }
         throw new Error('Resource not found.');
+      } else if (response.status === 409) {
+        // Conflict errors -- preserve response data (e.g. room schedule conflict details)
+        const error = new Error(data?.error || 'Conflict detected');
+        error.code = 'CONFLICT';
+        error.status = 409;
+        error.conflicts = data?.conflicts || [];
+        throw error;
       } else if (response.status >= 500) {
         throw new Error('Server error. Please try again later.');
       } else if (response.status === 400 && data?.code === 'VALIDATION_ERROR' && data?.validationErrors) {

@@ -29,6 +29,7 @@ const ImportData = lazyWithRetry(() => import('./pages/ImportData'), 'ImportData
 const Settings = lazyWithRetry(() => import('./pages/Settings'), 'Settings')
 const AuditTrail = lazyWithRetry(() => import('./pages/AuditTrail'), 'AuditTrail')
 const RoomSchedule = lazyWithRetry(() => import('./pages/RoomSchedule'), 'RoomSchedule')
+const RoomScheduleFullscreen = lazyWithRetry(() => import('./pages/RoomScheduleFullscreen'), 'RoomScheduleFullscreen')
 
 // Conductor-specific pages
 const ConductorAttendance = lazyWithRetry(() => import('./components/rehearsal/RehearsalAttendance'), 'ConductorAttendance')
@@ -389,6 +390,17 @@ function AppRoutes() {
                   <Profile />
                 </Suspense>
               </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/room-schedule/fullscreen"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Suspense fallback={<PageLoadingFallback message="טוען מסך מלא..." />}>
+                <RoomScheduleFullscreen />
+              </Suspense>
             </ProtectedRoute>
           }
         />

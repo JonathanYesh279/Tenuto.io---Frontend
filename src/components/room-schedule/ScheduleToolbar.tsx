@@ -1,4 +1,4 @@
-import { Printer, FilePdf, CalendarBlank, Calendar } from '@phosphor-icons/react'
+import { Printer, FilePdf, CalendarBlank, Calendar, ArrowsOut } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
 interface ScheduleToolbarProps {
@@ -46,8 +46,16 @@ export default function ScheduleToolbar({
         </button>
       </div>
 
-      {/* Print & Export actions */}
+      {/* Print, Export & Fullscreen actions */}
       <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => window.open('/room-schedule/fullscreen', '_blank')}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <ArrowsOut size={16} />
+          <span>מסך מלא</span>
+        </button>
         <button
           type="button"
           onClick={onPrint}

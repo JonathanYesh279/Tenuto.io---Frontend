@@ -15,6 +15,7 @@ import DragOverlayContent from '@/components/room-schedule/DragOverlayContent'
 import type { ActivityData } from '@/components/room-schedule/ActivityCell'
 import { timeToMinutes, minutesToTime, extractBlockId, DAY_NAMES, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
 import ScheduleToolbar from '@/components/room-schedule/ScheduleToolbar'
+import WeekOverview from '@/components/room-schedule/WeekOverview'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import toast from 'react-hot-toast'
@@ -105,6 +106,8 @@ export default function RoomSchedule() {
   })
 
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day')
+  const [weekData, setWeekData] = useState<RoomScheduleResponse[] | null>(null)
+  const [weekLoading, setWeekLoading] = useState(false)
 
   // Drag-and-drop state
   const [activeActivity, setActiveActivity] = useState<ActivityData | null>(null)
@@ -141,6 +144,7 @@ export default function RoomSchedule() {
       setLoading(true)
       const result = await roomScheduleService.getRoomSchedule(selectedDay)
       setSchedule(result)
+      setWeekData(null) // Invalidate week cache on day-mode data reload
     } catch (err) {
       console.error('Error loading room schedule:', err)
       toast.error('שגיאה בטעינת לוח החדרים')
@@ -152,6 +156,29 @@ export default function RoomSchedule() {
   useEffect(() => {
     loadSchedule()
   }, [loadSchedule])
+
+  // Load all 6 days for week overview
+  const loadWeekData = useCallback(async () => {
+    setWeekLoading(true)
+    try {
+      const days = await Promise.all(
+        [0, 1, 2, 3, 4, 5].map(day => roomScheduleService.getRoomSchedule(day))
+      )
+      setWeekData(days)
+    } catch (err) {
+      console.error('Error loading week data:', err)
+      toast.error('שגיאה בטעינת מבט שבועי')
+    } finally {
+      setWeekLoading(false)
+    }
+  }, [])
+
+  // Auto-fetch week data when switching to week view (if not cached)
+  useEffect(() => {
+    if (viewMode === 'week' && weekData === null) {
+      loadWeekData()
+    }
+  }, [viewMode, weekData, loadWeekData])
 
   // Handle empty cell click -- open create lesson dialog
   const handleEmptyCellClick = useCallback((room: string, timeSlot: string) => {
@@ -390,11 +417,13 @@ export default function RoomSchedule() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
         <h1 className="text-2xl font-bold text-gray-900">לוח חדרים</h1>
-        <DaySelector
-          selectedDay={selectedDay}
-          onDayChange={setSelectedDay}
-          disabled={loading}
-        />
+        {viewMode === 'day' && (
+          <DaySelector
+            selectedDay={selectedDay}
+            onDayChange={setSelectedDay}
+            disabled={loading}
+          />
+        )}
       </div>
 
       {/* Schedule toolbar (print/export/view mode) */}
@@ -454,9 +483,13 @@ export default function RoomSchedule() {
         </>
       )}
 
-      {/* Week view placeholder (to be implemented in Plan 35-02) */}
+      {/* Week overview */}
       {viewMode === 'week' && (
-        <div className="text-center text-gray-500 py-12">Week view placeholder</div>
+        <WeekOverview
+          weekData={weekData}
+          tenantRooms={tenantRooms}
+          loading={weekLoading}
+        />
       )}
     </div>
   )

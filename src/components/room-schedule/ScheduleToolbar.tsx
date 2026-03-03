@@ -1,18 +1,20 @@
-import { Printer, FilePdf, CalendarBlank, Calendar, ArrowsOut } from '@phosphor-icons/react'
+import { Printer, FilePdf, CalendarBlank, Calendar, ArrowsOut, Table } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
 interface ScheduleToolbarProps {
   viewMode: 'day' | 'week'
   onViewModeChange: (mode: 'day' | 'week') => void
   onPrint: () => void
-  onExportPDF: () => void
+  onExportGridPDF: () => void
+  onExportTabularPDF: () => void
 }
 
 export default function ScheduleToolbar({
   viewMode,
   onViewModeChange,
   onPrint,
-  onExportPDF,
+  onExportGridPDF,
+  onExportTabularPDF,
 }: ScheduleToolbarProps) {
   return (
     <div className="flex items-center justify-between print:hidden">
@@ -66,11 +68,19 @@ export default function ScheduleToolbar({
         </button>
         <button
           type="button"
-          onClick={onExportPDF}
+          onClick={onExportGridPDF}
           className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
         >
           <FilePdf size={16} />
-          <span>ייצוא PDF</span>
+          <span>PDF חזותי</span>
+        </button>
+        <button
+          type="button"
+          onClick={onExportTabularPDF}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <Table size={16} />
+          <span>PDF טבלאי</span>
         </button>
       </div>
     </div>

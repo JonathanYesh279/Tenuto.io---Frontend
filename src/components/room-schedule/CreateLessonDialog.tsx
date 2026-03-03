@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { teacherScheduleService } from '@/services/apiService'
-import { DAY_NAMES } from './utils'
+import { DAY_NAMES, doTimesOverlap } from './utils'
 import toast from 'react-hot-toast'
 
 // ==================== Types ====================
@@ -30,11 +30,30 @@ interface Teacher {
   }
 }
 
+interface ScheduleActivity {
+  id: string
+  startTime: string
+  endTime: string
+  teacherName: string
+  teacherId: string
+  source: string
+}
+
+interface ScheduleRoom {
+  room: string
+  activities: ScheduleActivity[]
+}
+
+interface ScheduleResponse {
+  rooms: ScheduleRoom[]
+}
+
 interface CreateLessonDialogProps {
   state: CreateDialogState
   onOpenChange: (open: boolean) => void
   teachers: Teacher[]
   onCreated: () => void // callback to refresh grid after creation
+  scheduleData: ScheduleResponse | null // full day schedule for conflict checking
 }
 
 // ==================== Helpers ====================
@@ -53,6 +72,7 @@ export default function CreateLessonDialog({
   onOpenChange,
   teachers,
   onCreated,
+  scheduleData,
 }: CreateLessonDialogProps) {
   const [selectedTeacherId, setSelectedTeacherId] = useState('')
   const [endTime, setEndTime] = useState(state.endTime)
@@ -77,6 +97,41 @@ export default function CreateLessonDialog({
     const name = getTeacherDisplayName(teacher)
     return name.includes(teacherSearch)
   })
+
+  // Check for conflicts with existing activities
+  const conflictWarning = useMemo(() => {
+    if (!scheduleData || !state.open) return null
+
+    const warnings: string[] = []
+
+    // 1. Room conflict: check if any activity in the target room overlaps with the selected time
+    const targetRoom = scheduleData.rooms.find(r => r.room === state.room)
+    if (targetRoom) {
+      for (const activity of targetRoom.activities) {
+        if (doTimesOverlap(state.startTime, endTime, activity.startTime, activity.endTime)) {
+          warnings.push(`\u05D4\u05D7\u05D3\u05E8 \u05EA\u05E4\u05D5\u05E1 \u05E2"\u05D9 ${activity.teacherName} \u05D1\u05E9\u05E2\u05D5\u05EA ${activity.startTime}-${activity.endTime}`)
+        }
+      }
+    }
+
+    // 2. Teacher double-booking: if a teacher is selected, check all rooms for same teacherId + overlapping time
+    if (selectedTeacherId) {
+      for (const room of scheduleData.rooms) {
+        for (const activity of room.activities) {
+          if (
+            activity.teacherId === selectedTeacherId &&
+            doTimesOverlap(state.startTime, endTime, activity.startTime, activity.endTime)
+          ) {
+            const selectedTeacher = teachers.find(t => t._id === selectedTeacherId)
+            const teacherName = selectedTeacher ? getTeacherDisplayName(selectedTeacher) : activity.teacherName
+            warnings.push(`${teacherName} \u05DB\u05D1\u05E8 \u05DE\u05DC\u05DE\u05D3/\u05EA \u05D1\u05D7\u05D3\u05E8 ${room.room} \u05D1\u05E9\u05E2\u05D5\u05EA ${activity.startTime}-${activity.endTime}`)
+          }
+        }
+      }
+    }
+
+    return warnings.length > 0 ? warnings : null
+  }, [scheduleData, state.open, state.room, state.startTime, endTime, selectedTeacherId, teachers])
 
   const handleSubmit = async () => {
     if (!selectedTeacherId) {
@@ -225,6 +280,16 @@ export default function CreateLessonDialog({
           </div>
         </div>
 
+        {/* Conflict warnings */}
+        {conflictWarning && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-3 space-y-1">
+            <div className="text-sm font-medium text-red-800">{'\u05D4\u05EA\u05E0\u05D2\u05E9\u05D5\u05D9\u05D5\u05EA \u05E9\u05E0\u05DE\u05E6\u05D0\u05D5:'}</div>
+            {conflictWarning.map((w, i) => (
+              <div key={i} className="text-sm text-red-700">{'\u2022'} {w}</div>
+            ))}
+          </div>
+        )}
+
         <DialogFooter className="gap-2 sm:gap-0">
           <button
             type="button"
@@ -236,7 +301,7 @@ export default function CreateLessonDialog({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting || !selectedTeacherId}
+            disabled={submitting || !selectedTeacherId || conflictWarning !== null}
             className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {submitting ? '\u05D9\u05D5\u05E6\u05E8...' : '\u05E6\u05D5\u05E8 \u05E9\u05D9\u05E2\u05D5\u05E8'}

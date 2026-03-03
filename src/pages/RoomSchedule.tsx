@@ -479,6 +479,7 @@ export default function RoomSchedule() {
             onOpenChange={(open) => setCreateDialogState((prev) => ({ ...prev, open }))}
             teachers={teachers}
             onCreated={handleLessonCreated}
+            scheduleData={schedule}
           />
         </>
       )}

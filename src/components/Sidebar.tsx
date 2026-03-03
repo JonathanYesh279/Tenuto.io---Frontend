@@ -29,6 +29,7 @@ import {
   CheckSquareIcon,
   ShieldIcon,
   BuildingsIcon,
+  SquaresFourIcon,
 } from '@phosphor-icons/react'
 import type { Icon } from '@phosphor-icons/react'
 
@@ -49,6 +50,7 @@ const adminNavigation: NavigationItem[] = [
   { name: 'שיעורי תיאוריה', href: '/theory-lessons', Icon: BookOpenIcon, category: 'management', roles: ['admin'] },
   { name: 'תזמורות', href: '/orchestras', Icon: MusicNotesIcon, category: 'management', roles: ['admin'] },
   { name: 'חזרות', href: '/rehearsals', Icon: CalendarIcon, category: 'management', roles: ['admin'] },
+  { name: 'לוח חדרים', href: '/room-schedule', Icon: SquaresFourIcon, category: 'management', roles: ['admin'] },
   { name: 'בגרויות', href: '/bagruts', Icon: MedalIcon, category: 'management', roles: ['admin'] },
   { name: 'נוכחות', href: '/teachers', Icon: UserCircleCheckIcon, category: 'operations', roles: ['admin'] },
   { name: 'דוחות משרד', href: '/ministry-reports', Icon: FileTextIcon, category: 'operations', roles: ['admin'] },

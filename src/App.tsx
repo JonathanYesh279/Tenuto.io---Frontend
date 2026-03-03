@@ -28,6 +28,7 @@ const MinistryReports = lazyWithRetry(() => import('./pages/MinistryReports'), '
 const ImportData = lazyWithRetry(() => import('./pages/ImportData'), 'ImportData')
 const Settings = lazyWithRetry(() => import('./pages/Settings'), 'Settings')
 const AuditTrail = lazyWithRetry(() => import('./pages/AuditTrail'), 'AuditTrail')
+const RoomSchedule = lazyWithRetry(() => import('./pages/RoomSchedule'), 'RoomSchedule')
 
 // Conductor-specific pages
 const ConductorAttendance = lazyWithRetry(() => import('./components/rehearsal/RehearsalAttendance'), 'ConductorAttendance')
@@ -386,6 +387,19 @@ function AppRoutes() {
               <Layout>
                 <Suspense fallback={<PageLoadingFallback message="טוען עמוד אישי..." />}>
                   <Profile />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/room-schedule"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען לוח חדרים..." />}>
+                  <RoomSchedule />
                 </Suspense>
               </Layout>
             </ProtectedRoute>

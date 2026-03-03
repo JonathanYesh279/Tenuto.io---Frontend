@@ -5588,6 +5588,34 @@ export const adminAuditService = {
   getSnapshots: () => apiClient.get('/admin/deletion/snapshots'),
 };
 
+// ==================== Room Schedule Service ====================
+
+/**
+ * Room Schedule Service
+ * Room-based schedule grid with conflict detection (admin only)
+ * Backend endpoints: /api/room-schedule/*
+ */
+export const roomScheduleService = {
+  async getRoomSchedule(day) {
+    try {
+      const response = await apiClient.get('/room-schedule', { day });
+      return response;
+    } catch (error) {
+      console.error('Error fetching room schedule:', error);
+      throw error;
+    }
+  },
+  async moveActivity(moveData) {
+    try {
+      const response = await apiClient.put('/room-schedule/move', moveData);
+      return response;
+    } catch (error) {
+      console.error('Error moving activity:', error);
+      throw error;
+    }
+  },
+};
+
 /**
  * Default export with all services
  * Complete API service collection matching backend schemas
@@ -5607,6 +5635,7 @@ export default {
   analytics: analyticsService,
   assignments: assignmentService,
   attendance: attendanceService,
+  roomSchedule: roomScheduleService,
   test: apiTestUtils,
   client: apiClient,
   // Utility functions

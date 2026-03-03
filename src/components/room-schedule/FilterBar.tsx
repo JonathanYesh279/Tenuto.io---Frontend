@@ -29,21 +29,18 @@ const ACTIVITY_TYPE_BUTTONS = [
     label: 'שיעור פרטי',
     activeBg: 'bg-blue-100',
     activeText: 'text-blue-800',
-    activeBorder: 'border-transparent',
   },
   {
     type: 'rehearsal',
     label: 'חזרה',
     activeBg: 'bg-purple-100',
     activeText: 'text-purple-800',
-    activeBorder: 'border-transparent',
   },
   {
     type: 'theory',
     label: 'תאוריה',
     activeBg: 'bg-orange-100',
     activeText: 'text-orange-800',
-    activeBorder: 'border-transparent',
   },
 ] as const
 
@@ -118,8 +115,8 @@ export default function FilterBar({ filters, onFiltersChange, rooms }: FilterBar
             className={cn(
               'px-3 py-1.5 text-sm rounded-md border transition-colors',
               isActive
-                ? `${btn.activeBg} ${btn.activeText} ${btn.activeBorder}`
-                : 'bg-gray-50 text-gray-400 border-gray-200'
+                ? `${btn.activeBg} ${btn.activeText} border-transparent font-medium shadow-sm`
+                : 'bg-white text-gray-400 border-gray-300 line-through'
             )}
           >
             {btn.label}

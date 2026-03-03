@@ -236,6 +236,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
                       room={room.room}
                       timeSlot={slot}
                       isEmpty={isEmpty}
+                      roomActivities={room.activities}
                       onClick={
                         isEmpty && onEmptyCellClick
                           ? () => onEmptyCellClick(room.room, slot)

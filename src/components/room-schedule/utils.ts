@@ -68,6 +68,18 @@ export function computeRoomUtilization(
 }
 
 /**
+ * Check if two time ranges overlap.
+ * Ported from backend utils/timeUtils.js for client-side conflict detection.
+ */
+export function doTimesOverlap(start1: string, end1: string, start2: string, end2: string): boolean {
+  const s1 = timeToMinutes(start1)
+  const e1 = timeToMinutes(end1)
+  const s2 = timeToMinutes(start2)
+  const e2 = timeToMinutes(end2)
+  return s1 < e2 && e1 > s2
+}
+
+/**
  * Extract the raw blockId from a timeBlock activity ID.
  * The API emits IDs like "objectId" or "objectId_0" (with lesson index suffix).
  * The move API needs the raw blockId without the suffix.

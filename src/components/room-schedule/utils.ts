@@ -29,6 +29,45 @@ export function minutesToTime(totalMinutes: number): string {
 }
 
 /**
+ * Compute room utilization percentage across all week days.
+ * Iterates over each day's schedule, finds the room by name, counts unique
+ * occupied slot indices, and returns the percentage of total possible slots.
+ */
+export function computeRoomUtilization(
+  roomName: string,
+  weekData: any[],
+  totalSlotsPerDay: number
+): number {
+  if (!weekData || weekData.length === 0) return 0
+
+  const gridStartMinutes = GRID_START_HOUR * 60
+  let totalOccupied = 0
+
+  for (const dayData of weekData) {
+    if (!dayData?.rooms) continue
+    const room = dayData.rooms.find((r: any) => r.room === roomName)
+    if (!room) continue
+
+    const occupied = new Set<number>()
+    for (const activity of room.activities || []) {
+      const startMin = timeToMinutes(activity.startTime)
+      const endMin = timeToMinutes(activity.endTime)
+      for (let t = startMin; t < endMin; t += SLOT_DURATION) {
+        const slotIndex = Math.floor((t - gridStartMinutes) / SLOT_DURATION)
+        if (slotIndex >= 0 && slotIndex < totalSlotsPerDay) {
+          occupied.add(slotIndex)
+        }
+      }
+    }
+    totalOccupied += occupied.size
+  }
+
+  const totalPossible = totalSlotsPerDay * weekData.length
+  if (totalPossible === 0) return 0
+  return Math.round((totalOccupied / totalPossible) * 100)
+}
+
+/**
  * Extract the raw blockId from a timeBlock activity ID.
  * The API emits IDs like "objectId" or "objectId_0" (with lesson index suffix).
  * The move API needs the raw blockId without the suffix.

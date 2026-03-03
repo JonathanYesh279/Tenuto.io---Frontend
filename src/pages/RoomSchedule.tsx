@@ -125,7 +125,11 @@ function applyFilters(
   return filtered
 }
 
-export default function RoomSchedule() {
+interface RoomScheduleProps {
+  isFullscreen?: boolean
+}
+
+export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps) {
   const [selectedDay, setSelectedDay] = useState(getInitialDay)
   const [schedule, setSchedule] = useState<RoomScheduleResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -581,18 +585,26 @@ export default function RoomSchedule() {
   }, [selectedDay, filteredRooms, viewMode, weekData, filters, tenantRooms])
 
   return (
-    <div className="p-6 space-y-6">
+    <div className={isFullscreen ? 'p-2 space-y-2 h-full flex flex-col' : 'p-6 space-y-6'}>
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
-        <h1 className="text-2xl font-bold text-gray-900">לוח חדרים</h1>
-        {viewMode === 'day' && (
-          <DaySelector
-            selectedDay={selectedDay}
-            onDayChange={setSelectedDay}
-            disabled={loading}
-          />
-        )}
-      </div>
+      {isFullscreen ? (
+        <div className="flex items-center gap-2 print:hidden shrink-0">
+          {viewMode === 'day' && (
+            <DaySelector selectedDay={selectedDay} onDayChange={setSelectedDay} disabled={loading} />
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
+          <h1 className="text-2xl font-bold text-gray-900">לוח חדרים</h1>
+          {viewMode === 'day' && (
+            <DaySelector
+              selectedDay={selectedDay}
+              onDayChange={setSelectedDay}
+              disabled={loading}
+            />
+          )}
+        </div>
+      )}
 
       {/* Schedule toolbar (print/export/view mode) */}
       <ScheduleToolbar
@@ -611,17 +623,19 @@ export default function RoomSchedule() {
             <FilterBar filters={filters} onFiltersChange={setFilters} rooms={roomNames} />
           </div>
 
-          {/* Summary statistics bar */}
-          <SummaryBar
-            totalRooms={stats.totalRooms}
-            occupiedSlots={stats.occupiedSlots}
-            freeSlots={stats.freeSlots}
-            conflictCount={stats.conflictCount}
-            loading={loading}
-          />
+          {/* Summary statistics bar (hidden in fullscreen to maximize grid space) */}
+          {!isFullscreen && (
+            <SummaryBar
+              totalRooms={stats.totalRooms}
+              occupiedSlots={stats.occupiedSlots}
+              freeSlots={stats.freeSlots}
+              conflictCount={stats.conflictCount}
+              loading={loading}
+            />
+          )}
 
           {/* Room grid with drag-and-drop */}
-          <div className="print:overflow-visible print:max-h-none">
+          <div className={`print:overflow-visible print:max-h-none ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>
             <DndContext
               sensors={sensors}
               onDragStart={handleDragStart}
@@ -632,6 +646,7 @@ export default function RoomSchedule() {
                 loading={loading}
                 onEmptyCellClick={handleEmptyCellClick}
                 isDragEnabled={true}
+                isFullscreen={isFullscreen}
               />
               <DragOverlay>
                 {activeActivity ? <DragOverlayContent activity={activeActivity} /> : null}

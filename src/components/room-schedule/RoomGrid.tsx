@@ -23,6 +23,7 @@ interface RoomGridProps {
   loading: boolean
   onEmptyCellClick?: (room: string, timeSlot: string) => void
   isDragEnabled?: boolean  // passed down from DndContext in RoomSchedule
+  isFullscreen?: boolean   // when true, grid fills viewport (no max-height cap)
 }
 
 // ==================== Constants ====================
@@ -108,7 +109,12 @@ function getRowMinHeight(activities: RoomScheduleActivity[]): number {
 
 // ==================== Component ====================
 
-export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabled }: RoomGridProps) {
+export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabled, isFullscreen }: RoomGridProps) {
+  // Grid column template: wider content columns in fullscreen, narrower room label
+  const gridColumns = isFullscreen
+    ? '120px repeat(24, minmax(140px, 1fr))'
+    : '140px repeat(24, minmax(120px, 1fr))'
+
   // Precompute row heights for conflict stacking
   const rowHeights = useMemo(
     () => rooms.map((room) => getRowMinHeight(room.activities)),
@@ -118,11 +124,13 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
   // Loading skeleton
   if (loading) {
     return (
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <div className={`overflow-x-auto rounded-lg border border-gray-200 ${
+        isFullscreen ? 'h-full overflow-y-auto' : ''
+      }`}>
         <div
           className="grid"
           style={{
-            gridTemplateColumns: '140px repeat(24, minmax(120px, 1fr))',
+            gridTemplateColumns: gridColumns,
           }}
         >
           {/* Skeleton header */}
@@ -166,11 +174,13 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
     .join(' ')
 
   return (
-    <div className="overflow-x-auto max-h-[calc(100vh-280px)] overflow-y-auto rounded-lg border border-gray-200">
+    <div className={`overflow-x-auto overflow-y-auto rounded-lg border border-gray-200 ${
+      isFullscreen ? 'h-full' : 'max-h-[calc(100vh-280px)]'
+    }`}>
       <div
         className="grid relative"
         style={{
-          gridTemplateColumns: '140px repeat(24, minmax(120px, 1fr))',
+          gridTemplateColumns: gridColumns,
           gridTemplateRows: `auto ${rowTemplate}`,
         }}
       >

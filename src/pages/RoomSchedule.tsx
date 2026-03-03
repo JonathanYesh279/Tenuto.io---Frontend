@@ -193,6 +193,18 @@ export default function RoomSchedule() {
     }
   }, [selectedDay])
 
+  // Silent reload: sync with server without showing skeleton (grid stays mounted, scroll preserved)
+  const silentReloadSchedule = useCallback(async () => {
+    try {
+      const result = await roomScheduleService.getRoomSchedule(selectedDay)
+      setSchedule(result)
+      setWeekData(null)
+    } catch (err) {
+      console.error('Error reloading room schedule:', err)
+    }
+    // Note: NO setLoading -- grid stays rendered, no skeleton
+  }, [selectedDay])
+
   useEffect(() => {
     loadSchedule()
   }, [loadSchedule])
@@ -268,6 +280,39 @@ export default function RoomSchedule() {
     // Skip if dropped on same cell (same room and same start time)
     if (targetRoom === activity.room && targetStartTime === activity.startTime) return
 
+    // Optimistic update: move activity in local state immediately
+    setSchedule((prev: RoomScheduleResponse | null): RoomScheduleResponse | null => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        rooms: prev.rooms.map(room => {
+          // Remove activity from source room
+          const withoutActivity = room.activities.filter(a => a.id !== activity.id)
+          if (room.room === targetRoom) {
+            // Add activity to target room with updated times
+            return {
+              ...room,
+              activities: [...withoutActivity, {
+                id: activity.id,
+                source: activity.source,
+                room: targetRoom,
+                day: prev.day,
+                startTime: targetStartTime,
+                endTime: targetEndTime,
+                teacherName: activity.teacherName,
+                teacherId: activity.teacherId,
+                label: activity.label,
+                activityType: activity.activityType,
+                hasConflict: false,
+                conflictGroupId: null as string | null,
+              }],
+            }
+          }
+          return { ...room, activities: withoutActivity }
+        }),
+      }
+    })
+
     try {
       const moveData: Record<string, string> = {
         activityId: activity.id,
@@ -285,7 +330,7 @@ export default function RoomSchedule() {
 
       await roomScheduleService.moveActivity(moveData)
       toast.success('הפעילות הועברה בהצלחה')
-      loadSchedule()  // Refresh grid with server state
+      silentReloadSchedule()  // Sync with server without unmounting grid
     } catch (err: any) {
       if (err?.code === 'CONFLICT' && err?.conflicts?.length > 0) {
         // Show conflict details in Hebrew
@@ -298,9 +343,9 @@ export default function RoomSchedule() {
       } else {
         toast.error('שגיאה בהעברת הפעילות')
       }
-      loadSchedule()  // Reload to reset to server state
+      silentReloadSchedule()  // Reload server state without skeleton (rolls back optimistic update)
     }
-  }, [loadSchedule])
+  }, [silentReloadSchedule])
 
   // Room names for FilterBar dropdown (schedule rooms + active tenant rooms)
   const roomNames = useMemo(() => {

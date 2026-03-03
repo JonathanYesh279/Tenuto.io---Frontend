@@ -13,7 +13,7 @@ import CreateLessonDialog from '@/components/room-schedule/CreateLessonDialog'
 import type { CreateDialogState } from '@/components/room-schedule/CreateLessonDialog'
 import DragOverlayContent from '@/components/room-schedule/DragOverlayContent'
 import type { ActivityData } from '@/components/room-schedule/ActivityCell'
-import { timeToMinutes, minutesToTime, extractBlockId, DAY_NAMES, GRID_START_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
+import { timeToMinutes, minutesToTime, extractBlockId, DAY_NAMES, GRID_START_HOUR, GRID_END_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
 import ScheduleToolbar from '@/components/room-schedule/ScheduleToolbar'
 import WeekOverview from '@/components/room-schedule/WeekOverview'
 import jsPDF from 'jspdf'
@@ -83,6 +83,46 @@ interface RoomScheduleResponse {
       theory: number
     }
   }
+}
+
+/**
+ * Apply activity/room filters to a day's schedule response.
+ * Reusable for both the main filteredRooms useMemo and week PDF pages.
+ */
+function applyFilters(
+  daySchedule: RoomScheduleResponse,
+  currentFilters: Filters,
+  rooms: Array<{ name: string; isActive: boolean }>
+) {
+  const scheduleRoomNames = new Set((daySchedule.rooms || []).map((r) => r.room))
+
+  // Filter activities within each room
+  let filtered = (daySchedule.rooms || []).map((room) => ({
+    ...room,
+    activities: room.activities.filter((activity) => {
+      if (!currentFilters.activityTypes.includes(activity.source)) return false
+      if (currentFilters.teacherName && !activity.teacherName.includes(currentFilters.teacherName)) return false
+      return true
+    }),
+  }))
+
+  // Filter by room name
+  if (currentFilters.roomName) {
+    filtered = filtered.filter((room) => room.room === currentFilters.roomName)
+  } else {
+    filtered = filtered.filter((room) => room.activities.length > 0)
+  }
+
+  // Merge empty tenant rooms not already in schedule
+  for (const tr of rooms) {
+    if (!tr.isActive) continue
+    if (scheduleRoomNames.has(tr.name)) continue
+    if (currentFilters.roomName && currentFilters.roomName !== tr.name) continue
+    filtered.push({ room: tr.name, activities: [], hasConflicts: false })
+  }
+
+  filtered.sort((a, b) => a.room.localeCompare(b.room, 'he'))
+  return filtered
 }
 
 export default function RoomSchedule() {
@@ -270,45 +310,10 @@ export default function RoomSchedule() {
     return Array.from(names).sort((a, b) => a.localeCompare(b, 'he'))
   }, [schedule, tenantRooms])
 
-  // Filter rooms + merge empty tenant rooms
+  // Filter rooms + merge empty tenant rooms (delegates to shared applyFilters helper)
   const filteredRooms = useMemo(() => {
     if (!schedule) return []
-
-    const scheduleRoomNames = new Set((schedule.rooms || []).map((r) => r.room))
-
-    // Start with schedule rooms, filter activities within each room
-    let rooms = (schedule.rooms || []).map((room) => ({
-      ...room,
-      activities: room.activities.filter((activity) => {
-        // Activity type filter
-        if (!filters.activityTypes.includes(activity.source)) return false
-        // Teacher name filter
-        if (filters.teacherName && !activity.teacherName.includes(filters.teacherName)) return false
-        return true
-      }),
-    }))
-
-    // Filter by room name
-    if (filters.roomName) {
-      rooms = rooms.filter((room) => room.room === filters.roomName)
-    } else {
-      // When no room filter: remove rooms with no matching activities
-      rooms = rooms.filter((room) => room.activities.length > 0)
-    }
-
-    // Merge empty tenant rooms (rooms in tenant settings not already in schedule)
-    for (const tr of tenantRooms) {
-      if (!tr.isActive) continue
-      if (scheduleRoomNames.has(tr.name)) continue
-      // Only include when no room filter is active OR the room matches the filter
-      if (filters.roomName && filters.roomName !== tr.name) continue
-      rooms.push({ room: tr.name, activities: [], hasConflicts: false })
-    }
-
-    // Sort alphabetically by room name
-    rooms.sort((a, b) => a.room.localeCompare(b.room, 'he'))
-
-    return rooms
+    return applyFilters(schedule, filters, tenantRooms)
   }, [schedule, filters, tenantRooms])
 
   // Compute summary statistics from filtered rooms
@@ -352,10 +357,11 @@ export default function RoomSchedule() {
     window.print()
   }, [])
 
-  // PDF export handler
-  const handleExportPDF = useCallback(() => {
+  // Tabular PDF export handler (activity rows -- existing format with week support)
+  const handleExportTabularPDF = useCallback(() => {
     try {
       const doc = new jsPDF({ orientation: 'landscape' })
+      const pageWidth = doc.internal.pageSize.getWidth()
 
       const activityTypeLabels: Record<string, string> = {
         timeBlock: 'שיעור פרטי',
@@ -363,54 +369,171 @@ export default function RoomSchedule() {
         theory: 'תאוריה',
       }
 
-      // Title and metadata (right-aligned for Hebrew)
-      const pageWidth = doc.internal.pageSize.getWidth()
-      doc.setFontSize(16)
-      doc.text(`לוח חדרים - יום ${DAY_NAMES[selectedDay]}`, pageWidth - 14, 15, { align: 'right' })
-      doc.setFontSize(10)
-      doc.text(`תאריך: ${new Date().toLocaleDateString('he-IL')}`, pageWidth - 14, 22, { align: 'right' })
-      doc.text(
-        `חדרים: ${stats.totalRooms} | תפוסות: ${stats.occupiedSlots} | פנויות: ${stats.freeSlots} | התנגשויות: ${stats.conflictCount}`,
-        pageWidth - 14,
-        28,
-        { align: 'right' }
-      )
+      const exportTabularPage = (
+        dayRooms: typeof filteredRooms,
+        dayName: string
+      ) => {
+        doc.setFontSize(16)
+        doc.text(`לוח חדרים - יום ${dayName}`, pageWidth - 14, 15, { align: 'right' })
+        doc.setFontSize(10)
+        doc.text(`תאריך: ${new Date().toLocaleDateString('he-IL')}`, pageWidth - 14, 22, { align: 'right' })
 
-      // Build table body from filtered rooms
-      const tableBody: string[][] = []
-      for (const room of filteredRooms) {
-        for (const activity of room.activities) {
-          tableBody.push([
-            room.room,
-            activity.startTime,
-            activity.endTime,
-            activity.teacherName,
-            activity.label,
-            activityTypeLabels[activity.source] || activity.source,
-            activity.hasConflict ? 'כן' : '',
-          ])
+        const tableBody: string[][] = []
+        for (const room of dayRooms) {
+          for (const activity of room.activities) {
+            tableBody.push([
+              room.room,
+              activity.startTime,
+              activity.endTime,
+              activity.teacherName,
+              activity.label,
+              activityTypeLabels[activity.source] || activity.source,
+              activity.hasConflict ? 'כן' : '',
+            ])
+          }
         }
+
+        doc.autoTable({
+          startY: 28,
+          head: [['חדר', 'התחלה', 'סיום', 'מורה', 'תלמיד/קבוצה', 'סוג', 'התנגשות']],
+          body: tableBody,
+          styles: { fontSize: 8, cellPadding: 2, halign: 'right' },
+          headStyles: { fillColor: [63, 126, 223], halign: 'right' },
+          columnStyles: {
+            0: { cellWidth: 30 },
+            1: { cellWidth: 18 },
+            2: { cellWidth: 18 },
+            6: { cellWidth: 18 },
+          },
+        })
       }
 
-      doc.autoTable({
-        startY: 33,
-        head: [['חדר', 'התחלה', 'סיום', 'מורה', 'תלמיד/קבוצה', 'סוג', 'התנגשות']],
-        body: tableBody,
-        styles: { fontSize: 8, cellPadding: 2, halign: 'right' },
-        headStyles: { fillColor: [63, 126, 223], halign: 'right' },
-        columnStyles: {
-          0: { cellWidth: 30 },
-          1: { cellWidth: 18 },
-          2: { cellWidth: 18 },
-          6: { cellWidth: 18 },
-        },
-      })
-
-      doc.save(`room-schedule-${DAY_NAMES[selectedDay]}.pdf`)
+      if (viewMode === 'week' && weekData) {
+        // Week mode: 6 pages, one per day
+        for (let dayIdx = 0; dayIdx < 6; dayIdx++) {
+          if (dayIdx > 0) doc.addPage()
+          const dayData = weekData[dayIdx]
+          const dayFilteredRooms = dayData ? applyFilters(dayData, filters, tenantRooms) : []
+          exportTabularPage(dayFilteredRooms, DAY_NAMES[dayIdx])
+        }
+        doc.save('room-schedule-week.pdf')
+      } else {
+        // Day mode: single page
+        exportTabularPage(filteredRooms, DAY_NAMES[selectedDay])
+        doc.save(`room-schedule-${DAY_NAMES[selectedDay]}.pdf`)
+      }
     } catch {
       toast.error('שגיאה בייצוא PDF')
     }
-  }, [selectedDay, filteredRooms, stats])
+  }, [selectedDay, filteredRooms, viewMode, weekData, filters, tenantRooms])
+
+  // Grid-style visual PDF export handler (rooms x time slots, color-coded)
+  const handleExportGridPDF = useCallback(() => {
+    try {
+      const doc = new jsPDF({ orientation: 'landscape' })
+      const pageWidth = doc.internal.pageSize.getWidth()
+
+      // Generate time slot headers for the grid columns
+      const timeHeaders: string[] = []
+      for (let min = GRID_START_HOUR * 60; min < GRID_END_HOUR * 60; min += SLOT_DURATION) {
+        const h = Math.floor(min / 60)
+        const m = min % 60
+        timeHeaders.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`)
+      }
+
+      const exportGridPage = (dayRooms: typeof filteredRooms, dayName: string) => {
+        // Title
+        doc.setFontSize(14)
+        doc.text(`לוח חדרים - יום ${dayName}`, pageWidth - 14, 12, { align: 'right' })
+        doc.setFontSize(8)
+        doc.text(`תאריך: ${new Date().toLocaleDateString('he-IL')}`, pageWidth - 14, 18, { align: 'right' })
+
+        if (dayRooms.length === 0) {
+          doc.setFontSize(10)
+          doc.text('אין פעילויות להצגה', pageWidth / 2, 40, { align: 'center' })
+          return
+        }
+
+        // Build body: each room = one row. Each cell = activity text or empty.
+        const body: string[][] = []
+        for (const room of dayRooms) {
+          const row: string[] = [room.room]
+
+          // Fill in slot cells
+          for (let s = 0; s < timeHeaders.length; s++) {
+            // Find activity that starts at this slot
+            const activity = room.activities.find((a) => {
+              const aStart = Math.floor((timeToMinutes(a.startTime) - GRID_START_HOUR * 60) / SLOT_DURATION)
+              return aStart === s
+            })
+
+            if (activity) {
+              // Show compact info: teacher + label
+              row.push(`${activity.teacherName}\n${activity.label}`)
+            } else {
+              // Check if an activity spans over this slot (continuation)
+              const spanning = room.activities.find((a) => {
+                const aStart = Math.floor((timeToMinutes(a.startTime) - GRID_START_HOUR * 60) / SLOT_DURATION)
+                const aEnd = Math.ceil((timeToMinutes(a.endTime) - GRID_START_HOUR * 60) / SLOT_DURATION)
+                return s > aStart && s < aEnd
+              })
+              row.push(spanning ? '...' : '')
+            }
+          }
+
+          body.push(row)
+        }
+
+        doc.autoTable({
+          startY: 22,
+          head: [['חדר', ...timeHeaders]],
+          body,
+          styles: { fontSize: 5, cellPadding: 1, halign: 'right', valign: 'middle', lineWidth: 0.1 },
+          headStyles: { fillColor: [63, 126, 223], halign: 'center', fontSize: 5 },
+          columnStyles: { 0: { cellWidth: 22, fontStyle: 'bold' } },
+          theme: 'grid',
+          didParseCell: (data: any) => {
+            // Color code activity cells based on source type
+            if (data.section === 'body' && data.column.index > 0 && data.cell.raw) {
+              const roomIdx = data.row.index
+              const slotIdx = data.column.index - 1
+              const room = dayRooms[roomIdx]
+              if (room) {
+                // Find activity that starts at or spans this slot
+                const activity = room.activities.find((a: any) => {
+                  const aStart = Math.floor((timeToMinutes(a.startTime) - GRID_START_HOUR * 60) / SLOT_DURATION)
+                  const aEnd = Math.ceil((timeToMinutes(a.endTime) - GRID_START_HOUR * 60) / SLOT_DURATION)
+                  return slotIdx >= aStart && slotIdx < aEnd
+                })
+                if (activity) {
+                  if (activity.source === 'timeBlock') data.cell.styles.fillColor = [219, 234, 254] // blue-100
+                  else if (activity.source === 'rehearsal') data.cell.styles.fillColor = [243, 232, 255] // purple-100
+                  else if (activity.source === 'theory') data.cell.styles.fillColor = [255, 237, 213] // orange-100
+                }
+              }
+            }
+          },
+        })
+      }
+
+      if (viewMode === 'week' && weekData) {
+        // Week: 6 pages
+        for (let dayIdx = 0; dayIdx < 6; dayIdx++) {
+          if (dayIdx > 0) doc.addPage()
+          const dayData = weekData[dayIdx]
+          const dayFilteredRooms = dayData ? applyFilters(dayData, filters, tenantRooms) : []
+          exportGridPage(dayFilteredRooms, DAY_NAMES[dayIdx])
+        }
+        doc.save('room-schedule-grid-week.pdf')
+      } else {
+        // Day: single page
+        exportGridPage(filteredRooms, DAY_NAMES[selectedDay])
+        doc.save(`room-schedule-grid-${DAY_NAMES[selectedDay]}.pdf`)
+      }
+    } catch {
+      toast.error('שגיאה בייצוא PDF')
+    }
+  }, [selectedDay, filteredRooms, viewMode, weekData, filters, tenantRooms])
 
   return (
     <div className="p-6 space-y-6">
@@ -431,7 +554,8 @@ export default function RoomSchedule() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onPrint={handlePrint}
-        onExportPDF={handleExportPDF}
+        onExportGridPDF={handleExportGridPDF}
+        onExportTabularPDF={handleExportTabularPDF}
       />
 
       {/* Day view content */}

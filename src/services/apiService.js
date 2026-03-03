@@ -5047,6 +5047,20 @@ export const tenantService = {
       throw error;
     }
   },
+
+  async importRooms(tenantId, file) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await apiClient.post(`/tenant/${tenantId}/rooms/import`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return response;
+    } catch (error) {
+      console.error('Error importing rooms:', error);
+      throw error;
+    }
+  },
 };
 
 // ==================== Hours Summary Service (NEW) ====================

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../services/authContext.jsx'
 import { tenantService, teacherService } from '../services/apiService'
 import { Input } from '../components/ui/input'
@@ -6,6 +6,7 @@ import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
 import {
   GearIcon, FloppyDiskIcon, PencilSimpleIcon, PlusIcon, CheckIcon, XIcon, ProhibitIcon,
+  UploadSimpleIcon,
 } from '@phosphor-icons/react'
 
 interface ConservatoryProfile {
@@ -105,6 +106,8 @@ export default function Settings() {
   const [addingRoom, setAddingRoom] = useState(false)
   const [editingRoom, setEditingRoom] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
+  const [importingRooms, setImportingRooms] = useState(false)
+  const roomFileInputRef = useRef<HTMLInputElement>(null)
   const [formData, setFormData] = useState<TenantData>({
     _id: '',
     name: '',
@@ -290,6 +293,36 @@ export default function Settings() {
     setEditName('')
   }
 
+  const handleImportRooms = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      setImportingRooms(true)
+      const response = await tenantService.importRooms(formData._id, file)
+      const result = response?.data || response
+      const added = result?.added ?? 0
+      const skipped = result?.skipped ?? 0
+      toast.success(`${added > 0 ? `\u05D9\u05D5\u05D1\u05D0\u05D5 ${added} \u05D7\u05D3\u05E8\u05D9\u05DD \u05D7\u05D3\u05E9\u05D9\u05DD` : '\u05DC\u05D0 \u05E0\u05D5\u05E1\u05E4\u05D5 \u05D7\u05D3\u05E8\u05D9\u05DD'}${skipped > 0 ? `, ${skipped} \u05D3\u05D5\u05DC\u05D2\u05D5 (\u05DB\u05D1\u05E8 \u05E7\u05D9\u05D9\u05DE\u05D9\u05DD)` : ''}`)
+      if (result?.rooms) {
+        setRooms(result.rooms)
+      } else {
+        // Reload rooms if not returned in response
+        const roomsResponse = await tenantService.getRooms(formData._id)
+        const roomsData = roomsResponse?.data || roomsResponse || []
+        setRooms(Array.isArray(roomsData) ? roomsData : [])
+      }
+    } catch (error: any) {
+      const msg = error?.response?.data?.error || error?.message || '\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05D9\u05D9\u05D1\u05D5\u05D0 \u05D7\u05D3\u05E8\u05D9\u05DD'
+      toast.error(msg)
+    } finally {
+      setImportingRooms(false)
+      // Reset file input so the same file can be re-selected
+      if (roomFileInputRef.current) {
+        roomFileInputRef.current.value = ''
+      }
+    }
+  }
+
   const activeRoomCount = rooms.filter(r => r.isActive !== false).length
 
   if (loading) {
@@ -337,8 +370,8 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* Add Room */}
-        <div className="flex items-center gap-2 mb-4">
+        {/* Add Room + Import */}
+        <div className="flex items-center gap-2 mb-4 flex-wrap">
           <Input
             type="text"
             value={newRoomName}
@@ -356,6 +389,24 @@ export default function Settings() {
             <PlusIcon size={14} weight="bold" />
             הוסף חדר
           </button>
+          <div className="flex items-center gap-2">
+            <input
+              ref={roomFileInputRef}
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleImportRooms}
+              className="hidden"
+            />
+            <button
+              onClick={() => roomFileInputRef.current?.click()}
+              disabled={importingRooms}
+              className="flex items-center gap-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+            >
+              <UploadSimpleIcon size={14} weight="bold" />
+              {importingRooms ? 'מייבא...' : 'ייבוא מ-Excel'}
+            </button>
+            <span className="text-xs text-gray-400 hidden sm:inline">קובץ Excel עם שמות חדרים בעמודה A</span>
+          </div>
         </div>
 
         {/* Room List */}

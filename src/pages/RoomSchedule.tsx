@@ -134,7 +134,7 @@ export default function RoomSchedule() {
   useEffect(() => {
     if (user?.tenantId) {
       tenantService.getRooms(user.tenantId)
-        .then((rooms: Array<{ name: string; isActive: boolean }>) => setTenantRooms(rooms || []))
+        .then((res: any) => setTenantRooms(Array.isArray(res) ? res : res?.data || []))
         .catch((err: unknown) => console.error('Error fetching rooms:', err))
     }
   }, [user?.tenantId])

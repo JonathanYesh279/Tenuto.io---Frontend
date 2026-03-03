@@ -27,8 +27,8 @@ interface RoomGridProps {
 
 // ==================== Constants ====================
 
-const BASE_ROW_HEIGHT = 60 // px per non-conflicting row
-const STACKED_ITEM_HEIGHT = 32 // px per stacked conflict activity
+const BASE_ROW_HEIGHT = 80 // px per non-conflicting row
+const STACKED_ITEM_HEIGHT = 40 // px per stacked conflict activity
 
 // Generate time slots array: ['08:00', '08:30', ..., '19:30'] (24 entries)
 const TIME_SLOTS: string[] = []
@@ -122,7 +122,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
         <div
           className="grid"
           style={{
-            gridTemplateColumns: '120px repeat(24, minmax(80px, 1fr))',
+            gridTemplateColumns: '140px repeat(24, minmax(120px, 1fr))',
           }}
         >
           {/* Skeleton header */}
@@ -134,11 +134,11 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
           {/* Skeleton rows */}
           {Array.from({ length: 5 }).map((_, rowIdx) => (
             <div key={rowIdx} className="contents">
-              <div className="bg-gray-50 border-b border-l h-16 px-3 py-2">
+              <div className="bg-gray-50 border-b border-l h-20 px-3 py-2">
                 <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
               </div>
               {TIME_SLOTS.map((_, colIdx) => (
-                <div key={colIdx} className="border-b border-l h-16">
+                <div key={colIdx} className="border-b border-l h-20">
                   {colIdx % 4 === 1 && rowIdx % 2 === 0 && (
                     <div className="h-12 mx-1 mt-1 bg-gray-200 rounded animate-pulse" />
                   )}
@@ -170,7 +170,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
       <div
         className="grid relative"
         style={{
-          gridTemplateColumns: '120px repeat(24, minmax(80px, 1fr))',
+          gridTemplateColumns: '140px repeat(24, minmax(120px, 1fr))',
           gridTemplateRows: `auto ${rowTemplate}`,
         }}
       >

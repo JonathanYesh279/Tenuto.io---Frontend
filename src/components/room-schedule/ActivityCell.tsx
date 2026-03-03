@@ -1,6 +1,5 @@
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import { WarningCircle } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import {
   Tooltip,
@@ -41,22 +40,25 @@ const ACTIVITY_COLORS = {
     border: 'border-blue-300',
     text: 'text-blue-900',
     label: 'שיעור פרטי',
+    borderAccent: 'border-r-4 border-r-blue-600',
   },
   rehearsal: {
     bg: 'bg-purple-100',
     border: 'border-purple-300',
     text: 'text-purple-900',
     label: 'חזרה',
+    borderAccent: 'border-r-4 border-r-purple-600',
   },
   theory: {
     bg: 'bg-orange-100',
     border: 'border-orange-300',
     text: 'text-orange-900',
     label: 'תאוריה',
+    borderAccent: 'border-r-4 border-r-orange-600',
   },
 } as const
 
-const CONFLICT_BORDER = 'border-2 border-red-500 ring-2 ring-red-200'
+const CONFLICT_BORDER = 'border border-red-400'
 
 // ==================== Component ====================
 
@@ -79,29 +81,24 @@ export default function ActivityCell({ activity, isDragEnabled, dragData }: Acti
       style={style}
       {...(isDragEnabled ? { ...attributes, ...listeners } : {})}
       className={cn(
-        'rounded px-1.5 py-1 text-xs overflow-hidden h-full border relative',
+        'rounded px-1.5 py-1 text-xs overflow-hidden h-full border',
         isDragEnabled ? 'cursor-grab active:cursor-grabbing' : 'cursor-default',
         isDragging && 'opacity-30',
         colors.bg,
         colors.text,
+        colors.borderAccent,
         activity.hasConflict ? CONFLICT_BORDER : colors.border
       )}
     >
-      {/* Conflict warning indicator */}
-      {activity.hasConflict && (
-        <WarningCircle
-          size={12}
-          weight="fill"
-          className="absolute top-0.5 left-0.5 text-red-500"
-        />
-      )}
-
-      {/* Content */}
-      <div className="font-medium truncate leading-tight">
+      {/* Content: 3 lines with prefix labels */}
+      <div className="font-medium truncate leading-tight text-[11px]">
         {activity.teacherName}
       </div>
       <div className="truncate leading-tight text-[10px] opacity-80">
         {activity.label}
+      </div>
+      <div className="truncate leading-tight text-[9px] opacity-60">
+        {activity.startTime}-{activity.endTime}
       </div>
     </div>
   )

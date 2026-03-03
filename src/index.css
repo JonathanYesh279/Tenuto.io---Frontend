@@ -346,6 +346,16 @@ body::-webkit-scrollbar-thumb:hover {
   .break-inside-avoid, [class*="Card"] {
     break-inside: avoid;
   }
+  /* Prevent grid clipping during print (room schedule) */
+  .overflow-x-auto, .overflow-y-auto {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  /* Preserve activity cell background colors in print */
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }
 
 /* Reduced motion — WAI-ARIA accessibility pattern (A11Y-04) */

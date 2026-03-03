@@ -278,6 +278,7 @@ export default {
       },
       screens: {
         'xs': '475px',
+        'print': { raw: 'print' },
       },
     },
   },

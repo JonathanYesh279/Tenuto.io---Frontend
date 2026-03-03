@@ -5,7 +5,7 @@ import { Input } from '../components/ui/input'
 import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
 import {
-  GearIcon, FloppyDiskIcon,
+  GearIcon, FloppyDiskIcon, PencilSimpleIcon, PlusIcon, CheckIcon, XIcon, ProhibitIcon,
 } from '@phosphor-icons/react'
 
 interface ConservatoryProfile {
@@ -48,6 +48,13 @@ interface TenantData {
     schoolStartMonth: number
   }
   conservatoryProfile: ConservatoryProfile
+}
+
+interface Room {
+  _id: string
+  name: string
+  isActive: boolean
+  createdAt: string
 }
 
 interface TeacherOption {
@@ -93,6 +100,11 @@ export default function Settings() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [teachers, setTeachers] = useState<TeacherOption[]>([])
+  const [rooms, setRooms] = useState<Room[]>([])
+  const [newRoomName, setNewRoomName] = useState('')
+  const [addingRoom, setAddingRoom] = useState(false)
+  const [editingRoom, setEditingRoom] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
   const [formData, setFormData] = useState<TenantData>({
     _id: '',
     name: '',
@@ -116,9 +128,10 @@ export default function Settings() {
         return
       }
 
-      const [tenantResponse, teacherList] = await Promise.all([
+      const [tenantResponse, teacherList, roomsResponse] = await Promise.all([
         tenantService.getTenantById(tenantId),
         teacherService.getTeachers(),
+        tenantService.getRooms(tenantId),
       ])
 
       // API returns { success, data } — unwrap
@@ -165,6 +178,9 @@ export default function Settings() {
         },
       })
 
+      const roomsData = roomsResponse?.data || roomsResponse || []
+      setRooms(Array.isArray(roomsData) ? roomsData : [])
+
       const mappedTeachers = (teacherList || []).map((t: any) => ({
         _id: t._id,
         displayName: getDisplayName(t) || getDisplayName(t.personalInfo) || t.personalInfo?.fullName || 'ללא שם',
@@ -210,6 +226,72 @@ export default function Settings() {
     }))
   }
 
+  const handleAddRoom = async () => {
+    const trimmed = newRoomName.trim()
+    if (!trimmed) return
+    try {
+      setAddingRoom(true)
+      const response = await tenantService.addRoom(formData._id, { name: trimmed })
+      const newRoom = response?.data || response
+      setRooms(prev => [...prev, newRoom])
+      setNewRoomName('')
+      toast.success('החדר נוסף בהצלחה')
+    } catch (error: any) {
+      const msg = error?.response?.data?.error || error?.message || 'שגיאה בהוספת חדר'
+      toast.error(msg)
+    } finally {
+      setAddingRoom(false)
+    }
+  }
+
+  const handleUpdateRoom = async (roomId: string) => {
+    const trimmed = editName.trim()
+    if (!trimmed) return
+    try {
+      const response = await tenantService.updateRoom(formData._id, roomId, { name: trimmed })
+      const updatedRooms = response?.data || response
+      if (Array.isArray(updatedRooms)) {
+        setRooms(updatedRooms)
+      } else {
+        setRooms(prev => prev.map(r => r._id === roomId ? { ...r, name: trimmed } : r))
+      }
+      setEditingRoom(null)
+      setEditName('')
+      toast.success('שם החדר עודכן')
+    } catch (error: any) {
+      const msg = error?.response?.data?.error || error?.message || 'שגיאה בעדכון חדר'
+      toast.error(msg)
+    }
+  }
+
+  const handleDeactivateRoom = async (roomId: string) => {
+    try {
+      const response = await tenantService.deactivateRoom(formData._id, roomId)
+      const updatedRooms = response?.data || response
+      if (Array.isArray(updatedRooms)) {
+        setRooms(updatedRooms)
+      } else {
+        setRooms(prev => prev.map(r => r._id === roomId ? { ...r, isActive: false } : r))
+      }
+      toast.success('החדר הושבת')
+    } catch (error: any) {
+      const msg = error?.response?.data?.error || error?.message || 'שגיאה בהשבתת חדר'
+      toast.error(msg)
+    }
+  }
+
+  const startEditing = (room: Room) => {
+    setEditingRoom(room._id)
+    setEditName(room.name)
+  }
+
+  const cancelEditing = () => {
+    setEditingRoom(null)
+    setEditName('')
+  }
+
+  const activeRoomCount = rooms.filter(r => r.isActive !== false).length
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
@@ -242,6 +324,119 @@ export default function Settings() {
           <FloppyDiskIcon size={16} weight="regular" />
           {saving ? 'שומר...' : 'שמור הגדרות'}
         </button>
+      </div>
+
+      {/* Rooms Section */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-bold text-gray-800">חדרים</h3>
+            <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
+              {activeRoomCount}
+            </span>
+          </div>
+        </div>
+
+        {/* Add Room */}
+        <div className="flex items-center gap-2 mb-4">
+          <Input
+            type="text"
+            value={newRoomName}
+            onChange={e => setNewRoomName(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleAddRoom() }}
+            className="text-right text-sm flex-1 max-w-xs"
+            placeholder="שם חדר"
+            disabled={addingRoom}
+          />
+          <button
+            onClick={handleAddRoom}
+            disabled={addingRoom || !newRoomName.trim()}
+            className="flex items-center gap-1 px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+          >
+            <PlusIcon size={14} weight="bold" />
+            הוסף חדר
+          </button>
+        </div>
+
+        {/* Room List */}
+        {rooms.length === 0 ? (
+          <div className="text-sm text-gray-400 text-center py-4">לא נמצאו חדרים. הוסף חדר ראשון.</div>
+        ) : (
+          <div className="space-y-2">
+            {rooms.map(room => (
+              <div
+                key={room._id}
+                className="flex items-center justify-between py-2.5 px-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-3 flex-1">
+                  {editingRoom === room._id ? (
+                    <div className="flex items-center gap-2 flex-1">
+                      <Input
+                        type="text"
+                        value={editName}
+                        onChange={e => setEditName(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') handleUpdateRoom(room._id)
+                          if (e.key === 'Escape') cancelEditing()
+                        }}
+                        className="text-right text-sm flex-1 max-w-xs"
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleUpdateRoom(room._id)}
+                        disabled={!editName.trim()}
+                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+                        title="שמור"
+                      >
+                        <CheckIcon size={16} weight="bold" />
+                      </button>
+                      <button
+                        onClick={cancelEditing}
+                        className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-md transition-colors"
+                        title="ביטול"
+                      >
+                        <XIcon size={16} weight="bold" />
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="text-sm text-gray-800 font-medium">{room.name}</span>
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${
+                          room.isActive !== false
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-500'
+                        }`}
+                      >
+                        {room.isActive !== false ? 'פעיל' : 'לא פעיל'}
+                      </span>
+                    </>
+                  )}
+                </div>
+                {editingRoom !== room._id && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => startEditing(room)}
+                      className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
+                      title="ערוך"
+                    >
+                      <PencilSimpleIcon size={16} weight="regular" />
+                    </button>
+                    {room.isActive !== false && (
+                      <button
+                        onClick={() => handleDeactivateRoom(room._id)}
+                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                        title="השבת"
+                      >
+                        <ProhibitIcon size={16} weight="regular" />
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Top row: General + Director + Ministry side by side */}

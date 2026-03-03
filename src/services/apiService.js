@@ -5006,7 +5006,47 @@ export const tenantService = {
       console.error('❌ Error updating tenant:', error);
       throw error;
     }
-  }
+  },
+
+  async getRooms(tenantId) {
+    try {
+      const response = await apiClient.get(`/tenant/${tenantId}/rooms`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+      throw error;
+    }
+  },
+
+  async addRoom(tenantId, roomData) {
+    try {
+      const response = await apiClient.post(`/tenant/${tenantId}/rooms`, roomData);
+      return response;
+    } catch (error) {
+      console.error('Error adding room:', error);
+      throw error;
+    }
+  },
+
+  async updateRoom(tenantId, roomId, roomData) {
+    try {
+      const response = await apiClient.put(`/tenant/${tenantId}/rooms/${roomId}`, roomData);
+      return response;
+    } catch (error) {
+      console.error('Error updating room:', error);
+      throw error;
+    }
+  },
+
+  async deactivateRoom(tenantId, roomId) {
+    try {
+      const response = await apiClient.put(`/tenant/${tenantId}/rooms/${roomId}/deactivate`);
+      return response;
+    } catch (error) {
+      console.error('Error deactivating room:', error);
+      throw error;
+    }
+  },
 };
 
 // ==================== Hours Summary Service (NEW) ====================

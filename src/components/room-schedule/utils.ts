@@ -27,3 +27,20 @@ export function minutesToTime(totalMinutes: number): string {
   const m = totalMinutes % 60
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
+
+/**
+ * Extract the raw blockId from a timeBlock activity ID.
+ * The API emits IDs like "objectId" or "objectId_0" (with lesson index suffix).
+ * The move API needs the raw blockId without the suffix.
+ */
+export function extractBlockId(activityId: string): string {
+  // ObjectIds are 24 hex chars. If longer with underscore + digits, strip suffix.
+  if (activityId.length > 24 && activityId.includes('_')) {
+    const lastUnderscore = activityId.lastIndexOf('_')
+    const suffix = activityId.slice(lastUnderscore + 1)
+    if (/^\d+$/.test(suffix)) {
+      return activityId.slice(0, lastUnderscore)
+    }
+  }
+  return activityId
+}

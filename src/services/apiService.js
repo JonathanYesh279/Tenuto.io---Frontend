@@ -4412,6 +4412,16 @@ export const teacherScheduleService = {
     }
   },
 
+  // Assign a student lesson to an existing time block
+  async assignLessonToBlock(assignmentData) {
+    try {
+      return await apiClient.post('/schedule/assign-lesson', assignmentData);
+    } catch (error) {
+      console.error('Error assigning lesson to block:', error);
+      throw error;
+    }
+  },
+
   // Update time block
   async updateTimeBlock(teacherId, timeBlockId, timeBlockData) {
     try {
@@ -5618,6 +5628,24 @@ export const roomScheduleService = {
       return response;
     } catch (error) {
       console.error('Error moving activity:', error);
+      throw error;
+    }
+  },
+  async rescheduleLesson(data) {
+    try {
+      const response = await apiClient.put('/room-schedule/reschedule-lesson', data);
+      return response;
+    } catch (error) {
+      console.error('Error rescheduling lesson:', error);
+      throw error;
+    }
+  },
+  async deleteLessonFromBlock(teacherId, blockId, lessonId) {
+    try {
+      const response = await apiClient.delete(`/lesson/${teacherId}/${blockId}/${lessonId}`);
+      return response;
+    } catch (error) {
+      console.error('Error deleting lesson from block:', error);
       throw error;
     }
   },

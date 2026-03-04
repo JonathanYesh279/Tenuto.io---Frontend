@@ -14,7 +14,7 @@ import type { CreateDialogState } from '@/components/room-schedule/CreateLessonD
 import ActivityDetailModal from '@/components/room-schedule/ActivityDetailModal'
 import DragOverlayContent from '@/components/room-schedule/DragOverlayContent'
 import type { ActivityData } from '@/components/room-schedule/ActivityCell'
-import { timeToMinutes, minutesToTime, extractBlockId, DAY_NAMES, GRID_START_HOUR, GRID_END_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
+import { timeToMinutes, minutesToTime, extractBlockId, doTimesOverlap, DAY_NAMES, GRID_START_HOUR, GRID_END_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
 import ScheduleToolbar from '@/components/room-schedule/ScheduleToolbar'
 import WeekOverview from '@/components/room-schedule/WeekOverview'
 import jsPDF from 'jspdf'
@@ -296,6 +296,21 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
     // Skip if dropped on same cell (same room and same start time)
     if (targetRoom === activity.room && targetStartTime === activity.startTime) return
 
+    // Client-side room conflict pre-check -- block drop if target slot is occupied
+    if (schedule) {
+      const targetRoomData = schedule.rooms.find(r => r.room === targetRoom)
+      if (targetRoomData) {
+        const hasRoomConflict = targetRoomData.activities.some(a => {
+          if (a.id === activity.id) return false  // skip self
+          return doTimesOverlap(targetStartTime, targetEndTime, a.startTime, a.endTime)
+        })
+        if (hasRoomConflict) {
+          toast.error('לא ניתן להעביר — התנגשות בחדר')
+          return
+        }
+      }
+    }
+
     // Determine if this is a lesson-level activity (blockId_N format)
     const isLessonLevel = activity.source === 'timeBlock' &&
       activity.id.includes('_') &&
@@ -396,7 +411,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
       }
       silentReloadSchedule()  // Reload server state without skeleton (rolls back optimistic update)
     }
-  }, [silentReloadSchedule, selectedDay])
+  }, [silentReloadSchedule, selectedDay, schedule])
 
   // Room names for FilterBar dropdown (schedule rooms + active tenant rooms)
   const roomNames = useMemo(() => {

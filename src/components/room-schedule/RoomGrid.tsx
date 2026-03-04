@@ -57,13 +57,18 @@ function getActivityGridPlacement(startTime: string, endTime: string) {
   const endCol = Math.ceil((clampedEnd - gridStartMinutes) / SLOT_DURATION) + 2
   const span = endCol - startCol
 
-  // Proportional width: actual duration vs spanned slot duration
-  // e.g. 45min lesson in 2×30min slots = 75%
+  // Sub-slot positioning: offset and width as percentages of the grid span
+  // e.g. 09:15-10:15 lesson in 09:00-10:30 span (3 cols):
+  //   startOffset = 15/90 = 16.7%, widthPercent = 60/90 = 66.7%
   const spanMinutes = span * SLOT_DURATION
   const actualMinutes = clampedEnd - clampedStart
+  const spanStartMinutes = (startCol - 2) * SLOT_DURATION + gridStartMinutes
+  const offsetMinutes = clampedStart - spanStartMinutes
+
+  const startOffsetPercent = spanMinutes > 0 ? Math.round((offsetMinutes / spanMinutes) * 100) : 0
   const widthPercent = spanMinutes > 0 ? Math.round((actualMinutes / spanMinutes) * 100) : 100
 
-  return { startCol, endCol, span, widthPercent }
+  return { startCol, endCol, span, startOffsetPercent, widthPercent }
 }
 
 /**
@@ -267,22 +272,30 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
 
               {/* Solo (non-conflicting) activity cells */}
               {soloActivities.map((activity) => {
-                const { startCol, endCol, span, widthPercent } = getActivityGridPlacement(
+                const { startCol, endCol, span, startOffsetPercent, widthPercent } = getActivityGridPlacement(
                   activity.startTime,
                   activity.endTime
                 )
 
                 if (span <= 0) return null
 
+                const needsSubSlot = startOffsetPercent > 0 || widthPercent < 100
+
                 return (
                   <div
                     key={activity.id}
-                    className="mx-0.5 my-1 pointer-events-auto"
+                    className="my-1 pointer-events-auto"
                     style={{
                       gridColumn: `${startCol} / ${endCol}`,
                       gridRow: `${rowNumber}`,
                       alignSelf: 'center',
-                      ...(widthPercent < 100 ? { width: `${widthPercent}%` } : {}),
+                      ...(needsSubSlot ? {
+                        marginInlineStart: `${startOffsetPercent}%`,
+                        width: `${widthPercent}%`,
+                      } : {
+                        marginInlineStart: '2px',
+                        marginInlineEnd: '2px',
+                      }),
                     }}
                   >
                     <ActivityCell

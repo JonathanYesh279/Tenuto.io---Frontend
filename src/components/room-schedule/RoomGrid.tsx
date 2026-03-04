@@ -24,6 +24,7 @@ interface RoomGridProps {
   onEmptyCellClick?: (room: string, timeSlot: string) => void
   isDragEnabled?: boolean  // passed down from DndContext in RoomSchedule
   isFullscreen?: boolean   // when true, grid fills viewport (no max-height cap)
+  onActivityClick?: (activity: RoomScheduleActivity & { room: string }) => void
 }
 
 // ==================== Constants ====================
@@ -109,7 +110,7 @@ function getRowMinHeight(activities: RoomScheduleActivity[]): number {
 
 // ==================== Component ====================
 
-export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabled, isFullscreen }: RoomGridProps) {
+export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabled, isFullscreen, onActivityClick }: RoomGridProps) {
   // Grid column template: wider content columns in fullscreen, narrower room label
   const gridColumns = isFullscreen
     ? '120px repeat(24, minmax(140px, 1fr))'
@@ -280,6 +281,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
                       activity={activity}
                       isDragEnabled={isDragEnabled}
                       dragData={{ room: room.room, teacherId: activity.teacherId }}
+                      onClick={() => onActivityClick?.({ ...activity, room: room.room })}
                     />
                   </div>
                 )
@@ -313,6 +315,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
                           activity={activity}
                           isDragEnabled={isDragEnabled}
                           dragData={{ room: room.room, teacherId: activity.teacherId }}
+                          onClick={() => onActivityClick?.({ ...activity, room: room.room })}
                         />
                       </div>
                     ))}

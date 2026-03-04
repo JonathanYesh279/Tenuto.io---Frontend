@@ -21,6 +21,10 @@ export interface ActivityData {
   activityType: string
   hasConflict: boolean
   conflictGroupId: string | null
+  lessonId?: string | null
+  studentId?: string | null
+  duration?: number | null
+  blockId?: string | null
 }
 
 interface ActivityCellProps {
@@ -30,6 +34,7 @@ interface ActivityCellProps {
     room: string
     teacherId: string
   }
+  onClick?: () => void     // click handler for opening detail modal
 }
 
 // ==================== Constants ====================
@@ -65,7 +70,7 @@ const CONFLICT_BORDER = 'border border-red-400'
 
 // ==================== Component ====================
 
-export default function ActivityCell({ activity, isDragEnabled, dragData }: ActivityCellProps) {
+export default function ActivityCell({ activity, isDragEnabled, dragData, onClick }: ActivityCellProps) {
   const colors = ACTIVITY_COLORS[activity.source] || ACTIVITY_COLORS.timeBlock
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -83,6 +88,12 @@ export default function ActivityCell({ activity, isDragEnabled, dragData }: Acti
       ref={setNodeRef}
       style={style}
       {...(isDragEnabled ? { ...attributes, ...listeners } : {})}
+      onClick={(e) => {
+        if (!isDragging && onClick) {
+          e.stopPropagation()
+          onClick()
+        }
+      }}
       className={cn(
         'rounded px-1.5 py-1 text-xs overflow-hidden h-full border',
         isDragEnabled ? 'cursor-grab active:cursor-grabbing' : 'cursor-default',

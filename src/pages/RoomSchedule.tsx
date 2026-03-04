@@ -11,6 +11,7 @@ import FilterBar from '@/components/room-schedule/FilterBar'
 import type { Filters } from '@/components/room-schedule/FilterBar'
 import CreateLessonDialog from '@/components/room-schedule/CreateLessonDialog'
 import type { CreateDialogState } from '@/components/room-schedule/CreateLessonDialog'
+import ActivityDetailModal from '@/components/room-schedule/ActivityDetailModal'
 import DragOverlayContent from '@/components/room-schedule/DragOverlayContent'
 import type { ActivityData } from '@/components/room-schedule/ActivityCell'
 import { timeToMinutes, minutesToTime, extractBlockId, DAY_NAMES, GRID_START_HOUR, GRID_END_HOUR, TOTAL_SLOTS, SLOT_DURATION } from '@/components/room-schedule/utils'
@@ -150,6 +151,10 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
     endTime: '08:30',
   })
 
+  // Detail modal state
+  const [detailActivity, setDetailActivity] = useState<(ActivityData & { room: string }) | null>(null)
+  const [detailModalOpen, setDetailModalOpen] = useState(false)
+
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day')
   const [weekData, setWeekData] = useState<RoomScheduleResponse[] | null>(null)
   const [weekLoading, setWeekLoading] = useState(false)
@@ -255,6 +260,12 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
     loadSchedule()
   }, [loadSchedule])
 
+  // Activity click handler -- open detail modal
+  const handleActivityClick = useCallback((activity: ActivityData & { room: string }) => {
+    setDetailActivity(activity)
+    setDetailModalOpen(true)
+  }, [])
+
   // Drag start handler -- store the active activity for DragOverlay
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const activity = event.active.data.current as ActivityData
@@ -284,6 +295,41 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
 
     // Skip if dropped on same cell (same room and same start time)
     if (targetRoom === activity.room && targetStartTime === activity.startTime) return
+
+    // Determine if this is a lesson-level activity (blockId_N format)
+    const isLessonLevel = activity.source === 'timeBlock' &&
+      activity.id.includes('_') &&
+      /^\d+$/.test(activity.id.split('_').pop() || '')
+
+    if (isLessonLevel && activity.lessonId) {
+      // Single-lesson reschedule -- skip optimistic update (new entity IDs created server-side)
+      try {
+        await roomScheduleService.rescheduleLesson({
+          teacherId: activity.teacherId,
+          sourceBlockId: extractBlockId(activity.id),
+          lessonId: activity.lessonId,
+          targetRoom,
+          targetDay: selectedDay,
+          targetStartTime,
+          targetEndTime,
+        })
+        toast.success('\u05D4\u05E9\u05D9\u05E2\u05D5\u05E8 \u05D4\u05D5\u05E2\u05D1\u05E8 \u05D1\u05D4\u05E6\u05DC\u05D7\u05D4')
+        silentReloadSchedule()
+      } catch (err: any) {
+        if (err?.code === 'CONFLICT' && err?.conflicts?.length > 0) {
+          const conflictNames = err.conflicts
+            .map((c: any) => `${c.teacherName} (${c.startTime}-${c.endTime})`)
+            .join(', ')
+          toast.error(`\u05D4\u05EA\u05E0\u05D2\u05E9\u05D5\u05EA \u05D1\u05D7\u05D3\u05E8: ${conflictNames}`)
+        } else if (err?.message === 'Resource not found.') {
+          toast.error('\u05D4\u05E9\u05D9\u05E2\u05D5\u05E8 \u05DC\u05D0 \u05E0\u05DE\u05E6\u05D0')
+        } else {
+          toast.error('\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05D4\u05E2\u05D1\u05E8\u05EA \u05D4\u05E9\u05D9\u05E2\u05D5\u05E8')
+        }
+        silentReloadSchedule()
+      }
+      return  // Exit early -- don't fall through to block-level move
+    }
 
     // Optimistic update: move activity in local state immediately
     setSchedule((prev: RoomScheduleResponse | null): RoomScheduleResponse | null => {
@@ -350,7 +396,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
       }
       silentReloadSchedule()  // Reload server state without skeleton (rolls back optimistic update)
     }
-  }, [silentReloadSchedule])
+  }, [silentReloadSchedule, selectedDay])
 
   // Room names for FilterBar dropdown (schedule rooms + active tenant rooms)
   const roomNames = useMemo(() => {
@@ -652,6 +698,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
                 onEmptyCellClick={handleEmptyCellClick}
                 isDragEnabled={true}
                 isFullscreen={isFullscreen}
+                onActivityClick={handleActivityClick}
               />
               <DragOverlay>
                 {activeActivity ? <DragOverlayContent activity={activeActivity} /> : null}
@@ -669,6 +716,16 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
             teachers={teachers}
             onCreated={handleLessonCreated}
             scheduleData={schedule}
+          />
+
+          {/* Activity detail modal */}
+          <ActivityDetailModal
+            activity={detailActivity}
+            open={detailModalOpen}
+            onOpenChange={setDetailModalOpen}
+            onReschedule={() => { setDetailModalOpen(false); silentReloadSchedule() }}
+            onDelete={() => { setDetailModalOpen(false); silentReloadSchedule() }}
+            day={selectedDay}
           />
         </>
       )}

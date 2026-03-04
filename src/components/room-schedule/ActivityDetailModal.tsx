@@ -26,6 +26,7 @@ interface ActivityDetailModalProps {
   onReschedule: () => void
   onDelete: () => void
   day: number
+  rooms?: Array<{ name: string; isActive: boolean }>
 }
 
 // ==================== Component ====================
@@ -37,6 +38,7 @@ export default function ActivityDetailModal({
   onReschedule,
   onDelete,
   day,
+  rooms = [],
 }: ActivityDetailModalProps) {
   // Local edit state
   const [editDay, setEditDay] = useState(day)
@@ -193,12 +195,18 @@ export default function ActivityDetailModal({
                     <label className="block text-xs font-medium text-gray-500 mb-1">
                       {'\u05D7\u05D3\u05E8'}
                     </label>
-                    <input
-                      type="text"
+                    <select
                       value={editRoom}
                       onChange={(e) => setEditRoom(e.target.value)}
                       className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
+                    >
+                      {rooms.filter(r => r.isActive).map((r) => (
+                        <option key={r.name} value={r.name}>{r.name}</option>
+                      ))}
+                      {editRoom && !rooms.some(r => r.name === editRoom && r.isActive) && (
+                        <option value={editRoom}>{editRoom}</option>
+                      )}
+                    </select>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">

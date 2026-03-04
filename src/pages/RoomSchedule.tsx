@@ -741,6 +741,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
             onReschedule={() => { setDetailModalOpen(false); silentReloadSchedule() }}
             onDelete={() => { setDetailModalOpen(false); silentReloadSchedule() }}
             day={selectedDay}
+            rooms={tenantRooms}
           />
         </>
       )}

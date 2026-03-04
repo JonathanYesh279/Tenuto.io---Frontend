@@ -55,8 +55,15 @@ function getActivityGridPlacement(startTime: string, endTime: string) {
   // Column index: +2 because column 1 is room header (1-based grid)
   const startCol = Math.floor((clampedStart - gridStartMinutes) / SLOT_DURATION) + 2
   const endCol = Math.ceil((clampedEnd - gridStartMinutes) / SLOT_DURATION) + 2
+  const span = endCol - startCol
 
-  return { startCol, endCol, span: endCol - startCol }
+  // Proportional width: actual duration vs spanned slot duration
+  // e.g. 45min lesson in 2×30min slots = 75%
+  const spanMinutes = span * SLOT_DURATION
+  const actualMinutes = clampedEnd - clampedStart
+  const widthPercent = spanMinutes > 0 ? Math.round((actualMinutes / spanMinutes) * 100) : 100
+
+  return { startCol, endCol, span, widthPercent }
 }
 
 /**
@@ -260,7 +267,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
 
               {/* Solo (non-conflicting) activity cells */}
               {soloActivities.map((activity) => {
-                const { startCol, endCol, span } = getActivityGridPlacement(
+                const { startCol, endCol, span, widthPercent } = getActivityGridPlacement(
                   activity.startTime,
                   activity.endTime
                 )
@@ -275,6 +282,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
                       gridColumn: `${startCol} / ${endCol}`,
                       gridRow: `${rowNumber}`,
                       alignSelf: 'center',
+                      ...(widthPercent < 100 ? { width: `${widthPercent}%` } : {}),
                     }}
                   >
                     <ActivityCell

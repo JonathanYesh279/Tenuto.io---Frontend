@@ -58,3 +58,68 @@ export function getInstrumentDepartment(instrument: string): string | undefined 
   }
   return undefined;
 }
+
+// ==================== RBAC Constants ====================
+
+// RBAC role constants (match backend config/constants.js)
+export const TEACHER_ROLES = [
+  'מנהל', 'סגן מנהל', 'מזכירות',
+  'רכז/ת כללי', 'רכז/ת מחלקתי',
+  'מורה', 'ניצוח', 'מדריך הרכב', 'תאוריה', 'ליווי פסנתר', 'הלחנה', 'מורה מגמה',
+  'צפייה בלבד',
+] as const;
+export type TeacherRole = typeof TEACHER_ROLES[number];
+
+export const ADMIN_TIER_ROLES: TeacherRole[] = ['מנהל', 'סגן מנהל', 'מזכירות'];
+export const COORDINATOR_ROLES: TeacherRole[] = ['רכז/ת כללי', 'רכז/ת מחלקתי'];
+
+// Role tier labels for grouped display in UI
+export const ROLE_TIERS = [
+  { label: 'הנהלה', roles: ['מנהל', 'סגן מנהל', 'מזכירות'] },
+  { label: 'ריכוז', roles: ['רכז/ת כללי', 'רכז/ת מחלקתי'] },
+  { label: 'הוראה', roles: ['מורה', 'ניצוח', 'מדריך הרכב', 'תאוריה', 'ליווי פסנתר', 'הלחנה', 'מורה מגמה'] },
+  { label: 'צפייה', roles: ['צפייה בלבד'] },
+] as const;
+
+// Permission domains and their Hebrew labels
+export const PERMISSION_DOMAIN_LABELS: Record<string, string> = {
+  students: 'תלמידים',
+  schedules: 'מערכת שעות',
+  orchestras: 'תזמורות',
+  rehearsals: 'חזרות',
+  theory: 'תאוריה',
+  teachers: 'מורים',
+  reports: 'דוחות',
+  settings: 'הגדרות',
+  roles: 'תפקידים',
+};
+
+// Actions per domain type (match backend PERMISSION_ACTIONS)
+export const PERMISSION_ACTIONS_BY_DOMAIN: Record<string, string[]> = {
+  students: ['view', 'create', 'update', 'delete'],
+  schedules: ['view', 'create', 'update', 'delete'],
+  orchestras: ['view', 'create', 'update', 'delete'],
+  rehearsals: ['view', 'create', 'update', 'delete'],
+  theory: ['view', 'create', 'update', 'delete'],
+  teachers: ['view', 'create', 'update', 'delete'],
+  reports: ['view', 'export'],
+  settings: ['view', 'update'],
+  roles: ['view', 'assign'],
+};
+
+export const ACTION_LABELS: Record<string, string> = {
+  view: 'צפייה',
+  create: 'יצירה',
+  update: 'עדכון',
+  delete: 'מחיקה',
+  export: 'ייצוא',
+  assign: 'הקצאה',
+};
+
+export const SCOPE_LABELS: Record<string, string> = {
+  all: 'הכל',
+  department: 'מחלקה',
+  own: 'אישי',
+};
+
+export const LOCKED_DOMAINS = ['settings', 'roles'] as const;

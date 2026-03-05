@@ -5651,6 +5651,55 @@ export const roomScheduleService = {
   },
 };
 
+// ==================== Roles & Permissions Service ====================
+
+/**
+ * Roles & Permissions Service
+ * RBAC role assignment and permission matrix management
+ * Backend endpoints: /api/settings/roles, /api/teacher/:id/roles
+ */
+export const rolesService = {
+  async getRoles() {
+    try {
+      const response = await apiClient.get('/settings/roles');
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+      throw error;
+    }
+  },
+
+  async updateRolePermissions(roleName, permissions) {
+    try {
+      const response = await apiClient.put(`/settings/roles/${encodeURIComponent(roleName)}`, permissions);
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error updating role permissions:', error);
+      throw error;
+    }
+  },
+
+  async resetRolePermissions(roleName) {
+    try {
+      const response = await apiClient.post(`/settings/roles/${encodeURIComponent(roleName)}/reset`);
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error resetting role permissions:', error);
+      throw error;
+    }
+  },
+
+  async updateTeacherRoles(teacherId, data) {
+    try {
+      const response = await apiClient.put(`/teacher/${teacherId}/roles`, data);
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error updating teacher roles:', error);
+      throw error;
+    }
+  },
+};
+
 /**
  * Default export with all services
  * Complete API service collection matching backend schemas

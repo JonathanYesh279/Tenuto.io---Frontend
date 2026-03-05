@@ -3,6 +3,7 @@ import { rolesService } from '../../services/apiService'
 import { ADMIN_TIER_ROLES, COORDINATOR_ROLES } from '../../constants/enums'
 import { getDisplayName } from '../../utils/nameUtils'
 import EditRoleModal from './EditRoleModal'
+import PermissionMatrixEditor from './PermissionMatrixEditor'
 import toast from 'react-hot-toast'
 import { PencilSimple as PencilSimpleIcon } from '@phosphor-icons/react'
 
@@ -33,6 +34,7 @@ function getRoleBadgeColor(role: string): string {
 
 export default function StaffRoleTable() {
   const [teachers, setTeachers] = useState<Teacher[]>([])
+  const [rolePermissions, setRolePermissions] = useState<Record<string, Record<string, Record<string, string>>>>({})
   const [loading, setLoading] = useState(true)
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null)
 
@@ -54,6 +56,7 @@ export default function StaffRoleTable() {
       })
 
       setTeachers(sorted)
+      setRolePermissions(result?.rolePermissions || {})
     } catch (error) {
       console.error('Error loading staff roles:', error)
       toast.error('שגיאה בטעינת רשימת הצוות')
@@ -167,6 +170,18 @@ export default function StaffRoleTable() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Permission Matrix Section */}
+      <div className="mt-6">
+        <div className="mb-3">
+          <h3 className="text-sm font-bold text-gray-800">מטריצת הרשאות</h3>
+          <p className="text-xs text-gray-500 mt-0.5">התאם הרשאות לכל תפקיד</p>
+        </div>
+        <PermissionMatrixEditor
+          rolePermissions={rolePermissions}
+          onPermissionsChanged={handleSaved}
+        />
       </div>
 
       <EditRoleModal

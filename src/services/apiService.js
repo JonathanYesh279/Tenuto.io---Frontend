@@ -514,6 +514,25 @@ export const authService = {
       console.error('🔐 Reset password error:', error);
       throw error;
     }
+  },
+
+  /**
+   * Force password change (for accounts with requiresPasswordChange flag)
+   * Called after login when admin has been given a default password by super admin.
+   * @param {string} newPassword - New password to set
+   * @returns {Promise} - New tokens + teacher object
+   */
+  async forcePasswordChange(newPassword) {
+    try {
+      const response = await apiClient.post('/auth/force-password-change', { newPassword });
+      if (response.accessToken) {
+        apiClient.setToken(response.accessToken);
+      }
+      return response;
+    } catch (error) {
+      console.error('🔐 Force password change error:', error);
+      throw error;
+    }
   }
 };
 

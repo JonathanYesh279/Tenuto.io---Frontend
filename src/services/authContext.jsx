@@ -45,12 +45,30 @@ export const AuthProvider = ({ children }) => {
       }
     }, 100)
     
+    // Listen for forced logout from apiService 401 interceptor
+    const handleAuthExpired = () => {
+      console.log('🔐 AUTH CONTEXT - auth:expired event received, forcing logout')
+      if (mountedRef.current) {
+        localStorage.removeItem('loginType')
+        localStorage.removeItem('superAdminUser')
+        localStorage.removeItem('impersonationContext')
+        sessionStorage.removeItem('preImpersonation_authToken')
+        sessionStorage.removeItem('preImpersonation_loginType')
+        sessionStorage.removeItem('preImpersonation_superAdminUser')
+        setIsAuthenticated(false)
+        setUser(null)
+        setAuthError('פג תוקף ההתחברות. יש להתחבר מחדש.')
+      }
+    }
+    window.addEventListener('auth:expired', handleAuthExpired)
+
     return () => {
       mountedRef.current = false
       if (validationTimeoutRef.current) {
         clearTimeout(validationTimeoutRef.current)
       }
       clearTimeout(timeoutId)
+      window.removeEventListener('auth:expired', handleAuthExpired)
     }
   }, [])
 
@@ -219,7 +237,8 @@ export const AuthProvider = ({ children }) => {
             address: userData?.address || ''
           },
           roles: userData?.roles || basicUserData?.roles || [],
-          role: userData?.role || userData?.roles?.[0] || basicUserData?.roles?.[0] || ''
+          role: userData?.role || userData?.roles?.[0] || basicUserData?.roles?.[0] || '',
+          requiresPasswordChange: userData?.credentials?.requiresPasswordChange || userData?.requiresPasswordChange || false
         }
 
         console.log('🔐 AUTH CONTEXT - User data normalized:', {
@@ -336,7 +355,8 @@ export const AuthProvider = ({ children }) => {
           address: userData?.address || basicUserData?.personalInfo?.address || ''
         },
         roles: userData?.roles || basicUserData?.roles || [],
-        role: userData?.role || userData?.roles?.[0] || basicUserData?.roles?.[0] || ''
+        role: userData?.role || userData?.roles?.[0] || basicUserData?.roles?.[0] || '',
+        requiresPasswordChange: basicUserData?.requiresPasswordChange || userData?.credentials?.requiresPasswordChange || userData?.requiresPasswordChange || false
       }
 
       console.log('🔐 AUTH CONTEXT - User data normalized after login:', {
@@ -634,6 +654,11 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isAuthenticated])
 
+  // Clear requiresPasswordChange flag after successful forced password change
+  const clearRequiresPasswordChange = useCallback(() => {
+    setUser(prev => prev ? { ...prev, requiresPasswordChange: false } : prev)
+  }, [])
+
   // Debug helper for testing improvements
   const debugAuth = useCallback(() => {
     return {
@@ -659,6 +684,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     checkAuthStatus,
     refreshToken,
+    clearRequiresPasswordChange,
     debugAuth
   }
 

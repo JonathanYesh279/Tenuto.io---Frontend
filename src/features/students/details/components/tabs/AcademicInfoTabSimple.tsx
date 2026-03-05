@@ -90,6 +90,8 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         instrumentTests[instrument.instrumentName] = {
           stageTestStatus: instrument.tests?.stageTest?.status || 'לא נבחן',
           technicalTestStatus: instrument.tests?.technicalTest?.status || 'לא נבחן',
+          stageTestNotes: instrument.tests?.stageTest?.notes || '',
+          technicalTestNotes: instrument.tests?.technicalTest?.notes || '',
         }
       })
     }
@@ -159,44 +161,54 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
       setIsSaving(true)
 
       // Update instrument progress with new test statuses and check for stage advancement
+      // Only include schema-allowed fields to avoid validation errors
       const updatedInstrumentProgress = academicInfo.instrumentProgress?.map((instrument: any) => {
         const testUpdates = editedData.instrumentTests?.[instrument.instrumentName]
-        if (testUpdates) {
-          const oldStageTestStatus = instrument.tests?.stageTest?.status || 'לא נבחן'
-          const newStageTestStatus = testUpdates.stageTestStatus
 
-          // Check if stage test changed from failing to passing
-          const shouldAdvanceStage =
-            PASSING_STATUSES.includes(newStageTestStatus) &&
-            !PASSING_STATUSES.includes(oldStageTestStatus) &&
-            instrument.currentStage < 8
+        const oldStageTestStatus = instrument.tests?.stageTest?.status || 'לא נבחן'
+        const newStageTestStatus = testUpdates?.stageTestStatus || oldStageTestStatus
 
-          return {
-            ...instrument,
-            // Increment stage if conditions are met
-            currentStage: shouldAdvanceStage ? instrument.currentStage + 1 : instrument.currentStage,
-            tests: {
-              ...instrument.tests,
-              stageTest: {
-                ...instrument.tests?.stageTest,
-                status: testUpdates.stageTestStatus
-              },
-              technicalTest: {
-                ...instrument.tests?.technicalTest,
-                status: testUpdates.technicalTestStatus
-              }
+        // Check if stage test changed from failing to passing
+        const shouldAdvanceStage = testUpdates &&
+          PASSING_STATUSES.includes(newStageTestStatus) &&
+          !PASSING_STATUSES.includes(oldStageTestStatus) &&
+          instrument.currentStage < 8
+
+        return {
+          instrumentName: instrument.instrumentName,
+          isPrimary: instrument.isPrimary ?? false,
+          currentStage: shouldAdvanceStage ? instrument.currentStage + 1 : instrument.currentStage,
+          ...(instrument.ministryStageLevel != null && { ministryStageLevel: instrument.ministryStageLevel }),
+          ...(instrument.department != null && { department: instrument.department }),
+          tests: {
+            stageTest: {
+              status: testUpdates?.stageTestStatus || instrument.tests?.stageTest?.status || 'לא נבחן',
+              ...(instrument.tests?.stageTest?.lastTestDate && { lastTestDate: instrument.tests.stageTest.lastTestDate }),
+              ...(instrument.tests?.stageTest?.nextTestDate && { nextTestDate: instrument.tests.stageTest.nextTestDate }),
+              notes: testUpdates?.stageTestNotes ?? instrument.tests?.stageTest?.notes ?? ''
+            },
+            technicalTest: {
+              status: testUpdates?.technicalTestStatus || instrument.tests?.technicalTest?.status || 'לא נבחן',
+              ...(instrument.tests?.technicalTest?.lastTestDate && { lastTestDate: instrument.tests.technicalTest.lastTestDate }),
+              ...(instrument.tests?.technicalTest?.nextTestDate && { nextTestDate: instrument.tests.technicalTest.nextTestDate }),
+              notes: testUpdates?.technicalTestNotes ?? instrument.tests?.technicalTest?.notes ?? ''
             }
           }
         }
-        return instrument
       })
 
+      // Only send schema-allowed academicInfo fields
+      const academicUpdate: Record<string, any> = {
+        class: editedData.class,
+        instrumentProgress: updatedInstrumentProgress
+      }
+      if (academicInfo.studyYears != null) academicUpdate.studyYears = academicInfo.studyYears
+      if (academicInfo.extraHour != null) academicUpdate.extraHour = Number(academicInfo.extraHour)
+      if (academicInfo.tests) academicUpdate.tests = academicInfo.tests
+      if (academicInfo.isBagrutCandidate != null) academicUpdate.isBagrutCandidate = academicInfo.isBagrutCandidate
+
       await apiService.students.updateStudent(studentId, {
-        academicInfo: {
-          ...academicInfo,
-          class: editedData.class,
-          instrumentProgress: updatedInstrumentProgress
-        }
+        academicInfo: academicUpdate
       })
 
       // Fetch fresh data from server
@@ -243,6 +255,19 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
         [instrumentName]: {
           ...prev.instrumentTests?.[instrumentName],
           [`${testType}Status`]: value
+        }
+      }
+    }))
+  }
+
+  const handleTestNotesChange = (instrumentName: string, testType: 'stageTest' | 'technicalTest', value: string) => {
+    setEditedData(prev => ({
+      ...prev,
+      instrumentTests: {
+        ...prev.instrumentTests,
+        [instrumentName]: {
+          ...prev.instrumentTests?.[instrumentName],
+          [`${testType}Notes`]: value
         }
       }
     }))
@@ -464,20 +489,34 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                     <div className="bg-white rounded-lg p-3 border border-gray-200">
                       <div className="text-xs text-gray-500 mb-1">מבחן טכני</div>
                       {isEditing ? (
-                        <select
-                          value={editedData.instrumentTests?.[instrument.instrumentName]?.technicalTestStatus || 'לא נבחן'}
-                          onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'technicalTest', e.target.value)}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        >
-                          {TEST_STATUSES.map(status => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
-                        </select>
+                        <>
+                          <select
+                            value={editedData.instrumentTests?.[instrument.instrumentName]?.technicalTestStatus || 'לא נבחן'}
+                            onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'technicalTest', e.target.value)}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            {TEST_STATUSES.map(status => (
+                              <option key={status} value={status}>{status}</option>
+                            ))}
+                          </select>
+                          <textarea
+                            value={editedData.instrumentTests?.[instrument.instrumentName]?.technicalTestNotes || ''}
+                            onChange={(e) => handleTestNotesChange(instrument.instrumentName, 'technicalTest', e.target.value)}
+                            placeholder="הערות למבחן טכני..."
+                            rows={2}
+                            className="w-full mt-2 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                          />
+                        </>
                       ) : (
-                        <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${getExamStatusColor(instrument.tests?.technicalTest?.status || 'לא נבחן')}`}>
-                          {getExamStatusIcon(instrument.tests?.technicalTest?.status || 'לא נבחן')}
-                          {instrument.tests?.technicalTest?.status || 'לא נבחן'}
-                        </div>
+                        <>
+                          <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${getExamStatusColor(instrument.tests?.technicalTest?.status || 'לא נבחן')}`}>
+                            {getExamStatusIcon(instrument.tests?.technicalTest?.status || 'לא נבחן')}
+                            {instrument.tests?.technicalTest?.status || 'לא נבחן'}
+                          </div>
+                          {instrument.tests?.technicalTest?.notes && (
+                            <p className="text-xs text-gray-600 mt-2 bg-gray-50 p-2 rounded">{instrument.tests.technicalTest.notes}</p>
+                          )}
+                        </>
                       )}
                     </div>
 
@@ -485,20 +524,34 @@ const AcademicInfoTabSimple: React.FC<AcademicInfoTabProps> = ({ student, studen
                     <div className="bg-white rounded-lg p-3 border border-gray-200">
                       <div className="text-xs text-gray-500 mb-1">מבחן שלב</div>
                       {isEditing ? (
-                        <select
-                          value={editedData.instrumentTests?.[instrument.instrumentName]?.stageTestStatus || 'לא נבחן'}
-                          onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'stageTest', e.target.value)}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        >
-                          {TEST_STATUSES.map(status => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
-                        </select>
+                        <>
+                          <select
+                            value={editedData.instrumentTests?.[instrument.instrumentName]?.stageTestStatus || 'לא נבחן'}
+                            onChange={(e) => handleTestStatusChange(instrument.instrumentName, 'stageTest', e.target.value)}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            {TEST_STATUSES.map(status => (
+                              <option key={status} value={status}>{status}</option>
+                            ))}
+                          </select>
+                          <textarea
+                            value={editedData.instrumentTests?.[instrument.instrumentName]?.stageTestNotes || ''}
+                            onChange={(e) => handleTestNotesChange(instrument.instrumentName, 'stageTest', e.target.value)}
+                            placeholder="הערות למבחן שלב..."
+                            rows={2}
+                            className="w-full mt-2 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                          />
+                        </>
                       ) : (
-                        <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${getExamStatusColor(instrument.tests?.stageTest?.status || 'לא נבחן')}`}>
-                          {getExamStatusIcon(instrument.tests?.stageTest?.status || 'לא נבחן')}
-                          {instrument.tests?.stageTest?.status || 'לא נבחן'}
-                        </div>
+                        <>
+                          <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${getExamStatusColor(instrument.tests?.stageTest?.status || 'לא נבחן')}`}>
+                            {getExamStatusIcon(instrument.tests?.stageTest?.status || 'לא נבחן')}
+                            {instrument.tests?.stageTest?.status || 'לא נבחן'}
+                          </div>
+                          {instrument.tests?.stageTest?.notes && (
+                            <p className="text-xs text-gray-600 mt-2 bg-gray-50 p-2 rounded">{instrument.tests.stageTest.notes}</p>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>

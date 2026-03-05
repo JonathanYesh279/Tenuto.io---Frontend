@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../services/authContext.jsx'
 import { tenantService, teacherService } from '../services/apiService'
 import { Input } from '../components/ui/input'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs'
 import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
 import {
   GearIcon, FloppyDiskIcon, PencilSimpleIcon, PlusIcon, CheckIcon, XIcon, ProhibitIcon,
   UploadSimpleIcon,
 } from '@phosphor-icons/react'
+import StaffRoleTable from '../components/settings/StaffRoleTable'
 
 interface ConservatoryProfile {
   code: string
@@ -338,7 +340,7 @@ export default function Settings() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto" dir="rtl">
-      {/* Page Header + Save */}
+      {/* Page Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -349,6 +351,17 @@ export default function Settings() {
             <p className="text-sm text-gray-500">ניהול פרטי המוסד וההגדרות</p>
           </div>
         </div>
+      </div>
+
+      <Tabs defaultValue="general" dir="rtl" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="general">הגדרות כלליות</TabsTrigger>
+          <TabsTrigger value="roles">תפקידים והרשאות</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="general">
+      {/* Save button for general tab */}
+      <div className="flex justify-end mb-4">
         <button
           onClick={handleSave}
           disabled={saving}
@@ -664,6 +677,12 @@ export default function Settings() {
           </Field>
         </div>
       </div>
+        </TabsContent>
+
+        <TabsContent value="roles">
+          <StaffRoleTable />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

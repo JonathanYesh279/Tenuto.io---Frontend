@@ -45,6 +45,11 @@ export default function Login() {
         return
       }
 
+      if (result?.user?.requiresPasswordChange) {
+        navigate('/force-password-change')
+        return
+      }
+
       navigate('/dashboard')
     } catch (error: any) {
       setError(error.message || 'שגיאה בהתחברות. אנא בדוק את הפרטים ונסה שוב.')
@@ -63,6 +68,11 @@ export default function Login() {
       if (result?.requiresTenantSelection) {
         setError('שגיאה בבחירת מוסד. נסה שוב.')
         setIsLoading(false)
+        return
+      }
+
+      if (result?.user?.requiresPasswordChange) {
+        navigate('/force-password-change')
         return
       }
 
@@ -200,7 +210,7 @@ export default function Login() {
                       type="email"
                       required
                       disabled={isLoading}
-                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder='כתובת דוא״ל'
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -218,7 +228,7 @@ export default function Login() {
                       type="password"
                       required
                       disabled={isLoading}
-                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="סיסמה"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}

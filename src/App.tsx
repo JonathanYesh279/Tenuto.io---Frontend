@@ -9,6 +9,7 @@ import Layout from './components/Layout'
 import Login from './pages/Login'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import ForcePasswordChange from './pages/ForcePasswordChange'
 import { lazyWithRetry, initializeBundleOptimizations } from './utils/bundleOptimization'
 import { Toaster, ToastBar } from 'react-hot-toast'
 
@@ -161,6 +162,11 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
     return <Navigate to="/login" replace />
   }
 
+  // Force password change: block all protected routes until password is changed
+  if (user?.requiresPasswordChange && location.pathname !== '/force-password-change') {
+    return <Navigate to="/force-password-change" replace />
+  }
+
   // Super admin can only access these paths
   const SUPER_ADMIN_ALLOWED_PATHS = ['/dashboard', '/settings', '/tenants', '/super-admins', '/tenant-admins']
   if (user?.isSuperAdmin && !SUPER_ADMIN_ALLOWED_PATHS.some(p => location.pathname.startsWith(p))) {
@@ -208,6 +214,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/force-password-change" element={<ForcePasswordChange />} />
         <Route
           path="/dashboard"
           element={

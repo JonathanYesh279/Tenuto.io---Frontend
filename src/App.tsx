@@ -41,6 +41,7 @@ const TenantDetailPage = lazyWithRetry(() => import('./pages/super-admin/TenantD
 const TenantFormPage = lazyWithRetry(() => import('./pages/super-admin/TenantFormPage'), 'TenantFormPage')
 const SuperAdminManagementPage = lazyWithRetry(() => import('./pages/super-admin/SuperAdminManagementPage'), 'SuperAdminManagementPage')
 const SuperAdminSettingsPage = lazyWithRetry(() => import('./pages/super-admin/SuperAdminSettingsPage'), 'SuperAdminSettingsPage')
+const TenantAdminManagementPage = lazyWithRetry(() => import('./pages/super-admin/TenantAdminManagementPage'), 'TenantAdminManagementPage')
 
 // Lazy load detail pages with optimization
 const StudentDetailsPage = lazyWithRetry(
@@ -161,7 +162,7 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   }
 
   // Super admin can only access these paths
-  const SUPER_ADMIN_ALLOWED_PATHS = ['/dashboard', '/settings', '/tenants', '/super-admins']
+  const SUPER_ADMIN_ALLOWED_PATHS = ['/dashboard', '/settings', '/tenants', '/super-admins', '/tenant-admins']
   if (user?.isSuperAdmin && !SUPER_ADMIN_ALLOWED_PATHS.some(p => location.pathname.startsWith(p))) {
     return <Navigate to="/dashboard" replace />
   }
@@ -572,6 +573,7 @@ function AppRoutes() {
         <Route path="/tenants/:tenantId" element={createProtectedRoute(TenantDetailPage, 'loading tenant...')} />
         <Route path="/tenants/:tenantId/edit" element={createProtectedRoute(TenantFormPage, 'loading form...')} />
         <Route path="/super-admins" element={createProtectedRoute(SuperAdminManagementPage, 'loading admins...')} />
+        <Route path="/tenant-admins" element={createProtectedRoute(TenantAdminManagementPage, 'loading tenant admins...')} />
 
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

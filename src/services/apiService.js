@@ -70,6 +70,45 @@ class ApiClient {
   }
 
   /**
+   * Attempt to refresh the current token (super-admin or regular)
+   */
+  async _attemptRefresh() {
+    try {
+      const loginType = localStorage.getItem('loginType');
+      let refreshEndpoint;
+
+      if (loginType === 'super_admin') {
+        refreshEndpoint = '/super-admin/auth/refresh';
+      } else if (loginType === 'impersonation') {
+        // Impersonation tokens can't be refreshed
+        return false;
+      } else {
+        refreshEndpoint = '/auth/refresh';
+      }
+
+      const response = await fetch(this.buildUrl(refreshEndpoint), {
+        method: 'POST',
+        headers: this.getHeaders(),
+        credentials: 'include',
+      });
+
+      if (!response.ok) return false;
+
+      const data = await response.json();
+      const newToken = data?.data?.accessToken || data?.accessToken;
+
+      if (newToken) {
+        this.setToken(newToken);
+        console.log('🔐 API Client - Token refreshed successfully');
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Build full URL for endpoint
    */
   buildUrl(endpoint) {
@@ -98,19 +137,23 @@ class ApiClient {
       // Handle different error types
       if (response.status === 401) {
         console.log('🔐 API Client - 401 Unauthorized detected for:', endpoint);
-        // Be more conservative about token removal - only for critical auth failures
-        if (endpoint === '/auth/validate' || endpoint === '/auth/login' || endpoint === '/auth/refresh') {
-          console.log('🔐 API Client - Removing token due to auth endpoint failure');
-          this.removeToken();
-        } else {
-          console.log('🔐 API Client - Keeping token, might be temporary issue');
-        }
-        // For login endpoints, pass through the backend's actual error message
+
+        // For login/seed endpoints, pass through the backend's actual error message
         const backendMessage = data?.error || data?.message;
-        if (backendMessage && (endpoint.includes('/login') || endpoint.includes('/seed'))) {
-          throw new Error(backendMessage);
+        if (endpoint.includes('/login') || endpoint.includes('/seed')) {
+          throw new Error(backendMessage || 'Authentication failed.');
         }
-        throw new Error('Authentication failed. Please login again.');
+
+        // For auth validation/refresh endpoints, just remove token and throw
+        if (endpoint === '/auth/validate' || endpoint === '/auth/refresh' ||
+            endpoint === '/super-admin/auth/refresh') {
+          this.removeToken();
+        }
+
+        // Mark error as 401 so _makeRequest can attempt refresh+retry
+        const authError = new Error('Authentication failed. Please login again.');
+        authError.status = 401;
+        throw authError;
       } else if (response.status === 403) {
         throw new Error('Access denied. Insufficient permissions.');
       } else if (response.status === 404) {
@@ -196,7 +239,13 @@ class ApiClient {
 
     // Add body for POST/PUT/PATCH/DELETE requests
     if (options.body && (method === 'POST' || method === 'PUT' || method === 'PATCH' || method === 'DELETE')) {
-      config.body = JSON.stringify(options.body);
+      if (options.body instanceof FormData) {
+        // Let browser set Content-Type with boundary for multipart uploads
+        delete config.headers['Content-Type'];
+        config.body = options.body;
+      } else {
+        config.body = JSON.stringify(options.body);
+      }
     }
 
     try {
@@ -227,6 +276,35 @@ class ApiClient {
     } catch (error) {
       if (error.name === 'AbortError') {
         throw new Error('Request timeout. Please check your connection.');
+      }
+
+      // 401 on a non-auth endpoint — attempt refresh + retry once
+      const isAuthEndpoint = endpoint === '/auth/validate' || endpoint === '/auth/refresh' ||
+        endpoint === '/super-admin/auth/refresh' || endpoint.includes('/login');
+      if (error.status === 401 && !isAuthEndpoint) {
+        if (!this.authRefreshPromise) {
+          this.authRefreshPromise = this._attemptRefresh();
+        }
+        try {
+          const refreshed = await this.authRefreshPromise;
+          this.authRefreshPromise = null;
+
+          if (refreshed) {
+            console.log('🔐 API Client - Token refreshed, retrying request');
+            // Rebuild config with fresh token and retry
+            const retryConfig = { method, headers: this.getHeaders() };
+            if (config.body) retryConfig.body = config.body;
+            const retryResponse = await fetch(url, retryConfig);
+            return this.handleResponse(retryResponse, endpoint);
+          }
+        } catch {
+          this.authRefreshPromise = null;
+        }
+
+        // Refresh failed — force logout via event
+        console.log('🔐 API Client - Refresh failed, forcing logout');
+        this.removeToken();
+        window.dispatchEvent(new CustomEvent('auth:expired'));
       }
 
       // Don't log expected 404s for attendance lookups (this is normal when no record exists yet)
@@ -5065,13 +5143,21 @@ export const tenantService = {
     }
   },
 
+  async deleteRoom(tenantId, roomId) {
+    try {
+      const response = await apiClient.delete(`/tenant/${tenantId}/rooms/${roomId}`);
+      return response;
+    } catch (error) {
+      console.error('Error deleting room:', error);
+      throw error;
+    }
+  },
+
   async importRooms(tenantId, file) {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const response = await apiClient.post(`/tenant/${tenantId}/rooms/import`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await apiClient.post(`/tenant/${tenantId}/rooms/import`, formData);
       return response;
     } catch (error) {
       console.error('Error importing rooms:', error);
@@ -5536,6 +5622,27 @@ export const superAdminService = {
       console.error('Error updating admin:', error);
       throw error;
     }
+  },
+
+  // Tenant Admin Management
+  async getAllTenantAdmins() {
+    const response = await apiClient.get('/super-admin/tenant-admins');
+    return response;
+  },
+
+  async getTenantAdmins(tenantId) {
+    const response = await apiClient.get(`/super-admin/tenants/${tenantId}/admins`);
+    return response;
+  },
+
+  async updateTenantAdmin(tenantId, adminId, data) {
+    const response = await apiClient.put(`/super-admin/tenants/${tenantId}/admins/${adminId}`, data);
+    return response;
+  },
+
+  async resetTenantAdminPassword(tenantId, adminId) {
+    const response = await apiClient.post(`/super-admin/tenants/${tenantId}/admins/${adminId}/reset-password`);
+    return response;
   },
 
   // Reporting

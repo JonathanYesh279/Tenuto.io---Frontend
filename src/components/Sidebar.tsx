@@ -29,6 +29,7 @@ import {
   CheckSquareIcon,
   ShieldIcon,
   BuildingsIcon,
+  UserListIcon,
   SquaresFourIcon,
 } from '@phosphor-icons/react'
 import type { Icon } from '@phosphor-icons/react'
@@ -94,6 +95,7 @@ const superAdminNavigation: NavigationItem[] = [
   { name: 'לוח בקרה', href: '/dashboard', Icon: HouseIcon, category: 'general' },
   { name: 'ניהול מוסדות', href: '/tenants', Icon: BuildingsIcon, category: 'management' },
   { name: 'מנהלי-על', href: '/super-admins', Icon: ShieldIcon, category: 'management' },
+  { name: 'מנהלי מוסדות', href: '/tenant-admins', Icon: UserListIcon, category: 'management' },
   { name: 'הגדרות', href: '/settings', Icon: GearIcon, category: 'system' },
 ]
 

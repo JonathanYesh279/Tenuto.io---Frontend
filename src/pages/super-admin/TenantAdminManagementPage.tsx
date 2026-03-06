@@ -38,16 +38,16 @@ const ROLE_COLORS: Record<string, string> = {
   'סגן מנהל': 'bg-red-50 text-red-600 border-red-100',
   'מזכירות': 'bg-red-50 text-red-600 border-red-100',
   // Coordinator tier
-  'רכז מחלקה': 'bg-blue-100 text-blue-700 border-blue-200',
-  'רכז הרכבים': 'bg-blue-50 text-blue-600 border-blue-100',
+  'רכז/ת כללי': 'bg-blue-100 text-blue-700 border-blue-200',
+  'רכז/ת מחלקתי': 'bg-blue-50 text-blue-600 border-blue-100',
   // Teaching tier
   'מורה': 'bg-green-100 text-green-700 border-green-200',
-  'מנצח': 'bg-green-50 text-green-600 border-green-100',
-  'מלווה': 'bg-green-50 text-green-600 border-green-100',
-  'מורה תאוריה': 'bg-green-50 text-green-600 border-green-100',
-  'מורה לכלי הקשה': 'bg-green-50 text-green-600 border-green-100',
-  'מורה להרכבים': 'bg-green-50 text-green-600 border-green-100',
-  'מורה לקאמה': 'bg-green-50 text-green-600 border-green-100',
+  'ניצוח': 'bg-green-50 text-green-600 border-green-100',
+  'מדריך הרכב': 'bg-green-50 text-green-600 border-green-100',
+  'תאוריה': 'bg-green-50 text-green-600 border-green-100',
+  'ליווי פסנתר': 'bg-green-50 text-green-600 border-green-100',
+  'הלחנה': 'bg-green-50 text-green-600 border-green-100',
+  'מורה מגמה': 'bg-green-50 text-green-600 border-green-100',
   // View-only
   'צפייה בלבד': 'bg-gray-100 text-gray-600 border-gray-200',
 }

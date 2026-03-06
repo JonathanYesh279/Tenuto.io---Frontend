@@ -5,7 +5,6 @@ import {
   SquaresFourIcon, ListIcon, DownloadIcon, CheckCircleIcon, ClockIcon, MedalIcon,
   FileTextIcon, UserIcon
 } from '@phosphor-icons/react'
-import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import { StatusBadge } from '../components/domain'
 import StatsCard from '../components/ui/StatsCard'
@@ -16,6 +15,8 @@ import { SearchInput } from '../components/ui/SearchInput'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
+import FilterPanel from '../components/filters/FilterPanel'
+import type { FilterGroup, FilterState } from '../components/filters/FilterPanel'
 import { useBagrut } from '../hooks/useBagrut'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
@@ -24,6 +25,7 @@ import { getDisplayName } from '../utils/nameUtils'
 
 export default function Bagruts() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { currentSchoolYear } = useSchoolYear()
   const { user } = useAuth()
   const {
@@ -36,15 +38,16 @@ export default function Bagruts() {
     clearError
   } = useBagrut()
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [filters, setFilters] = useState({
-    status: '',
-    teacherId: '',
-    conservatory: '',
-    isCompleted: ''
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
+  const [filters, setFilters] = useState<FilterState>({
+    status: searchParams.get('status') || '',
+    teacherId: searchParams.get('teacher') || '',
+    conservatory: searchParams.get('conservatory') || '',
+    grade: searchParams.get('grade') || '',
+    age: searchParams.get('age') ? JSON.parse(searchParams.get('age')!) : { min: '', max: '' }
   })
   const [showForm, setShowForm] = useState(false)
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table')
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>((searchParams.get('view') as 'table' | 'grid') || 'table')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [bagrutToDelete, setBagrutToDelete] = useState<{id: string, studentName: string} | null>(null)
 
@@ -67,6 +70,23 @@ export default function Bagruts() {
       console.log('🎭 First bagrut sample:', bagruts[0])
     }
   }, [bagruts])
+
+  // Sync filter state to URL search params
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (searchTerm) params.set('search', searchTerm)
+    if (filters.status) params.set('status', filters.status)
+    if (filters.teacherId) params.set('teacher', filters.teacherId)
+    if (filters.conservatory) params.set('conservatory', filters.conservatory)
+    if (filters.grade) params.set('grade', filters.grade)
+    if (filters.age?.min || filters.age?.max) params.set('age', JSON.stringify(filters.age))
+    if (viewMode !== 'table') params.set('view', viewMode)
+    const newSearch = params.toString()
+    const currentSearch = searchParams.toString()
+    if (newSearch !== currentSearch) {
+      setSearchParams(params, { replace: true })
+    }
+  }, [searchTerm, filters, viewMode])
 
   const loadData = async (forceRefresh = false) => {
     try {
@@ -254,6 +274,61 @@ export default function Bagruts() {
   // Use appropriate bagrut source based on user role
   const bagrutSource = isTeacherRole ? teacherBagruts : bagruts
 
+  // Helper to get unique grades from student data
+  const getUniqueGrades = () => {
+    const grades = new Set<string>()
+    bagrutSource.forEach(bagrut => {
+      const student = students.find(s => s._id === bagrut.studentId)
+      const grade = student?.personalInfo?.class || student?.academicInfo?.class
+      if (grade) grades.add(String(grade))
+    })
+    return [...grades].sort()
+  }
+
+  // Build filter groups for FilterPanel
+  const filterGroups: FilterGroup[] = [
+    {
+      key: 'status',
+      label: 'סטטוס',
+      type: 'select',
+      options: [
+        { value: 'completed', label: 'הושלם' },
+        { value: 'pending', label: 'בתהליך' }
+      ]
+    },
+    {
+      key: 'teacherId',
+      label: 'מורה',
+      type: 'select',
+      options: teachers.map(t => ({
+        value: t._id,
+        label: getDisplayName(t.personalInfo)
+      }))
+    },
+    {
+      key: 'conservatory',
+      label: 'קונסרבטוריון',
+      type: 'select',
+      options: [...new Set(bagrutSource.map(b => b.conservatoryName).filter(Boolean))].map(name => ({
+        value: name,
+        label: name
+      }))
+    },
+    {
+      key: 'grade',
+      label: 'כיתה',
+      type: 'select',
+      options: getUniqueGrades().map(g => ({ value: g, label: g }))
+    },
+    {
+      key: 'age',
+      label: 'גיל',
+      type: 'range',
+      min: 10,
+      max: 25
+    }
+  ]
+
   // Filter bagruts
   const filteredBagruts = bagrutSource.filter(bagrut => {
     const studentName = bagrut.studentName || getStudentName(bagrut.studentId)
@@ -273,11 +348,23 @@ export default function Bagruts() {
     const matchesConservatory = !filters.conservatory ||
       bagrut.conservatoryName === filters.conservatory
 
-    const matchesCompletion = filters.isCompleted === '' ||
-      (filters.isCompleted === 'true' && bagrut.isCompleted) ||
-      (filters.isCompleted === 'false' && !bagrut.isCompleted)
+    const matchesGrade = !filters.grade || (() => {
+      const student = students.find(s => s._id === bagrut.studentId)
+      const studentGrade = student?.personalInfo?.class || student?.academicInfo?.class
+      return String(studentGrade) === filters.grade
+    })()
 
-    return matchesSearch && matchesStatus && matchesTeacher && matchesConservatory && matchesCompletion
+    const matchesAge = (!filters.age?.min && !filters.age?.max) || (() => {
+      const student = students.find(s => s._id === bagrut.studentId)
+      const birthDate = student?.personalInfo?.birthDate || student?.personalInfo?.dateOfBirth
+      if (!birthDate) return false
+      const age = Math.floor((Date.now() - new Date(birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+      const minAge = filters.age?.min ? Number(filters.age.min) : 0
+      const maxAge = filters.age?.max ? Number(filters.age.max) : 999
+      return age >= minAge && age <= maxAge
+    })()
+
+    return matchesSearch && matchesStatus && matchesTeacher && matchesConservatory && matchesGrade && matchesAge
   })
 
   // Calculate statistics
@@ -490,58 +577,22 @@ export default function Bagruts() {
       </div>
 
       {/* Filters and Search */}
-      <Card padding="md">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <div className="relative">
-              <MagnifyingGlassIcon size={16} weight="regular" className="absolute right-3 top-3 text-gray-400" />
-              <input
-                type="text"
-                placeholder="חיפוש לפי שם תלמיד, מורה או קונסרבטוריון..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-              />
-            </div>
-          </div>
-          
-          <div className="flex gap-3 flex-wrap">
-            <select
-              value={filters.status}
-              onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-              className="px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              <option value="">כל הסטטוסים</option>
-              <option value="completed">הושלם</option>
-              <option value="pending">בתהליך</option>
-            </select>
-
-            <select
-              value={filters.teacherId}
-              onChange={(e) => setFilters(prev => ({ ...prev, teacherId: e.target.value }))}
-              className="px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              <option value="">כל המורים</option>
-              {teachers.map(teacher => (
-                <option key={teacher._id} value={teacher._id}>
-                  {getDisplayName(teacher.personalInfo)}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={filters.conservatory}
-              onChange={(e) => setFilters(prev => ({ ...prev, conservatory: e.target.value }))}
-              className="px-3 py-2 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              <option value="">כל הקונסרבטוריונים</option>
-              {[...new Set(bagruts.map(b => b.conservatoryName).filter(Boolean))].map(name => (
-                <option key={name} value={name}>{name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </Card>
+      <div className="flex flex-col gap-4">
+        <SearchInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          onClear={() => setSearchTerm('')}
+          placeholder="חיפוש לפי שם תלמיד, מורה או קונסרבטוריון..."
+          className="flex-1"
+        />
+        <FilterPanel
+          filters={filterGroups}
+          values={filters}
+          onChange={(newValues) => setFilters(newValues as typeof filters)}
+          onReset={() => setFilters({ status: '', teacherId: '', conservatory: '', grade: '', age: { min: '', max: '' } })}
+          variant="horizontal"
+        />
+      </div>
 
       {/* View Mode Toggle and Results Count */}
       <div className="flex items-center justify-between">

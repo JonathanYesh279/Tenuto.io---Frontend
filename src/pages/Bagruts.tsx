@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
-  MagnifyingGlassIcon, PlusIcon, EyeIcon, PencilSimpleIcon, TrashIcon, FunnelIcon, CircleNotchIcon,
+  PlusIcon, EyeIcon, PencilSimpleIcon, TrashIcon,
   SquaresFourIcon, ListIcon, DownloadIcon, CheckCircleIcon, ClockIcon, MedalIcon,
-  FileTextIcon, CalendarIcon, UserIcon, MusicNoteIcon, WarningCircleIcon, XCircleIcon
+  FileTextIcon, UserIcon
 } from '@phosphor-icons/react'
 import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
@@ -12,6 +12,10 @@ import StatsCard from '../components/ui/StatsCard'
 import BagrutCard from '../components/BagrutCard'
 import SimplifiedBagrutForm from '../components/SimplifiedBagrutForm'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
+import { SearchInput } from '../components/ui/SearchInput'
+import { TableSkeleton } from '../components/feedback/Skeleton'
+import { EmptyState } from '../components/feedback/EmptyState'
+import { ErrorState } from '../components/feedback/ErrorState'
 import { useBagrut } from '../hooks/useBagrut'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
@@ -422,33 +426,11 @@ export default function Bagruts() {
   ]
 
   if (loading || loadingAdditionalData) {
-    return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <CircleNotchIcon size={32} weight="regular" className="animate-spin mx-auto mb-4 text-primary" />
-          <div className="text-lg text-gray-600">טוען נתוני בגרויות...</div>
-        </div>
-      </div>
-    )
+    return <TableSkeleton rows={8} cols={6} />
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12">
-        <WarningCircleIcon size={48} weight="fill" className="text-red-500 mx-auto mb-4" />
-        <div className="text-red-600 text-lg mb-4">שגיאה בטעינת הנתונים</div>
-        <div className="text-gray-600 mb-6">{error}</div>
-        <button 
-          onClick={() => {
-            clearError()
-            loadData()
-          }}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
-        >
-          נסה שוב
-        </button>
-      </div>
-    )
+    return <ErrorState message={error} onRetry={() => { clearError(); loadData() }} />
   }
 
   return (
@@ -619,22 +601,15 @@ export default function Bagruts() {
       )}
 
       {filteredBagruts.length === 0 && !loading && !loadingAdditionalData && (
-        <div className="text-center py-12">
-          <FileTextIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-4" />
-          <div className="text-gray-500 text-lg">
-            {isTeacherRole
-              ? totalBagruts === 0
-                ? 'אין לך תלמידים עם תהליכי בגרות פעילים כרגע'
-                : 'לא נמצאו בגרויות התואמות לחיפוש'
-              : 'לא נמצאו בגרויות התואמות לחיפוש'
-            }
-          </div>
-          {isTeacherRole && totalBagruts === 0 && (
-            <p className="text-gray-400 text-sm mt-2">
-              כאשר תלמידיך יירשמו לבגרויות, הן יופיעו כאן
-            </p>
-          )}
-        </div>
+        <EmptyState
+          title={isTeacherRole && totalBagruts === 0
+            ? 'אין תלמידים עם תהליכי בגרות פעילים'
+            : 'לא נמצאו בגרויות התואמות לחיפוש'}
+          description={isTeacherRole && totalBagruts === 0
+            ? 'כאשר תלמידיך יירשמו לבגרויות, הן יופיעו כאן'
+            : undefined}
+          icon={<FileTextIcon size={48} weight="regular" />}
+        />
       )}
 
       {/* New Bagrut Form Modal */}

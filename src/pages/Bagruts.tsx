@@ -63,14 +63,6 @@ export default function Bagruts() {
     loadData()
   }, [currentSchoolYear])
 
-  // Log bagruts when they change (for debugging)
-  useEffect(() => {
-    console.log('🎭 Bagruts state updated:', bagruts.length, 'bagruts loaded')
-    if (bagruts.length > 0) {
-      console.log('🎭 First bagrut sample:', bagruts[0])
-    }
-  }, [bagruts])
-
   // Sync filter state to URL search params
   useEffect(() => {
     const params = new URLSearchParams()
@@ -92,9 +84,6 @@ export default function Bagruts() {
     try {
       setLoadingAdditionalData(true)
 
-      console.log('🔄 Loading bagrut data...', forceRefresh ? '(forced refresh)' : '')
-      console.log('👤 Current user:', user?._id, 'Role:', user?.roles?.[0])
-
       // Check if user is a teacher (but not if they're also an admin)
       const userIsAdmin = user?.roles?.includes('מנהל') || user?.roles?.includes('admin')
       const userIsTeacher = (user?.roles?.includes('מורה') || user?.roles?.includes('teacher')) && !userIsAdmin
@@ -102,29 +91,23 @@ export default function Bagruts() {
 
       if (userIsTeacher) {
         // Teacher role: Load their students and filter bagruts by their students
-        console.log('🎓 Teacher role detected, loading student bagruts...')
-
-        // Get teacher's students via dedicated endpoint
-        const studentsData = await apiService.teachers.getTeacherStudents(user._id)
-
-        console.log('👥 Teacher has', studentsData.length, 'students')
+        const [studentsData, teacherProfile] = await Promise.all([
+          apiService.teachers.getTeacherStudents(user._id),
+          apiService.teachers.getTeacher(user._id)
+        ])
 
         if (studentsData.length === 0) {
-          // No students assigned to this teacher
           setTeacherBagruts([])
           setStudents([])
-          setTeachers([])
+          setTeachers(teacherProfile ? [teacherProfile] : [])
           return
         }
-        console.log('📚 Loaded', studentsData.length, 'students')
 
         // Filter students who have bagrut data
         const studentsWithBagruts = studentsData.filter(student =>
           student.academicInfo?.bagrutTracking &&
           Object.keys(student.academicInfo.bagrutTracking).length > 0
         )
-
-        console.log('🎯', studentsWithBagruts.length, 'students have bagrut data')
 
         // Create bagrut objects from student data
         const bagrutData = studentsWithBagruts.map(student => ({
@@ -157,9 +140,6 @@ export default function Bagruts() {
           apiService.teachers.getTeachers()
         ])
 
-        console.log('🎓 Loaded students data:', studentsData?.length, 'students')
-        console.log('👨‍🏫 Loaded teachers data:', teachersData?.length, 'teachers')
-
         setStudents(studentsData)
         setTeachers(teachersData)
       }
@@ -173,7 +153,6 @@ export default function Bagruts() {
   // Get student and teacher names for display
   const getStudentName = (studentId: string) => {
     const student = students.find(s => s._id === studentId)
-    console.log('🔍 Looking for student:', studentId, 'Found:', getDisplayName(student?.personalInfo) || 'NOT FOUND')
     return getDisplayName(student?.personalInfo) || 'תלמיד לא ידוע'
   }
 
@@ -238,33 +217,23 @@ export default function Bagruts() {
 
   const handleFormSubmit = async (formData: any) => {
     try {
-      console.log('🚀 Creating bagrut with data:', formData)
       const newBagrut = await createBagrut(formData)
-      
+
       if (newBagrut) {
-        console.log('✅ Bagrut created successfully:', newBagrut._id)
-        
-        // Close form first
         setShowForm(false)
-        
+
         // Force a fresh reload of all data with a small delay
         setTimeout(async () => {
-          console.log('🔄 Refreshing bagrut data...')
           await Promise.all([
-            loadData(true), // Force refresh
-            fetchAllBagruts({ 
+            loadData(true),
+            fetchAllBagruts({
               showInactive: false,
               sortBy: 'createdAt',
               order: 'desc'
             })
           ])
-          
-          // Navigate after data refresh
-          console.log('🔗 Navigating to bagrut details:', newBagrut._id)
           navigate(`/bagruts/${newBagrut._id}`)
         }, 200)
-      } else {
-        console.error('❌ Failed to create bagrut - no bagrut returned')
       }
     } catch (error) {
       console.error('❌ Error in form submission:', error)

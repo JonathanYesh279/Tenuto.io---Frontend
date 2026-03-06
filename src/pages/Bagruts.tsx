@@ -15,8 +15,6 @@ import { SearchInput } from '../components/ui/SearchInput'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
-import FilterPanel from '../components/filters/FilterPanel'
-import type { FilterGroup, FilterState } from '../components/filters/FilterPanel'
 import { useBagrut } from '../hooks/useBagrut'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
@@ -39,12 +37,13 @@ export default function Bagruts() {
   } = useBagrut()
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
-  const [filters, setFilters] = useState<FilterState>({
+  const [filters, setFilters] = useState({
     status: searchParams.get('status') || '',
     teacherId: searchParams.get('teacher') || '',
     conservatory: searchParams.get('conservatory') || '',
     grade: searchParams.get('grade') || '',
-    age: searchParams.get('age') ? JSON.parse(searchParams.get('age')!) : { min: '', max: '' }
+    ageMin: searchParams.get('ageMin') || '',
+    ageMax: searchParams.get('ageMax') || ''
   })
   const [showForm, setShowForm] = useState(false)
   const [viewMode, setViewMode] = useState<'table' | 'grid'>((searchParams.get('view') as 'table' | 'grid') || 'table')
@@ -71,7 +70,8 @@ export default function Bagruts() {
     if (filters.teacherId) params.set('teacher', filters.teacherId)
     if (filters.conservatory) params.set('conservatory', filters.conservatory)
     if (filters.grade) params.set('grade', filters.grade)
-    if (filters.age?.min || filters.age?.max) params.set('age', JSON.stringify(filters.age))
+    if (filters.ageMin) params.set('ageMin', filters.ageMin)
+    if (filters.ageMax) params.set('ageMax', filters.ageMax)
     if (viewMode !== 'table') params.set('view', viewMode)
     const newSearch = params.toString()
     const currentSearch = searchParams.toString()
@@ -243,60 +243,19 @@ export default function Bagruts() {
   // Use appropriate bagrut source based on user role
   const bagrutSource = isTeacherRole ? teacherBagruts : bagruts
 
-  // Helper to get unique grades from student data
-  const getUniqueGrades = () => {
-    const grades = new Set<string>()
-    bagrutSource.forEach(bagrut => {
-      const student = students.find(s => s._id === bagrut.studentId)
-      const grade = student?.personalInfo?.class || student?.academicInfo?.class
-      if (grade) grades.add(String(grade))
-    })
-    return [...grades].sort()
-  }
+  // Unique grades and conservatories for filter options
+  const uniqueGrades = [...new Set(
+    bagrutSource.map(b => {
+      const student = students.find(s => s._id === b.studentId)
+      return student?.personalInfo?.class || student?.academicInfo?.class
+    }).filter(Boolean).map(String)
+  )].sort()
 
-  // Build filter groups for FilterPanel
-  const filterGroups: FilterGroup[] = [
-    {
-      key: 'status',
-      label: 'סטטוס',
-      type: 'select',
-      options: [
-        { value: 'completed', label: 'הושלם' },
-        { value: 'pending', label: 'בתהליך' }
-      ]
-    },
-    {
-      key: 'teacherId',
-      label: 'מורה',
-      type: 'select',
-      options: teachers.map(t => ({
-        value: t._id,
-        label: getDisplayName(t.personalInfo)
-      }))
-    },
-    {
-      key: 'conservatory',
-      label: 'קונסרבטוריון',
-      type: 'select',
-      options: [...new Set(bagrutSource.map(b => b.conservatoryName).filter(Boolean))].map(name => ({
-        value: name,
-        label: name
-      }))
-    },
-    {
-      key: 'grade',
-      label: 'כיתה',
-      type: 'select',
-      options: getUniqueGrades().map(g => ({ value: g, label: g }))
-    },
-    {
-      key: 'age',
-      label: 'גיל',
-      type: 'range',
-      min: 10,
-      max: 25
-    }
-  ]
+  const uniqueConservatories = [...new Set(bagrutSource.map(b => b.conservatoryName).filter(Boolean))]
+
+  const hasActiveFilters = filters.status || filters.teacherId || filters.conservatory || filters.grade || filters.ageMin || filters.ageMax
+
+  const selectClassName = "px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
 
   // Filter bagruts
   const filteredBagruts = bagrutSource.filter(bagrut => {
@@ -323,13 +282,13 @@ export default function Bagruts() {
       return String(studentGrade) === filters.grade
     })()
 
-    const matchesAge = (!filters.age?.min && !filters.age?.max) || (() => {
+    const matchesAge = (!filters.ageMin && !filters.ageMax) || (() => {
       const student = students.find(s => s._id === bagrut.studentId)
       const birthDate = student?.personalInfo?.birthDate || student?.personalInfo?.dateOfBirth
       if (!birthDate) return false
       const age = Math.floor((Date.now() - new Date(birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
-      const minAge = filters.age?.min ? Number(filters.age.min) : 0
-      const maxAge = filters.age?.max ? Number(filters.age.max) : 999
+      const minAge = filters.ageMin ? Number(filters.ageMin) : 0
+      const maxAge = filters.ageMax ? Number(filters.ageMax) : 999
       return age >= minAge && age <= maxAge
     })()
 
@@ -490,12 +449,12 @@ export default function Bagruts() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-4 h-full">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">ניהול בגרויות</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-2xl font-bold text-foreground">ניהול בגרויות</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
             {isTeacherRole
               ? 'מעקב אחר בגרויות התלמידים שלך'
               : 'מעקב אחר תהליכי בגרות, ציונים ומסמכים'
@@ -505,7 +464,7 @@ export default function Bagruts() {
         {!isTeacherRole && (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
+            className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors text-sm font-medium"
           >
             <PlusIcon size={16} weight="fill" className="ml-2" />
             בגרות חדשה
@@ -514,7 +473,7 @@ export default function Bagruts() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatsCard
           title="סה״כ בגרויות"
           value={totalBagruts.toString()}
@@ -545,92 +504,167 @@ export default function Bagruts() {
         />
       </div>
 
-      {/* Filters and Search */}
-      <div className="flex flex-col gap-4">
-        <SearchInput
-          value={searchTerm}
-          onChange={setSearchTerm}
-          onClear={() => setSearchTerm('')}
-          placeholder="חיפוש לפי שם תלמיד, מורה או קונסרבטוריון..."
-          className="flex-1"
-        />
-        <FilterPanel
-          filters={filterGroups}
-          values={filters}
-          onChange={(newValues) => setFilters(newValues as typeof filters)}
-          onReset={() => setFilters({ status: '', teacherId: '', conservatory: '', grade: '', age: { min: '', max: '' } })}
-          variant="horizontal"
-        />
-      </div>
+      {/* Table Card Container */}
+      <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden flex-1 min-h-0 flex flex-col">
+        {/* Card Header: Search + Filters + View Toggle */}
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="w-64 flex-none">
+              <SearchInput
+                value={searchTerm}
+                onChange={setSearchTerm}
+                onClear={() => setSearchTerm('')}
+                placeholder="חיפוש תלמיד, מורה..."
+              />
+            </div>
+            <select
+              value={filters.status}
+              onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+              className={selectClassName}
+            >
+              <option value="">כל הסטטוסים</option>
+              <option value="completed">הושלם</option>
+              <option value="pending">בתהליך</option>
+            </select>
+            {teachers.length > 1 && (
+              <select
+                value={filters.teacherId}
+                onChange={(e) => setFilters(prev => ({ ...prev, teacherId: e.target.value }))}
+                className={selectClassName}
+              >
+                <option value="">כל המורים</option>
+                {teachers.map(t => (
+                  <option key={t._id} value={t._id}>{getDisplayName(t.personalInfo)}</option>
+                ))}
+              </select>
+            )}
+            {uniqueConservatories.length > 1 && (
+              <select
+                value={filters.conservatory}
+                onChange={(e) => setFilters(prev => ({ ...prev, conservatory: e.target.value }))}
+                className={selectClassName}
+              >
+                <option value="">כל הקונסרבטוריונים</option>
+                {uniqueConservatories.map(name => (
+                  <option key={name} value={name}>{name}</option>
+                ))}
+              </select>
+            )}
+            {uniqueGrades.length > 0 && (
+              <select
+                value={filters.grade}
+                onChange={(e) => setFilters(prev => ({ ...prev, grade: e.target.value }))}
+                className={selectClassName}
+              >
+                <option value="">כל הכיתות</option>
+                {uniqueGrades.map(g => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+            )}
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-slate-400">גיל:</span>
+              <input
+                type="number"
+                placeholder="מ"
+                value={filters.ageMin}
+                onChange={(e) => setFilters(prev => ({ ...prev, ageMin: e.target.value }))}
+                className="w-14 px-2 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg text-center bg-white dark:bg-slate-800 text-foreground"
+                min={10}
+                max={25}
+              />
+              <span className="text-xs text-slate-400">–</span>
+              <input
+                type="number"
+                placeholder="עד"
+                value={filters.ageMax}
+                onChange={(e) => setFilters(prev => ({ ...prev, ageMax: e.target.value }))}
+                className="w-14 px-2 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg text-center bg-white dark:bg-slate-800 text-foreground"
+                min={10}
+                max={25}
+              />
+            </div>
 
-      {/* View Mode Toggle and Results Count */}
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-gray-600">
-          מציג {filteredBagruts.length} מתוך {totalBagruts} בגרויות
-        </div>
-        
-        <div className="flex items-center bg-gray-50 p-1 rounded border border-gray-200">
-          <button
-            onClick={() => setViewMode('table')}
-            className={`px-3 py-2 rounded text-sm font-medium transition-all flex items-center gap-2 ${
-              viewMode === 'table'
-                ? 'bg-white text-foreground shadow-sm border border-border'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            <ListIcon size={16} weight="regular" />
-            טבלה
-          </button>
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`px-3 py-2 rounded text-sm font-medium transition-all flex items-center gap-2 ${
-              viewMode === 'grid'
-                ? 'bg-white text-foreground shadow-sm border border-border'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            <SquaresFourIcon size={16} weight="regular" />
-            רשת
-          </button>
-        </div>
-      </div>
+            <div className="mr-auto flex items-center gap-3">
+              {hasActiveFilters && (
+                <button
+                  onClick={() => setFilters({ status: '', teacherId: '', conservatory: '', grade: '', ageMin: '', ageMax: '' })}
+                  className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  איפוס
+                </button>
+              )}
 
-      {/* Data Display */}
-      {viewMode === 'table' ? (
-        <Table
-          columns={columns}
-          data={filteredBagruts}
-          onRowClick={(row) => handleViewBagrut(row._id)}
-          rowClassName="hover:bg-gray-50 cursor-pointer transition-colors"
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filteredBagruts.map(bagrut => (
-            <BagrutCard
-              key={bagrut._id}
-              bagrut={bagrut}
-              studentName={getStudentName(bagrut.studentId)}
-              teacherName={getTeacherName(bagrut.teacherId)}
-              onClick={() => handleViewBagrut(bagrut._id!)}
-              onEdit={() => handleEditBagrut(bagrut._id!)}
-              onDelete={() => handleDeleteClick(bagrut._id!, bagrut.studentId)}
-              onExport={() => handleExportPDF(bagrut._id!)}
+              <span className="text-xs font-medium text-slate-400">
+                {filteredBagruts.length} מתוך {totalBagruts}
+              </span>
+
+              {/* View Mode Toggle */}
+              <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                <button
+                  onClick={() => setViewMode('table')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    viewMode === 'table'
+                      ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-600'
+                  }`}
+                >
+                  <ListIcon size={14} weight="bold" />
+                  <span className="hidden sm:inline">טבלה</span>
+                </button>
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+                    viewMode === 'grid'
+                      ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                      : 'text-slate-400 hover:text-slate-600'
+                  }`}
+                >
+                  <SquaresFourIcon size={14} weight="bold" />
+                  <span className="hidden sm:inline">רשת</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Data Display */}
+        <div className="flex-1 min-h-0 overflow-auto">
+          {filteredBagruts.length === 0 ? (
+            <EmptyState
+              title={isTeacherRole && totalBagruts === 0
+                ? 'אין תלמידים עם תהליכי בגרות פעילים'
+                : 'לא נמצאו בגרויות התואמות לחיפוש'}
+              description={isTeacherRole && totalBagruts === 0
+                ? 'כאשר תלמידיך יירשמו לבגרויות, הן יופיעו כאן'
+                : undefined}
+              icon={<FileTextIcon size={48} weight="regular" />}
             />
-          ))}
+          ) : viewMode === 'table' ? (
+            <Table
+              columns={columns}
+              data={filteredBagruts}
+              onRowClick={(row) => handleViewBagrut(row._id)}
+              rowClassName="hover:bg-gray-50 cursor-pointer transition-colors"
+            />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+              {filteredBagruts.map(bagrut => (
+                <BagrutCard
+                  key={bagrut._id}
+                  bagrut={bagrut}
+                  studentName={getStudentName(bagrut.studentId)}
+                  teacherName={getTeacherName(bagrut.teacherId)}
+                  onClick={() => handleViewBagrut(bagrut._id!)}
+                  onEdit={() => handleEditBagrut(bagrut._id!)}
+                  onDelete={() => handleDeleteClick(bagrut._id!, bagrut.studentId)}
+                  onExport={() => handleExportPDF(bagrut._id!)}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      )}
-
-      {filteredBagruts.length === 0 && !loading && !loadingAdditionalData && (
-        <EmptyState
-          title={isTeacherRole && totalBagruts === 0
-            ? 'אין תלמידים עם תהליכי בגרות פעילים'
-            : 'לא נמצאו בגרויות התואמות לחיפוש'}
-          description={isTeacherRole && totalBagruts === 0
-            ? 'כאשר תלמידיך יירשמו לבגרויות, הן יופיעו כאן'
-            : undefined}
-          icon={<FileTextIcon size={48} weight="regular" />}
-        />
-      )}
+      </div>
 
       {/* New Bagrut Form Modal */}
       {showForm && (

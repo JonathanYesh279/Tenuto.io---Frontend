@@ -125,7 +125,7 @@ export default function Bagruts() {
 
         setTeacherBagruts(bagrutData)
         setStudents(studentsData)
-        setTeachers([teacherProfile])
+        setTeachers(teacherProfile ? [teacherProfile] : [])
       } else {
         // Admin/other roles: Load all bagruts
         await fetchAllBagruts({

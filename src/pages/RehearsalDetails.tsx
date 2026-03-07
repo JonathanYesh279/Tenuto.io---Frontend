@@ -1,23 +1,23 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowRightIcon, CalendarIcon, ClockIcon, MapPinIcon, UsersIcon, PencilSimpleIcon, TrashIcon, CheckCircleIcon, XCircleIcon, CheckIcon, XIcon, MagnifyingGlassIcon, FloppyDiskIcon, ArrowCounterClockwiseIcon } from '@phosphor-icons/react'
+import { ArrowRightIcon, CalendarIcon, ClockIcon, MapPinIcon, UsersIcon, PencilSimpleIcon, TrashIcon, CheckIcon, XIcon, XCircleIcon } from '@phosphor-icons/react'
 import { rehearsalService, orchestraService, studentService } from '../services/apiService'
-import { 
-  formatRehearsalDateTime, 
+import {
+  formatRehearsalDateTime,
   getRehearsalStatus,
   calculateAttendanceStats,
   getRehearsalColor,
-  type Rehearsal 
+  type Rehearsal
 } from '../utils/rehearsalUtils'
 import { Card } from '../components/ui/Card'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import RehearsalForm from '../components/RehearsalForm'
-import { getDisplayName } from '@/utils/nameUtils'
+import AttendanceManager from '../components/AttendanceManager'
 
 export default function RehearsalDetails() {
   const { rehearsalId } = useParams<{ rehearsalId: string }>()
   const navigate = useNavigate()
-  
+
   const [rehearsal, setRehearsal] = useState<Rehearsal | null>(null)
   const [orchestras, setOrchestras] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -27,22 +27,8 @@ export default function RehearsalDetails() {
   const [pendingUpdateData, setPendingUpdateData] = useState<any>(null)
   const [bulkUpdateLoading, setBulkUpdateLoading] = useState(false)
   const [bulkUpdateError, setBulkUpdateError] = useState<string | null>(null)
-  
-  // Attendance state
-  const [attendanceState, setAttendanceState] = useState<{
-    present: Set<string>
-    absent: Set<string>
-  }>({
-    present: new Set(),
-    absent: new Set()
-  })
-  const [attendanceSearchQuery, setAttendanceSearchQuery] = useState('')
-  const [attendanceLoading, setAttendanceLoading] = useState(false)
-  const [hasAttendanceChanges, setHasAttendanceChanges] = useState(false)
-  const [attendanceError, setAttendanceError] = useState<string | null>(null)
-  const [attendanceSuccess, setAttendanceSuccess] = useState(false)
   const [showAttendanceModal, setShowAttendanceModal] = useState(false)
-  
+
   // Delete confirmation modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
@@ -90,12 +76,6 @@ export default function RehearsalDetails() {
 
       setRehearsal(enrichedRehearsal)
       setOrchestras(orchestrasData)
-      
-      // Initialize attendance state
-      setAttendanceState({
-        present: new Set(foundRehearsal.attendance?.present || []),
-        absent: new Set(foundRehearsal.attendance?.absent || [])
-      })
     } catch (error: any) {
       console.error('Error loading rehearsal details:', error)
       setError('שגיאה בטעינת פרטי החזרה')
@@ -186,150 +166,17 @@ export default function RehearsalDetails() {
     setShowDeleteModal(false)
   }
 
-  // Attendance functions
-  useEffect(() => {
-    if (!rehearsal) return
-    
-    // Check if there are changes
-    const originalPresent = new Set(rehearsal.attendance?.present || [])
-    const originalAbsent = new Set(rehearsal.attendance?.absent || [])
-    
-    const hasChanges = 
-      originalPresent.size !== attendanceState.present.size ||
-      originalAbsent.size !== attendanceState.absent.size ||
-      [...attendanceState.present].some(id => !originalPresent.has(id)) ||
-      [...attendanceState.absent].some(id => !originalAbsent.has(id))
-    
-    setHasAttendanceChanges(hasChanges)
-  }, [attendanceState, rehearsal])
-
-  const handleAttendanceChange = (memberId: string, status: 'present' | 'absent' | 'unmarked') => {
-    setAttendanceState(prev => {
-      const newState = {
-        present: new Set(prev.present),
-        absent: new Set(prev.absent)
-      }
-
-      // Remove from both sets first
-      newState.present.delete(memberId)
-      newState.absent.delete(memberId)
-
-      // Add to appropriate set if not unmarked
-      if (status === 'present') {
-        newState.present.add(memberId)
-      } else if (status === 'absent') {
-        newState.absent.add(memberId)
-      }
-
-      return newState
-    })
-    setAttendanceError(null)
-  }
-
-  const handleQuickMarkAll = (status: 'present' | 'absent') => {
-    if (!rehearsal?.orchestra?.members) return
-    
-    setAttendanceState(prev => {
-      const newState = {
-        present: new Set<string>(),
-        absent: new Set<string>()
-      }
-
-      if (status === 'present') {
-        rehearsal.orchestra!.members!.forEach(member => newState.present.add(member._id))
-      } else {
-        rehearsal.orchestra!.members!.forEach(member => newState.absent.add(member._id))
-      }
-
-      return newState
-    })
-    setAttendanceError(null)
-  }
-
-  const handleAttendanceReset = () => {
-    if (!rehearsal) return
-    
-    setAttendanceState({
-      present: new Set(rehearsal.attendance?.present || []),
-      absent: new Set(rehearsal.attendance?.absent || [])
-    })
-    setAttendanceError(null)
-  }
-
-  // Enhanced Select All functionality
-  const markAllPresent = useCallback(() => {
-    if (!rehearsal?.orchestra?.members) return
-    
-    const allMemberIds = rehearsal.orchestra.members.map(member => member._id)
-    setAttendanceState({
-      present: new Set(allMemberIds),
-      absent: new Set()
-    })
-    setAttendanceError(null)
-  }, [rehearsal])
-
-  const markAllAbsent = useCallback(() => {
-    if (!rehearsal?.orchestra?.members) return
-    
-    const allMemberIds = rehearsal.orchestra.members.map(member => member._id)
-    setAttendanceState({
-      present: new Set(),
-      absent: new Set(allMemberIds)
-    })
-    setAttendanceError(null)
-  }, [rehearsal])
-
-  const clearAllAttendance = useCallback(() => {
-    setAttendanceState({
-      present: new Set(),
-      absent: new Set()
-    })
-    setAttendanceError(null)
-  }, [])
-
-  const handleSaveAttendance = async () => {
-    if (!rehearsal) return
-    
-    setAttendanceLoading(true)
-    setAttendanceError(null)
-
-    try {
-      const attendanceData = {
-        present: [...attendanceState.present],
-        absent: [...attendanceState.absent]
-      }
-
-      await rehearsalService.updateAttendance(rehearsal._id, attendanceData)
-      setAttendanceSuccess(true)
-      setTimeout(() => {
-        setAttendanceSuccess(false)
-        setShowAttendanceModal(false)
-      }, 1500)
-      await loadRehearsalDetails()
-    } catch (error: any) {
-      setAttendanceError(error.message || 'שגיאה בשמירת הנוכחות')
-    } finally {
-      setAttendanceLoading(false)
-    }
-  }
-
-  const getAttendanceStatus = (memberId: string): 'present' | 'absent' | 'unmarked' => {
-    if (attendanceState.present.has(memberId)) return 'present'
-    if (attendanceState.absent.has(memberId)) return 'absent'
-    return 'unmarked'
-  }
-
   // Check if rehearsal date has passed (for attendance management)
   const hasRehearsalPassed = useMemo(() => {
     if (!rehearsal) return false
-    
+
     const rehearsalDate = new Date(rehearsal.date)
     const today = new Date()
-    
+
     // Set both dates to midnight to compare dates only (not times)
     today.setHours(0, 0, 0, 0)
     rehearsalDate.setHours(0, 0, 0, 0)
-    
+
     // Allow attendance marking for past rehearsals OR current day rehearsals
     return rehearsalDate <= today
   }, [rehearsal])
@@ -381,6 +228,7 @@ export default function RehearsalDetails() {
   const attendanceStats = calculateAttendanceStats(rehearsal)
   const color = getRehearsalColor(rehearsal)
   const dateTime = formatRehearsalDateTime(rehearsal)
+  const lateCount = rehearsal.attendance?.late?.length || 0
 
   return (
     <div className="space-y-6">
@@ -407,7 +255,7 @@ export default function RehearsalDetails() {
               className="flex items-center px-4 py-2 text-green-700 border border-green-300 rounded hover:bg-green-50 transition-colors"
             >
               <CheckIcon size={16} weight="fill" className="ml-1" />
-              סימון נוכחות
+              ניהול נוכחות
             </button>
           )}
           <button
@@ -485,6 +333,21 @@ export default function RehearsalDetails() {
               </div>
             </div>
 
+            {/* Attendance summary (from cache) */}
+            {attendanceStats.hasAttendanceData && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className="font-medium text-gray-900 mb-3">סיכום נוכחות</div>
+                <div className="flex items-center gap-6 text-sm">
+                  <span className="text-green-700">נוכחים: {attendanceStats.presentCount}</span>
+                  {lateCount > 0 && (
+                    <span className="text-amber-700">איחור: {lateCount}</span>
+                  )}
+                  <span className="text-red-700">נעדרים: {attendanceStats.absentCount}</span>
+                  <span className="text-gray-500">({attendanceStats.attendanceRate}% נוכחות)</span>
+                </div>
+              </div>
+            )}
+
             {rehearsal.notes && (
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <div className="font-medium text-gray-900 mb-2">הערות</div>
@@ -512,190 +375,14 @@ export default function RehearsalDetails() {
         </Card>
       </div>
 
-      {/* Attendance Modal */}
-      {showAttendanceModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">ניהול נוכחות</h3>
-              <button
-                onClick={() => setShowAttendanceModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <XIcon size={24} weight="regular" />
-              </button>
-            </div>
-
-            <div className="mb-6">
-              
-              {/* Quick Actions */}
-              <div className="flex items-center gap-2 flex-wrap">
-                <button
-                  onClick={markAllPresent}
-                  className="px-3 py-1 text-sm bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors"
-                >
-                  <CheckIcon size={12} weight="fill" className="inline-block ml-1" />
-                  סמן הכל נוכח
-                </button>
-                <button
-                  onClick={markAllAbsent}
-                  className="px-3 py-1 text-sm bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
-                >
-                  <XIcon size={12} weight="regular" className="inline-block ml-1" />
-                  סמן הכל נעדר
-                </button>
-                <button
-                  onClick={clearAllAttendance}
-                  className="px-3 py-1 text-sm bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors"
-                >
-                  נקה הכל
-                </button>
-                {hasAttendanceChanges && (
-                  <button
-                    onClick={handleAttendanceReset}
-                    className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-colors"
-                  >
-                    <ArrowCounterClockwiseIcon size={12} weight="regular" className="mr-1 inline" />
-                    שחזר מקור
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Success Message */}
-            {attendanceSuccess && (
-              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
-                <div className="flex items-center">
-                  <CheckCircleIcon size={16} weight="fill" className="text-green-600 ml-2" />
-                  <span className="text-green-800 text-sm">הנוכחות נשמרה בהצלחה!</span>
-                </div>
-              </div>
-            )}
-
-            {/* Error Message */}
-            {attendanceError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded">
-                <div className="flex items-center">
-                  <XCircleIcon size={16} weight="fill" className="text-red-600 ml-2" />
-                  <span className="text-red-800 text-sm">{attendanceError}</span>
-                </div>
-              </div>
-            )}
-
-            {/* Statistics */}
-            <div className="grid grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{attendanceState.present.size}</div>
-                <div className="text-sm text-gray-600">נוכחים</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-red-600">{attendanceState.absent.size}</div>
-                <div className="text-sm text-gray-600">נעדרים</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-600">
-                  {(rehearsal.orchestra?.members?.length || 0) - attendanceState.present.size - attendanceState.absent.size}
-                </div>
-                <div className="text-sm text-gray-600">לא סומנו</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{rehearsal.orchestra?.members?.length || 0}</div>
-                <div className="text-sm text-gray-600">סה״כ</div>
-              </div>
-            </div>
-
-            {/* Search */}
-            <div className="relative mb-4">
-              <MagnifyingGlassIcon size={16} weight="regular" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="חיפוש חבר..."
-                value={attendanceSearchQuery}
-                onChange={(e) => setAttendanceSearchQuery(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
-              />
-            </div>
-
-            {/* Members List */}
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {!rehearsal.orchestra?.members || rehearsal.orchestra.members.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <UsersIcon size={48} weight="regular" className="mx-auto mb-2 text-gray-400" />
-                  <p>אין חברים רשומים לתזמורת/הרכב זה</p>
-                  <p className="text-sm mt-1">יש להוסיף חברים דרך עמוד התזמורת</p>
-                </div>
-              ) : rehearsal.orchestra.members
-                .filter(member =>
-                  getDisplayName(member.personalInfo).toLowerCase().includes(attendanceSearchQuery.toLowerCase()) ||
-                  member.academicInfo?.class?.includes(attendanceSearchQuery)
-                )
-                .map(member => {
-                  const status = getAttendanceStatus(member._id)
-                  return (
-                    <div key={member._id} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded">
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-900">{getDisplayName(member.personalInfo)}</div>
-                        {member.academicInfo?.class && (
-                          <div className="text-sm text-gray-500">{member.academicInfo.class}</div>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleAttendanceChange(member._id, status === 'present' ? 'unmarked' : 'present')}
-                          className={`p-2 rounded transition-colors ${
-                            status === 'present' 
-                              ? 'bg-green-100 text-green-600 border-2 border-green-300' 
-                              : 'bg-gray-100 text-gray-600 border-2 border-gray-300 hover:bg-green-50'
-                          }`}
-                          title="נוכח"
-                        >
-                          <CheckIcon size={16} weight="fill" />
-                        </button>
-                        
-                        <button
-                          onClick={() => handleAttendanceChange(member._id, status === 'absent' ? 'unmarked' : 'absent')}
-                          className={`p-2 rounded transition-colors ${
-                            status === 'absent' 
-                              ? 'bg-red-100 text-red-600 border-2 border-red-300' 
-                              : 'bg-gray-100 text-gray-600 border-2 border-gray-300 hover:bg-red-50'
-                          }`}
-                          title="נעדר"
-                        >
-                          <XIcon size={16} weight="regular" />
-                        </button>
-                      </div>
-                    </div>
-                  )
-                })}
-            </div>
-
-            {/* Save Button */}
-            {hasAttendanceChanges && (
-              <div className="mt-6 pt-4 border-t border-gray-200">
-                <button
-                  onClick={handleSaveAttendance}
-                  disabled={attendanceLoading}
-                  className="w-full flex items-center justify-center px-4 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {attendanceLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
-                      שומר...
-                    </>
-                  ) : (
-                    <>
-                      <FloppyDiskIcon size={16} weight="regular" className="ml-2" />
-                      שמור נוכחות
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
-            </div>
-          </div>
-        </div>
+      {/* Attendance Manager Modal */}
+      {showAttendanceModal && rehearsal && (
+        <AttendanceManager
+          rehearsal={rehearsal}
+          orchestraId={rehearsal.groupId}
+          onSaved={() => loadRehearsalDetails()}
+          onClose={() => setShowAttendanceModal(false)}
+        />
       )}
 
       {/* Bulk Update Confirmation Modal */}
@@ -733,7 +420,7 @@ export default function RehearsalDetails() {
                     </svg>
                     <div className="text-sm text-blue-800">
                       <strong>תזמורת:</strong> {rehearsal?.orchestra?.name}<br />
-                      <strong>שינויים:</strong> 
+                      <strong>שינויים:</strong>
                       {pendingUpdateData?.location && ` מיקום: ${pendingUpdateData.location}`}
                       {pendingUpdateData?.startTime && ` | זמן התחלה: ${pendingUpdateData.startTime}`}
                       {pendingUpdateData?.endTime && ` | זמן סיום: ${pendingUpdateData.endTime}`}
@@ -772,7 +459,7 @@ export default function RehearsalDetails() {
                     </>
                   )}
                 </button>
-                
+
                 <button
                   onClick={handleBulkUpdate}
                   disabled={bulkUpdateLoading}
@@ -790,7 +477,7 @@ export default function RehearsalDetails() {
                     </>
                   )}
                 </button>
-                
+
                 <button
                   onClick={cancelBulkUpdate}
                   disabled={bulkUpdateLoading}

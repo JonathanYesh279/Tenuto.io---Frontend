@@ -5784,6 +5784,122 @@ export const roomScheduleService = {
  * RBAC role assignment and permission matrix management
  * Backend endpoints: /api/settings/roles, /api/teacher/:id/roles
  */
+export const reportsService = {
+  async getDashboard(schoolYearId) {
+    try {
+      const params = schoolYearId ? `?schoolYearId=${schoolYearId}` : '';
+      const response = await apiClient.get(`/reports/dashboard${params}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching reports dashboard:', error);
+      throw error;
+    }
+  },
+
+  async getRegistry() {
+    try {
+      const response = await apiClient.get('/reports/registry');
+      return response;
+    } catch (error) {
+      console.error('Error fetching reports registry:', error);
+      throw error;
+    }
+  },
+
+  async getReport(reportId, params = {}) {
+    try {
+      const query = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) query.set(key, String(value));
+      });
+      const queryStr = query.toString() ? `?${query.toString()}` : '';
+      const response = await apiClient.get(`/reports/${reportId}${queryStr}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching report:', error);
+      throw error;
+    }
+  },
+
+  async exportExcel(reportId, params = {}) {
+    try {
+      const query = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) query.set(key, String(value));
+      });
+      const queryStr = query.toString() ? `?${query.toString()}` : '';
+      const response = await fetch(
+        `${apiClient.baseURL}/reports/${reportId}/export/excel${queryStr}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiClient.getStoredToken()}`
+          }
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to export Excel');
+
+      const blob = await response.blob();
+      const disposition = response.headers.get('Content-Disposition');
+      const filenameMatch = disposition?.match(/filename="?([^";\n]+)"?/);
+      const filename = filenameMatch?.[1] || `${reportId}.xlsx`;
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting Excel:', error);
+      throw error;
+    }
+  },
+
+  async exportPdf(reportId, params = {}) {
+    try {
+      const query = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) query.set(key, String(value));
+      });
+      const queryStr = query.toString() ? `?${query.toString()}` : '';
+      const response = await fetch(
+        `${apiClient.baseURL}/reports/${reportId}/export/pdf${queryStr}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiClient.getStoredToken()}`
+          }
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to export PDF');
+
+      const blob = await response.blob();
+      const disposition = response.headers.get('Content-Disposition');
+      const filenameMatch = disposition?.match(/filename="?([^";\n]+)"?/);
+      const filename = filenameMatch?.[1] || `${reportId}.pdf`;
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      throw error;
+    }
+  },
+};
+
+// ==================== Roles & Permissions Service ====================
+
 export const rolesService = {
   async getRoles() {
     try {
@@ -5846,6 +5962,7 @@ export default {
   assignments: assignmentService,
   attendance: attendanceService,
   roomSchedule: roomScheduleService,
+  reports: reportsService,
   test: apiTestUtils,
   client: apiClient,
   // Utility functions

@@ -31,6 +31,8 @@ const Settings = lazyWithRetry(() => import('./pages/Settings'), 'Settings')
 const AuditTrail = lazyWithRetry(() => import('./pages/AuditTrail'), 'AuditTrail')
 const RoomSchedule = lazyWithRetry(() => import('./pages/RoomSchedule'), 'RoomSchedule')
 const RoomScheduleFullscreen = lazyWithRetry(() => import('./pages/RoomScheduleFullscreen'), 'RoomScheduleFullscreen')
+const Reports = lazyWithRetry(() => import('./pages/Reports'), 'Reports')
+const ReportViewer = lazyWithRetry(() => import('./pages/ReportViewer'), 'ReportViewer')
 
 // Conductor-specific pages
 const ConductorAttendance = lazyWithRetry(() => import('./components/rehearsal/RehearsalAttendance'), 'ConductorAttendance')
@@ -420,6 +422,31 @@ function AppRoutes() {
               <Layout>
                 <Suspense fallback={<PageLoadingFallback message="טוען לוח חדרים..." />}>
                   <RoomSchedule />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען דוחות..." />}>
+                  <Reports />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports/:reportId"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען דוח..." />}>
+                  <ReportViewer />
                 </Suspense>
               </Layout>
             </ProtectedRoute>

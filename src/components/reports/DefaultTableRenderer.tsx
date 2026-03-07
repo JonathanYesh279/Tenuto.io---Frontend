@@ -110,8 +110,8 @@ export default function DefaultTableRenderer({
   return (
     <div className="space-y-4">
       {/* Table with horizontal scroll */}
-      <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="min-w-full divide-y divide-border bg-card text-card-foreground">
+      <div className="overflow-x-auto rounded-lg border border-border w-fit max-w-full">
+        <table className="divide-y divide-border bg-card text-card-foreground">
           {/* Column Groups Header */}
           {columnGroups && columnGroups.length > 0 && (
             <thead>

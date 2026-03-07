@@ -122,6 +122,13 @@ export interface Rehearsal {
         lastName?: string;
         fullName?: string;
       };
+      academicInfo?: {
+        class?: string;
+        instrumentProgress?: Array<{
+          instrumentName?: string;
+          isPrimary?: boolean;
+        }>;
+      };
     }>;
   };
 }

@@ -40,7 +40,6 @@ import {
   type Rehearsal,
   type RehearsalFormData,
   type BulkRehearsalData,
-  type AttendanceUpdate
 } from '../utils/rehearsalUtils'
 
 export default function Rehearsals() {
@@ -252,18 +251,6 @@ export default function Rehearsals() {
     setBulkDeleteData({ orchestraId: '', startDate: '', endDate: '' })
   }
 
-  const handleUpdateAttendance = async (attendanceData: AttendanceUpdate) => {
-    if (!selectedRehearsal) return
-
-    try {
-      await rehearsalService.updateAttendance(selectedRehearsal._id, attendanceData)
-      setShowAttendanceManager(false)
-      setSelectedRehearsal(null)
-      await loadData()
-    } catch (error: any) {
-      throw new Error(error.message || 'שגיאה בעדכון הנוכחות')
-    }
-  }
 
   const handleFilterChange = (key: string, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value }))
@@ -742,7 +729,8 @@ export default function Rehearsals() {
       {showAttendanceManager && selectedRehearsal && (
         <AttendanceManager
           rehearsal={selectedRehearsal}
-          onUpdateAttendance={handleUpdateAttendance}
+          orchestraId={selectedRehearsal.groupId}
+          onSaved={() => loadData()}
           onClose={() => {
             setShowAttendanceManager(false)
             setSelectedRehearsal(null)

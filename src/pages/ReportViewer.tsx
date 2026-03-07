@@ -5,6 +5,7 @@ import { reportsService } from '../services/apiService'
 import DefaultTableRenderer from '../components/reports/DefaultTableRenderer'
 import ReportFiltersBar from '../components/reports/ReportFiltersBar'
 import ExportButtons from '../components/reports/ExportButtons'
+import YearComparisonToggle from '../components/reports/YearComparisonToggle'
 import toast from 'react-hot-toast'
 import { CaretRightIcon } from '@phosphor-icons/react'
 
@@ -174,35 +175,14 @@ export default function ReportViewer() {
           onSchoolYearChange={handleSchoolYearChange}
         />
 
-        {/* Year Comparison Toggle - inline with filters */}
-        <div className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${comparisonEnabled ? 'bg-blue-50 border border-blue-200' : 'bg-muted/30'}`}>
-          <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-            השוואה לשנה קודמת
-          </label>
-          <button
-            onClick={() => handleComparisonToggle(!comparisonEnabled)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${comparisonEnabled ? 'bg-primary' : 'bg-gray-300'}`}
-          >
-            <span
-              className={`inline-block h-5 w-5 rounded-full bg-white shadow-lg transition-transform ${comparisonEnabled ? 'translate-x-5' : 'translate-x-0.5'}`}
-            />
-          </button>
-
-          {comparisonEnabled && (
-            <select
-              value={comparisonYearId || ''}
-              onChange={(e) => handleComparisonYearChange(e.target.value)}
-              className="rounded-md border border-border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              <option value="">בחר שנה</option>
-              {comparisonYears.map((sy: any) => (
-                <option key={sy._id} value={sy._id}>
-                  {sy.name || `${sy.startYear}-${sy.endYear}`}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
+        {/* Year Comparison Toggle */}
+        <YearComparisonToggle
+          enabled={comparisonEnabled}
+          onToggle={handleComparisonToggle}
+          comparisonYearId={comparisonYearId}
+          onComparisonYearChange={handleComparisonYearChange}
+          excludeYearId={schoolYearId}
+        />
       </div>
 
       {/* Custom Renderer (above table, if exists) */}

@@ -2767,10 +2767,25 @@ export const orchestraService = {
   async deleteOrchestra(orchestraId) {
     try {
       await apiClient.delete(`/orchestra/${orchestraId}`);
-      
+
       console.log(`🗑️ Deleted orchestra: ${orchestraId}`);
     } catch (error) {
       console.error('Error deleting orchestra:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get attendance rates for all members of an orchestra
+   * @param {string} orchestraId - Orchestra ID
+   * @returns {Promise<Array<{studentId, totalRehearsals, attended, late, attendanceRate, suggestion}>>}
+   */
+  async getMemberAttendanceRates(orchestraId) {
+    try {
+      const rates = await apiClient.get(`/orchestra/${orchestraId}/member-attendance-rates`);
+      return rates;
+    } catch (error) {
+      console.error('Error fetching member attendance rates:', error);
       throw error;
     }
   }
@@ -2934,17 +2949,17 @@ export const rehearsalService = {
   },
 
   /**
-   * Update rehearsal attendance
+   * Update rehearsal attendance using records format
    * @param {string} rehearsalId - Rehearsal ID
-   * @param {Object} attendance - Attendance data { present: [], absent: [] }
+   * @param {Array<{studentId: string, status: string, notes: string}>} records - Attendance records with Hebrew status values
    * @returns {Promise<Object>} Updated rehearsal
    */
-  async updateAttendance(rehearsalId, attendance) {
+  async updateAttendance(rehearsalId, records) {
     try {
-      const rehearsal = await apiClient.put(`/rehearsal/${rehearsalId}/attendance`, attendance);
-      
+      const rehearsal = await apiClient.put(`/rehearsal/${rehearsalId}/attendance`, { records });
+
       console.log(`✅ Updated attendance for rehearsal: ${rehearsalId}`);
-      
+
       return rehearsal;
     } catch (error) {
       console.error('Error updating rehearsal attendance:', error);

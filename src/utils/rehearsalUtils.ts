@@ -29,6 +29,59 @@ export const VALID_REHEARSAL_TYPES = ['תזמורת', 'הרכב'] as const;
 export type RehearsalType = typeof VALID_REHEARSAL_TYPES[number];
 export type DayOfWeek = keyof typeof VALID_DAYS_OF_WEEK;
 
+// --- Attendance types ---
+
+export type AttendanceStatus = 'unmarked' | 'present' | 'late' | 'absent';
+
+/** Backend-facing attendance record (Hebrew status values) */
+export interface AttendanceRecord {
+  studentId: string;
+  status: 'הגיע/ה' | 'לא הגיע/ה' | 'איחור';
+  notes: string;
+}
+
+/** UI-facing attendance record (English status values) */
+export interface AttendanceRecordInput {
+  studentId: string;
+  status: AttendanceStatus;
+  notes: string;
+}
+
+/** Per-member attendance rate from batch endpoint */
+export interface MemberAttendanceRate {
+  studentId: string;
+  totalRehearsals: number;
+  attended: number;
+  late: number;
+  attendanceRate: number;
+  suggestion: 'likelyPresent' | 'frequentAbsent' | null;
+}
+
+/** Map English UI status to Hebrew backend status */
+export const STATUS_MAP = {
+  present: 'הגיע/ה',
+  absent: 'לא הגיע/ה',
+  late: 'איחור',
+} as const;
+
+/** Map Hebrew backend status to English UI status */
+export const REVERSE_STATUS_MAP = {
+  'הגיע/ה': 'present',
+  'לא הגיע/ה': 'absent',
+  'איחור': 'late',
+} as const;
+
+/** Status cycle order for tap-to-cycle UI */
+export const STATUS_CYCLE: readonly AttendanceStatus[] = ['unmarked', 'present', 'late', 'absent'] as const;
+
+/** Hebrew labels for each status */
+export const STATUS_LABELS: Record<AttendanceStatus, string> = {
+  unmarked: 'לא סומן',
+  present: 'נוכח/ת',
+  late: 'איחור',
+  absent: 'נעדר/ת',
+} as const;
+
 // Rehearsal interface matching backend schema
 export interface Rehearsal {
   _id: string;
@@ -42,6 +95,7 @@ export interface Rehearsal {
   attendance: {
     present: string[];
     absent: string[];
+    late: string[];
   };
   notes: string;
   schoolYearId: string;
@@ -98,7 +152,10 @@ export interface RehearsalFormData {
   isActive: boolean;
 }
 
-// Attendance update interface
+/**
+ * @deprecated Use AttendanceRecord[] (records format) instead.
+ * Kept for backward compatibility with legacy callers.
+ */
 export interface AttendanceUpdate {
   present: string[];
   absent: string[];

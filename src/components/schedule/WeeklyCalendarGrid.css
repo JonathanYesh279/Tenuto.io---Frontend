@@ -1,3 +1,35 @@
+/* ============================================================
+ * FILE: WeeklyCalendarGrid.css
+ * STATUS: Permanent Exception
+ * AUDITED: Phase 69 CSS Cleanup (2026-03-11)
+ *
+ * PURPOSE:
+ * RTL layout overrides and custom styling for react-big-calendar in
+ * the WeeklyCalendarGrid schedule view. Handles right-to-left column
+ * order, Saturday column hiding, event card colors, current time
+ * indicator, legend styling, and responsive breakpoints.
+ *
+ * WHY OVERRIDE CSS (not Tailwind):
+ * react-big-calendar generates its own DOM structure with inline styles.
+ * Overriding requires 90+ !important declarations targeting the
+ * library's CSS class names (.rbc-header, .rbc-time-slot,
+ * .rbc-event, etc.). These cannot be replaced with Tailwind utilities
+ * because the DOM elements are not controlled by our JSX.
+ *
+ * COMPONENTS USING THIS FILE:
+ * - WeeklyCalendarGrid.tsx (direct import, applies to library DOM)
+ *
+ * MIGRATION NOTES:
+ * - Some hardcoded hex colors (#6366f1, #e5e7eb, #f8fafc) match design
+ *   tokens (primary-500, border, muted) but swapping to CSS vars inside
+ *   !important overrides is risky -- any specificity change breaks the
+ *   override chain
+ * - This file will only become unnecessary if react-big-calendar is
+ *   replaced with a different calendar library or a custom implementation
+ * - Do NOT attempt partial color token migration -- the risk of breaking
+ *   the calendar layout outweighs the consistency benefit
+ * ============================================================ */
+
 /* Weekly Calendar Grid Styles */
 .weekly-calendar-grid {
   direction: rtl;

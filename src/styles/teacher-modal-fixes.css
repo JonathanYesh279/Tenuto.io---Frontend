@@ -1,3 +1,34 @@
+/* ============================================================
+ * FILE: teacher-modal-fixes.css
+ * STATUS: Permanent Exception
+ * AUDITED: Phase 69 CSS Cleanup (2026-03-11)
+ *
+ * PURPOSE:
+ * Enhanced styling for the teacher student management modal. Provides
+ * backdrop blur, custom scrollbar styling for the searchable teacher
+ * dropdown, keyboard navigation highlights, and dropdown open/close
+ * CSS animation.
+ *
+ * WHY OVERRIDE CSS (not Tailwind):
+ * Custom scrollbar styling (::-webkit-scrollbar), CSS @keyframes
+ * animation for dropdown, and keyboard-navigation .highlighted state
+ * with hsl(var(--primary)) cannot be expressed as Tailwind utilities.
+ * Backdrop-filter blur requires element-level CSS.
+ *
+ * COMPONENTS USING THIS FILE:
+ * - StudentManagementTab.tsx (classes: .teacher-modal-backdrop,
+ *   .teacher-modal-container, .teacher-modal-label,
+ *   .teacher-search-input, .teacher-search-dropdown,
+ *   .teacher-dropdown-enter, .teacher-modal-buttons,
+ *   .teacher-modal-button)
+ *
+ * MIGRATION NOTES:
+ * - Already uses hsl(var(--primary)) token for keyboard nav highlight
+ * - Custom scrollbar colors (#cbd5e1, #f1f5f9) have no Tailwind
+ *   scrollbar utility equivalent
+ * - rgba(59, 130, 246, 0.1) focus shadow is intentionally custom
+ * ============================================================ */
+
 /* Teacher Details Modal Fixes */
 
 /* Better focus states for teacher modal buttons */

@@ -228,6 +228,16 @@ export default {
           'sans-serif'
         ]
       },
+      fontSize: {
+        // Semantic type scale — Hebrew-optimized line heights (TYP-01)
+        'display': ['2.25rem', { lineHeight: '1.3', fontWeight: '700' }],   // 36px — hero numbers, big stats
+        'h1': ['1.875rem', { lineHeight: '1.3', fontWeight: '700' }],       // 30px — page titles
+        'h2': ['1.5rem', { lineHeight: '1.35', fontWeight: '600' }],        // 24px — section headings
+        'h3': ['1.25rem', { lineHeight: '1.4', fontWeight: '600' }],        // 20px — card headings
+        'body': ['0.875rem', { lineHeight: '1.6', fontWeight: '400' }],     // 14px — default body text
+        'small': ['0.8125rem', { lineHeight: '1.5', fontWeight: '400' }],   // 13px — secondary text
+        'caption': ['0.75rem', { lineHeight: '1.5', fontWeight: '400' }],   // 12px — metadata, labels
+      },
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
@@ -238,6 +248,11 @@ export default {
         'spacing-section': '2rem',     // 32px — gap between page sections
         'spacing-card': '1.5rem',      // 24px — internal card padding (matches existing .card p-6)
         'spacing-element': '0.75rem',  // 12px — gap between sibling elements within a section
+        // Table density tokens (TCS-01)
+        'table-row-compact': '2.625rem',    // 42px — compact row height
+        'table-cell-px': '0.75rem',         // 12px — horizontal cell padding
+        'table-cell-py': '0.5rem',          // 8px — vertical cell padding
+        'table-header-py': '0.625rem',      // 10px — header vertical padding
       },
       borderRadius: {
         lg: "var(--radius)",

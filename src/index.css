@@ -19,7 +19,7 @@
 @layer base {
   :root {
     /* Cool neutral palette */
-    --background: 0 0% 100%;           /* true white */
+    --background: 213 100% 97%;         /* light blue #F0F7FF */
     --foreground: 220 15% 11%;         /* near-black, cool */
     --card: 0 0% 100%;                 /* white */
     --card-foreground: 220 15% 11%;
@@ -40,13 +40,13 @@
     --ring: 239 84% 67%;              /* indigo ring to match primary */
     --radius: 0.75rem;                /* 12px — v4.0 rounded aesthetic */
 
-    /* Light sidebar tokens (v4.0 — reversed from v3.0 dark) */
-    --sidebar: 0 0% 100%;             /* white background */
-    --sidebar-foreground: 220 15% 11%; /* dark text */
-    --sidebar-border: 220 13% 91%;    /* light gray border */
-    --sidebar-active-bg: 239 84% 67%; /* indigo active pill */
+    /* Dark navy sidebar tokens (#07275A) */
+    --sidebar: 217 86% 19%;           /* navy #07275A */
+    --sidebar-foreground: 210 20% 90%; /* off-white text */
+    --sidebar-border: 217 60% 28%;    /* lighter navy border */
+    --sidebar-active-bg: 217 60% 30%; /* lighter navy active pill */
     --sidebar-active-fg: 0 0% 100%;   /* white active text */
-    --sidebar-label: 220 10% 60%;     /* muted section labels */
+    --sidebar-label: 210 15% 65%;     /* muted light labels */
 
     /* Chart color tokens (v4.0 — for dashboard visualizations) */
     --chart-blue: 199 95% 74%;        /* #BAE6FD */
@@ -98,6 +98,14 @@
     --shadow-2: 0 2px 8px -2px rgba(0,0,0,0.12), 0 1px 4px -1px rgba(0,0,0,0.08);
     --shadow-3: 0 8px 24px -4px rgba(0,0,0,0.16), 0 4px 12px -2px rgba(0,0,0,0.10);
     --shadow-4: 0 16px 40px -4px rgba(0,0,0,0.20), 0 8px 16px -4px rgba(0,0,0,0.12);
+
+    /* Semantic status tokens (CLR-03) */
+    --success: 160 84% 39%;           /* emerald-600 #059669 */
+    --success-foreground: 0 0% 100%;  /* white */
+    --warning: 38 92% 50%;            /* amber-500 #f59e0b */
+    --warning-foreground: 0 0% 100%;  /* white */
+    --info: 199 89% 48%;              /* sky-500 #0ea5e9 */
+    --info-foreground: 0 0% 100%;     /* white */
   }
 
   .dark {
@@ -112,6 +120,12 @@
     --border: 217 33% 17%;
     --sidebar: 217 33% 17%;           /* dark sidebar */
     --sidebar-foreground: 210 40% 98%;
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
   }
 }
 

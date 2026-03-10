@@ -113,6 +113,18 @@ export default {
           800: '#065f46',
           900: '#064e3b',
           950: '#022c22',
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        // Warning semantic token (CLR-03)
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        // Info semantic token (CLR-03)
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
         },
         // Orange accents
         orange: {

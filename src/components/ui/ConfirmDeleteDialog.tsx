@@ -91,7 +91,7 @@ export function ConfirmDeleteDialog({
           {itemName && (
             <div className={`rounded-lg ${bgColorClass} border border-current/10 p-3 text-center`}>
               <p className="text-sm text-muted-foreground">מחיקת:</p>
-              <p className="font-bold text-gray-900 mt-0.5">"{itemName}"</p>
+              <p className="font-bold text-foreground mt-0.5">"{itemName}"</p>
             </div>
           )}
 

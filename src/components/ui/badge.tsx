@@ -16,10 +16,10 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
         success:
-          "border-transparent bg-green-500 text-white hover:bg-green-600",
+          "border-transparent bg-success text-success-foreground hover:bg-success/80",
         // Domain status variants — soft colors for list/detail page status display
         active: "border-transparent bg-green-100 text-green-800",
-        inactive: "border-transparent bg-gray-100 text-gray-700",
+        inactive: "border-transparent bg-neutral-100 text-neutral-700",
         graduated: "border-transparent bg-purple-100 text-purple-800",
         pending: "border-transparent bg-orange-100 text-orange-800",
         completed: "border-transparent bg-green-100 text-green-800",

@@ -21,7 +21,7 @@ export const StatusBadge: React.FC<{
 
   const statusClasses = {
     active: 'bg-success-100 text-success-800 border-success-200',
-    inactive: 'bg-gray-100 text-gray-800 border-gray-200',
+    inactive: 'bg-neutral-100 text-neutral-800 border-neutral-200',
     // 'graduated' was using primary-NNN — now uses neutral muted tokens
     graduated: 'bg-muted text-foreground border-border',
     suspended: 'bg-red-100 text-red-800 border-red-200',

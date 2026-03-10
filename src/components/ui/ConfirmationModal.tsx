@@ -83,7 +83,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             </div>
             {title}
           </DialogTitle>
-          <DialogDescription className="text-right text-gray-700 text-sm leading-relaxed pt-1">
+          <DialogDescription className="text-right text-muted-foreground text-sm leading-relaxed pt-1">
             {message}
           </DialogDescription>
         </DialogHeader>

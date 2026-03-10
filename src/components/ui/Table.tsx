@@ -34,7 +34,7 @@ interface StatusBadgeProps {
 export function StatusBadge({ status, children }: StatusBadgeProps) {
   const statusClasses = {
     active: 'bg-success-100 text-success-800',
-    inactive: 'bg-gray-100 text-gray-800',
+    inactive: 'bg-neutral-100 text-neutral-800',
     pending: 'bg-orange-100 text-orange-800',
     completed: 'bg-success-100 text-success-800',
     'in-progress': 'bg-muted text-foreground'
@@ -72,7 +72,7 @@ export default function Table({
                   <th
                     key={column.key}
                     className={clsx(
-                      'px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider',
+                      'px-table-cell-px py-table-header-py text-xs font-medium text-muted-foreground uppercase tracking-wider',
                       {
                         'text-start': column.align === 'left',
                         'text-center': column.align === 'center',
@@ -85,7 +85,7 @@ export default function Table({
                   </th>
                 ))}
                 {actions && (
-                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider text-end">
+                  <th className="px-table-cell-px py-table-header-py text-xs font-medium text-muted-foreground uppercase tracking-wider text-end">
                     פעולות
                   </th>
                 )}
@@ -123,7 +123,7 @@ export default function Table({
                       <td
                         key={column.key}
                         className={clsx(
-                          'px-4 py-3 whitespace-nowrap text-sm text-foreground',
+                          'px-table-cell-px py-table-cell-py whitespace-nowrap text-sm text-foreground',
                           {
                             'text-start': column.align === 'left',
                             'text-center': column.align === 'center',
@@ -135,7 +135,7 @@ export default function Table({
                       </td>
                     ))}
                     {actions && (
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-end">
+                      <td className="px-table-cell-px py-table-cell-py whitespace-nowrap text-sm font-medium text-end">
                         <div className="flex items-center justify-end gap-0.5">
                           {onView && (
                             <button

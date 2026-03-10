@@ -2,9 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Import component styles */
-@import './styles/components.css';
-
 /* Import tab navigation fix styles */
 @import './styles/tab-navigation-fix.css';
 
@@ -208,60 +205,6 @@ body::-webkit-scrollbar-thumb {
 
 body::-webkit-scrollbar-thumb:hover {
   background-color: rgb(156 163 175);
-}
-
-/* Base component classes - vanilla CSS to avoid PostCSS conflicts */
-/* DEPRECATED: Legacy .btn base class — superseded by CVA Button component (src/components/ui/button.tsx). Remove in Phase 69. */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: 0.5rem;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-  cursor: pointer;
-  outline: none;
-}
-
-.btn:focus {
-  ring-width: 2px;
-  ring-offset-width: 2px;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.input {
-  display: block;
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid rgb(209 213 219);
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  outline: none;
-}
-
-.input:focus {
-  border-color: rgb(59 130 246);
-  box-shadow: 0 0 0 1px rgb(59 130 246);
-}
-
-.input:disabled {
-  background-color: rgb(249 250 251);
-  color: rgb(107 114 128);
-  cursor: not-allowed;
-}
-
-.card {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-  padding: 1.5rem;
 }
 
 /* Scrollbar Hide Utility */

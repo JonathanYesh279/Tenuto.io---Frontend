@@ -70,6 +70,8 @@ export default function Calendar({ events = {} }: CalendarProps) {
   }
 
   const getColorClasses = (color: string) => {
+    // Event colors: blue and green use semantic tokens; orange and purple
+    // have no semantic equivalent and use Tailwind palette directly.
     const colorMap = {
       blue: 'bg-muted text-foreground border-border',
       green: 'bg-success-100 text-success-800 border-success-200',
@@ -83,7 +85,7 @@ export default function Calendar({ events = {} }: CalendarProps) {
     <Card>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <h3 className="text-lg font-semibold text-foreground">
+          <h3 className="text-h3 text-foreground">
             {MONTHS[currentMonth]} {currentYear}
           </h3>
           <div className="flex items-center mr-4">
@@ -111,7 +113,7 @@ export default function Calendar({ events = {} }: CalendarProps) {
       <div className="grid grid-cols-7 gap-px bg-border rounded overflow-hidden">
         {/* Header */}
         {DAYS.map(day => (
-          <div key={day} className="bg-muted p-3 text-center text-sm font-medium text-muted-foreground">
+          <div key={day} className="bg-muted p-spacing-element text-center text-sm font-medium text-muted-foreground">
             {day}
           </div>
         ))}
@@ -162,7 +164,7 @@ export default function Calendar({ events = {} }: CalendarProps) {
       {/* Selected Date Events */}
       {selectedDate && events[getDateKey(selectedDate)]?.length > 0 && (
         <div className="mt-6 pt-6 border-t border-border">
-          <h4 className="font-medium text-foreground mb-3">
+          <h4 className="text-body font-medium text-foreground mb-3">
             אירועים ב-{selectedDate.getDate()} {MONTHS[selectedDate.getMonth()]}
           </h4>
           <div className="space-y-2">

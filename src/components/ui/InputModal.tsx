@@ -40,7 +40,7 @@ export const InputModal: React.FC<InputModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
       <div className="bg-background rounded border border-border max-w-md w-full">
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+          <h3 className="text-h3 text-foreground">{title}</h3>
           <button
             onClick={handleCancel}
             className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
@@ -56,7 +56,7 @@ export const InputModal: React.FC<InputModalProps> = ({
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder={placeholder}
-              className="w-full px-3 py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
+              className="w-full px-spacing-element py-2 border border-input rounded focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
               autoFocus
               required
             />

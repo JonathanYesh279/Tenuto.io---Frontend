@@ -64,7 +64,7 @@ export function ListPageHero({ title, entityColor, metrics, action }: ListPageHe
     >
       {/* Header row — RTL: title on right (start), action on left (end) */}
       <div className="flex items-center justify-between mb-4">
-        <h1 className={clsx('text-2xl font-bold text-foreground', styles.fg)}>{title}</h1>
+        <h1 className={clsx('text-h2 font-bold text-foreground', styles.fg)}>{title}</h1>
         {action && (
           <button
             onClick={action.onClick}

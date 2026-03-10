@@ -1,5 +1,13 @@
 /* Component styles - rewritten without @apply to avoid PostCSS issues */
 
+/* ============================================================
+ * DEPRECATED: Legacy .btn-* button classes
+ * These CSS classes are no longer used by any TSX component.
+ * All buttons now use the CVA Button component (src/components/ui/button.tsx).
+ * These classes are retained for backward compatibility only.
+ * Migration target: Remove in Phase 69 CSS cleanup.
+ * ============================================================ */
+
 /* Button Components */
 .btn-primary {
   display: inline-flex;

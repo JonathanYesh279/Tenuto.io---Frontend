@@ -5,6 +5,8 @@
 
 import React from 'react'
 import type { Icon as PhosphorIcon } from '@phosphor-icons/react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 
 // Color-coded status indicators for music education
@@ -119,7 +121,7 @@ export const ProgressIndicator: React.FC<{
   )
 }
 
-// Action button with consistent styling
+// Action button with consistent styling — delegates to CVA Button
 export const ActionButton: React.FC<{
   variant: 'primary' | 'secondary' | 'danger' | 'success'
   size?: 'sm' | 'md' | 'lg'
@@ -139,37 +141,39 @@ export const ActionButton: React.FC<{
   onClick,
   className = ''
 }) => {
-  const variants = {
-    // 'primary' was bg-primary — now uses semantic token
-    primary: 'bg-primary text-primary-foreground hover:bg-neutral-800 focus:ring-ring',
-    secondary: 'bg-muted text-foreground hover:bg-muted/80 focus:ring-ring',
-    danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
-    success: 'bg-success-500 text-white hover:bg-success-600 focus:ring-success-500'
+  // Map ActionButton variants to CVA Button variants
+  const variantMap: Record<string, 'default' | 'secondary' | 'destructive'> = {
+    primary: 'default',
+    secondary: 'secondary',
+    danger: 'destructive',
+    success: 'default'
   }
 
-  const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base'
+  // Map ActionButton sizes to CVA Button sizes
+  const sizeMap: Record<string, 'sm' | 'default' | 'lg'> = {
+    sm: 'sm',
+    md: 'default',
+    lg: 'lg'
   }
 
   return (
-    <button
+    <Button
+      variant={variantMap[variant]}
+      size={sizeMap[size]}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`
-        inline-flex items-center justify-center gap-2 font-medium rounded
-        transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
-        disabled:opacity-50 disabled:cursor-not-allowed
-        ${variants[variant]} ${sizes[size]} ${className}
-      `}
+      className={cn(
+        'gap-2',
+        variant === 'success' && 'bg-success-500 text-white hover:bg-success-600',
+        className
+      )}
     >
       {loading && (
         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       )}
       {Icon && !loading && <Icon className="w-4 h-4" />}
       {children}
-    </button>
+    </Button>
   )
 }
 
@@ -188,7 +192,7 @@ export const EmptyState: React.FC<{
       <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
         <Icon className="w-12 h-12 text-muted-foreground" />
       </div>
-      <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
+      <h3 className="text-h3 text-foreground mb-2">{title}</h3>
       <p className="text-muted-foreground mb-6 max-w-md mx-auto">{description}</p>
       {action && (
         <ActionButton variant="primary" onClick={action.onClick}>

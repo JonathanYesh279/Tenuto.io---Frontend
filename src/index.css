@@ -211,6 +211,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 /* Base component classes - vanilla CSS to avoid PostCSS conflicts */
+/* DEPRECATED: Legacy .btn base class — superseded by CVA Button component (src/components/ui/button.tsx). Remove in Phase 69. */
 .btn {
   display: inline-flex;
   align-items: center;

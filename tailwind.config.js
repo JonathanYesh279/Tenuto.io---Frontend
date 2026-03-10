@@ -68,22 +68,19 @@ export default {
           fg: "hsl(var(--color-theory-fg))",
         },
         // === Existing palettes with semantic tokens MERGED in ===
-        // NOTE (Phase 22-01): primary-50 through primary-950 are hardcoded blue hex values.
-        // These are used by ~1,211 bg-primary-NNN classes across 134 files.
-        // DO NOT remove — migration to new palette deferred to Phase 22-03.
-        // primary.DEFAULT and primary.foreground read from CSS vars (--primary = 0 0% 0% = black).
+        // Unified indigo primary palette (CLR-01 — collision resolved)
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#4F46E5', // Main brand blue (hardcoded — see note above)
-          600: '#3b82f6',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#eef2ff',   // indigo-50
+          100: '#e0e7ff',  // indigo-100
+          200: '#c7d2fe',  // indigo-200
+          300: '#a5b4fc',  // indigo-300
+          400: '#818cf8',  // indigo-400
+          500: '#6366f1',  // indigo-500 — matches --primary CSS var
+          600: '#4f46e5',  // indigo-600
+          700: '#4338ca',  // indigo-700
+          800: '#3730a3',  // indigo-800
+          900: '#312e81',  // indigo-900
+          950: '#1e1b4b',  // indigo-950
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
@@ -158,6 +155,19 @@ export default {
           800: '#1f2937',
           900: '#111827',
           950: '#030712',
+        },
+        // Neutral scale referencing CSS vars (CLR-01)
+        neutral: {
+          50: 'var(--neutral-50)',
+          100: 'var(--neutral-100)',
+          200: 'var(--neutral-200)',
+          300: 'var(--neutral-300)',
+          400: 'var(--neutral-400)',
+          500: 'var(--neutral-500)',
+          600: 'var(--neutral-600)',
+          700: 'var(--neutral-700)',
+          800: 'var(--neutral-800)',
+          900: 'var(--neutral-900)',
         },
         // v4.0 Chart color tokens for dashboard visualizations
         'chart-blue': '#BAE6FD',

@@ -1,3 +1,31 @@
+/* ============================================================
+ * FILE: tab-navigation-fix.css
+ * STATUS: Permanent Exception
+ * AUDITED: Phase 69 CSS Cleanup (2026-03-11)
+ *
+ * PURPOSE:
+ * Overflow containment fixes for the StudentDetailsPage tab navigation.
+ * Prevents horizontal scroll expansion caused by the schedule calendar
+ * tab content exceeding viewport width.
+ *
+ * WHY OVERRIDE CSS (not Tailwind):
+ * Requires global body/html/root overflow-x:hidden and max-width:100vw
+ * constraints that must apply at the document level, not on individual
+ * elements. Tailwind's overflow-x-hidden only works on specific elements.
+ *
+ * COMPONENTS USING THIS FILE:
+ * - StudentDetailsPage.tsx (class: .student-details-container)
+ * - ScheduleTab.tsx (class: .student-content-area)
+ *
+ * MIGRATION NOTES:
+ * - CONCERN: The body/html/root overflow-x:hidden rules are GLOBAL and
+ *   affect the entire app, not just the student details page. This is a
+ *   heavy-handed fix for a single-page overflow issue.
+ * - Future fix: Scope the overflow constraint to only the student details
+ *   page container, and fix the underlying calendar overflow cause.
+ * - Already uses hsl(var(--background)) token for background color.
+ * ============================================================ */
+
 /* Fix for Student Details Page Overflow Issues */
 
 /* Main container width constraints */

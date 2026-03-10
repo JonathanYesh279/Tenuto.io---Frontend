@@ -1,3 +1,31 @@
+/* ============================================================
+ * FILE: simple-weekly-grid.css
+ * STATUS: Permanent Exception
+ * AUDITED: Phase 69 CSS Cleanup (2026-03-11)
+ *
+ * PURPOSE:
+ * RTL grid layout for the SimpleWeeklyGrid room schedule component.
+ * Handles day-column structure, lesson card styling, hover animations,
+ * and responsive breakpoints for the weekly room schedule view.
+ *
+ * WHY OVERRIDE CSS (not Tailwind):
+ * The layout requires CSS direction:rtl on grid columns, pseudo-element
+ * overlays for time slots, and hover transition animations that cannot
+ * be expressed as Tailwind utility classes without significant component
+ * refactoring.
+ *
+ * COMPONENTS USING THIS FILE:
+ * - SimpleWeeklyGrid.tsx (classes: .day-column, .day-header,
+ *   .day-content, .legend, .legend-item, .lesson-card)
+ *
+ * MIGRATION NOTES:
+ * - Some hardcoded colors (#e5e7eb, #f8fafc) could theoretically use
+ *   CSS var(--border) / var(--muted), but gradient backgrounds prevent
+ *   direct migration
+ * - Full migration would require rewriting SimpleWeeklyGrid.tsx to use
+ *   inline Tailwind classes -- out of scope for infrastructure-only work
+ * ============================================================ */
+
 /* Simple Weekly Grid Styles */
 
 .simple-weekly-grid {

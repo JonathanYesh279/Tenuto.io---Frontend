@@ -56,7 +56,7 @@ const DialogContent = React.forwardRef<
         animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
         transition={shouldReduceMotion ? undefined : smooth}
         className={cn(
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-4 duration-200",
+          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-spacing-card shadow-4 duration-200",
           // Keep CSS exit animations
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
           // Framer Motion handles entrance — no data-[state=open] animation classes
@@ -111,7 +111,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
+      "text-h3 leading-none tracking-tight",
       className
     )}
     {...props}

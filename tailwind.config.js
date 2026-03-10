@@ -233,6 +233,11 @@ export default {
         '88': '22rem',
         '128': '32rem',
         '144': '36rem',
+        // Semantic spacing tokens (SPC-01)
+        'spacing-page': '1.5rem',      // 24px — outer page padding
+        'spacing-section': '2rem',     // 32px — gap between page sections
+        'spacing-card': '1.5rem',      // 24px — internal card padding (matches existing .card p-6)
+        'spacing-element': '0.75rem',  // 12px — gap between sibling elements within a section
       },
       borderRadius: {
         lg: "var(--radius)",

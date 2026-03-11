@@ -89,6 +89,7 @@ export default function TenantListPage() {
     try {
       setError(null)
       await startImpersonation(tenantId)
+      navigate('/dashboard')
     } catch (err: any) {
       console.error('Failed to start impersonation:', err)
       setError(err.message || 'שגיאה בכניסה למוסד')

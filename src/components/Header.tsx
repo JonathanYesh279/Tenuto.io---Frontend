@@ -5,8 +5,9 @@ import { getUploadUrl } from '../services/apiService'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
-import { HouseIcon, SignOutIcon, UserIcon, UserCircleIcon, MagnifyingGlassIcon, BellIcon } from '@phosphor-icons/react'
+import { HouseIcon, SignOutIcon, UserIcon, MagnifyingGlassIcon, BellIcon } from '@phosphor-icons/react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export default function Header() {
   const navigate = useNavigate()
@@ -214,19 +215,30 @@ export default function Header() {
                 <div className="text-sm font-bold font-reisinger-yonatan">{getUserFullName()}</div>
                 <div className="text-[11px] font-semibold text-slate-400 uppercase">{getUserRole()}</div>
               </div>
-              <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
-                <UserCircleIcon size={40} weight="fill" />
-              </div>
+              <Avatar className="h-10 w-10 shrink-0">
+                <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
             </button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuLabel className="font-normal">
-              <div className="font-medium text-sm text-foreground font-reisinger-yonatan">
-                {getUserFullName()}
-              </div>
-              <div className="text-xs text-muted-foreground mt-0.5">
-                {getUserRole()}
+              <div className="flex items-center gap-3">
+                <Avatar className="h-9 w-9 shrink-0">
+                  <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
+                    {getInitials()}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-medium text-sm text-foreground font-reisinger-yonatan">
+                    {getUserFullName()}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    {getUserRole()}
+                  </div>
+                </div>
               </div>
             </DropdownMenuLabel>
 

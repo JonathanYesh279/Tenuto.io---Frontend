@@ -35,6 +35,7 @@ import BatchDeletionModal from '../components/BatchDeletionModal'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
+import { GlassSelect } from '../components/ui/GlassSelect'
 
 const AVATAR_COLORS: Array<'primary' | 'secondary' | 'success' | 'warning' | 'danger'> = [
   'primary', 'secondary', 'success', 'warning', 'danger'
@@ -305,9 +306,13 @@ export default function Students() {
 
       // Fetch absence counts in parallel (non-blocking — badges just won't show on error)
       if (!append && currentSchoolYear?._id) {
+        console.log('🔢 Fetching absence counts for school year:', currentSchoolYear._id)
         apiService.analytics.getBulkAbsenceCounts({ schoolYearId: currentSchoolYear._id })
-          .then(counts => setAbsenceCounts(counts))
-          .catch(() => {})
+          .then(counts => {
+            console.log('🔢 Absence counts received:', counts)
+            setAbsenceCounts(counts)
+          })
+          .catch(err => console.error('🔢 Absence counts error:', err))
       }
 
       // Map response data using CORRECT database field names
@@ -725,14 +730,15 @@ export default function Students() {
     switch (columnKey) {
       case 'name': {
         const count = absenceCounts[student.id] || 0
+        if (count > 0) console.log('🏷️ Badge for', student.name, 'id:', student.id, 'count:', count)
         const badgeColor = getAbsenceBadgeColor(count)
         const avatarColor = getAvatarColor(student.name || '')
 
         const userEl = (
           <User
             avatarProps={{
-              radius: 'lg',
-              size: 'sm',
+              radius: 'full',
+              size: 'md',
               showFallback: true,
               name: student.name,
               color: avatarColor,
@@ -847,7 +853,7 @@ export default function Students() {
       default:
         return student[columnKey] ?? ''
     }
-  }, [teachersMap, editingStageLevelId, updatingStageLevel, selectedStudents, isSelectMode])
+  }, [teachersMap, editingStageLevelId, updatingStageLevel, selectedStudents, isSelectMode, absenceCounts])
 
   if (loading) {
     return (
@@ -924,7 +930,7 @@ export default function Students() {
       <div className="flex-1 min-h-0 flex flex-col gap-4">
         {/* Filters + Selection + View Toggle */}
         <div>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap px-1">
             <div className="w-64 flex-none">
               <SearchInput
                 value={searchTerm}
@@ -934,51 +940,55 @@ export default function Students() {
                 isLoading={searchLoading}
               />
             </div>
-            <select
-              value={filters.orchestra}
-              onChange={(e) => setFilters(prev => ({ ...prev, orchestra: e.target.value }))}
-              className="px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
-            >
-              <option value="">כל התזמורות</option>
-              <option value="תזמורת">תזמורת</option>
-              <option value="ללא תזמורת">ללא תזמורת</option>
-            </select>
-            <select
-              value={filters.instrument}
-              onChange={(e) => setFilters(prev => ({ ...prev, instrument: e.target.value }))}
-              className="px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
-            >
-              <option value="">כל הכלים</option>
-              <option value="חלילית">חלילית</option>
-              <option value="חליל צד">חליל צד</option>
-              <option value="אבוב">אבוב</option>
-              <option value="בסון">בסון</option>
-              <option value="סקסופון">סקסופון</option>
-              <option value="קלרינט">קלרינט</option>
-              <option value="חצוצרה">חצוצרה</option>
-              <option value="קרן יער">קרן יער</option>
-              <option value="טרומבון">טרומבון</option>
-              <option value="טובה/בריטון">טובה/בריטון</option>
-              <option value="שירה">שירה</option>
-              <option value="כינור">כינור</option>
-              <option value="ויולה">ויולה</option>
-              <option value="צ'לו">צ'לו</option>
-              <option value="קונטרבס">קונטרבס</option>
-              <option value="פסנתר">פסנתר</option>
-              <option value="גיטרה">גיטרה</option>
-              <option value="גיטרה בס">גיטרה בס</option>
-              <option value="תופים">תופים</option>
-            </select>
-            <select
-              value={filters.stageLevel}
-              onChange={(e) => setFilters(prev => ({ ...prev, stageLevel: e.target.value }))}
-              className="px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white dark:bg-slate-800 text-foreground"
-            >
-              <option value="">כל השלבים</option>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
-                <option key={level} value={level}>שלב {level}</option>
-              ))}
-            </select>
+            <GlassSelect
+              value={filters.orchestra || '__all__'}
+              onValueChange={(v) => setFilters(prev => ({ ...prev, orchestra: v === '__all__' ? '' : v }))}
+              placeholder="כל התזמורות"
+              options={[
+                { value: '__all__', label: 'כל התזמורות' },
+                { value: 'תזמורת', label: 'תזמורת' },
+                { value: 'ללא תזמורת', label: 'ללא תזמורת' },
+              ]}
+            />
+            <GlassSelect
+              value={filters.instrument || '__all__'}
+              onValueChange={(v) => setFilters(prev => ({ ...prev, instrument: v === '__all__' ? '' : v }))}
+              placeholder="כל הכלים"
+              options={[
+                { value: '__all__', label: 'כל הכלים' },
+                { value: 'חלילית', label: 'חלילית' },
+                { value: 'חליל צד', label: 'חליל צד' },
+                { value: 'אבוב', label: 'אבוב' },
+                { value: 'בסון', label: 'בסון' },
+                { value: 'סקסופון', label: 'סקסופון' },
+                { value: 'קלרינט', label: 'קלרינט' },
+                { value: 'חצוצרה', label: 'חצוצרה' },
+                { value: 'קרן יער', label: 'קרן יער' },
+                { value: 'טרומבון', label: 'טרומבון' },
+                { value: 'טובה/בריטון', label: 'טובה/בריטון' },
+                { value: 'שירה', label: 'שירה' },
+                { value: 'כינור', label: 'כינור' },
+                { value: 'ויולה', label: 'ויולה' },
+                { value: "צ'לו", label: "צ'לו" },
+                { value: 'קונטרבס', label: 'קונטרבס' },
+                { value: 'פסנתר', label: 'פסנתר' },
+                { value: 'גיטרה', label: 'גיטרה' },
+                { value: 'גיטרה בס', label: 'גיטרה בס' },
+                { value: 'תופים', label: 'תופים' },
+              ]}
+            />
+            <GlassSelect
+              value={filters.stageLevel || '__all__'}
+              onValueChange={(v) => setFilters(prev => ({ ...prev, stageLevel: v === '__all__' ? '' : v }))}
+              placeholder="כל השלבים"
+              options={[
+                { value: '__all__', label: 'כל השלבים' },
+                ...([1, 2, 3, 4, 5, 6, 7, 8].map(level => ({
+                  value: String(level),
+                  label: `שלב ${level}`,
+                }))),
+              ]}
+            />
 
             <div className="mr-auto flex items-center gap-3">
               {/* Selection Controls */}
@@ -1058,7 +1068,7 @@ export default function Students() {
 
           {viewMode === 'table' ? (
             <HeroTable
-              key={`students-table-page-${tablePage}`}
+              key={`students-table-page-${tablePage}-${Object.keys(absenceCounts).length}`}
               aria-label="טבלת תלמידים"
               isHeaderSticky
               selectionMode={isSelectMode ? 'multiple' : 'none'}
@@ -1091,6 +1101,8 @@ export default function Students() {
                 wrapper: 'h-full',
                 th: 'bg-default-100 text-default-600',
                 thead: '[&>tr]:border-b-0',
+                tr: 'transition-colors duration-150 hover:bg-primary/5 data-[selected=true]:bg-primary/10',
+                td: 'py-3',
               }}
             >
               <TableHeader columns={heroColumns}>

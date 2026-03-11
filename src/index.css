@@ -126,6 +126,24 @@
   }
 }
 
+/* HeroUI primary color override — match sidebar navy #082753 */
+:root,
+[data-theme="light"],
+.light {
+  --heroui-primary: 215 82% 18%;
+  --heroui-primary-50: 214 50% 95%;
+  --heroui-primary-100: 214 50% 88%;
+  --heroui-primary-200: 215 50% 76%;
+  --heroui-primary-300: 215 55% 62%;
+  --heroui-primary-400: 215 65% 48%;
+  --heroui-primary-500: 215 82% 35%;
+  --heroui-primary-600: 215 82% 28%;
+  --heroui-primary-700: 215 82% 22%;
+  --heroui-primary-800: 215 82% 18%;
+  --heroui-primary-900: 216 90% 12%;
+  --heroui-primary-foreground: 0 0% 100%;
+}
+
 /* Reisinger Hebrew Font Family - Custom Fonts */
 /* Note: Assistant + Plus Jakarta Sans fonts loaded via <link> in index.html (performance — no render-blocking @import) */
 @font-face {
@@ -315,6 +333,47 @@ body::-webkit-scrollbar-thumb:hover {
     print-color-adjust: exact !important;
   }
 }
+
+/* === Glass Select — staggered item slide-in === */
+@keyframes glassItemSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* === Animated Table Rows — staggered slide-in on mount/pagination === */
+@keyframes table-row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-table-rows tbody tr {
+  animation: table-row-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger rows — each row starts 40ms after the previous */
+.animate-table-rows tbody tr:nth-child(1)  { animation-delay: 0ms; }
+.animate-table-rows tbody tr:nth-child(2)  { animation-delay: 40ms; }
+.animate-table-rows tbody tr:nth-child(3)  { animation-delay: 80ms; }
+.animate-table-rows tbody tr:nth-child(4)  { animation-delay: 120ms; }
+.animate-table-rows tbody tr:nth-child(5)  { animation-delay: 160ms; }
+.animate-table-rows tbody tr:nth-child(6)  { animation-delay: 200ms; }
+.animate-table-rows tbody tr:nth-child(7)  { animation-delay: 240ms; }
+.animate-table-rows tbody tr:nth-child(8)  { animation-delay: 280ms; }
+.animate-table-rows tbody tr:nth-child(9)  { animation-delay: 320ms; }
+.animate-table-rows tbody tr:nth-child(10) { animation-delay: 360ms; }
+.animate-table-rows tbody tr:nth-child(n+11) { animation-delay: 400ms; }
 
 /* Reduced motion — WAI-ARIA accessibility pattern (A11Y-04) */
 /* Migrated from globals.css (dead file removed in Phase 06-02) */

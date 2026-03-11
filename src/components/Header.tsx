@@ -223,27 +223,7 @@ export default function Header() {
             </button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" className="w-52">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9 shrink-0">
-                  <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
-                    {getInitials()}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium text-sm text-foreground font-reisinger-yonatan">
-                    {getUserFullName()}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-0.5">
-                    {getUserRole()}
-                  </div>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
+          <DropdownMenuContent align="end" className="w-48">
             {!isSuperAdmin && (
               <DropdownMenuItem
                 onClick={handleProfileClick}

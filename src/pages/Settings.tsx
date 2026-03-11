@@ -10,6 +10,7 @@ import {
   UploadSimpleIcon, ImageIcon, TrashIcon,
 } from '@phosphor-icons/react'
 import StaffRoleTable from '../components/settings/StaffRoleTable'
+import Folder from '../components/Folder'
 
 interface ConservatoryProfile {
   code: string
@@ -563,18 +564,31 @@ export default function Settings() {
         </div>
 
         <div className="flex items-center gap-6">
-          {/* Logo preview */}
-          <div className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 shrink-0">
-            {formData.branding.logoUrl ? (
+          {/* Upload zone / Logo preview */}
+          {uploadingLogo ? (
+            <div className="w-28 h-28 flex items-center justify-center shrink-0">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : formData.branding.logoUrl ? (
+            <div className="w-28 h-28 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden bg-gray-50/50 shrink-0 cursor-pointer hover:border-primary/40 transition-colors"
+              onClick={() => logoFileInputRef.current?.click()}
+            >
               <img
                 src={getUploadUrl(formData.branding.logoUrl)!}
                 alt="לוגו"
-                className="w-full h-full object-contain p-1"
+                className="max-w-full max-h-full object-contain p-2"
               />
-            ) : (
-              <ImageIcon size={28} weight="thin" className="text-gray-300" />
-            )}
-          </div>
+            </div>
+          ) : (
+            <div
+              className="w-28 h-28 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center shrink-0 cursor-pointer hover:border-primary/40 hover:bg-gray-50 transition-colors"
+              onClick={() => logoFileInputRef.current?.click()}
+            >
+              <div onClick={(e) => e.stopPropagation()}>
+                <Folder color="#409b78" size={0.7} />
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <p className="text-xs text-gray-500">לוגו המוסד יוצג בכותרת לצד שם הקונסרבטוריון. PNG או JPG, עד 2MB.</p>

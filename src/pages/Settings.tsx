@@ -104,7 +104,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export default function Settings() {
-  const { user } = useAuth()
+  const { user, checkAuthStatus } = useAuth()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [teachers, setTeachers] = useState<TeacherOption[]>([])
@@ -352,6 +352,8 @@ export default function Settings() {
         },
       }))
       toast.success('הלוגו הועלה בהצלחה')
+      // Refresh user context so Header picks up the new logo
+      checkAuthStatus()
     } catch (error: any) {
       const msg = error?.response?.data?.error || error?.message || 'שגיאה בהעלאת לוגו'
       toast.error(msg)
@@ -370,6 +372,7 @@ export default function Settings() {
         branding: { logoUrl: null, logoKey: null },
       }))
       toast.success('הלוגו הוסר בהצלחה')
+      checkAuthStatus()
     } catch (error: any) {
       const msg = error?.response?.data?.error || error?.message || 'שגיאה בהסרת לוגו'
       toast.error(msg)

@@ -228,6 +228,7 @@ export const AuthProvider = ({ children }) => {
           ...userData,
           teacherId: userData?.teacherId || userData?._id,
           tenantName: userData?.tenantName || basicUserData?.tenantName || null,
+          tenantLogoUrl: userData?.tenantLogoUrl || basicUserData?.tenantLogoUrl || null,
           personalInfo: userData?.personalInfo || {
             firstName: userData?.firstName || basicUserData?.firstName || '',
             lastName: userData?.lastName || basicUserData?.lastName || '',
@@ -346,6 +347,7 @@ export const AuthProvider = ({ children }) => {
         teacherId: userData?.teacherId || userData?._id,
         tenantId: userData?.tenantId || basicUserData?.tenantId || tenantId,
         tenantName: userData?.tenantName || basicUserData?.tenantName || null,
+        tenantLogoUrl: userData?.tenantLogoUrl || basicUserData?.tenantLogoUrl || null,
         personalInfo: userData?.personalInfo || {
           firstName: userData?.firstName || basicUserData?.personalInfo?.firstName || basicUserData?.firstName || '',
           lastName: userData?.lastName || basicUserData?.personalInfo?.lastName || basicUserData?.lastName || '',

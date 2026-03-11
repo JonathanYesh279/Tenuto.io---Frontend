@@ -37,8 +37,8 @@
     --ring: 239 84% 67%;              /* indigo ring to match primary */
     --radius: 0.75rem;                /* 12px — v4.0 rounded aesthetic */
 
-    /* Dark navy sidebar tokens (#07275A) */
-    --sidebar: 217 86% 19%;           /* navy #07275A */
+    /* Dark navy sidebar tokens (#082753) */
+    --sidebar: 216 84% 18%;           /* navy #082753 */
     --sidebar-foreground: 210 20% 90%; /* off-white text */
     --sidebar-border: 217 60% 28%;    /* lighter navy border */
     --sidebar-active-bg: 217 60% 30%; /* lighter navy active pill */

@@ -1,4 +1,5 @@
 import { DotsThreeIcon } from '@phosphor-icons/react'
+import { VerticalAutoScroll } from '../../animations/VerticalAutoScroll'
 
 interface AgendaEvent {
   time: string
@@ -85,37 +86,39 @@ export function AgendaWidget({ events, loading }: AgendaWidgetProps) {
         </button>
       </div>
 
-      <div className="space-y-4">
-        {displayEvents.map((event, index) => {
-          const variant = COLOR_VARIANTS[index % COLOR_VARIANTS.length]
+      <VerticalAutoScroll speed={20} height={200}>
+        <div className="space-y-4">
+          {displayEvents.map((event, index) => {
+            const variant = COLOR_VARIANTS[index % COLOR_VARIANTS.length]
 
-          return (
-            <div
-              key={index}
-              className={`p-4 rounded-2xl border ${variant.bg} ${variant.border}`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className={`text-[10px] font-bold ${variant.time}`}>
-                  {event.time}
-                </span>
-                {event.badge && (
-                  <span className="text-[9px] font-bold bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded shadow-sm">
-                    {event.badge}
+            return (
+              <div
+                key={index}
+                className={`p-4 rounded-2xl border ${variant.bg} ${variant.border}`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-[10px] font-bold ${variant.time}`}>
+                    {event.time}
                   </span>
+                  {event.badge && (
+                    <span className="text-[9px] font-bold bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded shadow-sm">
+                      {event.badge}
+                    </span>
+                  )}
+                </div>
+                <h4 className={`text-sm font-bold mb-1 ${variant.title}`}>
+                  {event.title}
+                </h4>
+                {event.location && (
+                  <p className={`text-[11px] ${variant.detail}`}>
+                    {event.location}
+                  </p>
                 )}
               </div>
-              <h4 className={`text-sm font-bold mb-1 ${variant.title}`}>
-                {event.title}
-              </h4>
-              {event.location && (
-                <p className={`text-[11px] ${variant.detail}`}>
-                  {event.location}
-                </p>
-              )}
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      </VerticalAutoScroll>
     </div>
   )
 }

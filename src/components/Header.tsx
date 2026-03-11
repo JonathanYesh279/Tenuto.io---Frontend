@@ -101,16 +101,31 @@ export default function Header() {
       className="fixed top-0 left-0 h-20 bg-white dark:bg-sidebar-dark border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0 z-[45] transition-all duration-300"
       style={{
         direction: 'rtl',
-        width: hasSidebar && !isMobile && isDesktopOpen ? 'calc(100% - 280px)' : '100%',
+        width: hasSidebar && !isMobile ? (isDesktopOpen ? 'calc(100% - 280px)' : 'calc(100% - 64px)') : '100%',
       }}
     >
-      {/* Right side (RTL) - Brand/Logo + Search */}
+      {/* Right side (RTL) - Conservatory Name + Search */}
       <div className="flex items-center gap-6">
-        <img
-          src="/logo.png"
-          alt="Logo"
-          className="h-10 w-auto object-contain"
-        />
+        {/* Conservatory name — glass pill */}
+        {!isSuperAdmin && (
+          <h1
+            className="text-sm font-bold text-[#082753] truncate max-w-[250px] px-5 py-2.5 rounded-2xl backdrop-blur-2xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.4) 100%)',
+              border: '1.5px solid rgba(255,255,255,0.6)',
+              boxShadow: `
+                inset 0 2px 4px 0 rgba(255,255,255,0.9),
+                inset 0 -2px 4px 0 rgba(7,39,90,0.08),
+                inset 0 0 20px 0 rgba(255,255,255,0.3),
+                0 4px 16px -4px rgba(7,39,90,0.2),
+                0 1px 3px 0 rgba(7,39,90,0.1),
+                0 0 0 1px rgba(255,255,255,0.4)
+              `,
+            }}
+          >
+            {user?.tenantName || user?.schoolName || 'Tenuto'}
+          </h1>
+        )}
 
         {/* Search input - Desktop only, hidden for super admin */}
         {!isMobile && !isSuperAdmin && (

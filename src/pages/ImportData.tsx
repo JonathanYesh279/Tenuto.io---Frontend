@@ -4,7 +4,6 @@ import { StepProgress } from '../components/feedback/ProgressIndicators'
 import toast from 'react-hot-toast'
 import {
   UploadIcon,
-  FileXlsIcon,
   CheckCircleIcon,
   XCircleIcon,
   WarningIcon,
@@ -17,6 +16,8 @@ import {
   BuildingsIcon,
   MusicNotesIcon,
 } from '@phosphor-icons/react'
+import Folder from '../components/Folder'
+import AnimatedContent from '../components/AnimatedContent'
 
 type ImportTab = 'teachers' | 'students' | 'conservatory' | 'ensembles'
 type ImportState = 'upload' | 'preview' | 'results'
@@ -998,50 +999,58 @@ export default function ImportData() {
 
       {/* Tab Switcher */}
       <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => handleTabChange('teachers')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-            activeTab === 'teachers'
-              ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-          }`}
-        >
-          <GraduationCapIcon size={16} weight="regular" />
-          ייבוא מורים
-        </button>
-        <button
-          onClick={() => handleTabChange('students')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-            activeTab === 'students'
-              ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-          }`}
-        >
-          <UsersIcon size={16} weight="regular" />
-          ייבוא תלמידים
-        </button>
-        <button
-          onClick={() => handleTabChange('conservatory')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-            activeTab === 'conservatory'
-              ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-          }`}
-        >
-          <BuildingsIcon size={16} weight="regular" />
-          פרטי קונסרבטוריון
-        </button>
-        <button
-          onClick={() => handleTabChange('ensembles')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-            activeTab === 'ensembles'
-              ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-          }`}
-        >
-          <MusicNotesIcon size={16} weight="regular" />
-          הרכבים
-        </button>
+        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0}>
+          <button
+            onClick={() => handleTabChange('teachers')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === 'teachers'
+                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            <GraduationCapIcon size={16} weight="regular" />
+            ייבוא מורים
+          </button>
+        </AnimatedContent>
+        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0.08}>
+          <button
+            onClick={() => handleTabChange('students')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === 'students'
+                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            <UsersIcon size={16} weight="regular" />
+            ייבוא תלמידים
+          </button>
+        </AnimatedContent>
+        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0.16}>
+          <button
+            onClick={() => handleTabChange('conservatory')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === 'conservatory'
+                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            <BuildingsIcon size={16} weight="regular" />
+            פרטי קונסרבטוריון
+          </button>
+        </AnimatedContent>
+        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0.24}>
+          <button
+            onClick={() => handleTabChange('ensembles')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              activeTab === 'ensembles'
+                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            <MusicNotesIcon size={16} weight="regular" />
+            הרכבים
+          </button>
+        </AnimatedContent>
       </div>
 
       {/* Step Progress Indicator */}
@@ -1149,7 +1158,9 @@ export default function ImportData() {
                     : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                 }`}
               >
-                <FileXlsIcon size={48} weight="regular" className={`mb-4 ${dragActive ? 'text-primary-500' : 'text-gray-400'}`} />
+                <div className="mb-4" onClick={(e) => e.stopPropagation()}>
+                  <Folder color="#3b82f6" size={0.8} />
+                </div>
                 <p className="text-lg font-medium text-gray-700 mb-1">
                   גרור קובץ לכאן או לחץ לבחירה
                 </p>

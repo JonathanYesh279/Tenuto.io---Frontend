@@ -1,4 +1,4 @@
-import { UserCircleIcon, MusicNotesIcon } from '@phosphor-icons/react'
+import { VerticalAutoScroll } from '../../animations/VerticalAutoScroll'
 
 interface Activity {
   type: string
@@ -48,28 +48,23 @@ export function MessagesWidget({ activities, loading }: MessagesWidgetProps) {
         <h3 className="font-bold text-sm">פעילות אחרונה</h3>
       </div>
 
-      <div className="space-y-6">
-        {displayItems.map((item, index) => (
-          <div key={index} className="flex gap-3">
-            <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
-              {item.type === 'student' ? (
-                <UserCircleIcon size={40} weight="fill" />
-              ) : (
-                <MusicNotesIcon size={40} weight="fill" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-bold truncate">{item.title}</span>
-                <span className="text-[9px] text-slate-400 shrink-0">{item.time}</span>
+      <VerticalAutoScroll speed={20} height={200}>
+        <div className="space-y-6">
+          {displayItems.map((item, index) => (
+            <div key={index}>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold truncate">{item.title}</span>
+                  <span className="text-[9px] text-slate-400 shrink-0">{item.time}</span>
+                </div>
+                <p className="text-[11px] text-slate-500 line-clamp-2">
+                  {item.description}
+                </p>
               </div>
-              <p className="text-[11px] text-slate-500 line-clamp-2">
-                {item.description}
-              </p>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </VerticalAutoScroll>
     </div>
   )
 }

@@ -443,16 +443,7 @@ export default function Sidebar() {
         </button>
       )}
 
-      {/* Desktop Floating Open Button - Shows when sidebar is closed */}
-      {!isMobile && !isDesktopOpen && (
-        <button
-          onClick={() => setIsDesktopOpen(true)}
-          className="fixed top-[20px] right-4 z-[60] p-2 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200"
-          aria-label="Open sidebar"
-        >
-          <ListIcon size={20} weight="bold" className="text-foreground" />
-        </button>
-      )}
+      {/* Desktop Floating Open Button - removed: sidebar now collapses to icon rail */}
 
       {/* Backdrop Overlay - Mobile Only */}
       {isMobile && isOpen && (
@@ -465,56 +456,55 @@ export default function Sidebar() {
       {/* Sidebar */}
       <div
         id="sidebar"
-        className={`fixed top-0 right-0 w-[280px] h-screen bg-white dark:bg-sidebar-dark text-sidebar-foreground border-l border-slate-200 dark:border-slate-800 shadow-1 rtl z-[55] transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 h-screen bg-[#082753] text-white/90 border-l border-white/10 shadow-1 rtl z-[55] transition-all duration-300 ease-in-out flex flex-col overflow-hidden ${
           isMobile
-            ? isOpen ? 'translate-x-0' : 'translate-x-full'
-            : isDesktopOpen ? 'translate-x-0' : 'translate-x-full'
+            ? `w-[280px] ${isOpen ? 'translate-x-0' : 'translate-x-full'}`
+            : isDesktopOpen ? 'w-[280px]' : 'w-[64px]'
         }`}
       >
-        {/* Desktop Toggle Button - Inside Sidebar Top Left Corner */}
+        {/* Desktop Toggle Button */}
         {!isMobile && (
           <button
             onClick={() => setIsDesktopOpen(!isDesktopOpen)}
-            className="absolute top-4 left-4 p-2 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 z-10"
+            className={`absolute top-3 z-10 p-1.5 bg-white/10 rounded-lg border border-white/10 hover:bg-white/20 transition-all duration-200 ${
+              isDesktopOpen ? 'left-3' : 'left-1/2 -translate-x-1/2'
+            }`}
             aria-label="Toggle sidebar"
           >
-            {isDesktopOpen ? (
-              <XIcon size={20} weight="bold" className="text-slate-500 dark:text-slate-400" />
-            ) : (
-              <ListIcon size={20} weight="bold" className="text-slate-500 dark:text-slate-400" />
-            )}
+            <ListIcon size={18} weight="bold" className="text-white/70" />
           </button>
         )}
-        {/* Brand Logo */}
-        <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Logo" className="h-9 w-auto object-contain" />
-            <h2 className="font-bold text-base tracking-tight text-foreground truncate">
-              {user?.tenantName || user?.schoolName || 'Tenuto'}
-            </h2>
+        {/* Tenuto.io Logo — hidden when collapsed */}
+        {(!isMobile && isDesktopOpen || isMobile) && (
+          <div className="px-8 border-b border-white/10 flex-shrink-0 flex items-center justify-start">
+            <img src="/tenuto-logo.png" alt="Tenuto.io" className="w-[180px] h-auto object-contain" />
           </div>
-        </div>
-        {/* Search */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
-          <div className="relative">
-            <MagnifyingGlassIcon
-              size={16}
-              weight="regular"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400"
-            />
-            <input
-              type="text"
-              placeholder="חיפוש..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 pl-3 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm font-reisinger-yonatan text-foreground placeholder:text-slate-400 text-right rtl focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
+        )}
+        {/* Collapsed spacer for toggle button */}
+        {!isMobile && !isDesktopOpen && <div className="h-12 flex-shrink-0 border-b border-white/10" />}
+        {/* Search — hidden when collapsed */}
+        {(!isMobile && isDesktopOpen || isMobile) && (
+          <div className="px-4 pt-2 pb-3 border-b border-white/10 flex-shrink-0">
+            <div className="relative">
+              <MagnifyingGlassIcon
+                size={16}
+                weight="regular"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40"
+              />
+              <input
+                type="text"
+                placeholder="חיפוש..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pr-10 pl-3 py-2 bg-white/10 border-none rounded-xl text-sm font-reisinger-yonatan text-white placeholder:text-white/40 text-right rtl focus:outline-none focus:ring-2 focus:ring-white/20"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* User Role Badges - Show when user has multiple roles */}
-        {hasMultipleRoles && (
-          <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
+        {/* User Role Badges - Show when user has multiple roles, hidden when collapsed */}
+        {hasMultipleRoles && (!isMobile && isDesktopOpen || isMobile) && (
+          <div className="px-4 py-3 border-b border-white/10 flex-shrink-0">
             <div className="flex flex-wrap gap-2">
               {userRoles.map(role => (
                 <span
@@ -530,14 +520,14 @@ export default function Sidebar() {
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 overflow-y-auto overflow-x-hidden min-h-0 custom-scrollbar">
+        <nav className={`flex-1 py-4 overflow-y-auto overflow-x-hidden min-h-0 custom-scrollbar ${!isMobile && !isDesktopOpen ? 'px-1.5' : 'px-3'}`}>
           {isLoading ? (
             <div className="space-y-2 px-4 py-8">
               <div className="animate-pulse space-y-3">
-                <div className="h-4 bg-sidebar-active-bg rounded w-1/2"></div>
-                <div className="h-8 bg-sidebar-active-bg rounded"></div>
-                <div className="h-8 bg-sidebar-active-bg rounded"></div>
-                <div className="h-8 bg-sidebar-active-bg rounded"></div>
+                <div className="h-4 bg-white/10 rounded w-1/2"></div>
+                <div className="h-8 bg-white/10 rounded"></div>
+                <div className="h-8 bg-white/10 rounded"></div>
+                <div className="h-8 bg-white/10 rounded"></div>
               </div>
             </div>
           ) : (
@@ -545,11 +535,15 @@ export default function Sidebar() {
               {/* Grouped Navigation */}
               {groupedNavigation.map((category, categoryIndex) => (
                 <div key={category.key} className={categoryIndex > 0 ? 'mt-5' : ''}>
-                  {/* Category label — static, no collapse */}
-                  {categoryIndex > 0 && (
-                    <p className="px-3 mb-2 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                  {/* Category label — hidden when collapsed */}
+                  {categoryIndex > 0 && (!isMobile && isDesktopOpen || isMobile) && (
+                    <p className="px-3 mb-2 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
                       {category.label}
                     </p>
+                  )}
+                  {/* Collapsed divider */}
+                  {categoryIndex > 0 && !isMobile && !isDesktopOpen && (
+                    <div className="mx-2 my-2 border-t border-white/10" />
                   )}
 
                   <div className="space-y-0.5">
@@ -560,29 +554,32 @@ export default function Sidebar() {
                           to={item.href}
                           end={item.href === '/dashboard'}
                           onClick={closeMobileMenu}
+                          title={!isMobile && !isDesktopOpen ? item.name : undefined}
                           className={({ isActive: active }) =>
-                            `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
-                              active
-                                ? 'bg-primary/10 text-primary font-bold'
-                                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium'
+                            `flex items-center rounded-xl transition-all ${
+                              !isMobile && !isDesktopOpen
+                                ? `justify-center p-2.5 ${active ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}`
+                                : `gap-3 px-3 py-2.5 ${active ? 'bg-white/15 text-white font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white font-medium'}`
                             }`
                           }
                         >
                           {({ isActive: active }) => (
                             <>
                               <item.Icon
-                                size={20}
+                                size={!isMobile && !isDesktopOpen ? 22 : 20}
                                 weight={active ? 'fill' : 'duotone'}
                                 className="flex-shrink-0"
                               />
-                              <div className="flex items-center gap-2 flex-1">
-                                <span className="text-sm text-right">{item.name}</span>
-                                {hasMultipleRoles && item.roles && item.roles.length === 1 && (
-                                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(item.roles[0])}`}>
-                                    {getRoleLabel(item.roles[0])}
-                                  </span>
-                                )}
-                              </div>
+                              {(!isMobile && isDesktopOpen || isMobile) && (
+                                <div className="flex items-center gap-2 flex-1">
+                                  <span className="text-sm text-right">{item.name}</span>
+                                  {hasMultipleRoles && item.roles && item.roles.length === 1 && (
+                                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(item.roles[0])}`}>
+                                      {getRoleLabel(item.roles[0])}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
                             </>
                           )}
                         </NavLink>
@@ -594,26 +591,33 @@ export default function Sidebar() {
 
               {/* Quick Actions */}
               {quickActions.length > 0 && (
-                <div className="space-y-0.5 border-t border-slate-200 dark:border-slate-800 pt-5 mt-5">
-                  <p className="px-3 mb-2 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-                    פעולות מהירות
-                  </p>
+                <div className="space-y-0.5 border-t border-white/10 pt-5 mt-5">
+                  {(!isMobile && isDesktopOpen || isMobile) && (
+                    <p className="px-3 mb-2 text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                      פעולות מהירות
+                    </p>
+                  )}
                   {quickActions.map((action) => {
                     return (
                       <button
                         key={`${action.href}-${action.name}-${action.role}`}
                         onClick={() => handleQuickActionClick(action.name, action.href)}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all font-medium group"
+                        title={!isMobile && !isDesktopOpen ? action.name : undefined}
+                        className={`w-full flex items-center rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-all font-medium group ${
+                          !isMobile && !isDesktopOpen ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'
+                        }`}
                       >
-                        <PlusIcon size={18} weight="bold" className="flex-shrink-0 text-primary/60" />
-                        <div className="flex items-center gap-2 flex-1">
-                          <span className="text-sm text-right">{action.name}</span>
-                          {hasMultipleRoles && action.role && (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(action.role)}`}>
-                              {getRoleLabel(action.role)}
-                            </span>
-                          )}
-                        </div>
+                        <PlusIcon size={!isMobile && !isDesktopOpen ? 22 : 18} weight="bold" className="flex-shrink-0 text-white/50" />
+                        {(!isMobile && isDesktopOpen || isMobile) && (
+                          <div className="flex items-center gap-2 flex-1">
+                            <span className="text-sm text-right">{action.name}</span>
+                            {hasMultipleRoles && action.role && (
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getRoleBadgeColor(action.role)}`}>
+                                {getRoleLabel(action.role)}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </button>
                     )
                   })}

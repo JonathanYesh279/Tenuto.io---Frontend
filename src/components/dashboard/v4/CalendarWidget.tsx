@@ -30,22 +30,56 @@ export function CalendarWidget() {
   }
 
   return (
-    <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+    <div
+      className="relative p-6 rounded-3xl overflow-hidden backdrop-blur-2xl dark:border-white/20"
+      style={{
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(186,230,253,0.25) 50%, rgba(255,255,255,0.5) 100%)',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: 'rgba(255,255,255,0.8)',
+        boxShadow: `
+          0 8px 32px rgba(0,140,210,0.12),
+          0 2px 8px rgba(0,140,210,0.06),
+          inset 0 1px 1px rgba(255,255,255,0.9),
+          inset 0 -1px 2px rgba(0,140,210,0.04)
+        `,
+      }}
+    >
+      {/* Top glossy reflection band */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[40%] rounded-t-3xl"
+        style={{
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.1) 60%, transparent 100%)',
+        }}
+      />
+      {/* Corner light bloom */}
+      <div
+        className="pointer-events-none absolute -top-[25%] -left-[15%] w-[60%] h-[60%] rounded-full"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(186,230,253,0.15) 50%, transparent 70%)',
+        }}
+      />
+      {/* Top edge highlight */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-3xl"
+        style={{ background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.95) 50%, transparent 90%)' }}
+      />
+
       {/* Month navigation */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="relative flex items-center justify-between mb-6">
         <button
           onClick={handlePrevMonth}
-          className="p-1 text-slate-400 hover:text-primary transition-colors"
+          className="p-1 text-slate-500 hover:text-primary transition-colors"
           aria-label="Previous month"
         >
           <CaretRightIcon size={18} />
         </button>
-        <h3 className="font-bold text-sm">
+        <h3 className="font-bold text-sm text-slate-800 dark:text-white">
           {format(currentDate, 'MMMM yyyy', { locale: he })}
         </h3>
         <button
           onClick={handleNextMonth}
-          className="p-1 text-slate-400 hover:text-primary transition-colors"
+          className="p-1 text-slate-500 hover:text-primary transition-colors"
           aria-label="Next month"
         >
           <CaretLeftIcon size={18} />
@@ -53,10 +87,10 @@ export function CalendarWidget() {
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-1 text-center">
+      <div className="relative grid grid-cols-7 gap-1 text-center">
         {/* Day headers */}
         {HEBREW_DAYS.map((day) => (
-          <div key={day} className="text-[10px] font-bold text-slate-400 uppercase mb-2">
+          <div key={day} className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">
             {day}
           </div>
         ))}
@@ -80,7 +114,7 @@ export function CalendarWidget() {
                 ${
                   isSelected || isToday
                     ? 'bg-primary text-white shadow-md shadow-primary/20 font-bold'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100'
+                    : 'hover:bg-white/50 dark:hover:bg-white/10 text-slate-800 dark:text-slate-100'
                 }
               `}
             >

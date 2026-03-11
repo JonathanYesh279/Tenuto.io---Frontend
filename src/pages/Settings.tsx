@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../services/authContext.jsx'
-import { tenantService, teacherService } from '../services/apiService'
+import { tenantService, teacherService, getUploadUrl } from '../services/apiService'
 import { Input } from '../components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs'
 import { getDisplayName } from '../utils/nameUtils'
@@ -567,7 +567,7 @@ export default function Settings() {
           <div className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 shrink-0">
             {formData.branding.logoUrl ? (
               <img
-                src={formData.branding.logoUrl}
+                src={getUploadUrl(formData.branding.logoUrl)!}
                 alt="לוגו"
                 className="w-full h-full object-contain p-1"
               />

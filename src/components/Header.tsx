@@ -1,6 +1,7 @@
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../services/authContext.jsx'
+import { getUploadUrl } from '../services/apiService'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
@@ -125,11 +126,13 @@ export default function Header() {
             }}
           >
             {user?.tenantLogoUrl && (
-              <img
-                src={user.tenantLogoUrl}
-                alt=""
-                className="h-8 w-8 object-contain shrink-0"
-              />
+              <div className="w-9 h-9 shrink-0 rounded-lg overflow-hidden flex items-center justify-center">
+                <img
+                  src={getUploadUrl(user.tenantLogoUrl)}
+                  alt=""
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
             )}
             <h1 className="text-sm font-bold text-[#082753] truncate max-w-[250px]">
               {user?.tenantName || user?.schoolName || 'Tenuto'}

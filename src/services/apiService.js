@@ -5998,6 +5998,18 @@ export const rolesService = {
  * Default export with all services
  * Complete API service collection matching backend schemas
  */
+/**
+ * Resolve a backend upload path to a full URL.
+ * Handles both relative paths (/uploads/...) and absolute URLs (S3).
+ */
+export function getUploadUrl(path) {
+  if (!path) return null;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  // Strip /api from base URL to get the server origin
+  const origin = API_CONFIG.BASE_URL.replace(/\/api\/?$/, '');
+  return `${origin}${path}`;
+}
+
 export default {
   auth: authService,
   students: studentService,

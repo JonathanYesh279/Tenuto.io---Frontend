@@ -5213,6 +5213,28 @@ export const tenantService = {
       throw error;
     }
   },
+
+  async uploadLogo(tenantId, file) {
+    try {
+      const formData = new FormData();
+      formData.append('logo', file);
+      const response = await apiClient.post(`/tenant/${tenantId}/logo`, formData);
+      return response;
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+      throw error;
+    }
+  },
+
+  async deleteLogo(tenantId) {
+    try {
+      const response = await apiClient.delete(`/tenant/${tenantId}/logo`);
+      return response;
+    } catch (error) {
+      console.error('Error deleting logo:', error);
+      throw error;
+    }
+  },
 };
 
 // ==================== Hours Summary Service (NEW) ====================

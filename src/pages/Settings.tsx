@@ -7,7 +7,7 @@ import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
 import {
   GearIcon, FloppyDiskIcon, PencilSimpleIcon, PlusIcon, CheckIcon, XIcon, ProhibitIcon,
-  UploadSimpleIcon,
+  UploadSimpleIcon, ImageIcon, TrashIcon,
 } from '@phosphor-icons/react'
 import StaffRoleTable from '../components/settings/StaffRoleTable'
 
@@ -49,6 +49,10 @@ interface TenantData {
   settings: {
     lessonDurations: number[]
     schoolStartMonth: number
+  }
+  branding: {
+    logoUrl: string | null
+    logoKey: string | null
   }
   conservatoryProfile: ConservatoryProfile
 }
@@ -109,7 +113,9 @@ export default function Settings() {
   const [editingRoom, setEditingRoom] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
   const [importingRooms, setImportingRooms] = useState(false)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
   const roomFileInputRef = useRef<HTMLInputElement>(null)
+  const logoFileInputRef = useRef<HTMLInputElement>(null)
   const [formData, setFormData] = useState<TenantData>({
     _id: '',
     name: '',
@@ -117,6 +123,7 @@ export default function Settings() {
     director: { name: '', teacherId: '' },
     ministryInfo: { institutionCode: '', districtName: '' },
     settings: { lessonDurations: [30, 45, 60], schoolStartMonth: 9 },
+    branding: { logoUrl: null, logoKey: null },
     conservatoryProfile: { ...EMPTY_PROFILE },
   })
 
@@ -158,6 +165,10 @@ export default function Settings() {
         settings: {
           lessonDurations: tenantData.settings?.lessonDurations || [30, 45, 60],
           schoolStartMonth: tenantData.settings?.schoolStartMonth || 9,
+        },
+        branding: {
+          logoUrl: tenantData.branding?.logoUrl || null,
+          logoKey: tenantData.branding?.logoKey || null,
         },
         conservatoryProfile: {
           code: cp.code || '',
@@ -322,6 +333,47 @@ export default function Settings() {
       if (roomFileInputRef.current) {
         roomFileInputRef.current.value = ''
       }
+    }
+  }
+
+  const handleUploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      setUploadingLogo(true)
+      const response = await tenantService.uploadLogo(formData._id, file)
+      const updated = response?.data || response
+      setFormData(prev => ({
+        ...prev,
+        branding: {
+          logoUrl: updated?.branding?.logoUrl || null,
+          logoKey: updated?.branding?.logoKey || null,
+        },
+      }))
+      toast.success('הלוגו הועלה בהצלחה')
+    } catch (error: any) {
+      const msg = error?.response?.data?.error || error?.message || 'שגיאה בהעלאת לוגו'
+      toast.error(msg)
+    } finally {
+      setUploadingLogo(false)
+      if (logoFileInputRef.current) logoFileInputRef.current.value = ''
+    }
+  }
+
+  const handleDeleteLogo = async () => {
+    try {
+      setUploadingLogo(true)
+      await tenantService.deleteLogo(formData._id)
+      setFormData(prev => ({
+        ...prev,
+        branding: { logoUrl: null, logoKey: null },
+      }))
+      toast.success('הלוגו הוסר בהצלחה')
+    } catch (error: any) {
+      const msg = error?.response?.data?.error || error?.message || 'שגיאה בהסרת לוגו'
+      toast.error(msg)
+    } finally {
+      setUploadingLogo(false)
     }
   }
 
@@ -501,6 +553,60 @@ export default function Settings() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Branding — Logo Upload */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4">
+        <div className="flex items-center gap-2 mb-4">
+          <ImageIcon size={18} weight="regular" className="text-gray-600" />
+          <h3 className="text-sm font-bold text-gray-800">מיתוג</h3>
+        </div>
+
+        <div className="flex items-center gap-6">
+          {/* Logo preview */}
+          <div className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 shrink-0">
+            {formData.branding.logoUrl ? (
+              <img
+                src={formData.branding.logoUrl}
+                alt="לוגו"
+                className="w-full h-full object-contain p-1"
+              />
+            ) : (
+              <ImageIcon size={28} weight="thin" className="text-gray-300" />
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <p className="text-xs text-gray-500">לוגו המוסד יוצג בכותרת לצד שם הקונסרבטוריון. PNG או JPG, עד 2MB.</p>
+            <div className="flex items-center gap-2">
+              <input
+                ref={logoFileInputRef}
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                onChange={handleUploadLogo}
+                className="hidden"
+              />
+              <button
+                onClick={() => logoFileInputRef.current?.click()}
+                disabled={uploadingLogo}
+                className="flex items-center gap-1 px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+              >
+                <UploadSimpleIcon size={14} weight="bold" />
+                {uploadingLogo ? 'מעלה...' : formData.branding.logoUrl ? 'החלף לוגו' : 'העלה לוגו'}
+              </button>
+              {formData.branding.logoUrl && (
+                <button
+                  onClick={handleDeleteLogo}
+                  disabled={uploadingLogo}
+                  className="flex items-center gap-1 px-3 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                >
+                  <TrashIcon size={14} weight="bold" />
+                  הסר לוגו
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Top row: General + Director + Ministry side by side */}

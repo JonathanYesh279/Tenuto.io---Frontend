@@ -34,9 +34,23 @@ export default function SchoolYearSelector() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+      <div
+        className="flex items-center gap-2 px-3 py-2 rounded-2xl backdrop-blur-2xl"
+        style={{
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.4) 100%)',
+          border: '1.5px solid rgba(255,255,255,0.6)',
+          boxShadow: `
+            inset 0 2px 4px 0 rgba(255,255,255,0.9),
+            inset 0 -2px 4px 0 rgba(7,39,90,0.08),
+            inset 0 0 20px 0 rgba(255,255,255,0.3),
+            0 4px 16px -4px rgba(7,39,90,0.2),
+            0 1px 3px 0 rgba(7,39,90,0.1),
+            0 0 0 1px rgba(255,255,255,0.4)
+          `,
+        }}
+      >
         <CalendarIcon className="w-4 h-4 text-gray-400" />
-        <div className="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div className="w-24 h-4 bg-gray-200/50 rounded animate-pulse"></div>
       </div>
     )
   }
@@ -46,8 +60,20 @@ export default function SchoolYearSelector() {
       {/* Selector Button */}
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 ease-in-out min-w-[200px]"
-        style={{ direction: 'rtl' }}
+        className="flex items-center gap-2 px-3 py-2 rounded-2xl backdrop-blur-2xl transition-all duration-150 ease-in-out min-w-[200px]"
+        style={{
+          direction: 'rtl',
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.4) 100%)',
+          border: '1.5px solid rgba(255,255,255,0.6)',
+          boxShadow: `
+            inset 0 2px 4px 0 rgba(255,255,255,0.9),
+            inset 0 -2px 4px 0 rgba(7,39,90,0.08),
+            inset 0 0 20px 0 rgba(255,255,255,0.3),
+            0 4px 16px -4px rgba(7,39,90,0.2),
+            0 1px 3px 0 rgba(7,39,90,0.1),
+            0 0 0 1px rgba(255,255,255,0.4)
+          `,
+        }}
       >
         {/* CalendarIcon Icon */}
         <CalendarIcon className="w-4 h-4 text-indigo-600 flex-shrink-0" />

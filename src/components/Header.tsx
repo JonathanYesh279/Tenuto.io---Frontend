@@ -98,18 +98,19 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 h-20 bg-white dark:bg-sidebar-dark border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0 z-[45] transition-all duration-300"
+      className="fixed top-0 left-0 h-20 dark:bg-sidebar-dark border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0 z-[45] transition-all duration-300"
       style={{
         direction: 'rtl',
         width: hasSidebar && !isMobile ? (isDesktopOpen ? 'calc(100% - 280px)' : 'calc(100% - 64px)') : '100%',
+        backgroundColor: 'rgba(64, 155, 120, 0.08)',
       }}
     >
       {/* Right side (RTL) - Conservatory Name + Search */}
       <div className="flex items-center gap-6">
-        {/* Conservatory name — glass pill */}
+        {/* Conservatory logo + name — glass pill */}
         {!isSuperAdmin && (
-          <h1
-            className="text-sm font-bold text-[#082753] truncate max-w-[250px] px-5 py-2.5 rounded-2xl backdrop-blur-2xl"
+          <div
+            className="flex items-center gap-3 px-5 py-2.5 rounded-2xl backdrop-blur-2xl"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.4) 100%)',
               border: '1.5px solid rgba(255,255,255,0.6)',
@@ -123,8 +124,17 @@ export default function Header() {
               `,
             }}
           >
-            {user?.tenantName || user?.schoolName || 'Tenuto'}
-          </h1>
+            {user?.tenantLogoUrl && (
+              <img
+                src={user.tenantLogoUrl}
+                alt=""
+                className="h-8 w-8 object-contain shrink-0"
+              />
+            )}
+            <h1 className="text-sm font-bold text-[#082753] truncate max-w-[250px]">
+              {user?.tenantName || user?.schoolName || 'Tenuto'}
+            </h1>
+          </div>
         )}
 
         {/* Search input - Desktop only, hidden for super admin */}
@@ -133,12 +143,24 @@ export default function Header() {
             <MagnifyingGlassIcon
               size={18}
               weight="regular"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 z-[1]"
             />
             <input
               type="text"
               placeholder="חיפוש שיעורים, תלמידים..."
-              className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-2xl py-2.5 pr-11 pl-4 focus:ring-2 focus:ring-primary text-sm transition-all text-right font-reisinger-yonatan placeholder:text-slate-400"
+              className="w-full border-none rounded-2xl py-2.5 pr-11 pl-4 focus:ring-2 focus:ring-primary text-sm transition-all text-right font-reisinger-yonatan placeholder:text-slate-400 backdrop-blur-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.4) 100%)',
+                border: '1.5px solid rgba(255,255,255,0.6)',
+                boxShadow: `
+                  inset 0 2px 4px 0 rgba(255,255,255,0.9),
+                  inset 0 -2px 4px 0 rgba(7,39,90,0.08),
+                  inset 0 0 20px 0 rgba(255,255,255,0.3),
+                  0 4px 16px -4px rgba(7,39,90,0.2),
+                  0 1px 3px 0 rgba(7,39,90,0.1),
+                  0 0 0 1px rgba(255,255,255,0.4)
+                `,
+              }}
               // TODO: wire to global search
             />
           </div>

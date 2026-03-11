@@ -1,10 +1,22 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowUpRightIcon, PencilLineIcon, FunnelIcon, CircleNotchIcon, XIcon, SquaresFourIcon, ListIcon, TrashIcon, CaretUpIcon, CaretDownIcon, WarningIcon, ShieldIcon, ArchiveIcon, ClockIcon, UsersIcon, GraduationCapIcon, UserCheckIcon, UserCircleMinusIcon, BookOpenIcon, UserCircleIcon } from '@phosphor-icons/react'
 import { PlusIcon } from '@phosphor-icons/react'
 import { clsx } from 'clsx'
+import {
+  Table as HeroTable,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  User,
+  Chip,
+  Pagination,
+  Spinner,
+  Badge as HeroBadge,
+} from '@heroui/react'
 import { Card } from '../components/ui/Card'
-import Table from '../components/ui/Table'
 import { Badge } from '../components/ui/badge'
 import { StatusBadge, InstrumentBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
@@ -24,6 +36,23 @@ import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
 
+const AVATAR_COLORS: Array<'primary' | 'secondary' | 'success' | 'warning' | 'danger'> = [
+  'primary', 'secondary', 'success', 'warning', 'danger'
+]
+
+function getAvatarColor(name: string): typeof AVATAR_COLORS[number] {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
+
+function getAbsenceBadgeColor(count: number): 'warning' | 'danger' | null {
+  if (count >= 8) return 'danger'
+  if (count >= 4) return 'warning'
+  return null
+}
 
 export default function Students() {
   const navigate = useNavigate()
@@ -48,7 +77,7 @@ export default function Students() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [totalStudentsCount, setTotalStudentsCount] = useState(0)
-  const STUDENTS_PER_PAGE = 20
+  const STUDENTS_PER_PAGE = 10000
   const [showForm, setShowForm] = useState(false)
   const [editingStudentId, setEditingStudentId] = useState(null)
   const [viewMode, setViewMode] = useState<'table' | 'grid'>((searchParams.get('view') as 'table' | 'grid') || 'table')
@@ -70,6 +99,9 @@ export default function Students() {
 
   // Teachers lookup map for displaying teacher names
   const [teachersMap, setTeachersMap] = useState<Map<string, string>>(new Map())
+
+  // Absence counts per student (studentId → count)
+  const [absenceCounts, setAbsenceCounts] = useState<Record<string, number>>({})
 
   // Cascade deletion hooks
   const { previewDeletion, executeDeletion, isDeleting } = useCascadeDeletion()
@@ -270,7 +302,14 @@ export default function Students() {
       }
 
       studentsResponse = response
-      
+
+      // Fetch absence counts in parallel (non-blocking — badges just won't show on error)
+      if (!append && currentSchoolYear?._id) {
+        apiService.analytics.getBulkAbsenceCounts({ schoolYearId: currentSchoolYear._id })
+          .then(counts => setAbsenceCounts(counts))
+          .catch(() => {})
+      }
+
       // Map response data using CORRECT database field names
       const students = response.map(student => ({
         id: student._id,
@@ -657,164 +696,158 @@ export default function Students() {
     ? Math.round(students.reduce((sum, s) => sum + (s.stageLevel || 0), 0) / students.length * 10) / 10
     : 0
 
-  const columns = [
-    ...(isSelectMode ? [{
-      key: 'select',
-      header: (
-        <input
-          type="checkbox"
-          checked={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0}
-          onChange={(e) => {
-            if (e.target.checked) {
-              setSelectedStudents(new Set(filteredStudents.map(s => s.id)))
-            } else {
-              setSelectedStudents(new Set())
-            }
-          }}
-          className="w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-ring cursor-pointer"
-        />
-      ),
-      render: (student: any) => (
-        <input
-          type="checkbox"
-          checked={selectedStudents.has(student.id)}
-          onChange={(e) => {
-            e.stopPropagation()
-            const newSelected = new Set(selectedStudents)
-            if (e.target.checked) {
-              newSelected.add(student.id)
-            } else {
-              newSelected.delete(student.id)
-            }
-            setSelectedStudents(newSelected)
-          }}
-          onClick={(e) => e.stopPropagation()}
-          className="w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-ring cursor-pointer"
-        />
-      ),
-      width: '60px',
-      align: 'center' as const
-    }] : []),
-    {
-      key: 'name',
-      header: 'שם התלמיד',
-      render: (row: any) => (
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
-            <UserCircleIcon size={40} weight="fill" />
-          </div>
-          <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{row.name}</span>
-        </div>
-      )
-    },
-    {
-      key: 'instrument',
-      header: 'כלי נגינה',
-      render: (student: any) => student.instrument
-        ? <InstrumentBadge instrument={student.instrument} />
-        : <span className="text-muted-foreground">—</span>
-    },
-    {
-      key: 'teacherName',
-      header: 'שם המורה',
-      render: (student: any) => {
-        const assignments = student.rawData?.teacherAssignments || student.originalStudent?.teacherAssignments || []
-        if (!assignments || assignments.length === 0) {
-          return <span className="text-gray-400">לא משוייך</span>
-        }
+  // HeroUI table columns
+  const heroColumns = [
+    { uid: 'name', name: 'שם התלמיד' },
+    { uid: 'instrument', name: 'כלי נגינה' },
+    { uid: 'teacherName', name: 'שם המורה' },
+    { uid: 'stageLevel', name: 'שלב' },
+    { uid: 'orchestra', name: 'תזמורת' },
+    { uid: 'grade', name: 'כיתה' },
+    { uid: 'status', name: 'סטטוס' },
+    { uid: 'actions', name: 'פעולות' },
+  ]
 
-        // Get first teacher's ID and look up name from teachersMap
-        const firstAssignment = assignments[0]
-        const teacherId = firstAssignment?.teacherId
+  // HeroUI pagination state
+  const [tablePage, setTablePage] = useState(1)
+  const tableRowsPerPage = 50
+  const tablePages = Math.ceil(filteredStudents.length / tableRowsPerPage)
+  const paginatedStudents = React.useMemo(() => {
+    const start = (tablePage - 1) * tableRowsPerPage
+    return filteredStudents.slice(start, start + tableRowsPerPage)
+  }, [filteredStudents, tablePage])
 
-        if (!teacherId) {
-          return <span className="text-gray-400">לא משוייך</span>
-        }
+  // Reset page when data changes
+  useEffect(() => { setTablePage(1) }, [filteredStudents.length])
 
-        const teacherName = teachersMap.get(teacherId)
-        if (!teacherName) {
-          return <span className="text-gray-400">לא משוייך</span>
-        }
+  // HeroUI renderCell
+  const renderCell = React.useCallback((student: any, columnKey: string) => {
+    switch (columnKey) {
+      case 'name': {
+        const count = absenceCounts[student.id] || 0
+        const badgeColor = getAbsenceBadgeColor(count)
+        const avatarColor = getAvatarColor(student.name || '')
 
-        return <span className="text-gray-700">{teacherName}</span>
+        const userEl = (
+          <User
+            avatarProps={{
+              radius: 'lg',
+              size: 'sm',
+              showFallback: true,
+              name: student.name,
+              color: avatarColor,
+            }}
+            description={student.rawData?.phone || ''}
+            name={student.name}
+          />
+        )
+
+        if (!badgeColor) return userEl
+
+        return (
+          <HeroBadge content={count} color={badgeColor} size="sm" shape="circle">
+            {userEl}
+          </HeroBadge>
+        )
       }
-    },
-    {
-      key: 'stageLevel',
-      header: 'שלב', 
-      align: 'center' as const,
-      render: (student: any) => {
+      case 'instrument':
+        return student.instrument && student.instrument !== 'ללא כלי'
+          ? <InstrumentBadge instrument={student.instrument} />
+          : <span className="text-default-400">—</span>
+      case 'teacherName': {
+        const assignments = student.rawData?.teacherAssignments || student.originalStudent?.teacherAssignments || []
+        if (!assignments?.length) return <span className="text-default-400">לא משוייך</span>
+        const teacherId = assignments[0]?.teacherId
+        if (!teacherId) return <span className="text-default-400">לא משוייך</span>
+        const name = teachersMap.get(teacherId)
+        return name ? <span>{name}</span> : <span className="text-default-400">לא משוייך</span>
+      }
+      case 'stageLevel': {
         const isEditing = editingStageLevelId === student.id
         const isUpdating = updatingStageLevel === student.id
-        
+
         if (isUpdating) {
           return (
             <div className="flex items-center justify-center">
-              <div className="w-16 h-8 flex items-center justify-center bg-blue-50 rounded border-2 border-blue-200">
-                <span className="text-blue-600 font-medium">...</span>
-              </div>
+              <Chip size="sm" variant="flat" color="primary">...</Chip>
             </div>
           )
         }
-        
+
         if (isEditing) {
           return (
-            <div 
-              className="flex items-center justify-center gap-1"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleStageLevelChange(student.id, student.name, student.stageLevel, false)
-                }}
+                onClick={(e) => { e.stopPropagation(); handleStageLevelChange(student.id, student.name, student.stageLevel, false) }}
                 disabled={student.stageLevel <= 1}
                 className="w-6 h-6 flex items-center justify-center bg-red-100 text-red-600 hover:bg-red-200 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-bold"
-                title="הורד שלב"
-              >
-                -
-              </button>
-              
-              <div className="w-12 h-8 flex items-center justify-center bg-blue-50 rounded border-2 border-blue-300 mx-1">
-                <span className="text-blue-700 font-bold text-sm">{student.stageLevel}</span>
-              </div>
-              
+              >-</button>
+              <Chip size="sm" variant="flat" color="primary" className="mx-1">{student.stageLevel}</Chip>
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleStageLevelChange(student.id, student.name, student.stageLevel, true)
-                }}
+                onClick={(e) => { e.stopPropagation(); handleStageLevelChange(student.id, student.name, student.stageLevel, true) }}
                 disabled={student.stageLevel >= 8}
                 className="w-6 h-6 flex items-center justify-center bg-green-100 text-green-600 hover:bg-green-200 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm font-bold"
-                title="העלה שלב"
-              >
-                +
-              </button>
+              >+</button>
             </div>
           )
         }
-        
+
         return (
           <div className="flex items-center justify-center">
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                handleStageLevelClick(student.id)
-              }}
-              className="w-8 h-8 flex items-center justify-center text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded transition-colors font-medium border border-transparent hover:border-blue-200"
+              onClick={(e) => { e.stopPropagation(); handleStageLevelClick(student.id) }}
+              className="w-8 h-8 flex items-center justify-center text-default-600 hover:bg-primary-50 hover:text-primary rounded transition-colors font-medium border border-transparent hover:border-primary-200"
               title="לחץ לעריכת השלב"
-            >
-              {student.stageLevel}
-            </button>
+            >{student.stageLevel}</button>
           </div>
         )
       }
-    },
-    { key: 'orchestra', header: 'תזמורת' },
-    { key: 'grade', header: 'כיתה', align: 'center' as const },
-    { key: 'status', header: 'סטטוס', align: 'center' as const },
-    { key: 'actions', header: 'פעולות', align: 'center' as const, width: isSelectMode ? '120px' : '140px' },
-  ]
+      case 'orchestra':
+        return <span className="text-sm">{student.orchestra}</span>
+      case 'grade':
+        return <Badge variant="outline">{student.rawData?.class || ''}</Badge>
+      case 'status':
+        return <StatusBadge status={student.rawData?.isActive ? 'פעיל' : 'לא פעיל'} />
+      case 'actions':
+        return (
+          <div className="flex items-center justify-end gap-0.5">
+            <button
+              className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-700/50 transition-colors"
+              onClick={(e) => { e.stopPropagation(); handleViewStudent(student.id) }}
+              title="צפה בפרטי התלמיד"
+            >
+              <ArrowUpRightIcon size={15} weight="regular" />
+            </button>
+            <button
+              className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:text-slate-300 dark:hover:bg-slate-700/50 transition-colors"
+              onClick={(e) => { e.stopPropagation(); handleEditStudent(student.id) }}
+              title="ערוך פרטי התלמיד"
+            >
+              <PencilLineIcon size={15} weight="regular" />
+            </button>
+            {(student.rawData?.referenceCount || 0) > 0 ? (
+              <button
+                className="p-1.5 rounded-md text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors"
+                onClick={(e) => { e.stopPropagation(); handleSafeDeleteClick(student.id, student.name) }}
+                title="מחיקה מאובטחת"
+              >
+                <ShieldIcon size={15} weight="regular" />
+              </button>
+            ) : (
+              <button
+                className="p-1.5 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                onClick={(e) => { e.stopPropagation(); handleDeleteClick(student.id, student.name) }}
+                title="מחק תלמיד"
+              >
+                <TrashIcon size={15} weight="regular" />
+              </button>
+            )}
+          </div>
+        )
+      default:
+        return student[columnKey] ?? ''
+    }
+  }, [teachersMap, editingStageLevelId, updatingStageLevel, selectedStudents, isSelectMode])
 
   if (loading) {
     return (
@@ -887,10 +920,10 @@ export default function Students() {
         ))}
       </div>
 
-      {/* Table Card Container — fills remaining height */}
-      <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden flex-1 min-h-0 flex flex-col">
-        {/* Card Header: Filters + Selection + View Toggle */}
-        <div className="p-5 border-b border-slate-100 dark:border-slate-800">
+      {/* Table Section — fills remaining height */}
+      <div className="flex-1 min-h-0 flex flex-col gap-4">
+        {/* Filters + Selection + View Toggle */}
+        <div>
           <div className="flex items-center gap-3 flex-wrap">
             <div className="w-64 flex-none">
               <SearchInput
@@ -1012,10 +1045,10 @@ export default function Students() {
           </div>
         </div>
 
-        {/* Table / Grid Content — scrolls internally, load-more stays visible */}
-        <div className="relative flex-1 min-h-0">
+        {/* Table / Grid Content */}
+        <div className="relative flex-1 min-h-0 flex flex-col">
           {searchLoading && (
-            <div className="absolute inset-0 bg-white/75 dark:bg-sidebar-dark/75 flex items-center justify-center z-10">
+            <div className="absolute inset-0 bg-white/75 dark:bg-sidebar-dark/75 flex items-center justify-center z-10 rounded-large">
               <div className="text-center">
                 <CircleNotchIcon size={24} weight="regular" className="animate-spin mx-auto mb-2 text-primary" />
                 <div className="text-sm text-slate-500">מחפש תלמידים...</div>
@@ -1024,32 +1057,73 @@ export default function Students() {
           )}
 
           {viewMode === 'table' ? (
-            <Table
-              columns={columns}
-              data={filteredStudents}
-              onRowClick={(row) => {
-                if (isSelectMode) {
-                  const newSelected = new Set(selectedStudents)
-                  if (newSelected.has(row.id)) {
-                    newSelected.delete(row.id)
-                  } else {
-                    newSelected.add(row.id)
-                  }
-                  setSelectedStudents(newSelected)
+            <HeroTable
+              key={`students-table-page-${tablePage}`}
+              aria-label="טבלת תלמידים"
+              isHeaderSticky
+              selectionMode={isSelectMode ? 'multiple' : 'none'}
+              selectedKeys={selectedStudents as any}
+              onSelectionChange={(keys) => {
+                if (keys === 'all') {
+                  setSelectedStudents(new Set(filteredStudents.map(s => s.id)))
                 } else {
-                  handleViewStudent(row.id)
+                  setSelectedStudents(new Set(keys as Set<string>))
                 }
               }}
-              rowClassName={(row) => {
-                const isSelected = selectedStudents.has(row.id)
-                return clsx(
-                  'cursor-pointer transition-all duration-150',
-                  isSelected
-                    ? 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 border-l-4 border-blue-500'
-                    : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20'
-                )
+              bottomContent={
+                tablePages > 1 ? (
+                  <div className="flex w-full justify-center">
+                    <Pagination
+                      isCompact
+                      showControls
+                      showShadow
+                      color="primary"
+                      page={tablePage}
+                      total={tablePages}
+                      onChange={setTablePage}
+                    />
+                  </div>
+                ) : null
+              }
+              bottomContentPlacement="outside"
+              classNames={{
+                base: 'flex-1 min-h-0 animate-table-rows',
+                wrapper: 'h-full',
+                th: 'bg-default-100 text-default-600',
+                thead: '[&>tr]:border-b-0',
               }}
-            />
+            >
+              <TableHeader columns={heroColumns}>
+                {(column) => (
+                  <TableColumn
+                    key={column.uid}
+                    align={column.uid === 'actions' ? 'end' : ['stageLevel', 'grade', 'status'].includes(column.uid) ? 'center' : 'start'}
+                  >
+                    {column.name}
+                  </TableColumn>
+                )}
+              </TableHeader>
+              <TableBody
+                items={paginatedStudents}
+                isLoading={loading}
+                loadingContent={<Spinner color="primary" label="טוען..." />}
+                emptyContent="אין תלמידים להצגה"
+              >
+                {(item: any) => (
+                  <TableRow
+                    key={item.id}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      if (!isSelectMode) handleViewStudent(item.id)
+                    }}
+                  >
+                    {(columnKey) => (
+                      <TableCell>{renderCell(item, columnKey as string)}</TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </HeroTable>
           ) : (
             <div className="p-5">
               {/* Grid Select All Header */}

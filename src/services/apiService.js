@@ -4060,6 +4060,21 @@ export const analyticsService = {
       console.error('Error fetching teacher attendance stats:', error);
       throw error;
     }
+  },
+
+  /**
+   * Get bulk absence counts for all students in tenant
+   * @param {Object} options - Query options (schoolYearId, etc.)
+   * @returns {Promise<Object>} Map of { studentId: absenceCount }
+   */
+  async getBulkAbsenceCounts(options = {}) {
+    try {
+      const result = await apiClient.get('/analytics/attendance/bulk-absence-counts', options);
+      return result?.data || {};
+    } catch (error) {
+      console.error('Error fetching bulk absence counts:', error);
+      return {};
+    }
   }
 };
 

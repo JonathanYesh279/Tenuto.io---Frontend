@@ -109,23 +109,9 @@ export default function Header() {
     >
       {/* Right side (RTL) - Conservatory Name + Search */}
       <div className="flex items-center gap-6">
-        {/* Conservatory logo + name — glass pill */}
+        {/* Conservatory logo + name */}
         {!isSuperAdmin && (
-          <div
-            className="flex items-center gap-3 px-5 py-2.5 rounded-2xl backdrop-blur-2xl"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.4) 100%)',
-              border: '1.5px solid rgba(255,255,255,0.6)',
-              boxShadow: `
-                inset 0 2px 4px 0 rgba(255,255,255,0.9),
-                inset 0 -2px 4px 0 rgba(7,39,90,0.08),
-                inset 0 0 20px 0 rgba(255,255,255,0.3),
-                0 4px 16px -4px rgba(7,39,90,0.2),
-                0 1px 3px 0 rgba(7,39,90,0.1),
-                0 0 0 1px rgba(255,255,255,0.4)
-              `,
-            }}
-          >
+          <div className="flex items-center gap-3">
             {user?.tenantLogoUrl && (
               <div className="w-9 h-9 shrink-0 rounded-lg overflow-hidden flex items-center justify-center">
                 <img

@@ -113,7 +113,7 @@ export default function Header() {
         {!isSuperAdmin && (
           <div className="flex items-center gap-3">
             {user?.tenantLogoUrl && (
-              <div className="w-9 h-9 shrink-0 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="w-14 h-14 shrink-0 rounded-lg overflow-hidden flex items-center justify-center">
                 <img
                   src={getUploadUrl(user.tenantLogoUrl)}
                   alt=""

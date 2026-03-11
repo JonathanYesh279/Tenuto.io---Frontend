@@ -584,9 +584,7 @@ export default function Settings() {
               className="w-28 h-28 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center shrink-0 cursor-pointer hover:border-primary/40 hover:bg-gray-50 transition-colors"
               onClick={() => logoFileInputRef.current?.click()}
             >
-              <div onClick={(e) => e.stopPropagation()}>
-                <Folder color="#409b78" size={0.7} />
-              </div>
+              <Folder color="#409b78" size={0.7} />
             </div>
           )}
 

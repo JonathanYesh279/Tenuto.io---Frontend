@@ -43,20 +43,20 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
   }
 
   return (
-    <div 
-      className={`bg-white rounded border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group hover:border-blue-300 ${onViewDetails ? 'cursor-pointer' : ''}`}
+    <div
+      className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 group hover:border-blue-300 ${onViewDetails ? 'cursor-pointer' : ''}`}
       onClick={onViewDetails ? handleViewDetails : undefined}
     >
       {/* Card Header */}
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-neutral-100 dark:border-neutral-800">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">
                 {typeInfo.text}
               </span>
               {orchestra.subType && (
-                <span className="text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-600">
+                <span className="text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
                   {orchestra.subType}
                 </span>
               )}
@@ -71,19 +71,19 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
                   {orchestra.performanceLevel}
                 </span>
               )}
-              <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">
                 {status.text}
               </span>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-tight group-hover:text-blue-900 transition-colors">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-1 leading-tight group-hover:text-blue-900 dark:group-hover:text-blue-400 transition-colors">
               {orchestra.name}
             </h3>
-            <p className="text-sm text-gray-600 flex items-center group-hover:text-blue-600 transition-colors">
+            <p className="text-sm text-slate-600 dark:text-slate-400 flex items-center group-hover:text-blue-600 transition-colors">
               <UserIcon className="w-3 h-3 ml-1" />
               {getConductorName(orchestra)}
             </p>
           </div>
-          
+
           {/* Action Buttons */}
           <div className="flex items-center gap-1 mr-2">
             {onEdit && (
@@ -92,7 +92,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
                   e.stopPropagation()
                   handleEdit()
                 }}
-                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors opacity-0 group-hover:opacity-100"
+                className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors opacity-0 group-hover:opacity-100"
                 title="ערוך תזמורת"
               >
                 <PencilIcon className="w-4 h-4" />
@@ -104,7 +104,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
                   e.stopPropagation()
                   handleDelete()
                 }}
-                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-0 group-hover:opacity-100"
+                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-0 group-hover:opacity-100"
                 title="מחק תזמורת"
               >
                 <TrashIcon className="w-4 h-4" />
@@ -117,45 +117,45 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
       {/* Card Content */}
       <div className="p-4 space-y-3">
         {/* Location */}
-        <div className="flex items-center text-sm text-gray-600">
-          <MapPinIcon className="w-4 h-4 ml-2 text-gray-400" />
-          <span className="font-medium text-gray-900 ml-1">מיקום:</span>
+        <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
+          <MapPinIcon className="w-4 h-4 ml-2 text-slate-400" />
+          <span className="font-medium text-slate-900 dark:text-white ml-1">מיקום:</span>
           {orchestra.location}
         </div>
 
         {/* Members and Rehearsals */}
         <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center text-gray-600">
-            <UsersIcon className="w-4 h-4 ml-2 text-gray-400" />
-            <span className="font-medium text-gray-900 ml-1">חברים:</span>
+          <div className="flex items-center text-slate-600 dark:text-slate-400">
+            <UsersIcon className="w-4 h-4 ml-2 text-slate-400" />
+            <span className="font-medium text-slate-900 dark:text-white ml-1">חברים:</span>
             {formatMemberCount(stats.memberCount)}
             {orchestra.ministryData?.importedParticipantCount != null && orchestra.ministryData.importedParticipantCount > 0 && (
-              <span className="text-gray-400 text-xs mr-1">(משרד: {orchestra.ministryData.importedParticipantCount})</span>
+              <span className="text-slate-400 text-xs mr-1">(משרד: {orchestra.ministryData.importedParticipantCount})</span>
             )}
           </div>
-          <div className="flex items-center text-gray-600">
-            <CalendarIcon className="w-4 h-4 ml-2 text-gray-400" />
-            <span className="font-medium text-gray-900 ml-1">חזרות:</span>
+          <div className="flex items-center text-slate-600 dark:text-slate-400">
+            <CalendarIcon className="w-4 h-4 ml-2 text-slate-400" />
+            <span className="font-medium text-slate-900 dark:text-white ml-1">חזרות:</span>
             {formatRehearsalCount(stats.rehearsalCount)}
           </div>
         </div>
 
         {/* Schedule Slots */}
         {orchestra.scheduleSlots && orchestra.scheduleSlots.length > 0 && (
-          <div className="bg-blue-50/50 rounded p-3">
+          <div className="bg-blue-50/50 dark:bg-blue-950/20 rounded-lg p-3">
             <div className="flex items-center gap-1 mb-1.5">
               <ClockIcon className="w-4 h-4 text-blue-400" />
-              <span className="text-sm font-medium text-gray-900">לוח זמנים</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">לוח זמנים</span>
             </div>
             <div className="space-y-1">
               {orchestra.scheduleSlots.map((slot, i) => {
                 const dayName = slot.day || (['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][slot.dayOfWeek] ?? '')
                 return (
-                  <div key={i} className="text-sm text-gray-700 flex items-center gap-2">
+                  <div key={i} className="text-sm text-slate-700 dark:text-slate-300 flex items-center gap-2">
                     <span className="font-medium">{dayName}</span>
                     <span>{slot.startTime}-{slot.endTime}</span>
                     {slot.actualHours != null && (
-                      <span className="text-gray-400 text-xs">({slot.actualHours} ש')</span>
+                      <span className="text-slate-400 text-xs">({slot.actualHours} ש')</span>
                     )}
                   </div>
                 )
@@ -166,17 +166,17 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
 
         {/* Ministry Hours */}
         {orchestra.ministryData && (orchestra.ministryData.totalReportingHours != null || orchestra.ministryData.coordinationHours != null) && (
-          <div className="bg-gray-50 rounded p-3">
+          <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
             <div className="flex items-center gap-2 text-sm flex-wrap">
               {orchestra.ministryData.totalReportingHours != null && (
-                <span className="text-gray-700">
-                  <span className="text-gray-400 text-xs">ש"ש דיווח: </span>
+                <span className="text-slate-700 dark:text-slate-300">
+                  <span className="text-slate-400 text-xs">ש"ש דיווח: </span>
                   <span className="font-medium">{orchestra.ministryData.totalReportingHours}</span>
                 </span>
               )}
               {orchestra.ministryData.coordinationHours != null && (
-                <span className="text-gray-700">
-                  <span className="text-gray-400 text-xs">ש' ריכוז: </span>
+                <span className="text-slate-700 dark:text-slate-300">
+                  <span className="text-slate-400 text-xs">ש' ריכוז: </span>
                   <span className="font-medium">{orchestra.ministryData.coordinationHours}</span>
                 </span>
               )}
@@ -186,32 +186,32 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
 
         {/* Instruments Summary */}
         {instrumentsSummary.totalInstruments > 0 && (
-          <div className="bg-gray-50 rounded p-3">
+          <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-900">
+              <span className="text-sm font-medium text-slate-900 dark:text-white">
                 <MusicNotesIcon className="w-4 h-4 inline ml-1" />
                 כלי נגינה
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-slate-500">
                 {instrumentsSummary.totalInstruments} סוגים
               </span>
             </div>
-            
+
             {instrumentsSummary.primaryInstruments.length > 0 && (
               <div className="flex flex-wrap gap-1">
                 {instrumentsSummary.primaryInstruments.slice(0, 4).map(instrument => (
-                  <span 
+                  <span
                     key={instrument}
-                    className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                    className="text-xs bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 px-2 py-1 rounded-full"
                   >
                     {instrument}
-                    <span className="mr-1 text-gray-600">
+                    <span className="mr-1 text-slate-600 dark:text-slate-400">
                       ({instrumentsSummary.instrumentCounts[instrument]})
                     </span>
                   </span>
                 ))}
                 {instrumentsSummary.primaryInstruments.length > 4 && (
-                  <span className="text-xs text-gray-500 px-2 py-1">
+                  <span className="text-xs text-slate-500 px-2 py-1">
                     +{instrumentsSummary.primaryInstruments.length - 4} נוספים
                   </span>
                 )}
@@ -222,18 +222,18 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
 
         {/* Attendance Rate */}
         {stats.averageAttendance > 0 && (
-          <div className="flex items-center bg-gray-50 rounded p-3">
+          <div className="flex items-center bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
             <div className="flex items-center text-sm">
-              <ClockIcon className="w-4 h-4 ml-2 text-gray-400" />
-              <span className="font-medium text-gray-900 ml-1">נוכחות ממוצעת:</span>
-              <span className="text-gray-600">{stats.averageAttendance}%</span>
+              <ClockIcon className="w-4 h-4 ml-2 text-slate-400" />
+              <span className="font-medium text-slate-900 dark:text-white ml-1">נוכחות ממוצעת:</span>
+              <span className="text-slate-600 dark:text-slate-400">{stats.averageAttendance}%</span>
             </div>
           </div>
         )}
 
 
         {/* Footer Statistics */}
-        <div className="text-xs text-gray-500 text-center pt-2 border-t border-gray-100 flex justify-between">
+        <div className="text-xs text-slate-500 text-center pt-2 border-t border-neutral-100 dark:border-neutral-800 flex justify-between">
           <span>
             הרכב {stats.orchestraSize}
           </span>

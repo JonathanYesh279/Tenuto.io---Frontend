@@ -1,8 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { PlusIcon, MagnifyingGlassIcon, FunnelIcon, CalendarIcon, ClockIcon, UsersIcon, BookOpenIcon, TrashIcon, WarningIcon, GearIcon, CaretDownIcon, CaretUpIcon, ClockCounterClockwiseIcon } from '@phosphor-icons/react'
+import { Button as HeroButton } from '@heroui/react'
 import { Card } from '../components/ui/Card'
-import StatsCard from '../components/ui/StatsCard'
+import { GlassStatCard } from '../components/ui/GlassStatCard'
+import { GlassSelect } from '../components/ui/GlassSelect'
+import { SearchInput } from '../components/ui/SearchInput'
 import TheoryLessonForm from '../components/TheoryLessonForm'
 import TheoryLessonCard from '../components/TheoryLessonCard'
 import BulkTheoryUpdateTab from '../components/BulkTheoryUpdateTab'
@@ -511,7 +514,7 @@ export default function TheoryLessons() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <div className="text-gray-600">טוען שיעורי תיאוריה...</div>
+          <div className="text-slate-600">טוען שיעורי תיאוריה...</div>
         </div>
       </div>
     )
@@ -522,77 +525,83 @@ export default function TheoryLessons() {
       <style>{scrollbarStyles}</style>
       <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">שיעורי תיאוריה</h1>
-          <p className="text-gray-600 mt-1">ניהול שיעורי תיאוריה ומעקב נוכחות</p>
-          
-          {/* Tab Navigation */}
-          <div className="flex space-x-4 rtl:space-x-reverse mt-4">
-            <button
-              onClick={() => setActiveTab('lessons')}
-              className={`flex items-center px-4 py-2 rounded font-medium transition-colors ${
-                activeTab === 'lessons'
-                  ? 'bg-muted text-foreground'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <BookOpenIcon size={16} weight="regular" className="ml-2" />
-              רשימת שיעורים
-            </button>
-            <button
-              onClick={() => setActiveTab('bulk')}
-              className={`flex items-center px-4 py-2 rounded font-medium transition-colors ${
-                activeTab === 'bulk'
-                  ? 'bg-muted text-foreground'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <GearIcon size={16} weight="regular" className="ml-2" />
-              עדכון שיעורים קבוצתי
-            </button>
-          </div>
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">שיעורי תיאוריה</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">ניהול שיעורי תיאוריה ומעקב נוכחות</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           {activeTab === 'lessons' && (
             <>
               {selectedLessons.size > 0 && (
                 <>
-                  <button
-                    onClick={handleBulkEdit}
-                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                    title={`עריכה קבוצתית של ${selectedLessons.size} שיעורים`}
+                  <HeroButton
+                    color="primary"
+                    variant="flat"
+                    size="sm"
+                    onPress={handleBulkEdit}
+                    startContent={<UsersIcon size={14} weight="fill" />}
                   >
-                    <UsersIcon size={16} weight="fill" className="ml-1" />
                     עריכה קבוצתית ({selectedLessons.size})
-                  </button>
-                  <button
-                    onClick={() => setSelectedLessons(new Set())}
-                    className="flex items-center px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
-                    title="בטל בחירה"
+                  </HeroButton>
+                  <HeroButton
+                    color="default"
+                    variant="flat"
+                    size="sm"
+                    onPress={() => setSelectedLessons(new Set())}
                   >
                     ביטול בחירה
-                  </button>
+                  </HeroButton>
                 </>
               )}
-              <button
-                onClick={() => setShowBulkDeleteModal(true)}
-                className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-                title="מחיקה קבוצתית של שיעורי תיאוריה"
+              <HeroButton
+                color="danger"
+                variant="flat"
+                size="sm"
+                onPress={() => setShowBulkDeleteModal(true)}
+                startContent={<TrashIcon size={14} weight="fill" />}
               >
-                <TrashIcon size={16} weight="fill" className="ml-1" />
                 מחיקת שיעורים
-              </button>
-              <button
-                onClick={handleCreateLesson}
-                className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
+              </HeroButton>
+              <HeroButton
+                color="primary"
+                variant="solid"
+                size="sm"
+                onPress={handleCreateLesson}
+                startContent={<PlusIcon size={14} weight="bold" />}
+                className="font-bold"
               >
-                <PlusIcon size={16} weight="fill" className="ml-2" />
                 שיעור חדש
-              </button>
+              </HeroButton>
             </>
           )}
         </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="flex space-x-4 rtl:space-x-reverse">
+        <button
+          onClick={() => setActiveTab('lessons')}
+          className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
+            activeTab === 'lessons'
+              ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm'
+              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <BookOpenIcon size={16} weight="regular" className="ml-2" />
+          רשימת שיעורים
+        </button>
+        <button
+          onClick={() => setActiveTab('bulk')}
+          className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
+            activeTab === 'bulk'
+              ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm'
+              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <GearIcon size={16} weight="regular" className="ml-2" />
+          עדכון שיעורים קבוצתי
+        </button>
       </div>
 
       {/* Error Display */}
@@ -606,101 +615,77 @@ export default function TheoryLessons() {
       {activeTab === 'lessons' ? (
         <>
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatsCard
-          title="סה״כ שיעורים"
-          value={stats.totalLessons.toString()}
-          subtitle="שיעורי תיאוריה"
-          icon={<BookOpenIcon />}
-          color="blue"
-        />
-        <StatsCard
-          title="שיעורים קרובים"
-          value={stats.upcomingLessons.toString()}
-          subtitle="שיעורים מהיום והלאה"
-          icon={<CalendarIcon />}
-          color="green"
-        />
-        <StatsCard
-          title="סה״כ תלמידים"
-          value={stats.totalStudents.toString()}
-          subtitle="נרשמים לשיעורים"
-          icon={<UsersIcon />}
-          color="purple"
-        />
-        <StatsCard
-          title="נוכחות ממוצעת"
-          value={`${stats.averageAttendance}%`}
-          subtitle="אחוז נוכחות"
-          icon={<ClockIcon />}
-          color="orange"
-        />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          { value: stats.totalLessons, label: 'סה״כ שיעורים' },
+          { value: stats.upcomingLessons, label: 'שיעורים קרובים' },
+          { value: stats.totalStudents, label: 'סה״כ תלמידים' },
+          { value: `${stats.averageAttendance}%`, label: 'נוכחות ממוצעת' },
+        ].map((s) => (
+          <GlassStatCard key={s.label} value={s.value} label={s.label} size="sm" />
+        ))}
       </div>
 
       {/* Filters and Search */}
-      <Card>
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* Search */}
-          <div className="flex-1">
-            <div className="relative">
-              <MagnifyingGlassIcon size={16} weight="regular" className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="חיפוש שיעורים..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          {/* Category Filter */}
-          <div className="md:w-56">
-            <select
-              value={filters.category}
-              onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-              className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
-            >
-              <option value="">כל הקטגוריות</option>
-              <option value="תלמידים חדשים ב-ד">תלמידים חדשים ב-ד</option>
-              <option value="תלמידים חדשים צעירים">תלמידים חדשים צעירים</option>
-              <option value="תלמידים חדשים בוגרים (ה - ט)">תלמידים חדשים בוגרים (ה - ט)</option>
-              <option value="מתחילים">מתחילים</option>
-              <option value="מתחילים ב">מתחילים ב</option>
-              <option value="מתחילים ד">מתחילים ד</option>
-              <option value="מתקדמים א">מתקדמים א</option>
-              <option value="מתקדמים ב">מתקדמים ב</option>
-              <option value="מתקדמים ג">מתקדמים ג</option>
-              <option value="הכנה לרסיטל קלאסי יא">הכנה לרסיטל קלאסי יא</option>
-              <option value="הכנה לרסיטל רוק\פופ\ג'אז יא">הכנה לרסיטל רוק\פופ\ג'אז יא</option>
-              <option value="הכנה לרסיטל רוק\פופ\ג'אז יב">הכנה לרסיטל רוק\פופ\ג'אז יב</option>
-              <option value="מגמה">מגמה</option>
-              <option value="תאוריה כלי">תאוריה כלי</option>
-            </select>
-          </div>
-
-          {/* Date Filter */}
-          <div className="md:w-48">
-            <input
-              type="date"
-              value={filters.date}
-              onChange={(e) => setFilters(prev => ({ ...prev, date: e.target.value }))}
-              className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-ring focus:border-transparent"
-            />
-          </div>
-
-          {/* Clear Filters */}
-          <button
-            onClick={() => {
-              setFilters({ category: '', teacherId: '', date: '' })
-              setSearchQuery('')
-            }}
-            className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-          >
-            <FunnelIcon size={16} weight="regular" />
-          </button>
+      <div className="flex items-center gap-3 flex-wrap px-1">
+        <div className="w-64 flex-none">
+          <SearchInput
+            value={searchQuery}
+            onChange={(value) => setSearchQuery(value)}
+            onClear={() => setSearchQuery('')}
+            placeholder="חיפוש שיעורים..."
+          />
         </div>
-      </Card>
+
+        <GlassSelect
+          value={filters.category || '__all__'}
+          onValueChange={(v) => setFilters(prev => ({ ...prev, category: v === '__all__' ? '' : v }))}
+          placeholder="כל הקטגוריות"
+          options={[
+            { value: '__all__', label: 'כל הקטגוריות' },
+            { value: 'תלמידים חדשים ב-ד', label: 'תלמידים חדשים ב-ד' },
+            { value: 'תלמידים חדשים צעירים', label: 'תלמידים חדשים צעירים' },
+            { value: 'תלמידים חדשים בוגרים (ה - ט)', label: 'תלמידים חדשים בוגרים (ה - ט)' },
+            { value: 'מתחילים', label: 'מתחילים' },
+            { value: 'מתחילים ב', label: 'מתחילים ב' },
+            { value: 'מתחילים ד', label: 'מתחילים ד' },
+            { value: 'מתקדמים א', label: 'מתקדמים א' },
+            { value: 'מתקדמים ב', label: 'מתקדמים ב' },
+            { value: 'מתקדמים ג', label: 'מתקדמים ג' },
+            { value: 'הכנה לרסיטל קלאסי יא', label: 'הכנה לרסיטל קלאסי יא' },
+            { value: 'הכנה לרסיטל רוק\\פופ\\ג\'אז יא', label: 'הכנה לרסיטל רוק\\פופ\\ג\'אז יא' },
+            { value: 'הכנה לרסיטל רוק\\פופ\\ג\'אז יב', label: 'הכנה לרסיטל רוק\\פופ\\ג\'אז יב' },
+            { value: 'מגמה', label: 'מגמה' },
+            { value: 'תאוריה כלי', label: 'תאוריה כלי' },
+          ]}
+        />
+
+        <input
+          type="date"
+          value={filters.date}
+          onChange={(e) => setFilters(prev => ({ ...prev, date: e.target.value }))}
+          className="h-9 rounded-md border border-neutral-200 dark:border-neutral-700 bg-white/70 dark:bg-neutral-900/50 backdrop-blur-sm px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+        />
+
+        <HeroButton
+          color="default"
+          variant="flat"
+          size="sm"
+          onPress={() => {
+            setFilters({ category: '', teacherId: '', date: '' })
+            setSearchQuery('')
+          }}
+          isIconOnly
+        >
+          <FunnelIcon size={14} weight="regular" />
+        </HeroButton>
+
+        <span className="text-xs font-medium text-slate-400 mr-auto">
+          {searchQuery || filters.category || filters.date
+            ? `${lessons.length} מתוך ${totalCount}`
+            : `${lessons.length} שיעורים`}
+        </span>
+      </div>
 
       {/* Theory Lessons Table */}
       <Card>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FunnelIcon, MusicNoteIcon, UsersIcon, UserCheckIcon, CalendarIcon, SquaresFourIcon, ListIcon, MapPinIcon, ChartBarIcon, GearIcon, CheckCircleIcon, Table as TablePhIcon } from '@phosphor-icons/react'
+import { MusicNoteIcon, UsersIcon, SquaresFourIcon, ListIcon, ChartBarIcon, Table as TablePhIcon } from '@phosphor-icons/react'
 import { PlusIcon } from '@phosphor-icons/react'
-import { Card } from '../components/ui/Card'
 import Table from '../components/ui/Table'
 import { SearchInput } from '../components/ui/SearchInput'
+import { GlassStatCard } from '../components/ui/GlassStatCard'
+import { GlassSelect } from '../components/ui/GlassSelect'
+import { Button as HeroButton } from '@heroui/react'
 import OrchestraForm from '../components/OrchestraForm'
 import OrchestraCard from '../components/OrchestraCard'
 import OrchestraManagementDashboard from '../components/OrchestraManagementDashboard'
@@ -47,7 +49,7 @@ export default function Orchestras() {
   const [editingOrchestra, setEditingOrchestra] = useState<Orchestra | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'dashboard'>('dashboard')
-  
+
   // Modal states (keeping member management modal for now)
   const [showMemberManagement, setShowMemberManagement] = useState(false)
   const [selectedOrchestraId, setSelectedOrchestraId] = useState<string | null>(null)
@@ -65,7 +67,7 @@ export default function Orchestras() {
     type: '' as OrchestraType | '',
     conductorId: '',
     location: '' as LocationType | '',
-    isActive: true as boolean | undefined,
+    statusFilter: '' as '' | 'active' | 'inactive',
     hasMembers: undefined as boolean | undefined
   })
 
@@ -78,7 +80,7 @@ export default function Orchestras() {
     try {
       setLoading(true)
       setError(null)
-      
+
       // Load orchestras and teachers in parallel
       // Use 'role' (singular) as expected by the backend API
       const [orchestrasData, teachersData, allTeachersData] = await Promise.all([
@@ -106,7 +108,7 @@ export default function Orchestras() {
       type: filters.type,
       conductorId: filters.conductorId,
       location: filters.location,
-      isActive: filters.isActive,
+      isActive: filters.statusFilter === 'active' ? true : filters.statusFilter === 'inactive' ? false : undefined,
       hasMembers: filters.hasMembers
     }),
     sortBy,
@@ -221,7 +223,7 @@ export default function Orchestras() {
               <MusicNoteIcon size={16} weight="regular" />
             </div>
             <div>
-              <div className="font-medium text-gray-900">{orchestra.name}</div>
+              <div className="font-medium text-slate-900">{orchestra.name}</div>
               <span className="text-xs text-muted-foreground">{typeInfo.text}</span>
             </div>
           </div>
@@ -254,7 +256,7 @@ export default function Orchestras() {
       render: (orchestra: Orchestra) => {
         const status = getOrchestraStatus(orchestra)
         return (
-          <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+          <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-neutral-100 text-neutral-700">
             {status.text}
           </span>
         )
@@ -276,28 +278,45 @@ export default function Orchestras() {
 
   return (
     <div className="space-y-4">
-      {/* Compact identity strip */}
-      <div className="flex items-center justify-between py-3 border-b border-border">
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold text-foreground">תזמורות</h1>
-          <span className="text-sm text-muted-foreground">{stats.activeOrchestras} פעילות</span>
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">תזמורות</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">ניהול הרכבים ותזמורות</p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowEnsembleSummary(true)}
-            className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-50 transition-colors"
+          <HeroButton
+            color="default"
+            variant="bordered"
+            size="sm"
+            onPress={() => setShowEnsembleSummary(true)}
+            startContent={<TablePhIcon size={14} weight="regular" />}
           >
-            <TablePhIcon size={14} weight="regular" />
             סיכום הרכבים
-          </button>
-          <button
-            onClick={handleCreateOrchestra}
-            className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm font-medium hover:bg-neutral-800 transition-colors"
+          </HeroButton>
+          <HeroButton
+            color="primary"
+            variant="solid"
+            size="sm"
+            onPress={handleCreateOrchestra}
+            startContent={<PlusIcon size={14} weight="bold" />}
+            className="font-bold"
           >
-            <PlusIcon size={14} weight="fill" />
             תזמורת חדשה
-          </button>
+          </HeroButton>
         </div>
+      </div>
+
+      {/* Stat Cards -- always visible */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          { value: stats.totalOrchestras, label: 'סה״כ הרכבים' },
+          { value: stats.activeOrchestras, label: 'הרכבים פעילים' },
+          { value: stats.totalMembers, label: 'סה״כ חברים' },
+          { value: stats.orchestrasReady, label: 'מוכנות מלאה' },
+        ].map((s) => (
+          <GlassStatCard key={s.label} value={s.value} label={s.label} size="sm" />
+        ))}
       </div>
 
       {/* Error Display */}
@@ -309,47 +328,63 @@ export default function Orchestras() {
 
       {/* View Mode Toggle + Sort Controls */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center border border-gray-200 rounded overflow-hidden">
+        <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-full border border-slate-200 dark:border-slate-700">
           <button
             onClick={() => setViewMode('dashboard')}
-            className={`p-2 text-sm ${viewMode === 'dashboard' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+              viewMode === 'dashboard'
+                ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-600'
+            }`}
             title="לוח בקרה"
           >
-            <ChartBarIcon size={16} weight="regular" />
+            <ChartBarIcon size={14} weight="regular" />
+            <span className="hidden sm:inline">לוח בקרה</span>
           </button>
           <button
             onClick={() => setViewMode('grid')}
-            className={`p-2 text-sm ${viewMode === 'grid' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+              viewMode === 'grid'
+                ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-600'
+            }`}
             title="תצוגת כרטיסים"
           >
-            <SquaresFourIcon size={16} weight="regular" />
+            <SquaresFourIcon size={14} weight="regular" />
+            <span className="hidden sm:inline">כרטיסים</span>
           </button>
           <button
             onClick={() => setViewMode('table')}
-            className={`p-2 text-sm ${viewMode === 'table' ? 'bg-orchestras-fg text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+              viewMode === 'table'
+                ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-600'
+            }`}
             title="תצוגת טבלה"
           >
-            <ListIcon size={16} weight="regular" />
+            <ListIcon size={14} weight="regular" />
+            <span className="hidden sm:inline">טבלה</span>
           </button>
         </div>
 
         {viewMode !== 'dashboard' && (
           <div className="flex items-center gap-3">
-            <select
+            <GlassSelect
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-3 py-1.5 text-sm border border-gray-200 rounded"
-            >
-              <option value="name">מיון לפי שם</option>
-              <option value="type">מיון לפי סוג</option>
-              <option value="conductor">מיון לפי מנצח</option>
-              <option value="memberCount">מיון לפי מספר חברים</option>
-              <option value="location">מיון לפי מיקום</option>
-              <option value="rehearsalCount">מיון לפי חזרות</option>
-            </select>
+              onValueChange={(v) => setSortBy(v as any)}
+              placeholder="מיון"
+              options={[
+                { value: 'name', label: 'מיון לפי שם' },
+                { value: 'type', label: 'מיון לפי סוג' },
+                { value: 'conductor', label: 'מיון לפי מנצח' },
+                { value: 'memberCount', label: 'מיון לפי מספר חברים' },
+                { value: 'location', label: 'מיון לפי מיקום' },
+                { value: 'rehearsalCount', label: 'מיון לפי חזרות' },
+              ]}
+            />
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-3 py-1.5 text-sm border border-gray-200 rounded hover:bg-gray-50"
+              className="px-3 py-1.5 text-sm border border-slate-200 rounded hover:bg-slate-50 text-slate-600"
             >
               {sortOrder === 'asc' ? '↑' : '↓'}
             </button>
@@ -357,9 +392,9 @@ export default function Orchestras() {
         )}
       </div>
 
-      {/* Compact Filter Toolbar — grid/table modes only */}
+      {/* Compact Filter Toolbar -- grid/table modes only */}
       {viewMode !== 'dashboard' && (
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap px-1">
           <div className="w-64 flex-none">
             <SearchInput
               value={searchQuery}
@@ -368,52 +403,50 @@ export default function Orchestras() {
               placeholder="חיפוש תזמורות..."
             />
           </div>
-          <select
-            value={filters.type}
-            onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as OrchestraType | '' }))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded"
-          >
-            <option value="">כל הסוגים</option>
-            {VALID_ORCHESTRA_TYPES.map(type => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
-          <select
-            value={filters.conductorId}
-            onChange={(e) => setFilters(prev => ({ ...prev, conductorId: e.target.value }))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded"
-          >
-            <option value="">כל המנצחים</option>
-            {teachers.map((teacher: any) => (
-              <option key={teacher._id} value={teacher._id}>{getDisplayName(teacher.personalInfo)}</option>
-            ))}
-          </select>
-          <select
-            value={filters.location}
-            onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value as LocationType | '' }))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded"
-          >
-            <option value="">כל המיקומים</option>
-            {VALID_LOCATIONS.map(location => (
-              <option key={location} value={location}>{location}</option>
-            ))}
-          </select>
-          <label className="flex items-center text-sm">
-            <input
-              type="checkbox"
-              checked={filters.isActive === true}
-              onChange={(e) => setFilters(prev => ({ ...prev, isActive: e.target.checked ? true : undefined }))}
-              className="w-4 h-4 text-primary border-border rounded ml-2"
-            />
-            רק פעילות
-          </label>
-          <span className="text-sm text-muted-foreground mr-auto">
+          <GlassSelect
+            value={filters.type || '__all__'}
+            onValueChange={(v) => setFilters(prev => ({ ...prev, type: (v === '__all__' ? '' : v) as OrchestraType | '' }))}
+            placeholder="כל הסוגים"
+            options={[
+              { value: '__all__', label: 'כל הסוגים' },
+              ...VALID_ORCHESTRA_TYPES.map(type => ({ value: type, label: type }))
+            ]}
+          />
+          <GlassSelect
+            value={filters.conductorId || '__all__'}
+            onValueChange={(v) => setFilters(prev => ({ ...prev, conductorId: v === '__all__' ? '' : v }))}
+            placeholder="כל המנצחים"
+            options={[
+              { value: '__all__', label: 'כל המנצחים' },
+              ...teachers.map((teacher: any) => ({ value: teacher._id, label: getDisplayName(teacher.personalInfo) }))
+            ]}
+          />
+          <GlassSelect
+            value={filters.location || '__all__'}
+            onValueChange={(v) => setFilters(prev => ({ ...prev, location: (v === '__all__' ? '' : v) as LocationType | '' }))}
+            placeholder="כל המיקומים"
+            options={[
+              { value: '__all__', label: 'כל המיקומים' },
+              ...VALID_LOCATIONS.map(location => ({ value: location, label: location }))
+            ]}
+          />
+          <GlassSelect
+            value={filters.statusFilter || '__all__'}
+            onValueChange={(v) => setFilters(prev => ({ ...prev, statusFilter: (v === '__all__' ? '' : v) as '' | 'active' | 'inactive' }))}
+            placeholder="כל הסטטוסים"
+            options={[
+              { value: '__all__', label: 'כל הסטטוסים' },
+              { value: 'active', label: 'פעילים בלבד' },
+              { value: 'inactive', label: 'לא פעילים' },
+            ]}
+          />
+          <span className="text-xs font-medium text-slate-400 mr-auto">
             {filteredAndSortedOrchestras.length} תזמורות
           </span>
         </div>
       )}
 
-      {/* Data area — grid/table views */}
+      {/* Data area -- grid/table views */}
       {viewMode !== 'dashboard' && (
         <>
           {filteredAndSortedOrchestras.length === 0 ? (
@@ -589,46 +622,46 @@ export default function Orchestras() {
               {/* Performance Level + SubType Breakdown */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Performance Level Breakdown */}
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-gray-900 mb-3">רמת ביצוע להרכבים</h4>
+                <div className="border border-neutral-200 rounded-lg p-4">
+                  <h4 className="text-sm font-semibold text-slate-900 mb-3">רמת ביצוע להרכבים</h4>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700">התחלתי</span>
-                      <span className="text-sm font-semibold text-gray-900">{perfLevels['התחלתי']}</span>
+                      <span className="text-sm font-semibold text-slate-900">{perfLevels['התחלתי']}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded-full bg-sky-100 text-sky-700">ביניים</span>
-                      <span className="text-sm font-semibold text-gray-900">{perfLevels['ביניים']}</span>
+                      <span className="text-sm font-semibold text-slate-900">{perfLevels['ביניים']}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded-full bg-amber-100 text-amber-700">ייצוגי</span>
-                      <span className="text-sm font-semibold text-gray-900">{perfLevels['ייצוגי']}</span>
+                      <span className="text-sm font-semibold text-slate-900">{perfLevels['ייצוגי']}</span>
                     </div>
-                    <div className="flex items-center justify-between border-t border-gray-200 pt-2 mt-2">
-                      <span className="text-xs font-medium text-gray-600">סה"כ עם רמת ביצוע</span>
-                      <span className="text-sm font-bold text-gray-900">{perfLevels['התחלתי'] + perfLevels['ביניים'] + perfLevels['ייצוגי']}</span>
+                    <div className="flex items-center justify-between border-t border-neutral-200 pt-2 mt-2">
+                      <span className="text-xs font-medium text-slate-600">סה"כ עם רמת ביצוע</span>
+                      <span className="text-sm font-bold text-slate-900">{perfLevels['התחלתי'] + perfLevels['ביניים'] + perfLevels['ייצוגי']}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* SubType Breakdown */}
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-gray-900 mb-3">סך משתתפים בהרכבי נגינה</h4>
+                <div className="border border-neutral-200 rounded-lg p-4">
+                  <h4 className="text-sm font-semibold text-slate-900 mb-3">סך משתתפים בהרכבי נגינה</h4>
                   <div className="space-y-1.5">
                     {subTypeBreakdown.map(([subType, data]) => (
                       <div key={subType} className="flex items-center justify-between text-sm">
-                        <span className="text-gray-700">{subType}</span>
+                        <span className="text-slate-700">{subType}</span>
                         <div className="flex items-center gap-4">
-                          <span className="text-gray-500 text-xs w-16 text-left">{data.count} גופים</span>
-                          <span className="font-medium text-gray-900 w-16 text-left">{data.participants} משתתפים</span>
+                          <span className="text-slate-500 text-xs w-16 text-left">{data.count} גופים</span>
+                          <span className="font-medium text-slate-900 w-16 text-left">{data.participants} משתתפים</span>
                         </div>
                       </div>
                     ))}
-                    <div className="flex items-center justify-between border-t border-gray-200 pt-2 mt-2 font-semibold text-sm">
-                      <span className="text-gray-900">סה"כ</span>
+                    <div className="flex items-center justify-between border-t border-neutral-200 pt-2 mt-2 font-semibold text-sm">
+                      <span className="text-slate-900">סה"כ</span>
                       <div className="flex items-center gap-4">
-                        <span className="text-gray-700 text-xs w-16 text-left">{summaryOrchestras.length} גופים</span>
-                        <span className="text-gray-900 w-16 text-left">{totalParticipants} משתתפים</span>
+                        <span className="text-slate-700 text-xs w-16 text-left">{summaryOrchestras.length} גופים</span>
+                        <span className="text-slate-900 w-16 text-left">{totalParticipants} משתתפים</span>
                       </div>
                     </div>
                   </div>
@@ -648,21 +681,21 @@ export default function Orchestras() {
               </div>
 
               {/* Full Table */}
-              <div className="overflow-x-auto border border-gray-200 rounded-lg">
+              <div className="overflow-x-auto border border-neutral-200 rounded-lg">
                 <table className="w-full text-sm" dir="rtl">
                   <thead>
-                    <tr className="bg-gray-50 border-b border-gray-200">
-                      <th className="px-2 py-2 text-right font-medium text-gray-700 w-8">#</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">שם</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">סוג</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">תת-סוג</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">רמת ביצוע</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">מנצח</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">משתתפים</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">לוח זמנים</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">שעות בפועל</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">ש"ש דיווח</th>
-                      <th className="px-2 py-2 text-right font-medium text-gray-700">ש' ריכוז</th>
+                    <tr className="bg-neutral-50 border-b border-neutral-200">
+                      <th className="px-2 py-2 text-right font-medium text-slate-700 w-8">#</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">שם</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">סוג</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">תת-סוג</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">רמת ביצוע</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">מנצח</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">משתתפים</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">לוח זמנים</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">שעות בפועל</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">ש"ש דיווח</th>
+                      <th className="px-2 py-2 text-right font-medium text-slate-700">ש' ריכוז</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -677,20 +710,20 @@ export default function Orchestras() {
                       return (
                         <tr
                           key={orchestra._id}
-                          className="border-b border-gray-100 hover:bg-blue-50/50 cursor-pointer transition-colors"
+                          className="border-b border-neutral-100 hover:bg-blue-50/50 cursor-pointer transition-colors"
                           onClick={() => {
                             setShowEnsembleSummary(false)
                             handleViewDetails(orchestra._id)
                           }}
                         >
-                          <td className="px-2 py-2 text-gray-400 text-xs">{idx + 1}</td>
-                          <td className="px-2 py-2 font-medium text-gray-900 whitespace-nowrap">{orchestra.name}</td>
+                          <td className="px-2 py-2 text-slate-400 text-xs">{idx + 1}</td>
+                          <td className="px-2 py-2 font-medium text-slate-900 whitespace-nowrap">{orchestra.name}</td>
                           <td className="px-2 py-2">
-                            <span className="inline-flex px-1.5 py-0.5 text-[10px] font-medium rounded-full bg-gray-100 text-gray-700">
+                            <span className="inline-flex px-1.5 py-0.5 text-[10px] font-medium rounded-full bg-neutral-100 text-neutral-700">
                               {orchestra.type}
                             </span>
                           </td>
-                          <td className="px-2 py-2 text-gray-600 text-xs">{orchestra.subType || '—'}</td>
+                          <td className="px-2 py-2 text-slate-600 text-xs">{orchestra.subType || '—'}</td>
                           <td className="px-2 py-2">
                             {orchestra.performanceLevel ? (
                               <span className={`inline-flex px-1.5 py-0.5 text-[10px] font-medium rounded-full ${
@@ -704,25 +737,25 @@ export default function Orchestras() {
                               </span>
                             ) : '—'}
                           </td>
-                          <td className="px-2 py-2 text-gray-600 text-xs whitespace-nowrap">{conductorName}</td>
-                          <td className="px-2 py-2 text-gray-600 text-center">{orchestra.ministryData?.importedParticipantCount ?? '—'}</td>
-                          <td className="px-2 py-2 text-gray-600 text-xs whitespace-nowrap">{scheduleText}</td>
-                          <td className="px-2 py-2 text-gray-600 text-center">{slotActualHours || '—'}</td>
-                          <td className="px-2 py-2 text-gray-600 text-center">{orchestra.ministryData?.totalReportingHours ?? '—'}</td>
-                          <td className="px-2 py-2 text-gray-600 text-center">{orchestra.ministryData?.coordinationHours ?? '—'}</td>
+                          <td className="px-2 py-2 text-slate-600 text-xs whitespace-nowrap">{conductorName}</td>
+                          <td className="px-2 py-2 text-slate-600 text-center">{orchestra.ministryData?.importedParticipantCount ?? '—'}</td>
+                          <td className="px-2 py-2 text-slate-600 text-xs whitespace-nowrap">{scheduleText}</td>
+                          <td className="px-2 py-2 text-slate-600 text-center">{slotActualHours || '—'}</td>
+                          <td className="px-2 py-2 text-slate-600 text-center">{orchestra.ministryData?.totalReportingHours ?? '—'}</td>
+                          <td className="px-2 py-2 text-slate-600 text-center">{orchestra.ministryData?.coordinationHours ?? '—'}</td>
                         </tr>
                       )
                     })}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-gray-100 border-t-2 border-gray-300 font-semibold text-sm">
+                    <tr className="bg-neutral-100 border-t-2 border-neutral-300 font-semibold text-sm">
                       <td className="px-2 py-2" colSpan={2}>סה"כ</td>
                       <td className="px-2 py-2" colSpan={4}></td>
-                      <td className="px-2 py-2 text-gray-900 text-center">{totalParticipants}</td>
+                      <td className="px-2 py-2 text-slate-900 text-center">{totalParticipants}</td>
                       <td className="px-2 py-2"></td>
-                      <td className="px-2 py-2 text-gray-900 text-center">{totalActualHours}</td>
-                      <td className="px-2 py-2 text-gray-900 text-center">{totalReportingHours}</td>
-                      <td className="px-2 py-2 text-gray-900 text-center">{totalCoordHours}</td>
+                      <td className="px-2 py-2 text-slate-900 text-center">{totalActualHours}</td>
+                      <td className="px-2 py-2 text-slate-900 text-center">{totalReportingHours}</td>
+                      <td className="px-2 py-2 text-slate-900 text-center">{totalCoordHours}</td>
                     </tr>
                   </tfoot>
                 </table>

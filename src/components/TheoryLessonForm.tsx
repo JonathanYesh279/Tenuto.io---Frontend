@@ -166,9 +166,9 @@ export default function TheoryLessonForm({
   const loadTeachers = async () => {
     try {
       const teachersData = await teacherService.getTeachers()
-      // Filter teachers to show only those with "מורה תאוריה" role
-      const theoryTeachers = teachersData.filter(teacher => 
-        teacher.roles && teacher.roles.includes('מורה תאוריה')
+      // Filter teachers to show only those with "תאוריה" role (check legacy "מורה תאוריה" for pre-RBAC DB records)
+      const theoryTeachers = teachersData.filter(teacher =>
+        teacher.roles && teacher.roles.some(r => r === 'תאוריה' || r === 'מורה תאוריה')
       )
       setTeachers(theoryTeachers)
     } catch (error) {

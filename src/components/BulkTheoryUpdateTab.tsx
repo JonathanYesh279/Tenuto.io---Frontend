@@ -108,8 +108,9 @@ export default function BulkTheoryUpdateTab({
   const loadTeachers = async () => {
     try {
       const teachersData = await teacherService.getTeachers()
-      const theoryTeachers = teachersData.filter((teacher: any) => 
-        teacher.roles && teacher.roles.includes('מורה תאוריה')
+      // Check both normalized and legacy role names for backward compatibility
+      const theoryTeachers = teachersData.filter((teacher: any) =>
+        teacher.roles && teacher.roles.some((r: string) => r === 'תאוריה' || r === 'מורה תאוריה')
       )
       setTeachers(theoryTeachers)
     } catch (error) {

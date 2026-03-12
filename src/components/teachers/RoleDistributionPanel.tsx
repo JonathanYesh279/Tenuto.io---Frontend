@@ -12,7 +12,7 @@ const ROLE_COLORS: Record<string, string> = {
   'מגמה': '#ec4899',
   'ליווי פסנתר': '#ec4899',
   'הלחנה': '#f59e0b',
-  // Backward compatibility
+  // Both normalized and legacy role names for backward compatibility
   'מנצח': '#8b5cf6',
   'מורה תאוריה': '#10b981',
 }

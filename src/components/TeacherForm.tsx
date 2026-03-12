@@ -148,9 +148,9 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
         return '';
 
       case 'professionalInfo.instrument':
-        const hasTeoryRole = formData.roles.includes('מורה תאוריה');
+        const hasTeoryRole = formData.roles.includes('תאוריה');
         if (!hasTeoryRole && (!value || value.trim().length === 0)) {
-          return 'נושא הוראה נדרש (אלא אם כן התפקיד הוא מורה תאוריה)';
+          return 'נושא הוראה נדרש (אלא אם כן התפקיד הוא תאוריה)';
         }
         return '';
 
@@ -446,7 +446,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                נושא הוראה {!formData.roles.includes('מורה תאוריה') && '*'}
+                נושא הוראה {!formData.roles.includes('תאוריה') && '*'}
               </label>
               <select
                 value={formData.professionalInfo.instrument}
@@ -454,7 +454,7 @@ export default function TeacherForm({ teacher, onSubmit, onCancel, isLoading = f
                 className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-ring text-gray-900 ${
                   getFieldError('professionalInfo.instrument') ? 'border-red-500' : 'border-gray-300'
                 }`}
-                disabled={formData.roles.includes('מורה תאוריה')}
+                disabled={formData.roles.includes('תאוריה')}
               >
                 <option value="">בחר נושא הוראה</option>
                 {Object.entries(INSTRUMENT_DEPARTMENTS).map(([dept, instruments]) => (

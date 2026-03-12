@@ -64,7 +64,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
       'מגמה': 'bg-indigo-100 text-indigo-800',
       'ליווי פסנתר': 'bg-pink-100 text-pink-800',
       'הלחנה': 'bg-amber-100 text-amber-800',
-      // Backward compatibility
+      // Legacy role names — kept for backward compatibility with pre-RBAC DB records
       'מנצח': 'bg-purple-100 text-purple-800',
       'מורה תאוריה': 'bg-yellow-100 text-yellow-800'
     }
@@ -89,7 +89,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({
       'מגמה': 'bg-indigo-500',
       'ליווי פסנתר': 'bg-pink-500',
       'הלחנה': 'bg-amber-500',
-      // Backward compatibility
+      // Legacy role names — kept for backward compatibility with pre-RBAC DB records
       'מנצח': 'bg-purple-500',
       'מורה תאוריה': 'bg-yellow-500'
     }

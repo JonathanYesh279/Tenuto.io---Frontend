@@ -176,10 +176,7 @@ export default function Profile() {
 
   // Helper function to check if user is a theory teacher
   const isTheoryTeacher = () => {
-    return (
-      user?.roles?.includes('theory_teacher') ||
-      user?.roles?.includes('מורה תאוריה')
-    )
+    return user?.roles?.includes('תאוריה') || user?.roles?.includes('מורה תאוריה')
   }
 
   const getTabsByRole = (): Tab[] => {
@@ -260,7 +257,7 @@ export default function Profile() {
       case 'מורה': return 'מורה'
       case 'conductor': return 'מנצח'
       case 'מנצח': return 'מנצח'
-      case 'theory_teacher': return 'מורה תיאוריה'
+      case 'תאוריה': return 'תאוריה'
       case 'מורה תיאוריה': return 'מורה תיאוריה'
       case 'admin': return 'מנהל'
       case 'מנהל': return 'מנהל'

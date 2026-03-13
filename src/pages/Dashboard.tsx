@@ -149,13 +149,6 @@ export default function Dashboard() {
 
       const activeBagruts = bagrutsData.filter((b: any) => !b.isCompleted && b.isActive !== false).length
 
-      const maleCount = studentsData.filter((s: any) =>
-        s.personalInfo?.gender === 'male' || s.personalInfo?.gender === 'זכר'
-      ).length
-      const femaleCount = studentsData.filter((s: any) =>
-        s.personalInfo?.gender === 'female' || s.personalInfo?.gender === 'נקבה'
-      ).length
-
       setStats({
         activeStudents,
         totalStudents,
@@ -165,7 +158,7 @@ export default function Dashboard() {
         studentsTrend,
         activeBagruts,
         theoryLessonsThisWeek: weeklyTheory,
-        genderStats: { male: maleCount, female: femaleCount }
+        genderStats: { male: 0, female: 0 }
       })
 
       // ── Activities & events ──
@@ -295,8 +288,8 @@ export default function Dashboard() {
       // ── NEW: Instrument distribution from students ──
       const instrumentCounts = new Map<string, number>()
       studentsData.forEach((s: any) => {
-        const instrument = s.teacherAssignments?.[0]?.instrument
-          || s.personalInfo?.instrument
+        const instrument = s.academicInfo?.instrument
+          || s.teacherAssignments?.[0]?.instrument
           || s.instrument
         if (instrument) {
           instrumentCounts.set(instrument, (instrumentCounts.get(instrument) || 0) + 1)
@@ -562,28 +555,8 @@ export default function Dashboard() {
             </ChartCard>
           </div>
 
-          {/* Section 3: Distribution charts — Gender donut, Instrument donut, Teacher workloads */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ChartCard title="התפלגות מגדרית">
-              {stats.genderStats.male + stats.genderStats.female > 0 ? (
-                <TremorDonutChart
-                  data={[
-                    { name: 'בנים', count: stats.genderStats.male },
-                    { name: 'בנות', count: stats.genderStats.female },
-                  ]}
-                  category="name"
-                  value="count"
-                  colors={['sky', 'amber']}
-                  variant="donut"
-                  label={`${stats.totalStudents}`}
-                  showLabel
-                  className="h-44"
-                />
-              ) : (
-                <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתונים</div>
-              )}
-            </ChartCard>
-
+          {/* Section 3: Distribution charts — Instrument donut + Teacher workloads */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ChartCard title="התפלגות כלי נגינה">
               {instrumentDistribution.length > 0 ? (
                 <TremorDonutChart

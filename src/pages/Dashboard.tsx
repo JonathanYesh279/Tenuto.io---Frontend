@@ -288,8 +288,9 @@ export default function Dashboard() {
       // ── NEW: Instrument distribution from students ──
       const instrumentCounts = new Map<string, number>()
       studentsData.forEach((s: any) => {
-        const instrument = s.academicInfo?.instrument
-          || s.teacherAssignments?.[0]?.instrument
+        // Primary instrument is in academicInfo.instrumentProgress[0].instrumentName
+        const instrument = s.academicInfo?.instrumentProgress?.[0]?.instrumentName
+          || s.academicInfo?.instrument
           || s.instrument
         if (instrument) {
           instrumentCounts.set(instrument, (instrumentCounts.get(instrument) || 0) + 1)
@@ -303,18 +304,24 @@ export default function Dashboard() {
       if (otherCount > 0) instrumentData.push({ name: 'אחר', count: otherCount })
       setInstrumentDistribution(instrumentData)
 
-      // ── NEW: Teacher workloads — try hours summary API, fallback to basic data ──
+      // ── NEW: Teacher workloads — try hours summary API ──
       try {
-        const summaries = await hoursSummaryService.getAllSummaries()
-        if (Array.isArray(summaries) && summaries.length > 0) {
+        const summariesRes = await hoursSummaryService.getAllSummaries()
+        const summaries = Array.isArray(summariesRes) ? summariesRes : summariesRes?.data || []
+        if (summaries.length > 0) {
           setTeacherWorkloads(
-            summaries.slice(0, 6).map((s: any) => ({
-              name: s.teacherName || 'מורה',
-              individual: s.totals?.individualLessons || 0,
-              orchestra: s.totals?.orchestraConducting || 0,
-              theory: s.totals?.theoryTeaching || 0,
-              management: s.totals?.management || 0,
-            }))
+            summaries.slice(0, 6).map((s: any) => {
+              const name = s.teacherName
+                || (s.teacherInfo ? `${s.teacherInfo.firstName || ''} ${s.teacherInfo.lastName || ''}`.trim() : '')
+                || 'מורה'
+              return {
+                name,
+                individual: s.totals?.individualLessons || 0,
+                orchestra: s.totals?.orchestraConducting || 0,
+                theory: s.totals?.theoryTeaching || 0,
+                management: s.totals?.management || 0,
+              }
+            })
           )
         }
       } catch {

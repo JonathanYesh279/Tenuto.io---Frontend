@@ -12,7 +12,7 @@ import { StatCard } from '../components/dashboard/v4/StatCard'
 import { TeacherPerformanceTable } from '../components/dashboard/v4/TeacherPerformanceTable'
 import { AgendaWidget } from '../components/dashboard/v4/AgendaWidget'
 import { MessagesWidget } from '../components/dashboard/v4/MessagesWidget'
-import { ComboChart, TremorBarChart, TremorDonutChart, CategoryBar, Tracker } from '../components/charts'
+import { ComboChart, TremorBarChart, Tracker } from '../components/charts'
 
 interface TeacherHoursSummary {
   teacherId: string
@@ -72,7 +72,7 @@ export default function Dashboard() {
   const [activityByDay, setActivityByDay] = useState<Array<Record<string, any>>>([])
   const [comboChartData, setComboChartData] = useState<Array<Record<string, any>>>([])
   const [instrumentDistribution, setInstrumentDistribution] = useState<Array<{ name: string; count: number }>>([])
-  const [teacherWorkloads, setTeacherWorkloads] = useState<Array<{ name: string; individual: number; orchestra: number; theory: number; management: number }>>([])
+  // teacherWorkloads will be reintroduced in phase 73 (hours refactor)
   const [rehearsalHistory, setRehearsalHistory] = useState<Array<{ color?: string; tooltip?: string }>>([])
   const [sparkStudents, setSparkStudents] = useState<Array<Record<string, any>>>([])
   const [sparkTeachers, setSparkTeachers] = useState<Array<Record<string, any>>>([])
@@ -304,29 +304,7 @@ export default function Dashboard() {
       if (otherCount > 0) instrumentData.push({ name: 'אחר', count: otherCount })
       setInstrumentDistribution(instrumentData)
 
-      // ── NEW: Teacher workloads — try hours summary API ──
-      try {
-        const summariesRes = await hoursSummaryService.getAllSummaries()
-        const summaries = Array.isArray(summariesRes) ? summariesRes : summariesRes?.data || []
-        if (summaries.length > 0) {
-          setTeacherWorkloads(
-            summaries.slice(0, 6).map((s: any) => {
-              const name = s.teacherName
-                || (s.teacherInfo ? `${s.teacherInfo.firstName || ''} ${s.teacherInfo.lastName || ''}`.trim() : '')
-                || 'מורה'
-              return {
-                name,
-                individual: s.totals?.individualLessons || 0,
-                orchestra: s.totals?.orchestraConducting || 0,
-                theory: s.totals?.theoryTeaching || 0,
-                management: s.totals?.management || 0,
-              }
-            })
-          )
-        }
-      } catch {
-        // Hours summary not available — leave empty
-      }
+      // Teacher workloads will be added in phase 73 (hours import refactor)
 
       // ── NEW: 30-day rehearsal tracker ──
       const thirtyDaysAgo = new Date(today)
@@ -562,49 +540,52 @@ export default function Dashboard() {
             </ChartCard>
           </div>
 
-          {/* Section 3: Distribution charts — Instrument donut + Teacher workloads */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ChartCard title="התפלגות כלי נגינה">
-              {instrumentDistribution.length > 0 ? (
-                <TremorDonutChart
-                  data={instrumentDistribution}
-                  category="name"
-                  value="count"
-                  variant="donut"
-                  label={`${instrumentDistribution.reduce((s, d) => s + d.count, 0)}`}
-                  showLabel
-                  className="h-44"
-                />
-              ) : (
-                <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתוני כלים</div>
-              )}
-            </ChartCard>
-
-            <ChartCard title="עומס מורים (ש״ש)">
-              {teacherWorkloads.length > 0 ? (
-                <div className="space-y-3">
-                  {teacherWorkloads.slice(0, 5).map((teacher) => (
-                    <div key={teacher.name}>
-                      <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 truncate">{teacher.name}</p>
-                      <CategoryBar
-                        values={[teacher.individual, teacher.orchestra, teacher.theory, teacher.management]}
-                        colors={['indigo', 'amber', 'cyan', 'gray']}
-                        labels={['פרטני', 'תזמורת', 'תיאוריה', 'ניהול']}
-                        showLabels={false}
-                      />
+          {/* Section 3: Instrument distribution — glassmorphic horizontal bar chart */}
+          <div
+            className="relative rounded-2xl overflow-hidden border border-white/60 dark:border-white/20 p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.3) 35%, rgba(186,230,253,0.3) 65%, rgba(255,255,255,0.45) 100%)',
+              boxShadow: '0 8px 32px rgba(0,170,160,0.12), 0 2px 8px rgba(0,140,210,0.08), inset 0 1px 1px rgba(255,255,255,0.9)',
+            }}
+          >
+            {/* Glossy top reflection */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-[40%] rounded-t-2xl" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)' }} />
+            <h3 className="relative text-base font-bold text-slate-900 dark:text-white mb-4">התפלגות כלי נגינה</h3>
+            {instrumentDistribution.length > 0 ? (
+              <div className="relative space-y-2.5">
+                {instrumentDistribution.map((item, i) => {
+                  const maxCount = Math.max(...instrumentDistribution.map(d => d.count))
+                  const pct = maxCount > 0 ? (item.count / maxCount) * 100 : 0
+                  const barColors = [
+                    'from-indigo-400 to-indigo-500',
+                    'from-emerald-400 to-emerald-500',
+                    'from-amber-400 to-amber-500',
+                    'from-sky-400 to-sky-500',
+                    'from-rose-400 to-rose-500',
+                    'from-violet-400 to-violet-500',
+                    'from-cyan-400 to-cyan-500',
+                    'from-lime-400 to-lime-500',
+                    'from-pink-400 to-pink-500',
+                  ]
+                  const gradient = barColors[i % barColors.length]
+                  return (
+                    <div key={item.name} className="flex items-center gap-3">
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-300 w-16 text-left truncate">{item.name}</span>
+                      <div className="flex-1 h-6 rounded-full bg-white/40 dark:bg-white/10 backdrop-blur-sm overflow-hidden">
+                        <div
+                          className={`h-full rounded-full bg-gradient-to-l ${gradient} transition-all duration-700 ease-out flex items-center justify-start px-2`}
+                          style={{ width: `${Math.max(pct, 8)}%` }}
+                        >
+                          <span className="text-[10px] font-bold text-white drop-shadow-sm">{item.count}</span>
+                        </div>
+                      </div>
                     </div>
-                  ))}
-                  <div className="flex gap-3 text-[10px] text-slate-400 pt-1">
-                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />פרטני</span>
-                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" />תזמורת</span>
-                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />תיאוריה</span>
-                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-gray-500" />ניהול</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתוני שעות</div>
-              )}
-            </ChartCard>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתוני כלים</div>
+            )}
           </div>
 
           {/* Section 4: Teacher table + Rehearsal tracker */}

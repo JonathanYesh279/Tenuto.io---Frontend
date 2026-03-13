@@ -16,7 +16,7 @@
 @layer base {
   :root {
     /* Cool neutral palette */
-    --background: 213 100% 97%;         /* light blue #F0F7FF */
+    --background: 0 0% 98%;              /* near-white #FAFAFA */
     --foreground: 220 15% 11%;         /* near-black, cool */
     --card: 0 0% 100%;                 /* white */
     --card-foreground: 220 15% 11%;
@@ -258,6 +258,43 @@ body::-webkit-scrollbar-thumb:hover {
   background-color: rgb(156 163 175);  /* Darker gray on hover - Tailwind gray-400 */
 }
 
+/* Border glow effect — mouse-tracking radial glow on hover */
+.border-glow {
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-opacity: 0;
+}
+
+.border-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: radial-gradient(
+    200px circle at var(--glow-x) var(--glow-y),
+    rgba(99, 102, 241, var(--glow-opacity)) 0%,
+    rgba(99, 102, 241, calc(var(--glow-opacity) * 0.4)) 40%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 10;
+  transition: --glow-opacity 0.3s ease;
+}
+
+.dark .border-glow::after {
+  background: radial-gradient(
+    200px circle at var(--glow-x) var(--glow-y),
+    rgba(129, 140, 248, var(--glow-opacity)) 0%,
+    rgba(129, 140, 248, calc(var(--glow-opacity) * 0.4)) 40%,
+    transparent 70%
+  );
+}
+
 /* Toast Animation */
 @keyframes slide-down {
   from {
@@ -374,6 +411,19 @@ body::-webkit-scrollbar-thumb:hover {
 .animate-table-rows tbody tr:nth-child(9)  { animation-delay: 320ms; }
 .animate-table-rows tbody tr:nth-child(10) { animation-delay: 360ms; }
 .animate-table-rows tbody tr:nth-child(n+11) { animation-delay: 400ms; }
+
+@keyframes marquee {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  animation: marquee 12s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
 
 /* Reduced motion — WAI-ARIA accessibility pattern (A11Y-04) */
 /* Migrated from globals.css (dead file removed in Phase 06-02) */

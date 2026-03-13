@@ -357,7 +357,7 @@ export default function Dashboard() {
       }
       setRehearsalHistory(trackerData)
 
-      // ── NEW: Spark data per stat — 6-month rolling aggregation ──
+      // ── NEW: Spark data per stat — 6-month rolling, zero-filled ──
       const buildSparkData = (items: any[], dateField: string) => {
         const buckets = new Map<string, number>()
         items.forEach((item: any) => {
@@ -367,10 +367,15 @@ export default function Dashboard() {
           const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
           buckets.set(key, (buckets.get(key) || 0) + 1)
         })
-        return [...buckets.entries()]
-          .sort((a, b) => a[0].localeCompare(b[0]))
-          .slice(-6)
-          .map(([key, value]) => ({ month: hebrewMonthNames[key.split('-')[1]] || key, value }))
+        // Always generate 6 months of data, filling missing months with 0
+        const months: Array<{ month: string; value: number }> = []
+        for (let i = 5; i >= 0; i--) {
+          const d = new Date(today.getFullYear(), today.getMonth() - i, 1)
+          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+          const monthLabel = hebrewMonthNames[String(d.getMonth() + 1).padStart(2, '0')] || key
+          months.push({ month: monthLabel, value: buckets.get(key) || 0 })
+        }
+        return months
       }
 
       setSparkStudents(buildSparkData(studentsData, 'createdAt'))

@@ -46,7 +46,7 @@ function TeacherRow({ teacher }: { teacher: Teacher }) {
         <User
           avatarProps={{
             radius: 'full',
-            size: 'sm',
+            size: 'md',
             showFallback: true,
             name: teacher.name,
             color: getAvatarColor(teacher.name),

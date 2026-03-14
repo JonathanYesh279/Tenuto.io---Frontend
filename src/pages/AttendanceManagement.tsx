@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
   UsersIcon,
   ChartBarIcon,
@@ -6,6 +6,8 @@ import {
   CalendarIcon,
   MusicNoteIcon,
   CaretRightIcon,
+  CaretDownIcon,
+  CheckIcon,
   CheckCircleIcon,
   ClockIcon,
   CaretLeftIcon,
@@ -23,8 +25,8 @@ import {
   Chip,
 } from '@heroui/react'
 import { GlassStatCard } from '../components/ui/GlassStatCard'
-import { GlassSelect } from '../components/ui/GlassSelect'
 import { SearchInput } from '../components/ui/SearchInput'
+import { cn } from '@/lib/utils'
 import { Badge } from '../components/ui/badge'
 import AttendanceManager from '../components/AttendanceManager'
 import { BarChart } from '../components/charts/HebrewCharts'
@@ -109,6 +111,94 @@ function getDefaultDateRange() {
   }
 }
 
+// Multi-select dropdown for orchestra filtering
+function OrchestraMultiSelect({
+  selected,
+  onChange,
+  options,
+}: {
+  selected: string[]
+  onChange: (ids: string[]) => void
+  options: { value: string; label: string }[]
+}) {
+  const [open, setOpen] = React.useState(false)
+  const ref = React.useRef<HTMLDivElement>(null)
+
+  // Close on outside click
+  React.useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  const toggle = (id: string) => {
+    onChange(selected.includes(id) ? selected.filter(v => v !== id) : [...selected, id])
+  }
+
+  const label = selected.length === 0
+    ? 'כל התזמורות'
+    : selected.length === 1
+      ? options.find(o => o.value === selected[0])?.label || '1 תזמורת'
+      : `${selected.length} תזמורות`
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className={cn(
+          'relative inline-flex h-9 items-center justify-between gap-2 rounded-md px-4 py-2 text-sm font-medium',
+          'backdrop-blur-2xl border border-white/70 dark:border-white/20',
+          'text-slate-700 dark:text-slate-200',
+          'outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
+          'hover:border-white/90 cursor-pointer overflow-hidden',
+        )}
+        style={{
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(186,230,253,0.25) 50%, rgba(255,255,255,0.5) 100%)',
+          boxShadow: '0 4px 16px rgba(0,140,210,0.1), 0 2px 6px rgba(0,140,210,0.06), inset 0 1px 2px rgba(255,255,255,0.95)',
+        }}
+      >
+        <span className="relative z-10">{label}</span>
+        <CaretDownIcon className={cn('h-3.5 w-3.5 opacity-50 transition-transform relative z-10', open && 'rotate-180')} />
+      </button>
+
+      {open && (
+        <div
+          className="absolute top-full mt-2 z-50 min-w-[220px] max-h-72 overflow-auto rounded-2xl border border-white/70 dark:border-white/20 backdrop-blur-2xl p-1.5"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(240,247,255,0.85) 50%, rgba(255,255,255,0.8) 100%)',
+            boxShadow: '0 20px 60px rgba(0,140,210,0.15), 0 8px 24px rgba(0,140,210,0.08)',
+          }}
+        >
+          {options.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => toggle(opt.value)}
+              className={cn(
+                'flex w-full items-center gap-2 rounded-xl py-2.5 px-3 text-sm transition-all duration-150',
+                'text-slate-600 dark:text-slate-300 hover:bg-primary/5',
+                selected.includes(opt.value) && 'text-primary font-semibold bg-primary/5',
+              )}
+            >
+              <span className={cn(
+                'w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors',
+                selected.includes(opt.value)
+                  ? 'bg-primary border-primary text-white'
+                  : 'border-slate-300 dark:border-slate-600',
+              )}>
+                {selected.includes(opt.value) && <CheckIcon size={10} weight="bold" />}
+              </span>
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function AttendanceManagement() {
   // Core data
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
@@ -116,7 +206,7 @@ export default function AttendanceManagement() {
   const [error, setError] = useState<string | null>(null)
 
   // Filters
-  const [orchestraFilter, setOrchestraFilter] = useState('')
+  const [orchestraFilter, setOrchestraFilter] = useState<string[]>([])
   const [dateRange, setDateRange] = useState(getDefaultDateRange)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -223,8 +313,8 @@ export default function AttendanceManagement() {
   const filteredOrchestras = useMemo(() => {
     if (!dashboardData?.perOrchestra) return []
     let filtered = dashboardData.perOrchestra
-    if (orchestraFilter) {
-      filtered = filtered.filter(o => o.orchestraId === orchestraFilter)
+    if (orchestraFilter.length > 0) {
+      filtered = filtered.filter(o => orchestraFilter.includes(o.orchestraId))
     }
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
@@ -247,8 +337,8 @@ export default function AttendanceManagement() {
   const filteredFlagged = useMemo(() => {
     if (!dashboardData?.flaggedStudents) return []
     let filtered = dashboardData.flaggedStudents
-    if (orchestraFilter) {
-      filtered = filtered.filter(s => s.orchestraId === orchestraFilter)
+    if (orchestraFilter.length > 0) {
+      filtered = filtered.filter(s => orchestraFilter.includes(s.orchestraId))
     }
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
@@ -329,10 +419,10 @@ export default function AttendanceManagement() {
           size="sm"
         />
         <GlassStatCard
-          value={orchestraFilter || searchQuery ? filteredFlagged.length : (summary?.totalFlagged ?? 0)}
+          value={orchestraFilter.length > 0 || searchQuery ? filteredFlagged.length : (summary?.totalFlagged ?? 0)}
           label="תלמידים בסיכון"
           size="sm"
-          valueClassName={(orchestraFilter || searchQuery ? filteredFlagged.length : (summary?.totalFlagged ?? 0)) > 0 ? 'text-red-600' : undefined}
+          valueClassName={(orchestraFilter.length > 0 || searchQuery ? filteredFlagged.length : (summary?.totalFlagged ?? 0)) > 0 ? 'text-red-600' : undefined}
         />
         <GlassStatCard
           value={summary?.totalStudentsTracked ?? 0}
@@ -393,14 +483,10 @@ export default function AttendanceManagement() {
             placeholder="חיפוש..."
           />
         </div>
-        <GlassSelect
-          value={orchestraFilter || '__all__'}
-          onValueChange={(v: string) => setOrchestraFilter(v === '__all__' ? '' : v)}
-          placeholder="כל התזמורות"
-          options={[
-            { value: '__all__', label: 'כל התזמורות' },
-            ...orchestraOptions,
-          ]}
+        <OrchestraMultiSelect
+          selected={orchestraFilter}
+          onChange={setOrchestraFilter}
+          options={orchestraOptions}
         />
         <input
           type="date"
@@ -415,13 +501,13 @@ export default function AttendanceManagement() {
           onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
           className="border border-border rounded px-3 py-1.5 text-sm bg-white dark:bg-slate-800 text-foreground"
         />
-        {(orchestraFilter || searchQuery || dateRange.startDate !== getDefaultDateRange().startDate || dateRange.endDate !== getDefaultDateRange().endDate) && (
+        {(orchestraFilter.length > 0 || searchQuery || dateRange.startDate !== getDefaultDateRange().startDate || dateRange.endDate !== getDefaultDateRange().endDate) && (
           <HeroButton
             size="sm"
             variant="flat"
             color="default"
             onPress={() => {
-              setOrchestraFilter('')
+              setOrchestraFilter([])
               setSearchQuery('')
               setDateRange(getDefaultDateRange())
             }}

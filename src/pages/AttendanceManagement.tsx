@@ -35,6 +35,7 @@ import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
 import { attendanceAlertService, rehearsalService, orchestraService } from '../services/apiService'
+import { getAvatarColorHex } from '../utils/avatarColorHash'
 
 // Types for dashboard API response
 interface OrchestraStats {
@@ -767,8 +768,8 @@ export default function AttendanceManagement() {
                           return (
                             <TableCell>
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#082753' }}>
-                                  <UsersIcon size={16} weight="regular" className="text-white" />
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold" style={{ backgroundColor: getAvatarColorHex(item.studentName || '') }}>
+                                  {item.studentName?.charAt(0) || ''}
                                 </div>
                                 <span className="font-medium text-slate-900 dark:text-white">{item.studentName}</span>
                               </div>

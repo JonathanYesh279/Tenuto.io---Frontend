@@ -5279,7 +5279,7 @@ export const hoursSummaryService = {
 
   async calculateAll() {
     try {
-      const response = await apiClient.post('/hours-summary/calculate');
+      const response = await apiClient.request('POST', '/hours-summary/calculate', { timeout: 120000 });
       console.log('✅ Recalculated all hours summaries');
       return response;
     } catch (error) {

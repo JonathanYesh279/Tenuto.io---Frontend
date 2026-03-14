@@ -581,8 +581,8 @@ export default function AttendanceManagement() {
                           return (
                             <TableCell>
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-full bg-orchestras-bg text-orchestras-fg flex items-center justify-center flex-shrink-0">
-                                  <MusicNoteIcon size={16} weight="regular" />
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#46ab7d' }}>
+                                  <MusicNoteIcon size={16} weight="regular" className="text-white" />
                                 </div>
                                 <span className="font-medium text-slate-900 dark:text-white">{item.orchestraName}</span>
                               </div>

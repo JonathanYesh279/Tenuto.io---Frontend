@@ -9,6 +9,7 @@ import TeacherDashboard from '../components/dashboard/TeacherDashboard'
 import TheoryTeacherDashboard from '../components/dashboard/TheoryTeacherDashboard'
 import SuperAdminDashboard from '../components/dashboard/SuperAdminDashboard'
 import { StatCard } from '../components/dashboard/v4/StatCard'
+import { TeacherPerformanceTable } from '../components/dashboard/v4/TeacherPerformanceTable'
 import { AgendaWidget } from '../components/dashboard/v4/AgendaWidget'
 import { MessagesWidget } from '../components/dashboard/v4/MessagesWidget'
 import { ComboChart, TremorBarChart } from '../components/charts'
@@ -518,7 +519,15 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Section 2: Primary charts — ComboChart + Activity BarChart */}
+          {/* Section 2: Teacher performance table */}
+          <TeacherPerformanceTable
+            teachers={teacherTableData}
+            loading={loading}
+            isRecalculating={isRecalculating}
+            onRecalculate={handleRecalculateHours}
+          />
+
+          {/* Section 3: Primary charts — ComboChart + Activity BarChart */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             <ChartCard title="רישומים ופעילות חודשית">
               {loading ? (

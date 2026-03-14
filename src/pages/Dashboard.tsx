@@ -9,10 +9,9 @@ import TeacherDashboard from '../components/dashboard/TeacherDashboard'
 import TheoryTeacherDashboard from '../components/dashboard/TheoryTeacherDashboard'
 import SuperAdminDashboard from '../components/dashboard/SuperAdminDashboard'
 import { StatCard } from '../components/dashboard/v4/StatCard'
-import { TeacherPerformanceTable } from '../components/dashboard/v4/TeacherPerformanceTable'
 import { AgendaWidget } from '../components/dashboard/v4/AgendaWidget'
 import { MessagesWidget } from '../components/dashboard/v4/MessagesWidget'
-import { ComboChart, TremorBarChart, Tracker } from '../components/charts'
+import { ComboChart, TremorBarChart } from '../components/charts'
 import type { BarClickPayload } from '../components/charts/TremorBarChart'
 
 const hebrewMonthNames: Record<string, string> = {
@@ -339,7 +338,7 @@ export default function Dashboard() {
         } else if (rehearsalDates.has(d.toDateString())) {
           trackerData.push({ color: 'bg-emerald-500', tooltip: `${dateStr} — חזרה התקיימה` })
         } else if (d <= today) {
-          trackerData.push({ color: 'bg-rose-400', tooltip: `${dateStr} — אין חזרה` })
+          trackerData.push({ color: 'bg-rose-500', tooltip: `${dateStr} — אין חזרה` })
         } else {
           trackerData.push({ color: 'bg-slate-200 dark:bg-slate-700', tooltip: `${dateStr} — עתידי` })
         }
@@ -634,73 +633,84 @@ export default function Dashboard() {
             </ChartCard>
           </div>
 
-          {/* Section 3: Instrument distribution — glassmorphic horizontal bar chart */}
-          <div
-            className="relative rounded-2xl overflow-hidden border border-white/60 dark:border-white/20 p-6"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.3) 35%, rgba(186,230,253,0.3) 65%, rgba(255,255,255,0.45) 100%)',
-              boxShadow: '0 8px 32px rgba(0,170,160,0.12), 0 2px 8px rgba(0,140,210,0.08), inset 0 1px 1px rgba(255,255,255,0.9)',
-            }}
-          >
-            {/* Glossy top reflection */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-[40%] rounded-t-2xl" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)' }} />
-            <h3 className="relative text-base font-bold text-slate-900 dark:text-white mb-4">התפלגות כלי נגינה</h3>
-            {instrumentDistribution.length > 0 ? (
-              <div className="relative space-y-2.5">
-                {instrumentDistribution.map((item, i) => {
-                  const maxCount = Math.max(...instrumentDistribution.map(d => d.count))
-                  const pct = maxCount > 0 ? (item.count / maxCount) * 100 : 0
-                  const barColors = [
-                    'from-indigo-400 to-indigo-500',
-                    'from-emerald-400 to-emerald-500',
-                    'from-amber-400 to-amber-500',
-                    'from-sky-400 to-sky-500',
-                    'from-rose-400 to-rose-500',
-                    'from-violet-400 to-violet-500',
-                    'from-cyan-400 to-cyan-500',
-                    'from-lime-400 to-lime-500',
-                    'from-pink-400 to-pink-500',
-                  ]
-                  const gradient = barColors[i % barColors.length]
-                  return (
-                    <div key={item.name} className="flex items-center gap-3">
-                      <span className="text-xs font-medium text-slate-600 dark:text-slate-300 w-16 text-left truncate">{item.name}</span>
-                      <div className="flex-1 h-6 rounded-full bg-white/40 dark:bg-white/10 backdrop-blur-sm overflow-hidden">
-                        <div
-                          className={`h-full rounded-full bg-gradient-to-l ${gradient} transition-all duration-700 ease-out flex items-center justify-start px-2`}
-                          style={{ width: `${Math.max(pct, 8)}%` }}
-                        >
-                          <span className="text-[10px] font-bold text-white drop-shadow-sm">{item.count}</span>
+          {/* Section 3: Instrument distribution + Rehearsal tracker — even 2 columns */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            {/* Instrument distribution — glassmorphic horizontal bar chart */}
+            <div
+              className="relative rounded-2xl overflow-hidden border border-white/60 dark:border-white/20 p-6"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.3) 35%, rgba(186,230,253,0.3) 65%, rgba(255,255,255,0.45) 100%)',
+                boxShadow: '0 8px 32px rgba(0,170,160,0.12), 0 2px 8px rgba(0,140,210,0.08), inset 0 1px 1px rgba(255,255,255,0.9)',
+              }}
+            >
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-[40%] rounded-t-2xl" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)' }} />
+              <h3 className="relative text-base font-bold text-slate-900 dark:text-white mb-4">התפלגות כלי נגינה</h3>
+              {instrumentDistribution.length > 0 ? (
+                <div className="relative space-y-2.5">
+                  {instrumentDistribution.map((item, i) => {
+                    const maxCount = Math.max(...instrumentDistribution.map(d => d.count))
+                    const pct = maxCount > 0 ? (item.count / maxCount) * 100 : 0
+                    const barColors = [
+                      'from-indigo-400 to-indigo-500',
+                      'from-emerald-400 to-emerald-500',
+                      'from-amber-400 to-amber-500',
+                      'from-sky-400 to-sky-500',
+                      'from-rose-400 to-rose-500',
+                      'from-violet-400 to-violet-500',
+                      'from-cyan-400 to-cyan-500',
+                      'from-lime-400 to-lime-500',
+                      'from-pink-400 to-pink-500',
+                    ]
+                    const gradient = barColors[i % barColors.length]
+                    return (
+                      <div key={item.name} className="flex items-center gap-3">
+                        <span className="text-xs font-medium text-slate-600 dark:text-slate-300 w-16 text-left truncate">{item.name}</span>
+                        <div className="flex-1 h-6 rounded-full bg-white/40 dark:bg-white/10 backdrop-blur-sm overflow-hidden">
+                          <div
+                            className={`h-full rounded-full bg-gradient-to-l ${gradient} transition-all duration-700 ease-out flex items-center justify-start px-2`}
+                            style={{ width: `${Math.max(pct, 8)}%` }}
+                          >
+                            <span className="text-[10px] font-bold text-white drop-shadow-sm">{item.count}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )
-                })}
-              </div>
-            ) : (
-              <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתוני כלים</div>
-            )}
-          </div>
-
-          {/* Section 4: Teacher table + Rehearsal tracker */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="xl:col-span-2">
-              <TeacherPerformanceTable
-                teachers={teacherTableData}
-                loading={loading}
-                isRecalculating={isRecalculating}
-                onRecalculate={handleRecalculateHours}
-              />
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתוני כלים</div>
+              )}
             </div>
+
+            {/* Rehearsal tracker — 30 days */}
             <ChartCard title="חזרות — 30 יום אחרונים">
               {rehearsalHistory.length > 0 ? (
                 <div>
-                  <Tracker data={rehearsalHistory} />
-                  <div className="flex gap-3 text-[10px] text-slate-400 mt-3">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-emerald-500" />התקיימה</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-rose-400" />לא התקיימה</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-slate-200 dark:bg-slate-700" />סוף שבוע / עתידי</span>
+                  <div className="flex gap-1">
+                    {rehearsalHistory.map((block, i) => (
+                      <div
+                        key={i}
+                        className={`h-12 flex-1 rounded transition-all hover:scale-y-110 hover:opacity-90 ${block.color ?? 'bg-slate-200 dark:bg-slate-700'}`}
+                        title={block.tooltip}
+                      />
+                    ))}
                   </div>
+                  <div className="flex gap-4 text-xs text-slate-500 mt-4 justify-center">
+                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-500" />התקיימה</span>
+                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-rose-500" />לא התקיימה</span>
+                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-slate-200 dark:bg-slate-700" />סוף שבוע / עתידי</span>
+                  </div>
+                  {(() => {
+                    const held = rehearsalHistory.filter(b => b.color === 'bg-emerald-500').length
+                    const missed = rehearsalHistory.filter(b => b.color === 'bg-rose-500').length
+                    const total = held + missed
+                    const rate = total > 0 ? Math.round((held / total) * 100) : 0
+                    return total > 0 ? (
+                      <p className="text-center text-sm text-slate-500 mt-3">
+                        <span className="font-semibold text-slate-700 dark:text-white">{rate}%</span> אחוז קיום ({held} מתוך {total})
+                      </p>
+                    ) : null
+                  })()}
                 </div>
               ) : (
                 <div className="h-20 flex items-center justify-center text-sm text-slate-400">אין נתוני חזרות</div>

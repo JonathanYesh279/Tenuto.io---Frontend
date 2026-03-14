@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ClockIcon, ArrowsClockwiseIcon, WarningCircleIcon, MoonIcon } from '@phosphor-icons/react'
+import { MoonIcon } from '@phosphor-icons/react'
 import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
@@ -13,19 +13,6 @@ import { TeacherPerformanceTable } from '../components/dashboard/v4/TeacherPerfo
 import { AgendaWidget } from '../components/dashboard/v4/AgendaWidget'
 import { MessagesWidget } from '../components/dashboard/v4/MessagesWidget'
 import { ComboChart, TremorBarChart, Tracker } from '../components/charts'
-
-interface TeacherHoursSummary {
-  teacherId: string
-  teacherName: string
-  totals: {
-    totalWeeklyHours: number
-    individualLessons: number
-    orchestraConducting: number
-    theoryTeaching: number
-    management: number
-  }
-  calculatedAt: string
-}
 
 const hebrewMonthNames: Record<string, string> = {
   '01': "ינו'", '02': "פבר'", '03': 'מרץ', '04': "אפר'",
@@ -61,9 +48,6 @@ export default function Dashboard() {
   })
   const [recentActivities, setRecentActivities] = useState<any[]>([])
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
-  const [hoursSummaries, setHoursSummaries] = useState<TeacherHoursSummary[]>([])
-  const [hoursLoading, setHoursLoading] = useState(false)
-  const [hoursError, setHoursError] = useState<string | null>(null)
   const [isRecalculating, setIsRecalculating] = useState(false)
   const [teacherTableData, setTeacherTableData] = useState<any[]>([])
   const [agendaData, setAgendaData] = useState<any[]>([])
@@ -72,7 +56,6 @@ export default function Dashboard() {
   const [activityByDay, setActivityByDay] = useState<Array<Record<string, any>>>([])
   const [comboChartData, setComboChartData] = useState<Array<Record<string, any>>>([])
   const [instrumentDistribution, setInstrumentDistribution] = useState<Array<{ name: string; count: number }>>([])
-  // teacherWorkloads will be reintroduced in phase 73 (hours refactor)
   const [rehearsalHistory, setRehearsalHistory] = useState<Array<{ color?: string; tooltip?: string }>>([])
   const [sparkStudents, setSparkStudents] = useState<Array<Record<string, any>>>([])
   const [sparkTeachers, setSparkTeachers] = useState<Array<Record<string, any>>>([])
@@ -205,13 +188,13 @@ export default function Dashboard() {
         isPrimary: false
       })))
 
-      // Teacher table
-      const teacherTable = teachersData.slice(0, 6).map((t: any) => ({
+      // Teacher table — includes weeklyHours from Phase 73 dual-write
+      const teacherTable = teachersData.map((t: any) => ({
         id: t._id,
         name: getDisplayName(t.personalInfo) || 'מורה',
         department: t.professionalInfo?.instrument || t.teaching?.instruments?.[0] || '—',
-        studentCount: t.teaching?.studentIds?.length || 0,
-        rating: t.professionalInfo?.rating || null,
+        studentCount: t.studentCount || t.teaching?.studentIds?.length || 0,
+        weeklyHours: t.weeklyHoursSummary?.totalWeeklyHours || 0,
         isActive: t.isActive !== false,
         avatarUrl: t.personalInfo?.avatarUrl || null,
       }))
@@ -304,7 +287,7 @@ export default function Dashboard() {
       if (otherCount > 0) instrumentData.push({ name: 'אחר', count: otherCount })
       setInstrumentDistribution(instrumentData)
 
-      // Teacher workloads will be added in phase 73 (hours import refactor)
+      // Teacher workload data flows through weeklyHoursSummary on teacher docs (Phase 73/74)
 
       // ── NEW: 30-day rehearsal tracker ──
       const thirtyDaysAgo = new Date(today)
@@ -372,6 +355,18 @@ export default function Dashboard() {
 
   const handleRefresh = () => {
     loadDashboardData()
+  }
+
+  const handleRecalculateHours = async () => {
+    setIsRecalculating(true)
+    try {
+      await hoursSummaryService.calculateAll()
+      await loadDashboardData()
+    } catch (err) {
+      console.error('Error recalculating hours:', err)
+    } finally {
+      setIsRecalculating(false)
+    }
   }
 
   const getRelativeTime = (date: string | Date) => {
@@ -591,7 +586,12 @@ export default function Dashboard() {
           {/* Section 4: Teacher table + Rehearsal tracker */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div className="xl:col-span-2">
-              <TeacherPerformanceTable teachers={teacherTableData} loading={loading} />
+              <TeacherPerformanceTable
+                teachers={teacherTableData}
+                loading={loading}
+                isRecalculating={isRecalculating}
+                onRecalculate={handleRecalculateHours}
+              />
             </div>
             <ChartCard title="חזרות — 30 יום אחרונים">
               {rehearsalHistory.length > 0 ? (
@@ -630,108 +630,6 @@ export default function Dashboard() {
       >
         <MoonIcon weight="fill" className="text-primary dark:text-amber-400" size={20} />
       </button>
-    </div>
-  )
-}
-
-function AdminHoursOverview({
-  hoursSummaries,
-  loading,
-  error,
-  isRecalculating,
-  onLoad,
-  onRecalculateAll
-}: {
-  hoursSummaries: TeacherHoursSummary[]
-  loading: boolean
-  error: string | null
-  isRecalculating: boolean
-  onLoad: () => void
-  onRecalculateAll: () => void
-}) {
-  useEffect(() => {
-    if (hoursSummaries.length === 0 && !loading && !error) {
-      onLoad()
-    }
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="text-center py-12 text-muted-foreground">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        טוען נתוני שעות...
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center py-12 text-center">
-        <WarningCircleIcon size={48} weight="fill" className="text-red-400 mb-4" />
-        <h3 className="text-lg font-medium text-foreground mb-2">שגיאה בטעינת נתוני שעות</h3>
-        <p className="text-muted-foreground mb-4">{error}</p>
-        <button
-          onClick={onLoad}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800"
-        >
-          <ArrowsClockwiseIcon size={16} weight="regular" />
-          נסה שוב
-        </button>
-      </div>
-    )
-  }
-
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm text-muted-foreground">שעות שבועיות — כל המורים</span>
-        <button
-          onClick={onRecalculateAll}
-          disabled={isRecalculating}
-          className="flex items-center gap-2 px-4 py-2 text-sm bg-muted text-foreground border border-border rounded hover:bg-muted/80 disabled:opacity-50"
-        >
-          <ArrowsClockwiseIcon size={16} weight="regular" className={isRecalculating ? 'animate-spin' : ''} />
-          {isRecalculating ? 'מחשב...' : 'חשב מחדש הכל'}
-        </button>
-      </div>
-
-      {hoursSummaries.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
-          <ClockIcon size={48} weight="regular" className="mx-auto mb-3 text-muted-foreground/40" />
-          <p>לא נמצאו נתוני שעות. לחץ "חשב מחדש הכל" ליצירת חישוב ראשוני.</p>
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border">
-              <tr>
-                <th className="text-right px-4 py-3 font-medium text-muted-foreground">מורה</th>
-                <th className="text-right px-4 py-3 font-medium text-muted-foreground">סה"כ ש"ש</th>
-                <th className="text-right px-4 py-3 font-medium text-muted-foreground">פרטניים</th>
-                <th className="text-right px-4 py-3 font-medium text-muted-foreground">תזמורות</th>
-                <th className="text-right px-4 py-3 font-medium text-muted-foreground">תיאוריה</th>
-                <th className="text-right px-4 py-3 font-medium text-muted-foreground">ניהול</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {hoursSummaries.map((summary) => (
-                <tr key={summary.teacherId} className="hover:bg-muted/50">
-                  <td className="px-4 py-3 text-foreground font-medium">{summary.teacherName}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center px-2.5 py-0.5 text-sm font-bold bg-muted text-foreground">
-                      {summary.totals.totalWeeklyHours}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.individualLessons}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.orchestraConducting}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.theoryTeaching}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{summary.totals.management}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
     </div>
   )
 }

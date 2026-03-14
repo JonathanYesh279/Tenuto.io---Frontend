@@ -8,6 +8,8 @@ interface GlassStatCardProps {
   trend?: string
   loading?: boolean
   className?: string
+  /** Override color for the value text (e.g. 'text-red-600' for alerts) */
+  valueClassName?: string
   /** 'default' for dashboard, 'sm' for list pages */
   size?: 'default' | 'sm'
   /** Optional spark trend data — replaces the static SVG icon */
@@ -16,7 +18,7 @@ interface GlassStatCardProps {
   sparkColor?: ChartColorKey
 }
 
-export const GlassStatCard: React.FC<GlassStatCardProps> = ({ value, label, trend, loading = false, className = '', size = 'default', sparkData, sparkColor = 'indigo' }) => {
+export const GlassStatCard: React.FC<GlassStatCardProps> = ({ value, label, trend, loading = false, className = '', valueClassName, size = 'default', sparkData, sparkColor = 'indigo' }) => {
   const isSmall = size === 'sm'
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -121,7 +123,7 @@ export const GlassStatCard: React.FC<GlassStatCardProps> = ({ value, label, tren
           </svg>
         )}
       </div>
-      <h3 className={`relative font-extrabold text-slate-900 dark:text-white mb-0.5 ${isSmall ? 'text-2xl' : 'text-2xl'}`}>
+      <h3 className={`relative font-extrabold mb-0.5 ${isSmall ? 'text-2xl' : 'text-2xl'} ${valueClassName || 'text-slate-900 dark:text-white'}`}>
         {typeof value === 'number' ? value.toLocaleString('he-IL') : value}
       </h3>
       <p className={`relative font-bold text-teal-800/80 dark:text-teal-200/60 ${isSmall ? 'text-xs' : 'text-xs'}`}>{label}</p>

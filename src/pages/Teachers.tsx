@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { PlusIcon, CircleNotchIcon, UsersIcon, SquaresFourIcon, ListIcon, ArrowUpRightIcon, PencilLineIcon, TrashIcon } from '@phosphor-icons/react'
+import { PlusIcon, CircleNotchIcon, UsersIcon, SquaresFourIcon, ListIcon, ArrowUpRightIcon, PencilLineIcon, TrashIcon, ArrowsClockwise as ArrowsClockwiseIcon } from '@phosphor-icons/react'
 import {
   Table as HeroTable,
   TableHeader,
@@ -21,10 +21,11 @@ import { GlassSelect } from '../components/ui/GlassSelect'
 import TeacherCard from '../components/TeacherCard'
 import AddTeacherModal from '../components/modals/AddTeacherModal'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
-import apiService from '../services/apiService'
+import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
 import { getDisplayName } from '../utils/nameUtils'
+import { getWorkloadColor } from '../utils/workloadColors'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
@@ -45,6 +46,8 @@ interface Teacher {
   ensembleCount: number
   availabilityDays: string[]
   totalTeachingHours: number
+  weeklyHours: number
+  hoursCalculated: boolean
   loginCount: number
   lastLogin: string | null
   rawData: any
@@ -99,6 +102,7 @@ export default function Teachers() {
   const [modalMode, setModalMode] = useState<'add' | 'edit'>('add')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [teacherToDelete, setTeacherToDelete] = useState<Teacher | null>(null)
+  const [isRecalculating, setIsRecalculating] = useState(false)
 
   // Debounce search term - wait 500ms after user stops typing
   useEffect(() => {
@@ -175,6 +179,8 @@ export default function Teachers() {
         ensembleCount: teacher.ensembleCount || 0,
         availabilityDays: teacher.availabilityDays || [],
         totalTeachingHours: Math.round((teacher.totalTeachingHours / 60) * 10) / 10 || 0,
+        weeklyHours: teacher.weeklyHoursSummary?.totalWeeklyHours || 0,
+        hoursCalculated: teacher.weeklyHoursSummary != null,
         loginCount: teacher.loginCount || 0,
         lastLogin: teacher.lastLogin || null,
         rawData: teacher,
@@ -256,6 +262,18 @@ export default function Teachers() {
     }
   }
 
+  const handleRecalculateAll = async () => {
+    setIsRecalculating(true)
+    try {
+      await hoursSummaryService.calculateAll()
+      await loadTeachers()
+    } catch (err) {
+      console.error('Error recalculating hours:', err)
+    } finally {
+      setIsRecalculating(false)
+    }
+  }
+
   // Reload teachers when filters or debounced search change
   useEffect(() => {
     if (!schoolYearLoading) {
@@ -283,9 +301,10 @@ export default function Teachers() {
       .map(t => t.specialization)
       .filter(s => s && s !== 'לא צוין')
   ).size
-  const avgStudentsPerTeacher = activeTeachers > 0
-    ? Math.round(teachers.reduce((sum, t) => sum + t.studentCount, 0) / activeTeachers * 10) / 10
+  const avgWeeklyHours = activeTeachers > 0
+    ? Math.round(teachers.reduce((sum, t) => sum + t.weeklyHours, 0) / activeTeachers * 10) / 10
     : 0
+  const overloadedTeachers = teachers.filter(t => t.weeklyHours >= 20).length
 
   // HeroUI table columns
   const heroColumns = [
@@ -293,18 +312,33 @@ export default function Teachers() {
     { uid: 'specialization', name: 'התמחות' },
     { uid: 'roles', name: 'תפקידים' },
     { uid: 'studentCount', name: 'מס\' תלמידים' },
+    { uid: 'weeklyHours', name: 'ש"ש' },
     { uid: 'status', name: 'סטטוס' },
     { uid: 'actions', name: 'פעולות' },
   ]
 
-  // HeroUI pagination state
+  // HeroUI sorting + pagination state
   const [tablePage, setTablePage] = useState(1)
+  const [sortDescriptor, setSortDescriptor] = useState<{ column: string; direction: 'ascending' | 'descending' }>({ column: 'name', direction: 'ascending' })
   const tableRowsPerPage = 20
-  const tablePages = Math.ceil(filteredTeachers.length / tableRowsPerPage)
+
+  const sortedTeachers = useMemo(() => {
+    const sorted = [...filteredTeachers].sort((a, b) => {
+      const col = sortDescriptor.column
+      let cmp = 0
+      if (col === 'weeklyHours') cmp = a.weeklyHours - b.weeklyHours
+      else if (col === 'studentCount') cmp = a.studentCount - b.studentCount
+      else if (col === 'name') cmp = a.name.localeCompare(b.name, 'he')
+      return sortDescriptor.direction === 'descending' ? -cmp : cmp
+    })
+    return sorted
+  }, [filteredTeachers, sortDescriptor])
+
+  const tablePages = Math.ceil(sortedTeachers.length / tableRowsPerPage)
   const paginatedTeachers = React.useMemo(() => {
     const start = (tablePage - 1) * tableRowsPerPage
-    return filteredTeachers.slice(start, start + tableRowsPerPage)
-  }, [filteredTeachers, tablePage])
+    return sortedTeachers.slice(start, start + tableRowsPerPage)
+  }, [sortedTeachers, tablePage])
 
   // Reset page when data changes
   useEffect(() => { setTablePage(1) }, [filteredTeachers.length])
@@ -346,6 +380,15 @@ export default function Teachers() {
         return <span className="text-sm">{teacher.rolesDisplay || 'לא מוגדר'}</span>
       case 'studentCount':
         return <span className="text-sm">{teacher.studentCount}</span>
+      case 'weeklyHours': {
+        const hours = teacher.weeklyHours || 0
+        const { bg, text } = getWorkloadColor(hours)
+        return (
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${bg} ${text}`}>
+            {hours}
+          </span>
+        )
+      }
       case 'status':
         return <StatusBadge status={teacher.isActive ? 'פעיל' : 'לא פעיל'} />
       case 'actions':
@@ -402,16 +445,18 @@ export default function Teachers() {
         </div>
       </div>
 
-      {/* Analytics: 4 stat cards in a row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {[
-          { value: totalTeachers, label: 'סה״כ מורים' },
-          { value: activeTeachers, label: 'מורים פעילים' },
-          { value: uniqueInstruments, label: 'כלים ייחודיים' },
-          { value: avgStudentsPerTeacher, label: 'ממוצע תלמידים/מורה' },
-        ].map((s) => (
-          <GlassStatCard key={s.label} value={s.value} label={s.label} size="sm" />
-        ))}
+      {/* Analytics: 5 stat cards in a row */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <GlassStatCard value={totalTeachers} label="סה״כ מורים" size="sm" />
+        <GlassStatCard value={activeTeachers} label="מורים פעילים" size="sm" />
+        <GlassStatCard value={uniqueInstruments} label="כלים ייחודיים" size="sm" />
+        <GlassStatCard value={avgWeeklyHours} label='ממוצע ש"ש' size="sm" />
+        <GlassStatCard
+          value={overloadedTeachers}
+          label="עומס גבוה"
+          size="sm"
+          valueClassName={overloadedTeachers > 0 ? 'text-red-600' : undefined}
+        />
       </div>
 
       {/* Table Section -- fills remaining height */}
@@ -474,16 +519,29 @@ export default function Teachers() {
 
             <div className="mr-auto flex items-center gap-3">
               {isUserAdmin(user) && (
-                <HeroButton
-                  color="primary"
-                  variant="solid"
-                  size="sm"
-                  onPress={handleAddTeacher}
-                  startContent={<PlusIcon size={14} weight="bold" />}
-                  className="font-bold"
-                >
-                  הוסף מורה
-                </HeroButton>
+                <>
+                  <HeroButton
+                    color="default"
+                    variant="bordered"
+                    size="sm"
+                    onPress={handleRecalculateAll}
+                    isLoading={isRecalculating}
+                    startContent={!isRecalculating ? <ArrowsClockwiseIcon size={14} weight="bold" /> : undefined}
+                    className="font-bold"
+                  >
+                    {isRecalculating ? 'מחשב...' : 'חשב ש"ש'}
+                  </HeroButton>
+                  <HeroButton
+                    color="primary"
+                    variant="solid"
+                    size="sm"
+                    onPress={handleAddTeacher}
+                    startContent={<PlusIcon size={14} weight="bold" />}
+                    className="font-bold"
+                  >
+                    הוסף מורה
+                  </HeroButton>
+                </>
               )}
               <span className="text-xs font-medium text-slate-400">
                 {searchTerm || filters.instrument || filters.role
@@ -538,6 +596,8 @@ export default function Teachers() {
             <HeroTable
               aria-label="טבלת מורים"
               isHeaderSticky
+              sortDescriptor={sortDescriptor as any}
+              onSortChange={(descriptor) => setSortDescriptor(descriptor as any)}
               bottomContent={
                 tablePages > 1 ? (
                   <div className="flex w-full justify-center">
@@ -556,7 +616,7 @@ export default function Teachers() {
               bottomContentPlacement="outside"
               classNames={{
                 base: 'flex-1 min-h-0 animate-table-rows',
-                wrapper: 'h-full',
+                wrapper: 'h-full bg-transparent shadow-none',
                 th: 'bg-default-100 text-default-600',
                 thead: '[&>tr]:border-b-0',
                 tr: 'transition-colors duration-150 hover:bg-primary/5',
@@ -567,7 +627,8 @@ export default function Teachers() {
                 {(column) => (
                   <TableColumn
                     key={column.uid}
-                    align={column.uid === 'actions' ? 'end' : ['studentCount', 'status'].includes(column.uid) ? 'center' : 'start'}
+                    align={column.uid === 'actions' ? 'end' : ['studentCount', 'weeklyHours', 'status'].includes(column.uid) ? 'center' : 'start'}
+                    allowsSorting={['name', 'studentCount', 'weeklyHours'].includes(column.uid)}
                   >
                     {column.name}
                   </TableColumn>

@@ -15,8 +15,10 @@ import {
   Pagination,
   Spinner,
   Badge as HeroBadge,
+  Button as HeroButton,
 } from '@heroui/react'
 import { Card } from '../components/ui/Card'
+import { GlassStatCard } from '../components/ui/GlassStatCard'
 import { Badge } from '../components/ui/badge'
 import { StatusBadge, InstrumentBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
@@ -24,6 +26,7 @@ import StudentCard from '../components/StudentCard'
 import StudentForm from '../components/forms/StudentForm'
 import ConfirmationModal from '../components/ui/ConfirmationModal'
 import apiService from '../services/apiService'
+import { getAvatarColorHex } from '../utils/avatarColorHash'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
 import { useCascadeDeletion } from '../hooks/useCascadeDeletion'
@@ -37,17 +40,7 @@ import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
 import { GlassSelect } from '../components/ui/GlassSelect'
 
-const AVATAR_COLORS: Array<'primary' | 'secondary' | 'success' | 'warning' | 'danger'> = [
-  'primary', 'secondary', 'success', 'warning', 'danger'
-]
-
-function getAvatarColor(name: string): typeof AVATAR_COLORS[number] {
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
-}
+// Avatar colors imported from shared utility
 
 function getAbsenceBadgeColor(count: number): 'warning' | 'danger' | null {
   if (count >= 8) return 'danger'
@@ -732,8 +725,6 @@ export default function Students() {
         const count = absenceCounts[student.id] || 0
         if (count > 0) console.log('🏷️ Badge for', student.name, 'id:', student.id, 'count:', count)
         const badgeColor = getAbsenceBadgeColor(count)
-        const avatarColor = getAvatarColor(student.name || '')
-
         const userEl = (
           <User
             avatarProps={{
@@ -741,7 +732,7 @@ export default function Students() {
               size: 'md',
               showFallback: true,
               name: student.name,
-              color: avatarColor,
+              style: { backgroundColor: getAvatarColorHex(student.name || ''), color: '#fff' },
             }}
             description={student.rawData?.phone || ''}
             name={student.name}
@@ -896,13 +887,6 @@ export default function Students() {
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">תלמידים</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{activeStudents} פעילים מתוך {totalStudents}</p>
         </div>
-        <button
-          onClick={handleAddStudent}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:bg-neutral-800 transition-colors shadow-sm"
-        >
-          <PlusIcon size={16} weight="bold" />
-          הוסף תלמיד
-        </button>
       </div>
 
       {/* Analytics Section: 3 columns — Stats | Instrument Pie | Stage Distribution */}
@@ -914,15 +898,7 @@ export default function Students() {
           { value: studentsInOrchestras, label: 'רשומים לתזמורות' },
           { value: avgStageLevel, label: 'ממוצע שלב לימוד' },
         ].map((s) => (
-          <div key={s.label} className="bg-gradient-to-br from-sky-400 to-cyan-400 dark:from-sky-900/40 dark:to-cyan-900/40 rounded-xl flex flex-col items-center justify-center py-3">
-            <h3 className="text-xl font-extrabold text-white leading-none flex items-center gap-2">
-              {typeof s.value === 'number' ? s.value.toLocaleString('he-IL') : s.value}
-              <svg width="28" height="14" viewBox="0 0 40 20" fill="none" className="opacity-40">
-                <polyline points="0,12 5,8 10,14 15,4 20,10 25,6 30,16 35,9 40,11" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-              </svg>
-            </h3>
-            <p className="text-[11px] font-bold text-white/70 dark:text-sky-300/50 mt-1.5">{s.label}</p>
-          </div>
+          <GlassStatCard key={s.label} value={s.value} label={s.label} size="sm" />
         ))}
       </div>
 
@@ -991,10 +967,20 @@ export default function Students() {
             />
 
             <div className="mr-auto flex items-center gap-3">
+              <HeroButton
+                color="primary"
+                variant="solid"
+                size="sm"
+                onPress={handleAddStudent}
+                startContent={<PlusIcon size={14} weight="bold" />}
+                className="font-bold"
+              >
+                הוסף תלמיד
+              </HeroButton>
               {/* Selection Controls */}
               <button
                 onClick={handleToggleSelectMode}
-                className={`flex items-center px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-colors ${
+                className={`flex items-center px-2.5 py-1.5 rounded-full text-[10px] font-bold transition-colors ${
                   isSelectMode
                     ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300'
                     : 'bg-primary/10 text-primary hover:bg-primary/20'
@@ -1008,7 +994,7 @@ export default function Students() {
               {isSelectMode && selectedStudents.size > 0 && (
                 <button
                   onClick={handleBatchDelete}
-                  className="flex items-center px-2.5 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-[10px] font-bold"
+                  className="flex items-center px-2.5 py-1.5 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors text-[10px] font-bold"
                 >
                   <TrashIcon size={12} weight="bold" className="ml-1" />
                   מחק נבחרים ({selectedStudents.size})
@@ -1023,7 +1009,7 @@ export default function Students() {
               </span>
 
               {/* View Mode Toggle */}
-              <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-full border border-slate-200 dark:border-slate-700">
                 <button
                   onClick={() => setViewMode('table')}
                   className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
@@ -1098,7 +1084,7 @@ export default function Students() {
               bottomContentPlacement="outside"
               classNames={{
                 base: 'flex-1 min-h-0 animate-table-rows',
-                wrapper: 'h-full',
+                wrapper: 'h-full bg-white/70 dark:bg-neutral-900/50 shadow-none backdrop-blur-sm',
                 th: 'bg-default-100 text-default-600',
                 thead: '[&>tr]:border-b-0',
                 tr: 'transition-colors duration-150 hover:bg-primary/5 data-[selected=true]:bg-primary/10',

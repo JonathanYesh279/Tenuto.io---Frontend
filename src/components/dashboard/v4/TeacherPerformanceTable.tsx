@@ -2,25 +2,7 @@ import { useState } from 'react'
 import { ArrowsClockwise as ArrowsClockwiseIcon } from '@phosphor-icons/react'
 import { Tabs, Tab, Modal, ModalContent, ModalHeader, ModalBody, User } from '@heroui/react'
 import { getWorkloadColor } from '../../../utils/workloadColors'
-
-const AVATAR_STYLES = [
-  { bg: '#6366f1', text: '#fff' }, // indigo
-  { bg: '#10b981', text: '#fff' }, // emerald
-  { bg: '#f59e0b', text: '#fff' }, // amber
-  { bg: '#ec4899', text: '#fff' }, // pink
-  { bg: '#8b5cf6', text: '#fff' }, // violet
-  { bg: '#06b6d4', text: '#fff' }, // cyan
-  { bg: '#f43f5e', text: '#fff' }, // rose
-  { bg: '#14b8a6', text: '#fff' }, // teal
-]
-
-function getAvatarStyle(name: string) {
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return AVATAR_STYLES[Math.abs(hash) % AVATAR_STYLES.length]
-}
+import { getAvatarColorHex } from '../../../utils/avatarColorHash'
 
 interface Teacher {
   id: string
@@ -56,7 +38,7 @@ function TeacherRow({ teacher }: { teacher: Teacher }) {
             size: 'md',
             showFallback: true,
             name: teacher.name,
-            style: { backgroundColor: getAvatarStyle(teacher.name).bg, color: getAvatarStyle(teacher.name).text },
+            style: { backgroundColor: getAvatarColorHex(teacher.name), color: '#fff' },
           }}
           name={teacher.name}
           description={teacher.department || ''}

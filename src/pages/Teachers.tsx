@@ -26,6 +26,7 @@ import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
 import { getDisplayName } from '../utils/nameUtils'
 import { getWorkloadColor } from '../utils/workloadColors'
+import { getAvatarColorHex } from '../utils/avatarColorHash'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
@@ -53,17 +54,7 @@ interface Teacher {
   rawData: any
 }
 
-const AVATAR_COLORS: Array<'primary' | 'secondary' | 'success' | 'warning' | 'danger'> = [
-  'primary', 'secondary', 'success', 'warning', 'danger'
-]
-
-function getAvatarColor(name: string): typeof AVATAR_COLORS[number] {
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
-}
+// Avatar colors imported from shared utility
 
 // Helper function to check if user is admin
 const isUserAdmin = (user: any): boolean => {
@@ -347,7 +338,6 @@ export default function Teachers() {
   const renderCell = React.useCallback((teacher: any, columnKey: string) => {
     switch (columnKey) {
       case 'name': {
-        const avatarColor = getAvatarColor(teacher.name || '')
         const userEl = (
           <User
             avatarProps={{
@@ -355,7 +345,7 @@ export default function Teachers() {
               size: 'md',
               showFallback: true,
               name: teacher.name,
-              color: avatarColor,
+              style: { backgroundColor: getAvatarColorHex(teacher.name || ''), color: '#fff' },
             }}
             description={teacher.email || ''}
             name={teacher.name}

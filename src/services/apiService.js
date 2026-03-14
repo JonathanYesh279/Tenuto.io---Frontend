@@ -2813,9 +2813,9 @@ export const rehearsalService = {
         // Add computed fields
         duration: this.calculateDuration(rehearsal.startTime, rehearsal.endTime),
         attendanceCount: rehearsal.attendanceCount || {
-          present: rehearsal.attendance?.present?.length || 0,
-          absent: rehearsal.attendance?.absent?.length || 0,
-          total: (rehearsal.attendance?.present?.length || 0) + (rehearsal.attendance?.absent?.length || 0)
+          present: 0,
+          absent: 0,
+          total: 0
         },
 
         // Date formatting helpers
@@ -3076,9 +3076,9 @@ export const rehearsalService = {
         duration: this.calculateDuration(rehearsal.startTime, rehearsal.endTime),
         dayName: this.getDayName(rehearsal.dayOfWeek),
         attendanceCount: rehearsal.attendanceCount || {
-          present: rehearsal.attendance?.present?.length || 0,
-          absent: rehearsal.attendance?.absent?.length || 0,
-          total: (rehearsal.attendance?.present?.length || 0) + (rehearsal.attendance?.absent?.length || 0)
+          present: 0,
+          absent: 0,
+          total: 0
         }
       };
 

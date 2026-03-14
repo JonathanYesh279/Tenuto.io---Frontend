@@ -92,7 +92,7 @@ export default function EnhancedStudentCard({
           <div className="flex-1">
             {/* Student Name with Status */}
             <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-semibold text-gray-900 font-reisinger-yonatan text-lg">
+              <h4 className="font-semibold text-gray-900 text-lg">
                 {getDisplayName(student.personalInfo)}
               </h4>
               <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
@@ -104,9 +104,9 @@ export default function EnhancedStudentCard({
             {/* Primary Instrument with Icon */}
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <MusicNotesIcon className="w-4 h-4 text-indigo-500" />
-              <span className="font-reisinger-yonatan font-medium">{instrumentName}</span>
+              <span className="font-medium">{instrumentName}</span>
               {currentStage > 0 && (
-                <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-reisinger-yonatan">
+                <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">
                   שלב {currentStage}
                 </span>
               )}
@@ -150,13 +150,13 @@ export default function EnhancedStudentCard({
             {student.personalInfo.age && (
               <div className="flex items-center gap-2 text-gray-600">
                 <UserIcon className="w-3 h-3" />
-                <span className="font-reisinger-yonatan">גיל: {student.personalInfo.age}</span>
+                <span className="">גיל: {student.personalInfo.age}</span>
               </div>
             )}
             {student.personalInfo.class && (
               <div className="flex items-center gap-2 text-gray-600">
                 <MapPinIcon className="w-3 h-3" />
-                <span className="font-reisinger-yonatan">כיתה: {student.personalInfo.class}</span>
+                <span className="">כיתה: {student.personalInfo.class}</span>
               </div>
             )}
           </div>
@@ -175,12 +175,12 @@ export default function EnhancedStudentCard({
         {/* Lesson Schedule */}
         {lessonTime && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-2">
-            <div className="flex items-center gap-2 text-sm text-blue-800 font-reisinger-yonatan">
+            <div className="flex items-center gap-2 text-sm text-blue-800">
               <CalendarIcon className="w-4 h-4" />
               <span className="font-medium">שיעור קבוע:</span>
             </div>
             <div className="flex items-center justify-between mt-1">
-              <span className="text-sm font-reisinger-yonatan text-blue-700">
+              <span className="text-sm text-blue-700">
                 {lessonTime}
               </span>
               <div className="flex items-center gap-1 text-xs text-blue-600">
@@ -198,7 +198,7 @@ export default function EnhancedStudentCard({
           {/* Primary Action Button */}
           <button
             onClick={() => onViewDetails(student.id)}
-            className="text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
+            className="text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1"
           >
             <EyeIcon className="w-4 h-4" />
             פרטים מלאים
@@ -208,7 +208,7 @@ export default function EnhancedStudentCard({
           {hasScheduledLesson && onUpdateLesson ? (
             <button
               onClick={() => onUpdateLesson(student)}
-              className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
+              className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1"
             >
               <CalendarIcon className="w-4 h-4" />
               עדכן שיעור קבוע
@@ -216,7 +216,7 @@ export default function EnhancedStudentCard({
           ) : onScheduleLesson && !hasScheduledLesson ? (
             <button
               onClick={() => onScheduleLesson(student.id)}
-              className="text-green-600 hover:text-green-800 hover:bg-green-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
+              className="text-green-600 hover:text-green-800 hover:bg-green-100 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1"
             >
               <CalendarIcon className="w-4 h-4" />
               תזמן שיעור
@@ -227,7 +227,7 @@ export default function EnhancedStudentCard({
           {onMarkAttendance && (
             <button
               onClick={() => onMarkAttendance(student.id)}
-              className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
+              className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1"
             >
               <CheckSquareIcon className="w-4 h-4" />
               נוכחות
@@ -238,7 +238,7 @@ export default function EnhancedStudentCard({
           {onAddNote && (
             <button
               onClick={() => onAddNote(student.id)}
-              className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100 px-3 py-1 rounded-lg text-sm font-medium font-reisinger-yonatan transition-all duration-200 flex items-center gap-1"
+              className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1"
             >
               <FileTextIcon className="w-4 h-4" />
               הערה

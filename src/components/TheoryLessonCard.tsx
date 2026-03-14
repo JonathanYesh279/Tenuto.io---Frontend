@@ -1,13 +1,13 @@
 
-import { BookOpenIcon, CalendarIcon, ClockIcon, EyeIcon, MapPinIcon, PencilIcon, TrashIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
+import { CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, TrashIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
 import {
   formatLessonDate,
   formatLessonTime,
-  getLessonStatus,
   type TheoryLesson
 } from '../utils/theoryLessonUtils'
 import TeacherNameDisplay from './TeacherNameDisplay'
 import { Button as HeroButton } from '@heroui/react'
+import { Card, CardHeader, CardContent, CardFooter } from './ui/Card'
 
 interface TheoryLessonCardProps {
   lesson: TheoryLesson
@@ -18,130 +18,104 @@ interface TheoryLessonCardProps {
   selectable?: boolean
   selected?: boolean
   onSelect?: (lessonId: string) => void
+  index?: number
 }
 
-export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onViewAttendance, selectable, selected, onSelect }: TheoryLessonCardProps) {
-  // Use utility functions for consistent formatting as specified in requirements
+const categoryStyle: Record<string, string> = {
+  'תלמידים חדשים ב-ד': 'bg-blue-100 text-blue-700 border-blue-200',
+  'תלמידים חדשים צעירים': 'bg-sky-100 text-sky-700 border-sky-200',
+  'תלמידים חדשים בוגרים (ה - ט)': 'bg-indigo-100 text-indigo-700 border-indigo-200',
+  'מתחילים': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'מתחילים ב': 'bg-green-100 text-green-700 border-green-200',
+  'מתחילים ד': 'bg-teal-100 text-teal-700 border-teal-200',
+  'מתקדמים א': 'bg-amber-100 text-amber-700 border-amber-200',
+  'מתקדמים ב': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  'מתקדמים ג': 'bg-orange-100 text-orange-700 border-orange-200',
+  'הכנה לרסיטל קלאסי יא': 'bg-rose-100 text-rose-700 border-rose-200',
+  'הכנה לרסיטל רוק\\פופ\\ג\'אז יא': 'bg-red-100 text-red-700 border-red-200',
+  'הכנה לרסיטל רוק\\פופ\\ג\'אז יב': 'bg-pink-100 text-pink-700 border-pink-200',
+  'מגמה': 'bg-violet-100 text-violet-700 border-violet-200',
+  'תאוריה כלי': 'bg-cyan-100 text-cyan-700 border-cyan-200',
+}
+
+const defaultCategoryStyle = 'bg-neutral-100 text-neutral-700 border-neutral-200'
+
+export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onViewAttendance, selected }: TheoryLessonCardProps) {
   const formattedDate = formatLessonDate(lesson)
   const formattedTime = formatLessonTime(lesson)
-  const lessonStatus = getLessonStatus(lesson)
+  const chipStyle = categoryStyle[lesson.category] || defaultCategoryStyle
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't navigate if clicking action buttons
+    if ((e.target as HTMLElement).closest('button')) return
+    onView?.(lesson)
+  }
 
   return (
-    <div className={`bg-white dark:bg-neutral-900 rounded-xl border shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:-translate-y-1 ${
-      selected ? 'border-primary ring-2 ring-primary' : 'border-neutral-200 dark:border-neutral-700'
-    }`}>
-      {/* Card Header */}
-      <div className="p-4 border-b border-neutral-100 dark:border-neutral-800">
-        <div className="flex items-start justify-between">
-          {selectable && (
-            <div className="flex items-center ml-3">
-              <input
-                type="checkbox"
-                checked={selected}
-                onChange={() => onSelect?.(lesson._id)}
-                className="rounded border-slate-300 text-primary focus:ring-primary"
-              />
-            </div>
-          )}
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <BookOpenIcon className="w-4 h-4 text-primary" />
-              <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full">
-                {lesson.category}
-              </span>
-              <span className={`text-xs font-medium px-2 py-1 rounded-full ${lessonStatus.colorClass}`}>
-                {lessonStatus.text}
-              </span>
-            </div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-1">{lesson.title}</h3>
-            {/* Teacher name displayed prominently under the title */}
-            <TeacherNameDisplay
-              lesson={lesson}
-              className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1"
-              showIcon={true}
-            />
-            {lesson.description && (
-              <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">{lesson.description}</p>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-0.5 mr-2">
-            {onView && (
-              <HeroButton
-                isIconOnly
-                color="primary"
-                variant="light"
-                size="sm"
-                onPress={() => onView(lesson)}
-                title="צפה בפרטים"
-              >
-                <EyeIcon className="w-4 h-4" />
-              </HeroButton>
-            )}
+    <div className="relative h-full pt-3">
+      <span className={`absolute top-0 right-4 z-10 inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md border ${chipStyle}`}>
+        {lesson.category}
+      </span>
+      <Card
+        hover
+        className={`h-full flex flex-col rounded-xl cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:-translate-y-0.5 ${
+          selected ? 'ring-2 ring-primary border-primary' : ''
+        }`}
+        onClick={handleCardClick}
+      >
+        {/* Header: Actions */}
+        <CardHeader className="flex-row items-center justify-end gap-2 pb-3 shrink-0">
+          <div className="flex items-center gap-0.5 shrink-0">
             {onViewAttendance && (
-              <HeroButton
-                isIconOnly
-                color="success"
-                variant="light"
-                size="sm"
-                onPress={() => onViewAttendance(lesson)}
-                title="צפה בנוכחות"
-              >
+              <HeroButton isIconOnly color="success" variant="light" size="sm" onPress={() => onViewAttendance(lesson)} title="צפה בנוכחות">
                 <UserCircleCheckIcon className="w-4 h-4" />
               </HeroButton>
             )}
             {onEdit && (
-              <HeroButton
-                isIconOnly
-                color="default"
-                variant="light"
-                size="sm"
-                onPress={() => onEdit(lesson)}
-                title="ערוך שיעור"
-              >
+              <HeroButton isIconOnly color="default" variant="light" size="sm" onPress={() => onEdit(lesson)} title="ערוך שיעור">
                 <PencilIcon className="w-4 h-4" />
               </HeroButton>
             )}
             {onDelete && (
-              <HeroButton
-                isIconOnly
-                color="danger"
-                variant="light"
-                size="sm"
-                onPress={() => onDelete(lesson)}
-                title="מחק שיעור"
-              >
+              <HeroButton isIconOnly color="danger" variant="light" size="sm" onPress={() => onDelete(lesson)} title="מחק שיעור">
                 <TrashIcon className="w-4 h-4" />
               </HeroButton>
             )}
           </div>
-        </div>
-      </div>
+        </CardHeader>
 
-      {/* Card Content */}
-      <div className="p-4 space-y-3">
-        {/* Date and Time */}
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center text-slate-500 dark:text-slate-400">
-            <CalendarIcon className="w-4 h-4 ml-2 text-slate-400 dark:text-slate-500" />
-            <span className="font-medium text-slate-900 dark:text-white ml-1">תאריך:</span>
-            {formattedDate}
+        {/* Body: Teacher + Location */}
+        <CardContent className="space-y-2 flex-1">
+          <TeacherNameDisplay
+            lesson={lesson}
+            className="text-sm text-muted-foreground"
+            showIcon={true}
+          />
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <MapPinIcon className="w-4 h-4 shrink-0" />
+            <span>{lesson.location || 'לא צוין'}</span>
           </div>
-          <div className="flex items-center text-slate-500 dark:text-slate-400">
-            <ClockIcon className="w-4 h-4 ml-2 text-slate-400 dark:text-slate-500" />
-            <span className="font-medium text-slate-900 dark:text-white ml-1">שעה:</span>
-            {formattedTime}
-          </div>
-        </div>
+          {lesson.description && (
+            <p className="text-sm text-muted-foreground line-clamp-2">{lesson.description}</p>
+          )}
+        </CardContent>
 
-        {/* Location */}
-        <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
-          <MapPinIcon className="w-4 h-4 ml-2 text-slate-400 dark:text-slate-500" />
-          <span className="font-medium text-slate-900 dark:text-white ml-1">מיקום:</span>
-          {lesson.location || 'לא צוין'}
-        </div>
-      </div>
+        {/* Footer: Date + Time */}
+        <CardFooter className="flex-col items-stretch gap-2 pt-3 border-t border-border shrink-0 mt-auto">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <CalendarIcon className="w-4 h-4 shrink-0" />
+              <span className="font-medium text-foreground">תאריך:</span>
+              {formattedDate}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <ClockIcon className="w-4 h-4 shrink-0" />
+              <span className="font-medium text-foreground">שעה:</span>
+              {formattedTime}
+            </span>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   )
 }

@@ -389,7 +389,7 @@ export default function TheoryGroupManager() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען קבוצות תיאוריה...</div>
+          <div className="text-gray-600">טוען קבוצות תיאוריה...</div>
         </div>
       </div>
     )
@@ -399,7 +399,7 @@ export default function TheoryGroupManager() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <WarningIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -420,7 +420,7 @@ export default function TheoryGroupManager() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+            <h1 className="text-3xl font-bold text-gray-900">
               ניהול קבוצות תיאוריה 👥
             </h1>
             <p className="text-gray-600 mt-2">ניהול מתקדם של רישום תלמידים וקבוצות לימוד</p>
@@ -430,7 +430,7 @@ export default function TheoryGroupManager() {
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
             <PlusIcon className="w-4 h-4" />
-            <span className="font-reisinger-yonatan">קבוצה חדשה</span>
+            <span className="">קבוצה חדשה</span>
           </button>
         </div>
 
@@ -439,7 +439,7 @@ export default function TheoryGroupManager() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="p-4 border-b border-gray-200">
-                <h2 className="font-semibold text-gray-900 font-reisinger-yonatan">קבוצות תיאוריה</h2>
+                <h2 className="font-semibold text-gray-900">קבוצות תיאוריה</h2>
 
                 {/* Filters */}
                 <div className="mt-4 space-y-3">
@@ -483,7 +483,7 @@ export default function TheoryGroupManager() {
                 {filteredGroups.length === 0 ? (
                   <div className="p-6 text-center text-gray-500">
                     <UsersIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                    <p className="font-reisinger-yonatan">אין קבוצות</p>
+                    <p className="">אין קבוצות</p>
                   </div>
                 ) : (
                   filteredGroups.map((group) => (
@@ -495,7 +495,7 @@ export default function TheoryGroupManager() {
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium text-gray-900 font-reisinger-yonatan">{group.name}</h3>
+                        <h3 className="font-medium text-gray-900">{group.name}</h3>
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           group.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                         }`}>
@@ -517,7 +517,7 @@ export default function TheoryGroupManager() {
                         </div>
                       </div>
                       {group.waitingList.length > 0 && (
-                        <div className="mt-2 text-xs text-orange-600 font-reisinger-yonatan">
+                        <div className="mt-2 text-xs text-orange-600">
                           {group.waitingList.length} ברשימת המתנה
                         </div>
                       )}
@@ -536,10 +536,10 @@ export default function TheoryGroupManager() {
                 <div className="p-6 border-b border-gray-200">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+                      <h2 className="text-xl font-bold text-gray-900">
                         {selectedGroup.name}
                       </h2>
-                      <p className="text-gray-600 mt-1 font-reisinger-yonatan">
+                      <p className="text-gray-600 mt-1">
                         {selectedGroup.teacherName} • {selectedGroup.category}
                       </p>
                     </div>
@@ -549,21 +549,21 @@ export default function TheoryGroupManager() {
                         className="flex items-center gap-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         <EnvelopeIcon className="w-4 h-4" />
-                        <span className="font-reisinger-yonatan">שלח הודעה</span>
+                        <span className="">שלח הודעה</span>
                       </button>
                       <button
                         onClick={() => exportGroupData(selectedGroup)}
                         className="flex items-center gap-1 px-3 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                       >
                         <DownloadSimpleIcon className="w-4 h-4" />
-                        <span className="font-reisinger-yonatan">ייצא נתונים</span>
+                        <span className="">ייצא נתונים</span>
                       </button>
                       <button
                         onClick={() => setShowEnrollModal(true)}
                         className="flex items-center gap-1 px-3 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                       >
                         <UserPlusIcon className="w-4 h-4" />
-                        <span className="font-reisinger-yonatan">הוסף תלמיד</span>
+                        <span className="">הוסף תלמיד</span>
                       </button>
                     </div>
                   </div>
@@ -572,15 +572,15 @@ export default function TheoryGroupManager() {
                   <div className="grid grid-cols-4 gap-4 mt-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-blue-600">{selectedGroup.enrolledStudents.length}</div>
-                      <div className="text-sm text-gray-600 font-reisinger-yonatan">תלמידים רשומים</div>
+                      <div className="text-sm text-gray-600">תלמידים רשומים</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-green-600">{selectedGroup.capacity}</div>
-                      <div className="text-sm text-gray-600 font-reisinger-yonatan">קיבולת מקסימלית</div>
+                      <div className="text-sm text-gray-600">קיבולת מקסימלית</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-orange-600">{selectedGroup.waitingList.length}</div>
-                      <div className="text-sm text-gray-600 font-reisinger-yonatan">רשימת המתנה</div>
+                      <div className="text-sm text-gray-600">רשימת המתנה</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-purple-600">
@@ -588,7 +588,7 @@ export default function TheoryGroupManager() {
                           Math.round(selectedGroup.enrolledStudents.reduce((sum, s) => sum + (s.attendance?.rate || 0), 0) / selectedGroup.enrolledStudents.length)
                           : 0}%
                       </div>
-                      <div className="text-sm text-gray-600 font-reisinger-yonatan">נוכחות ממוצעת</div>
+                      <div className="text-sm text-gray-600">נוכחות ממוצעת</div>
                     </div>
                   </div>
                 </div>
@@ -607,7 +607,7 @@ export default function TheoryGroupManager() {
                         <button
                           key={tab.id}
                           onClick={() => setActiveTab(tab.id as any)}
-                          className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 font-reisinger-yonatan ${
+                          className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
                             activeTab === tab.id
                               ? 'border-indigo-500 text-indigo-600'
                               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -633,7 +633,7 @@ export default function TheoryGroupManager() {
                       {filteredStudents.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
                           <UsersIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                          <p className="font-reisinger-yonatan">אין תלמידים רשומים</p>
+                          <p className="">אין תלמידים רשומים</p>
                         </div>
                       ) : (
                         filteredStudents.map((student) => (
@@ -643,7 +643,7 @@ export default function TheoryGroupManager() {
                                 <UsersIcon className="w-5 h-5 text-indigo-600" />
                               </div>
                               <div>
-                                <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{getDisplayName(student)}</h4>
+                                <h4 className="font-medium text-gray-900">{getDisplayName(student)}</h4>
                                 <div className="text-sm text-gray-600 space-y-1">
                                   <div>כיתה {student.grade} • {student.instrument}</div>
                                   <div>רישום: {new Date(student.enrollmentDate).toLocaleDateString('he-IL')}</div>
@@ -685,7 +685,7 @@ export default function TheoryGroupManager() {
                       {selectedGroup.waitingList.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
                           <ClockIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                          <p className="font-reisinger-yonatan">אין תלמידים ברשימת המתנה</p>
+                          <p className="">אין תלמידים ברשימת המתנה</p>
                         </div>
                       ) : (
                         selectedGroup.waitingList.map((student, index) => (
@@ -695,7 +695,7 @@ export default function TheoryGroupManager() {
                                 <span className="text-orange-600 font-bold text-sm">#{index + 1}</span>
                               </div>
                               <div>
-                                <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{getDisplayName(student)}</h4>
+                                <h4 className="font-medium text-gray-900">{getDisplayName(student)}</h4>
                                 <div className="text-sm text-gray-600">
                                   כיתה {student.grade} • {student.instrument}
                                 </div>
@@ -732,8 +732,8 @@ export default function TheoryGroupManager() {
                   {activeTab === 'curriculum' && (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">תכנית הלימודים</h3>
-                        <span className="text-sm text-gray-600 font-reisinger-yonatan">
+                        <h3 className="text-lg font-bold text-gray-900">תכנית הלימודים</h3>
+                        <span className="text-sm text-gray-600">
                           {selectedGroup.curriculum?.filter(item => item.isCompleted).length || 0} מתוך {selectedGroup.curriculum?.length || 0} הושלמו
                         </span>
                       </div>
@@ -741,7 +741,7 @@ export default function TheoryGroupManager() {
                       {!selectedGroup.curriculum || selectedGroup.curriculum.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
                           <BookOpenIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                          <p className="font-reisinger-yonatan">אין תכנית לימודים מוגדרת</p>
+                          <p className="">אין תכנית לימודים מוגדרת</p>
                         </div>
                       ) : (
                         <div className="space-y-3">
@@ -763,16 +763,16 @@ export default function TheoryGroupManager() {
                                   <div>
                                     <h4 className={`font-medium ${
                                       item.isCompleted ? 'text-green-900' : 'text-gray-900'
-                                    } font-reisinger-yonatan`}>
+                                    }`}>
                                       {item.title}
                                     </h4>
                                     {item.description && (
-                                      <p className="text-sm text-gray-600 font-reisinger-yonatan">{item.description}</p>
+                                      <p className="text-sm text-gray-600">{item.description}</p>
                                     )}
                                   </div>
                                 </div>
                                 {item.completedDate && (
-                                  <span className="text-xs text-green-600 font-reisinger-yonatan">
+                                  <span className="text-xs text-green-600">
                                     הושלם: {new Date(item.completedDate).toLocaleDateString('he-IL')}
                                   </span>
                                 )}
@@ -785,12 +785,12 @@ export default function TheoryGroupManager() {
                       {/* Requirements */}
                       {selectedGroup.requirements && selectedGroup.requirements.length > 0 && (
                         <div className="mt-8">
-                          <h4 className="font-medium text-gray-900 mb-3 font-reisinger-yonatan">דרישות הקבוצה</h4>
+                          <h4 className="font-medium text-gray-900 mb-3">דרישות הקבוצה</h4>
                           <ul className="space-y-2">
                             {selectedGroup.requirements.map((requirement, index) => (
                               <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
                                 <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                                <span className="font-reisinger-yonatan">{requirement}</span>
+                                <span className="">{requirement}</span>
                               </li>
                             ))}
                           </ul>
@@ -802,8 +802,8 @@ export default function TheoryGroupManager() {
                   {activeTab === 'analytics' && (
                     <div className="text-center py-12">
                       <TrendUpIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">ניתוח נתונים מתקדם</h3>
-                      <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">ניתוח נתונים מתקדם</h3>
+                      <p className="text-gray-600">תכונה זו תהיה זמינה בקרוב</p>
                     </div>
                   )}
                 </div>
@@ -812,8 +812,8 @@ export default function TheoryGroupManager() {
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
                 <div className="text-center text-gray-500">
                   <UsersIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">בחר קבוצה</h3>
-                  <p className="font-reisinger-yonatan">בחר קבוצה מהרשימה כדי לצפות בפרטים ולנהל תלמידים</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">בחר קבוצה</h3>
+                  <p className="">בחר קבוצה מהרשימה כדי לצפות בפרטים ולנהל תלמידים</p>
                 </div>
               </div>
             )}
@@ -870,7 +870,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 max-h-[80vh] overflow-y-auto" dir="rtl">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">
           הוסף תלמיד ל{group.name}
         </h3>
 
@@ -889,7 +889,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
           <div className="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
             <div className="flex items-center gap-2 text-orange-800">
               <WarningIcon className="w-4 h-4" />
-              <span className="text-sm font-reisinger-yonatan">הקבוצה מלאה - תלמידים יתווספו לרשימת המתנה</span>
+              <span className="text-sm">הקבוצה מלאה - תלמידים יתווספו לרשימת המתנה</span>
             </div>
           </div>
         )}
@@ -898,23 +898,23 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
           {filteredStudents.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <UsersIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-              <p className="font-reisinger-yonatan">אין תלמידים זמינים</p>
+              <p className="">אין תלמידים זמינים</p>
             </div>
           ) : (
             filteredStudents.map((student) => (
               <div key={student.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <div>
-                  <div className="font-medium text-gray-900 font-reisinger-yonatan">
+                  <div className="font-medium text-gray-900">
                     {getDisplayName(student)}
                   </div>
-                  <div className="text-sm text-gray-600 font-reisinger-yonatan">
+                  <div className="text-sm text-gray-600">
                     {student.instrument && `${student.instrument} • `}
                     {student.grade && `כיתה ${student.grade}`}
                   </div>
                 </div>
                 <button
                   onClick={() => onEnroll(student.id)}
-                  className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-reisinger-yonatan"
+                  className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm"
                 >
                   <UserPlusIcon className="w-4 h-4" />
                   {group.enrolledStudents.length >= group.capacity ? 'רשימת המתנה' : 'רשום'}
@@ -927,7 +927,7 @@ function EnrollStudentModal({ group, availableStudents, onClose, onEnroll }: Enr
         <div className="flex gap-3 mt-6">
           <button
             onClick={onClose}
-            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors font-reisinger-yonatan"
+            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
           >
             סגור
           </button>

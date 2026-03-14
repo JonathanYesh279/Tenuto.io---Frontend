@@ -31,7 +31,7 @@ export const BarChart: React.FC<BaseChartProps> = ({
   return (
     <div className={`${className}`} dir="rtl">
       {title && (
-        <h4 className="text-sm font-medium text-gray-700 mb-4 font-reisinger-yonatan">
+        <h4 className="text-sm font-medium text-gray-700 mb-4">
           {title}
         </h4>
       )}
@@ -43,7 +43,7 @@ export const BarChart: React.FC<BaseChartProps> = ({
           
           return (
             <div key={index} className="flex items-center">
-              <div className="w-20 text-sm font-reisinger-yonatan text-right truncate ml-3">
+              <div className="w-20 text-sm text-right truncate ml-3">
                 {item.label}
               </div>
               
@@ -59,7 +59,7 @@ export const BarChart: React.FC<BaseChartProps> = ({
                 </div>
               </div>
               
-              <div className="w-12 text-sm font-medium text-gray-900 text-center mr-3 font-reisinger-yonatan">
+              <div className="w-12 text-sm font-medium text-gray-900 text-center mr-3">
                 {showValues && item.value}
                 {showPercentages && `${Math.round(valuePercentage)}%`}
               </div>
@@ -125,7 +125,7 @@ export const DonutChart: React.FC<BaseChartProps & { centerText?: string }> = ({
   return (
     <div className={`${className}`} dir="rtl">
       {title && (
-        <h4 className="text-sm font-medium text-gray-700 mb-4 font-reisinger-yonatan">
+        <h4 className="text-sm font-medium text-gray-700 mb-4">
           {title}
         </h4>
       )}
@@ -148,10 +148,10 @@ export const DonutChart: React.FC<BaseChartProps & { centerText?: string }> = ({
           {centerText && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">
+                <div className="text-2xl font-bold text-gray-900">
                   {total}
                 </div>
-                <div className="text-xs text-gray-600 font-reisinger-yonatan">
+                <div className="text-xs text-gray-600">
                   {centerText}
                 </div>
               </div>
@@ -168,11 +168,11 @@ export const DonutChart: React.FC<BaseChartProps & { centerText?: string }> = ({
                   className="w-3 h-3 rounded-full ml-2"
                   style={{ backgroundColor: segment.color }}
                 />
-                <span className="text-sm font-reisinger-yonatan">
+                <span className="text-sm">
                   {segment.label}
                 </span>
               </div>
-              <div className="text-sm font-medium text-gray-900 font-reisinger-yonatan">
+              <div className="text-sm font-medium text-gray-900">
                 {showValues && segment.value} ({Math.round(segment.percentage)}%)
               </div>
             </div>
@@ -228,11 +228,11 @@ export const LineChart: React.FC<{
     <div className={`${className}`} dir="rtl">
       {title && (
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
+          <h4 className="text-sm font-medium text-gray-700">
             {title}
           </h4>
           {trend && (
-            <span className={`text-xs font-medium ${getTrendColor()} font-reisinger-yonatan`}>
+            <span className={`text-xs font-medium ${getTrendColor()}`}>
               {trend === 'up' ? '↗ עלייה' : trend === 'down' ? '↘ ירידה' : '→ יציב'}
             </span>
           )}
@@ -277,7 +277,7 @@ export const LineChart: React.FC<{
           {data.map((item, index) => (
             <span
               key={index}
-              className="text-xs text-gray-600 font-reisinger-yonatan"
+              className="text-xs text-gray-600"
               style={{ width: `${100 / data.length}%`, textAlign: 'center' }}
             >
               {item.label}
@@ -346,11 +346,11 @@ export const ProgressRingChart: React.FC<{
         
         {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <span className="text-xl font-bold text-gray-900">
             {Math.round(percentage)}%
           </span>
           {subtitle && (
-            <span className="text-xs text-gray-600 font-reisinger-yonatan">
+            <span className="text-xs text-gray-600">
               {subtitle}
             </span>
           )}
@@ -358,7 +358,7 @@ export const ProgressRingChart: React.FC<{
       </div>
       
       {label && (
-        <span className="mt-2 text-sm font-medium text-gray-700 text-center font-reisinger-yonatan">
+        <span className="mt-2 text-sm font-medium text-gray-700 text-center">
           {label}
         </span>
       )}
@@ -400,7 +400,7 @@ export const GaugeChart: React.FC<{
   return (
     <div className={`${className}`} dir="rtl">
       {title && (
-        <h4 className="text-sm font-medium text-gray-700 mb-4 text-center font-reisinger-yonatan">
+        <h4 className="text-sm font-medium text-gray-700 mb-4 text-center">
           {title}
         </h4>
       )}
@@ -445,15 +445,15 @@ export const GaugeChart: React.FC<{
         
         {/* Center value */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
-          <div className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">
+          <div className="text-2xl font-bold text-gray-900">
             {normalizedValue}
           </div>
           {subtitle && (
-            <div className="text-xs text-gray-600 font-reisinger-yonatan">
+            <div className="text-xs text-gray-600">
               {subtitle}
             </div>
           )}
-          <div className="text-xs font-medium font-reisinger-yonatan" style={{ color: gaugeColor }}>
+          <div className="text-xs font-medium" style={{ color: gaugeColor }}>
             {currentThreshold.label}
           </div>
         </div>
@@ -467,7 +467,7 @@ export const GaugeChart: React.FC<{
               className="w-3 h-3 rounded-full mb-1"
               style={{ backgroundColor: threshold.color }}
             />
-            <span className="text-xs text-gray-600 font-reisinger-yonatan">
+            <span className="text-xs text-gray-600">
               {threshold.label}
             </span>
           </div>

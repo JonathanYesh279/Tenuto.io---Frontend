@@ -253,7 +253,7 @@ export default function BagrutDashboard() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען לוח בקרה בגרות...</div>
+          <div className="text-gray-600">טוען לוח בקרה בגרות...</div>
         </div>
       </div>
     )
@@ -263,7 +263,7 @@ export default function BagrutDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <WarningCircleIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -283,7 +283,7 @@ export default function BagrutDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h1 className="text-3xl font-bold text-gray-900">
             לוח בקרה בגרות
           </h1>
           <p className="text-gray-600 mt-2">
@@ -346,7 +346,7 @@ export default function BagrutDashboard() {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">
             פעולות מהירות
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -395,7 +395,7 @@ export default function BagrutDashboard() {
             {/* Students List */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   תלמידי בגרות
                 </h2>
                 <div className="flex items-center gap-3">
@@ -426,7 +426,7 @@ export default function BagrutDashboard() {
               {filteredStudents.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <GraduationCapIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין תלמידי בגרות</p>
+                  <p className="">אין תלמידי בגרות</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -484,7 +484,7 @@ export default function BagrutDashboard() {
             {/* Progress Analytics */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   אנליטיקת התקדמות
                 </h2>
                 <ChartBarIcon className="w-5 h-5 text-gray-400" />
@@ -523,7 +523,7 @@ export default function BagrutDashboard() {
             {/* Upcoming Exams */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   מבחנים קרובים
                 </h2>
                 <CalendarDotsIcon className="w-5 h-5 text-gray-400" />
@@ -532,7 +532,7 @@ export default function BagrutDashboard() {
               {upcomingExams.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין מבחנים מתוכננים</p>
+                  <p className="">אין מבחנים מתוכננים</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -564,7 +564,7 @@ export default function BagrutDashboard() {
             {/* Performance Metrics */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   מדדי ביצועים
                 </h2>
                 <TrendUpIcon className="w-5 h-5 text-gray-400" />
@@ -607,7 +607,7 @@ function StatCard({ icon, title, value, suffix, bgColor, iconColor, borderColor 
     <div className={`${bgColor} border ${borderColor} rounded p-6`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>
+          <p className="text-sm font-medium text-gray-700">{title}</p>
           <p className="text-2xl font-bold text-gray-900 mt-2">
             {value} {suffix && <span className="text-lg font-normal">{suffix}</span>}
           </p>
@@ -644,7 +644,7 @@ function QuickActionButton({ icon, label, onClick, color }: QuickActionButtonPro
       className={`flex flex-col items-center justify-center p-4 rounded border transition-colors ${colorClasses[color]}`}
     >
       {icon}
-      <span className="mt-2 text-sm font-medium font-reisinger-yonatan">{label}</span>
+      <span className="mt-2 text-sm font-medium">{label}</span>
     </button>
   )
 }

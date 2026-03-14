@@ -342,7 +342,7 @@ export default function OrchestraEnrollmentManager() {
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען נתוני הרשמה...</div>
+          <div className="text-gray-600">טוען נתוני הרשמה...</div>
         </div>
       </div>
     )
@@ -353,7 +353,7 @@ export default function OrchestraEnrollmentManager() {
       <div className="bg-red-50 border border-red-200 rounded p-4">
         <div className="flex items-center gap-2 text-red-800">
           <WarningCircleIcon className="w-5 h-5" />
-          <div className="font-reisinger-yonatan">{error}</div>
+          <div className="">{error}</div>
         </div>
       </div>
     )
@@ -367,7 +367,7 @@ export default function OrchestraEnrollmentManager() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h1 className="text-2xl font-bold text-gray-900">
             ניהול הרשמות לתזמורות
           </h1>
           <p className="text-gray-600 mt-1">
@@ -389,7 +389,7 @@ export default function OrchestraEnrollmentManager() {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-              <div className="text-sm text-gray-600 font-reisinger-yonatan">סה״כ תלמידים</div>
+              <div className="text-sm text-gray-600">סה״כ תלמידים</div>
             </div>
             <UsersIcon className="w-8 h-8 text-blue-600" />
           </div>
@@ -398,7 +398,7 @@ export default function OrchestraEnrollmentManager() {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-green-600">{stats.enrolled}</div>
-              <div className="text-sm text-gray-600 font-reisinger-yonatan">רשומים</div>
+              <div className="text-sm text-gray-600">רשומים</div>
             </div>
             <CheckCircleIcon className="w-8 h-8 text-green-600" />
           </div>
@@ -407,7 +407,7 @@ export default function OrchestraEnrollmentManager() {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
-              <div className="text-sm text-gray-600 font-reisinger-yonatan">ממתינים</div>
+              <div className="text-sm text-gray-600">ממתינים</div>
             </div>
             <ClockIcon className="w-8 h-8 text-yellow-600" />
           </div>
@@ -416,7 +416,7 @@ export default function OrchestraEnrollmentManager() {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold text-purple-600">{Math.round(stats.averageAttendance)}%</div>
-              <div className="text-sm text-gray-600 font-reisinger-yonatan">נוכחות ממוצעת</div>
+              <div className="text-sm text-gray-600">נוכחות ממוצעת</div>
             </div>
             <TrendUpIcon className="w-8 h-8 text-purple-600" />
           </div>
@@ -517,7 +517,7 @@ export default function OrchestraEnrollmentManager() {
       <div className="bg-white rounded border border-gray-200 overflow-hidden">
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+            <h3 className="text-lg font-semibold text-gray-900">
               רשימת תלמידים ({filteredStudents.length})
             </h3>
             {showBulkActions && (
@@ -534,7 +534,7 @@ export default function OrchestraEnrollmentManager() {
         {filteredStudents.length === 0 ? (
           <div className="text-center py-12">
             <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-500 font-reisinger-yonatan">לא נמצאו תלמידים</p>
+            <p className="text-gray-500">לא נמצאו תלמידים</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -583,7 +583,7 @@ export default function OrchestraEnrollmentManager() {
                       </td>
                     )}
                     <td className="px-4 py-3">
-                      <div className="font-medium text-gray-900 font-reisinger-yonatan">
+                      <div className="font-medium text-gray-900">
                         {student.name}
                       </div>
                       <div className="text-sm text-gray-500">
@@ -606,7 +606,7 @@ export default function OrchestraEnrollmentManager() {
                       {student.currentOrchestras.length > 0 ? (
                         <div className="space-y-1">
                           {student.currentOrchestras.map((orchestra, index) => (
-                            <div key={index} className="text-sm text-gray-900 font-reisinger-yonatan">
+                            <div key={index} className="text-sm text-gray-900">
                               {orchestra}
                             </div>
                           ))}

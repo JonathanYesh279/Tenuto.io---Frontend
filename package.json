@@ -1,7 +1,9 @@
 {
   "name": "conservatory-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
+  "author": "Yehonatan Yeshayahu (יהונתן ישעיהו)",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -26,6 +28,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@floating-ui/react": "^0.25.4",
     "@headlessui/react": "^1.7.17",
+    "@heroui/react": "^2.8.10",
     "@hookform/resolvers": "^3.3.1",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-avatar": "^1.1.11",
@@ -48,6 +51,7 @@
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.4",
+    "gsap": "^3.14.2",
     "immer": "^10.0.2",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",

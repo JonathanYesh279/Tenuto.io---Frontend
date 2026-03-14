@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MusicNoteIcon, UsersIcon, SquaresFourIcon, ListIcon, ChartBarIcon, Table as TablePhIcon } from '@phosphor-icons/react'
+import { MusicNoteIcon, UsersIcon, SquaresFourIcon, ListIcon, Table as TablePhIcon } from '@phosphor-icons/react'
 import { PlusIcon } from '@phosphor-icons/react'
 import Table from '../components/ui/Table'
 import { SearchInput } from '../components/ui/SearchInput'
@@ -9,9 +9,7 @@ import { GlassSelect } from '../components/ui/GlassSelect'
 import { Button as HeroButton } from '@heroui/react'
 import OrchestraForm from '../components/OrchestraForm'
 import OrchestraCard from '../components/OrchestraCard'
-import OrchestraManagementDashboard from '../components/OrchestraManagementDashboard'
 import Modal from '../components/ui/Modal'
-import OrchestraMemberManagement from '../components/OrchestraMemberManagement'
 import ConfirmDeleteDialog from '../components/ui/ConfirmDeleteDialog'
 import { orchestraService, teacherService } from '../services/apiService'
 import { useAuth } from '../services/authContext'
@@ -25,7 +23,6 @@ import {
   getOrchestraTypeInfo,
   getOrchestraStatus,
   calculateOrchestraStats,
-  getConductorName,
   formatMemberCount,
   formatRehearsalCount,
   VALID_ORCHESTRA_TYPES,
@@ -48,11 +45,7 @@ export default function Orchestras() {
   const [showForm, setShowForm] = useState(false)
   const [editingOrchestra, setEditingOrchestra] = useState<Orchestra | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [viewMode, setViewMode] = useState<'grid' | 'table' | 'dashboard'>('dashboard')
-
-  // Modal states (keeping member management modal for now)
-  const [showMemberManagement, setShowMemberManagement] = useState(false)
-  const [selectedOrchestraId, setSelectedOrchestraId] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid')
 
   // Ensemble summary modal
   const [showEnsembleSummary, setShowEnsembleSummary] = useState(false)
@@ -114,6 +107,16 @@ export default function Orchestras() {
     sortBy,
     sortOrder
   )
+
+  // Build teacher lookup for conductor names
+  const resolveConductorName = (conductorId?: string): string => {
+    if (!conductorId) return 'לא הוקצה מנצח'
+    const teacher = allTeachers.find((t: any) => t._id === conductorId)
+    if (teacher) return getDisplayName(teacher.personalInfo)
+    const conductor = teachers.find((t: any) => t._id === conductorId)
+    if (conductor) return getDisplayName((conductor as any).personalInfo)
+    return 'לא הוקצה מנצח'
+  }
 
   // Calculate statistics
   const stats = {
@@ -200,16 +203,6 @@ export default function Orchestras() {
     navigate(`/orchestras/${orchestraId}`)
   }
 
-  const handleManageMembers = (orchestraId: string) => {
-    setSelectedOrchestraId(orchestraId)
-    setShowMemberManagement(true)
-  }
-
-  const handleCloseModals = () => {
-    setShowMemberManagement(false)
-    setSelectedOrchestraId(null)
-  }
-
   // Table columns configuration
   const columns = [
     {
@@ -233,7 +226,7 @@ export default function Orchestras() {
     {
       key: 'conductor',
       label: 'מנצח',
-      render: (orchestra: Orchestra) => getConductorName(orchestra)
+      render: (orchestra: Orchestra) => resolveConductorName(orchestra.conductorId)
     },
     {
       key: 'members',
@@ -330,18 +323,6 @@ export default function Orchestras() {
       <div className="flex items-center justify-between">
         <div className="flex items-center bg-slate-50 dark:bg-slate-800 p-0.5 rounded-full border border-slate-200 dark:border-slate-700">
           <button
-            onClick={() => setViewMode('dashboard')}
-            className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
-              viewMode === 'dashboard'
-                ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-600'
-            }`}
-            title="לוח בקרה"
-          >
-            <ChartBarIcon size={14} weight="regular" />
-            <span className="hidden sm:inline">לוח בקרה</span>
-          </button>
-          <button
             onClick={() => setViewMode('grid')}
             className={`px-2.5 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
               viewMode === 'grid'
@@ -367,132 +348,115 @@ export default function Orchestras() {
           </button>
         </div>
 
-        {viewMode !== 'dashboard' && (
-          <div className="flex items-center gap-3">
-            <GlassSelect
-              value={sortBy}
-              onValueChange={(v) => setSortBy(v as any)}
-              placeholder="מיון"
-              options={[
-                { value: 'name', label: 'מיון לפי שם' },
-                { value: 'type', label: 'מיון לפי סוג' },
-                { value: 'conductor', label: 'מיון לפי מנצח' },
-                { value: 'memberCount', label: 'מיון לפי מספר חברים' },
-                { value: 'location', label: 'מיון לפי מיקום' },
-                { value: 'rehearsalCount', label: 'מיון לפי חזרות' },
-              ]}
-            />
-            <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="px-3 py-1.5 text-sm border border-slate-200 rounded hover:bg-slate-50 text-slate-600"
-            >
-              {sortOrder === 'asc' ? '↑' : '↓'}
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          <GlassSelect
+            value={sortBy}
+            onValueChange={(v) => setSortBy(v as any)}
+            placeholder="מיון"
+            options={[
+              { value: 'name', label: 'מיון לפי שם' },
+              { value: 'type', label: 'מיון לפי סוג' },
+              { value: 'conductor', label: 'מיון לפי מנצח' },
+              { value: 'memberCount', label: 'מיון לפי מספר חברים' },
+              { value: 'location', label: 'מיון לפי מיקום' },
+              { value: 'rehearsalCount', label: 'מיון לפי חזרות' },
+            ]}
+          />
+          <button
+            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            className="px-3 py-1.5 text-sm border border-slate-200 rounded hover:bg-slate-50 text-slate-600"
+          >
+            {sortOrder === 'asc' ? '↑' : '↓'}
+          </button>
+        </div>
       </div>
 
-      {/* Compact Filter Toolbar -- grid/table modes only */}
-      {viewMode !== 'dashboard' && (
-        <div className="flex items-center gap-3 flex-wrap px-1">
-          <div className="w-64 flex-none">
-            <SearchInput
-              value={searchQuery}
-              onChange={(value) => setSearchQuery(value)}
-              onClear={() => setSearchQuery('')}
-              placeholder="חיפוש תזמורות..."
-            />
-          </div>
-          <GlassSelect
-            value={filters.type || '__all__'}
-            onValueChange={(v) => setFilters(prev => ({ ...prev, type: (v === '__all__' ? '' : v) as OrchestraType | '' }))}
-            placeholder="כל הסוגים"
-            options={[
-              { value: '__all__', label: 'כל הסוגים' },
-              ...VALID_ORCHESTRA_TYPES.map(type => ({ value: type, label: type }))
-            ]}
+      {/* Filter Toolbar */}
+      <div className="flex items-center gap-3 flex-wrap px-1">
+        <div className="w-64 flex-none">
+          <SearchInput
+            value={searchQuery}
+            onChange={(value) => setSearchQuery(value)}
+            onClear={() => setSearchQuery('')}
+            placeholder="חיפוש תזמורות..."
           />
-          <GlassSelect
-            value={filters.conductorId || '__all__'}
-            onValueChange={(v) => setFilters(prev => ({ ...prev, conductorId: v === '__all__' ? '' : v }))}
-            placeholder="כל המנצחים"
-            options={[
-              { value: '__all__', label: 'כל המנצחים' },
-              ...teachers.map((teacher: any) => ({ value: teacher._id, label: getDisplayName(teacher.personalInfo) }))
-            ]}
-          />
-          <GlassSelect
-            value={filters.location || '__all__'}
-            onValueChange={(v) => setFilters(prev => ({ ...prev, location: (v === '__all__' ? '' : v) as LocationType | '' }))}
-            placeholder="כל המיקומים"
-            options={[
-              { value: '__all__', label: 'כל המיקומים' },
-              ...VALID_LOCATIONS.map(location => ({ value: location, label: location }))
-            ]}
-          />
-          <GlassSelect
-            value={filters.statusFilter || '__all__'}
-            onValueChange={(v) => setFilters(prev => ({ ...prev, statusFilter: (v === '__all__' ? '' : v) as '' | 'active' | 'inactive' }))}
-            placeholder="כל הסטטוסים"
-            options={[
-              { value: '__all__', label: 'כל הסטטוסים' },
-              { value: 'active', label: 'פעילים בלבד' },
-              { value: 'inactive', label: 'לא פעילים' },
-            ]}
-          />
-          <span className="text-xs font-medium text-slate-400 mr-auto">
-            {filteredAndSortedOrchestras.length} תזמורות
-          </span>
         </div>
-      )}
-
-      {/* Data area -- grid/table views */}
-      {viewMode !== 'dashboard' && (
-        <>
-          {filteredAndSortedOrchestras.length === 0 ? (
-            searchQuery || filters.type || filters.conductorId || filters.location ? (
-              <div className="text-center py-12 text-muted-foreground">לא נמצאו תזמורות התואמות לחיפוש</div>
-            ) : (
-              <EmptyState
-                title="אין תזמורות עדיין"
-                description="צור תזמורת חדשה כדי להתחיל"
-                icon={<MusicNoteIcon size={48} weight="regular" />}
-                action={{ label: 'תזמורת חדשה', onClick: handleCreateOrchestra }}
-              />
-            )
-          ) : viewMode === 'table' ? (
-            <Table
-              data={filteredAndSortedOrchestras}
-              columns={columns}
-              onEdit={handleEditOrchestra}
-              onDelete={(orchestra) => handleDeleteOrchestra(orchestra._id)}
-              onView={(orchestra) => handleViewDetails(orchestra._id)}
-              actions={true}
-            />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredAndSortedOrchestras.map(orchestra => (
-                <OrchestraCard
-                  key={orchestra._id}
-                  orchestra={orchestra}
-                  onEdit={handleEditOrchestra}
-                  onDelete={handleDeleteOrchestra}
-                  onViewDetails={handleViewDetails}
-                />
-              ))}
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Dashboard View */}
-      {viewMode === 'dashboard' && (
-        <OrchestraManagementDashboard
-          onViewDetails={handleViewDetails}
-          onEditOrchestra={handleEditOrchestra}
-          onManageMembers={handleManageMembers}
-          onDeleteOrchestra={handleDeleteOrchestra}
+        <GlassSelect
+          value={filters.type || '__all__'}
+          onValueChange={(v) => setFilters(prev => ({ ...prev, type: (v === '__all__' ? '' : v) as OrchestraType | '' }))}
+          placeholder="כל הסוגים"
+          options={[
+            { value: '__all__', label: 'כל הסוגים' },
+            ...VALID_ORCHESTRA_TYPES.map(type => ({ value: type, label: type }))
+          ]}
         />
+        <GlassSelect
+          value={filters.conductorId || '__all__'}
+          onValueChange={(v) => setFilters(prev => ({ ...prev, conductorId: v === '__all__' ? '' : v }))}
+          placeholder="כל המנצחים"
+          options={[
+            { value: '__all__', label: 'כל המנצחים' },
+            ...teachers.map((teacher: any) => ({ value: teacher._id, label: getDisplayName(teacher.personalInfo) }))
+          ]}
+        />
+        <GlassSelect
+          value={filters.location || '__all__'}
+          onValueChange={(v) => setFilters(prev => ({ ...prev, location: (v === '__all__' ? '' : v) as LocationType | '' }))}
+          placeholder="כל המיקומים"
+          options={[
+            { value: '__all__', label: 'כל המיקומים' },
+            ...VALID_LOCATIONS.map(location => ({ value: location, label: location }))
+          ]}
+        />
+        <GlassSelect
+          value={filters.statusFilter || '__all__'}
+          onValueChange={(v) => setFilters(prev => ({ ...prev, statusFilter: (v === '__all__' ? '' : v) as '' | 'active' | 'inactive' }))}
+          placeholder="כל הסטטוסים"
+          options={[
+            { value: '__all__', label: 'כל הסטטוסים' },
+            { value: 'active', label: 'פעילים בלבד' },
+            { value: 'inactive', label: 'לא פעילים' },
+          ]}
+        />
+        <span className="text-xs font-medium text-slate-400 mr-auto">
+          {filteredAndSortedOrchestras.length} תזמורות
+        </span>
+      </div>
+
+      {/* Data area */}
+      {filteredAndSortedOrchestras.length === 0 ? (
+        searchQuery || filters.type || filters.conductorId || filters.location ? (
+          <div className="text-center py-12 text-muted-foreground">לא נמצאו תזמורות התואמות לחיפוש</div>
+        ) : (
+          <EmptyState
+            title="אין תזמורות עדיין"
+            description="צור תזמורת חדשה כדי להתחיל"
+            icon={<MusicNoteIcon size={48} weight="regular" />}
+            action={{ label: 'תזמורת חדשה', onClick: handleCreateOrchestra }}
+          />
+        )
+      ) : viewMode === 'table' ? (
+        <Table
+          data={filteredAndSortedOrchestras}
+          columns={columns}
+          onEdit={handleEditOrchestra}
+          onDelete={(orchestra) => handleDeleteOrchestra(orchestra._id)}
+          onView={(orchestra) => handleViewDetails(orchestra._id)}
+          actions={true}
+        />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredAndSortedOrchestras.map(orchestra => (
+            <OrchestraCard
+              key={orchestra._id}
+              orchestra={orchestra}
+              conductorName={resolveConductorName(orchestra.conductorId)}
+              onEdit={handleEditOrchestra}
+              onDelete={handleDeleteOrchestra}
+              onViewDetails={handleViewDetails}
+            />
+          ))}
+        </div>
       )}
 
       {/* Orchestra Form Modal */}
@@ -508,16 +472,6 @@ export default function Orchestras() {
         />
       )}
 
-
-      {/* Member Management Modal */}
-      {showMemberManagement && selectedOrchestraId && (
-        <OrchestraMemberManagement
-          orchestraId={selectedOrchestraId}
-          isOpen={showMemberManagement}
-          onClose={handleCloseModals}
-          onUpdate={loadData}
-        />
-      )}
 
       {/* Delete Confirmation Dialog */}
       <ConfirmDeleteDialog
@@ -542,17 +496,9 @@ export default function Orchestras() {
         className="!max-w-7xl"
       >
         {(() => {
-          // Build teacher lookup map for conductor names
-          const teacherMap = new Map<string, string>()
-          allTeachers.forEach((t: any) => {
-            teacherMap.set(t._id, getDisplayName(t.personalInfo))
-          })
-          const resolveConductorName = (orchestra: Orchestra) => {
-            if (orchestra.conductorId && teacherMap.has(orchestra.conductorId)) {
-              return teacherMap.get(orchestra.conductorId)!
-            }
-            const name = getConductorName(orchestra)
-            return name === 'טוען נתוני מנצח...' ? '—' : name
+          // Resolve conductor name using already-loaded teachers
+          const modalResolveConductor = (orchestra: Orchestra) => {
+            return resolveConductorName(orchestra.conductorId)
           }
 
           // Compute totals for the summary
@@ -700,7 +646,7 @@ export default function Orchestras() {
                   </thead>
                   <tbody>
                     {summaryOrchestras.map((orchestra, idx) => {
-                      const conductorName = resolveConductorName(orchestra)
+                      const conductorName = modalResolveConductor(orchestra)
                       const scheduleText = orchestra.scheduleSlots?.map((slot: any) => {
                         const dayName = slot.day || (['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][slot.dayOfWeek] ?? '')
                         return `${dayName} ${slot.startTime}-${slot.endTime}`

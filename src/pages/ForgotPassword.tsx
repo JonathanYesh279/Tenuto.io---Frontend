@@ -46,7 +46,7 @@ export default function ForgotPassword() {
               <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
                 <MusicNoteIcon size={32} weight="regular" className="text-white" />
               </div>
-              <p className="text-sm text-white/70 font-reisinger-yonatan">מערכת ניהול קונסרבטוריון</p>
+              <p className="text-sm text-white/70">מערכת ניהול קונסרבטוריון</p>
             </div>
             <h2
               className="mt-6 text-center text-3xl font-extrabold text-white drop-shadow-lg"
@@ -54,7 +54,7 @@ export default function ForgotPassword() {
             >
               שכחתי סיסמא
             </h2>
-            <p className="mt-2 text-center text-sm text-white/80 font-reisinger-yonatan">
+            <p className="mt-2 text-center text-sm text-white/80">
               הזן את כתובת הדוא"ל שלך ונשלח לך קישור לאיפוס סיסמה
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function ForgotPassword() {
           {isSuccess ? (
             <div className="mt-8 space-y-6">
               <div className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg backdrop-blur-sm">
-                <p className="text-green-100 text-sm text-center font-reisinger-yonatan">
+                <p className="text-green-100 text-sm text-center">
                   אם קיים חשבון עם כתובת דוא"ל זו, נשלח אליך קישור לאיפוס סיסמה.
                   אנא בדוק את תיבת הדואר שלך.
                 </p>
@@ -71,7 +71,7 @@ export default function ForgotPassword() {
               <div className="text-center">
                 <Link
                   to="/login"
-                  className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 font-reisinger-yonatan underline"
+                  className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 underline"
                 >
                   חזור לדף הכניסה
                 </Link>
@@ -81,13 +81,13 @@ export default function ForgotPassword() {
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               {error && (
                 <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg backdrop-blur-sm">
-                  <p className="text-red-100 text-sm text-center font-reisinger-yonatan">{error}</p>
+                  <p className="text-red-100 text-sm text-center">{error}</p>
                 </div>
               )}
 
               <div className="rounded-md shadow-sm">
                 <div>
-                  <label htmlFor="email" className="sr-only font-reisinger-yonatan">
+                  <label htmlFor="email" className="sr-only">
                     כתובת דוא"ל
                   </label>
                   <input
@@ -96,7 +96,7 @@ export default function ForgotPassword() {
                     type="email"
                     required
                     disabled={isLoading}
-                    className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="כתובת דוא״ל"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -110,7 +110,7 @@ export default function ForgotPassword() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <div className="flex items-center">
@@ -126,7 +126,7 @@ export default function ForgotPassword() {
               <div className="text-center">
                 <Link
                   to="/login"
-                  className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 font-reisinger-yonatan underline"
+                  className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 underline"
                 >
                   חזור לדף הכניסה
                 </Link>

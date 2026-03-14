@@ -242,7 +242,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען נתוני נוכחות...</div>
+          <div className="text-gray-600">טוען נתוני נוכחות...</div>
         </div>
       </div>
     )
@@ -253,7 +253,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
         <div className="flex items-center gap-2 text-red-800">
           <WarningCircleIcon className="w-5 h-5" />
-          <div className="font-reisinger-yonatan">{error}</div>
+          <div className="">{error}</div>
         </div>
       </div>
     )
@@ -263,7 +263,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
     return (
       <div className="text-center py-12">
         <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-        <div className="text-gray-600 font-reisinger-yonatan">לא נמצאה חזרה</div>
+        <div className="text-gray-600">לא נמצאה חזרה</div>
       </div>
     )
   }
@@ -276,7 +276,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
       {/* Rehearsal Header */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h2 className="text-xl font-bold text-gray-900">
             נוכחות חזרה
           </h2>
           <div className="flex gap-2">
@@ -302,7 +302,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
           <div className="flex items-center gap-3">
             <MusicNotesIcon className="w-5 h-5 text-indigo-600" />
             <div>
-              <div className="font-medium text-gray-900 font-reisinger-yonatan">{rehearsal.orchestraName}</div>
+              <div className="font-medium text-gray-900">{rehearsal.orchestraName}</div>
               <div className="text-sm text-gray-600">{rehearsal.date}</div>
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
       {/* Attendance Stats */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-lg font-semibold text-gray-900">
             סיכום נוכחות
           </h3>
           <button
@@ -340,23 +340,23 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-            <div className="text-sm text-gray-600 font-reisinger-yonatan">סה״כ חברים</div>
+            <div className="text-sm text-gray-600">סה״כ חברים</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{stats.present}</div>
-            <div className="text-sm text-gray-600 font-reisinger-yonatan">נוכחים</div>
+            <div className="text-sm text-gray-600">נוכחים</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-red-600">{stats.absent}</div>
-            <div className="text-sm text-gray-600 font-reisinger-yonatan">נעדרים</div>
+            <div className="text-sm text-gray-600">נעדרים</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-yellow-600">{stats.late}</div>
-            <div className="text-sm text-gray-600 font-reisinger-yonatan">מאחרים</div>
+            <div className="text-sm text-gray-600">מאחרים</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-gray-500">{stats.notMarked}</div>
-            <div className="text-sm text-gray-600 font-reisinger-yonatan">לא סומנו</div>
+            <div className="text-sm text-gray-600">לא סומנו</div>
           </div>
         </div>
 
@@ -407,7 +407,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
       {/* Members List */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="p-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-lg font-semibold text-gray-900">
             רשימת חברים ({filteredMembers.length})
           </h3>
         </div>
@@ -415,7 +415,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
         {filteredMembers.length === 0 ? (
           <div className="text-center py-12">
             <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-500 font-reisinger-yonatan">
+            <p className="text-gray-500">
               {searchTerm || filterStatus !== 'all' ? 'לא נמצאו חברים' : 'אין חברים רשומים'}
             </p>
           </div>
@@ -432,7 +432,7 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
                       'bg-gray-400'
                     }`} />
                     <div>
-                      <div className="font-medium text-gray-900 font-reisinger-yonatan">
+                      <div className="font-medium text-gray-900">
                         {member.name}
                       </div>
                       <div className="text-sm text-gray-600">

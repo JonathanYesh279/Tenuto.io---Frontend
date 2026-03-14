@@ -192,7 +192,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
                   <Icon className="w-5 h-5" />
                 </div>
                 <span className={`
-                  mr-2 text-sm font-medium font-reisinger-yonatan
+                  mr-2 text-sm font-medium
                   ${isCompleted 
                     ? 'text-green-600' 
                     : isCurrent 
@@ -223,10 +223,10 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
         <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full">
           <UserIcon className="w-8 h-8 text-red-600" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan mb-2">
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
           מחיקת תלמיד - {studentName}
         </h3>
-        <p className="text-gray-600 font-reisinger-yonatan">
+        <p className="text-gray-600">
           נבדקת השפעת המחיקה על המערכת
         </p>
       </div>
@@ -243,12 +243,12 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
       ) : (
         <Card className="text-center py-8">
           <WarningIcon className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-          <p className="text-gray-600 font-reisinger-yonatan">
+          <p className="text-gray-600">
             לא ניתן לטעון את נתוני ההשפעה
           </p>
           <button
             onClick={loadDeletionImpact}
-            className="mt-4 px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded hover:bg-blue-100 transition-colors font-reisinger-yonatan"
+            className="mt-4 px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded hover:bg-blue-100 transition-colors"
           >
             נסה שוב
           </button>
@@ -263,10 +263,10 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
         <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-orange-100 rounded-full">
           <WarningIcon className="w-8 h-8 text-orange-600" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan mb-2">
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
           אישור סופי למחיקה
         </h3>
-        <p className="text-gray-600 font-reisinger-yonatan">
+        <p className="text-gray-600">
           פעולה זו אינה הפיכה ותמחק לצמיתות את כל הנתונים
         </p>
       </div>
@@ -275,9 +275,9 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-red-700">
             <XCircleIcon className="w-5 h-5" />
-            <span className="font-semibold font-reisinger-yonatan">אזהרה חמורה</span>
+            <span className="font-semibold">אזהרה חמורה</span>
           </div>
-          <div className="text-sm text-red-700 space-y-1 font-reisinger-yonatan">
+          <div className="text-sm text-red-700 space-y-1">
             <p>• כל הנתונים של התלמיד יימחקו לצמיתות</p>
             <p>• היסטוריית נוכחות וציונים תאבד</p>
             <p>• קבצים ומסמכים קשורים יימחקו</p>
@@ -288,21 +288,21 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             סיבת המחיקה (חובה)
           </label>
           <textarea
             value={formData.reason}
             onChange={(e) => setFormData(prev => ({ ...prev, reason: e.target.value }))}
             placeholder="הזן את הסיבה למחיקת התלמיד..."
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none font-reisinger-yonatan"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             rows={3}
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             אפשרויות ניקוי
           </label>
           <div className="space-y-2">
@@ -319,7 +319,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
                 }))}
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="mr-2 text-sm text-gray-700 font-reisinger-yonatan">
+              <span className="mr-2 text-sm text-gray-700">
                 נקה הפניות יתומות
               </span>
             </label>
@@ -337,7 +337,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
                 }))}
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="mr-2 text-sm text-gray-700 font-reisinger-yonatan">
+              <span className="mr-2 text-sm text-gray-700">
                 מחק מסמכים קשורים
               </span>
             </label>
@@ -355,7 +355,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
                 }))}
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="mr-2 text-sm text-gray-700 font-reisinger-yonatan">
+              <span className="mr-2 text-sm text-gray-700">
                 מחק רשומות נוכחות
               </span>
             </label>
@@ -363,7 +363,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             אישור סופי - הקלד את שם התלמיד: <strong>{studentName}</strong>
           </label>
           <input
@@ -372,7 +372,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
             onChange={(e) => setFormData(prev => ({ ...prev, confirmationText: e.target.value }))}
             placeholder={studentName}
             className={`
-              w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent font-reisinger-yonatan
+              w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent
               ${formData.confirmationText === studentName 
                 ? 'border-green-300 bg-green-50' 
                 : 'border-gray-300'
@@ -380,7 +380,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
             `}
             required
           />
-          <p className="text-xs text-gray-500 mt-1 font-reisinger-yonatan">
+          <p className="text-xs text-gray-500 mt-1">
             יש להקליד את שם התלמיד בדיוק כפי שמופיע למעלה
           </p>
         </div>
@@ -409,10 +409,10 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
     return (
       <div className="space-y-6" dir="rtl">
         <div className="text-center">
-          <h3 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan mb-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
             תהליך המחיקה מתבצע
           </h3>
-          <p className="text-gray-600 font-reisinger-yonatan">
+          <p className="text-gray-600">
             אנא המתן עד להשלמת התהליך. לא לסגור חלון זה.
           </p>
         </div>
@@ -429,9 +429,9 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
         <Card className="bg-blue-50 border-blue-200">
           <div className="flex items-center gap-2 text-blue-700">
             <ClockIcon className="w-5 h-5" />
-            <span className="font-semibold font-reisinger-yonatan">הערה חשובה</span>
+            <span className="font-semibold">הערה חשובה</span>
           </div>
-          <p className="text-sm text-blue-700 mt-2 font-reisinger-yonatan">
+          <p className="text-sm text-blue-700 mt-2">
             תהליך המחיקה עלול להימשך מספר דקות. המערכת תעדכן אותך על ההתקדמות.
           </p>
         </Card>
@@ -446,10 +446,10 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
       </div>
       
       <div>
-        <h3 className="text-xl font-semibold text-gray-900 font-reisinger-yonatan mb-2">
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
           המחיקה הושלמה בהצלחה
         </h3>
-        <p className="text-gray-600 font-reisinger-yonatan">
+        <p className="text-gray-600">
           התלמיד {studentName} נמחק מהמערכת יחד עם כל הנתונים הקשורים
         </p>
       </div>
@@ -458,9 +458,9 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-green-700">
             <CheckCircleIcon className="w-5 h-5" />
-            <span className="font-semibold font-reisinger-yonatan">פעולות שבוצעו:</span>
+            <span className="font-semibold">פעולות שבוצעו:</span>
           </div>
-          <ul className="text-sm text-green-700 space-y-1 font-reisinger-yonatan">
+          <ul className="text-sm text-green-700 space-y-1">
             <li>• מחיקת פרטי התלמיד האישיים</li>
             <li>• הסרת השיבוצים לשיעורים</li>
             <li>• מחיקת היסטוריית נוכחות</li>
@@ -486,7 +486,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
               className="flex items-center gap-1 px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
             >
               <CaretRightIcon className="w-4 h-4" />
-              <span className="font-reisinger-yonatan">הקודם</span>
+              <span className="">הקודם</span>
             </button>
           )}
         </div>
@@ -495,7 +495,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
           {currentStep !== 'progress' && (
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors font-reisinger-yonatan"
+              className="px-4 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
             >
               ביטול
             </button>
@@ -518,7 +518,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
                 }
               `}
             >
-              <span className="font-reisinger-yonatan">
+              <span className="">
                 {currentStep === 'impact' ? 'המשך' : 'מחק תלמיד'}
               </span>
               <CaretLeftIcon className="w-4 h-4" />
@@ -531,7 +531,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
               className="flex items-center gap-1 px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
             >
               <CheckCircleIcon className="w-4 h-4" />
-              <span className="font-reisinger-yonatan">סגור</span>
+              <span className="">סגור</span>
             </button>
           )}
         </div>
@@ -564,7 +564,7 @@ const StudentDeletionModal: React.FC<StudentDeletionModalProps> = ({
 
         {/* Step Title */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h2 className="text-2xl font-bold text-gray-900">
             {getStepTitle()}
           </h2>
         </div>

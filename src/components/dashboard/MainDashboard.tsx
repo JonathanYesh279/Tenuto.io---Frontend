@@ -97,10 +97,10 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
             <div className="flex items-center">
               <MusicNotesIcon className="w-8 h-8 text-primary ml-3" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+                <h1 className="text-xl font-bold text-gray-900">
                   לוח הבקרה
                 </h1>
-                <p className="text-sm text-gray-600 font-reisinger-yonatan">
+                <p className="text-sm text-gray-600">
                   ניהול הקונסרבטוריון
                 </p>
               </div>
@@ -123,7 +123,7 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors font-reisinger-yonatan ${
+                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                     activeTab === tab.id
                       ? 'border-primary text-primary'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -145,10 +145,10 @@ const MainDashboard: React.FC<MainDashboardProps> = ({
         <div className="bg-red-50 border border-red-200 p-4 m-4 rounded-lg">
           <div className="flex items-center">
             <WarningIcon className="w-5 h-5 text-red-500 ml-2" />
-            <span className="text-red-700 font-reisinger-yonatan">{error}</span>
+            <span className="text-red-700">{error}</span>
             <button
               onClick={refresh}
-              className="mr-4 text-red-600 hover:text-red-800 underline font-reisinger-yonatan"
+              className="mr-4 text-red-600 hover:text-red-800 underline"
             >
               נסה שוב
             </button>
@@ -203,8 +203,8 @@ const OverviewDashboard: React.FC<{
         <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">סך הכל תלמידים</p>
-              <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.totalStudents}</p>
+              <p className="text-sm font-medium text-gray-600">סך הכל תלמידים</p>
+              <p className="text-2xl font-bold text-gray-900">{data.totalStudents}</p>
             </div>
             <UsersIcon className="w-8 h-8 text-blue-500" />
           </div>
@@ -213,8 +213,8 @@ const OverviewDashboard: React.FC<{
         <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">סך הכל מורים</p>
-              <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.totalTeachers}</p>
+              <p className="text-sm font-medium text-gray-600">סך הכל מורים</p>
+              <p className="text-2xl font-bold text-gray-900">{data.totalTeachers}</p>
             </div>
             <TrendUpIcon className="w-8 h-8 text-green-500" />
           </div>
@@ -223,8 +223,8 @@ const OverviewDashboard: React.FC<{
         <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">שיעורים השבוע</p>
-              <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.weeklyLessons}</p>
+              <p className="text-sm font-medium text-gray-600">שיעורים השבוע</p>
+              <p className="text-2xl font-bold text-gray-900">{data.weeklyLessons}</p>
             </div>
             <CalendarIcon className="w-8 h-8 text-purple-500" />
           </div>
@@ -233,8 +233,8 @@ const OverviewDashboard: React.FC<{
         <div className="bg-white p-6 rounded border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 font-reisinger-yonatan">נוכחות ממוצעת</p>
-              <p className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">{data.attendanceRate}%</p>
+              <p className="text-sm font-medium text-gray-600">נוכחות ממוצעת</p>
+              <p className="text-2xl font-bold text-gray-900">{data.attendanceRate}%</p>
             </div>
             <ChartBarIcon className="w-8 h-8 text-orange-500" />
           </div>
@@ -327,20 +327,20 @@ const OverviewDashboard: React.FC<{
         
         {/* Quick Actions */}
         <div className="bg-white rounded border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 font-reisinger-yonatan">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
             פעולות מהירות
           </h3>
           <div className="space-y-3">
-            <button className="w-full text-right p-3 bg-muted text-foreground rounded hover:bg-muted/80 transition-colors font-reisinger-yonatan">
+            <button className="w-full text-right p-3 bg-muted text-foreground rounded hover:bg-muted/80 transition-colors">
               הוסף תלמיד חדש
             </button>
-            <button className="w-full text-right p-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors font-reisinger-yonatan">
+            <button className="w-full text-right p-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors">
               תזמן שיעור חדש
             </button>
-            <button className="w-full text-right p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-reisinger-yonatan">
+            <button className="w-full text-right p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors">
               רשום נוכחות
             </button>
-            <button className="w-full text-right p-3 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors font-reisinger-yonatan">
+            <button className="w-full text-right p-3 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors">
               צור דוח חדש
             </button>
           </div>

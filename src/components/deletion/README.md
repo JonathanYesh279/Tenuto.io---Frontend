@@ -145,7 +145,7 @@ AdminDeletionDashboard (Main Dashboard)
 ```tsx
 // RTL container
 <div dir="rtl" className="space-y-4">
-  <div className="text-right font-reisinger-yonatan">
+  <div className="text-right">
     Hebrew content here
   </div>
 </div>

@@ -441,7 +441,7 @@ export default function TeacherScheduleTab() {
       type === 'success' ? 'bg-green-500 text-white' :
       type === 'error' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
     }`
-    notification.innerHTML = `<div class="flex items-center gap-2 font-reisinger-yonatan">
+    notification.innerHTML = `<div class="flex items-center gap-2">
       ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'} ${message}
     </div>`
     document.body.appendChild(notification)
@@ -583,7 +583,7 @@ export default function TeacherScheduleTab() {
   if (error && !weekSchedule) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <div className="text-red-800 font-reisinger-yonatan">{error}</div>
+        <div className="text-red-800">{error}</div>
       </div>
     )
   }
@@ -595,7 +595,7 @@ export default function TeacherScheduleTab() {
       {/* Header with Navigation */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-xl font-bold text-gray-900">
             לוח זמנים שבועי
           </h3>
           <p className="text-gray-600 mt-1">
@@ -611,7 +611,7 @@ export default function TeacherScheduleTab() {
           </button>
           <button
             onClick={() => setCurrentWeek(new Date())}
-            className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors font-reisinger-yonatan"
+            className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
           >
             השבוע
           </button>
@@ -628,15 +628,15 @@ export default function TeacherScheduleTab() {
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         {/* Days Header */}
         <div className="grid grid-cols-8 border-b border-gray-200">
-          <div className="p-3 bg-gray-50 font-medium text-gray-700 font-reisinger-yonatan">
+          <div className="p-3 bg-gray-50 font-medium text-gray-700">
             שעה
           </div>
           {weekSchedule?.days.map((day) => (
             <div key={day.date} className="p-3 bg-gray-50 text-center">
-              <div className="font-medium text-gray-900 font-reisinger-yonatan">
+              <div className="font-medium text-gray-900">
                 {day.dayName}
               </div>
-              <div className="text-sm text-gray-500 font-reisinger-yonatan">
+              <div className="text-sm text-gray-500">
                 {formatDate(day.date)}
               </div>
             </div>
@@ -647,7 +647,7 @@ export default function TeacherScheduleTab() {
         <div className="max-h-96 overflow-y-auto relative">
           {timeSlots.map((time) => (
             <div key={time} className="grid grid-cols-8 border-b border-gray-100" style={{ height: '60px' }}>
-              <div className="p-3 bg-gray-50 text-sm font-medium text-gray-600 font-reisinger-yonatan flex items-center">
+              <div className="p-3 bg-gray-50 text-sm font-medium text-gray-600 flex items-center">
                 {formatTime(time)}
               </div>
               {weekSchedule?.days.map((day) => {
@@ -680,7 +680,7 @@ export default function TeacherScheduleTab() {
 
                     {lesson && isLessonStart(lesson, time) && (
                       <div
-                        className="absolute left-1 right-1 top-1 p-2.5 rounded text-xs font-reisinger-yonatan bg-blue-100 text-blue-800 hover:bg-blue-200 border border-blue-300 shadow-sm cursor-pointer transition-all hover:scale-[1.02] z-10 overflow-hidden"
+                        className="absolute left-1 right-1 top-1 p-2.5 rounded text-xs bg-blue-100 text-blue-800 hover:bg-blue-200 border border-blue-300 shadow-sm cursor-pointer transition-all hover:scale-[1.02] z-10 overflow-hidden"
                         style={{
                           height: `${getLessonSpanHeight(lesson) - 2}px`,
                           minHeight: '82px'
@@ -733,7 +733,7 @@ export default function TeacherScheduleTab() {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h4 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+            <h4 className="text-lg font-bold text-gray-900">
               ימי לימוד - זמינות המורה
             </h4>
             <p className="text-sm text-gray-600 mt-1">
@@ -747,7 +747,7 @@ export default function TeacherScheduleTab() {
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               <PlusIcon className="w-4 h-4" />
-              <span className="font-reisinger-yonatan">הוסף יום לימוד</span>
+              <span className="">הוסף יום לימוד</span>
             </button>
           </div>
         </div>
@@ -756,7 +756,7 @@ export default function TeacherScheduleTab() {
         {teachingDays.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-lg">
             <BookOpenIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 font-reisinger-yonatan text-lg">
+            <p className="text-gray-500 text-lg">
               אין ימי לימוד מוגדרים
             </p>
             <button
@@ -785,11 +785,11 @@ export default function TeacherScheduleTab() {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <CalendarIcon className="w-5 h-5 text-blue-600" />
-            <span className="font-medium text-blue-900 font-reisinger-yonatan">
+            <span className="font-medium text-blue-900">
               ימי לימוד
             </span>
           </div>
-          <div className="text-2xl font-bold text-blue-900 mt-2 font-reisinger-yonatan">
+          <div className="text-2xl font-bold text-blue-900 mt-2">
             {teachingDays.length}
           </div>
           <div className="text-xs text-blue-700 mt-1">
@@ -800,11 +800,11 @@ export default function TeacherScheduleTab() {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <ClockIcon className="w-5 h-5 text-green-600" />
-            <span className="font-medium text-green-900 font-reisinger-yonatan">
+            <span className="font-medium text-green-900">
               שעות זמינות
             </span>
           </div>
-          <div className="text-2xl font-bold text-green-900 mt-2 font-reisinger-yonatan">
+          <div className="text-2xl font-bold text-green-900 mt-2">
             {(teachingDays.reduce((total, day) => {
               const duration = calculateDuration(day.startTime, day.endTime)
               return total + duration
@@ -818,11 +818,11 @@ export default function TeacherScheduleTab() {
         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <UserIcon className="w-5 h-5 text-purple-600" />
-            <span className="font-medium text-purple-900 font-reisinger-yonatan">
+            <span className="font-medium text-purple-900">
               תלמידים
             </span>
           </div>
-          <div className="text-2xl font-bold text-purple-900 mt-2 font-reisinger-yonatan">
+          <div className="text-2xl font-bold text-purple-900 mt-2">
             {new Set(lessonDays.map(l => l.studentId).filter(Boolean)).size}
           </div>
           <div className="text-xs text-purple-700 mt-1">
@@ -833,11 +833,11 @@ export default function TeacherScheduleTab() {
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <MapPinIcon className="w-5 h-5 text-orange-600" />
-            <span className="font-medium text-orange-900 font-reisinger-yonatan">
+            <span className="font-medium text-orange-900">
               שיעורים
             </span>
           </div>
-          <div className="text-2xl font-bold text-orange-900 mt-2 font-reisinger-yonatan">
+          <div className="text-2xl font-bold text-orange-900 mt-2">
             {lessonDays.length}
           </div>
           <div className="text-xs text-orange-700 mt-1">
@@ -949,7 +949,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
             <CalendarIcon className="w-4 h-4 text-green-600" />
           </div>
           <div>
-            <h5 className="font-bold text-gray-900 font-reisinger-yonatan">
+            <h5 className="font-bold text-gray-900">
               יום {teachingDay.day}
             </h5>
             <p className="text-xs text-gray-500 mt-0.5">
@@ -958,7 +958,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
           </div>
         </div>
         {teachingDay.isRecurring !== false && (
-          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-reisinger-yonatan">
+          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
             שבועי
           </span>
         )}
@@ -1004,7 +1004,7 @@ function TeachingDayCard({ teachingDay, onEdit, onDelete }: TeachingDayCardProps
           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors text-sm"
         >
           <PencilIcon className="w-3.5 h-3.5" />
-          <span className="font-reisinger-yonatan">ערוך</span>
+          <span className="">ערוך</span>
         </button>
         <button
           onClick={onDelete}
@@ -1043,7 +1043,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
             <CalendarIcon className="w-4 h-4 text-indigo-600" />
           </div>
           <div>
-            <h5 className="font-bold text-gray-900 font-reisinger-yonatan">
+            <h5 className="font-bold text-gray-900">
               יום {lessonDay.day}
             </h5>
             <p className="text-xs text-gray-500 mt-0.5">
@@ -1052,7 +1052,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
           </div>
         </div>
         {lessonDay.recurring?.isRecurring && (
-          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-reisinger-yonatan">
+          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
             קבוע
           </span>
         )}
@@ -1116,7 +1116,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
             title="צפה בפרטי התלמיד"
           >
             <EyeIcon className="w-3.5 h-3.5" />
-            <span className="font-reisinger-yonatan">צפה</span>
+            <span className="">צפה</span>
           </button>
         )}
         <button
@@ -1124,7 +1124,7 @@ function LessonDayCard({ lessonDay, onEdit, onDelete, onView }: LessonDayCardPro
           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors text-sm"
         >
           <PencilIcon className="w-3.5 h-3.5" />
-          <span className="font-reisinger-yonatan">ערוך</span>
+          <span className="">ערוך</span>
         </button>
         <button
           onClick={onDelete}
@@ -1221,7 +1221,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" dir="rtl">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-xl font-bold text-gray-900">
             {lessonDay ? 'עריכת יום לימוד' : 'הוספת יום לימוד חדש'}
           </h3>
           <button
@@ -1236,7 +1236,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
           {/* Day and Time */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 יום בשבוע *
               </label>
               <select
@@ -1252,7 +1252,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת התחלה *
               </label>
               <input
@@ -1265,7 +1265,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת סיום *
               </label>
               <input
@@ -1280,7 +1280,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               מיקום / חדר
             </label>
             <select
@@ -1297,7 +1297,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
 
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               הערות
             </label>
             <textarea
@@ -1338,7 +1338,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan flex items-center justify-center gap-2"
+              className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {saving ? (
                 <>
@@ -1365,7 +1365,7 @@ function LessonDayModal({ lessonDay, teacherId, onClose, onSave, showAlert }: Le
               type="button"
               onClick={onClose}
               disabled={saving}
-              className="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
+              className="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               ביטול
             </button>
@@ -1571,7 +1571,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-xl font-bold text-gray-900">
             הוספת שיעור חדש
           </h3>
           <button
@@ -1599,7 +1599,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Student Selection with MagnifyingGlassIcon */}
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               בחר תלמיד *
             </label>
             {loading ? (
@@ -1688,7 +1688,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
 
           {/* Minute Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               זמן התחלה מדויק (שעה {timeSlot.time.split(':')[0]}:__)
             </label>
             <div className="grid grid-cols-6 gap-2">
@@ -1714,7 +1714,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
 
           {/* Duration */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               משך השיעור (דקות)
             </label>
             <select
@@ -1734,7 +1734,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
             <button
               type="submit"
               disabled={saving || !selectedStudent}
-              className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan flex items-center justify-center gap-2"
+              className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {saving ? (
                 <>
@@ -1752,7 +1752,7 @@ function QuickLessonModal({ timeSlot, teacherId, teachingDays, onClose, onSave, 
               type="button"
               onClick={onClose}
               disabled={saving}
-              className="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
+              className="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               ביטול
             </button>
@@ -1780,20 +1780,20 @@ function ConfirmModal({ message, onConfirm, onCancel }: ConfirmModalProps) {
           </div>
         </div>
 
-        <h3 className="text-lg font-bold text-gray-900 text-center mb-4 font-reisinger-yonatan">
+        <h3 className="text-lg font-bold text-gray-900 text-center mb-4">
           {message}
         </h3>
 
         <div className="flex gap-3">
           <button
             onClick={onConfirm}
-            className="flex-1 bg-red-600 text-white py-2.5 px-4 rounded-lg hover:bg-red-700 transition-colors font-reisinger-yonatan font-medium"
+            className="flex-1 bg-red-600 text-white py-2.5 px-4 rounded-lg hover:bg-red-700 transition-colors font-medium"
           >
             אישור
           </button>
           <button
             onClick={onCancel}
-            className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 transition-colors font-reisinger-yonatan font-medium"
+            className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 transition-colors font-medium"
           >
             ביטול
           </button>
@@ -1819,13 +1819,13 @@ function AlertModal({ message, onClose }: AlertModalProps) {
           </div>
         </div>
 
-        <h3 className="text-lg font-bold text-gray-900 text-center mb-6 font-reisinger-yonatan">
+        <h3 className="text-lg font-bold text-gray-900 text-center mb-6">
           {message}
         </h3>
 
         <button
           onClick={onClose}
-          className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-reisinger-yonatan font-medium"
+          className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
         >
           הבנתי
         </button>
@@ -1979,7 +1979,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
     notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg z-50 ${
       type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
     }`
-    notification.innerHTML = `<div class="flex items-center gap-2 font-reisinger-yonatan">
+    notification.innerHTML = `<div class="flex items-center gap-2">
       ${type === 'success' ? '✅' : '❌'} ${message}
     </div>`
     document.body.appendChild(notification)
@@ -2004,7 +2004,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" dir="rtl">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-xl font-bold text-gray-900">
             עריכת שיעור
           </h3>
           <button
@@ -2017,7 +2017,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
 
         {/* Student Info Display */}
         <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <h4 className="font-medium text-blue-900 mb-2 font-reisinger-yonatan">פרטי התלמיד</h4>
+          <h4 className="font-medium text-blue-900 mb-2">פרטי התלמיד</h4>
           <div className="space-y-1 text-sm text-blue-800">
             <div className="flex items-center gap-2">
               <UserIcon className="w-4 h-4" />
@@ -2041,7 +2041,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Day Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               יום בשבוע *
             </label>
             <select
@@ -2069,7 +2069,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
 
           {/* Duration Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               משך השיעור (דקות) *
             </label>
             <div className="grid grid-cols-3 gap-3">
@@ -2092,7 +2092,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
 
           {/* Available Time Slots */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               בחר זמן שיעור זמין *
             </label>
             {availableSlots.length === 0 ? (
@@ -2142,7 +2142,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
             <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
               <div className="flex items-center gap-2 text-indigo-800">
                 <ClockIcon className="w-4 h-4" />
-                <span className="font-reisinger-yonatan font-medium">
+                <span className="font-medium">
                   זמן שיעור נבחר: {formData.startTime} - {formData.endTime} ({calculateDuration(formData.startTime, formData.endTime)} דקות)
                 </span>
               </div>
@@ -2151,7 +2151,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               מיקום / חדר
             </label>
             <select
@@ -2168,7 +2168,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
 
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               הערות
             </label>
             <textarea
@@ -2185,7 +2185,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
             <button
               type="submit"
               disabled={saving || !formData.startTime || !formData.endTime}
-              className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan flex items-center justify-center gap-2"
+              className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {saving ? (
                 <>
@@ -2203,7 +2203,7 @@ function EditLessonModal({ lesson, teacherId, teachingDays, onClose, onSave, sho
               type="button"
               onClick={onClose}
               disabled={saving}
-              className="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed font-reisinger-yonatan"
+              className="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               ביטול
             </button>

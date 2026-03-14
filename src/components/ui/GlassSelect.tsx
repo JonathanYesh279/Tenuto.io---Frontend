@@ -42,7 +42,7 @@ export function GlassSelect({
         <SelectPrimitive.Trigger
           className={cn(
             // Layout
-            'relative inline-flex h-9 items-center justify-between gap-2 rounded-2xl px-4 py-2 text-sm font-medium',
+            'relative inline-flex h-9 items-center justify-between gap-2 rounded-md px-4 py-2 text-sm font-medium',
             // Glass surface
             'backdrop-blur-2xl border border-white/70 dark:border-white/20',
             'text-slate-700 dark:text-slate-200',
@@ -72,14 +72,14 @@ export function GlassSelect({
         >
           {/* Top glossy reflection band */}
           <span
-            className="pointer-events-none absolute inset-x-0 top-0 h-[45%] rounded-t-2xl"
+            className="pointer-events-none absolute inset-x-0 top-0 h-[45%] rounded-t-md"
             style={{
               background: 'linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.15) 60%, transparent 100%)',
             }}
           />
           {/* Edge highlight — thin top line */}
           <span
-            className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-2xl"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-md"
             style={{
               background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.95) 50%, transparent 90%)',
             }}
@@ -137,14 +137,14 @@ export function GlassSelect({
         >
           {/* Top reflection on dropdown */}
           <span
-            className="pointer-events-none absolute inset-x-0 top-0 h-[30%] rounded-t-2xl z-10"
+            className="pointer-events-none absolute inset-x-0 top-0 h-[30%] rounded-t-full z-10"
             style={{
               background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
             }}
           />
           {/* Top edge highlight */}
           <span
-            className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-2xl z-10"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-full z-10"
             style={{
               background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.95) 50%, transparent 95%)',
             }}

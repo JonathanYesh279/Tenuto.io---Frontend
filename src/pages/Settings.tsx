@@ -428,8 +428,10 @@ export default function Settings() {
         </button>
       </div>
 
+      {/* Rooms + Branding side by side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
       {/* Rooms Section */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4">
+      <div className="bg-white rounded-2xl border border-gray-200 p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-bold text-gray-800">חדרים</h3>
@@ -560,7 +562,7 @@ export default function Settings() {
       </div>
 
       {/* Branding — Logo Upload */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4">
+      <div className="bg-white rounded-2xl border border-gray-200 p-5">
         <div className="flex items-center gap-2 mb-4">
           <ImageIcon size={18} weight="regular" className="text-gray-600" />
           <h3 className="text-sm font-bold text-gray-800">מיתוג</h3>
@@ -622,6 +624,7 @@ export default function Settings() {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Top row: General + Director + Ministry side by side */}

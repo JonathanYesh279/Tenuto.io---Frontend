@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { MoonIcon } from '@phosphor-icons/react'
-import apiService, { hoursSummaryService } from '../services/apiService'
+import { MoonIcon, MapPinIcon, ClockIcon, UsersIcon, MusicNotesIcon } from '@phosphor-icons/react'
+import { Tooltip } from '@heroui/react'
+import apiService, { hoursSummaryService, roomScheduleService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
 import { getDisplayName } from '../utils/nameUtils'
@@ -11,8 +12,11 @@ import SuperAdminDashboard from '../components/dashboard/SuperAdminDashboard'
 import { StatCard } from '../components/dashboard/v4/StatCard'
 import { TeacherPerformanceTable } from '../components/dashboard/v4/TeacherPerformanceTable'
 import { AgendaWidget } from '../components/dashboard/v4/AgendaWidget'
-import { MessagesWidget } from '../components/dashboard/v4/MessagesWidget'
+import { DashboardRoomSchedule } from '../components/dashboard/v4/DashboardRoomSchedule'
+import { VacantRoomsWidget } from '../components/dashboard/v4/VacantRoomsWidget'
 import { ComboChart, TremorBarChart } from '../components/charts'
+
+import { ScrollReveal } from '../components/ui/ScrollReveal'
 import type { BarClickPayload } from '../components/charts/TremorBarChart'
 
 const hebrewMonthNames: Record<string, string> = {
@@ -24,7 +28,7 @@ const hebrewMonthNames: Record<string, string> = {
 /** Chart card wrapper — consistent styling for all chart sections */
 function ChartCard({ title, children, className = '' }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-white dark:bg-sidebar-dark p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ${className}`}>
+    <div className={`relative bg-white dark:bg-sidebar-dark p-6 rounded-md shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden ${className}`}>
       <h3 className="text-base font-bold text-slate-900 dark:text-white mb-4">{title}</h3>
       {children}
     </div>
@@ -47,8 +51,6 @@ export default function Dashboard() {
     theoryLessonsThisWeek: 0,
     genderStats: { male: 0, female: 0 }
   })
-  const [recentActivities, setRecentActivities] = useState<any[]>([])
-  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
   const [isRecalculating, setIsRecalculating] = useState(false)
   const [teacherTableData, setTeacherTableData] = useState<any[]>([])
   const [agendaData, setAgendaData] = useState<any[]>([])
@@ -57,7 +59,7 @@ export default function Dashboard() {
   const [activityByDay, setActivityByDay] = useState<Array<Record<string, any>>>([])
   const [comboChartData, setComboChartData] = useState<Array<Record<string, any>>>([])
   const [instrumentDistribution, setInstrumentDistribution] = useState<Array<{ name: string; count: number }>>([])
-  const [rehearsalHistory, setRehearsalHistory] = useState<Array<{ color?: string; tooltip?: string }>>([])
+  const [rehearsalHistory, setRehearsalHistory] = useState<Array<{ color?: string; tooltip?: string; dateStr?: string; status?: string; rehearsals?: any[] }>>([])
   const [sparkStudents, setSparkStudents] = useState<Array<Record<string, any>>>([])
   const [sparkTeachers, setSparkTeachers] = useState<Array<Record<string, any>>>([])
   const [sparkOrchestras, setSparkOrchestras] = useState<Array<Record<string, any>>>([])
@@ -172,50 +174,6 @@ export default function Dashboard() {
         genderStats: { male: 0, female: 0 }
       })
 
-      // ── Activities & events ──
-      const activities: any[] = []
-      const recentStudents = [...studentsData]
-        .sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
-        .slice(0, 3)
-
-      recentStudents.forEach((student: any) => {
-        activities.push({
-          type: 'student',
-          title: 'רישום תלמיד חדש',
-          description: `${getDisplayName(student.personalInfo) || 'תלמיד'} נרשם לקונסרבטוריון`,
-          time: getRelativeTime(student.createdAt),
-          color: 'primary'
-        })
-      })
-
-      const upcomingRehearsals = rehearsalsData
-        .filter((r: any) => new Date(r.date) >= today)
-        .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .slice(0, 3)
-
-      const orchestraNameMap = new Map<string, string>()
-      orchestrasData.forEach((o: any) => orchestraNameMap.set(o._id, o.name))
-
-      upcomingRehearsals.forEach((rehearsal: any) => {
-        const orchName = orchestraNameMap.get(rehearsal.groupId) || rehearsal.orchestraName || 'תזמורת'
-        activities.push({
-          type: 'rehearsal',
-          title: 'חזרה מתוכננת',
-          description: `${orchName} - ${formatDate(rehearsal.date)} ${rehearsal.startTime || ''}`,
-          time: getRelativeTime(rehearsal.createdAt),
-          color: 'success'
-        })
-      })
-
-      setRecentActivities(activities.slice(0, 6))
-
-      setUpcomingEvents(upcomingRehearsals.slice(0, 4).map((rehearsal: any) => ({
-        title: orchestraNameMap.get(rehearsal.groupId) || rehearsal.orchestraName || 'חזרת תזמורת',
-        date: formatDate(rehearsal.date),
-        description: `${rehearsal.type || 'חזרה'} - ${rehearsal.location || 'אולם ראשי'}`,
-        isPrimary: false
-      })))
-
       // Teacher table — includes weeklyHours from Phase 73 dual-write
       const teacherTable = teachersData.map((t: any) => ({
         id: t._id,
@@ -229,14 +187,20 @@ export default function Dashboard() {
       }))
       setTeacherTableData(teacherTable)
 
-      // Agenda
-      const agenda = upcomingRehearsals.slice(0, 3).map((rehearsal: any) => ({
-        time: rehearsal.startTime || '09:00',
-        title: orchestraNameMap.get(rehearsal.groupId) || rehearsal.orchestraName || 'חזרת תזמורת',
-        location: rehearsal.location || 'אולם ראשי',
-        badge: rehearsal.type || 'חזרה',
-      }))
-      setAgendaData(agenda)
+      // Agenda — fetch from daily agenda API (all activity types for today)
+      try {
+        const agendaResult = await roomScheduleService.getDailyAgenda()
+        if (agendaResult?.activities?.length > 0) {
+          setAgendaData(agendaResult.activities.map((a: any) => ({
+            time: a.startTime || '09:00',
+            title: a.title || a.badge || 'פעילות',
+            location: a.location || '',
+            badge: a.badge || '',
+          })))
+        }
+      } catch (agendaErr) {
+        console.warn('Failed to load daily agenda:', agendaErr)
+      }
 
       // ── NEW: Activity by day — stacked rehearsals vs theory ──
       const hebrewDays = ["א'", "ב'", "ג'", "ד'", "ה'"]
@@ -321,28 +285,43 @@ export default function Dashboard() {
       // ── NEW: 30-day rehearsal tracker ──
       const thirtyDaysAgo = new Date(today)
       thirtyDaysAgo.setDate(today.getDate() - 29)
-      const rehearsalDates = new Set(
-        rehearsalsData
-          .filter((r: any) => r.date)
-          .map((r: any) => new Date(r.date).toDateString())
-      )
 
-      const trackerData: Array<{ color?: string; tooltip?: string }> = []
+      // Build orchestra name lookup from already-loaded data
+      const orchestraNameMap = new Map<string, string>()
+      orchestrasData.forEach((o: any) => {
+        if (o._id) orchestraNameMap.set(o._id, o.name || o.basicInfo?.name || 'הרכב')
+      })
+
+      // Group rehearsals by date string for quick lookup, enriched with orchestra name
+      const rehearsalsByDate = new Map<string, any[]>()
+      rehearsalsData
+        .filter((r: any) => r.date)
+        .forEach((r: any) => {
+          const key = new Date(r.date).toDateString()
+          if (!rehearsalsByDate.has(key)) rehearsalsByDate.set(key, [])
+          rehearsalsByDate.get(key)!.push({
+            ...r,
+            orchestraDisplayName: r.groupId ? (orchestraNameMap.get(r.groupId) || r.type || 'חזרה') : (r.type || 'חזרה'),
+          })
+        })
+
+      const trackerData: Array<{ color?: string; tooltip?: string; dateStr?: string; status?: string; rehearsals?: any[] }> = []
       for (let i = 0; i < 30; i++) {
         const d = new Date(thirtyDaysAgo)
         d.setDate(thirtyDaysAgo.getDate() + i)
         const dayOfWeek = d.getDay()
         const dateStr = `${d.getDate()}/${d.getMonth() + 1}`
+        const dateKey = d.toDateString()
+        const dayRehearsals = rehearsalsByDate.get(dateKey) || []
 
         if (dayOfWeek === 5 || dayOfWeek === 6) {
-          // Friday/Saturday — no activity expected
-          trackerData.push({ color: 'bg-slate-100 dark:bg-slate-800', tooltip: `${dateStr} — סוף שבוע` })
-        } else if (rehearsalDates.has(d.toDateString())) {
-          trackerData.push({ color: 'bg-emerald-500', tooltip: `${dateStr} — חזרה התקיימה` })
+          trackerData.push({ color: 'bg-slate-100 dark:bg-slate-800', tooltip: `${dateStr} — סוף שבוע`, dateStr, status: 'weekend' })
+        } else if (dayRehearsals.length > 0) {
+          trackerData.push({ color: 'bg-emerald-500', tooltip: `${dateStr} — חזרה התקיימה`, dateStr, status: 'held', rehearsals: dayRehearsals })
         } else if (d <= today) {
-          trackerData.push({ color: 'bg-rose-500', tooltip: `${dateStr} — אין חזרה` })
+          trackerData.push({ color: 'bg-rose-500', tooltip: `${dateStr} — אין חזרה`, dateStr, status: 'missed' })
         } else {
-          trackerData.push({ color: 'bg-slate-200 dark:bg-slate-700', tooltip: `${dateStr} — עתידי` })
+          trackerData.push({ color: 'bg-slate-200 dark:bg-slate-700', tooltip: `${dateStr} — עתידי`, dateStr, status: 'future' })
         }
       }
       setRehearsalHistory(trackerData)
@@ -411,21 +390,6 @@ export default function Dashboard() {
       window.removeEventListener('auth:expired', suppressAuthExpired, { capture: true })
       setIsRecalculating(false)
     }
-  }
-
-  const getRelativeTime = (date: string | Date) => {
-    if (!date) return 'לאחרונה'
-    const now = new Date()
-    const then = new Date(date)
-    const diff = now.getTime() - then.getTime()
-    const minutes = Math.floor(diff / 60000)
-    const hours = Math.floor(diff / 3600000)
-    const days = Math.floor(diff / 86400000)
-
-    if (minutes < 60) return `לפני ${minutes} דקות`
-    if (hours < 24) return `לפני ${hours} שעות`
-    if (days < 7) return `לפני ${days} ימים`
-    return 'השבוע'
   }
 
   const formatDate = (date: string | Date) => {
@@ -503,52 +467,85 @@ export default function Dashboard() {
 
           {/* Section 1: Stat cards — single row with sparklines */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              entity="students"
-              value={stats.activeStudents}
-              label="תלמידים פעילים"
-              trend={stats.studentsTrend > 0 ? `${stats.studentsTrend}%` : undefined}
-              loading={loading}
-              sparkData={sparkStudents}
-            />
-            <StatCard
-              entity="teachers"
-              value={stats.staffMembers}
-              label="סגל הוראה"
-              loading={loading}
-              sparkData={sparkTeachers}
-            />
-            <StatCard
-              entity="orchestras"
-              value={stats.activeOrchestras}
-              label="הרכבים פעילים"
-              loading={loading}
-              sparkData={sparkOrchestras}
-            />
-            <StatCard
-              entity="rehearsals"
-              value={stats.weeklyRehearsals}
-              label="חזרות שבועיות"
-              trend="שבועי"
-              loading={loading}
-              sparkData={sparkRehearsals}
-            />
+            <ScrollReveal delay={0}>
+              <StatCard
+                entity="students"
+                value={stats.activeStudents}
+                label="תלמידים פעילים"
+                trend={stats.studentsTrend > 0 ? `${stats.studentsTrend}%` : undefined}
+                loading={loading}
+                sparkData={sparkStudents}
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={0.08}>
+              <StatCard
+                entity="teachers"
+                value={stats.staffMembers}
+                label="סגל הוראה"
+                loading={loading}
+                sparkData={sparkTeachers}
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={0.16}>
+              <StatCard
+                entity="orchestras"
+                value={stats.activeOrchestras}
+                label="הרכבים פעילים"
+                loading={loading}
+                sparkData={sparkOrchestras}
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={0.24}>
+              <StatCard
+                entity="rehearsals"
+                value={stats.weeklyRehearsals}
+                label="חזרות שבועיות"
+                trend="שבועי"
+                loading={loading}
+                sparkData={sparkRehearsals}
+              />
+            </ScrollReveal>
           </div>
 
           {/* Section 2: Teacher performance table */}
-          <TeacherPerformanceTable
-            teachers={teacherTableData}
-            loading={loading}
-            isRecalculating={isRecalculating}
-            onRecalculate={handleRecalculateHours}
-            error={recalcError}
-          />
+          <ScrollReveal>
+            <TeacherPerformanceTable
+              teachers={teacherTableData}
+              loading={loading}
+              isRecalculating={isRecalculating}
+              onRecalculate={handleRecalculateHours}
+              error={recalcError}
+            />
+          </ScrollReveal>
 
-          {/* Section 3: Primary charts — ComboChart + Activity BarChart */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <ChartCard title="רישומים ופעילות חודשית">
+
+        </div>
+
+        {/* Right sidebar — 3 columns (agenda + vacant rooms) */}
+        <div className="col-span-12 lg:col-span-3 space-y-6">
+          <ScrollReveal delay={0.1}>
+            <AgendaWidget events={agendaData} loading={loading} />
+          </ScrollReveal>
+          <ScrollReveal delay={0.2}>
+            <VacantRoomsWidget />
+          </ScrollReveal>
+        </div>
+      </div>
+
+      {/* Section 3: Room schedule — full width */}
+      <ScrollReveal className="mt-6">
+        <DashboardRoomSchedule />
+      </ScrollReveal>
+
+      {/* Full-width sections below the 9/3 grid */}
+      <div className="space-y-6 mt-6">
+        {/* Charts — 3 columns */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          {/* Registrations & activity combo chart */}
+          <ScrollReveal delay={0}>
+          <ChartCard title="רישומים ופעילות חודשית">
               {loading ? (
-                <div className="h-72 flex items-center justify-center">
+                <div className="h-56 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                 </div>
               ) : comboChartData.length > 0 ? (
@@ -559,16 +556,19 @@ export default function Dashboard() {
                   lineSeries={{ categories: ['cumulative'], colors: ['indigo'], showYAxis: true }}
                   enableBiaxial
                   categoryLabels={{ registrations: 'רישומים', cumulative: 'מצטבר', activities: 'פעילויות' }}
-                  className="h-64"
+                  className="h-52"
                 />
               ) : (
-                <div className="h-64 flex items-center justify-center text-sm text-slate-400">אין נתונים להצגה</div>
+                <div className="h-52 flex items-center justify-center text-sm text-slate-400">אין נתונים להצגה</div>
               )}
             </ChartCard>
+          </ScrollReveal>
 
+            {/* Activity by day bar chart */}
+          <ScrollReveal delay={0.1}>
             <ChartCard title={`פעילויות לפי יום${activityByDay.length > 0 ? ` (${activityByDay.reduce((s, d) => s + d.rehearsals + d.theory, 0)} סה״כ)` : ''}`}>
               {loading ? (
-                <div className="h-72 flex items-center justify-center">
+                <div className="h-56 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                 </div>
               ) : activityByDay.some(d => d.rehearsals > 0 || d.theory > 0) ? (
@@ -580,7 +580,7 @@ export default function Dashboard() {
                     colors={['indigo', 'amber']}
                     type="default"
                     categoryLabels={{ rehearsals: 'חזרות', theory: 'תיאוריה' }}
-                    className="h-64"
+                    className="h-52"
                     barRadius={6}
                     showLabels
                     onBarClick={(payload: BarClickPayload) => {
@@ -589,7 +589,6 @@ export default function Dashboard() {
                       if (total === 0) return
                       const pctR = ((row.rehearsals / total) * 100).toFixed(0)
                       const pctT = ((row.theory / total) * 100).toFixed(0)
-                      // Position relative to the chart container
                       const containerRect = chartContainerRef.current?.getBoundingClientRect()
                       const x = containerRect ? payload.mouseX - containerRect.left : payload.mouseX
                       const y = containerRect ? payload.mouseY - containerRect.top : payload.mouseY
@@ -654,22 +653,21 @@ export default function Dashboard() {
                   <p className="text-[11px] text-slate-400 mt-1 text-center">לחץ על עמודה לפרטים נוספים</p>
                 </div>
               ) : (
-                <div className="h-64 flex items-center justify-center text-sm text-slate-400">אין נתוני פעילות</div>
+                <div className="h-52 flex items-center justify-center text-sm text-slate-400">אין נתוני פעילות</div>
               )}
             </ChartCard>
-          </div>
+          </ScrollReveal>
 
-          {/* Section 3: Instrument distribution + Rehearsal tracker — even 2 columns */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             {/* Instrument distribution — glassmorphic horizontal bar chart */}
+          <ScrollReveal delay={0.2}>
             <div
-              className="relative rounded-2xl overflow-hidden border border-white/60 dark:border-white/20 p-6"
+              className="relative rounded-md overflow-hidden border border-white/60 dark:border-white/20 p-6"
               style={{
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.3) 35%, rgba(186,230,253,0.3) 65%, rgba(255,255,255,0.45) 100%)',
                 boxShadow: '0 8px 32px rgba(0,170,160,0.12), 0 2px 8px rgba(0,140,210,0.08), inset 0 1px 1px rgba(255,255,255,0.9)',
               }}
             >
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-[40%] rounded-t-2xl" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)' }} />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-[40%] rounded-t-md" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)' }} />
               <h3 className="relative text-base font-bold text-slate-900 dark:text-white mb-4">התפלגות כלי נגינה</h3>
               {instrumentDistribution.length > 0 ? (
                 <div className="relative space-y-2.5">
@@ -707,49 +705,122 @@ export default function Dashboard() {
                 <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתוני כלים</div>
               )}
             </div>
-
-            {/* Rehearsal tracker — 30 days */}
-            <ChartCard title="חזרות — 30 יום אחרונים">
-              {rehearsalHistory.length > 0 ? (
-                <div>
-                  <div className="flex gap-1">
-                    {rehearsalHistory.map((block, i) => (
-                      <div
-                        key={i}
-                        className={`h-12 flex-1 rounded transition-all hover:scale-y-110 hover:opacity-90 ${block.color ?? 'bg-slate-200 dark:bg-slate-700'}`}
-                        title={block.tooltip}
-                      />
-                    ))}
-                  </div>
-                  <div className="flex gap-4 text-xs text-slate-500 mt-4 justify-center">
-                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-500" />התקיימה</span>
-                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-rose-500" />לא התקיימה</span>
-                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-slate-200 dark:bg-slate-700" />סוף שבוע / עתידי</span>
-                  </div>
-                  {(() => {
-                    const held = rehearsalHistory.filter(b => b.color === 'bg-emerald-500').length
-                    const missed = rehearsalHistory.filter(b => b.color === 'bg-rose-500').length
-                    const total = held + missed
-                    const rate = total > 0 ? Math.round((held / total) * 100) : 0
-                    return total > 0 ? (
-                      <p className="text-center text-sm text-slate-500 mt-3">
-                        <span className="font-semibold text-slate-700 dark:text-white">{rate}%</span> אחוז קיום ({held} מתוך {total})
-                      </p>
-                    ) : null
-                  })()}
-                </div>
-              ) : (
-                <div className="h-20 flex items-center justify-center text-sm text-slate-400">אין נתוני חזרות</div>
-              )}
-            </ChartCard>
+          </ScrollReveal>
           </div>
-        </div>
 
-        {/* Right sidebar — 3 columns (agenda + messages only) */}
-        <div className="col-span-12 lg:col-span-3 space-y-6">
-          <AgendaWidget events={agendaData} loading={loading} />
-          <MessagesWidget activities={recentActivities} loading={loading} />
-        </div>
+          {/* Section 5: Rehearsal tracker — full width */}
+          <ScrollReveal>
+          <ChartCard title="חזרות — 30 יום אחרונים">
+            {rehearsalHistory.length > 0 ? (
+              <div>
+                <div className="flex gap-1">
+                  {rehearsalHistory.map((block, i) => (
+                    <Tooltip
+                      key={i}
+                      placement="bottom"
+                      showArrow
+                      delay={150}
+                      closeDelay={0}
+                      classNames={{ content: 'p-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl rounded-lg' }}
+                      content={
+                        <div className="w-[300px]" dir="rtl">
+                          {/* Header bar */}
+                          <div className={`px-3.5 py-2 rounded-t-lg flex items-center justify-between ${
+                            block.status === 'held' ? 'bg-emerald-500 text-white' :
+                            block.status === 'missed' ? 'bg-rose-500 text-white' :
+                            block.status === 'weekend' ? 'bg-slate-200 text-slate-600' :
+                            'bg-slate-100 text-slate-500'
+                          }`}>
+                            <span className="text-sm font-bold">{block.dateStr}</span>
+                            <span className="text-xs font-medium opacity-90">
+                              {block.status === 'held' ? `${block.rehearsals?.length} חזרות` :
+                               block.status === 'missed' ? 'לא התקיימה' :
+                               block.status === 'weekend' ? 'סוף שבוע' : 'עתידי'}
+                            </span>
+                          </div>
+
+                          {/* Body */}
+                          <div className="px-3.5 py-2.5 max-h-[200px] overflow-y-auto">
+                            {block.status === 'held' && block.rehearsals ? (
+                              <div className="space-y-2">
+                                {block.rehearsals.map((r: any, ri: number) => (
+                                  <div
+                                    key={ri}
+                                    className={`flex items-start gap-3 p-2 rounded-md animate-[tooltipItemIn_0.25s_ease-out_both] ${
+                                    ri % 2 === 0 ? 'bg-emerald-50/60' : 'bg-slate-50/60'
+                                  }`}
+                                    style={{ animationDelay: `${ri * 60}ms` }}
+                                  >
+                                    {/* Color accent bar */}
+                                    <div className="w-1 self-stretch rounded-full bg-emerald-400 flex-shrink-0 mt-0.5" />
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
+                                        {r.orchestraDisplayName}
+                                      </p>
+                                      <div className="flex items-center gap-3 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                        <span className="flex items-center gap-1">
+                                          <ClockIcon className="w-3 h-3" />
+                                          {r.startTime || '—'} – {r.endTime || '—'}
+                                        </span>
+                                        {r.location && (
+                                          <span className="flex items-center gap-1">
+                                            <MapPinIcon className="w-3 h-3" />
+                                            {r.location}
+                                          </span>
+                                        )}
+                                      </div>
+                                      {r.attendanceCount?.total > 0 && (
+                                        <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                          <UsersIcon className="w-3 h-3" />
+                                          <span>{r.attendanceCount.present}/{r.attendanceCount.total} נוכחים</span>
+                                          <span className="text-[10px] text-emerald-600 font-medium">
+                                            ({Math.round((r.attendanceCount.present / r.attendanceCount.total) * 100)}%)
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : block.status === 'missed' ? (
+                              <p className="text-xs text-rose-600 py-1">לא נרשמו חזרות ביום זה</p>
+                            ) : block.status === 'weekend' ? (
+                              <p className="text-xs text-slate-400 py-1">יום מנוחה — אין פעילות</p>
+                            ) : (
+                              <p className="text-xs text-slate-400 py-1">טרם הגיע</p>
+                            )}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <div
+                        className={`h-12 flex-1 rounded transition-all hover:scale-y-110 hover:opacity-90 cursor-pointer ${block.color ?? 'bg-slate-200 dark:bg-slate-700'}`}
+                      />
+                    </Tooltip>
+                  ))}
+                </div>
+                <div className="flex gap-4 text-xs text-slate-500 mt-4 justify-center">
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-500" />התקיימה</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-rose-500" />לא התקיימה</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-slate-200 dark:bg-slate-700" />סוף שבוע / עתידי</span>
+                </div>
+                {(() => {
+                  const held = rehearsalHistory.filter(b => b.color === 'bg-emerald-500').length
+                  const missed = rehearsalHistory.filter(b => b.color === 'bg-rose-500').length
+                  const total = held + missed
+                  const rate = total > 0 ? Math.round((held / total) * 100) : 0
+                  return total > 0 ? (
+                    <p className="text-center text-sm text-slate-500 mt-3">
+                      <span className="font-semibold text-slate-700 dark:text-white">{rate}%</span> אחוז קיום ({held} מתוך {total})
+                    </p>
+                  ) : null
+                })()}
+              </div>
+            ) : (
+              <div className="h-20 flex items-center justify-center text-sm text-slate-400">אין נתוני חזרות</div>
+            )}
+          </ChartCard>
+          </ScrollReveal>
       </div>
 
       {/* Dark mode FAB toggle */}

@@ -1,30 +1,27 @@
 import { useRef, useEffect, useState, type ReactNode } from 'react'
 
-interface VerticalAutoScrollProps {
+interface HorizontalAutoScrollProps {
   children: ReactNode
   /** Pixels per second */
   speed?: number
-  /** Container height in pixels (default: auto-sizes to parent) */
-  height?: number
   className?: string
 }
 
-export function VerticalAutoScroll({
+export function HorizontalAutoScroll({
   children,
-  speed = 20,
-  height,
+  speed = 80,
   className = ''
-}: VerticalAutoScrollProps) {
+}: HorizontalAutoScrollProps) {
   const outerRef = useRef<HTMLDivElement>(null)
-  const innerRef = useRef<HTMLDivElement>(null)
-  const [contentHeight, setContentHeight] = useState(0)
+  const textRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const [textWidth, setTextWidth] = useState(0)
   const offsetRef = useRef(0)
   const rafRef = useRef<number>(0)
   const lastTimeRef = useRef(0)
   const isPausedRef = useRef(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
-  // Detect prefers-reduced-motion
   useEffect(() => {
     const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
     setPrefersReducedMotion(mql.matches)
@@ -33,24 +30,23 @@ export function VerticalAutoScroll({
     return () => mql.removeEventListener('change', handler)
   }, [])
 
-  // Measure content height
   useEffect(() => {
-    if (!innerRef.current) return
     const measure = () => {
-      const h = innerRef.current?.children[0]
-      if (h) setContentHeight(h.getBoundingClientRect().height)
+      if (outerRef.current) setContainerWidth(outerRef.current.getBoundingClientRect().width)
+      if (textRef.current) setTextWidth(textRef.current.getBoundingClientRect().width)
     }
     measure()
     const ro = new ResizeObserver(measure)
-    if (innerRef.current.children[0]) {
-      ro.observe(innerRef.current.children[0])
-    }
+    if (outerRef.current) ro.observe(outerRef.current)
     return () => ro.disconnect()
   }, [children])
 
-  // Animation loop
+  // Single text scrolls from right edge to left edge, then resets
   useEffect(() => {
-    if (prefersReducedMotion || contentHeight === 0) return
+    if (prefersReducedMotion || containerWidth === 0 || textWidth === 0) return
+
+    // Total travel: start fully off-screen right → end fully off-screen left
+    const totalTravel = containerWidth + textWidth
 
     const animate = (time: number) => {
       if (lastTimeRef.current === 0) lastTimeRef.current = time
@@ -59,12 +55,14 @@ export function VerticalAutoScroll({
         const delta = (time - lastTimeRef.current) / 1000
         offsetRef.current += delta * speed
 
-        if (offsetRef.current >= contentHeight) {
-          offsetRef.current -= contentHeight
+        if (offsetRef.current >= totalTravel) {
+          offsetRef.current -= totalTravel
         }
 
-        if (innerRef.current) {
-          innerRef.current.style.transform = `translateY(-${offsetRef.current}px)`
+        if (textRef.current) {
+          // Start at right edge of container, move left
+          const x = containerWidth - offsetRef.current
+          textRef.current.style.transform = `translateX(${x}px)`
         }
       }
 
@@ -74,34 +72,28 @@ export function VerticalAutoScroll({
 
     rafRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [speed, contentHeight, prefersReducedMotion])
+  }, [speed, containerWidth, textWidth, prefersReducedMotion])
 
   const handleMouseEnter = () => { isPausedRef.current = true }
   const handleMouseLeave = () => { isPausedRef.current = false }
 
-  // If reduced motion, just render children normally (no duplication, no scroll)
   if (prefersReducedMotion) {
     return <div className={className}>{children}</div>
-  }
-
-  const containerStyle: React.CSSProperties = {
-    overflow: 'hidden',
-    ...(height ? { height } : {})
   }
 
   return (
     <div
       ref={outerRef}
       className={className}
-      style={containerStyle}
+      style={{ overflow: 'hidden', position: 'relative' }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div ref={innerRef} className="flex flex-col gap-4" style={{ willChange: 'transform' }}>
-        {/* Original content */}
-        <div>{children}</div>
-        {/* Duplicate for seamless loop */}
-        <div aria-hidden="true">{children}</div>
+      <div
+        ref={textRef}
+        style={{ display: 'inline-block', whiteSpace: 'nowrap', willChange: 'transform' }}
+      >
+        {children}
       </div>
     </div>
   )

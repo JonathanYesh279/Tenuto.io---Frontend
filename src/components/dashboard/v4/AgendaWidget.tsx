@@ -60,12 +60,11 @@ const COLOR_VARIANTS = [
 ]
 
 export function AgendaWidget({ events, loading }: AgendaWidgetProps) {
-  // TODO: Wire to upcomingEvents data when available
-  const displayEvents = events && events.length > 0 ? events : MOCK_EVENTS
+  const displayEvents = events || []
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+      <div className="bg-white dark:bg-sidebar-dark p-6 rounded-md shadow-sm border border-slate-100 dark:border-slate-800">
         <div className="flex justify-between items-center mb-6">
           <h3 className="font-bold text-sm">סדר יום</h3>
           <DotsThreeIcon size={20} weight="bold" className="text-slate-400" />
@@ -78,7 +77,7 @@ export function AgendaWidget({ events, loading }: AgendaWidgetProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-sidebar-dark p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+    <div className="relative bg-white dark:bg-sidebar-dark p-6 rounded-md shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
       <div className="flex justify-between items-center mb-6">
         <h3 className="font-bold text-sm">סדר יום</h3>
         <button className="p-1 hover:bg-slate-50 dark:hover:bg-slate-800 rounded transition-colors">
@@ -86,6 +85,11 @@ export function AgendaWidget({ events, loading }: AgendaWidgetProps) {
         </button>
       </div>
 
+      {displayEvents.length === 0 ? (
+        <div className="flex items-center justify-center h-32 text-sm text-slate-400">
+          אין פעילויות היום
+        </div>
+      ) : (
       <VerticalAutoScroll speed={20} height={200}>
         <div className="space-y-4">
           {displayEvents.map((event, index) => {
@@ -94,7 +98,7 @@ export function AgendaWidget({ events, loading }: AgendaWidgetProps) {
             return (
               <div
                 key={index}
-                className={`p-4 rounded-2xl border ${variant.bg} ${variant.border}`}
+                className={`p-4 rounded-md border ${variant.bg} ${variant.border}`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className={`text-[10px] font-bold ${variant.time}`}>
@@ -119,6 +123,7 @@ export function AgendaWidget({ events, loading }: AgendaWidgetProps) {
           })}
         </div>
       </VerticalAutoScroll>
+      )}
     </div>
   )
 }

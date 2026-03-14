@@ -1,7 +1,13 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { BuildingIcon, ArrowRightIcon, ShieldIcon, MusicNoteIcon } from '@phosphor-icons/react'
+import { useNavigate } from 'react-router-dom'
+import { BuildingIcon, ArrowRightIcon, ShieldIcon, EyeIcon, EyeSlashIcon } from '@phosphor-icons/react'
 import { useAuth } from '../services/authContext.jsx'
+import { authService } from '../services/apiService.js'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '../components/ui/animated-tabs'
+import { BorderBeam } from '../components/ui/BorderBeam'
 
 interface Tenant {
   tenantId: string
@@ -15,10 +21,18 @@ export default function Login() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSuperAdmin, setIsSuperAdmin] = useState(false)
+  const [activeTab, setActiveTab] = useState('login')
+  const [showPassword, setShowPassword] = useState(false)
 
   // Multi-tenant state
   const [showTenantSelector, setShowTenantSelector] = useState(false)
   const [availableTenants, setAvailableTenants] = useState<Tenant[]>([])
+
+  // Forgot password state
+  const [forgotEmail, setForgotEmail] = useState('')
+  const [forgotSuccess, setForgotSuccess] = useState(false)
+  const [forgotError, setForgotError] = useState('')
+  const [forgotLoading, setForgotLoading] = useState(false)
 
   const navigate = useNavigate()
   const { login, loginAsSuperAdmin } = useAuth()
@@ -37,7 +51,6 @@ export default function Login() {
 
       const result = await login(email, password)
 
-      // Multi-tenant: show tenant selector if needed
       if (result?.requiresTenantSelection) {
         setAvailableTenants(result.tenants || [])
         setShowTenantSelector(true)
@@ -90,198 +103,270 @@ export default function Login() {
     setError('')
   }
 
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setForgotError('')
+    setForgotLoading(true)
+
+    try {
+      await authService.forgotPassword(forgotEmail)
+      setForgotSuccess(true)
+    } catch (error: any) {
+      setForgotError(error.message || 'שגיאה בשליחת בקשת איפוס סיסמה')
+    } finally {
+      setForgotLoading(false)
+    }
+  }
+
+  const switchToForgot = () => {
+    setForgotEmail(email)
+    setForgotSuccess(false)
+    setForgotError('')
+    setError('')
+    setActiveTab('forgot')
+  }
+
+  const switchToLogin = () => {
+    setError('')
+    setForgotError('')
+    setActiveTab('login')
+  }
+
   return (
-    <div
-      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative"
-      style={{
-        backgroundImage: 'url("/login-background.jpg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
-      dir="rtl"
-    >
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+    <div className="grid h-screen lg:grid-cols-[minmax(400px,1fr)_1fr]" dir="rtl">
+      {/* Right side — Form */}
+      <div className="flex items-center justify-center px-5 py-12">
+        <div className="relative w-full max-w-[480px] rounded-2xl border border-slate-200 bg-white p-10 overflow-hidden">
+          <BorderBeam duration={10} size={120} colorFrom="#a855f7" colorTo="#6366f1" />
 
-      <div className="max-w-md w-full space-y-8 relative z-10">
-        {/* Glassmorphism container */}
-        <div className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl shadow-xl p-8">
-
-          {/* Tenant Selector View */}
           {showTenantSelector ? (
             <>
-              <div>
-                <h2
-                  className="mt-2 text-center text-2xl font-extrabold text-white drop-shadow-lg"
-                  style={{ fontFamily: "'Reisinger Yonatan', 'Arial Hebrew', 'Noto Sans Hebrew', Arial, sans-serif" }}
-                >
-                  בחר מוסד
-                </h2>
-                <p className="mt-2 text-center text-sm text-white/70 font-reisinger-yonatan">
-                  נמצאו מספר מוסדות המשויכים לחשבון שלך
-                </p>
-              </div>
+              <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">בחר מוסד</h1>
+              <p className="mt-1 text-muted-foreground">
+                נמצאו מספר מוסדות המשויכים לחשבון שלך
+              </p>
 
               {error && (
-                <div className="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg backdrop-blur-sm">
-                  <p className="text-red-100 text-sm text-center font-reisinger-yonatan">{error}</p>
+                <div className="mt-4 rounded-md border border-destructive/50 bg-destructive/10 p-3">
+                  <p className="text-sm text-center text-destructive">{error}</p>
                 </div>
               )}
 
-              <div className="mt-6 space-y-3">
+              <div className="mt-8 space-y-3">
                 {availableTenants.map((tenant) => (
                   <button
                     key={tenant.tenantId}
                     onClick={() => handleTenantSelect(tenant.tenantId)}
                     disabled={isLoading}
-                    className="w-full p-4 bg-white/15 border border-white/25 rounded-xl text-right
-                      hover:bg-white/25 hover:border-white/40 focus:outline-none focus:ring-2
-                      focus:ring-ring transition-all duration-200 backdrop-blur-sm
+                    className="w-full rounded-lg border bg-background p-4 text-right
+                      hover:bg-accent hover:border-primary/40 focus:outline-none focus:ring-2
+                      focus:ring-ring transition-all duration-200
                       disabled:opacity-50 disabled:cursor-not-allowed group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/30 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <BuildingIcon size={20} weight="regular" className="text-white" />
+                      <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
+                        <BuildingIcon size={20} weight="regular" className="text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-white text-base font-reisinger-yonatan truncate">
+                        <div className="font-semibold text-foreground truncate">
                           {tenant.tenantName}
                         </div>
-                        <div className="text-sm text-white/60 font-reisinger-yonatan">
+                        <div className="text-sm text-muted-foreground">
                           {tenant.roles.join(' · ')}
                         </div>
                       </div>
-                      <ArrowRightIcon size={16} weight="regular" className="text-white/40 group-hover:text-white/70 transition-colors" mirrored />
+                      <ArrowRightIcon size={16} weight="regular" className="text-muted-foreground group-hover:text-foreground transition-colors" mirrored />
                     </div>
                   </button>
                 ))}
               </div>
 
-              <button
-                onClick={handleBackToLogin}
-                disabled={isLoading}
-                className="w-full mt-6 py-2.5 px-4 text-sm font-medium text-white/80 hover:text-white
-                  bg-white/10 hover:bg-white/15 border border-white/20 rounded-lg
-                  transition-all duration-200 font-reisinger-yonatan
-                  disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <Button variant="outline" className="w-full mt-6" onClick={handleBackToLogin} disabled={isLoading}>
                 חזרה לכניסה
-              </button>
+              </Button>
             </>
           ) : (
-            /* Login Form View */
-            <>
-              <div>
-                <div className="flex flex-col items-center gap-2 mb-4">
-                  <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
-                    <MusicNoteIcon size={32} weight="regular" className="text-white" />
-                  </div>
-                  <p className="text-sm text-white/70 font-reisinger-yonatan">מערכת ניהול קונסרבטוריון</p>
-                </div>
-                <h2
-                  className="mt-6 text-center text-3xl font-extrabold text-white drop-shadow-lg"
-                  style={{ fontFamily: "'Reisinger Yonatan', 'Arial Hebrew', 'Noto Sans Hebrew', Arial, sans-serif" }}
-                >
-                  {isSuperAdmin ? 'כניסת מנהל-על' : 'כניסה למערכת'}
-                </h2>
-                {isSuperAdmin && (
-                  <div className="flex items-center justify-center gap-1.5 mt-2">
-                    <ShieldIcon size={16} weight="fill" className="text-amber-300" />
-                    <p className="text-sm text-amber-200 font-reisinger-yonatan">ממשק ניהול מערכת</p>
-                  </div>
-                )}
-              </div>
-              <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                {error && (
-                  <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg backdrop-blur-sm">
-                    <p className="text-red-100 text-sm text-center font-reisinger-yonatan">{error}</p>
-                  </div>
-                )}
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+            >
+              <TabsList>
+                <TabsTrigger value="login" className="font-bold text-sm">כניסה</TabsTrigger>
+                <TabsTrigger value="forgot" className="font-bold text-sm">שכחתי סיסמה</TabsTrigger>
+              </TabsList>
+              <TabsContents>
+                <TabsContent value="login">
+                <div className="mt-4">
+                  <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
+                    {isSuperAdmin ? 'כניסת מנהל-על' : 'ברוכים הבאים'}
+                  </h1>
+                  <p className="mt-1 text-muted-foreground">
+                    {isSuperAdmin ? 'ממשק ניהול מערכת' : 'התחברו לחשבון שלכם כדי להמשיך.'}
+                  </p>
 
-                <div className="rounded-md shadow-sm space-y-4">
-                  <div>
-                    <label htmlFor="email" className="sr-only font-reisinger-yonatan">
-                      כתובת דוא"ל
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      disabled={isLoading}
-                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right disabled:opacity-50 disabled:cursor-not-allowed"
-                      placeholder='כתובת דוא״ל'
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      dir="ltr"
-                      style={{ textAlign: 'left' }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="password" className="sr-only font-reisinger-yonatan">
-                      סיסמה
-                    </label>
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      required
-                      disabled={isLoading}
-                      className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right disabled:opacity-50 disabled:cursor-not-allowed"
-                      placeholder="סיסמה"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      dir="ltr"
-                      style={{ textAlign: 'left' }}
-                    />
-                  </div>
-                </div>
+                  <form className="mt-6" onSubmit={handleSubmit}>
+                    <fieldset disabled={isLoading} className="grid gap-5">
+                      {error && (
+                        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
+                          <p className="text-sm text-center text-destructive">{error}</p>
+                        </div>
+                      )}
 
-                <div>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        מתחבר...
+                      <div className="grid gap-2">
+                        <Label htmlFor="email">כתובת דוא״ל</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          required
+                          placeholder="you@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          dir="ltr"
+                          style={{ textAlign: 'left' }}
+                        />
                       </div>
-                    ) : (
-                      'כניסה'
-                    )}
-                  </button>
-                </div>
 
-                <div className="text-center space-y-2">
-                  <Link
-                    to="/forgot-password"
-                    className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 font-reisinger-yonatan underline"
-                  >
-                    שכחתי סיסמא
-                  </Link>
-                  <div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="password">סיסמה</Label>
+                        <div className="relative">
+                          <Input
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            required
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            dir="ltr"
+                            style={{ textAlign: 'left', paddingRight: '2.5rem' }}
+                          />
+                          <button
+                            type="button"
+                            tabIndex={-1}
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {showPassword ? (
+                              <EyeSlashIcon size={15} weight="regular" />
+                            ) : (
+                              <EyeIcon size={15} weight="regular" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      <Button className="w-full" type="submit">
+                        {isLoading ? (
+                          <span className="flex items-center gap-2">
+                            <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                            מתחבר...
+                          </span>
+                        ) : (
+                          'כניסה'
+                        )}
+                      </Button>
+                    </fieldset>
+                  </form>
+
+                  {isSuperAdmin && (
+                    <div className="mt-4 flex items-center justify-center gap-1.5">
+                      <ShieldIcon size={16} weight="fill" className="text-amber-500" />
+                      <span className="text-sm text-amber-600">ממשק ניהול מערכת</span>
+                    </div>
+                  )}
+
+                  <div className="mt-6 text-center">
                     <button
                       type="button"
                       onClick={() => { setIsSuperAdmin(!isSuperAdmin); setError('') }}
-                      className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200 font-reisinger-yonatan"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
                     >
                       {isSuperAdmin ? 'חזרה לכניסה רגילה' : 'כניסת מנהל-על'}
                     </button>
                   </div>
                 </div>
-              </form>
-            </>
+              </TabsContent>
+
+                <TabsContent value="forgot">
+                <div className="mt-4">
+                  <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
+                    איפוס סיסמה
+                  </h1>
+                  <p className="mt-1 text-muted-foreground">
+                    הזינו את כתובת הדוא״ל ונשלח לכם קישור לאיפוס.
+                  </p>
+
+                  {forgotSuccess ? (
+                    <div className="mt-6 space-y-5">
+                      <div className="rounded-md border border-green-200 bg-green-50 p-4">
+                        <p className="text-sm text-center text-green-700">
+                          אם קיים חשבון עם כתובת דוא״ל זו, נשלח אליכם קישור לאיפוס סיסמה.
+                          אנא בדקו את תיבת הדואר שלכם.
+                        </p>
+                      </div>
+
+                      <Button variant="outline" className="w-full" onClick={switchToLogin}>
+                        חזרה לכניסה
+                      </Button>
+                    </div>
+                  ) : (
+                    <form className="mt-6" onSubmit={handleForgotSubmit}>
+                      <fieldset disabled={forgotLoading} className="grid gap-5">
+                        {forgotError && (
+                          <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
+                            <p className="text-sm text-center text-destructive">{forgotError}</p>
+                          </div>
+                        )}
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="forgot-email">כתובת דוא״ל</Label>
+                          <Input
+                            id="forgot-email"
+                            type="email"
+                            required
+                            placeholder="you@example.com"
+                            value={forgotEmail}
+                            onChange={(e) => setForgotEmail(e.target.value)}
+                            dir="ltr"
+                            style={{ textAlign: 'left' }}
+                          />
+                        </div>
+
+                        <Button className="w-full" type="submit">
+                          {forgotLoading ? (
+                            <span className="flex items-center gap-2">
+                              <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                              שולח...
+                            </span>
+                          ) : (
+                            'שלח קישור לאיפוס'
+                          )}
+                        </Button>
+                      </fieldset>
+                    </form>
+                  )}
+                </div>
+              </TabsContent>
+              </TabsContents>
+            </Tabs>
           )}
         </div>
       </div>
 
+      {/* Left side — Background image */}
+      <div
+        className="hidden lg:block"
+        style={{
+          backgroundColor: '#1a2e4a',
+          backgroundImage: 'url("/login-background.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
       {/* Loading overlay for tenant selection */}
       {isLoading && showTenantSelector && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-20 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        <div className="fixed inset-0 bg-background/50 backdrop-blur-sm z-20 flex items-center justify-center">
+          <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </div>
       )}
     </div>

@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { rolesService } from '../../services/apiService'
 import { ADMIN_TIER_ROLES, COORDINATOR_ROLES } from '../../constants/enums'
 import { getDisplayName } from '../../utils/nameUtils'
 import EditRoleModal from './EditRoleModal'
 import PermissionMatrixEditor from './PermissionMatrixEditor'
 import toast from 'react-hot-toast'
-import { PencilSimple as PencilSimpleIcon } from '@phosphor-icons/react'
+import {
+  PencilSimple as PencilSimpleIcon,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  CaretDown as CaretDownIcon,
+  CaretUp as CaretUpIcon,
+} from '@phosphor-icons/react'
 
 interface Teacher {
   _id: string
@@ -18,6 +23,8 @@ interface Teacher {
   coordinatorDepartments?: string[]
   isActive?: boolean
 }
+
+const DEFAULT_VISIBLE = 5
 
 function getRoleBadgeColor(role: string): string {
   if (ADMIN_TIER_ROLES.includes(role as any)) {
@@ -37,6 +44,8 @@ export default function StaffRoleTable() {
   const [rolePermissions, setRolePermissions] = useState<Record<string, Record<string, Record<string, string>>>>({})
   const [loading, setLoading] = useState(true)
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [expanded, setExpanded] = useState(false)
 
   const loadData = async () => {
     try {
@@ -73,6 +82,26 @@ export default function StaffRoleTable() {
     loadData()
   }
 
+  const filteredTeachers = useMemo(() => {
+    if (!searchQuery.trim()) return teachers
+    const q = searchQuery.trim().toLowerCase()
+    return teachers.filter(t => {
+      const name = getDisplayName(t.personalInfo) || ''
+      const roles = (t.roles || []).join(' ')
+      return name.toLowerCase().includes(q) || roles.toLowerCase().includes(q)
+    })
+  }, [teachers, searchQuery])
+
+  // When searching, show all results; when not searching, respect expand/collapse
+  const visibleTeachers = useMemo(() => {
+    if (searchQuery.trim()) return filteredTeachers
+    if (expanded) return filteredTeachers
+    return filteredTeachers.slice(0, DEFAULT_VISIBLE)
+  }, [filteredTeachers, expanded, searchQuery])
+
+  const hasMore = !searchQuery.trim() && filteredTeachers.length > DEFAULT_VISIBLE
+  const hiddenCount = filteredTeachers.length - DEFAULT_VISIBLE
+
   if (loading) {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-8">
@@ -98,90 +127,140 @@ export default function StaffRoleTable() {
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-gray-200 p-5">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold text-gray-800">ניהול תפקידים</h3>
-            <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
-              {teachers.length}
-            </span>
+      {/* Two-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Staff Role Table — 3/5 */}
+        <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-gray-800">ניהול תפקידים</h3>
+              <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                {filteredTeachers.length}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-right py-3 px-3 text-xs font-medium text-gray-500">שם</th>
-                <th className="text-right py-3 px-3 text-xs font-medium text-gray-500">תפקידים</th>
-                <th className="text-right py-3 px-3 text-xs font-medium text-gray-500">סטטוס</th>
-                <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 w-20">פעולות</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teachers.map(teacher => {
-                const name = getDisplayName(teacher.personalInfo) || 'ללא שם'
-                const isActive = teacher.isActive !== false
-                const roles = teacher.roles || []
+          {/* Search input */}
+          <div className="relative mb-4">
+            <MagnifyingGlassIcon
+              size={16}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+            />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => {
+                setSearchQuery(e.target.value)
+                setExpanded(false)
+              }}
+              placeholder="חיפוש לפי שם או תפקיד..."
+              className="w-full pr-9 pl-3 py-2 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-colors placeholder:text-gray-400"
+            />
+          </div>
 
-                return (
-                  <tr
-                    key={teacher._id}
-                    className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
-                  >
-                    <td className="py-3 px-3 font-medium text-gray-800">{name}</td>
-                    <td className="py-3 px-3">
-                      <div className="flex flex-wrap gap-1.5">
-                        {roles.length === 0 ? (
-                          <span className="text-xs text-gray-400">ללא תפקידים</span>
-                        ) : (
-                          roles.map(role => (
-                            <span
-                              key={role}
-                              className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${getRoleBadgeColor(role)}`}
-                            >
-                              {role}
-                            </span>
-                          ))
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-3">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${
-                          isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
-                        }`}
-                      >
-                        {isActive ? 'פעיל' : 'לא פעיל'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3">
-                      <button
-                        onClick={() => setEditingTeacher(teacher)}
-                        className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
-                        title="ערוך תפקידים"
-                      >
-                        <PencilSimpleIcon size={16} weight="regular" />
-                      </button>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-right py-3 px-3 text-xs font-medium text-gray-500">שם</th>
+                  <th className="text-right py-3 px-3 text-xs font-medium text-gray-500">תפקידים</th>
+                  <th className="text-right py-3 px-3 text-xs font-medium text-gray-500">סטטוס</th>
+                  <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 w-20">פעולות</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visibleTeachers.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-8 text-center text-sm text-gray-400">
+                      לא נמצאו תוצאות עבור &quot;{searchQuery}&quot;
                     </td>
                   </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                ) : (
+                  visibleTeachers.map(teacher => {
+                    const name = getDisplayName(teacher.personalInfo) || 'ללא שם'
+                    const isActive = teacher.isActive !== false
+                    const roles = teacher.roles || []
 
-      {/* Permission Matrix Section */}
-      <div className="mt-6">
-        <div className="mb-3">
-          <h3 className="text-sm font-bold text-gray-800">מטריצת הרשאות</h3>
-          <p className="text-xs text-gray-500 mt-0.5">התאם הרשאות לכל תפקיד</p>
+                    return (
+                      <tr
+                        key={teacher._id}
+                        className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
+                      >
+                        <td className="py-3 px-3 font-medium text-gray-800">{name}</td>
+                        <td className="py-3 px-3">
+                          <div className="flex flex-wrap gap-1.5">
+                            {roles.length === 0 ? (
+                              <span className="text-xs text-gray-400">ללא תפקידים</span>
+                            ) : (
+                              roles.map(role => (
+                                <span
+                                  key={role}
+                                  className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${getRoleBadgeColor(role)}`}
+                                >
+                                  {role}
+                                </span>
+                              ))
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${
+                              isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
+                            }`}
+                          >
+                            {isActive ? 'פעיל' : 'לא פעיל'}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3">
+                          <button
+                            onClick={() => setEditingTeacher(teacher)}
+                            className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
+                            title="ערוך תפקידים"
+                          >
+                            <PencilSimpleIcon size={16} weight="regular" />
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Expand / Collapse button */}
+          {hasMore && (
+            <button
+              onClick={() => setExpanded(prev => !prev)}
+              className="w-full mt-3 py-2 flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/5 rounded-xl transition-colors"
+            >
+              {expanded ? (
+                <>
+                  <CaretUpIcon size={14} weight="bold" />
+                  הצג פחות
+                </>
+              ) : (
+                <>
+                  <CaretDownIcon size={14} weight="bold" />
+                  הצג עוד {hiddenCount} אנשי צוות
+                </>
+              )}
+            </button>
+          )}
         </div>
-        <PermissionMatrixEditor
-          rolePermissions={rolePermissions}
-          onPermissionsChanged={handleSaved}
-        />
+
+        {/* Permission Matrix — 2/5 */}
+        <div className="lg:col-span-2">
+          <div className="mb-3">
+            <h3 className="text-sm font-bold text-gray-800">מטריצת הרשאות</h3>
+            <p className="text-xs text-gray-500 mt-0.5">התאם הרשאות לכל תפקיד</p>
+          </div>
+          <PermissionMatrixEditor
+            rolePermissions={rolePermissions}
+            onPermissionsChanged={handleSaved}
+          />
+        </div>
       </div>
 
       <EditRoleModal

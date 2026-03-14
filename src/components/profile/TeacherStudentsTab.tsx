@@ -269,7 +269,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       // Show success message
       const successMsg = document.createElement('div')
       successMsg.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg z-50'
-      successMsg.innerHTML = `<div class="flex items-center gap-2 font-reisinger-yonatan"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>${studentName} נמחק בהצלחה</div>`
+      successMsg.innerHTML = `<div class="flex items-center gap-2"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>${studentName} נמחק בהצלחה</div>`
       document.body.appendChild(successMsg)
       setTimeout(() => successMsg.remove(), 3000)
     } catch (error) {
@@ -278,7 +278,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       // Show error message
       const errorMsg = document.createElement('div')
       errorMsg.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg z-50'
-      errorMsg.innerHTML = `<div class="flex items-center gap-2 font-reisinger-yonatan"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>שגיאה במחיקת ${studentName}</div>`
+      errorMsg.innerHTML = `<div class="flex items-center gap-2"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>שגיאה במחיקת ${studentName}</div>`
       document.body.appendChild(errorMsg)
       setTimeout(() => errorMsg.remove(), 5000)
     }
@@ -327,7 +327,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       type === 'success' ? 'bg-green-500 text-white' :
       type === 'error' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
     }`
-    notification.innerHTML = `<div class="flex items-center gap-2 font-reisinger-yonatan">
+    notification.innerHTML = `<div class="flex items-center gap-2">
       ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'} ${message}
     </div>`
     document.body.appendChild(notification)
@@ -466,21 +466,21 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
             </svg>
           </div>
           <div>
-            <h3 className="text-red-800 font-semibold font-reisinger-yonatan">שגיאה בטעינת הנתונים</h3>
-            <p className="text-red-700 text-sm font-reisinger-yonatan mt-1">{error}</p>
+            <h3 className="text-red-800 font-semibold">שגיאה בטעינת הנתונים</h3>
+            <p className="text-red-700 text-sm mt-1">{error}</p>
           </div>
         </div>
         <div className="flex gap-3">
           <button
             onClick={() => loadTeacherStudents()}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-reisinger-yonatan"
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
           >
             נסה שוב
           </button>
           {retryCount > 2 && (
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-reisinger-yonatan"
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
             >
               רענן דף
             </button>
@@ -495,7 +495,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-xl font-bold text-gray-900">
 התלמידים שלי
           </h3>
           <p className="text-gray-600 mt-1">
@@ -510,7 +510,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
         >
           <UserPlusIcon className="w-4 h-4" />
-          <span className="font-reisinger-yonatan">הוסף תלמיד</span>
+          <span className="">הוסף תלמיד</span>
         </button>
       </div>
 
@@ -531,10 +531,10 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
       {filteredStudents.length === 0 ? (
         <div className="text-center py-12">
           <UserPlusIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
             {searchTerm ? 'לא נמצאו תלמידים' : 'אין תלמידים רשומים'}
           </h3>
-          <p className="text-gray-600 font-reisinger-yonatan">
+          <p className="text-gray-600">
             {searchTerm ? 'נסה מילות חיפוש אחרות' : 'התחל בהוספת התלמיד הראשון שלך'}
           </p>
           {!searchTerm && (
@@ -543,7 +543,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
                 setShowAssignmentModal(true)
                 loadAllSystemStudents()
               }}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-reisinger-yonatan"
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               <UserPlusIcon className="w-4 h-4" />
               הוסף תלמיד ראשון
@@ -557,14 +557,14 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center gap-2">
                 <UserPlusIcon className="w-5 h-5 text-blue-600" />
-                <span className="font-medium text-blue-900 font-reisinger-yonatan">סה״כ תלמידים</span>
+                <span className="font-medium text-blue-900">סה״כ תלמידים</span>
               </div>
               <div className="text-2xl font-bold text-blue-900 mt-1">{students.length}</div>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <div className="flex items-center gap-2">
                 <EyeIcon className="w-5 h-5 text-green-600" />
-                <span className="font-medium text-green-900 font-reisinger-yonatan">פעילים</span>
+                <span className="font-medium text-green-900">פעילים</span>
               </div>
               <div className="text-2xl font-bold text-green-900 mt-1">
                 {students.filter(s => s.status === 'active').length}
@@ -573,7 +573,7 @@ export default function TeacherStudentsTab({ action }: TeacherStudentsTabProps =
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
               <div className="flex items-center gap-2">
                 <CalendarIcon className="w-5 h-5 text-purple-600" />
-                <span className="font-medium text-purple-900 font-reisinger-yonatan">עם שיעורים</span>
+                <span className="font-medium text-purple-900">עם שיעורים</span>
               </div>
               <div className="text-2xl font-bold text-purple-900 mt-1">
                 {students.filter(s => s.scheduleInfo || s.teacherAssignments?.length > 0).length}
@@ -862,7 +862,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col" dir="rtl">
-        <h3 className="text-xl font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">
           הוסף תלמיד
         </h3>
 
@@ -875,7 +875,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
             {/* MagnifyingGlassIcon Input */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 חפש תלמיד במערכת
               </label>
               <div className="relative">
@@ -945,7 +945,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
             {selectedStudent && (
               <div className="space-y-4 border-t pt-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-gray-900 font-reisinger-yonatan">
+                  <h4 className="font-medium text-gray-900">
                     בחר זמן שיעור עבור {getDisplayName(selectedStudent.personalInfo)}
                   </h4>
                   {selectedSlot && (
@@ -1060,7 +1060,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
               <button
                 type="submit"
                 disabled={!selectedStudent || !selectedSlot || submitting}
-                className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-reisinger-yonatan flex items-center justify-center gap-2"
+                className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>
@@ -1078,7 +1078,7 @@ function StudentAssignmentModal({ allStudents, loading, onClose, onSubmit }: Stu
                 type="button"
                 onClick={onClose}
                 disabled={submitting}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-reisinger-yonatan flex items-center justify-center gap-2"
+                className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <XIcon className="w-4 h-4" />
                 ביטול
@@ -1171,20 +1171,20 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
-        <h3 className="text-xl font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">
           תזמן שיעור קבוע - {getDisplayName(student.personalInfo) || `${student.firstName} ${student.lastName}`.trim()}
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Day Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               יום
             </label>
             <select
               value={formData.day}
               onChange={(e) => setFormData(prev => ({ ...prev, day: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               required
             >
               <option value="">בחר יום</option>
@@ -1197,7 +1197,7 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
           {/* Time Selection */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 שעת התחלה
               </label>
               <input
@@ -1214,13 +1214,13 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 משך (דקות)
               </label>
               <select
                 value={formData.duration}
                 onChange={(e) => handleDurationChange(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
                 {DURATIONS.map(dur => (
                   <option key={dur} value={dur}>{dur} דק'</option>
@@ -1231,13 +1231,13 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               מיקום
             </label>
             <select
               value={formData.location}
               onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
               <option value="">בחר מיקום</option>
               {VALID_LOCATIONS.map(loc => (
@@ -1248,13 +1248,13 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
 
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               הערות
             </label>
             <textarea
               value={formData.notes}
               onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               rows={3}
               placeholder="הערות נוספות..."
             />
@@ -1265,7 +1265,7 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-reisinger-yonatan font-medium"
+              className="flex-1 bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
             >
               {saving ? 'שומר...' : 'שמור'}
             </button>
@@ -1273,7 +1273,7 @@ function ScheduleLessonModal({ student, teacherId, teachingDays, onClose, onSave
               type="button"
               onClick={onClose}
               disabled={saving}
-              className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-reisinger-yonatan font-medium"
+              className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
             >
               ביטול
             </button>
@@ -1399,20 +1399,20 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
-        <h3 className="text-xl font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">
           עדכן שיעור קבוע - {getDisplayName(student.personalInfo) || `${student.firstName} ${student.lastName}`.trim()}
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Day Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               יום
             </label>
             <select
               value={formData.day}
               onChange={(e) => setFormData(prev => ({ ...prev, day: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               required
             >
               <option value="">בחר יום</option>
@@ -1425,7 +1425,7 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
           {/* Time Selection */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 שעת התחלה
               </label>
               <input
@@ -1442,13 +1442,13 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 משך (דקות)
               </label>
               <select
                 value={formData.duration}
                 onChange={(e) => handleDurationChange(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
                 {DURATIONS.map(dur => (
                   <option key={dur} value={dur}>{dur} דק'</option>
@@ -1459,13 +1459,13 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               מיקום
             </label>
             <select
               value={formData.location}
               onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
               <option value="">בחר מיקום</option>
               {VALID_LOCATIONS.map(loc => (
@@ -1476,13 +1476,13 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
 
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               הערות
             </label>
             <textarea
               value={formData.notes}
               onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-reisinger-yonatan"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               rows={3}
               placeholder="הערות נוספות..."
             />
@@ -1493,7 +1493,7 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-reisinger-yonatan font-medium"
+              className="flex-1 bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
             >
               {saving ? 'מעדכן...' : 'עדכן'}
             </button>
@@ -1501,7 +1501,7 @@ function UpdateLessonModal({ student, teacherId, teachingDays, onClose, onSave, 
               type="button"
               onClick={onClose}
               disabled={saving}
-              className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-reisinger-yonatan font-medium"
+              className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium"
             >
               ביטול
             </button>

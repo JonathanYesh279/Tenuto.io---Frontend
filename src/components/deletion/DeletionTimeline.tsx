@@ -264,29 +264,29 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
           {/* Event Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
-              <h4 className={`text-sm font-semibold font-reisinger-yonatan ${colorClasses.text}`}>
+              <h4 className={`text-sm font-semibold ${colorClasses.text}`}>
                 {event.title}
               </h4>
-              <span className="text-xs text-gray-500 font-reisinger-yonatan">
+              <span className="text-xs text-gray-500">
                 {formatTime(event.timestamp)}
               </span>
             </div>
             
-            <p className="text-sm text-gray-600 font-reisinger-yonatan mb-2">
+            <p className="text-sm text-gray-600 mb-2">
               {event.description}
             </p>
 
             {/* Event specific badges */}
             <div className="flex gap-2">
               {event.type === 'audit' && (
-                <span className="px-2 py-1 text-xs font-medium bg-white rounded-full border font-reisinger-yonatan">
+                <span className="px-2 py-1 text-xs font-medium bg-white rounded-full border">
                   יומן ביקורת
                 </span>
               )}
               
               {event.type === 'operation' && event.status && (
                 <span className={`
-                  px-2 py-1 text-xs font-medium rounded-full border font-reisinger-yonatan
+                  px-2 py-1 text-xs font-medium rounded-full border
                   ${event.status === 'completed' ? 'bg-green-100 text-green-700 border-green-200' :
                     event.status === 'failed' ? 'bg-red-100 text-red-700 border-red-200' :
                     event.status === 'running' ? 'bg-blue-100 text-blue-700 border-blue-200' :
@@ -301,7 +301,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
               )}
 
               {event.type === 'audit' && (event.data as AuditLogEntry).canRollback && (
-                <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200 rounded-full font-reisinger-yonatan">
+                <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200 rounded-full">
                   ניתן לשחזור
                 </span>
               )}
@@ -335,10 +335,10 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
             <div className="flex items-center gap-3">
               <ClockIcon className="w-6 h-6 text-gray-500" />
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+                <h3 className="text-lg font-semibold text-gray-900">
                   ציר זמן מחיקות
                 </h3>
-                <p className="text-sm text-gray-600 font-reisinger-yonatan">
+                <p className="text-sm text-gray-600">
                   {filteredEvents.length} אירועים מתוך {timelineEvents.length}
                 </p>
               </div>
@@ -350,7 +350,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                 className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
                 <FunnelIcon className="w-4 h-4" />
-                <span className="font-reisinger-yonatan">סינון</span>
+                <span className="">סינון</span>
               </button>
             </div>
           </div>
@@ -363,7 +363,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
               placeholder="חיפוש באירועים..."
               value={filters.searchQuery}
               onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
-              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-reisinger-yonatan"
+              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -372,7 +372,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
             <div className="space-y-4 pt-4 border-t border-gray-100">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     תאריך התחלה
                   </label>
                   <input
@@ -385,12 +385,12 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                         start: e.target.value ? new Date(e.target.value) : null 
                       }
                     }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     תאריך סיום
                   </label>
                   <input
@@ -403,7 +403,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                         end: e.target.value ? new Date(e.target.value) : null 
                       }
                     }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   />
                 </div>
               </div>
@@ -423,7 +423,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                       }}
                       className="rounded border-gray-300"
                     />
-                    <span className="mr-2 text-sm text-gray-700 font-reisinger-yonatan">יומן ביקורת</span>
+                    <span className="mr-2 text-sm text-gray-700">יומן ביקורת</span>
                   </label>
                   
                   <label className="flex items-center">
@@ -439,7 +439,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                       }}
                       className="rounded border-gray-300"
                     />
-                    <span className="mr-2 text-sm text-gray-700 font-reisinger-yonatan">פעולות מחיקה</span>
+                    <span className="mr-2 text-sm text-gray-700">פעולות מחיקה</span>
                   </label>
                 </div>
               </div>
@@ -452,7 +452,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
                   entityTypes: [],
                   searchQuery: ''
                 })}
-                className="text-sm text-blue-600 hover:text-blue-700 font-reisinger-yonatan"
+                className="text-sm text-blue-600 hover:text-blue-700"
               >
                 נקה סינונים
               </button>
@@ -470,10 +470,10 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
               <div className="sticky top-0 bg-white z-10 pb-4 mb-4 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <CalendarIcon className="w-5 h-5 text-primary" />
-                  <h4 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+                  <h4 className="text-lg font-semibold text-gray-900">
                     {formatDate(dateKey)}
                   </h4>
-                  <span className="text-sm text-gray-500 font-reisinger-yonatan">
+                  <span className="text-sm text-gray-500">
                     {events.length} אירועים
                   </span>
                 </div>
@@ -488,10 +488,10 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
         ) : (
           <Card className="text-center py-12">
             <ClockIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-600 font-reisinger-yonatan mb-2">
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">
               לא נמצאו אירועים
             </h3>
-            <p className="text-gray-500 font-reisinger-yonatan">
+            <p className="text-gray-500">
               לא נמצאו אירועים במסנן הנוכחי
             </p>
           </Card>
@@ -501,7 +501,7 @@ const DeletionTimeline: React.FC<DeletionTimelineProps> = ({
       {/* Load more / Pagination could go here */}
       {groupedEvents.length > 0 && (
         <div className="text-center py-4">
-          <button className="text-sm text-blue-600 hover:text-blue-700 font-reisinger-yonatan">
+          <button className="text-sm text-blue-600 hover:text-blue-700">
             טען אירועים נוספים
           </button>
         </div>

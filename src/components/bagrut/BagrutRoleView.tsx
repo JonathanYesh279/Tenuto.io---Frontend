@@ -400,7 +400,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
 
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">
           חברי תזמורת לפי סטטוס בגרות
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -488,7 +488,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען נתוני בגרות...</div>
+          <div className="text-gray-600">טוען נתוני בגרות...</div>
         </div>
       </div>
     )
@@ -498,7 +498,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <WarningCircleIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -520,7 +520,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+              <h1 className="text-3xl font-bold text-gray-900">
                 {getRoleSpecificTitle()}
               </h1>
               <p className="text-gray-600 mt-2">
@@ -536,7 +536,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">סה״כ תלמידים</p>
+                <p className="text-sm font-medium text-gray-700">סה״כ תלמידים</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.totalStudents}</p>
               </div>
               <GraduationCapIcon className="w-6 h-6 text-indigo-600" />
@@ -545,7 +545,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">פעילים</p>
+                <p className="text-sm font-medium text-gray-700">פעילים</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.activeStudents}</p>
               </div>
               <ClockIcon className="w-6 h-6 text-blue-600" />
@@ -554,7 +554,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">הושלמו</p>
+                <p className="text-sm font-medium text-gray-700">הושלמו</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.completedStudents}</p>
               </div>
               <CheckCircleIcon className="w-6 h-6 text-green-600" />
@@ -563,7 +563,7 @@ export default function BagrutRoleView({ role, userId }: BagrutRoleViewProps) {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">אחוז הצלחה</p>
+                <p className="text-sm font-medium text-gray-700">אחוז הצלחה</p>
                 <p className="text-2xl font-bold text-gray-900 mt-2">{stats.passRate}%</p>
               </div>
               <TargetIcon className="w-6 h-6 text-purple-600" />

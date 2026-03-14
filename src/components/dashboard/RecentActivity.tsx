@@ -230,10 +230,10 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
       <div className={`bg-white rounded-lg border border-red-200 p-6 ${className}`} dir="rtl">
         <div className="text-center">
           <WarningIcon className="w-8 h-8 text-red-500 mx-auto mb-2" />
-          <div className="text-red-700 font-reisinger-yonatan">{error}</div>
+          <div className="text-red-700">{error}</div>
           <button
             onClick={fetchActivities}
-            className="mt-2 text-sm text-red-600 hover:text-red-800 underline font-reisinger-yonatan"
+            className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
           >
             נסה שוב
           </button>
@@ -247,18 +247,18 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-lg font-semibold text-gray-900">
             פעילות אחרונה
           </h3>
           <div className="flex items-center space-x-2 space-x-reverse">
             {lastUpdated && (
-              <span className="text-xs text-gray-500 font-reisinger-yonatan">
+              <span className="text-xs text-gray-500">
                 עודכן: {formatTimeAgo(lastUpdated)}
               </span>
             )}
             <button
               onClick={fetchActivities}
-              className="text-sm text-primary hover:opacity-80 font-reisinger-yonatan"
+              className="text-sm text-primary hover:opacity-80"
               disabled={loading}
             >
               {loading ? 'מעדכן...' : 'רענן'}
@@ -279,7 +279,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
               <button
                 key={filterOption.key}
                 onClick={() => setFilter(filterOption.key)}
-                className={`px-3 py-1 text-xs rounded-full transition-colors font-reisinger-yonatan ${
+                className={`px-3 py-1 text-xs rounded-full transition-colors ${
                   filter === filterOption.key
                     ? 'bg-muted text-foreground'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -297,7 +297,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
         {filteredActivities.length === 0 ? (
           <div className="p-8 text-center">
             <MusicNotesIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 font-reisinger-yonatan">
+            <p className="text-gray-600">
               {filter === 'all' ? 'אין פעילות אחרונה' : `אין פעילות אחרונה בקטגוריה ${
                 filter === 'students' ? 'תלמידים' :
                 filter === 'teachers' ? 'מורים' :
@@ -324,15 +324,15 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-medium text-gray-900 font-reisinger-yonatan">
+                    <h4 className="text-sm font-medium text-gray-900">
                       {activity.title}
                     </h4>
-                    <span className="text-xs text-gray-500 font-reisinger-yonatan">
+                    <span className="text-xs text-gray-500">
                       {formatTimeAgo(activity.timestamp)}
                     </span>
                   </div>
                   
-                  <p className="text-sm text-gray-600 font-reisinger-yonatan mt-1">
+                  <p className="text-sm text-gray-600 mt-1">
                     {activity.description}
                   </p>
                   
@@ -341,7 +341,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
                       {Object.entries(activity.metadata).map(([key, value]) => (
                         <span
                           key={key}
-                          className="inline-flex items-center px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full font-reisinger-yonatan"
+                          className="inline-flex items-center px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full"
                         >
                           {String(value)}
                         </span>
@@ -360,7 +360,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
         <div className="p-4 border-t border-gray-200 text-center">
           <button
             onClick={() => window.location.href = '/activity'}
-            className="text-sm text-primary hover:text-primary font-reisinger-yonatan"
+            className="text-sm text-primary hover:text-primary"
           >
             הצג את כל הפעילות
           </button>

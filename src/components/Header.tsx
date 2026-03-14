@@ -5,7 +5,7 @@ import { getUploadUrl } from '../services/apiService'
 import { useSidebar } from '../contexts/SidebarContext'
 import SchoolYearSelector from './SchoolYearSelector'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
-import { HouseIcon, SignOutIcon, UserIcon, MagnifyingGlassIcon, BellIcon } from '@phosphor-icons/react'
+import { HouseIcon, SignOutIcon, UserIcon, BellIcon } from '@phosphor-icons/react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
@@ -100,11 +100,11 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 h-20 dark:bg-sidebar-dark border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0 z-[45] transition-all duration-300"
+      className="fixed top-0 left-0 h-20 flex items-center justify-between px-8 shrink-0 z-[45] transition-all duration-300"
       style={{
         direction: 'rtl',
         width: hasSidebar && !isMobile ? (isDesktopOpen ? 'calc(100% - 280px)' : 'calc(100% - 64px)') : '100%',
-        backgroundColor: 'rgba(64, 155, 120, 0.08)',
+        background: 'linear-gradient(to bottom, rgba(64, 155, 120, 0.28) 0%, rgba(64, 155, 120, 0.12) 60%, transparent 100%)',
       }}
     >
       {/* Right side (RTL) - Conservatory Name + Search */}
@@ -113,7 +113,7 @@ export default function Header() {
         {!isSuperAdmin && (
           <div className="flex items-center gap-3">
             {user?.tenantLogoUrl && (
-              <div className="w-14 h-14 shrink-0 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden flex items-center justify-center">
                 <img
                   src={getUploadUrl(user.tenantLogoUrl)}
                   alt=""
@@ -127,57 +127,49 @@ export default function Header() {
           </div>
         )}
 
-        {/* Search input - Desktop only, hidden for super admin */}
-        {!isMobile && !isSuperAdmin && (
-          <div className="relative w-96">
-            <MagnifyingGlassIcon
-              size={18}
-              weight="regular"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 z-[1]"
-            />
-            <input
-              type="text"
-              placeholder="חיפוש שיעורים, תלמידים..."
-              className="w-full border-none rounded-2xl py-2.5 pr-11 pl-4 focus:ring-2 focus:ring-primary text-sm transition-all text-right font-reisinger-yonatan placeholder:text-slate-400 backdrop-blur-2xl"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.4) 100%)',
-                border: '1.5px solid rgba(255,255,255,0.6)',
-                boxShadow: `
-                  inset 0 2px 4px 0 rgba(255,255,255,0.9),
-                  inset 0 -2px 4px 0 rgba(7,39,90,0.08),
-                  inset 0 0 20px 0 rgba(255,255,255,0.3),
-                  0 4px 16px -4px rgba(7,39,90,0.2),
-                  0 1px 3px 0 rgba(7,39,90,0.1),
-                  0 0 0 1px rgba(255,255,255,0.4)
-                `,
-              }}
-              // TODO: wire to global search
-            />
-          </div>
-        )}
       </div>
 
-      {/* Left side (RTL) - School Year + Bell + Profile */}
+      {/* Left side (RTL) - Profile + Bell + School Year */}
       <div className="flex items-center gap-4" style={{ direction: 'ltr' }}>
-        {/* School Year Selector - muted styling, hidden for super admin */}
-        {!isSuperAdmin && (
-          <div className="text-xs">
-            <SchoolYearSelector />
-          </div>
-        )}
+        {/* User profile section with DropdownMenu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl"
+              aria-label="תפריט פרופיל"
+            >
+              <Avatar className="h-10 w-10 shrink-0">
+                <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="text-left">
+                <div className="text-sm font-bold">{getUserFullName()}</div>
+                <div className="text-[11px] font-semibold text-slate-400 uppercase">{getUserRole()}</div>
+              </div>
+            </button>
+          </DropdownMenuTrigger>
 
-        {/* Notification bell */}
-        <button
-          className="relative text-slate-500 hover:text-primary transition-colors"
-          aria-label="התראות"
-          // TODO: wire to notifications API
-        >
-          <BellIcon size={22} weight="regular" />
-          <span className="absolute top-0 left-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-sidebar-dark"></span>
-        </button>
+          <DropdownMenuContent align="start" className="w-48">
+            {!isSuperAdmin && (
+              <DropdownMenuItem
+                onClick={handleProfileClick}
+                className="flex items-center justify-between cursor-pointer"
+              >
+                <span>עמוד אישי</span>
+                <UserIcon className="w-4 h-4 text-muted-foreground" />
+              </DropdownMenuItem>
+            )}
 
-        {/* Divider */}
-        <div className="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="flex items-center justify-between cursor-pointer text-destructive focus:text-destructive"
+            >
+              <span>יציאה</span>
+              <SignOutIcon className="w-4 h-4" />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Desktop - Dashboard Icon for non-admin users */}
         {!isMobile && !isAdmin && (
@@ -190,45 +182,25 @@ export default function Header() {
           </button>
         )}
 
-        {/* User profile section with DropdownMenu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl"
-              aria-label="תפריט פרופיל"
-            >
-              <div className="text-left">
-                <div className="text-sm font-bold font-reisinger-yonatan">{getUserFullName()}</div>
-                <div className="text-[11px] font-semibold text-slate-400 uppercase">{getUserRole()}</div>
-              </div>
-              <Avatar className="h-10 w-10 shrink-0">
-                <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
-                  {getInitials()}
-                </AvatarFallback>
-              </Avatar>
-            </button>
-          </DropdownMenuTrigger>
+        {/* Divider */}
+        <div className="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
 
-          <DropdownMenuContent align="end" className="w-48">
-            {!isSuperAdmin && (
-              <DropdownMenuItem
-                onClick={handleProfileClick}
-                className="flex items-center justify-between cursor-pointer"
-              >
-                <span className="font-reisinger-yonatan">עמוד אישי</span>
-                <UserIcon className="w-4 h-4 text-muted-foreground" />
-              </DropdownMenuItem>
-            )}
+        {/* Notification bell */}
+        <button
+          className="relative text-slate-500 hover:text-primary transition-colors"
+          aria-label="התראות"
+          // TODO: wire to notifications API
+        >
+          <BellIcon size={22} weight="regular" />
+          <span className="absolute top-0 left-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-sidebar-dark"></span>
+        </button>
 
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="flex items-center justify-between cursor-pointer text-destructive focus:text-destructive"
-            >
-              <span className="font-reisinger-yonatan">יציאה</span>
-              <SignOutIcon className="w-4 h-4" />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* School Year Selector - hidden for super admin */}
+        {!isSuperAdmin && (
+          <div className="text-xs">
+            <SchoolYearSelector />
+          </div>
+        )}
       </div>
     </header>
   )

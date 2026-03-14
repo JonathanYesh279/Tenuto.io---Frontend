@@ -151,7 +151,7 @@ export default function RehearsalScheduleModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" dir="rtl">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-lg font-bold text-gray-900">
             קביעת חזרה חדשה
           </h3>
           <button
@@ -165,14 +165,14 @@ export default function RehearsalScheduleModal({
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center gap-2 text-blue-800">
             <UsersIcon className="w-4 h-4" />
-            <span className="font-medium font-reisinger-yonatan">תזמורת: {orchestraName}</span>
+            <span className="font-medium">תזמורת: {orchestraName}</span>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               תאריך החזרה *
             </label>
             <div className="relative">
@@ -188,14 +188,14 @@ export default function RehearsalScheduleModal({
               />
             </div>
             {errors.date && (
-              <p className="text-red-600 text-xs mt-1 font-reisinger-yonatan">{errors.date}</p>
+              <p className="text-red-600 text-xs mt-1">{errors.date}</p>
             )}
           </div>
 
           {/* Time */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת התחלה *
               </label>
               <div className="relative">
@@ -211,12 +211,12 @@ export default function RehearsalScheduleModal({
                 />
               </div>
               {errors.startTime && (
-                <p className="text-red-600 text-xs mt-1 font-reisinger-yonatan">{errors.startTime}</p>
+                <p className="text-red-600 text-xs mt-1">{errors.startTime}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת סיום *
               </label>
               <div className="relative">
@@ -232,21 +232,21 @@ export default function RehearsalScheduleModal({
                 />
               </div>
               {errors.endTime && (
-                <p className="text-red-600 text-xs mt-1 font-reisinger-yonatan">{errors.endTime}</p>
+                <p className="text-red-600 text-xs mt-1">{errors.endTime}</p>
               )}
             </div>
           </div>
 
           {/* Duration Display */}
           {calculateDuration() && (
-            <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded font-reisinger-yonatan">
+            <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded">
               משך החזרה: {calculateDuration()}
             </div>
           )}
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               מקום החזרה *
             </label>
             <div className="relative">
@@ -263,13 +263,13 @@ export default function RehearsalScheduleModal({
               />
             </div>
             {errors.location && (
-              <p className="text-red-600 text-xs mt-1 font-reisinger-yonatan">{errors.location}</p>
+              <p className="text-red-600 text-xs mt-1">{errors.location}</p>
             )}
           </div>
 
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               הערות
             </label>
             <textarea
@@ -291,7 +291,7 @@ export default function RehearsalScheduleModal({
                 onChange={(e) => setFormData(prev => ({ ...prev, recurring: e.target.checked }))}
                 className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
               />
-              <label htmlFor="recurring" className="mr-2 text-sm text-gray-700 font-reisinger-yonatan">
+              <label htmlFor="recurring" className="mr-2 text-sm text-gray-700">
                 חזרה קבועה (חוזרת)
               </label>
             </div>
@@ -299,7 +299,7 @@ export default function RehearsalScheduleModal({
             {formData.recurring && (
               <div className="bg-gray-50 p-3 rounded-lg space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     תדירות
                   </label>
                   <select
@@ -317,7 +317,7 @@ export default function RehearsalScheduleModal({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     תאריך סיום החזרות הקבועות *
                   </label>
                   <input
@@ -330,13 +330,13 @@ export default function RehearsalScheduleModal({
                     }`}
                   />
                   {errors.endRecurrence && (
-                    <p className="text-red-600 text-xs mt-1 font-reisinger-yonatan">{errors.endRecurrence}</p>
+                    <p className="text-red-600 text-xs mt-1">{errors.endRecurrence}</p>
                   )}
                 </div>
 
                 <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded flex items-start gap-2">
                   <WarningCircleIcon className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span className="font-reisinger-yonatan">
+                  <span className="">
                     חזרות קבועות ייווצרו אוטומטית עד התאריך שצוין
                   </span>
                 </div>
@@ -349,14 +349,14 @@ export default function RehearsalScheduleModal({
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors font-reisinger-yonatan"
+              className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
             >
               {loading ? 'קובע חזרה...' : 'קבע חזרה'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors font-reisinger-yonatan"
+              className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
             >
               ביטול
             </button>

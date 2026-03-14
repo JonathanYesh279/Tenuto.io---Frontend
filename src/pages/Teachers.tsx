@@ -11,12 +11,11 @@ import {
   User,
   Pagination,
   Spinner,
-  Badge as HeroBadge,
   Button as HeroButton,
   Chip,
 } from '@heroui/react'
 import { GlassStatCard } from '../components/ui/GlassStatCard'
-import { StatusBadge, InstrumentBadge } from '../components/domain'
+import { InstrumentBadge } from '../components/domain'
 import { SearchInput } from '../components/ui/SearchInput'
 import { GlassSelect } from '../components/ui/GlassSelect'
 import TeacherCard from '../components/TeacherCard'
@@ -26,7 +25,6 @@ import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext'
 import { getDisplayName } from '../utils/nameUtils'
-import { getWorkloadColor } from '../utils/workloadColors'
 import { getAvatarColorHex } from '../utils/avatarColorHash'
 import { getRoleChipColor } from '../utils/roleColors'
 import { TableSkeleton } from '../components/feedback/Skeleton'
@@ -306,7 +304,7 @@ export default function Teachers() {
     { uid: 'roles', name: 'תפקידים' },
     { uid: 'studentCount', name: 'מס\' תלמידים' },
     { uid: 'weeklyHours', name: 'ש"ש' },
-    { uid: 'status', name: 'סטטוס' },
+    { uid: 'engagement', name: 'כניסות' },
     { uid: 'actions', name: 'פעולות' },
   ]
 
@@ -321,6 +319,7 @@ export default function Teachers() {
       let cmp = 0
       if (col === 'weeklyHours') cmp = a.weeklyHours - b.weeklyHours
       else if (col === 'studentCount') cmp = a.studentCount - b.studentCount
+      else if (col === 'engagement') cmp = (a.loginCount || 0) - (b.loginCount || 0)
       else if (col === 'name') cmp = a.name.localeCompare(b.name, 'he')
       return sortDescriptor.direction === 'descending' ? -cmp : cmp
     })
@@ -340,29 +339,35 @@ export default function Teachers() {
   const renderCell = React.useCallback((teacher: any, columnKey: string) => {
     switch (columnKey) {
       case 'name': {
-        const userEl = (
-          <User
-            avatarProps={{
-              radius: 'full',
-              size: 'md',
-              showFallback: true,
-              name: teacher.name,
-              style: { backgroundColor: getAvatarColorHex(teacher.name || ''), color: '#fff' },
-            }}
-            description={teacher.email || ''}
-            name={teacher.name}
-          />
-        )
-
-        if (teacher.loginCount > 0) {
-          return (
-            <HeroBadge content={teacher.loginCount} color="primary" size="sm" shape="circle">
-              {userEl}
-            </HeroBadge>
-          )
+        const lastLogin = teacher.lastLogin
+        let dotColor = '#ef4444'
+        if (lastLogin) {
+          const days = Math.floor((Date.now() - new Date(lastLogin).getTime()) / 86400000)
+          if (days <= 14) dotColor = '#10b981'
+          else if (days <= 30) dotColor = '#f59e0b'
         }
-
-        return userEl
+        return (
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <User
+                avatarProps={{
+                  radius: 'full',
+                  size: 'md',
+                  showFallback: true,
+                  name: teacher.name,
+                  style: { backgroundColor: getAvatarColorHex(teacher.name || ''), color: '#fff' },
+                }}
+                description={teacher.email || ''}
+                name={teacher.name}
+              />
+              <span
+                className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900"
+                style={{ backgroundColor: dotColor }}
+                title={lastLogin ? `כניסה אחרונה: ${new Date(lastLogin).toLocaleDateString('he-IL')}` : 'לא התחבר/ה'}
+              />
+            </div>
+          </div>
+        )
       }
       case 'specialization':
         return teacher.specialization && teacher.specialization !== 'לא צוין'
@@ -391,15 +396,37 @@ export default function Teachers() {
         return <span className="text-sm">{teacher.studentCount}</span>
       case 'weeklyHours': {
         const hours = teacher.weeklyHours || 0
-        const { bg, text } = getWorkloadColor(hours)
         return (
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${bg} ${text}`}>
-            {hours}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold" style={{ color: '#46ab7d' }}>
+              {hours}
+            </span>
+            <div className="flex-1 h-2 rounded-full bg-slate-100 dark:bg-slate-700 max-w-[120px]">
+              <div
+                className="h-full rounded-full"
+                style={{ backgroundColor: '#46ab7d', width: `${Math.min(hours / 30 * 100, 100)}%` }}
+              />
+            </div>
+          </div>
         )
       }
-      case 'status':
-        return <StatusBadge status={teacher.isActive ? 'פעיל' : 'לא פעיל'} />
+      case 'engagement': {
+        const count = teacher.loginCount || 0
+        const ll = teacher.lastLogin
+        let label = 'מעולם'
+        if (ll) {
+          const days = Math.floor((Date.now() - new Date(ll).getTime()) / 86400000)
+          if (days === 0) label = 'היום'
+          else if (days === 1) label = 'אתמול'
+          else label = `לפני ${days} ימים`
+        }
+        return (
+          <div className="flex flex-col items-center">
+            <span className="text-sm font-bold">{count}</span>
+            <span className="text-[10px] text-slate-400 leading-tight">{label}</span>
+          </div>
+        )
+      }
       case 'actions':
         return (
           <div className="flex items-center justify-end gap-0.5">
@@ -454,10 +481,9 @@ export default function Teachers() {
         </div>
       </div>
 
-      {/* Analytics: 5 stat cards in a row */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+      {/* Analytics: 4 stat cards in a row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <GlassStatCard value={totalTeachers} label="סה״כ מורים" size="sm" />
-        <GlassStatCard value={activeTeachers} label="מורים פעילים" size="sm" />
         <GlassStatCard value={uniqueInstruments} label="כלים ייחודיים" size="sm" />
         <GlassStatCard value={avgWeeklyHours} label='ממוצע ש"ש' size="sm" />
         <GlassStatCard
@@ -636,8 +662,8 @@ export default function Teachers() {
                 {(column) => (
                   <TableColumn
                     key={column.uid}
-                    align={column.uid === 'actions' ? 'end' : ['studentCount', 'weeklyHours', 'status'].includes(column.uid) ? 'center' : 'start'}
-                    allowsSorting={['name', 'studentCount', 'weeklyHours'].includes(column.uid)}
+                    align={column.uid === 'actions' ? 'end' : ['studentCount', 'weeklyHours', 'engagement'].includes(column.uid) ? 'center' : 'start'}
+                    allowsSorting={['name', 'studentCount', 'weeklyHours', 'engagement'].includes(column.uid)}
                   >
                     {column.name}
                   </TableColumn>

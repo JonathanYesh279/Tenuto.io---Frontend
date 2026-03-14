@@ -120,7 +120,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
           {/* Logo/Title */}
           <div className="flex items-center">
             <MusicNotesIcon className="w-8 h-8 text-primary ml-2" />
-            <h1 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+            <h1 className="text-lg font-bold text-gray-900">
               קונסרבטוריון
             </h1>
           </div>
@@ -194,7 +194,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
                     className="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
                   >
                     <Icon className="w-5 h-5 text-green-600 ml-3" />
-                    <span className="text-sm font-medium text-gray-900 font-reisinger-yonatan">
+                    <span className="text-sm font-medium text-gray-900">
                       {action.name}
                     </span>
                   </Link>
@@ -232,7 +232,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
                 <span className="text-primary font-semibold text-sm">מ</span>
               </div>
               <div className="mr-3">
-                <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">
+                <p className="text-sm font-medium text-gray-900">
                   מנהל המערכת
                 </p>
                 <p className="text-xs text-gray-500">admin@conservatory.co.il</p>
@@ -255,7 +255,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`flex items-center justify-between px-3 py-3 mx-2 rounded-lg text-sm font-medium transition-colors font-reisinger-yonatan ${
+                    className={`flex items-center justify-between px-3 py-3 mx-2 rounded-lg text-sm font-medium transition-colors ${
                       active
                         ? 'bg-muted/50 text-primary border border-border'
                         : 'text-gray-700 hover:bg-gray-50'
@@ -283,7 +283,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
                 // Handle logout
                 console.log('Logout clicked')
               }}
-              className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors font-reisinger-yonatan"
+              className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
             >
               יציאה מהמערכת
             </button>

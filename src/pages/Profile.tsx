@@ -295,12 +295,12 @@ export default function Profile() {
       <div className="bg-white rounded border border-gray-200 p-6 mb-6">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center">
-            <span className="text-xl font-bold text-white font-reisinger-yonatan">
+            <span className="text-xl font-bold text-white">
               {getInitials()}
             </span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">
+            <h1 className="text-2xl font-bold text-gray-900">
               {getUserFullName()}
             </h1>
             <p className="text-gray-600 mt-1">
@@ -315,28 +315,28 @@ export default function Profile() {
         <StatCard
           title="סה״כ תלמידים"
           value={loadingStats ? '...' : statistics?.studentsCount?.toString() || '0'}
-          icon={Users}
+          icon={UsersIcon}
           color="blue"
           loading={loadingStats}
         />
         <StatCard
           title="תלמידים פעילים"
           value={loadingStats ? '...' : statistics?.activeStudents?.toString() || '0'}
-          icon={Activity}
+          icon={PulseIcon}
           color="green"
           loading={loadingStats}
         />
         <StatCard
           title="שעות שבועיות"
           value={loadingStats ? '...' : statistics?.weeklyHours?.toString() || '0'}
-          icon={Clock}
+          icon={ClockIcon}
           color="purple"
           loading={loadingStats}
         />
         <StatCard
           title={isConductor() ? 'תזמורות' : 'שיעורי תיאוריה'}
           value={loadingStats ? '...' : (statistics?.orchestrasCount || statistics?.theoryLessonsCount)?.toString() || '0'}
-          icon={isConductor() ? Music : BookOpen}
+          icon={isConductor() ? MusicNoteIcon : BookOpenIcon}
           color="indigo"
           loading={loadingStats}
         />
@@ -359,7 +359,7 @@ export default function Profile() {
                   }`}
                 >
                   <Icon className="w-5 h-5" />
-                  <span className="font-reisinger-yonatan">{tab.label}</span>
+                  <span className="">{tab.label}</span>
                 </button>
               )
             })}
@@ -414,10 +414,10 @@ function StatCard({ title, value, icon: Icon, color, loading }: StatCardProps) {
     <div className={`bg-white rounded border ${variant.border} p-3 sm:p-4`}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-xs sm:text-sm font-medium text-gray-600 font-reisinger-yonatan truncate">
+          <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">
             {title}
           </p>
-          <div className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 font-reisinger-yonatan">
+          <div className="text-lg sm:text-2xl font-bold text-gray-900 mt-1">
             {loading ? (
               <div className="animate-pulse bg-gray-200 h-6 sm:h-8 w-12 sm:w-16 rounded"></div>
             ) : (

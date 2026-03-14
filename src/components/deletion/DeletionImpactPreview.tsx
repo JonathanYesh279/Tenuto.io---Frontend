@@ -124,10 +124,10 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             <div className="flex items-center gap-3">
               {getSeverityIcon(impact.severity)}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+                <h3 className="text-lg font-semibold text-gray-900">
                   השפעת המחיקה - {impact.entityName}
                 </h3>
-                <p className="text-sm text-gray-600 font-reisinger-yonatan">
+                <p className="text-sm text-gray-600">
                   זמן משוער: {formatTime(impact.estimatedTime)}
                 </p>
               </div>
@@ -138,7 +138,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             `}>
               <div className="flex items-center gap-1">
                 {getSeverityIcon(impact.severity)}
-                <span className="font-reisinger-yonatan">
+                <span className="">
                   {impact.severity === 'critical' ? 'קריטי' :
                    impact.severity === 'high' ? 'גבוה' :
                    impact.severity === 'medium' ? 'בינוני' : 'נמוך'}
@@ -152,13 +152,13 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             <div className="bg-red-50 border border-red-200 rounded p-4">
               <div className="flex items-center gap-2 text-red-700">
                 <XCircleIcon className="w-5 h-5" />
-                <span className="font-semibold font-reisinger-yonatan">
+                <span className="font-semibold">
                   לא ניתן למחוק כרגע
                 </span>
               </div>
               <ul className="mt-2 space-y-1 text-sm text-red-600">
                 {impact.warnings.map((warning, index) => (
-                  <li key={index} className="font-reisinger-yonatan">• {warning}</li>
+                  <li key={index} className="">• {warning}</li>
                 ))}
               </ul>
             </div>
@@ -168,11 +168,11 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
               <div className="flex items-center gap-2 text-yellow-700 mb-2">
                 <WarningIcon className="w-5 h-5" />
-                <span className="font-semibold font-reisinger-yonatan">אזהרות</span>
+                <span className="font-semibold">אזהרות</span>
               </div>
               <ul className="space-y-1 text-sm text-yellow-700">
                 {impact.warnings.map((warning, index) => (
-                  <li key={index} className="font-reisinger-yonatan">• {warning}</li>
+                  <li key={index} className="">• {warning}</li>
                 ))}
               </ul>
             </div>
@@ -190,7 +190,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             >
               <div className="flex items-center gap-2">
                 <DatabaseIcon className="w-5 h-5 text-gray-500" />
-                <h4 className="text-md font-semibold text-gray-900 font-reisinger-yonatan">
+                <h4 className="text-md font-semibold text-gray-900">
                   רשומות קשורות ({impact.relatedRecords.length})
                 </h4>
               </div>
@@ -208,15 +208,15 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
                       {getRecordTypeIcon(record.type)}
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-900 font-reisinger-yonatan">
+                          <span className="font-medium text-gray-900">
                             {getRecordTypeLabel(record.type)}
                           </span>
-                          <span className="text-sm text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full font-reisinger-yonatan">
+                          <span className="text-sm text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
                             {record.count}
                           </span>
                         </div>
                         {record.name && (
-                          <p className="text-sm text-gray-600 font-reisinger-yonatan">{record.name}</p>
+                          <p className="text-sm text-gray-600">{record.name}</p>
                         )}
                       </div>
                     </div>
@@ -224,7 +224,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
                       px-2 py-1 rounded-full text-xs font-medium
                       ${getActionColor(record.action)}
                     `}>
-                      <span className="font-reisinger-yonatan">{getActionLabel(record.action)}</span>
+                      <span className="">{getActionLabel(record.action)}</span>
                     </div>
                   </div>
                 ))}
@@ -244,7 +244,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
             >
               <div className="flex items-center gap-2">
                 <WarningCircleIcon className="w-5 h-5 text-yellow-500" />
-                <h4 className="text-md font-semibold text-gray-900 font-reisinger-yonatan">
+                <h4 className="text-md font-semibold text-gray-900">
                   הפניות יתומות ({impact.orphanedReferences.length})
                 </h4>
               </div>
@@ -260,14 +260,14 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
                   <div key={index} className="flex items-center justify-between p-3 bg-yellow-50 rounded border border-yellow-200">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-900 font-reisinger-yonatan">
+                        <span className="font-medium text-gray-900">
                           {orphan.table}.{orphan.field}
                         </span>
-                        <span className="text-sm text-yellow-700 bg-yellow-200 px-2 py-0.5 rounded-full font-reisinger-yonatan">
+                        <span className="text-sm text-yellow-700 bg-yellow-200 px-2 py-0.5 rounded-full">
                           {orphan.count}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 font-reisinger-yonatan">
+                      <p className="text-sm text-gray-600">
                         {orphan.canCleanup ? 'ניתן לניקוי אוטומטי' : 'דרוש טיפול ידני'}
                       </p>
                     </div>
@@ -275,7 +275,7 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
                       px-2 py-1 rounded-full text-xs font-medium
                       ${orphan.canCleanup ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}
                     `}>
-                      <span className="font-reisinger-yonatan">
+                      <span className="">
                         {orphan.cleanupMethod === 'delete' ? 'מחיקה' :
                          orphan.cleanupMethod === 'nullify' ? 'איפוס' : 'ערך ברירת מחדל'}
                       </span>
@@ -293,10 +293,10 @@ const DeletionImpactPreview: React.FC<DeletionImpactPreviewProps> = ({
         <div className="flex items-center gap-3">
           <ClockIcon className="w-5 h-5 text-blue-600" />
           <div>
-            <h4 className="text-md font-semibold text-blue-900 font-reisinger-yonatan">
+            <h4 className="text-md font-semibold text-blue-900">
               זמן ביצוע משוער
             </h4>
-            <p className="text-sm text-blue-700 font-reisinger-yonatan">
+            <p className="text-sm text-blue-700">
               תהליך המחיקה צפוי להימשך כ-{formatTime(impact.estimatedTime)}
             </p>
           </div>

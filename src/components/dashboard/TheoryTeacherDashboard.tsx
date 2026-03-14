@@ -249,7 +249,7 @@ export default function TheoryTeacherDashboard() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען לוח בקרה לתיאוריה...</div>
+          <div className="text-gray-600">טוען לוח בקרה לתיאוריה...</div>
         </div>
       </div>
     )
@@ -259,7 +259,7 @@ export default function TheoryTeacherDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -279,7 +279,7 @@ export default function TheoryTeacherDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h1 className="text-3xl font-bold text-gray-900">
             לוח בקרה - מורה תיאוריה 🎼
           </h1>
           <p className="text-gray-600 mt-2">
@@ -347,7 +347,7 @@ export default function TheoryTeacherDashboard() {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">
             פעולות מהירות - תיאוריה
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -383,7 +383,7 @@ export default function TheoryTeacherDashboard() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   השיעורים הבאים - תיאוריה
                 </h2>
                 <button
@@ -398,7 +398,7 @@ export default function TheoryTeacherDashboard() {
               {upcomingLessons.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין שיעורי תיאוריה מתוכננים</p>
+                  <p className="">אין שיעורי תיאוריה מתוכננים</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -409,12 +409,12 @@ export default function TheoryTeacherDashboard() {
                           <BookOpenIcon className="w-5 h-5 text-indigo-600" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900 font-reisinger-yonatan">{lesson.name}</div>
-                          <div className="text-sm text-gray-600 font-reisinger-yonatan">
+                          <div className="font-medium text-gray-900">{lesson.name}</div>
+                          <div className="text-sm text-gray-600">
                             {lesson.level} • {lesson.enrolledCount}/{lesson.capacity} תלמידים
                           </div>
                           {lesson.venue && (
-                            <div className="text-xs text-gray-500 font-reisinger-yonatan">{lesson.venue}</div>
+                            <div className="text-xs text-gray-500">{lesson.venue}</div>
                           )}
                         </div>
                       </div>
@@ -433,7 +433,7 @@ export default function TheoryTeacherDashboard() {
             {/* Theory Student Progress */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   התקדמות תלמידי תיאוריה
                 </h2>
                 <button
@@ -448,7 +448,7 @@ export default function TheoryTeacherDashboard() {
               {studentProgress.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <TrendUpIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין נתוני התקדמות</p>
+                  <p className="">אין נתוני התקדמות</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -459,11 +459,11 @@ export default function TheoryTeacherDashboard() {
                           <BookOpenIcon className="w-4 h-4 text-blue-600" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900 font-reisinger-yonatan">{student.studentName}</div>
-                          <div className="text-sm text-gray-600 font-reisinger-yonatan">
+                          <div className="font-medium text-gray-900">{student.studentName}</div>
+                          <div className="text-sm text-gray-600">
                             {student.theoryGroup} • רמה: {student.currentLevel}
                           </div>
-                          <div className="text-xs text-gray-500 font-reisinger-yonatan">
+                          <div className="text-xs text-gray-500">
                             פעילות אחרונה: {student.lastActivity}
                           </div>
                         </div>
@@ -481,7 +481,7 @@ export default function TheoryTeacherDashboard() {
                           </div>
                           <span className="text-xs text-gray-600">{student.progressPercentage}%</span>
                         </div>
-                        <div className="text-xs text-gray-500 font-reisinger-yonatan">
+                        <div className="text-xs text-gray-500">
                           נוכחות: {student.attendanceRate}%
                         </div>
                       </div>
@@ -495,7 +495,7 @@ export default function TheoryTeacherDashboard() {
           {/* Recent Theory PulseIcon Feed */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+              <h2 className="text-lg font-bold text-gray-900">
                 פעילות אחרונה - תיאוריה
               </h2>
               <PulseIcon className="w-5 h-5 text-gray-400" />
@@ -504,7 +504,7 @@ export default function TheoryTeacherDashboard() {
             {recentActivities.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <BellIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p className="font-reisinger-yonatan">אין פעילות לאחרונה</p>
+                <p className="">אין פעילות לאחרונה</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -523,10 +523,10 @@ export default function TheoryTeacherDashboard() {
                       {activity.type === 'exam' && <GraduationCapIcon className="w-4 h-4 text-indigo-600" />}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">{activity.title}</p>
-                      <p className="text-sm text-gray-600 truncate font-reisinger-yonatan">{activity.description}</p>
+                      <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                      <p className="text-sm text-gray-600 truncate">{activity.description}</p>
                       {activity.groupName && (
-                        <p className="text-xs text-indigo-600 font-reisinger-yonatan">{activity.groupName}</p>
+                        <p className="text-xs text-indigo-600">{activity.groupName}</p>
                       )}
                       <p className="text-xs text-gray-400 mt-1">{formatTime(activity.timestamp)}</p>
                     </div>
@@ -557,7 +557,7 @@ function TheoryStatCard({ icon, title, value, suffix, bgColor, iconColor, border
     <div className={`${bgColor} border ${borderColor} rounded p-4`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>
+          <p className="text-sm font-medium text-gray-700">{title}</p>
           <p className="text-xl font-bold text-gray-900 mt-1">
             {value} {suffix && <span className="text-sm font-normal">{suffix}</span>}
           </p>
@@ -592,7 +592,7 @@ function TheoryQuickActionButton({ icon, label, onClick, color }: TheoryQuickAct
       className={`flex flex-col items-center justify-center p-4 rounded border transition-colors ${colorClasses[color]}`}
     >
       {icon}
-      <span className="mt-2 text-sm font-medium font-reisinger-yonatan text-center">{label}</span>
+      <span className="mt-2 text-sm font-medium text-center">{label}</span>
     </button>
   )
 }

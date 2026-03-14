@@ -529,7 +529,7 @@ export default function TeacherDashboard() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען לוח בקרה...</div>
+          <div className="text-gray-600">טוען לוח בקרה...</div>
         </div>
       </div>
     )
@@ -539,7 +539,7 @@ export default function TeacherDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -569,7 +569,7 @@ export default function TeacherDashboard() {
               ) : (
                 <WarningCircleIcon className="w-5 h-5" />
               )}
-              <span className="font-reisinger-yonatan">{toast.message}</span>
+              <span className="">{toast.message}</span>
               <button
                 onClick={() => setToast(null)}
                 className="ml-2 text-gray-400 hover:text-gray-600"
@@ -583,7 +583,7 @@ export default function TeacherDashboard() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-            <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+            <h1 className="text-3xl font-bold text-gray-900">
               לוח בקרה - {getDisplayName(user?.personalInfo) || user?.fullName || 'מורה'}
             </h1>
           </div>
@@ -636,7 +636,7 @@ export default function TeacherDashboard() {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">
             פעולות מהירות
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -732,7 +732,7 @@ export default function TeacherDashboard() {
             {/* Upcoming Lessons */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   השיעורים הבאים
                 </h2>
                 <button
@@ -747,7 +747,7 @@ export default function TeacherDashboard() {
               {upcomingLessons.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין שיעורים מתוכננים היום</p>
+                  <p className="">אין שיעורים מתוכננים היום</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -758,7 +758,7 @@ export default function TeacherDashboard() {
                           <ClockIcon className="w-5 h-5 text-indigo-600" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900 font-reisinger-yonatan">{lesson.studentName}</div>
+                          <div className="font-medium text-gray-900">{lesson.studentName}</div>
                           <div className="text-sm text-gray-600">{lesson.instrument}</div>
                         </div>
                       </div>
@@ -777,7 +777,7 @@ export default function TeacherDashboard() {
             {/* Student Attendance Overview */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   סקירת נוכחות
                 </h2>
                 <button
@@ -792,7 +792,7 @@ export default function TeacherDashboard() {
               {studentAttendance.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <UsersIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין נתוני נוכחות</p>
+                  <p className="">אין נתוני נוכחות</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -804,7 +804,7 @@ export default function TeacherDashboard() {
                           student.status === 'late' ? 'bg-yellow-500' : 'bg-red-500'
                         }`} />
                         <div>
-                          <div className="font-medium text-gray-900 font-reisinger-yonatan">{student.studentName}</div>
+                          <div className="font-medium text-gray-900">{student.studentName}</div>
                           <div className="text-sm text-gray-600">שיעור אחרון: {student.lastLesson}</div>
                         </div>
                       </div>
@@ -827,7 +827,7 @@ export default function TeacherDashboard() {
             {bagrutStudents.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                  <h2 className="text-lg font-bold text-gray-900">
                     התקדמות תלמידי בגרות
                   </h2>
                   <button
@@ -847,7 +847,7 @@ export default function TeacherDashboard() {
                           <GraduationCapIcon className="w-4 h-4 text-indigo-600" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900 font-reisinger-yonatan">{student.studentName}</div>
+                          <div className="font-medium text-gray-900">{student.studentName}</div>
                           <div className="text-sm text-gray-600">{student.instrument}</div>
                         </div>
                       </div>
@@ -882,7 +882,7 @@ export default function TeacherDashboard() {
             {/* Recent PulseIcon */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   פעילות אחרונה
                 </h2>
                 <PulseIcon className="w-5 h-5 text-gray-400" />
@@ -891,7 +891,7 @@ export default function TeacherDashboard() {
               {recentActivities.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <BellIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין פעילות לאחרונה</p>
+                  <p className="">אין פעילות לאחרונה</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -908,8 +908,8 @@ export default function TeacherDashboard() {
                         {activity.type === 'grade' && <MedalIcon className="w-4 h-4 text-purple-600" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">{activity.title}</p>
-                        <p className="text-sm text-gray-600 truncate font-reisinger-yonatan">{activity.description}</p>
+                        <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                        <p className="text-sm text-gray-600 truncate">{activity.description}</p>
                         <p className="text-xs text-gray-400 mt-1">{formatTime(activity.timestamp)}</p>
                       </div>
                     </div>
@@ -920,7 +920,7 @@ export default function TeacherDashboard() {
 
             {/* Quick Stats */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">
                 נתונים מהירים
               </h2>
               <div className="space-y-4">
@@ -992,7 +992,7 @@ function StatCard({ icon, title, value, suffix, bgColor, iconColor, borderColor 
     <div className={`${bgColor} border ${borderColor} rounded p-6`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>
+          <p className="text-sm font-medium text-gray-700">{title}</p>
           <p className="text-2xl font-bold text-gray-900 mt-2">
             {value} {suffix && <span className="text-lg font-normal">{suffix}</span>}
           </p>
@@ -1033,7 +1033,7 @@ function QuickActionButton({ icon, label, onClick, color }: QuickActionButtonPro
       className={`flex flex-col items-center justify-center p-4 rounded border transition-colors ${colorClasses[color]}`}
     >
       {icon}
-      <span className="mt-2 text-sm font-medium font-reisinger-yonatan text-center">{label}</span>
+      <span className="mt-2 text-sm font-medium text-center">{label}</span>
     </button>
   )
 }

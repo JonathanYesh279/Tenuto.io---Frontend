@@ -347,7 +347,7 @@ export default function TheoryLessonScheduler() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען לוח שיעורי תיאוריה...</div>
+          <div className="text-gray-600">טוען לוח שיעורי תיאוריה...</div>
         </div>
       </div>
     )
@@ -357,7 +357,7 @@ export default function TheoryLessonScheduler() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <WarningIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -378,7 +378,7 @@ export default function TheoryLessonScheduler() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+            <h1 className="text-3xl font-bold text-gray-900">
               מתזמן שיעורי תיאוריה 📅
             </h1>
             <p className="text-gray-600 mt-2">תכנון וניהול שיעורי תיאוריה מתקדם</p>
@@ -405,7 +405,7 @@ export default function TheoryLessonScheduler() {
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               <PlusIcon className="w-4 h-4" />
-              <span className="font-reisinger-yonatan">שיעור חדש</span>
+              <span className="">שיעור חדש</span>
             </button>
           </div>
         </div>
@@ -420,7 +420,7 @@ export default function TheoryLessonScheduler() {
               >
                 <CaretRightIcon className="w-5 h-5" />
               </button>
-              <h2 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+              <h2 className="text-xl font-bold text-gray-900">
                 {currentDate.toLocaleDateString('he-IL', { year: 'numeric', month: 'long' })}
               </h2>
               <button
@@ -434,7 +434,7 @@ export default function TheoryLessonScheduler() {
                 className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
               >
                 <ArrowCounterClockwiseIcon className="w-4 h-4" />
-                <span className="font-reisinger-yonatan">היום</span>
+                <span className="">היום</span>
               </button>
             </div>
 
@@ -500,14 +500,14 @@ export default function TheoryLessonScheduler() {
                               className="px-2 py-1 text-xs rounded bg-indigo-100 text-indigo-800 truncate hover:bg-indigo-200 transition-colors"
                               title={`${lesson.title} (${lesson.startTime}-${lesson.endTime})`}
                             >
-                              <div className="font-medium font-reisinger-yonatan">{lesson.startTime} {lesson.title}</div>
+                              <div className="font-medium">{lesson.startTime} {lesson.title}</div>
                               {lesson.conflicts && lesson.conflicts.length > 0 && (
                                 <WarningIcon className="w-3 h-3 text-red-500 inline ml-1" />
                               )}
                             </div>
                           ))}
                           {day.lessons.length > 3 && (
-                            <div className="text-xs text-gray-500 text-center font-reisinger-yonatan">
+                            <div className="text-xs text-gray-500 text-center">
                               +{day.lessons.length - 3} עוד
                             </div>
                           )}
@@ -524,17 +524,17 @@ export default function TheoryLessonScheduler() {
         {/* Selected Date Details */}
         {selectedDate && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">
               שיעורים ל{selectedDate.toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' })}
             </h3>
 
             {lessons.filter(lesson => new Date(lesson.date).toDateString() === selectedDate.toDateString()).length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p className="font-reisinger-yonatan">אין שיעורים מתוכננים ליום זה</p>
+                <p className="">אין שיעורים מתוכננים ליום זה</p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="mt-2 text-indigo-600 hover:text-indigo-800 text-sm font-medium font-reisinger-yonatan"
+                  className="mt-2 text-indigo-600 hover:text-indigo-800 text-sm font-medium"
                 >
                   הוסף שיעור חדש
                 </button>
@@ -551,7 +551,7 @@ export default function TheoryLessonScheduler() {
                           <BookOpenIcon className="w-6 h-6 text-indigo-600" />
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{lesson.title}</h4>
+                          <h4 className="font-medium text-gray-900">{lesson.title}</h4>
                           <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
                             <div className="flex items-center gap-1">
                               <ClockIcon className="w-4 h-4" />
@@ -666,14 +666,14 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" dir="rtl">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">
           {lesson ? 'עריכת שיעור תיאוריה' : 'יצירת שיעור תיאוריה חדש'}
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 כותרת השיעור *
               </label>
               <input
@@ -686,7 +686,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 קטגוריה
               </label>
               <select
@@ -705,7 +705,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               תיאור השיעור
             </label>
             <textarea
@@ -718,7 +718,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 תאריך *
               </label>
               <input
@@ -731,7 +731,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת התחלה *
               </label>
               <input
@@ -744,7 +744,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת סיום *
               </label>
               <input
@@ -759,7 +759,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 רמה
               </label>
               <select
@@ -774,7 +774,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 מקסימום תלמידים
               </label>
               <input
@@ -788,7 +788,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 מיקום
               </label>
               <input
@@ -808,7 +808,7 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
                 onChange={(e) => setFormData(prev => ({ ...prev, isRecurring: e.target.checked }))}
                 className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
-              <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan">שיעור חוזר</span>
+              <span className="text-sm font-medium text-gray-700">שיעור חוזר</span>
             </label>
 
             {formData.isRecurring && (
@@ -837,14 +837,14 @@ function LessonModal({ lesson, onClose, onSubmit, selectedDate }: LessonModalPro
           <div className="flex gap-3 mt-6">
             <button
               type="submit"
-              className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-reisinger-yonatan"
+              className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
             >
               {lesson ? 'עדכן שיעור' : 'צור שיעור'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors font-reisinger-yonatan"
+              className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
             >
               ביטול
             </button>

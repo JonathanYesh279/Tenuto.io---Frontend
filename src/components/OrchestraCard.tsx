@@ -13,12 +13,13 @@ import {
 
 interface OrchestraCardProps {
   orchestra: Orchestra
+  conductorName?: string
   onEdit?: (orchestra: Orchestra) => void
   onDelete?: (orchestraId: string) => void
   onViewDetails?: (orchestraId: string) => void
 }
 
-export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetails }: OrchestraCardProps) {
+export default function OrchestraCard({ orchestra, conductorName, onEdit, onDelete, onViewDetails }: OrchestraCardProps) {
   const typeInfo = getOrchestraTypeInfo(orchestra.type)
   const status = getOrchestraStatus(orchestra)
   const stats = calculateOrchestraStats(orchestra)
@@ -80,7 +81,7 @@ export default function OrchestraCard({ orchestra, onEdit, onDelete, onViewDetai
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400 flex items-center group-hover:text-blue-600 transition-colors">
               <UserIcon className="w-3 h-3 ml-1" />
-              {getConductorName(orchestra)}
+              {conductorName || getConductorName(orchestra)}
             </p>
           </div>
 

@@ -96,12 +96,12 @@ export const Notification: React.FC<NotificationProps> = ({
         )}
         
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold font-reisinger-yonatan">
+          <h3 className="text-sm font-semibold">
             {title}
           </h3>
           
           {message && (
-            <p className="mt-1 text-sm font-reisinger-yonatan">
+            <p className="mt-1 text-sm">
               {message}
             </p>
           )}
@@ -110,7 +110,7 @@ export const Notification: React.FC<NotificationProps> = ({
             <div className="mt-3">
               <button
                 onClick={action.onClick}
-                className={`text-sm font-medium underline hover:no-underline transition-all font-reisinger-yonatan ${
+                className={`text-sm font-medium underline hover:no-underline transition-all ${
                   type === 'success' ? 'text-green-700 hover:text-green-800' :
                   type === 'error' ? 'text-red-700 hover:text-red-800' :
                   type === 'warning' ? 'text-orange-700 hover:text-orange-800' :
@@ -285,18 +285,18 @@ export const EmptyState: React.FC<{
           <Icon className="w-8 h-8 text-gray-400" />
         </div>
         
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 font-reisinger-yonatan">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">
           {title || content.title}
         </h3>
         
-        <p className="text-gray-600 mb-6 max-w-md font-reisinger-yonatan">
+        <p className="text-gray-600 mb-6 max-w-md">
           {message || content.message}
         </p>
         
         {action && (
           <button
             onClick={action.onClick}
-            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors font-reisinger-yonatan"
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors"
           >
             {action.label}
           </button>

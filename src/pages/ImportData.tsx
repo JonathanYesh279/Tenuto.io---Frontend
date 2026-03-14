@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { importService } from '../services/apiService'
-import { StepProgress } from '../components/feedback/ProgressIndicators'
+import { AnimatedStepper } from '../components/feedback/AnimatedStepper'
 import toast from 'react-hot-toast'
 import {
   UploadIcon,
@@ -18,6 +18,7 @@ import {
 } from '@phosphor-icons/react'
 import Folder from '../components/Folder'
 import AnimatedContent from '../components/AnimatedContent'
+import { Tabs, Tab, Accordion, AccordionItem } from '@heroui/react'
 
 type ImportTab = 'teachers' | 'students' | 'conservatory' | 'ensembles'
 type ImportState = 'upload' | 'preview' | 'results'
@@ -555,10 +556,15 @@ function getStudentRowDetails(row: any): React.ReactNode {
 function TeacherFileStructureGuide() {
   return (
     <div className="rounded-3xl shadow-sm bg-white p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">מבנה הקובץ הנדרש</h3>
-
+      <Accordion isCompact variant="light">
+        <AccordionItem
+          key="structure"
+          aria-label="מבנה הקובץ הנדרש"
+          title={<span className="text-lg font-bold text-gray-900">מבנה הקובץ הנדרש</span>}
+          subtitle={<span className="text-xs text-gray-400">לחץ לפתיחה</span>}
+        >
       {/* Ministry compatibility banner */}
-      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4">
+      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4 mt-2">
         <div className="flex items-start gap-2">
           <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
           <div>
@@ -724,6 +730,8 @@ function TeacherFileStructureGuide() {
           <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">אופציונלי</span></span>
         </div>
       </div>
+        </AccordionItem>
+      </Accordion>
     </div>
   )
 }
@@ -731,8 +739,14 @@ function TeacherFileStructureGuide() {
 function ConservatoryFileGuide() {
   return (
     <div className="rounded-3xl shadow-sm bg-white p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">קובץ פרטי קונסרבטוריון</h3>
-      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4">
+      <Accordion isCompact variant="light">
+        <AccordionItem
+          key="structure"
+          aria-label="קובץ פרטי קונסרבטוריון"
+          title={<span className="text-lg font-bold text-gray-900">קובץ פרטי קונסרבטוריון</span>}
+          subtitle={<span className="text-xs text-gray-400">לחץ לפתיחה</span>}
+        >
+      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4 mt-2">
         <div className="flex items-start gap-2">
           <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
           <div>
@@ -767,6 +781,8 @@ function ConservatoryFileGuide() {
           <span>מקדם עיר מעורבת</span>
         </div>
       </div>
+        </AccordionItem>
+      </Accordion>
     </div>
   )
 }
@@ -774,8 +790,14 @@ function ConservatoryFileGuide() {
 function EnsembleFileGuide() {
   return (
     <div className="rounded-3xl shadow-sm bg-white p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">קובץ הרכבי ביצוע</h3>
-      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4">
+      <Accordion isCompact variant="light">
+        <AccordionItem
+          key="structure"
+          aria-label="קובץ הרכבי ביצוע"
+          title={<span className="text-lg font-bold text-gray-900">קובץ הרכבי ביצוע</span>}
+          subtitle={<span className="text-xs text-gray-400">לחץ לפתיחה</span>}
+        >
+      <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4 mt-2">
         <div className="flex items-start gap-2">
           <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
           <div>
@@ -802,6 +824,8 @@ function EnsembleFileGuide() {
           <span>סה"כ שעות דיווח</span>
         </div>
       </div>
+        </AccordionItem>
+      </Accordion>
     </div>
   )
 }
@@ -998,67 +1022,58 @@ export default function ImportData() {
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex gap-2 mb-6">
-        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0}>
-          <button
-            onClick={() => handleTabChange('teachers')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-              activeTab === 'teachers'
-                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            <GraduationCapIcon size={16} weight="regular" />
-            ייבוא מורים
-          </button>
-        </AnimatedContent>
-        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0.08}>
-          <button
-            onClick={() => handleTabChange('students')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-              activeTab === 'students'
-                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            <UsersIcon size={16} weight="regular" />
-            ייבוא תלמידים
-          </button>
-        </AnimatedContent>
-        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0.16}>
-          <button
-            onClick={() => handleTabChange('conservatory')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-              activeTab === 'conservatory'
-                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            <BuildingsIcon size={16} weight="regular" />
-            פרטי קונסרבטוריון
-          </button>
-        </AnimatedContent>
-        <AnimatedContent distance={40} direction="vertical" duration={0.6} ease="bounce.out" initialOpacity={0} animateOpacity threshold={0} delay={0.24}>
-          <button
-            onClick={() => handleTabChange('ensembles')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-              activeTab === 'ensembles'
-                ? 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            <MusicNotesIcon size={16} weight="regular" />
-            הרכבים
-          </button>
-        </AnimatedContent>
-      </div>
+      <Tabs
+        aria-label="ייבוא נתונים"
+        selectedKey={activeTab}
+        onSelectionChange={(key) => handleTabChange(key as ImportTab)}
+        variant="solid"
+        color="default"
+        classNames={{
+          tab: "font-bold text-sm",
+        }}
+        className="mb-6"
+      >
+        <Tab
+          key="teachers"
+          title={
+            <div className="flex items-center gap-1.5">
+              <GraduationCapIcon size={15} weight="regular" />
+              <span>ייבוא מורים</span>
+            </div>
+          }
+        />
+        <Tab
+          key="students"
+          title={
+            <div className="flex items-center gap-1.5">
+              <UsersIcon size={15} weight="regular" />
+              <span>ייבוא תלמידים</span>
+            </div>
+          }
+        />
+        <Tab
+          key="conservatory"
+          title={
+            <div className="flex items-center gap-1.5">
+              <BuildingsIcon size={15} weight="regular" />
+              <span>פרטי קונסרבטוריון</span>
+            </div>
+          }
+        />
+        <Tab
+          key="ensembles"
+          title={
+            <div className="flex items-center gap-1.5">
+              <MusicNotesIcon size={15} weight="regular" />
+              <span>הרכבים</span>
+            </div>
+          }
+        />
+      </Tabs>
 
       {/* Step Progress Indicator */}
       <div className="mb-6">
-        <StepProgress
-          steps={getImportSteps()}
-          direction="horizontal"
-        />
+        <AnimatedStepper steps={getImportSteps()} />
       </div>
 
       {/* Upload State */}
@@ -1067,10 +1082,15 @@ export default function ImportData() {
           {/* File Structure Guide — show for both tabs */}
           {activeTab === 'students' && (
             <div className="rounded-3xl shadow-sm bg-white p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">מבנה הקובץ הנדרש</h3>
-
+              <Accordion isCompact variant="light">
+                <AccordionItem
+                  key="structure"
+                  aria-label="מבנה הקובץ הנדרש"
+                  title={<span className="text-lg font-bold text-gray-900">מבנה הקובץ הנדרש</span>}
+                  subtitle={<span className="text-xs text-gray-400">לחץ לפתיחה</span>}
+                >
               {/* Ministry compatibility banner */}
-              <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4">
+              <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 mb-4 mt-2">
                 <div className="flex items-start gap-2">
                   <InfoIcon size={20} weight="fill" className="text-blue-600 mt-0.5 flex-shrink-0" />
                   <div>
@@ -1124,6 +1144,8 @@ export default function ImportData() {
                   <span className="w-24 text-center"><span className="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-700">זיהוי אוטומטי</span></span>
                 </div>
               </div>
+                </AccordionItem>
+              </Accordion>
             </div>
           )}
 

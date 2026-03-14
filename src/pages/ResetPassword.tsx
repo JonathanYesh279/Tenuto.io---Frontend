@@ -93,7 +93,7 @@ export default function ResetPassword() {
               <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
                 <MusicNoteIcon size={32} weight="regular" className="text-white" />
               </div>
-              <p className="text-sm text-white/70 font-reisinger-yonatan">מערכת ניהול קונסרבטוריון</p>
+              <p className="text-sm text-white/70">מערכת ניהול קונסרבטוריון</p>
             </div>
             <h2
               className="mt-6 text-center text-3xl font-extrabold text-white drop-shadow-lg"
@@ -101,7 +101,7 @@ export default function ResetPassword() {
             >
               איפוס סיסמה
             </h2>
-            <p className="mt-2 text-center text-sm text-white/80 font-reisinger-yonatan">
+            <p className="mt-2 text-center text-sm text-white/80">
               הזן סיסמה חדשה לחשבון שלך
             </p>
           </div>
@@ -109,10 +109,10 @@ export default function ResetPassword() {
           {isSuccess ? (
             <div className="mt-8 space-y-6">
               <div className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg backdrop-blur-sm">
-                <p className="text-green-100 text-center font-reisinger-yonatan">
+                <p className="text-green-100 text-center">
                   הסיסמה אופסה בהצלחה! עכשיו תוכל להתחבר עם הסיסמה החדשה.
                 </p>
-                <p className="text-green-100 text-sm text-center font-reisinger-yonatan mt-2">
+                <p className="text-green-100 text-sm text-center mt-2">
                   מעביר אותך לדף הכניסה...
                 </p>
               </div>
@@ -120,7 +120,7 @@ export default function ResetPassword() {
               <div className="text-center">
                 <Link
                   to="/login"
-                  className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 font-reisinger-yonatan underline"
+                  className="font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 underline"
                 >
                   חזור לדף הכניסה עכשיו
                 </Link>
@@ -130,13 +130,13 @@ export default function ResetPassword() {
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg backdrop-blur-sm">
-                <p className="text-red-100 text-sm text-center font-reisinger-yonatan">{error}</p>
+                <p className="text-red-100 text-sm text-center">{error}</p>
               </div>
             )}
 
             <div className="rounded-md shadow-sm space-y-4">
               <div>
-                <label htmlFor="password" className="sr-only font-reisinger-yonatan">
+                <label htmlFor="password" className="sr-only">
                   סיסמה חדשה
                 </label>
                 <input
@@ -145,7 +145,7 @@ export default function ResetPassword() {
                   type="password"
                   required
                   disabled={isLoading || !tokenFromUrl}
-                  className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="סיסמה חדשה (לפחות 6 תווים)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -154,7 +154,7 @@ export default function ResetPassword() {
                 />
               </div>
               <div>
-                <label htmlFor="confirmPassword" className="sr-only font-reisinger-yonatan">
+                <label htmlFor="confirmPassword" className="sr-only">
                   אימות סיסמה
                 </label>
                 <input
@@ -163,7 +163,7 @@ export default function ResetPassword() {
                   type="password"
                   required
                   disabled={isLoading || !tokenFromUrl}
-                  className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="relative block w-full px-3 py-3 border border-white/30 placeholder-gray-400 text-gray-900 rounded-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent focus:z-10 sm:text-sm placeholder:text-right disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="אימות סיסמה"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -177,7 +177,7 @@ export default function ResetPassword() {
               <button
                 type="submit"
                 disabled={isLoading || !tokenFromUrl}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -193,13 +193,13 @@ export default function ResetPassword() {
             <div className="text-center space-y-2">
               <Link
                 to="/forgot-password"
-                className="block font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 font-reisinger-yonatan underline"
+                className="block font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 underline"
               >
                 בקש קישור חדש
               </Link>
               <Link
                 to="/login"
-                className="block font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 font-reisinger-yonatan underline"
+                className="block font-medium text-white/90 hover:text-white drop-shadow transition-colors duration-200 underline"
               >
                 חזור לדף הכניסה
               </Link>

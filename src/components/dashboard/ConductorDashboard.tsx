@@ -365,7 +365,7 @@ export default function ConductorDashboard() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען לוח בקרה למנצח...</div>
+          <div className="text-gray-600">טוען לוח בקרה למנצח...</div>
         </div>
       </div>
     )
@@ -375,7 +375,7 @@ export default function ConductorDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -395,7 +395,7 @@ export default function ConductorDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h1 className="text-3xl font-bold text-gray-900">
             שלום מנצח {user?.firstName || 'יקר'} 🎼
           </h1>
           <p className="text-gray-600 mt-2">
@@ -462,7 +462,7 @@ export default function ConductorDashboard() {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">
             פעולות מהירות
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -498,7 +498,7 @@ export default function ConductorDashboard() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   החזרות הקרובות
                 </h2>
                 <button
@@ -513,7 +513,7 @@ export default function ConductorDashboard() {
               {upcomingRehearsals.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <CalendarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין חזרות מתוכננות השבוע</p>
+                  <p className="">אין חזרות מתוכננות השבוע</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -524,7 +524,7 @@ export default function ConductorDashboard() {
                           <SpeakerHighIcon className="w-6 h-6 text-indigo-600" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900 font-reisinger-yonatan">{rehearsal.orchestraName}</div>
+                          <div className="font-medium text-gray-900">{rehearsal.orchestraName}</div>
                           <div className="text-sm text-gray-600 flex items-center gap-2">
                             <MapPinIcon className="w-3 h-3" />
                             {rehearsal.location}
@@ -554,7 +554,7 @@ export default function ConductorDashboard() {
             {bagrutMembers.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                  <h2 className="text-lg font-bold text-gray-900">
                     חברי תזמורת עם בגרות
                   </h2>
                   <GraduationCapIcon className="w-5 h-5 text-gray-400" />
@@ -652,7 +652,7 @@ export default function ConductorDashboard() {
             {/* Orchestra Performance Overview */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                <h2 className="text-lg font-bold text-gray-900">
                   ביצועי תזמורות
                 </h2>
                 <button
@@ -667,7 +667,7 @@ export default function ConductorDashboard() {
               {orchestraPerformance.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <ChartBarIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p className="font-reisinger-yonatan">אין נתוני ביצועים</p>
+                  <p className="">אין נתוני ביצועים</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -679,7 +679,7 @@ export default function ConductorDashboard() {
                           performance.status === 'good' ? 'bg-yellow-500' : 'bg-red-500'
                         }`} />
                         <div>
-                          <div className="font-medium text-gray-900 font-reisinger-yonatan">{performance.orchestraName}</div>
+                          <div className="font-medium text-gray-900">{performance.orchestraName}</div>
                           <div className="text-sm text-gray-600">
                             {performance.totalRehearsals} חזרות השנה • חזרה אחרונה: {performance.lastRehearsal}
                           </div>
@@ -707,7 +707,7 @@ export default function ConductorDashboard() {
           {/* Recent PulseIcon Feed */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+              <h2 className="text-lg font-bold text-gray-900">
                 פעילות אחרונה
               </h2>
               <PulseIcon className="w-5 h-5 text-gray-400" />
@@ -716,7 +716,7 @@ export default function ConductorDashboard() {
             {recentActivities.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <BellIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p className="font-reisinger-yonatan">אין פעילות לאחרונה</p>
+                <p className="">אין פעילות לאחרונה</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -733,8 +733,8 @@ export default function ConductorDashboard() {
                       {activity.type === 'attendance' && <CheckSquareIcon className="w-4 h-4 text-yellow-600" />}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 font-reisinger-yonatan">{activity.title}</p>
-                      <p className="text-sm text-gray-600 truncate font-reisinger-yonatan">{activity.description}</p>
+                      <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                      <p className="text-sm text-gray-600 truncate">{activity.description}</p>
                       <p className="text-xs text-gray-400 mt-1">{formatTime(activity.timestamp)}</p>
                     </div>
                   </div>
@@ -764,7 +764,7 @@ function StatCard({ icon, title, value, suffix, bgColor, iconColor, borderColor 
     <div className={`${bgColor} border ${borderColor} rounded p-6`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>
+          <p className="text-sm font-medium text-gray-700">{title}</p>
           <p className="text-2xl font-bold text-gray-900 mt-2">
             {value} {suffix && <span className="text-lg font-normal">{suffix}</span>}
           </p>
@@ -799,7 +799,7 @@ function QuickActionButton({ icon, label, onClick, color }: QuickActionButtonPro
       className={`flex flex-col items-center justify-center p-4 rounded border transition-colors ${colorClasses[color]}`}
     >
       {icon}
-      <span className="mt-2 text-sm font-medium font-reisinger-yonatan">{label}</span>
+      <span className="mt-2 text-sm font-medium">{label}</span>
     </button>
   )
 }

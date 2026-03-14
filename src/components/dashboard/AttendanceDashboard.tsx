@@ -303,7 +303,7 @@ export default function AttendanceDashboard() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <div className="text-gray-600 font-reisinger-yonatan">טוען נתוני נוכחות...</div>
+          <div className="text-gray-600">טוען נתוני נוכחות...</div>
         </div>
       </div>
     )
@@ -313,7 +313,7 @@ export default function AttendanceDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
-          <div className="text-red-800 font-reisinger-yonatan text-center">
+          <div className="text-red-800 text-center">
             <BellIcon className="w-12 h-12 mx-auto mb-4 text-red-600" />
             <h3 className="text-lg font-bold mb-2">{error}</h3>
             <button
@@ -333,7 +333,7 @@ export default function AttendanceDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h1 className="text-3xl font-bold text-gray-900">
             לוח בקרה - נוכחות 📊
           </h1>
           <p className="text-gray-600 mt-2">
@@ -361,7 +361,7 @@ export default function AttendanceDashboard() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveView(tab.id as any)}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 font-reisinger-yonatan ${
+                    className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
                       activeView === tab.id
                         ? 'border-indigo-500 text-indigo-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -447,7 +447,7 @@ export default function AttendanceDashboard() {
 
                 {/* Attendance Trends Chart */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-                  <h2 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">
                     מגמות נוכחות - 7 ימים אחרונים
                   </h2>
                   <div className="space-y-3">
@@ -455,24 +455,24 @@ export default function AttendanceDashboard() {
                       <div key={trend.date} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
                           <CalendarIcon className="w-5 h-5 text-gray-500" />
-                          <span className="font-medium text-gray-900 font-reisinger-yonatan">
+                          <span className="font-medium text-gray-900">
                             {new Date(trend.date).toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'short' })}
                           </span>
                         </div>
                         <div className="flex items-center gap-6 text-sm">
                           <div className="flex items-center gap-1">
                             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span className="font-reisinger-yonatan">נוכח: {trend.presentCount}</span>
+                            <span className="">נוכח: {trend.presentCount}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span className="font-reisinger-yonatan">נעדר: {trend.absentCount}</span>
+                            <span className="">נעדר: {trend.absentCount}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                            <span className="font-reisinger-yonatan">איחור: {trend.lateCount}</span>
+                            <span className="">איחור: {trend.lateCount}</span>
                           </div>
-                          <div className="font-medium text-gray-700 font-reisinger-yonatan">
+                          <div className="font-medium text-gray-700">
                             {Math.round((trend.presentCount / trend.totalStudents) * 100)}% נוכחות
                           </div>
                         </div>
@@ -488,7 +488,7 @@ export default function AttendanceDashboard() {
                 {/* Filters */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">תאריך</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">תאריך</label>
                     <input
                       type="date"
                       value={selectedDate}
@@ -497,7 +497,7 @@ export default function AttendanceDashboard() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">סוג שיעור</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">סוג שיעור</label>
                     <select
                       value={filterType}
                       onChange={(e) => setFilterType(e.target.value as any)}
@@ -510,7 +510,7 @@ export default function AttendanceDashboard() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">חיפוש</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">חיפוש</label>
                     <div className="relative">
                       <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                       <input
@@ -529,7 +529,7 @@ export default function AttendanceDashboard() {
                       className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors w-full justify-center"
                     >
                       <DownloadSimpleIcon className="w-4 h-4" />
-                      <span className="font-reisinger-yonatan">ייצא דוח</span>
+                      <span className="">ייצא דוח</span>
                     </button>
                   </div>
                 </div>
@@ -537,7 +537,7 @@ export default function AttendanceDashboard() {
                 {/* Today's Attendance */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                   <div className="p-6 border-b border-gray-200">
-                    <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+                    <h2 className="text-lg font-bold text-gray-900">
                       נוכחות יומית - {new Date(selectedDate).toLocaleDateString('he-IL')}
                     </h2>
                   </div>
@@ -545,25 +545,25 @@ export default function AttendanceDashboard() {
                     <table className="w-full">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider font-reisinger-yonatan">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             תלמיד
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider font-reisinger-yonatan">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             סוג שיעור
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider font-reisinger-yonatan">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             מורה/קבוצה
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider font-reisinger-yonatan">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             שעה
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider font-reisinger-yonatan">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             סטטוס
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider font-reisinger-yonatan">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             הערות
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider font-reisinger-yonatan">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             פעולות
                           </th>
                         </tr>
@@ -573,24 +573,24 @@ export default function AttendanceDashboard() {
                           <tr>
                             <td colSpan={7} className="px-6 py-12 text-center">
                               <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                              <p className="text-gray-500 font-reisinger-yonatan">אין רשומות נוכחות לתאריך זה</p>
+                              <p className="text-gray-500">אין רשומות נוכחות לתאריך זה</p>
                             </td>
                           </tr>
                         ) : (
                           todayAttendance.map((record, index) => (
                             <tr key={`${record.studentId}-${index}`} className="hover:bg-gray-50">
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="font-medium text-gray-900 font-reisinger-yonatan">
+                                <div className="font-medium text-gray-900">
                                   {record.studentName}
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <span className="font-reisinger-yonatan">
+                                <span className="">
                                   {getLessonTypeLabel(record.lessonType)}
                                 </span>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900 font-reisinger-yonatan">
+                                <div className="text-sm text-gray-900">
                                   {record.groupName || record.teacherName}
                                 </div>
                               </td>
@@ -600,10 +600,10 @@ export default function AttendanceDashboard() {
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(record.status)}`}>
                                   {getStatusIcon(record.status)}
-                                  <span className="mr-1 font-reisinger-yonatan">{getStatusLabel(record.status)}</span>
+                                  <span className="mr-1">{getStatusLabel(record.status)}</span>
                                 </span>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-reisinger-yonatan">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {record.notes || '-'}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -647,19 +647,19 @@ export default function AttendanceDashboard() {
             {activeView === 'reports' && (
               <div className="text-center py-12">
                 <FileTextIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">דוחות נוכחות מתקדמים</h3>
-                <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">דוחות נוכחות מתקדמים</h3>
+                <p className="text-gray-600">תכונה זו תהיה זמינה בקרוב</p>
               </div>
             )}
 
             {activeView === 'alerts' && (
               <div className="space-y-4">
-                <h2 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">התראות נוכחות</h2>
+                <h2 className="text-lg font-bold text-gray-900">התראות נוכחות</h2>
                 {attendanceAlerts.length === 0 ? (
                   <div className="text-center py-12">
                     <BellIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">אין התראות חדשות</h3>
-                    <p className="text-gray-600 font-reisinger-yonatan">כל התלמידים עם נוכחות תקינה</p>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">אין התראות חדשות</h3>
+                    <p className="text-gray-600">כל התלמידים עם נוכחות תקינה</p>
                   </div>
                 ) : (
                   attendanceAlerts.map((alert) => (
@@ -676,8 +676,8 @@ export default function AttendanceDashboard() {
                             'text-blue-600'
                           }`} />
                           <div>
-                            <h4 className="font-medium text-gray-900 font-reisinger-yonatan">{alert.studentName}</h4>
-                            <p className="text-sm text-gray-600 font-reisinger-yonatan">{alert.message}</p>
+                            <h4 className="font-medium text-gray-900">{alert.studentName}</h4>
+                            <p className="text-sm text-gray-600">{alert.message}</p>
                             <p className="text-xs text-gray-400 mt-1">
                               {new Date(alert.createdAt).toLocaleDateString('he-IL')}
                             </p>
@@ -720,7 +720,7 @@ function AttendanceStatCard({ icon, title, value, suffix, bgColor, iconColor, bo
     <div className={`${bgColor} border ${borderColor} rounded p-4`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-700 font-reisinger-yonatan">{title}</p>
+          <p className="text-sm font-medium text-gray-700">{title}</p>
           <p className="text-xl font-bold text-gray-900 mt-1">
             {value} {suffix && <span className="text-sm font-normal">{suffix}</span>}
           </p>

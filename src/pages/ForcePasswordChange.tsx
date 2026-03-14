@@ -70,7 +70,7 @@ export default function ForcePasswordChange() {
             >
               הגדרת סיסמה חדשה
             </h2>
-            <p className="mt-2 text-center text-sm text-white/70 font-reisinger-yonatan">
+            <p className="mt-2 text-center text-sm text-white/70">
               נדרש לשנות סיסמה לפני כניסה למערכת
             </p>
           </div>
@@ -78,13 +78,13 @@ export default function ForcePasswordChange() {
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg backdrop-blur-sm">
-                <p className="text-red-100 text-sm text-center font-reisinger-yonatan">{error}</p>
+                <p className="text-red-100 text-sm text-center">{error}</p>
               </div>
             )}
 
             <div className="rounded-md shadow-sm space-y-4">
               <div>
-                <label htmlFor="newPassword" className="sr-only font-reisinger-yonatan">
+                <label htmlFor="newPassword" className="sr-only">
                   סיסמה חדשה
                 </label>
                 <input
@@ -102,7 +102,7 @@ export default function ForcePasswordChange() {
                 />
               </div>
               <div>
-                <label htmlFor="confirmPassword" className="sr-only font-reisinger-yonatan">
+                <label htmlFor="confirmPassword" className="sr-only">
                   אימות סיסמה
                 </label>
                 <input
@@ -125,7 +125,7 @@ export default function ForcePasswordChange() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg font-reisinger-yonatan disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary/90 hover:bg-primary backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center">

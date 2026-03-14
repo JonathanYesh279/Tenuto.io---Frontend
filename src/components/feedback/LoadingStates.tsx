@@ -137,7 +137,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
         {variant === 'skeleton' && <LoadingSkeleton type="card" />}
       </div>
       
-      <p className="text-sm text-gray-600 font-reisinger-yonatan text-center">
+      <p className="text-sm text-gray-600 text-center">
         {defaultMessage}
       </p>
     </div>
@@ -282,7 +282,7 @@ export const ButtonLoading: React.FC<{
   return (
     <span className={`flex items-center justify-center ${className}`}>
       {loading && <LoadingSpinner size="sm" className="ml-2" />}
-      <span className="font-reisinger-yonatan">
+      <span className="">
         {loading ? loadingText : children}
       </span>
     </span>
@@ -300,7 +300,7 @@ export const InlineLoading: React.FC<{
   return (
     <div className={`flex items-center space-x-2 space-x-reverse text-sm text-gray-600 ${className}`} dir="rtl">
       <LoadingSpinner size="sm" />
-      <span className="font-reisinger-yonatan">{message}</span>
+      <span className="">{message}</span>
     </div>
   )
 }

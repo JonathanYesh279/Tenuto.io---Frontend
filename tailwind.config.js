@@ -1,8 +1,11 @@
+import { heroui } from '@heroui/react'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: 'class',
   theme: {
@@ -291,8 +294,13 @@ export default {
         'slide-from-right': 'slideFromRight 0.2s ease-out',
         'slide-to-right': 'slideToRight 0.15s ease-in forwards',
         // pulse-soft removed: decorative infinite animation — no decorative motion per user decision
+        'border-beam': 'border-beam var(--border-beam-duration, 8s) linear infinite',
       },
       keyframes: {
+        'border-beam': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
@@ -326,6 +334,7 @@ export default {
   },
   plugins: [
     require('tailwindcss-animate'),
+    heroui(),
     // RTL support plugin
     function({ addUtilities, addComponents, theme }) {
       addUtilities({

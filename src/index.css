@@ -425,6 +425,17 @@ body::-webkit-scrollbar-thumb:hover {
   animation-play-state: paused;
 }
 
+@keyframes tooltipItemIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Reduced motion — WAI-ARIA accessibility pattern (A11Y-04) */
 /* Migrated from globals.css (dead file removed in Phase 06-02) */
 @media (prefers-reduced-motion: reduce) {

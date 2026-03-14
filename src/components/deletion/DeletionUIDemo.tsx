@@ -199,12 +199,12 @@ const DeletionUIDemo: React.FC = () => {
             <Card>
               <div className="text-center py-8">
                 <TrashIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   מחיקת תלמיד - דמו
                 </h3>
                 <button
                   onClick={() => setShowStudentModal(true)}
-                  className="px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors font-reisinger-yonatan"
+                  className="px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                 >
                   פתח מחיקת תלמיד
                 </button>
@@ -269,10 +269,10 @@ const DeletionUIDemo: React.FC = () => {
       <Card>
         <div className="space-y-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 font-reisinger-yonatan mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
               רכיבי ממשק משתמש למחיקה
             </h2>
-            <p className="text-gray-600 font-reisinger-yonatan">
+            <p className="text-gray-600">
               דמונסטרציה של כל רכיבי ממשק המשתמש למערכת המחיקה המדורגת
             </p>
           </div>
@@ -281,7 +281,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('dashboard')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors
                 ${activeDemo === 'dashboard' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -295,7 +295,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('modal')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors
                 ${activeDemo === 'modal' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -309,7 +309,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('progress')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors
                 ${activeDemo === 'progress' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -323,7 +323,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('timeline')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors
                 ${activeDemo === 'timeline' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -337,7 +337,7 @@ const DeletionUIDemo: React.FC = () => {
             <button
               onClick={() => setActiveDemo('audit')}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded transition-colors font-reisinger-yonatan
+                flex items-center gap-2 px-4 py-2 rounded transition-colors
                 ${activeDemo === 'audit' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -357,19 +357,19 @@ const DeletionUIDemo: React.FC = () => {
       {/* Feature Highlights */}
       <Card className="bg-blue-50 border-blue-200">
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-blue-900 font-reisinger-yonatan">
+          <h3 className="text-lg font-semibold text-blue-900">
             תכונות מיושמות
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
-            <ul className="space-y-1 font-reisinger-yonatan">
+            <ul className="space-y-1">
               <li>• זרימת עבודה מרובת שלבים עם אישור</li>
               <li>• תצוגה מקדימה של השפעת המחיקה</li>
               <li>• מעקב התקדמות בזמן אמת</li>
               <li>• אפשרויות ביטול ושחזור</li>
             </ul>
             
-            <ul className="space-y-1 font-reisinger-yonatan">
+            <ul className="space-y-1">
               <li>• ציר זמן אינטראקטיבי</li>
               <li>• יומן ביקורת מפורט</li>
               <li>• לוח מחוונים לבריאות המערכת</li>

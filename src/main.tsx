@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { DirectionProvider } from '@radix-ui/react-direction'
+import { HeroUIProvider } from '@heroui/react'
 import { enableMapSet } from 'immer'
 import App from './App.tsx'
 import './index.css'
@@ -34,14 +35,16 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <DirectionProvider dir="rtl">
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <App />
-        </BrowserRouter>
+        <HeroUIProvider>
+          <BrowserRouter
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }}
+          >
+            <App />
+          </BrowserRouter>
+        </HeroUIProvider>
       </DirectionProvider>
     </QueryClientProvider>
   </React.StrictMode>

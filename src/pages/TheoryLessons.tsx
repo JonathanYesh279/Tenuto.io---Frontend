@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { PlusIcon, MagnifyingGlassIcon, FunnelIcon, CalendarIcon, ClockIcon, UsersIcon, BookOpenIcon, TrashIcon, WarningIcon, GearIcon, CaretDownIcon, CaretUpIcon, ClockCounterClockwiseIcon } from '@phosphor-icons/react'
-import { Button as HeroButton } from '@heroui/react'
-import { Card } from '../components/ui/Card'
+import { PlusIcon, MagnifyingGlassIcon, CalendarIcon, ClockIcon, UsersIcon, BookOpenIcon, TrashIcon, WarningIcon, GearIcon, CaretDownIcon, CaretUpIcon, ClockCounterClockwiseIcon } from '@phosphor-icons/react'
+import { Button as HeroButton, Checkbox, Tabs, Tab } from '@heroui/react'
 import { GlassStatCard } from '../components/ui/GlassStatCard'
 import { GlassSelect } from '../components/ui/GlassSelect'
 import { SearchInput } from '../components/ui/SearchInput'
+import { DragCarousel } from '../components/ui/DragCarousel'
 import TheoryLessonForm from '../components/TheoryLessonForm'
 import TheoryLessonCard from '../components/TheoryLessonCard'
 import BulkTheoryUpdateTab from '../components/BulkTheoryUpdateTab'
@@ -554,55 +555,41 @@ export default function TheoryLessons() {
                   </HeroButton>
                 </>
               )}
-              <HeroButton
-                color="danger"
-                variant="flat"
-                size="sm"
-                onPress={() => setShowBulkDeleteModal(true)}
-                startContent={<TrashIcon size={14} weight="fill" />}
-              >
-                מחיקת שיעורים
-              </HeroButton>
-              <HeroButton
-                color="primary"
-                variant="solid"
-                size="sm"
-                onPress={handleCreateLesson}
-                startContent={<PlusIcon size={14} weight="bold" />}
-                className="font-bold"
-              >
-                שיעור חדש
-              </HeroButton>
             </>
           )}
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex space-x-4 rtl:space-x-reverse">
-        <button
-          onClick={() => setActiveTab('lessons')}
-          className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
-            activeTab === 'lessons'
-              ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          <BookOpenIcon size={16} weight="regular" className="ml-2" />
-          רשימת שיעורים
-        </button>
-        <button
-          onClick={() => setActiveTab('bulk')}
-          className={`flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
-            activeTab === 'bulk'
-              ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          <GearIcon size={16} weight="regular" className="ml-2" />
-          עדכון שיעורים קבוצתי
-        </button>
-      </div>
+      <Tabs
+        aria-label="שיעורי תיאוריה"
+        selectedKey={activeTab}
+        onSelectionChange={(key) => setActiveTab(key as 'lessons' | 'bulk')}
+        variant="solid"
+        color="default"
+        classNames={{
+          tab: "font-bold text-sm",
+        }}
+      >
+        <Tab
+          key="lessons"
+          title={
+            <div className="flex items-center gap-2">
+              <BookOpenIcon size={16} weight="regular" />
+              <span>רשימת שיעורים</span>
+            </div>
+          }
+        />
+        <Tab
+          key="bulk"
+          title={
+            <div className="flex items-center gap-2">
+              <GearIcon size={16} weight="regular" />
+              <span>עדכון שיעורים קבוצתי</span>
+            </div>
+          }
+        />
+      </Tabs>
 
       {/* Error Display */}
       {error && (
@@ -612,8 +599,16 @@ export default function TheoryLessons() {
       )}
 
       {/* Tab Content */}
+      <AnimatePresence mode="wait">
       {activeTab === 'lessons' ? (
-        <>
+        <motion.div
+          key="lessons-tab"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+          className="flex flex-col gap-4"
+        >
       {/* Statistics Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
@@ -667,65 +662,59 @@ export default function TheoryLessons() {
           className="h-9 rounded-md border border-neutral-200 dark:border-neutral-700 bg-white/70 dark:bg-neutral-900/50 backdrop-blur-sm px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
 
-        <HeroButton
-          color="default"
-          variant="flat"
-          size="sm"
-          onPress={() => {
-            setFilters({ category: '', teacherId: '', date: '' })
-            setSearchQuery('')
-          }}
-          isIconOnly
-        >
-          <FunnelIcon size={14} weight="regular" />
-        </HeroButton>
+        {filteredAndSortedLessons.length > 0 && (
+          <Checkbox
+            size="sm"
+            color="primary"
+            isSelected={selectAll}
+            onValueChange={handleSelectAll}
+          >
+            <span className="text-xs">בחר הכל ({selectedLessons.size} נבחרו)</span>
+          </Checkbox>
+        )}
 
         <span className="text-xs font-medium text-slate-400 mr-auto">
           {searchQuery || filters.category || filters.date
             ? `${lessons.length} מתוך ${totalCount}`
             : `${lessons.length} שיעורים`}
         </span>
+
+        <HeroButton
+          color="danger"
+          variant="flat"
+          size="sm"
+          onPress={() => setShowBulkDeleteModal(true)}
+          startContent={<TrashIcon size={14} weight="fill" />}
+        >
+          מחיקת שיעורים
+        </HeroButton>
+        <HeroButton
+          color="primary"
+          variant="solid"
+          size="sm"
+          onPress={handleCreateLesson}
+          startContent={<PlusIcon size={14} weight="bold" />}
+          className="font-bold"
+        >
+          שיעור חדש
+        </HeroButton>
       </div>
 
       {/* Theory Lessons Table */}
-      <Card>
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <h3 className="text-lg font-semibold text-gray-900">
-              שיעורי תיאוריה קרובים ({lessons.length})
-            </h3>
-            {filteredAndSortedLessons.length > 0 && (
-              <label className="flex items-center text-sm text-gray-600">
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                  className="ml-2 rounded border-border text-primary focus:ring-ring"
-                />
-                בחר הכל ({selectedLessons.size} נבחרו)
-              </label>
-            )}
-          </div>
-          <button
-            onClick={handleRefresh}
-            className="text-sm text-primary hover:text-neutral-700 font-medium"
-          >
-            רענן
-          </button>
-        </div>
-
+      <div className="p-6">
         {filteredAndSortedLessons.length === 0 ? (
           <div className="text-center py-12">
             <BookOpenIcon size={48} weight="regular" className="text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">אין שיעורי תיאוריה</h3>
             <p className="text-gray-600 mb-4">התחל על ידי יצירת שיעור התיאוריה הראשון</p>
-            <button
-              onClick={handleCreateLesson}
-              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
+            <HeroButton
+              color="primary"
+              variant="solid"
+              onPress={handleCreateLesson}
+              startContent={<PlusIcon size={16} weight="bold" />}
             >
-              <PlusIcon size={16} weight="fill" className="ml-2" />
               צור שיעור ראשון
-            </button>
+            </HeroButton>
           </div>
         ) : (
           <div className="space-y-6">
@@ -737,13 +726,15 @@ export default function TheoryLessons() {
                 <p className="text-blue-700 text-sm mb-3">
                   אין שיעורים מתוכננים להיום או לעתיד. ניתן לצפות בשיעורים שהסתיימו למטה או ליצור שיעורים חדשים.
                 </p>
-                <button
-                  onClick={handleCreateLesson}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
+                <HeroButton
+                  color="primary"
+                  variant="solid"
+                  size="sm"
+                  onPress={handleCreateLesson}
+                  startContent={<PlusIcon size={16} weight="bold" />}
                 >
-                  <PlusIcon size={16} weight="fill" className="ml-2" />
                   צור שיעור חדש
-                </button>
+                </HeroButton>
               </div>
             )}
 
@@ -769,25 +760,19 @@ export default function TheoryLessons() {
                           )}
                         </span>
                       </div>
-                      <div className="relative">
-                        <div className="overflow-x-auto pb-2 custom-scrollbar">
-                          <div className="flex gap-4 px-1" style={{ minWidth: 'max-content' }}>
-                            {dayLessons.map(lesson => (
-                              <div key={lesson._id} className="w-80 flex-shrink-0">
-                                <TheoryLessonCard
-                                  lesson={lesson}
-                                  onView={handleViewLesson}
-                                  onEdit={handleEditLesson}
-                                  onDelete={handleDeleteLesson}
-                                  selectable={true}
-                                  selected={selectedLessons.has(lesson._id)}
-                                  onSelect={handleSelectLesson}
-                                />
-                              </div>
-                            ))}
+                      <DragCarousel>
+                        {dayLessons.map(lesson => (
+                          <div key={lesson._id} className="w-80 flex-shrink-0">
+                            <TheoryLessonCard
+                              lesson={lesson}
+                              onView={handleViewLesson}
+                              onEdit={handleEditLesson}
+                              onDelete={handleDeleteLesson}
+                              selected={selectedLessons.has(lesson._id)}
+                            />
                           </div>
-                        </div>
-                      </div>
+                        ))}
+                      </DragCarousel>
                     </div>
                   )
                 })}
@@ -817,25 +802,19 @@ export default function TheoryLessons() {
                           )}
                         </span>
                       </div>
-                      <div className="relative">
-                        <div className="overflow-x-auto pb-2 custom-scrollbar">
-                          <div className="flex gap-4 px-1" style={{ minWidth: 'max-content' }}>
-                            {dayLessons.map(lesson => (
-                              <div key={lesson._id} className="w-80 flex-shrink-0">
-                                <TheoryLessonCard
-                                  lesson={lesson}
-                                  onView={handleViewLesson}
-                                  onEdit={handleEditLesson}
-                                  onDelete={handleDeleteLesson}
-                                  selectable={true}
-                                  selected={selectedLessons.has(lesson._id)}
-                                  onSelect={handleSelectLesson}
-                                />
-                              </div>
-                            ))}
+                      <DragCarousel>
+                        {dayLessons.map(lesson => (
+                          <div key={lesson._id} className="w-80 flex-shrink-0">
+                            <TheoryLessonCard
+                              lesson={lesson}
+                              onView={handleViewLesson}
+                              onEdit={handleEditLesson}
+                              onDelete={handleDeleteLesson}
+                              selected={selectedLessons.has(lesson._id)}
+                            />
                           </div>
-                        </div>
-                      </div>
+                        ))}
+                      </DragCarousel>
                     </div>
                   )
                 })}
@@ -899,25 +878,19 @@ export default function TheoryLessons() {
                             )}
                           </span>
                         </div>
-                        <div className="relative">
-                          <div className="overflow-x-auto pb-2 custom-scrollbar">
-                            <div className="flex gap-4 px-1" style={{ minWidth: 'max-content' }}>
-                              {dayLessons.map(lesson => (
-                                <div key={lesson._id} className="w-80 flex-shrink-0">
-                                  <TheoryLessonCard
-                                    lesson={lesson}
-                                    onView={handleViewLesson}
-                                    onEdit={handleEditLesson}
-                                    onDelete={handleDeleteLesson}
-                                    selectable={true}
-                                    selected={selectedLessons.has(lesson._id)}
-                                    onSelect={handleSelectLesson}
-                                  />
-                                </div>
-                              ))}
+                        <DragCarousel>
+                          {dayLessons.map(lesson => (
+                            <div key={lesson._id} className="w-80 flex-shrink-0">
+                              <TheoryLessonCard
+                                lesson={lesson}
+                                onView={handleViewLesson}
+                                onEdit={handleEditLesson}
+                                onDelete={handleDeleteLesson}
+                                selected={selectedLessons.has(lesson._id)}
+                              />
                             </div>
-                          </div>
-                        </div>
+                          ))}
+                        </DragCarousel>
                       </div>
                     )
                   })}
@@ -933,46 +906,52 @@ export default function TheoryLessons() {
             </div>
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Load More Button */}
       {hasNextPage && (
         <div className="flex justify-center">
-          <button
-            onClick={handleLoadMore}
-            disabled={loadingMore}
-            className="flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+          <HeroButton
+            color="primary"
+            variant="flat"
+            onPress={handleLoadMore}
+            isDisabled={loadingMore}
+            isLoading={loadingMore}
+            startContent={!loadingMore ? <CalendarIcon size={20} weight="regular" /> : undefined}
           >
-            {loadingMore ? (
+            {loadingMore ? 'טוען...' : (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>טוען...</span>
-              </>
-            ) : (
-              <>
-                <CalendarIcon size={20} weight="regular" />
-                <span>טען עוד שיעורים</span>
+                טען עוד שיעורים
                 {totalCount > lessons.length && (
-                  <span className="text-sm opacity-90">
+                  <span className="text-sm opacity-90 mr-1">
                     ({lessons.length} מתוך {totalCount})
                   </span>
                 )}
               </>
             )}
-          </button>
+          </HeroButton>
         </div>
       )}
 
-      </>
+      </motion.div>
       ) : (
         /* Bulk Update Tab */
-        <BulkTheoryUpdateTab
-          lessons={lessons}
-          onRefresh={handleRefresh}
-          searchQuery={searchQuery}
-          filters={filters}
-        />
+        <motion.div
+          key="bulk-tab"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        >
+          <BulkTheoryUpdateTab
+            lessons={lessons}
+            onRefresh={handleRefresh}
+            searchQuery={searchQuery}
+            filters={filters}
+          />
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* Theory Lesson Form Modal */}
       {showForm && (
@@ -1151,24 +1130,26 @@ export default function TheoryLessons() {
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
-            <button
-              onClick={cancelBulkDelete}
-              className="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+            <HeroButton
+              color="default"
+              variant="flat"
+              onPress={cancelBulkDelete}
             >
               ביטול
-            </button>
-            <button
-              onClick={handleBulkDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-              disabled={
+            </HeroButton>
+            <HeroButton
+              color="danger"
+              variant="solid"
+              onPress={handleBulkDelete}
+              isDisabled={
                 (bulkDeleteType === 'date' && (!bulkDeleteData.startDate || !bulkDeleteData.endDate)) ||
                 (bulkDeleteType === 'category' && !bulkDeleteData.category) ||
                 (bulkDeleteType === 'teacher' && !bulkDeleteData.teacherId)
               }
+              startContent={<TrashIcon size={16} weight="fill" />}
             >
-              <TrashIcon size={16} weight="fill" className="ml-2 inline" />
               מחק שיעורי תיאוריה
-            </button>
+            </HeroButton>
           </div>
         </div>
       </Modal>

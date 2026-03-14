@@ -121,7 +121,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             {item.href && !item.isActive ? (
               <Link
                 to={item.href}
-                className="text-gray-500 hover:text-gray-700 transition-colors duration-150 font-reisinger-yonatan"
+                className="text-gray-500 hover:text-gray-700 transition-colors duration-150"
                 title={item.label}
               >
                 {index === 0 && (
@@ -131,7 +131,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
               </Link>
             ) : (
               <span 
-                className={`font-reisinger-yonatan ${
+                className={`${
                   item.isActive 
                     ? 'text-primary font-semibold' 
                     : 'text-gray-900'

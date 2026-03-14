@@ -424,7 +424,7 @@ export default function TheoryTeacherLessonsTab() {
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <div className="text-red-800 font-reisinger-yonatan">{error}</div>
+        <div className="text-red-800">{error}</div>
       </div>
     )
   }
@@ -434,7 +434,7 @@ export default function TheoryTeacherLessonsTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-xl font-bold text-gray-900">
             ניהול תיאוריה מתקדם
           </h3>
           <p className="text-gray-600 mt-1">
@@ -447,14 +447,14 @@ export default function TheoryTeacherLessonsTab() {
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <GearIcon className="w-4 h-4" />
-            <span className="font-reisinger-yonatan">נהל קבוצות</span>
+            <span className="">נהל קבוצות</span>
           </button>
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
             <PlusIcon className="w-4 h-4" />
-            <span className="font-reisinger-yonatan">הוסף שיעור</span>
+            <span className="">הוסף שיעור</span>
           </button>
         </div>
       </div>
@@ -474,7 +474,7 @@ export default function TheoryTeacherLessonsTab() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 font-reisinger-yonatan ${
+                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
                     activeTab === tab.id
                       ? 'border-indigo-500 text-indigo-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -511,10 +511,10 @@ export default function TheoryTeacherLessonsTab() {
           {filteredLessons.length === 0 ? (
             <div className="text-center py-12">
               <BookOpenIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
                 {searchTerm ? 'לא נמצאו שיעורים' : 'אין שיעורים רשומים'}
               </h3>
-              <p className="text-gray-600 font-reisinger-yonatan">
+              <p className="text-gray-600">
                 {searchTerm ? 'נסה מילות חיפוש אחרות' : 'התחל בהוספת השיעור הראשון שלך'}
               </p>
             </div>
@@ -532,14 +532,14 @@ export default function TheoryTeacherLessonsTab() {
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 font-reisinger-yonatan">
+                    <h4 className="font-semibold text-gray-900">
                       {lesson.name}
                     </h4>
-                    <p className="text-sm text-gray-600 font-reisinger-yonatan">
+                    <p className="text-sm text-gray-600">
                       {getLevelLabel(lesson.level)} • {lesson.duration} דקות
                     </p>
                     {lesson.description && (
-                      <p className="text-sm text-gray-500 mt-1 font-reisinger-yonatan">
+                      <p className="text-sm text-gray-500 mt-1">
                         {lesson.description}
                       </p>
                     )}
@@ -620,7 +620,7 @@ export default function TheoryTeacherLessonsTab() {
         {selectedLesson && (
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="font-semibold text-gray-900 font-reisinger-yonatan">
+              <h4 className="font-semibold text-gray-900">
                 תלמידי השיעור
               </h4>
               <div className="flex gap-2">
@@ -629,7 +629,7 @@ export default function TheoryTeacherLessonsTab() {
                     setShowStudentEnrollment(true)
                     loadAvailableStudents()
                   }}
-                  className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 text-sm font-medium font-reisinger-yonatan"
+                  className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 text-sm font-medium"
                 >
                   <UserPlusIcon className="w-4 h-4" />
                   הוסף תלמיד
@@ -640,23 +640,23 @@ export default function TheoryTeacherLessonsTab() {
             {lessonStudents.length === 0 ? (
               <div className="text-center py-8">
                 <UsersIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500 text-sm font-reisinger-yonatan">אין תלמידים רשומים לשיעור</p>
+                <p className="text-gray-500 text-sm">אין תלמידים רשומים לשיעור</p>
               </div>
             ) : (
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {lessonStudents.map((student) => (
                   <div key={student.id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded border">
                     <div className="flex-1">
-                      <div className="font-medium text-sm font-reisinger-yonatan">
+                      <div className="font-medium text-sm">
                         {student.firstName} {student.lastName}
                       </div>
-                      <div className="text-xs text-gray-500 font-reisinger-yonatan">
+                      <div className="text-xs text-gray-500">
                         {student.instrument && `${student.instrument} • `}
                         {student.grade && `כיתה ${student.grade} • `}
                         רישום: {new Date(student.enrollmentDate).toLocaleDateString('he-IL')}
                       </div>
                       {student.attendance && (
-                        <div className="text-xs text-gray-500 mt-1 font-reisinger-yonatan">
+                        <div className="text-xs text-gray-500 mt-1">
                           נוכחות: {student.attendance.present}/{student.attendance.total} שיעורים
                           <span className={`ml-2 ${
                             (student.attendance.present / student.attendance.total) >= 0.8
@@ -689,24 +689,24 @@ export default function TheoryTeacherLessonsTab() {
             {activeTab === 'groups' && (
               <div className="text-center py-12">
                 <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">ניהול קבוצות תיאוריה</h3>
-                <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">ניהול קבוצות תיאוריה</h3>
+                <p className="text-gray-600">תכונה זו תהיה זמינה בקרוב</p>
               </div>
             )}
 
             {activeTab === 'curriculum' && (
               <div className="text-center py-12">
                 <GraduationCapIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">תכנית לימודים</h3>
-                <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">תכנית לימודים</h3>
+                <p className="text-gray-600">תכונה זו תהיה זמינה בקרוב</p>
               </div>
             )}
 
             {activeTab === 'grades' && (
               <div className="text-center py-12">
                 <BookOpenTextIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2 font-reisinger-yonatan">ניהול ציונים</h3>
-                <p className="text-gray-600 font-reisinger-yonatan">תכונה זו תהיה זמינה בקרוב</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">ניהול ציונים</h3>
+                <p className="text-gray-600">תכונה זו תהיה זמינה בקרוב</p>
               </div>
             )}
         </div>
@@ -789,13 +789,13 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto" dir="rtl">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">
           {lesson ? 'עריכת שיעור תיאוריה' : 'הוספת שיעור תיאוריה חדש'}
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               שם השיעור *
             </label>
             <input
@@ -808,7 +808,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               תיאור השיעור
             </label>
             <textarea
@@ -821,7 +821,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 רמה *
               </label>
               <select
@@ -837,7 +837,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 משך השיעור (דקות) *
               </label>
               <input
@@ -855,7 +855,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 קיבולת תלמידים *
               </label>
               <input
@@ -870,7 +870,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 סטטוס
               </label>
               <select
@@ -885,7 +885,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               יום השיעור *
             </label>
             <select
@@ -906,7 +906,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת התחלה *
               </label>
               <input
@@ -919,7 +919,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 שעת סיום *
               </label>
               <input
@@ -933,7 +933,7 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               מקום השיעור
             </label>
             <input
@@ -947,14 +947,14 @@ function LessonModal({ lesson, onClose, onSubmit }: LessonModalProps) {
           <div className="flex gap-3 mt-6">
             <button
               type="submit"
-              className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-reisinger-yonatan"
+              className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
             >
               {lesson ? 'עדכן' : 'הוסף'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors font-reisinger-yonatan"
+              className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
             >
               ביטול
             </button>
@@ -983,7 +983,7 @@ function StudentEnrollmentModal({ availableStudents, onClose, onEnroll }: Studen
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 max-h-[80vh] overflow-y-auto" dir="rtl">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 font-reisinger-yonatan">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">
           הוסף תלמיד לשיעור
         </h3>
 
@@ -1002,23 +1002,23 @@ function StudentEnrollmentModal({ availableStudents, onClose, onEnroll }: Studen
           {filteredStudents.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <UsersIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-              <p className="font-reisinger-yonatan">אין תלמידים זמינים</p>
+              <p className="">אין תלמידים זמינים</p>
             </div>
           ) : (
             filteredStudents.map((student) => (
               <div key={student.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
                 <div>
-                  <div className="font-medium text-gray-900 font-reisinger-yonatan">
+                  <div className="font-medium text-gray-900">
                     {student.firstName} {student.lastName}
                   </div>
-                  <div className="text-sm text-gray-600 font-reisinger-yonatan">
+                  <div className="text-sm text-gray-600">
                     {student.instrument && `${student.instrument} • `}
                     {student.grade && `כיתה ${student.grade}`}
                   </div>
                 </div>
                 <button
                   onClick={() => onEnroll(student.id)}
-                  className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-reisinger-yonatan"
+                  className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm"
                 >
                   <UserPlusIcon className="w-4 h-4" />
                   הוסף
@@ -1031,7 +1031,7 @@ function StudentEnrollmentModal({ availableStudents, onClose, onEnroll }: Studen
         <div className="flex gap-3 mt-6">
           <button
             onClick={onClose}
-            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors font-reisinger-yonatan"
+            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
           >
             סגור
           </button>
@@ -1054,22 +1054,22 @@ function ConflictCheckerModal({ conflict, onClose, onResolve }: ConflictCheckerM
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4" dir="rtl">
         <div className="flex items-center gap-3 mb-4">
           <WarningIcon className="w-8 h-8 text-yellow-600" />
-          <h3 className="text-lg font-bold text-gray-900 font-reisinger-yonatan">
+          <h3 className="text-lg font-bold text-gray-900">
             התנגשות בלוח הזמנים
           </h3>
         </div>
 
         <div className="mb-4">
-          <p className="text-gray-700 font-reisinger-yonatan mb-3">
+          <p className="text-gray-700 mb-3">
             {conflict.conflictDetails}
           </p>
 
           {conflict.suggestions && (
             <div>
-              <p className="font-medium text-gray-900 mb-2 font-reisinger-yonatan">הצעות לפתרון:</p>
+              <p className="font-medium text-gray-900 mb-2">הצעות לפתרון:</p>
               <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
                 {conflict.suggestions.map((suggestion, index) => (
-                  <li key={index} className="font-reisinger-yonatan">{suggestion}</li>
+                  <li key={index} className="">{suggestion}</li>
                 ))}
               </ul>
             </div>
@@ -1079,13 +1079,13 @@ function ConflictCheckerModal({ conflict, onClose, onResolve }: ConflictCheckerM
         <div className="flex gap-3">
           <button
             onClick={onResolve}
-            className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-reisinger-yonatan"
+            className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
           >
             ערוך שיעור
           </button>
           <button
             onClick={onClose}
-            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors font-reisinger-yonatan"
+            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
           >
             ביטול
           </button>

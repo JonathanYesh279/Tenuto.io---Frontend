@@ -1,6 +1,7 @@
 import Sidebar from './Sidebar'
 import Header from './Header'
 import ImpersonationBanner from './ImpersonationBanner'
+import CopyrightFooter from './CopyrightFooter'
 import { useAuth } from '../services/authContext.jsx'
 import { useSidebar } from '../contexts/SidebarContext'
 
@@ -56,14 +57,15 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main Content - Adjust margin based on sidebar presence and state */}
       <main
-        className="mt-16 ml-0 p-0 bg-background h-[calc(100vh-64px)] rtl transition-all duration-300 overflow-hidden"
+        className="mt-16 ml-0 p-0 bg-background h-[calc(100vh-64px)] rtl transition-all duration-300 overflow-hidden flex flex-col"
         style={{
-          marginRight: shouldShowSidebar && !isMobile && isDesktopOpen ? '280px' : '0'
+          marginRight: shouldShowSidebar && !isMobile ? (isDesktopOpen ? '280px' : '64px') : '0'
         }}
       >
-        <div className="p-6 bg-background animate-fade-in h-full overflow-y-auto">
+        <div className="p-6 bg-background animate-fade-in flex-1 overflow-y-auto">
           {children}
         </div>
+        <CopyrightFooter />
       </main>
     </div>
   )

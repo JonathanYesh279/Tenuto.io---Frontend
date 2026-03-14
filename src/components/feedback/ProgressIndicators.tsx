@@ -69,12 +69,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       {(label || showPercentage) && (
         <div className="flex justify-between items-center mb-2">
           {label && (
-            <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
+            <span className="text-sm font-medium text-gray-700">
               {label}
             </span>
           )}
           {showPercentage && (
-            <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
+            <span className="text-sm font-medium text-gray-700">
               {Math.round(percentage)}%
             </span>
           )}
@@ -166,7 +166,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
         
         {showValue && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-lg font-semibold text-gray-700 font-reisinger-yonatan">
+            <span className="text-lg font-semibold text-gray-700">
               {Math.round(percentage)}%
             </span>
           </div>
@@ -174,7 +174,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
       </div>
       
       {label && (
-        <span className="mt-2 text-sm font-medium text-gray-700 font-reisinger-yonatan text-center">
+        <span className="mt-2 text-sm font-medium text-gray-700 text-center">
           {label}
         </span>
       )}
@@ -251,7 +251,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
             
             <div className="flex-1 min-w-0">
               <h3 className={`
-                text-sm font-semibold font-reisinger-yonatan
+                text-sm font-semibold
                 ${step.status === 'completed' ? 'text-green-600' :
                   step.status === 'current' ? 'text-primary' :
                   step.status === 'error' ? 'text-red-600' :
@@ -261,7 +261,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
               </h3>
               
               {step.description && (
-                <p className="text-xs text-gray-500 mt-1 font-reisinger-yonatan">
+                <p className="text-xs text-gray-500 mt-1">
                   {step.description}
                 </p>
               )}
@@ -287,7 +287,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
             
             <div className="mt-2 text-center">
               <h3 className={`
-                text-xs font-semibold font-reisinger-yonatan
+                text-xs font-semibold
                 ${step.status === 'completed' ? 'text-green-600' :
                   step.status === 'current' ? 'text-primary' :
                   step.status === 'error' ? 'text-red-600' :
@@ -297,7 +297,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
               </h3>
               
               {step.description && (
-                <p className="text-xs text-gray-500 mt-1 font-reisinger-yonatan max-w-20">
+                <p className="text-xs text-gray-500 mt-1 max-w-20">
                   {step.description}
                 </p>
               )}
@@ -338,12 +338,12 @@ export const MusicalProgress: React.FC<{
     <div className={`w-full ${className}`} dir="rtl">
       {label && (
         <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
+          <span className="text-sm font-medium text-gray-700">
             {label}
           </span>
           <div className="flex items-center">
             <MusicNotesIcon className="w-4 h-4 text-primary ml-1" />
-            <span className="text-sm font-medium text-primary font-reisinger-yonatan">
+            <span className="text-sm font-medium text-primary">
               {currentStage ? stages[currentStage - 1] : `${value}/${max}`}
             </span>
           </div>
@@ -373,7 +373,7 @@ export const MusicalProgress: React.FC<{
         })}
       </div>
       
-      <div className="flex justify-between mt-1 text-xs text-gray-500 font-reisinger-yonatan">
+      <div className="flex justify-between mt-1 text-xs text-gray-500">
         <span>שלב 1</span>
         <span>שלב {max}</span>
       </div>
@@ -405,12 +405,12 @@ export const StatusProgress: React.FC<{
   return (
     <div className={`space-y-2 ${className}`} dir="rtl">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
+        <span className="text-sm font-medium text-gray-700">
           {message}
         </span>
         
         {progress !== undefined && (
-          <span className="text-sm font-medium text-gray-700 font-reisinger-yonatan">
+          <span className="text-sm font-medium text-gray-700">
             {Math.round(progress)}%
           </span>
         )}

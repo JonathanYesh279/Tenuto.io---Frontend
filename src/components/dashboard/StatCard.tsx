@@ -88,8 +88,8 @@ const StatCard: React.FC<StatCardProps> = ({
     return (
       <div className={`bg-background rounded border border-red-200 p-6 ${className}`} dir="rtl">
         <div className="text-center">
-          <div className="text-red-500 text-sm font-reisinger-yonatan mb-2">שגיאה בטעינת נתונים</div>
-          <div className="text-xs text-gray-500 font-reisinger-yonatan">{error}</div>
+          <div className="text-red-500 text-sm mb-2">שגיאה בטעינת נתונים</div>
+          <div className="text-xs text-gray-500">{error}</div>
         </div>
       </div>
     )
@@ -99,7 +99,7 @@ const StatCard: React.FC<StatCardProps> = ({
     <>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-gray-600 font-reisinger-yonatan">
+        <h3 className="text-sm font-medium text-gray-600">
           {title}
         </h3>
         <div className="flex items-center space-x-2 space-x-reverse">
@@ -118,7 +118,7 @@ const StatCard: React.FC<StatCardProps> = ({
                   <button
                     key={index}
                     onClick={action.onClick}
-                    className="block w-full px-4 py-2 text-right text-sm text-foreground hover:bg-muted font-reisinger-yonatan"
+                    className="block w-full px-4 py-2 text-right text-sm text-foreground hover:bg-muted"
                   >
                     {action.label}
                   </button>
@@ -131,12 +131,12 @@ const StatCard: React.FC<StatCardProps> = ({
 
       {/* Main Value */}
       <div className="mb-3">
-        <div className="text-2xl font-bold text-gray-900 font-reisinger-yonatan">
+        <div className="text-2xl font-bold text-gray-900">
           {formatValue(value)}
         </div>
         
         {subtitle && (
-          <div className="text-sm text-gray-600 font-reisinger-yonatan mt-1">
+          <div className="text-sm text-gray-600 mt-1">
             {subtitle}
           </div>
         )}
@@ -146,11 +146,11 @@ const StatCard: React.FC<StatCardProps> = ({
       {trend && (
         <div className="flex items-center mb-3">
           {getTrendIcon()}
-          <span className={`text-sm font-medium mr-1 font-reisinger-yonatan ${getTrendColor()}`}>
+          <span className={`text-sm font-medium mr-1 ${getTrendColor()}`}>
             {trend.value > 0 ? '+' : ''}{trend.value}%
           </span>
           {trend.period && (
-            <span className="text-xs text-gray-500 mr-1 font-reisinger-yonatan">
+            <span className="text-xs text-gray-500 mr-1">
               {trend.period}
             </span>
           )}
@@ -223,7 +223,7 @@ export const ProgressStatCard: React.FC<StatCardProps & {
       {...props}
       chart={
         <div className="space-y-2">
-          <div className="flex justify-between text-xs text-gray-600 font-reisinger-yonatan">
+          <div className="flex justify-between text-xs text-gray-600">
             <span>{progressLabel || 'התקדמות'}</span>
             <span>{Math.round(percentage)}%</span>
           </div>

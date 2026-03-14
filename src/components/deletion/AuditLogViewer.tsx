@@ -215,10 +215,10 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             <div className="flex items-center gap-3">
               <FileTextIcon className="w-6 h-6 text-gray-500" />
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 font-reisinger-yonatan">
+                <h3 className="text-lg font-semibold text-gray-900">
                   יומן ביקורת
                 </h3>
-                <p className="text-sm text-gray-600 font-reisinger-yonatan">
+                <p className="text-sm text-gray-600">
                   {filteredAndSortedEntries.length} מתוך {entries.length} רשומות
                 </p>
               </div>
@@ -231,7 +231,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                   className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors"
                 >
                   <DownloadSimpleIcon className="w-4 h-4" />
-                  <span className="font-reisinger-yonatan">יצוא</span>
+                  <span className="">יצוא</span>
                 </button>
               )}
 
@@ -240,7 +240,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                 className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition-colors"
               >
                 <FunnelIcon className="w-4 h-4" />
-                <span className="font-reisinger-yonatan">סינון</span>
+                <span className="">סינון</span>
                 <CaretDownIcon className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
             </div>
@@ -254,7 +254,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
               placeholder="חיפוש בשם ישות, משתמש או פעולה..."
               value={filters.searchQuery}
               onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
-              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-reisinger-yonatan"
+              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -263,7 +263,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             <div className="space-y-4 pt-4 border-t border-gray-100">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     תאריך התחלה
                   </label>
                   <input
@@ -276,12 +276,12 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                         start: e.target.value ? new Date(e.target.value) : null 
                       }
                     }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     תאריך סיום
                   </label>
                   <input
@@ -294,18 +294,18 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                         end: e.target.value ? new Date(e.target.value) : null 
                       }
                     }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     פעולה
                   </label>
                   <select
                     value={filters.action}
                     onChange={(e) => setFilters(prev => ({ ...prev, action: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   >
                     <option value="">כל הפעולות</option>
                     {uniqueActions.map(action => (
@@ -315,13 +315,13 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     סוג ישות
                   </label>
                   <select
                     value={filters.entityType}
                     onChange={(e) => setFilters(prev => ({ ...prev, entityType: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   >
                     <option value="">כל הסוגים</option>
                     {uniqueEntityTypes.map(type => (
@@ -331,13 +331,13 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     משתמש
                   </label>
                   <select
                     value={filters.userId}
                     onChange={(e) => setFilters(prev => ({ ...prev, userId: e.target.value }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   >
                     <option value="">כל המשתמשים</option>
                     {uniqueUsers.map(user => (
@@ -347,7 +347,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 font-reisinger-yonatan">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     ניתן לשחזור
                   </label>
                   <select
@@ -356,7 +356,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                       ...prev, 
                       canRollback: e.target.value === '' ? null : e.target.value === 'true' 
                     }))}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-reisinger-yonatan"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
                   >
                     <option value="">הכל</option>
                     <option value="true">כן</option>
@@ -374,7 +374,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                   canRollback: null,
                   searchQuery: ''
                 })}
-                className="text-sm text-blue-600 hover:text-blue-700 font-reisinger-yonatan"
+                className="text-sm text-blue-600 hover:text-blue-700"
               >
                 נקה סינונים
               </button>
@@ -389,7 +389,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
           <div className="col-span-3">
             <button
               onClick={() => handleSort('timestamp')}
-              className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
+              className="flex items-center gap-1 hover:text-gray-900"
             >
               <ClockIcon className="w-4 h-4" />
               <span>תאריך ושעה</span>
@@ -400,7 +400,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
           <div className="col-span-2">
             <button
               onClick={() => handleSort('action')}
-              className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
+              className="flex items-center gap-1 hover:text-gray-900"
             >
               <span>פעולה</span>
               <ArrowsDownUpIcon className="w-3 h-3" />
@@ -410,7 +410,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
           <div className="col-span-2">
             <button
               onClick={() => handleSort('entityType')}
-              className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
+              className="flex items-center gap-1 hover:text-gray-900"
             >
               <span>סוג ישות</span>
               <ArrowsDownUpIcon className="w-3 h-3" />
@@ -418,13 +418,13 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
           </div>
           
           <div className="col-span-3">
-            <span className="font-reisinger-yonatan">שם ישות</span>
+            <span className="">שם ישות</span>
           </div>
           
           <div className="col-span-2">
             <button
               onClick={() => handleSort('userName')}
-              className="flex items-center gap-1 hover:text-gray-900 font-reisinger-yonatan"
+              className="flex items-center gap-1 hover:text-gray-900"
             >
               <UserIcon className="w-4 h-4" />
               <span>משתמש</span>
@@ -454,7 +454,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                         <CaretRightIcon className="w-4 h-4" />
                       }
                     </button>
-                    <span className="text-sm text-gray-600 font-reisinger-yonatan">
+                    <span className="text-sm text-gray-600">
                       {formatDate(entry.timestamp)}
                     </span>
                   </div>
@@ -462,26 +462,26 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                   <div className="col-span-2">
                     <div className="flex items-center gap-2">
                       {getActionIcon(entry.action)}
-                      <span className="text-sm font-medium font-reisinger-yonatan">
+                      <span className="text-sm font-medium">
                         {getActionLabel(entry.action)}
                       </span>
                     </div>
                   </div>
                   
                   <div className="col-span-2">
-                    <span className="text-sm text-gray-600 font-reisinger-yonatan">
+                    <span className="text-sm text-gray-600">
                       {getEntityTypeLabel(entry.entityType)}
                     </span>
                   </div>
                   
                   <div className="col-span-3">
-                    <span className="text-sm font-medium text-gray-900 font-reisinger-yonatan">
+                    <span className="text-sm font-medium text-gray-900">
                       {entry.entityName}
                     </span>
                   </div>
                   
                   <div className="col-span-2 flex items-center justify-between">
-                    <span className="text-sm text-gray-600 font-reisinger-yonatan">
+                    <span className="text-sm text-gray-600">
                       {entry.userName}
                     </span>
                     
@@ -515,17 +515,17 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                   <div className="pt-4 border-t border-gray-100 space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <h5 className="text-sm font-semibold text-gray-900 mb-2 font-reisinger-yonatan">
+                        <h5 className="text-sm font-semibold text-gray-900 mb-2">
                           פרטי הפעולה
                         </h5>
                         <div className="space-y-1 text-sm text-gray-600">
-                          <div className="font-reisinger-yonatan">
+                          <div className="">
                             <span className="font-medium">מזהה ישות:</span> {entry.entityId}
                           </div>
-                          <div className="font-reisinger-yonatan">
+                          <div className="">
                             <span className="font-medium">מזהה משתמש:</span> {entry.userId}
                           </div>
-                          <div className="flex items-center gap-2 font-reisinger-yonatan">
+                          <div className="flex items-center gap-2">
                             <span className="font-medium">ניתן לשחזור:</span>
                             {entry.canRollback ? 
                               <CheckCircleIcon className="w-4 h-4 text-green-500" /> :
@@ -537,7 +537,7 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
 
                       {entry.details && Object.keys(entry.details).length > 0 && (
                         <div>
-                          <h5 className="text-sm font-semibold text-gray-900 mb-2 font-reisinger-yonatan">
+                          <h5 className="text-sm font-semibold text-gray-900 mb-2">
                             פרטים נוספים
                           </h5>
                           <div className="bg-gray-50 rounded p-3">
@@ -559,10 +559,10 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
       {filteredAndSortedEntries.length === 0 && !isLoading && (
         <Card className="text-center py-12">
           <FileTextIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-600 font-reisinger-yonatan mb-2">
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">
             לא נמצאו רשומות
           </h3>
-          <p className="text-gray-500 font-reisinger-yonatan">
+          <p className="text-gray-500">
             לא נמצאו רשומות יומן המתאימות לקריטריונים שנבחרו
           </p>
         </Card>
@@ -580,38 +580,38 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             <div className="bg-blue-50 border border-blue-200 rounded p-4">
               <div className="flex items-center gap-2 text-blue-700 mb-2">
                 <ArrowCounterClockwiseIcon className="w-5 h-5" />
-                <span className="font-semibold font-reisinger-yonatan">שחזור נתונים</span>
+                <span className="font-semibold">שחזור נתונים</span>
               </div>
-              <p className="text-sm text-blue-700 font-reisinger-yonatan">
+              <p className="text-sm text-blue-700">
                 האם אתה בטוח שברצונך לשחזר את הפעולה הזו?
               </p>
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="font-medium text-gray-700 font-reisinger-yonatan">פעולה:</span>
-                <span className="text-gray-600 font-reisinger-yonatan">{getActionLabel(selectedEntry.action)}</span>
+                <span className="font-medium text-gray-700">פעולה:</span>
+                <span className="text-gray-600">{getActionLabel(selectedEntry.action)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="font-medium text-gray-700 font-reisinger-yonatan">ישות:</span>
-                <span className="text-gray-600 font-reisinger-yonatan">{selectedEntry.entityName}</span>
+                <span className="font-medium text-gray-700">ישות:</span>
+                <span className="text-gray-600">{selectedEntry.entityName}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="font-medium text-gray-700 font-reisinger-yonatan">תאריך:</span>
-                <span className="text-gray-600 font-reisinger-yonatan">{formatDate(selectedEntry.timestamp)}</span>
+                <span className="font-medium text-gray-700">תאריך:</span>
+                <span className="text-gray-600">{formatDate(selectedEntry.timestamp)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="font-medium text-gray-700 font-reisinger-yonatan">משתמש:</span>
-                <span className="text-gray-600 font-reisinger-yonatan">{selectedEntry.userName}</span>
+                <span className="font-medium text-gray-700">משתמש:</span>
+                <span className="text-gray-600">{selectedEntry.userName}</span>
               </div>
             </div>
 
             <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
               <div className="flex items-center gap-2 text-yellow-700 mb-1">
                 <WarningCircleIcon className="w-4 h-4" />
-                <span className="font-semibold text-sm font-reisinger-yonatan">שים לב</span>
+                <span className="font-semibold text-sm">שים לב</span>
               </div>
-              <p className="text-xs text-yellow-700 font-reisinger-yonatan">
+              <p className="text-xs text-yellow-700">
                 פעולת השחזור תבטל את כל השינויים שבוצעו מאז הפעולה המקורית.
                 פעולה זו אינה ניתנת לביטול.
               </p>
@@ -620,13 +620,13 @@ const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             <div className="flex gap-3 pt-4 border-t border-gray-100">
               <button
                 onClick={() => setShowRollbackModal(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors font-reisinger-yonatan"
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
               >
                 ביטול
               </button>
               <button
                 onClick={handleRollback}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors font-reisinger-yonatan"
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >
                 שחזר נתונים
               </button>

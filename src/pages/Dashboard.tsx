@@ -88,7 +88,7 @@ export default function Dashboard() {
         apiService.teachers.getTeachers(filters),
         apiService.orchestras.getOrchestras(filters),
         apiService.rehearsals.getRehearsals(filters),
-        apiService.theory.getTheoryLessons(filters),
+        apiService.theory.getTheoryLessons({ ...filters, limit: 9999 }),
         apiService.bagrut.getBagruts()
       ])
 
@@ -96,7 +96,8 @@ export default function Dashboard() {
       const teachersData = teachers.status === 'fulfilled' ? (Array.isArray(teachers.value) ? teachers.value : []) : []
       const orchestrasData = orchestras.status === 'fulfilled' ? (Array.isArray(orchestras.value) ? orchestras.value : []) : []
       const rehearsalsData = rehearsals.status === 'fulfilled' ? (Array.isArray(rehearsals.value) ? rehearsals.value : []) : []
-      const theoryData = theoryLessons.status === 'fulfilled' ? (Array.isArray(theoryLessons.value) ? theoryLessons.value : []) : []
+      const theoryRaw = theoryLessons.status === 'fulfilled' ? theoryLessons.value : null
+      const theoryData = Array.isArray(theoryRaw) ? theoryRaw : Array.isArray(theoryRaw?.data) ? theoryRaw.data : []
       const bagrutsData = bagruts.status === 'fulfilled' ? (Array.isArray(bagruts.value) ? bagruts.value : []) : []
 
       // Calculate stats
@@ -513,7 +514,7 @@ export default function Dashboard() {
               )}
             </ChartCard>
 
-            <ChartCard title="פעילויות לפי יום">
+            <ChartCard title={`פעילויות לפי יום${activityByDay.length > 0 ? ` (${activityByDay.reduce((s, d) => s + d.rehearsals + d.theory, 0)} סה״כ)` : ''}`}>
               {loading ? (
                 <div className="h-72 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
@@ -523,11 +524,12 @@ export default function Dashboard() {
                   data={activityByDay}
                   index="day"
                   categories={['rehearsals', 'theory']}
-                  colors={['sky', 'amber']}
-                  type="stacked"
+                  colors={['indigo', 'amber']}
+                  type="default"
                   categoryLabels={{ rehearsals: 'חזרות', theory: 'תיאוריה' }}
                   className="h-64"
                   barRadius={6}
+                  showLabels
                 />
               ) : (
                 <div className="h-64 flex items-center justify-center text-sm text-slate-400">אין נתוני פעילות</div>

@@ -6,6 +6,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  LabelList,
   ResponsiveContainer,
 } from 'recharts';
 import ChartTooltip from './ChartTooltip';
@@ -29,6 +30,7 @@ export interface TremorBarChartProps {
   barSize?: number;
   className?: string;
   categoryLabels?: Record<string, string>;
+  showLabels?: boolean;
 }
 
 const defaultValueFormatter = (value: number): string =>
@@ -99,6 +101,7 @@ export function TremorBarChart({
   barSize,
   className = 'h-72',
   categoryLabels,
+  showLabels = false,
 }: TremorBarChartProps) {
   if (!data || data.length === 0) {
     return null;
@@ -148,7 +151,7 @@ export function TremorBarChart({
         <BarChart
           data={chartData}
           layout={isVertical ? 'vertical' : 'horizontal'}
-          margin={{ top: 4, right: 4, bottom: 4, left: 4 }}
+          margin={{ top: showLabels ? 20 : 4, right: 4, bottom: 4, left: 4 }}
         >
           {showGridLines && (
             <CartesianGrid
@@ -239,7 +242,16 @@ export function TremorBarChart({
                 radius={[tl, tr, br, bl]}
                 stackId={isStacked ? 'stack' : undefined}
                 barSize={barSize}
-              />
+              >
+                {showLabels && (
+                  <LabelList
+                    dataKey={cat}
+                    position="top"
+                    style={{ fontSize: 11, fontWeight: 600, fill: '#64748b' }}
+                    formatter={(v: number) => (v > 0 ? v : '')}
+                  />
+                )}
+              </Bar>
             );
           })}
         </BarChart>

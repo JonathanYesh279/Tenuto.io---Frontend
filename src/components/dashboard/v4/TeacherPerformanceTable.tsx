@@ -1,7 +1,19 @@
 import { useState } from 'react'
-import { UserCircleIcon, ArrowsClockwise as ArrowsClockwiseIcon } from '@phosphor-icons/react'
-import { Tabs, Tab, Modal, ModalContent, ModalHeader, ModalBody } from '@heroui/react'
+import { ArrowsClockwise as ArrowsClockwiseIcon } from '@phosphor-icons/react'
+import { Tabs, Tab, Modal, ModalContent, ModalHeader, ModalBody, User } from '@heroui/react'
 import { getWorkloadColor } from '../../../utils/workloadColors'
+
+const AVATAR_COLORS: Array<'primary' | 'secondary' | 'success' | 'warning' | 'danger'> = [
+  'primary', 'secondary', 'success', 'warning', 'danger'
+]
+
+function getAvatarColor(name: string): typeof AVATAR_COLORS[number] {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
 
 interface Teacher {
   id: string
@@ -31,12 +43,18 @@ function TeacherRow({ teacher }: { teacher: Teacher }) {
   return (
     <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
       <td className="px-8 py-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 shrink-0 text-slate-300 dark:text-slate-600">
-            <UserCircleIcon size={40} weight="fill" />
-          </div>
-          <span className="text-sm font-bold">{teacher.name}</span>
-        </div>
+        <User
+          avatarProps={{
+            radius: 'full',
+            size: 'sm',
+            showFallback: true,
+            name: teacher.name,
+            color: getAvatarColor(teacher.name),
+          }}
+          name={teacher.name}
+          description={teacher.department || ''}
+          classNames={{ name: 'text-sm font-bold', description: 'text-xs text-slate-400' }}
+        />
       </td>
       <td className="px-8 py-4">
         <span className="text-sm text-slate-500 font-medium">{teacher.department}</span>

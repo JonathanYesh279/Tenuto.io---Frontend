@@ -165,10 +165,21 @@ export default function AttendanceManagement() {
     try {
       setRehearsalsLoading(true)
       const rehearsals = await rehearsalService.getOrchestraRehearsals(orchestraId)
-      // Sort by date descending (most recent first)
-      const sorted = (rehearsals || []).sort((a: any, b: any) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-      )
+      // Sort: upcoming/today first (ascending), then past (descending)
+      const now = new Date().setHours(0, 0, 0, 0)
+      const sorted = (rehearsals || []).sort((a: any, b: any) => {
+        const aTime = new Date(a.date).getTime()
+        const bTime = new Date(b.date).getTime()
+        const aUpcoming = aTime >= now
+        const bUpcoming = bTime >= now
+        // Upcoming before past
+        if (aUpcoming && !bUpcoming) return -1
+        if (!aUpcoming && bUpcoming) return 1
+        // Within upcoming: soonest first (ascending)
+        if (aUpcoming && bUpcoming) return aTime - bTime
+        // Within past: most recent first (descending)
+        return bTime - aTime
+      })
       setOrchestraRehearsals(sorted)
     } catch (err) {
       console.error('Error loading rehearsals:', err)
@@ -319,7 +330,7 @@ export default function AttendanceManagement() {
         />
         <GlassStatCard
           value={summary?.totalFlagged ?? 0}
-          label="תלמידים מסומנים"
+          label="תלמידים בסיכון"
           size="sm"
           valueClassName={(summary?.totalFlagged ?? 0) > 0 ? 'text-red-600' : undefined}
         />
@@ -352,7 +363,7 @@ export default function AttendanceManagement() {
           }`}
         >
           <WarningIcon size={14} weight="regular" />
-          תלמידים מסומנים
+          תלמידים בסיכון
           {(summary?.totalFlagged ?? 0) > 0 && (
             <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold rounded-full bg-red-500 text-white">
               {summary!.totalFlagged}
@@ -454,7 +465,7 @@ export default function AttendanceManagement() {
                 <TableColumn key="rehearsals" align="center">חזרות</TableColumn>
                 <TableColumn key="members" align="center">חברים</TableColumn>
                 <TableColumn key="rate" align="center">שיעור נוכחות</TableColumn>
-                <TableColumn key="flagged" align="center">מסומנים</TableColumn>
+                <TableColumn key="flagged" align="center">בסיכון</TableColumn>
                 <TableColumn key="actions" align="end">פעולות</TableColumn>
               </TableHeader>
               <TableBody items={paginatedOrchestras} emptyContent="אין תזמורות להצגה">
@@ -620,13 +631,13 @@ export default function AttendanceManagement() {
         <>
           {filteredFlagged.length === 0 ? (
             <EmptyState
-              title="אין תלמידים מסומנים"
+              title="אין תלמידים בסיכון"
               description="לא נמצאו תלמידים עם התראות נוכחות לתקופה שנבחרה"
               icon={<CheckCircleIcon size={48} weight="regular" />}
             />
           ) : (
             <HeroTable
-              aria-label="טבלת תלמידים מסומנים"
+              aria-label="טבלת תלמידים בסיכון"
               isHeaderSticky
               bottomContent={
                 flaggedPages > 1 ? (
@@ -660,7 +671,7 @@ export default function AttendanceManagement() {
                 <TableColumn key="consecutive" align="center">היעדרויות ברצף</TableColumn>
                 <TableColumn key="flags">סיבות</TableColumn>
               </TableHeader>
-              <TableBody items={paginatedFlagged} emptyContent="אין תלמידים מסומנים">
+              <TableBody items={paginatedFlagged} emptyContent="אין תלמידים בסיכון">
                 {(item: FlaggedStudent) => (
                   <TableRow key={`${item.studentId}-${item.orchestraId}`}>
                     {(columnKey) => {

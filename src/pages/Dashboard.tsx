@@ -14,6 +14,7 @@ import { TeacherPerformanceTable } from '../components/dashboard/v4/TeacherPerfo
 import { AgendaWidget } from '../components/dashboard/v4/AgendaWidget'
 import { DashboardRoomSchedule } from '../components/dashboard/v4/DashboardRoomSchedule'
 import { VacantRoomsWidget } from '../components/dashboard/v4/VacantRoomsWidget'
+import { DashboardChartSection } from '../components/dashboard/v4/DashboardChartSection'
 import { ComboChart, TremorBarChart } from '../components/charts'
 
 import { ScrollReveal } from '../components/ui/ScrollReveal'
@@ -539,12 +540,12 @@ export default function Dashboard() {
 
       {/* Full-width sections below the 9/3 grid */}
       <div className="space-y-6 mt-6">
-        {/* Charts — 3 columns */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Registrations & activity combo chart */}
-          <ScrollReveal delay={0}>
-          <ChartCard title="רישומים ופעילות חודשית">
-              {loading ? (
+        {/* Charts — responsive tabs on mobile, grid+focus on desktop */}
+        <ScrollReveal>
+          <DashboardChartSection
+            comboChartTitle="רישומים ופעילות חודשית"
+            comboChartContent={
+              loading ? (
                 <div className="h-56 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                 </div>
@@ -560,14 +561,11 @@ export default function Dashboard() {
                 />
               ) : (
                 <div className="h-52 flex items-center justify-center text-sm text-slate-400">אין נתונים להצגה</div>
-              )}
-            </ChartCard>
-          </ScrollReveal>
-
-            {/* Activity by day bar chart */}
-          <ScrollReveal delay={0.1}>
-            <ChartCard title={`פעילויות לפי יום${activityByDay.length > 0 ? ` (${activityByDay.reduce((s, d) => s + d.rehearsals + d.theory, 0)} סה״כ)` : ''}`}>
-              {loading ? (
+              )
+            }
+            activityChartTitle={`פעילויות לפי יום${activityByDay.length > 0 ? ` (${activityByDay.reduce((s, d) => s + d.rehearsals + d.theory, 0)} סה״כ)` : ''}`}
+            activityChartContent={
+              loading ? (
                 <div className="h-56 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                 </div>
@@ -654,22 +652,11 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="h-52 flex items-center justify-center text-sm text-slate-400">אין נתוני פעילות</div>
-              )}
-            </ChartCard>
-          </ScrollReveal>
-
-            {/* Instrument distribution — glassmorphic horizontal bar chart */}
-          <ScrollReveal delay={0.2}>
-            <div
-              className="relative rounded-md overflow-hidden border border-white/60 dark:border-white/20 p-6"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.3) 35%, rgba(186,230,253,0.3) 65%, rgba(255,255,255,0.45) 100%)',
-                boxShadow: '0 8px 32px rgba(0,170,160,0.12), 0 2px 8px rgba(0,140,210,0.08), inset 0 1px 1px rgba(255,255,255,0.9)',
-              }}
-            >
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-[40%] rounded-t-md" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)' }} />
-              <h3 className="relative text-base font-bold text-slate-900 dark:text-white mb-4">התפלגות כלי נגינה</h3>
-              {instrumentDistribution.length > 0 ? (
+              )
+            }
+            instrumentChartTitle="התפלגות כלי נגינה"
+            instrumentChartContent={
+              instrumentDistribution.length > 0 ? (
                 <div className="relative space-y-2.5">
                   {instrumentDistribution.map((item, i) => {
                     const maxCount = Math.max(...instrumentDistribution.map(d => d.count))
@@ -703,10 +690,10 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="h-44 flex items-center justify-center text-sm text-slate-400">אין נתוני כלים</div>
-              )}
-            </div>
-          </ScrollReveal>
-          </div>
+              )
+            }
+          />
+        </ScrollReveal>
 
           {/* Section 5: Rehearsal tracker — full width */}
           <ScrollReveal>

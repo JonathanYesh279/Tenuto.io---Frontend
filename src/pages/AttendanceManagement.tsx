@@ -329,10 +329,10 @@ export default function AttendanceManagement() {
           size="sm"
         />
         <GlassStatCard
-          value={summary?.totalFlagged ?? 0}
+          value={orchestraFilter || searchQuery ? filteredFlagged.length : (summary?.totalFlagged ?? 0)}
           label="תלמידים בסיכון"
           size="sm"
-          valueClassName={(summary?.totalFlagged ?? 0) > 0 ? 'text-red-600' : undefined}
+          valueClassName={(orchestraFilter || searchQuery ? filteredFlagged.length : (summary?.totalFlagged ?? 0)) > 0 ? 'text-red-600' : undefined}
         />
         <GlassStatCard
           value={summary?.totalStudentsTracked ?? 0}
@@ -364,9 +364,9 @@ export default function AttendanceManagement() {
         >
           <WarningIcon size={14} weight="regular" />
           תלמידים בסיכון
-          {(summary?.totalFlagged ?? 0) > 0 && (
+          {filteredFlagged.length > 0 && (
             <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold rounded-full bg-red-500 text-white">
-              {summary!.totalFlagged}
+              {filteredFlagged.length}
             </span>
           )}
         </button>

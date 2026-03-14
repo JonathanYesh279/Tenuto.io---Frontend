@@ -5101,6 +5101,34 @@ export const attendanceService = {
   }
 };
 
+// ==================== Attendance Alerts Service (NEW) ====================
+
+/**
+ * Attendance Alert Service
+ * Attendance monitoring dashboard and flagged student alerts
+ * Backend endpoints: /api/attendance-alerts/*
+ */
+export const attendanceAlertService = {
+  async getDashboard(options = {}) {
+    const params = {};
+    if (options.startDate) params.startDate = options.startDate;
+    if (options.endDate) params.endDate = options.endDate;
+    return apiClient.get('/attendance-alerts/dashboard', params);
+  },
+
+  async getFlaggedStudents(orchestraId) {
+    return apiClient.get(`/attendance-alerts/orchestra/${orchestraId}/flagged`);
+  },
+
+  async getStudentSummary(studentId) {
+    return apiClient.get(`/attendance-alerts/student/${studentId}/summary`);
+  },
+
+  async getSettings() {
+    return apiClient.get('/attendance-alerts/settings');
+  }
+};
+
 // ==================== Tenant Service (NEW) ====================
 
 /**
@@ -6035,6 +6063,7 @@ export default {
   analytics: analyticsService,
   assignments: assignmentService,
   attendance: attendanceService,
+  attendanceAlerts: attendanceAlertService,
   roomSchedule: roomScheduleService,
   reports: reportsService,
   test: apiTestUtils,

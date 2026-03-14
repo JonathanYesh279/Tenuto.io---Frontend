@@ -27,6 +27,7 @@ import {
 import { GlassStatCard } from '../components/ui/GlassStatCard'
 import { SearchInput } from '../components/ui/SearchInput'
 import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 import { Badge } from '../components/ui/badge'
 import AttendanceManager from '../components/AttendanceManager'
 import { BarChart } from '../components/charts/HebrewCharts'
@@ -566,11 +567,14 @@ export default function AttendanceManagement() {
                 <TableColumn key="members" align="center">חברים</TableColumn>
                 <TableColumn key="rate" align="center">שיעור נוכחות</TableColumn>
                 <TableColumn key="flagged" align="center">בסיכון</TableColumn>
-                <TableColumn key="actions" align="end">פעולות</TableColumn>
               </TableHeader>
               <TableBody items={paginatedOrchestras} emptyContent="אין תזמורות להצגה">
                 {(item: OrchestraStats) => (
-                  <TableRow key={item.orchestraId}>
+                  <TableRow
+                    key={item.orchestraId}
+                    className="cursor-pointer"
+                    onClick={() => handleDrillDown(item.orchestraId, item.orchestraName)}
+                  >
                     {(columnKey) => {
                       switch (columnKey) {
                         case 'name':
@@ -620,20 +624,6 @@ export default function AttendanceManagement() {
                               )}
                             </TableCell>
                           )
-                        case 'actions':
-                          return (
-                            <TableCell>
-                              <HeroButton
-                                size="sm"
-                                variant="light"
-                                isIconOnly
-                                onPress={() => handleDrillDown(item.orchestraId, item.orchestraName)}
-                                aria-label={`פירוט ${item.orchestraName}`}
-                              >
-                                <CaretLeftIcon size={16} weight="bold" />
-                              </HeroButton>
-                            </TableCell>
-                          )
                         default:
                           return <TableCell>--</TableCell>
                       }
@@ -681,9 +671,13 @@ export default function AttendanceManagement() {
                 const hasAttendance = rehearsal.attendanceCount?.total > 0
 
                 return (
-                  <div
+                  <motion.div
                     key={rehearsal._id}
-                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-800 border border-border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    onClick={() => handleOpenAttendance(rehearsal)}
+                    whileHover={{ scale: 1.015, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-800 border border-border rounded-lg cursor-pointer select-none hover:border-primary/30 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
@@ -709,16 +703,9 @@ export default function AttendanceManagement() {
                           <span className="text-xs text-slate-400">לא סומן</span>
                         </div>
                       )}
-                      <HeroButton
-                        size="sm"
-                        color="primary"
-                        variant="flat"
-                        onPress={() => handleOpenAttendance(rehearsal)}
-                      >
-                        סמן נוכחות
-                      </HeroButton>
+                      <span className="text-xs font-medium text-primary">סמן נוכחות ←</span>
                     </div>
-                  </div>
+                  </motion.div>
                 )
               })}
             </div>

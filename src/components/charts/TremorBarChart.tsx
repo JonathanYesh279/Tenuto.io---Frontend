@@ -19,7 +19,8 @@ export interface BarClickPayload {
   category: string;
   value: number;
   row: Record<string, any>;
-  rect: { x: number; y: number; width: number; height: number };
+  mouseX: number;
+  mouseY: number;
 }
 
 export interface TremorBarChartProps {
@@ -241,14 +242,16 @@ export function TremorBarChart({
                 stackId={isStacked ? 'stack' : undefined}
                 barSize={barSize}
                 cursor={onBarClick ? 'pointer' : undefined}
-                onClick={onBarClick ? (barData: any) => {
+                onClick={onBarClick ? (barData: any, _idx: any, e: any) => {
                   if (!barData) return;
+                  const nativeEvent = e?.nativeEvent || e;
                   onBarClick({
                     index: barData[index],
                     category: cat,
                     value: Number(barData[cat]) || 0,
                     row: barData,
-                    rect: { x: 0, y: 0, width: 0, height: 0 },
+                    mouseX: nativeEvent?.clientX ?? 0,
+                    mouseY: nativeEvent?.clientY ?? 0,
                   });
                 } : undefined}
               >

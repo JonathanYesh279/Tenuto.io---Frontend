@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { MoonIcon } from '@phosphor-icons/react'
-import { Popover, PopoverTrigger, PopoverContent } from '@heroui/react'
 import apiService, { hoursSummaryService } from '../services/apiService'
 import { useSchoolYear } from '../services/schoolYearContext'
 import { useAuth } from '../services/authContext.jsx'
@@ -66,14 +65,29 @@ export default function Dashboard() {
 
   // Activity popover state
   const [activityPopover, setActivityPopover] = useState<{
-    open: boolean
     day: string
     rehearsals: number
     theory: number
     total: number
     pct: { rehearsals: string; theory: string }
+    x: number
+    y: number
   } | null>(null)
-  const popoverAnchorRef = useRef<HTMLDivElement>(null)
+  const chartContainerRef = useRef<HTMLDivElement>(null)
+
+  // Close popover on outside click
+  useEffect(() => {
+    if (!activityPopover) return
+    const handler = (e: MouseEvent) => {
+      const popEl = document.getElementById('activity-popover')
+      if (popEl && !popEl.contains(e.target as Node)) {
+        setActivityPopover(null)
+      }
+    }
+    // Delay listener so the opening click doesn't immediately close it
+    const timer = setTimeout(() => document.addEventListener('mousedown', handler), 0)
+    return () => { clearTimeout(timer); document.removeEventListener('mousedown', handler) }
+  }, [activityPopover])
 
   // Dark mode initialization
   useEffect(() => {
@@ -505,15 +519,35 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Section 2a: Activity by day — full width with click-to-detail popover */}
-          <div className="relative">
+          {/* Section 2: Primary charts — ComboChart + Activity BarChart */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <ChartCard title="רישומים ופעילות חודשית">
+              {loading ? (
+                <div className="h-72 flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+                </div>
+              ) : comboChartData.length > 0 ? (
+                <ComboChart
+                  data={comboChartData}
+                  index="month"
+                  barSeries={{ categories: ['registrations'], colors: ['amber'], showYAxis: true }}
+                  lineSeries={{ categories: ['cumulative'], colors: ['indigo'], showYAxis: true }}
+                  enableBiaxial
+                  categoryLabels={{ registrations: 'רישומים', cumulative: 'מצטבר', activities: 'פעילויות' }}
+                  className="h-64"
+                />
+              ) : (
+                <div className="h-64 flex items-center justify-center text-sm text-slate-400">אין נתונים להצגה</div>
+              )}
+            </ChartCard>
+
             <ChartCard title={`פעילויות לפי יום${activityByDay.length > 0 ? ` (${activityByDay.reduce((s, d) => s + d.rehearsals + d.theory, 0)} סה״כ)` : ''}`}>
               {loading ? (
                 <div className="h-72 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                 </div>
               ) : activityByDay.some(d => d.rehearsals > 0 || d.theory > 0) ? (
-                <div className="relative">
+                <div className="relative" ref={chartContainerRef}>
                   <TremorBarChart
                     data={activityByDay}
                     index="day"
@@ -521,119 +555,84 @@ export default function Dashboard() {
                     colors={['indigo', 'amber']}
                     type="default"
                     categoryLabels={{ rehearsals: 'חזרות', theory: 'תיאוריה' }}
-                    className="h-72"
+                    className="h-64"
                     barRadius={6}
                     showLabels
                     onBarClick={(payload: BarClickPayload) => {
                       const row = payload.row
                       const total = (row.rehearsals || 0) + (row.theory || 0)
-                      const pctR = total > 0 ? ((row.rehearsals / total) * 100).toFixed(0) : '0'
-                      const pctT = total > 0 ? ((row.theory / total) * 100).toFixed(0) : '0'
+                      if (total === 0) return
+                      const pctR = ((row.rehearsals / total) * 100).toFixed(0)
+                      const pctT = ((row.theory / total) * 100).toFixed(0)
+                      // Position relative to the chart container
+                      const containerRect = chartContainerRef.current?.getBoundingClientRect()
+                      const x = containerRect ? payload.mouseX - containerRect.left : payload.mouseX
+                      const y = containerRect ? payload.mouseY - containerRect.top : payload.mouseY
                       setActivityPopover({
-                        open: true,
                         day: payload.index,
                         rehearsals: row.rehearsals || 0,
                         theory: row.theory || 0,
                         total,
                         pct: { rehearsals: pctR, theory: pctT },
+                        x, y,
                       })
                     }}
                   />
+
+                  {/* Click-positioned floating detail panel */}
+                  {activityPopover && (
+                    <div
+                      id="activity-popover"
+                      className="absolute z-50 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 p-4 text-right animate-in fade-in zoom-in-95 duration-150"
+                      style={{
+                        top: Math.max(8, activityPopover.y - 160),
+                        left: Math.min(Math.max(8, activityPopover.x - 112), (chartContainerRef.current?.offsetWidth || 400) - 232),
+                      }}
+                      dir="rtl"
+                    >
+                      <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-3">
+                        יום {activityPopover.day} — {activityPopover.total} פעילויות
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
+                            חזרות
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-semibold text-slate-800 dark:text-white">{activityPopover.rehearsals}</span>
+                            <span className="text-xs text-slate-400">({activityPopover.pct.rehearsals}%)</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                            תיאוריה
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-semibold text-slate-800 dark:text-white">{activityPopover.theory}</span>
+                            <span className="text-xs text-slate-400">({activityPopover.pct.theory}%)</span>
+                          </div>
+                        </div>
+                        <div className="flex h-2 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-700 mt-1">
+                          {activityPopover.rehearsals > 0 && (
+                            <div className="bg-indigo-500 transition-all duration-300" style={{ width: `${activityPopover.pct.rehearsals}%` }} />
+                          )}
+                          {activityPopover.theory > 0 && (
+                            <div className="bg-amber-500 transition-all duration-300" style={{ width: `${activityPopover.pct.theory}%` }} />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <p className="text-[11px] text-slate-400 mt-1 text-center">לחץ על עמודה לפרטים נוספים</p>
                 </div>
               ) : (
                 <div className="h-64 flex items-center justify-center text-sm text-slate-400">אין נתוני פעילות</div>
               )}
             </ChartCard>
-
-            {/* HeroUI Popover for bar click detail */}
-            <Popover
-              isOpen={activityPopover?.open || false}
-              onOpenChange={(open) => {
-                if (!open) setActivityPopover(null)
-              }}
-              placement="top"
-              showArrow
-              classNames={{
-                content: 'px-0 py-0 border-none shadow-xl',
-              }}
-            >
-              <PopoverTrigger>
-                <div
-                  ref={popoverAnchorRef}
-                  className="absolute pointer-events-none"
-                  style={{ bottom: 80, left: '50%', width: 1, height: 1 }}
-                />
-              </PopoverTrigger>
-              <PopoverContent>
-                {activityPopover && (
-                  <div className="w-64 p-4 text-right" dir="rtl">
-                    <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-3">
-                      יום {activityPopover.day} — {activityPopover.total} פעילויות
-                    </h4>
-                    <div className="space-y-2.5">
-                      <div className="flex items-center justify-between">
-                        <span className="flex items-center gap-2 text-sm text-slate-600">
-                          <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
-                          חזרות
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-slate-800">{activityPopover.rehearsals}</span>
-                          <span className="text-xs text-slate-400">({activityPopover.pct.rehearsals}%)</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="flex items-center gap-2 text-sm text-slate-600">
-                          <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                          תיאוריה
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-slate-800">{activityPopover.theory}</span>
-                          <span className="text-xs text-slate-400">({activityPopover.pct.theory}%)</span>
-                        </div>
-                      </div>
-                      {/* Mini proportion bar */}
-                      <div className="flex h-2 rounded-full overflow-hidden bg-slate-100 mt-1">
-                        {activityPopover.rehearsals > 0 && (
-                          <div
-                            className="bg-indigo-500 transition-all"
-                            style={{ width: `${activityPopover.pct.rehearsals}%` }}
-                          />
-                        )}
-                        {activityPopover.theory > 0 && (
-                          <div
-                            className="bg-amber-500 transition-all"
-                            style={{ width: `${activityPopover.pct.theory}%` }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </PopoverContent>
-            </Popover>
           </div>
-
-          {/* Section 2b: Monthly combo chart */}
-          <ChartCard title="רישומים ופעילות חודשית">
-            {loading ? (
-              <div className="h-72 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-              </div>
-            ) : comboChartData.length > 0 ? (
-              <ComboChart
-                data={comboChartData}
-                index="month"
-                barSeries={{ categories: ['registrations'], colors: ['amber'], showYAxis: true }}
-                lineSeries={{ categories: ['cumulative'], colors: ['indigo'], showYAxis: true }}
-                enableBiaxial
-                categoryLabels={{ registrations: 'רישומים', cumulative: 'מצטבר', activities: 'פעילויות' }}
-                className="h-64"
-              />
-            ) : (
-              <div className="h-64 flex items-center justify-center text-sm text-slate-400">אין נתונים להצגה</div>
-            )}
-          </ChartCard>
 
           {/* Section 3: Instrument distribution — glassmorphic horizontal bar chart */}
           <div

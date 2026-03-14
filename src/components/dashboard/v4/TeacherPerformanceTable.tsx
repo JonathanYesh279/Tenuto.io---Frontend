@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { ArrowsClockwise as ArrowsClockwiseIcon } from '@phosphor-icons/react'
-import { Tabs, Tab, Modal, ModalContent, ModalHeader, ModalBody, User } from '@heroui/react'
+import { Tabs, Tab, Modal, ModalContent, ModalHeader, ModalBody, User, Chip } from '@heroui/react'
 import { getWorkloadColor } from '../../../utils/workloadColors'
 import { getAvatarColorHex } from '../../../utils/avatarColorHash'
+import { getRoleChipColor } from '../../../utils/roleColors'
 
 interface Teacher {
   id: string
@@ -12,6 +13,7 @@ interface Teacher {
   weeklyHours?: number
   isActive: boolean
   avatarUrl?: string | null
+  roles?: string[]
 }
 
 interface TeacherPerformanceTableProps {
@@ -26,6 +28,33 @@ function getWorkloadBarColor(hours: number): string {
   if (hours >= 20) return 'bg-red-400'
   if (hours >= 15) return 'bg-amber-400'
   return 'bg-emerald-400'
+}
+
+function RoleChips({ roles }: { roles: string[] }) {
+  if (!roles || roles.length === 0) {
+    return <span className="text-xs text-slate-400">—</span>
+  }
+  return (
+    <div className="flex flex-wrap gap-1">
+      {roles.map((role) => (
+        <Chip
+          key={role}
+          variant="bordered"
+          size="sm"
+          classNames={{
+            base: `border-${getRoleChipColor(role)} text-${getRoleChipColor(role)}`,
+            content: 'text-[10px] font-bold px-1',
+          }}
+          style={{
+            borderColor: getRoleChipColor(role),
+            color: getRoleChipColor(role),
+          }}
+        >
+          {role}
+        </Chip>
+      ))}
+    </div>
+  )
 }
 
 function TeacherRow({ teacher }: { teacher: Teacher }) {
@@ -65,15 +94,7 @@ function TeacherRow({ teacher }: { teacher: Teacher }) {
         </div>
       </td>
       <td className="px-8 py-4">
-        {teacher.isActive ? (
-          <span className="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
-            פעיל
-          </span>
-        ) : (
-          <span className="px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400 text-[10px] font-bold">
-            לא פעיל
-          </span>
-        )}
+        <RoleChips roles={teacher.roles || []} />
       </td>
     </tr>
   )
@@ -86,7 +107,7 @@ const TABLE_HEADERS = (
       <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">מחלקה</th>
       <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">תלמידים</th>
       <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">ש"ש</th>
-      <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">סטטוס</th>
+      <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">תפקיד</th>
     </tr>
   </thead>
 )
@@ -101,7 +122,6 @@ export function TeacherPerformanceTable({ teachers, loading, isRecalculating, on
   const handleTabChange = (key: string) => {
     if (key === 'all') {
       setShowAllModal(true)
-      // Keep visual on preview so the tab snaps back after modal opens
       setTimeout(() => setActiveTab('preview'), 150)
     } else if (key === 'recalculate') {
       onRecalculate?.()

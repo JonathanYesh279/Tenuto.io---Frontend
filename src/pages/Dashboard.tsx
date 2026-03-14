@@ -225,6 +225,7 @@ export default function Dashboard() {
         weeklyHours: t.weeklyHoursSummary?.totalWeeklyHours || 0,
         isActive: t.isActive !== false,
         avatarUrl: t.personalInfo?.avatarUrl || null,
+        roles: t.allRoles || t.roles || [],
       }))
       setTeacherTableData(teacherTable)
 

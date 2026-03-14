@@ -13,6 +13,7 @@ import {
   Spinner,
   Badge as HeroBadge,
   Button as HeroButton,
+  Chip,
 } from '@heroui/react'
 import { GlassStatCard } from '../components/ui/GlassStatCard'
 import { StatusBadge, InstrumentBadge } from '../components/domain'
@@ -27,6 +28,7 @@ import { useAuth } from '../services/authContext'
 import { getDisplayName } from '../utils/nameUtils'
 import { getWorkloadColor } from '../utils/workloadColors'
 import { getAvatarColorHex } from '../utils/avatarColorHash'
+import { getRoleChipColor } from '../utils/roleColors'
 import { TableSkeleton } from '../components/feedback/Skeleton'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
@@ -366,8 +368,25 @@ export default function Teachers() {
         return teacher.specialization && teacher.specialization !== 'לא צוין'
           ? <InstrumentBadge instrument={teacher.specialization} />
           : <span className="text-default-400">--</span>
-      case 'roles':
-        return <span className="text-sm">{teacher.rolesDisplay || 'לא מוגדר'}</span>
+      case 'roles': {
+        const roles: string[] = teacher.roles || []
+        if (roles.length === 0) return <span className="text-xs text-slate-400">—</span>
+        return (
+          <div className="flex flex-wrap gap-1">
+            {roles.map((role: string) => (
+              <Chip
+                key={role}
+                variant="bordered"
+                size="sm"
+                classNames={{ content: 'text-[10px] font-bold px-1' }}
+                style={{ borderColor: getRoleChipColor(role), color: getRoleChipColor(role) }}
+              >
+                {role}
+              </Chip>
+            ))}
+          </div>
+        )
+      }
       case 'studentCount':
         return <span className="text-sm">{teacher.studentCount}</span>
       case 'weeklyHours': {

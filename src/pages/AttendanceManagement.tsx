@@ -415,6 +415,20 @@ export default function AttendanceManagement() {
           onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
           className="border border-border rounded px-3 py-1.5 text-sm bg-white dark:bg-slate-800 text-foreground"
         />
+        {(orchestraFilter || searchQuery || dateRange.startDate !== getDefaultDateRange().startDate || dateRange.endDate !== getDefaultDateRange().endDate) && (
+          <HeroButton
+            size="sm"
+            variant="flat"
+            color="default"
+            onPress={() => {
+              setOrchestraFilter('')
+              setSearchQuery('')
+              setDateRange(getDefaultDateRange())
+            }}
+          >
+            נקה סינון
+          </HeroButton>
+        )}
         <span className="text-xs font-medium text-slate-400 mr-auto">
           {activeTab === 'overview' ? `${filteredOrchestras.length} תזמורות` :
            activeTab === 'flagged' ? `${filteredFlagged.length} תלמידים` : ''}

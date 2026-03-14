@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
-import { UserCircleIcon } from '@phosphor-icons/react'
+import { UserCircleIcon, ArrowsClockwise as ArrowsClockwiseIcon } from '@phosphor-icons/react'
+import { getWorkloadColor } from '../../../utils/workloadColors'
 
 interface Teacher {
   id: string
   name: string
   department: string
   studentCount: number
+  weeklyHours?: number
   isActive: boolean
   avatarUrl?: string | null
 }
@@ -13,14 +15,23 @@ interface Teacher {
 interface TeacherPerformanceTableProps {
   teachers: Teacher[]
   loading?: boolean
+  isRecalculating?: boolean
+  onRecalculate?: () => void
 }
 
-export function TeacherPerformanceTable({ teachers, loading }: TeacherPerformanceTableProps) {
+/** Returns a solid bar color for the workload indicator */
+function getWorkloadBarColor(hours: number): string {
+  if (hours >= 20) return 'bg-red-400'
+  if (hours >= 15) return 'bg-amber-400'
+  return 'bg-emerald-400'
+}
+
+export function TeacherPerformanceTable({ teachers, loading, isRecalculating, onRecalculate }: TeacherPerformanceTableProps) {
   if (loading) {
     return (
       <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
         <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-          <h2 className="text-xl font-bold">סגל הוראה</h2>
+          <h2 className="text-xl font-bold">עומס עבודה — סגל הוראה</h2>
           <Link to="/teachers" className="text-primary text-sm font-bold hover:underline">
             הצג הכל
           </Link>
@@ -32,13 +43,15 @@ export function TeacherPerformanceTable({ teachers, loading }: TeacherPerformanc
     )
   }
 
-  const displayTeachers = teachers.slice(0, 6)
+  const displayTeachers = [...teachers]
+    .sort((a, b) => (b.weeklyHours || 0) - (a.weeklyHours || 0))
+    .slice(0, 6)
 
   if (displayTeachers.length === 0) {
     return (
       <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
         <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-          <h2 className="text-xl font-bold">סגל הוראה</h2>
+          <h2 className="text-xl font-bold">עומס עבודה — סגל הוראה</h2>
           <Link to="/teachers" className="text-primary text-sm font-bold hover:underline">
             הצג הכל
           </Link>
@@ -51,10 +64,22 @@ export function TeacherPerformanceTable({ teachers, loading }: TeacherPerformanc
   return (
     <div className="bg-white dark:bg-sidebar-dark rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
       <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-        <h2 className="text-xl font-bold">סגל הוראה</h2>
-        <Link to="/teachers" className="text-primary text-sm font-bold hover:underline">
-          הצג הכל
-        </Link>
+        <h2 className="text-xl font-bold">עומס עבודה — סגל הוראה</h2>
+        <div className="flex items-center gap-4">
+          {onRecalculate && (
+            <button
+              onClick={onRecalculate}
+              disabled={isRecalculating}
+              className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 disabled:opacity-50 transition-colors"
+            >
+              <ArrowsClockwiseIcon size={14} weight="bold" className={isRecalculating ? 'animate-spin' : ''} />
+              {isRecalculating ? 'מחשב...' : 'חשב מחדש'}
+            </button>
+          )}
+          <Link to="/teachers" className="text-primary text-sm font-bold hover:underline">
+            הצג הכל
+          </Link>
+        </div>
       </div>
 
       <table className="w-full text-right">
@@ -63,6 +88,7 @@ export function TeacherPerformanceTable({ teachers, loading }: TeacherPerformanc
             <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">מורה</th>
             <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">מחלקה</th>
             <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">תלמידים</th>
+            <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">ש"ש</th>
             <th className="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">סטטוס</th>
           </tr>
         </thead>
@@ -82,6 +108,19 @@ export function TeacherPerformanceTable({ teachers, loading }: TeacherPerformanc
               </td>
               <td className="px-8 py-4 text-center">
                 <span className="text-sm font-bold">{teacher.studentCount}</span>
+              </td>
+              <td className="px-8 py-4">
+                <div className="flex items-center gap-2">
+                  <span className={`text-sm font-bold ${getWorkloadColor(teacher.weeklyHours || 0).text}`}>
+                    {teacher.weeklyHours || 0}
+                  </span>
+                  <div className="flex-1 h-2 rounded-full bg-slate-100 dark:bg-slate-700 max-w-[80px]">
+                    <div
+                      className={`h-full rounded-full ${getWorkloadBarColor(teacher.weeklyHours || 0)}`}
+                      style={{ width: `${Math.min((teacher.weeklyHours || 0) / 30 * 100, 100)}%` }}
+                    />
+                  </div>
+                </div>
               </td>
               <td className="px-8 py-4">
                 {teacher.isActive ? (

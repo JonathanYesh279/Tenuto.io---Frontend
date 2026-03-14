@@ -23,6 +23,7 @@ import {
   Spinner,
   Button as HeroButton,
   Chip,
+  User,
 } from '@heroui/react'
 import { GlassStatCard } from '../components/ui/GlassStatCard'
 import { SearchInput } from '../components/ui/SearchInput'
@@ -767,12 +768,16 @@ export default function AttendanceManagement() {
                         case 'student':
                           return (
                             <TableCell>
-                              <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold" style={{ backgroundColor: getAvatarColorHex(item.studentName || '') }}>
-                                  {item.studentName?.charAt(0) || ''}
-                                </div>
-                                <span className="font-medium text-slate-900 dark:text-white">{item.studentName}</span>
-                              </div>
+                              <User
+                                avatarProps={{
+                                  radius: 'full',
+                                  size: 'md',
+                                  showFallback: true,
+                                  name: item.studentName,
+                                  style: { backgroundColor: getAvatarColorHex(item.studentName || ''), color: '#fff' },
+                                }}
+                                name={item.studentName}
+                              />
                             </TableCell>
                           )
                         case 'orchestra':

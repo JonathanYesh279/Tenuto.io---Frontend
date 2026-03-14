@@ -385,14 +385,29 @@ export default function Dashboard() {
     loadDashboardData()
   }
 
+  const [recalcError, setRecalcError] = useState<string | null>(null)
+
   const handleRecalculateHours = async () => {
     setIsRecalculating(true)
+    setRecalcError(null)
+
+    // Temporarily suppress auth:expired so a 401 here doesn't force-logout
+    let authExpiredSuppressed = false
+    const suppressAuthExpired = (e: Event) => { e.stopImmediatePropagation(); authExpiredSuppressed = true }
+    window.addEventListener('auth:expired', suppressAuthExpired, { capture: true })
+
     try {
       await hoursSummaryService.calculateAll()
       await loadDashboardData()
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error recalculating hours:', err)
+      if (authExpiredSuppressed || err?.message?.includes('Authentication')) {
+        setRecalcError('הפעולה נכשלה — יש להתחבר מחדש')
+      } else {
+        setRecalcError('שגיאה בחישוב שעות')
+      }
     } finally {
+      window.removeEventListener('auth:expired', suppressAuthExpired, { capture: true })
       setIsRecalculating(false)
     }
   }
@@ -525,6 +540,7 @@ export default function Dashboard() {
             loading={loading}
             isRecalculating={isRecalculating}
             onRecalculate={handleRecalculateHours}
+            error={recalcError}
           />
 
           {/* Section 3: Primary charts — ComboChart + Activity BarChart */}

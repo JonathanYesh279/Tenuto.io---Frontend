@@ -2812,12 +2812,12 @@ export const rehearsalService = {
         ...rehearsal,
         // Add computed fields
         duration: this.calculateDuration(rehearsal.startTime, rehearsal.endTime),
-        attendanceCount: {
+        attendanceCount: rehearsal.attendanceCount || {
           present: rehearsal.attendance?.present?.length || 0,
           absent: rehearsal.attendance?.absent?.length || 0,
           total: (rehearsal.attendance?.present?.length || 0) + (rehearsal.attendance?.absent?.length || 0)
         },
-        
+
         // Date formatting helpers
         dateInfo: {
           date: rehearsal.date,
@@ -3075,13 +3075,13 @@ export const rehearsalService = {
         })) : [],
         duration: this.calculateDuration(rehearsal.startTime, rehearsal.endTime),
         dayName: this.getDayName(rehearsal.dayOfWeek),
-        attendanceCount: {
+        attendanceCount: rehearsal.attendanceCount || {
           present: rehearsal.attendance?.present?.length || 0,
           absent: rehearsal.attendance?.absent?.length || 0,
           total: (rehearsal.attendance?.present?.length || 0) + (rehearsal.attendance?.absent?.length || 0)
         }
       };
-      
+
       console.log(`🎵 Retrieved detailed rehearsal: ${rehearsal.groupId} on ${detailedRehearsal.dayName}`);
       return detailedRehearsal;
     } catch (error) {
@@ -5797,6 +5797,16 @@ export const roomScheduleService = {
       return response;
     } catch (error) {
       console.error('Error fetching room schedule:', error);
+      throw error;
+    }
+  },
+  async getDailyAgenda(day) {
+    try {
+      const params = day !== undefined ? { day } : {};
+      const response = await apiClient.get('/room-schedule/agenda', params);
+      return response;
+    } catch (error) {
+      console.error('Error fetching daily agenda:', error);
       throw error;
     }
   },

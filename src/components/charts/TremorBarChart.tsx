@@ -7,11 +7,20 @@ import {
   CartesianGrid,
   Tooltip,
   LabelList,
+  Cell,
   ResponsiveContainer,
 } from 'recharts';
 import ChartTooltip from './ChartTooltip';
 import ChartLegend from './ChartLegend';
 import { getCategoryColors, ChartColorKey } from './chartColors';
+
+export interface BarClickPayload {
+  index: string;
+  category: string;
+  value: number;
+  row: Record<string, any>;
+  rect: { x: number; y: number; width: number; height: number };
+}
 
 export interface TremorBarChartProps {
   data: Record<string, any>[];
@@ -31,16 +40,12 @@ export interface TremorBarChartProps {
   className?: string;
   categoryLabels?: Record<string, string>;
   showLabels?: boolean;
+  onBarClick?: (payload: BarClickPayload) => void;
 }
 
 const defaultValueFormatter = (value: number): string =>
   value.toLocaleString('he-IL');
 
-/**
- * Computes per-bar border-radius arrays for stacked charts so that only the
- * topmost bar in each stack gets rounded corners. For non-stacked charts every
- * bar gets the full radius.
- */
 function getBarRadius(
   categoryIndex: number,
   totalCategories: number,
@@ -48,10 +53,8 @@ function getBarRadius(
   type: 'default' | 'stacked' | 'percent',
 ): [number, number, number, number] {
   if (type === 'default') {
-    // [topLeft, topRight, bottomRight, bottomLeft]
     return [radius, radius, 0, 0];
   }
-  // For stacked / percent: only the last category (topmost bar) gets a rounded top.
   const isTop = categoryIndex === totalCategories - 1;
   const isBottom = categoryIndex === 0;
   return [
@@ -62,10 +65,6 @@ function getBarRadius(
   ];
 }
 
-/**
- * Converts raw data to percent-stacked form (each row sums to 100 across
- * the given categories).
- */
 function toPercentData(
   data: Record<string, any>[],
   index: string,
@@ -102,6 +101,7 @@ export function TremorBarChart({
   className = 'h-72',
   categoryLabels,
   showLabels = false,
+  onBarClick,
 }: TremorBarChartProps) {
   if (!data || data.length === 0) {
     return null;
@@ -132,17 +132,19 @@ export function TremorBarChart({
   const isVertical = layout === 'vertical';
   const isStacked = type === 'stacked' || type === 'percent';
 
-  // Axis shared styles
-  const axisTickStyle: React.CSSProperties = {
+  const axisTickStyle = {
     fontSize: 12,
-    fill: '#94a3b8', // slate-400
+    fill: '#94a3b8',
   };
 
   const axisProps = {
     tick: axisTickStyle,
-    axisLine: false as const,
-    tickLine: false as const,
-  };
+    axisLine: false,
+    tickLine: false,
+  } as any;
+
+  // When showLabels is on, hide Y-axis to avoid label/axis number overlap
+  const effectiveShowYAxis = showLabels ? false : showYAxis;
 
   return (
     <div className={`flex flex-col gap-3 ${className}`} dir="rtl">
@@ -151,7 +153,7 @@ export function TremorBarChart({
         <BarChart
           data={chartData}
           layout={isVertical ? 'vertical' : 'horizontal'}
-          margin={{ top: showLabels ? 20 : 4, right: 4, bottom: 4, left: 4 }}
+          margin={{ top: showLabels ? 24 : 4, right: 8, bottom: 4, left: 8 }}
         >
           {showGridLines && (
             <CartesianGrid
@@ -163,7 +165,6 @@ export function TremorBarChart({
             />
           )}
 
-          {/* ---- HORIZONTAL layout ---- */}
           {!isVertical && (
             <>
               <XAxis
@@ -175,7 +176,7 @@ export function TremorBarChart({
                 }
               />
               <YAxis
-                hide={!showYAxis}
+                hide={!effectiveShowYAxis}
                 {...axisProps}
                 tickFormatter={activeFormatter}
                 width={48}
@@ -183,10 +184,8 @@ export function TremorBarChart({
             </>
           )}
 
-          {/* ---- VERTICAL layout (swap roles) ---- */}
           {isVertical && (
             <>
-              {/* In vertical layout the category axis becomes YAxis */}
               <YAxis
                 dataKey={index}
                 type="category"
@@ -197,7 +196,6 @@ export function TremorBarChart({
                 }
                 width={80}
               />
-              {/* Value axis becomes XAxis */}
               <XAxis
                 type="number"
                 hide={!showXAxis}
@@ -209,7 +207,7 @@ export function TremorBarChart({
 
           {showTooltip && (
             <Tooltip
-              cursor={{ fill: 'rgba(99,102,241,0.05)' }}
+              cursor={{ fill: 'rgba(99,102,241,0.08)' }}
               content={({ active, payload, label }) => (
                 <ChartTooltip
                   active={active}
@@ -242,12 +240,29 @@ export function TremorBarChart({
                 radius={[tl, tr, br, bl]}
                 stackId={isStacked ? 'stack' : undefined}
                 barSize={barSize}
+                cursor={onBarClick ? 'pointer' : undefined}
+                onClick={onBarClick ? (barData: any) => {
+                  if (!barData) return;
+                  onBarClick({
+                    index: barData[index],
+                    category: cat,
+                    value: Number(barData[cat]) || 0,
+                    row: barData,
+                    rect: { x: 0, y: 0, width: 0, height: 0 },
+                  });
+                } : undefined}
               >
+                {onBarClick && data.map((_, i) => (
+                  <Cell
+                    key={i}
+                    className="transition-opacity hover:opacity-80"
+                  />
+                ))}
                 {showLabels && (
                   <LabelList
                     dataKey={cat}
                     position="top"
-                    style={{ fontSize: 11, fontWeight: 600, fill: '#64748b' }}
+                    style={{ fontSize: 12, fontWeight: 700, fill: colorMap[cat] }}
                     formatter={(v: number) => (v > 0 ? v : '')}
                   />
                 )}

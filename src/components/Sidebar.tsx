@@ -55,7 +55,7 @@ const adminNavigation: NavigationItem[] = [
   { name: 'לוח חדרים', href: '/room-schedule', Icon: SquaresFourIcon, category: 'management', roles: ['admin'] },
   { name: 'בגרויות', href: '/bagruts', Icon: MedalIcon, category: 'management', roles: ['admin'] },
   { name: 'דוחות', href: '/reports', Icon: ChartBarIcon, category: 'operations', roles: ['admin'] },
-  { name: 'נוכחות', href: '/teachers', Icon: UserCircleCheckIcon, category: 'operations', roles: ['admin'] },
+  { name: 'נוכחות', href: '/attendance', Icon: UserCircleCheckIcon, category: 'operations', roles: ['admin'] },
   { name: 'דוחות משרד', href: '/ministry-reports', Icon: FileTextIcon, category: 'operations', roles: ['admin'] },
   { name: 'ייבוא נתונים', href: '/import', Icon: PlusIcon, category: 'operations', roles: ['admin'] },
   { name: 'יומן ביקורת', href: '/audit-trail', Icon: ShieldIcon, category: 'operations', roles: ['admin'] },
@@ -199,7 +199,7 @@ export default function Sidebar() {
 
       if (attendanceIndex !== -1) {
         // Determine smart attendance navigation based on additional roles
-        let attendanceHref = '/teachers' // Default admin attendance
+        let attendanceHref = '/attendance' // Default admin attendance
 
         // Priority: teacher > conductor > theory-teacher
         if (userRoles.includes('teacher')) {
@@ -496,7 +496,7 @@ export default function Sidebar() {
                 placeholder="חיפוש..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pr-10 pl-3 py-2 bg-white/10 border-none rounded-xl text-sm font-reisinger-yonatan text-white placeholder:text-white/40 text-right rtl focus:outline-none focus:ring-2 focus:ring-white/20"
+                className="w-full pr-10 pl-3 py-2 bg-white/10 border-none rounded-xl text-sm text-white placeholder:text-white/40 text-right rtl focus:outline-none focus:ring-2 focus:ring-white/20"
               />
             </div>
           </div>

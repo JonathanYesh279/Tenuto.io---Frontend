@@ -28,9 +28,11 @@ const Profile = lazyWithRetry(() => import('./pages/Profile'), 'Profile')
 const MinistryReports = lazyWithRetry(() => import('./pages/MinistryReports'), 'MinistryReports')
 const ImportData = lazyWithRetry(() => import('./pages/ImportData'), 'ImportData')
 const Settings = lazyWithRetry(() => import('./pages/Settings'), 'Settings')
+const HeroUITest = lazyWithRetry(() => import('./pages/HeroUITest'), 'HeroUITest')
 const AuditTrail = lazyWithRetry(() => import('./pages/AuditTrail'), 'AuditTrail')
 const RoomSchedule = lazyWithRetry(() => import('./pages/RoomSchedule'), 'RoomSchedule')
 const RoomScheduleFullscreen = lazyWithRetry(() => import('./pages/RoomScheduleFullscreen'), 'RoomScheduleFullscreen')
+const AttendanceManagement = lazyWithRetry(() => import('./pages/AttendanceManagement'), 'AttendanceManagement')
 const Reports = lazyWithRetry(() => import('./pages/Reports'), 'Reports')
 const ReportViewer = lazyWithRetry(() => import('./pages/ReportViewer'), 'ReportViewer')
 
@@ -213,6 +215,7 @@ function AppRoutes() {
   return (
     <div dir="rtl">
       <Routes>
+        <Route path="/heroui-test" element={<Suspense fallback={<div>Loading...</div>}><HeroUITest /></Suspense>} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
@@ -422,6 +425,19 @@ function AppRoutes() {
               <Layout>
                 <Suspense fallback={<PageLoadingFallback message="טוען לוח חדרים..." />}>
                   <RoomSchedule />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/attendance"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <Suspense fallback={<PageLoadingFallback message="טוען ניהול נוכחות..." />}>
+                  <AttendanceManagement />
                 </Suspense>
               </Layout>
             </ProtectedRoute>

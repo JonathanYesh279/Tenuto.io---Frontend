@@ -3,6 +3,7 @@ import { useAuth } from '../services/authContext.jsx'
 import { tenantService, teacherService, getUploadUrl } from '../services/apiService'
 import { Input } from '../components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs'
+import { Accordion, AccordionItem } from '@heroui/react'
 import { getDisplayName } from '../utils/nameUtils'
 import toast from 'react-hot-toast'
 import {
@@ -297,6 +298,17 @@ export default function Settings() {
     }
   }
 
+  const handleDeleteRoom = async (roomId: string) => {
+    try {
+      await tenantService.deleteRoom(formData._id, roomId)
+      setRooms(prev => prev.filter(r => r._id !== roomId))
+      toast.success('החדר נמחק')
+    } catch (error: any) {
+      const msg = error?.response?.data?.error || error?.message || 'שגיאה במחיקת חדר'
+      toast.error(msg)
+    }
+  }
+
   const startEditing = (room: Room) => {
     setEditingRoom(room._id)
     setEditName(room.name)
@@ -480,84 +492,147 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* Room List */}
+        {/* Room List with Accordion */}
         {rooms.length === 0 ? (
-          <div className="text-sm text-gray-400 text-center py-4">לא נמצאו חדרים. הוסף חדר ראשון.</div>
+          <div className="text-sm text-gray-400 text-center py-4">לא נמצאו חדרים. הוסף חדר ראשון או ייבא מ-Excel.</div>
         ) : (
-          <div className="space-y-2">
-            {rooms.map(room => (
-              <div
-                key={room._id}
-                className="flex items-center justify-between py-2.5 px-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  {editingRoom === room._id ? (
-                    <div className="flex items-center gap-2 flex-1">
-                      <Input
-                        type="text"
-                        value={editName}
-                        onChange={e => setEditName(e.target.value)}
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') handleUpdateRoom(room._id)
-                          if (e.key === 'Escape') cancelEditing()
-                        }}
-                        className="text-right text-sm flex-1 max-w-xs"
-                        autoFocus
-                      />
-                      <button
-                        onClick={() => handleUpdateRoom(room._id)}
-                        disabled={!editName.trim()}
-                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
-                        title="שמור"
-                      >
-                        <CheckIcon size={16} weight="bold" />
-                      </button>
-                      <button
-                        onClick={cancelEditing}
-                        className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-md transition-colors"
-                        title="ביטול"
-                      >
-                        <XIcon size={16} weight="bold" />
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <span className="text-sm text-gray-800 font-medium">{room.name}</span>
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${
-                          room.isActive !== false
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-500'
-                        }`}
-                      >
-                        {room.isActive !== false ? 'פעיל' : 'לא פעיל'}
-                      </span>
-                    </>
-                  )}
+          <Accordion
+            selectionMode="multiple"
+            variant="splitted"
+            defaultExpandedKeys={['active']}
+          >
+            {/* Active Rooms */}
+            <AccordionItem
+              key="active"
+              aria-label="חדרים פעילים"
+              title={
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-gray-700">חדרים פעילים</span>
+                  <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                    {rooms.filter(r => r.isActive !== false).length}
+                  </span>
                 </div>
-                {editingRoom !== room._id && (
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => startEditing(room)}
-                      className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
-                      title="ערוך"
-                    >
-                      <PencilSimpleIcon size={16} weight="regular" />
-                    </button>
-                    {room.isActive !== false && (
-                      <button
-                        onClick={() => handleDeactivateRoom(room._id)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
-                        title="השבת"
-                      >
-                        <ProhibitIcon size={16} weight="regular" />
-                      </button>
+              }
+              classNames={{ trigger: 'py-2', content: 'pb-3' }}
+            >
+              <div className="space-y-1.5">
+                {rooms.filter(r => r.isActive !== false).map(room => (
+                  <div
+                    key={room._id}
+                    className="flex items-center justify-between py-2 px-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 flex-1">
+                      {editingRoom === room._id ? (
+                        <div className="flex items-center gap-2 flex-1">
+                          <Input
+                            type="text"
+                            value={editName}
+                            onChange={e => setEditName(e.target.value)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter') handleUpdateRoom(room._id)
+                              if (e.key === 'Escape') cancelEditing()
+                            }}
+                            className="text-right text-sm flex-1 max-w-xs"
+                            autoFocus
+                          />
+                          <button
+                            onClick={() => handleUpdateRoom(room._id)}
+                            disabled={!editName.trim()}
+                            className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+                            title="שמור"
+                          >
+                            <CheckIcon size={16} weight="bold" />
+                          </button>
+                          <button
+                            onClick={cancelEditing}
+                            className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-md transition-colors"
+                            title="ביטול"
+                          >
+                            <XIcon size={16} weight="bold" />
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-800 font-medium">{room.name}</span>
+                      )}
+                    </div>
+                    {editingRoom !== room._id && (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => startEditing(room)}
+                          className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
+                          title="ערוך"
+                        >
+                          <PencilSimpleIcon size={16} weight="regular" />
+                        </button>
+                        <button
+                          onClick={() => handleDeactivateRoom(room._id)}
+                          className="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-md transition-colors"
+                          title="השבת"
+                        >
+                          <ProhibitIcon size={16} weight="regular" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteRoom(room._id)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                          title="מחק"
+                        >
+                          <TrashIcon size={16} weight="regular" />
+                        </button>
+                      </div>
                     )}
                   </div>
+                ))}
+                {rooms.filter(r => r.isActive !== false).length === 0 && (
+                  <div className="text-xs text-gray-400 text-center py-2">אין חדרים פעילים</div>
                 )}
               </div>
-            ))}
-          </div>
+            </AccordionItem>
+
+            {/* Inactive Rooms */}
+            <AccordionItem
+              key="inactive"
+              aria-label="חדרים לא פעילים"
+              title={
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-gray-500">חדרים לא פעילים</span>
+                  <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded-full">
+                    {rooms.filter(r => r.isActive === false).length}
+                  </span>
+                </div>
+              }
+              classNames={{ trigger: 'py-2', content: 'pb-3' }}
+            >
+              <div className="space-y-1.5">
+                {rooms.filter(r => r.isActive === false).map(room => (
+                  <div
+                    key={room._id}
+                    className="flex items-center justify-between py-2 px-3 rounded-lg border border-gray-100 bg-gray-50/50 transition-colors"
+                  >
+                    <span className="text-sm text-gray-500">{room.name}</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => startEditing(room)}
+                        className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
+                        title="ערוך"
+                      >
+                        <PencilSimpleIcon size={16} weight="regular" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteRoom(room._id)}
+                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                        title="מחק לצמיתות"
+                      >
+                        <TrashIcon size={16} weight="regular" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {rooms.filter(r => r.isActive === false).length === 0 && (
+                  <div className="text-xs text-gray-400 text-center py-2">אין חדרים מושבתים</div>
+                )}
+              </div>
+            </AccordionItem>
+          </Accordion>
         )}
       </div>
 

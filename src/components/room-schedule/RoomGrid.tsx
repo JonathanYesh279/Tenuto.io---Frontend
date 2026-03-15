@@ -299,7 +299,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
                       gridRow: `${rowNumber}`,
                       alignSelf: 'center',
                       ...(needsSubSlot ? {
-                        marginInlineStart: `${startOffsetPercent}%`,
+                        marginInlineEnd: `${startOffsetPercent}%`,
                         width: `${widthPercent}%`,
                       } : {
                         marginInlineStart: '2px',

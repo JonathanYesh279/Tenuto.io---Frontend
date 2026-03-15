@@ -3020,6 +3020,23 @@ export const rehearsalService = {
   },
 
   /**
+   * Delete all rehearsals matching the same weekly pattern as the given rehearsal.
+   * Used by room-schedule where rehearsals are deduplicated by pattern.
+   * @param {string} rehearsalId - Any rehearsal ID from the pattern
+   * @returns {Promise<Object>} { deletedCount }
+   */
+  async deleteRehearsalPattern(rehearsalId) {
+    try {
+      const response = await apiClient.delete(`/rehearsal/${rehearsalId}/pattern`);
+      console.log(`🗑️ Deleted rehearsal pattern: ${rehearsalId}, count: ${response?.deletedCount}`);
+      return response;
+    } catch (error) {
+      console.error('Error deleting rehearsal pattern:', error);
+      throw error;
+    }
+  },
+
+  /**
    * Delete rehearsals in a date range for a specific orchestra
    * @param {string} orchestraId - Orchestra ID
    * @param {string} startDate - Start date (YYYY-MM-DD)

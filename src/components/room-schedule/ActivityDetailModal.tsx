@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -141,7 +142,7 @@ export default function ActivityDetailModal({
           )
         }
       } else if (activity.source === 'rehearsal') {
-        await rehearsalService.deleteRehearsal(activity.id)
+        await rehearsalService.deleteRehearsalPattern(activity.id)
       } else if (activity.source === 'theory') {
         await theoryService.deleteTheoryLesson(activity.id)
       }
@@ -184,6 +185,7 @@ export default function ActivityDetailModal({
               </Chip>
               <span className="text-lg font-extrabold text-slate-900 dark:text-white">פרטי פעילות</span>
             </DialogTitle>
+            <DialogDescription className="sr-only">עריכת פרטי פעילות</DialogDescription>
           </DialogHeader>
 
           {/* Teacher + Student info cards */}

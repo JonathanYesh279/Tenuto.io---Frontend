@@ -1,6 +1,8 @@
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
+import { User } from '@heroui/react'
 import { cn } from '@/lib/utils'
+import { getAvatarColorHex } from '@/utils/avatarColorHash'
 import {
   Tooltip,
   TooltipContent,
@@ -41,28 +43,31 @@ interface ActivityCellProps {
 
 const ACTIVITY_COLORS = {
   timeBlock: {
-    bg: 'bg-blue-100',
-    border: 'border-blue-300',
+    bg: 'bg-blue-50/80',
+    border: 'border-blue-200',
     text: 'text-blue-900',
     label: 'שיעור פרטי',
-    borderAccent: 'border-r-[6px] border-r-blue-600',
-    borderAccentLeft: 'border-l-2 border-l-blue-400',
+    accent: 'border-r-[4px] border-r-blue-500',
+    accentHex: '#3b82f6',
+    iconBg: '#dbeafe',
   },
   rehearsal: {
-    bg: 'bg-purple-100',
-    border: 'border-purple-300',
+    bg: 'bg-purple-50/80',
+    border: 'border-purple-200',
     text: 'text-purple-900',
     label: 'חזרה',
-    borderAccent: 'border-r-[6px] border-r-purple-600',
-    borderAccentLeft: 'border-l-2 border-l-purple-400',
+    accent: 'border-r-[4px] border-r-purple-500',
+    accentHex: '#8b5cf6',
+    iconBg: '#f3e8ff',
   },
   theory: {
-    bg: 'bg-orange-100',
-    border: 'border-orange-300',
-    text: 'text-orange-900',
+    bg: 'bg-amber-50/80',
+    border: 'border-amber-200',
+    text: 'text-amber-900',
     label: 'תאוריה',
-    borderAccent: 'border-r-[6px] border-r-orange-600',
-    borderAccentLeft: 'border-l-2 border-l-orange-400',
+    accent: 'border-r-[4px] border-r-amber-500',
+    accentHex: '#f59e0b',
+    iconBg: '#fef3c7',
   },
 } as const
 
@@ -95,25 +100,41 @@ export default function ActivityCell({ activity, isDragEnabled, dragData, onClic
         }
       }}
       className={cn(
-        'rounded px-1.5 py-1 text-xs overflow-hidden h-full border',
+        'rounded-lg px-2 py-1.5 text-xs overflow-hidden h-full border backdrop-blur-sm transition-shadow hover:shadow-md',
         isDragEnabled ? 'cursor-grab active:cursor-grabbing' : 'cursor-default',
         isDragging && 'opacity-30',
         colors.bg,
-        colors.text,
-        colors.borderAccent,
-        colors.borderAccentLeft,
+        colors.accent,
         activity.hasConflict ? CONFLICT_BORDER : colors.border
       )}
     >
-      {/* Content: 3 lines with prefix labels */}
-      <div className="font-medium truncate leading-tight text-[11px]">
-        מורה: {activity.teacherName}
+      {/* Time range */}
+      <div className="text-[10px] text-slate-400 dark:text-slate-500 mb-0.5">
+        {activity.startTime} - {activity.endTime}
       </div>
-      <div className="truncate leading-tight text-[10px] opacity-80">
-        תלמיד: {activity.label}
+      {/* Activity type label */}
+      <div className={cn('font-bold text-[11px] leading-tight mb-1', colors.text)}>
+        {activity.source === 'timeBlock' ? colors.label : activity.activityType || colors.label}
       </div>
-      <div className="truncate leading-tight text-[9px] opacity-60">
-        {activity.startTime}-{activity.endTime}
+      {/* Teacher avatar + name */}
+      <User
+        avatarProps={{
+          radius: 'full',
+          size: 'sm',
+          showFallback: true,
+          name: activity.teacherName,
+          style: { backgroundColor: getAvatarColorHex(activity.teacherName || ''), color: '#fff', width: 20, height: 20, fontSize: 9 },
+          classNames: { base: 'shrink-0' },
+        }}
+        name={activity.teacherName}
+        classNames={{
+          base: 'justify-start gap-1.5',
+          name: 'text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate leading-tight',
+        }}
+      />
+      {/* Student / group label */}
+      <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5 pr-[26px]">
+        {activity.label}
       </div>
     </div>
   )

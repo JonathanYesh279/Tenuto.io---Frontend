@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, Tab } from '@heroui/react'
 import { DAY_NAMES } from './utils'
 
 interface DaySelectorProps {
@@ -10,21 +10,19 @@ interface DaySelectorProps {
 export default function DaySelector({ selectedDay, onDayChange, disabled }: DaySelectorProps) {
   return (
     <Tabs
-      value={String(selectedDay)}
-      onValueChange={(v) => onDayChange(Number(v))}
+      aria-label="בחירת יום"
+      selectedKey={String(selectedDay)}
+      onSelectionChange={(key) => onDayChange(Number(key))}
+      variant="solid"
+      color="default"
+      isDisabled={disabled}
+      classNames={{
+        tab: "font-bold text-sm min-w-[60px]",
+      }}
     >
-      <TabsList className="gap-1">
-        {DAY_NAMES.map((name, index) => (
-          <TabsTrigger
-            key={index}
-            value={String(index)}
-            disabled={disabled}
-            className="min-w-[60px]"
-          >
-            {name}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      {DAY_NAMES.map((name, index) => (
+        <Tab key={String(index)} title={name} />
+      ))}
     </Tabs>
   )
 }

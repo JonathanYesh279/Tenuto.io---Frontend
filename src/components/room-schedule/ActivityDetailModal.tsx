@@ -5,10 +5,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Button as HeroButton, User, Select, SelectItem, Input, Chip } from '@heroui/react'
+import { Clock, MapPin, CalendarBlank, MusicNote, Users as UsersIcon } from '@phosphor-icons/react'
 import { roomScheduleService } from '@/services/apiService'
 import { DAY_NAMES } from './utils'
 import type { ActivityData } from './ActivityCell'
 import { ACTIVITY_COLORS } from './ActivityCell'
+import { getAvatarColorHex } from '@/utils/avatarColorHash'
 import toast from 'react-hot-toast'
 
 // ==================== Types ====================
@@ -78,16 +81,16 @@ export default function ActivityDetailModal({
         targetStartTime: editStartTime,
         targetEndTime: editEndTime,
       })
-      toast.success('\u05D4\u05E9\u05D9\u05E2\u05D5\u05E8 \u05E2\u05D5\u05D3\u05DB\u05DF \u05D1\u05D4\u05E6\u05DC\u05D7\u05D4')
+      toast.success('השיעור עודכן בהצלחה')
       onReschedule()
     } catch (err: any) {
       if (err?.code === 'CONFLICT' && err?.conflicts?.length > 0) {
         const conflictNames = err.conflicts
           .map((c: any) => `${c.teacherName} (${c.startTime}-${c.endTime})`)
           .join(', ')
-        toast.error(`\u05D4\u05EA\u05E0\u05D2\u05E9\u05D5\u05EA \u05D1\u05D7\u05D3\u05E8: ${conflictNames}`)
+        toast.error(`התנגשות בחדר: ${conflictNames}`)
       } else {
-        toast.error('\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05E2\u05D3\u05DB\u05D5\u05DF \u05D4\u05E9\u05D9\u05E2\u05D5\u05E8')
+        toast.error('שגיאה בעדכון השיעור')
       }
     } finally {
       setSaving(false)
@@ -103,10 +106,10 @@ export default function ActivityDetailModal({
         activity.blockId,
         activity.lessonId,
       )
-      toast.success('\u05D4\u05E9\u05D9\u05E2\u05D5\u05E8 \u05E0\u05DE\u05D7\u05E7 \u05D1\u05D4\u05E6\u05DC\u05D7\u05D4')
+      toast.success('השיעור נמחק בהצלחה')
       onDelete()
     } catch {
-      toast.error('\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05DE\u05D7\u05D9\u05E7\u05EA \u05D4\u05E9\u05D9\u05E2\u05D5\u05E8')
+      toast.error('שגיאה במחיקת השיעור')
     } finally {
       setDeleting(false)
       setConfirmDelete(false)
@@ -115,177 +118,226 @@ export default function ActivityDetailModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>
-            <span
-              className={`inline-block px-2 py-0.5 rounded text-xs font-medium mr-2 ${colors.bg} ${colors.text}`}
-            >
-              {colors.label}
-            </span>
-            {'\u05E4\u05E8\u05D8\u05D9 \u05E4\u05E2\u05D9\u05DC\u05D5\u05EA'}
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        {/* Header with accent color */}
+        <div
+          className="px-6 pt-5 pb-4"
+          style={{
+            background: `linear-gradient(135deg, ${colors.iconBg}40 0%, transparent 100%)`,
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Chip
+                size="sm"
+                variant="flat"
+                classNames={{
+                  base: colors.bg,
+                  content: `${colors.text} text-xs font-bold`,
+                }}
+              >
+                {colors.label}
+              </Chip>
+              <span className="text-lg font-extrabold text-slate-900 dark:text-white">פרטי פעילות</span>
+            </DialogTitle>
+          </DialogHeader>
 
-        {/* Read-only details section */}
-        <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-0.5">
-                {'\u05DE\u05D5\u05E8\u05D4'}
-              </label>
-              <div className="text-sm text-gray-900">{activity.teacherName}</div>
+          {/* Teacher + Student info cards */}
+          <div className="mt-4 space-y-3">
+            {/* Teacher */}
+            <div className="flex items-center gap-3 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl px-3 py-2.5 border border-white/80 dark:border-slate-700/50">
+              <User
+                avatarProps={{
+                  radius: 'full',
+                  size: 'sm',
+                  showFallback: true,
+                  name: activity.teacherName,
+                  style: { backgroundColor: getAvatarColorHex(activity.teacherName || ''), color: '#fff' },
+                }}
+                name={activity.teacherName}
+                description="מורה"
+                classNames={{
+                  name: 'text-sm font-bold text-slate-800 dark:text-white',
+                  description: 'text-xs text-slate-400',
+                }}
+              />
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-0.5">
-                {'\u05EA\u05DC\u05DE\u05D9\u05D3/\u05E7\u05D1\u05D5\u05E6\u05D4'}
-              </label>
-              <div className="text-sm text-gray-900">{activity.label}</div>
+
+            {/* Student/Group */}
+            <div className="flex items-center gap-3 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl px-3 py-2.5 border border-white/80 dark:border-slate-700/50">
+              <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                {activity.source === 'rehearsal' ? (
+                  <UsersIcon size={16} className="text-purple-500" weight="duotone" />
+                ) : activity.source === 'theory' ? (
+                  <MusicNote size={16} className="text-amber-500" weight="duotone" />
+                ) : (
+                  <MusicNote size={16} className="text-blue-500" weight="duotone" />
+                )}
+              </div>
+              <div>
+                <div className="text-sm font-bold text-slate-800 dark:text-white">{activity.label}</div>
+                <div className="text-xs text-slate-400">תלמיד/קבוצה</div>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-0.5">
-                {'\u05D7\u05D3\u05E8'}
-              </label>
-              <div className="text-sm text-gray-900">{activity.room}</div>
+          {/* Quick info row */}
+          <div className="flex items-center gap-4 mt-3 text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-1">
+              <MapPin size={13} weight="duotone" />
+              <span className="font-medium">{activity.room}</span>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-0.5">
-                {'\u05D9\u05D5\u05DD'}
-              </label>
-              <div className="text-sm text-gray-900">{DAY_NAMES[day]}</div>
+            <div className="flex items-center gap-1">
+              <CalendarBlank size={13} weight="duotone" />
+              <span className="font-medium">{DAY_NAMES[day]}</span>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-0.5">
-                {'\u05E9\u05E2\u05D5\u05EA'}
-              </label>
-              <div className="text-sm text-gray-900">
-                {activity.startTime} - {activity.endTime}
-              </div>
+            <div className="flex items-center gap-1">
+              <Clock size={13} weight="duotone" />
+              <span className="font-medium">{activity.startTime} - {activity.endTime}</span>
             </div>
           </div>
         </div>
 
         {/* Edit section -- only for timeBlock with lessonId */}
         {isEditable && (
-          <>
-            <div className="border-t pt-3 mt-1">
-              <h4 className="text-sm font-medium text-gray-700 mb-3">
-                {'\u05E2\u05E8\u05D9\u05DB\u05EA \u05E9\u05D9\u05E2\u05D5\u05E8'}
+          <div className="px-6 pb-5">
+            <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+              <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">
+                עריכת שיעור
               </h4>
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">
-                      {'\u05D9\u05D5\u05DD'}
-                    </label>
-                    <select
-                      value={editDay}
-                      onChange={(e) => setEditDay(Number(e.target.value))}
-                      className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      {DAY_NAMES.map((name, idx) => (
-                        <option key={idx} value={idx}>{name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">
-                      {'\u05D7\u05D3\u05E8'}
-                    </label>
-                    <select
-                      value={editRoom}
-                      onChange={(e) => setEditRoom(e.target.value)}
-                      className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      {rooms.filter(r => r.isActive).map((r) => (
-                        <option key={r.name} value={r.name}>{r.name}</option>
-                      ))}
-                      {editRoom && !rooms.some(r => r.name === editRoom && r.isActive) && (
-                        <option value={editRoom}>{editRoom}</option>
-                      )}
-                    </select>
-                  </div>
+                  <Select
+                    label="יום"
+                    size="sm"
+                    variant="bordered"
+                    selectedKeys={[String(editDay)]}
+                    onSelectionChange={(keys) => {
+                      const val = Array.from(keys)[0]
+                      if (val !== undefined) setEditDay(Number(val))
+                    }}
+                    classNames={{
+                      trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                      label: 'text-slate-500 dark:text-slate-400 font-medium',
+                    }}
+                  >
+                    {DAY_NAMES.map((name, idx) => (
+                      <SelectItem key={String(idx)}>{name}</SelectItem>
+                    ))}
+                  </Select>
+                  <Select
+                    label="חדר"
+                    size="sm"
+                    variant="bordered"
+                    selectedKeys={[editRoom]}
+                    onSelectionChange={(keys) => {
+                      const val = Array.from(keys)[0] as string
+                      if (val) setEditRoom(val)
+                    }}
+                    classNames={{
+                      trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                      label: 'text-slate-500 dark:text-slate-400 font-medium',
+                    }}
+                  >
+                    {rooms.filter(r => r.isActive).map((r) => (
+                      <SelectItem key={r.name}>{r.name}</SelectItem>
+                    ))}
+                    {editRoom && !rooms.some(r => r.name === editRoom && r.isActive) && (
+                      <SelectItem key={editRoom}>{editRoom}</SelectItem>
+                    )}
+                  </Select>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">
-                      {'\u05E9\u05E2\u05EA \u05D4\u05EA\u05D7\u05DC\u05D4'}
-                    </label>
-                    <input
-                      type="time"
-                      value={editStartTime}
-                      onChange={(e) => setEditStartTime(e.target.value)}
-                      className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">
-                      {'\u05E9\u05E2\u05EA \u05E1\u05D9\u05D5\u05DD'}
-                    </label>
-                    <input
-                      type="time"
-                      value={editEndTime}
-                      onChange={(e) => setEditEndTime(e.target.value)}
-                      className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
+                  <Input
+                    type="time"
+                    label="שעת התחלה"
+                    size="sm"
+                    variant="bordered"
+                    value={editStartTime}
+                    onValueChange={setEditStartTime}
+                    classNames={{
+                      inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                      label: 'text-slate-500 dark:text-slate-400 font-medium',
+                    }}
+                  />
+                  <Input
+                    type="time"
+                    label="שעת סיום"
+                    size="sm"
+                    variant="bordered"
+                    value={editEndTime}
+                    onValueChange={setEditEndTime}
+                    classNames={{
+                      inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                      label: 'text-slate-500 dark:text-slate-400 font-medium',
+                    }}
+                  />
                 </div>
               </div>
             </div>
 
             {/* Action buttons */}
-            <div className="flex items-center justify-between border-t pt-3 mt-1">
+            <div className="flex items-center justify-between pt-4 mt-1">
               {/* Delete button */}
               <div>
                 {!confirmDelete ? (
-                  <button
-                    type="button"
-                    onClick={() => setConfirmDelete(true)}
-                    className="px-3 py-1.5 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-50 transition-colors"
+                  <HeroButton
+                    color="danger"
+                    variant="bordered"
+                    size="sm"
+                    onPress={() => setConfirmDelete(true)}
+                    className="font-bold"
                   >
-                    {'\u05DE\u05D7\u05D9\u05E7\u05EA \u05E9\u05D9\u05E2\u05D5\u05E8'}
-                  </button>
+                    מחיקת שיעור
+                  </HeroButton>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={handleDelete}
-                      disabled={deleting}
-                      className="px-3 py-1.5 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50 transition-colors"
+                    <HeroButton
+                      color="danger"
+                      variant="solid"
+                      size="sm"
+                      onPress={handleDelete}
+                      isDisabled={deleting}
+                      isLoading={deleting}
+                      className="font-bold"
                     >
-                      {deleting ? '\u05DE\u05D5\u05D7\u05E7...' : '\u05D0\u05D9\u05E9\u05D5\u05E8 \u05DE\u05D7\u05D9\u05E7\u05D4'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setConfirmDelete(false)}
-                      className="px-3 py-1.5 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                      אישור מחיקה
+                    </HeroButton>
+                    <HeroButton
+                      color="default"
+                      variant="bordered"
+                      size="sm"
+                      onPress={() => setConfirmDelete(false)}
+                      className="font-bold"
                     >
-                      {'\u05D1\u05D9\u05D8\u05D5\u05DC'}
-                    </button>
+                      ביטול
+                    </HeroButton>
                   </div>
                 )}
               </div>
 
               {/* Save button */}
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={saving}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              <HeroButton
+                color="primary"
+                variant="solid"
+                size="sm"
+                onPress={handleSave}
+                isDisabled={saving}
+                isLoading={saving}
+                className="font-bold"
               >
-                {saving ? '\u05E9\u05D5\u05DE\u05E8...' : '\u05E9\u05DE\u05D5\u05E8 \u05E9\u05D9\u05E0\u05D5\u05D9\u05D9\u05DD'}
-              </button>
+                שמור שינויים
+              </HeroButton>
             </div>
-          </>
+          </div>
         )}
 
         {/* Read-only notice for rehearsal/theory */}
         {activity.source !== 'timeBlock' && (
-          <div className="text-xs text-gray-500 bg-gray-50 rounded-md px-3 py-2 mt-2">
-            {'\u05E0\u05D9\u05EA\u05DF \u05DC\u05E2\u05E8\u05D5\u05DA \u05D7\u05D6\u05E8\u05D5\u05EA \u05D5\u05EA\u05D0\u05D5\u05E8\u05D9\u05D4 \u05D1\u05E2\u05DE\u05D5\u05D3\u05D9\u05DD \u05D4\u05D9\u05D9\u05E2\u05D5\u05D3\u05D9\u05D9\u05DD'}
+          <div className="px-6 pb-5">
+            <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 border border-slate-100 dark:border-slate-700">
+              ניתן לערוך חזרות ותאוריה בעמודים הייעודיים
+            </div>
           </div>
         )}
       </DialogContent>

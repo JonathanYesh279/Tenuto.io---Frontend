@@ -58,29 +58,29 @@ export default function WeekOverview({ weekData, tenantRooms, loading }: WeekOve
   // Loading state
   if (loading) {
     return (
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
         <div
           className="grid"
           style={{ gridTemplateColumns: '120px repeat(6, 1fr) 80px' }}
         >
           {/* Skeleton header */}
-          <div className="bg-gray-50 border-b border-l h-10" />
+          <div className="bg-slate-50 dark:bg-slate-800 border-b border-l h-10" />
           {DAY_NAMES.map((_, i) => (
-            <div key={i} className="bg-gray-50 border-b border-l h-10 animate-pulse" />
+            <div key={i} className="bg-slate-50 dark:bg-slate-800 border-b border-l h-10 animate-pulse" />
           ))}
-          <div className="bg-gray-50 border-b border-l h-10" />
+          <div className="bg-slate-50 dark:bg-slate-800 border-b border-l h-10" />
 
           {/* Skeleton rows */}
           {Array.from({ length: 4 }).map((_, rowIdx) => (
             <div key={rowIdx} className="contents">
-              <div className="bg-gray-50 border-b border-l h-12 px-3 py-2">
-                <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
+              <div className="bg-slate-50 dark:bg-slate-800 border-b border-l h-12 px-3 py-2">
+                <div className="h-4 w-16 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" />
               </div>
               {DAY_NAMES.map((_, colIdx) => (
                 <div key={colIdx} className="border-b border-l h-12 animate-pulse" />
               ))}
               <div className="border-b border-l h-12 px-2 py-3">
-                <div className="h-2 bg-gray-200 rounded-full animate-pulse" />
+                <div className="h-2 bg-slate-200 dark:bg-slate-600 rounded-full animate-pulse" />
               </div>
             </div>
           ))}
@@ -93,24 +93,24 @@ export default function WeekOverview({ weekData, tenantRooms, loading }: WeekOve
   if (!weekData) return null
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
+    <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
       <div
         className="grid"
         style={{ gridTemplateColumns: '120px repeat(6, 1fr) 80px' }}
       >
         {/* ====== Header Row ====== */}
-        <div className="bg-gray-50 border-b border-l p-2 text-sm font-medium text-gray-500">
+        <div className="bg-slate-50 dark:bg-slate-800 border-b border-l p-2 text-sm font-medium text-slate-500 dark:text-slate-400">
           חדר
         </div>
         {DAY_NAMES.map((dayName) => (
           <div
             key={dayName}
-            className="bg-gray-50 border-b border-l p-2 text-sm font-medium text-gray-500 text-center"
+            className="bg-slate-50 dark:bg-slate-800 border-b border-l p-2 text-sm font-medium text-slate-500 dark:text-slate-400 text-center"
           >
             {dayName}
           </div>
         ))}
-        <div className="bg-gray-50 border-b border-l p-2 text-sm font-medium text-gray-500 text-center">
+        <div className="bg-slate-50 dark:bg-slate-800 border-b border-l p-2 text-sm font-medium text-slate-500 dark:text-slate-400 text-center">
           ניצולת
         </div>
 
@@ -122,7 +122,7 @@ export default function WeekOverview({ weekData, tenantRooms, loading }: WeekOve
           return (
             <div key={roomName} className="contents">
               {/* Room name cell */}
-              <div className="bg-white border-b border-l px-3 py-2 flex items-center sticky right-0 z-10">
+              <div className="bg-white dark:bg-slate-900 border-b border-l px-3 py-2 flex items-center sticky right-0 z-10">
                 <span className="text-sm font-medium truncate">{roomName}</span>
               </div>
 
@@ -140,13 +140,13 @@ export default function WeekOverview({ weekData, tenantRooms, loading }: WeekOve
 
               {/* Utilization cell */}
               <div className="border-b border-l px-2 py-2 flex items-center gap-1">
-                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                <div className="flex-1 bg-slate-200 dark:bg-slate-600 rounded-full h-2">
                   <div
                     className={cn('h-2 rounded-full transition-all', barColor)}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
-                <span className="text-xs text-gray-500 w-8 text-left">{pct}%</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 w-8 text-left">{pct}%</span>
               </div>
             </div>
           )

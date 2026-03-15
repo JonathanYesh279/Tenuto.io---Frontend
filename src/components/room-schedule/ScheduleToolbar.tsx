@@ -1,5 +1,5 @@
 import { Printer, FilePdf, CalendarBlank, Calendar, ArrowsOut, Table } from '@phosphor-icons/react'
-import { cn } from '@/lib/utils'
+import { Button as HeroButton, Tabs, Tab } from '@heroui/react'
 
 interface ScheduleToolbarProps {
   viewMode: 'day' | 'week'
@@ -18,70 +18,79 @@ export default function ScheduleToolbar({
 }: ScheduleToolbarProps) {
   return (
     <div className="flex items-center justify-between print:hidden">
-      {/* View mode toggle (segmented control) */}
-      <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
-        <button
-          type="button"
-          onClick={() => onViewModeChange('day')}
-          className={cn(
-            'flex items-center gap-1.5 px-3 py-1.5 text-sm transition-colors',
-            viewMode === 'day'
-              ? 'bg-blue-50 text-blue-700 font-medium'
-              : 'bg-white text-gray-600 hover:bg-gray-50'
-          )}
-        >
-          <CalendarBlank size={16} />
-          <span>יום</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onViewModeChange('week')}
-          className={cn(
-            'flex items-center gap-1.5 px-3 py-1.5 text-sm border-r border-gray-200 transition-colors',
-            viewMode === 'week'
-              ? 'bg-blue-50 text-blue-700 font-medium'
-              : 'bg-white text-gray-600 hover:bg-gray-50'
-          )}
-        >
-          <Calendar size={16} />
-          <span>שבוע</span>
-        </button>
-      </div>
+      {/* View mode toggle */}
+      <Tabs
+        aria-label="מצב תצוגה"
+        selectedKey={viewMode}
+        onSelectionChange={(key) => onViewModeChange(key as 'day' | 'week')}
+        variant="solid"
+        color="default"
+        classNames={{
+          tab: "font-bold text-sm",
+        }}
+      >
+        <Tab
+          key="day"
+          title={
+            <div className="flex items-center gap-1.5">
+              <CalendarBlank size={14} />
+              <span>יום</span>
+            </div>
+          }
+        />
+        <Tab
+          key="week"
+          title={
+            <div className="flex items-center gap-1.5">
+              <Calendar size={14} />
+              <span>שבוע</span>
+            </div>
+          }
+        />
+      </Tabs>
 
       {/* Print, Export & Fullscreen actions */}
       <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => window.open('/room-schedule/fullscreen', '_blank')}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        <HeroButton
+          color="default"
+          variant="bordered"
+          size="sm"
+          onPress={() => window.open('/room-schedule/fullscreen', '_blank')}
+          startContent={<ArrowsOut size={14} />}
+          className="font-bold"
         >
-          <ArrowsOut size={16} />
-          <span>מסך מלא</span>
-        </button>
-        <button
-          type="button"
-          onClick={onPrint}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          מסך מלא
+        </HeroButton>
+        <HeroButton
+          color="default"
+          variant="bordered"
+          size="sm"
+          onPress={onPrint}
+          startContent={<Printer size={14} />}
+          className="font-bold"
         >
-          <Printer size={16} />
-          <span>הדפסה</span>
-        </button>
-        <button
-          type="button"
-          onClick={onExportGridPDF}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          הדפסה
+        </HeroButton>
+        <HeroButton
+          color="default"
+          variant="bordered"
+          size="sm"
+          onPress={onExportGridPDF}
+          startContent={<FilePdf size={14} />}
+          className="font-bold"
         >
-          <FilePdf size={16} />
-          <span>PDF חזותי</span>
-        </button>
-        <button
-          type="button"
-          onClick={onExportTabularPDF}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          PDF חזותי
+        </HeroButton>
+        <HeroButton
+          color="default"
+          variant="bordered"
+          size="sm"
+          onPress={onExportTabularPDF}
+          startContent={<Table size={14} />}
+          className="font-bold"
         >
-          <Table size={16} />
-          <span>PDF טבלאי</span>
-        </button>
+          PDF טבלאי
+        </HeroButton>
       </div>
     </div>
   )

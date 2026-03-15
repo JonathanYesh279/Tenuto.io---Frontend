@@ -7,7 +7,10 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { Button as HeroButton, Input, User, Chip } from '@heroui/react'
+import { MapPin, CalendarBlank, Clock, MagnifyingGlass } from '@phosphor-icons/react'
 import { teacherScheduleService } from '@/services/apiService'
+import { getAvatarColorHex } from '@/utils/avatarColorHash'
 import { DAY_NAMES, doTimesOverlap } from './utils'
 import toast from 'react-hot-toast'
 
@@ -62,7 +65,7 @@ function getTeacherDisplayName(teacher: Teacher): string {
   const first = teacher.personalInfo?.firstName || ''
   const last = teacher.personalInfo?.lastName || ''
   const combined = `${first} ${last}`.trim()
-  return combined || teacher.personalInfo?.fullName || '\u05DC\u05DC\u05D0 \u05E9\u05DD'
+  return combined || teacher.personalInfo?.fullName || 'ללא שם'
 }
 
 // ==================== Component ====================
@@ -104,21 +107,20 @@ export default function CreateLessonDialog({
 
     const warnings: string[] = []
 
-    // 1. Room conflict: check if any activity in the target room overlaps with the selected time
+    // 1. Room conflict
     const targetRoom = scheduleData.rooms.find(r => r.room === state.room)
     if (targetRoom) {
       for (const activity of targetRoom.activities) {
         if (doTimesOverlap(state.startTime, endTime, activity.startTime, activity.endTime)) {
-          warnings.push(`\u05D4\u05D7\u05D3\u05E8 \u05EA\u05E4\u05D5\u05E1 \u05E2"\u05D9 ${activity.teacherName} \u05D1\u05E9\u05E2\u05D5\u05EA ${activity.startTime}-${activity.endTime}`)
+          warnings.push(`החדר תפוס ע"י ${activity.teacherName} בשעות ${activity.startTime}-${activity.endTime}`)
         }
       }
     }
 
-    // 2. Teacher double-booking: if a teacher is selected, check OTHER rooms for same teacherId + overlapping time
-    //    Skip state.room to avoid duplicating the room conflict warning above
+    // 2. Teacher double-booking
     if (selectedTeacherId) {
       for (const room of scheduleData.rooms) {
-        if (room.room === state.room) continue // already reported as room conflict
+        if (room.room === state.room) continue
         for (const activity of room.activities) {
           if (
             String(activity.teacherId) === String(selectedTeacherId) &&
@@ -126,7 +128,7 @@ export default function CreateLessonDialog({
           ) {
             const selectedTeacher = teachers.find(t => t._id === selectedTeacherId)
             const teacherName = selectedTeacher ? getTeacherDisplayName(selectedTeacher) : activity.teacherName
-            warnings.push(`${teacherName} \u05DB\u05D1\u05E8 \u05DE\u05DC\u05DE\u05D3/\u05EA \u05D1\u05D7\u05D3\u05E8 ${room.room} \u05D1\u05E9\u05E2\u05D5\u05EA ${activity.startTime}-${activity.endTime}`)
+            warnings.push(`${teacherName} כבר מלמד/ת בחדר ${room.room} בשעות ${activity.startTime}-${activity.endTime}`)
           }
         }
       }
@@ -137,7 +139,7 @@ export default function CreateLessonDialog({
 
   const handleSubmit = async () => {
     if (!selectedTeacherId) {
-      setError('\u05D9\u05E9 \u05DC\u05D1\u05D7\u05D5\u05E8 \u05DE\u05D5\u05E8\u05D4')
+      setError('יש לבחור מורה')
       return
     }
 
@@ -153,11 +155,11 @@ export default function CreateLessonDialog({
       }
 
       await teacherScheduleService.createTimeBlock(selectedTeacherId, data)
-      toast.success('\u05D4\u05E9\u05D9\u05E2\u05D5\u05E8 \u05E0\u05D5\u05E6\u05E8 \u05D1\u05D4\u05E6\u05DC\u05D7\u05D4')
+      toast.success('השיעור נוצר בהצלחה')
       onCreated()
       onOpenChange(false)
     } catch {
-      toast.error('\u05E9\u05D2\u05D9\u05D0\u05D4 \u05D1\u05D9\u05E6\u05D9\u05E8\u05EA \u05D4\u05E9\u05D9\u05E2\u05D5\u05E8')
+      toast.error('שגיאה ביצירת השיעור')
     } finally {
       setSubmitting(false)
     }
@@ -167,94 +169,107 @@ export default function CreateLessonDialog({
 
   return (
     <Dialog open={state.open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{'\u05E6\u05D5\u05E8 \u05E9\u05D9\u05E2\u05D5\u05E8 \u05D7\u05D3\u05E9'}</DialogTitle>
-          <DialogDescription>
-            {'\u05D9\u05E6\u05D9\u05E8\u05EA \u05E9\u05D9\u05E2\u05D5\u05E8 \u05D7\u05D3\u05E9 \u05D1\u05D7\u05D3\u05E8 \u05D5\u05D1\u05E9\u05E2\u05D4 \u05E9\u05E0\u05D1\u05D7\u05E8\u05D5'}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        {/* Header with context info */}
+        <div className="px-6 pt-5 pb-4 bg-gradient-to-b from-primary/5 to-transparent">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-extrabold text-slate-900 dark:text-white">
+              צור שיעור חדש
+            </DialogTitle>
+            <DialogDescription className="text-slate-500 dark:text-slate-400">
+              יצירת שיעור חדש בחדר ובשעה שנבחרו
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Read-only fields: Room, Day, Start Time */}
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {'\u05D7\u05D3\u05E8'}
-              </label>
-              <div className="text-sm bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-gray-700">
-                {state.room}
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {'\u05D9\u05D5\u05DD'}
-              </label>
-              <div className="text-sm bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-gray-700">
-                {DAY_NAMES[state.day]}
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {'\u05E9\u05E2\u05EA \u05D4\u05EA\u05D7\u05DC\u05D4'}
-              </label>
-              <div className="text-sm bg-gray-50 border border-gray-200 rounded-md px-3 py-2 text-gray-700">
-                {state.startTime}
-              </div>
-            </div>
+          {/* Context chips */}
+          <div className="flex items-center gap-2 mt-3 flex-wrap">
+            <Chip size="sm" variant="flat" startContent={<MapPin size={12} weight="duotone" />}
+              classNames={{ base: 'bg-slate-100 dark:bg-slate-800', content: 'text-xs font-medium text-slate-600 dark:text-slate-300' }}>
+              {state.room}
+            </Chip>
+            <Chip size="sm" variant="flat" startContent={<CalendarBlank size={12} weight="duotone" />}
+              classNames={{ base: 'bg-slate-100 dark:bg-slate-800', content: 'text-xs font-medium text-slate-600 dark:text-slate-300' }}>
+              {DAY_NAMES[state.day]}
+            </Chip>
+            <Chip size="sm" variant="flat" startContent={<Clock size={12} weight="duotone" />}
+              classNames={{ base: 'bg-slate-100 dark:bg-slate-800', content: 'text-xs font-medium text-slate-600 dark:text-slate-300' }}>
+              {state.startTime}
+            </Chip>
           </div>
+        </div>
 
-          {/* Editable end time */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {'\u05E9\u05E2\u05EA \u05E1\u05D9\u05D5\u05DD'}
-            </label>
-            <input
-              type="time"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+        <div className="px-6 pb-5 space-y-4">
+          {/* End time */}
+          <Input
+            type="time"
+            label="שעת סיום"
+            size="sm"
+            variant="bordered"
+            value={endTime}
+            onValueChange={setEndTime}
+            classNames={{
+              inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+              label: 'text-slate-500 dark:text-slate-400 font-medium',
+            }}
+          />
 
           {/* Teacher selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {'\u05DE\u05D5\u05E8\u05D4'}
+            <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">
+              מורה
             </label>
 
             {/* Search input */}
-            <input
+            <Input
               type="text"
-              placeholder={'\u05D7\u05D9\u05E4\u05D5\u05E9 \u05DE\u05D5\u05E8\u05D4...'}
+              placeholder="חיפוש מורה..."
+              size="sm"
+              variant="bordered"
               value={teacherSearch}
-              onChange={(e) => setTeacherSearch(e.target.value)}
-              className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onValueChange={setTeacherSearch}
+              startContent={<MagnifyingGlass size={14} className="text-slate-400" />}
+              classNames={{
+                inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 mb-2',
+                label: 'text-slate-500 dark:text-slate-400 font-medium',
+              }}
             />
 
             {/* Selected teacher indicator */}
             {selectedTeacher && (
-              <div className="text-sm text-blue-700 bg-blue-50 rounded-md px-3 py-1.5 mb-2 flex items-center justify-between">
-                <span>{getTeacherDisplayName(selectedTeacher)}</span>
+              <div className="mb-2 flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-3 py-2">
+                <User
+                  avatarProps={{
+                    radius: 'full',
+                    size: 'sm',
+                    showFallback: true,
+                    name: getTeacherDisplayName(selectedTeacher),
+                    style: { backgroundColor: getAvatarColorHex(getTeacherDisplayName(selectedTeacher)), color: '#fff' },
+                  }}
+                  name={getTeacherDisplayName(selectedTeacher)}
+                  classNames={{
+                    name: 'text-sm font-bold text-primary',
+                  }}
+                />
                 <button
                   type="button"
                   onClick={() => setSelectedTeacherId('')}
-                  className="text-blue-500 hover:text-blue-700 text-xs"
+                  className="text-primary/60 hover:text-primary text-xs font-medium transition-colors"
                 >
-                  {'\u05E9\u05E0\u05D4'}
+                  שנה
                 </button>
               </div>
             )}
 
             {/* Teacher list */}
-            <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-md">
+            <div className="max-h-40 overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl">
               {filteredTeachers.length === 0 ? (
-                <div className="px-3 py-2 text-sm text-gray-500 text-center">
-                  {'\u05DC\u05D0 \u05E0\u05DE\u05E6\u05D0\u05D5 \u05DE\u05D5\u05E8\u05D9\u05DD'}
+                <div className="px-3 py-3 text-sm text-slate-400 text-center">
+                  לא נמצאו מורים
                 </div>
               ) : (
                 filteredTeachers.map((teacher) => {
                   const isSelected = teacher._id === selectedTeacherId
+                  const name = getTeacherDisplayName(teacher)
                   return (
                     <div
                       key={teacher._id}
@@ -262,13 +277,26 @@ export default function CreateLessonDialog({
                         setSelectedTeacherId(teacher._id)
                         setError('')
                       }}
-                      className={`px-3 py-2 text-sm cursor-pointer transition-colors ${
+                      className={`px-3 py-2 cursor-pointer transition-colors ${
                         isSelected
-                          ? 'bg-blue-50 border-r-2 border-blue-300 font-medium'
-                          : 'hover:bg-gray-50'
+                          ? 'bg-primary/5 border-r-2 border-primary font-medium'
+                          : 'hover:bg-slate-50 dark:hover:bg-slate-800'
                       }`}
                     >
-                      {getTeacherDisplayName(teacher)}
+                      <User
+                        avatarProps={{
+                          radius: 'full',
+                          size: 'sm',
+                          showFallback: true,
+                          name,
+                          style: { backgroundColor: getAvatarColorHex(name), color: '#fff', width: 24, height: 24, fontSize: 10 },
+                        }}
+                        name={name}
+                        classNames={{
+                          base: 'justify-start gap-2',
+                          name: `text-sm ${isSelected ? 'font-bold text-primary' : 'text-slate-700 dark:text-slate-300'}`,
+                        }}
+                      />
                     </div>
                   )
                 })
@@ -280,35 +308,40 @@ export default function CreateLessonDialog({
               <p className="text-sm text-red-600 mt-1">{error}</p>
             )}
           </div>
+
+          {/* Conflict warnings */}
+          {conflictWarning && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 space-y-1">
+              <div className="text-sm font-bold text-red-800 dark:text-red-400">התנגשויות שנמצאו:</div>
+              {conflictWarning.map((w, i) => (
+                <div key={i} className="text-sm text-red-700 dark:text-red-300">• {w}</div>
+              ))}
+            </div>
+          )}
+
+          <DialogFooter className="gap-2 sm:gap-0 pt-2">
+            <HeroButton
+              color="default"
+              variant="bordered"
+              size="sm"
+              onPress={() => onOpenChange(false)}
+              className="font-bold"
+            >
+              ביטול
+            </HeroButton>
+            <HeroButton
+              color="primary"
+              variant="solid"
+              size="sm"
+              onPress={handleSubmit}
+              isDisabled={submitting || !selectedTeacherId || conflictWarning !== null}
+              isLoading={submitting}
+              className="font-bold"
+            >
+              צור שיעור
+            </HeroButton>
+          </DialogFooter>
         </div>
-
-        {/* Conflict warnings */}
-        {conflictWarning && (
-          <div className="bg-red-50 border border-red-200 rounded-md p-3 space-y-1">
-            <div className="text-sm font-medium text-red-800">{'\u05D4\u05EA\u05E0\u05D2\u05E9\u05D5\u05D9\u05D5\u05EA \u05E9\u05E0\u05DE\u05E6\u05D0\u05D5:'}</div>
-            {conflictWarning.map((w, i) => (
-              <div key={i} className="text-sm text-red-700">{'\u2022'} {w}</div>
-            ))}
-          </div>
-        )}
-
-        <DialogFooter className="gap-2 sm:gap-0">
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-          >
-            {'\u05D1\u05D9\u05D8\u05D5\u05DC'}
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={submitting || !selectedTeacherId || conflictWarning !== null}
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {submitting ? '\u05D9\u05D5\u05E6\u05E8...' : '\u05E6\u05D5\u05E8 \u05E9\u05D9\u05E2\u05D5\u05E8'}
-          </button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

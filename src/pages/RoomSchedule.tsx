@@ -651,7 +651,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
   }, [selectedDay, filteredRooms, viewMode, weekData, filters, tenantRooms])
 
   return (
-    <div className={isFullscreen ? 'p-2 space-y-2 h-full flex flex-col' : 'p-6 space-y-6'}>
+    <div className={isFullscreen ? 'p-2 space-y-2 h-full flex flex-col' : 'flex flex-col gap-2 h-full overflow-hidden relative p-6'}>
       {/* Page header */}
       {isFullscreen ? (
         <div className="flex items-center gap-2 print:hidden shrink-0">
@@ -661,7 +661,10 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
         </div>
       ) : (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
-          <h1 className="text-2xl font-bold text-gray-900">לוח חדרים</h1>
+          <div>
+            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">לוח חדרים</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">ניהול וצפייה בלוח החדרים</p>
+          </div>
           {viewMode === 'day' && (
             <DaySelector
               selectedDay={selectedDay}

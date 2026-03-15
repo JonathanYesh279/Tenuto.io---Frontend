@@ -39,11 +39,11 @@ export default function UnassignedRow({ activities }: UnassignedRowProps) {
           return (
             <div
               key={activity.id}
-              className={`bg-gray-50 border border-gray-200 rounded-lg p-2 text-xs opacity-80 ${colors.text}`}
+              className={`bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs opacity-80 ${colors.text}`}
             >
               <div className="font-medium">{activity.teacherName}</div>
               <div className="opacity-80">{activity.label}</div>
-              <div className="text-gray-500 mt-0.5">
+              <div className="text-slate-500 dark:text-slate-400 mt-0.5">
                 {activity.startTime} - {activity.endTime}
               </div>
               <div className="mt-0.5">

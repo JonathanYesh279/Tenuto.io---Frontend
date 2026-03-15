@@ -52,7 +52,7 @@ export default function DroppableCell({ room, timeSlot, isEmpty, roomActivities,
         'h-full w-full transition-colors',
         isOver && !wouldConflict && 'bg-green-50 ring-2 ring-green-400 ring-inset rounded',
         isOver && wouldConflict && 'bg-red-50 ring-2 ring-red-400 ring-inset rounded cursor-not-allowed',
-        isEmpty && onClick && !isOver && 'cursor-pointer hover:bg-gray-50'
+        isEmpty && onClick && !isOver && 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800'
       )}
     >
       {children}

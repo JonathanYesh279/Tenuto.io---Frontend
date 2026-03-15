@@ -207,9 +207,9 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
         }}
       >
         {/* ====== Header Row ====== */}
-        {/* Empty cell for room header column */}
+        {/* Corner cell: sticky both top and right (RTL) */}
         <div
-          className="border-b border-l border-slate-200/50 dark:border-slate-700/50 sticky top-0 z-20 backdrop-blur-md bg-white/80 dark:bg-slate-900/80"
+          className="border-b border-l border-slate-200/50 dark:border-slate-700/50 sticky top-0 right-0 z-30 bg-white dark:bg-slate-900"
           style={{ gridColumn: '1', gridRow: '1' }}
         />
 
@@ -243,9 +243,9 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
 
           return (
             <div key={room.room} className="contents">
-              {/* Room name cell -- sticky on right (RTL) */}
+              {/* Room name cell -- sticky on right (RTL), opaque bg, high z-index */}
               <div
-                className="font-semibold text-sm text-slate-700 dark:text-slate-300 px-3 py-2 border-b border-l border-slate-200/50 dark:border-slate-700/50 flex items-center sticky right-0 z-10 backdrop-blur-md bg-white/70 dark:bg-slate-800/70"
+                className="font-semibold text-sm text-slate-700 dark:text-slate-300 px-3 py-2 border-b border-l border-slate-200/50 dark:border-slate-700/50 flex items-center sticky right-0 z-20 bg-white dark:bg-slate-900 shadow-[−2px_0_4px_rgba(0,0,0,0.05)]"
                 style={{ gridColumn: '1', gridRow: `${rowNumber}` }}
               >
                 <span className="truncate">{room.room}</span>

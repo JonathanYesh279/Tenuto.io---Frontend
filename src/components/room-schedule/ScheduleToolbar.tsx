@@ -17,7 +17,7 @@ export default function ScheduleToolbar({
   onExportTabularPDF,
 }: ScheduleToolbarProps) {
   return (
-    <div className="flex items-center justify-between print:hidden">
+    <>
       {/* View mode toggle */}
       <Tabs
         aria-label="מצב תצוגה"
@@ -25,15 +25,16 @@ export default function ScheduleToolbar({
         onSelectionChange={(key) => onViewModeChange(key as 'day' | 'week')}
         variant="solid"
         color="default"
+        size="sm"
         classNames={{
-          tab: "font-bold text-sm",
+          tab: "font-bold text-xs",
         }}
       >
         <Tab
           key="day"
           title={
-            <div className="flex items-center gap-1.5">
-              <CalendarBlank size={14} />
+            <div className="flex items-center gap-1">
+              <CalendarBlank size={13} />
               <span>יום</span>
             </div>
           }
@@ -41,57 +42,59 @@ export default function ScheduleToolbar({
         <Tab
           key="week"
           title={
-            <div className="flex items-center gap-1.5">
-              <Calendar size={14} />
+            <div className="flex items-center gap-1">
+              <Calendar size={13} />
               <span>שבוע</span>
             </div>
           }
         />
       </Tabs>
 
-      {/* Print, Export & Fullscreen actions */}
-      <div className="flex items-center gap-2">
-        <HeroButton
-          color="default"
-          variant="bordered"
-          size="sm"
-          onPress={() => window.open('/room-schedule/fullscreen', '_blank')}
-          startContent={<ArrowsOut size={14} />}
-          className="font-bold"
-        >
-          מסך מלא
-        </HeroButton>
-        <HeroButton
-          color="default"
-          variant="bordered"
-          size="sm"
-          onPress={onPrint}
-          startContent={<Printer size={14} />}
-          className="font-bold"
-        >
-          הדפסה
-        </HeroButton>
-        <HeroButton
-          color="default"
-          variant="bordered"
-          size="sm"
-          onPress={onExportGridPDF}
-          startContent={<FilePdf size={14} />}
-          className="font-bold"
-        >
-          PDF חזותי
-        </HeroButton>
-        <HeroButton
-          color="default"
-          variant="bordered"
-          size="sm"
-          onPress={onExportTabularPDF}
-          startContent={<Table size={14} />}
-          className="font-bold"
-        >
-          PDF טבלאי
-        </HeroButton>
-      </div>
-    </div>
+      {/* Action buttons */}
+      <HeroButton
+        color="default"
+        variant="bordered"
+        size="sm"
+        isIconOnly
+        onPress={() => window.open('/room-schedule/fullscreen', '_blank')}
+        className="min-w-8 w-8 h-8"
+        aria-label="מסך מלא"
+      >
+        <ArrowsOut size={14} />
+      </HeroButton>
+      <HeroButton
+        color="default"
+        variant="bordered"
+        size="sm"
+        isIconOnly
+        onPress={onPrint}
+        className="min-w-8 w-8 h-8"
+        aria-label="הדפסה"
+      >
+        <Printer size={14} />
+      </HeroButton>
+      <HeroButton
+        color="default"
+        variant="bordered"
+        size="sm"
+        isIconOnly
+        onPress={onExportGridPDF}
+        className="min-w-8 w-8 h-8"
+        aria-label="PDF חזותי"
+      >
+        <FilePdf size={14} />
+      </HeroButton>
+      <HeroButton
+        color="default"
+        variant="bordered"
+        size="sm"
+        isIconOnly
+        onPress={onExportTabularPDF}
+        className="min-w-8 w-8 h-8"
+        aria-label="PDF טבלאי"
+      >
+        <Table size={14} />
+      </HeroButton>
+    </>
   )
 }

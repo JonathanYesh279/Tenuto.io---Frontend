@@ -26,16 +26,27 @@ export default function SummaryBar({
       isCompact
       variant="light"
       defaultExpandedKeys={[]}
-      className="px-0"
+      className="px-0 shrink-0"
     >
       <AccordionItem
         key="stats"
         aria-label="סטטיסטיקות"
+        classNames={{
+          trigger: 'py-1',
+          title: 'text-xs',
+        }}
         title={
-          <div className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
-            <ChartBar size={16} weight="duotone" />
-            <span>סטטיסטיקות</span>
-            <span className="text-xs font-normal text-slate-400">({totalRooms} חדרים • {occupiedSlots} תפוסות • {conflictCount} התנגשויות)</span>
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400">
+            <ChartBar size={13} weight="duotone" />
+            <span>{totalRooms} חדרים</span>
+            <span className="text-slate-300 dark:text-slate-600">•</span>
+            <span>{occupiedSlots} תפוסות</span>
+            {conflictCount > 0 && (
+              <>
+                <span className="text-slate-300 dark:text-slate-600">•</span>
+                <span className="text-red-600">{conflictCount} התנגשויות</span>
+              </>
+            )}
           </div>
         }
       >

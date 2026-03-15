@@ -652,7 +652,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
 
   return (
     <div className={isFullscreen ? 'p-2 space-y-2 h-full flex flex-col' : 'flex flex-col gap-2 h-full overflow-hidden relative p-6'}>
-      {/* Page header */}
+      {/* Compact header: title + day selector + view mode + actions */}
       {isFullscreen ? (
         <div className="flex items-center gap-2 print:hidden shrink-0">
           {viewMode === 'day' && (
@@ -660,48 +660,49 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
           )}
         </div>
       ) : (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
-          <div>
-            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">לוח חדרים</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">ניהול וצפייה בלוח החדרים</p>
+        <div className="print:hidden space-y-2">
+          {/* Row 1: Title + Day selector + View mode */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-4 min-w-0">
+              <h1 className="text-xl font-extrabold text-slate-900 dark:text-white whitespace-nowrap">לוח חדרים</h1>
+              {viewMode === 'day' && (
+                <DaySelector
+                  selectedDay={selectedDay}
+                  onDayChange={setSelectedDay}
+                  disabled={loading}
+                />
+              )}
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <ScheduleToolbar
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+                onPrint={handlePrint}
+                onExportGridPDF={handleExportGridPDF}
+                onExportTabularPDF={handleExportTabularPDF}
+              />
+            </div>
           </div>
+
+          {/* Row 2: Filters + Statistics (day mode only) */}
           {viewMode === 'day' && (
-            <DaySelector
-              selectedDay={selectedDay}
-              onDayChange={setSelectedDay}
-              disabled={loading}
-            />
+            <div className="flex items-center justify-between gap-3">
+              <FilterBar filters={filters} onFiltersChange={setFilters} rooms={roomNames} />
+              <SummaryBar
+                totalRooms={stats.totalRooms}
+                occupiedSlots={stats.occupiedSlots}
+                freeSlots={stats.freeSlots}
+                conflictCount={stats.conflictCount}
+                loading={loading}
+              />
+            </div>
           )}
         </div>
       )}
 
-      {/* Schedule toolbar (print/export/view mode) */}
-      <ScheduleToolbar
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        onPrint={handlePrint}
-        onExportGridPDF={handleExportGridPDF}
-        onExportTabularPDF={handleExportTabularPDF}
-      />
-
       {/* Day view content */}
       {viewMode === 'day' && (
         <>
-          {/* Filter controls */}
-          <div className="print:hidden">
-            <FilterBar filters={filters} onFiltersChange={setFilters} rooms={roomNames} />
-          </div>
-
-          {/* Summary statistics bar (hidden in fullscreen to maximize grid space) */}
-          {!isFullscreen && (
-            <SummaryBar
-              totalRooms={stats.totalRooms}
-              occupiedSlots={stats.occupiedSlots}
-              freeSlots={stats.freeSlots}
-              conflictCount={stats.conflictCount}
-              loading={loading}
-            />
-          )}
 
           {/* Room grid with drag-and-drop */}
           <div className={`print:overflow-visible print:max-h-none ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>

@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button as HeroButton, User, Select, SelectItem, Input, Chip } from '@heroui/react'
 import { Clock, MapPin, CalendarBlank, MusicNote, Users as UsersIcon } from '@phosphor-icons/react'
-import { roomScheduleService, teacherScheduleService } from '@/services/apiService'
+import { roomScheduleService, teacherScheduleService, rehearsalService, theoryService } from '@/services/apiService'
 import { DAY_NAMES } from './utils'
 import type { ActivityData } from './ActivityCell'
 import { ACTIVITY_COLORS } from './ActivityCell'
@@ -44,10 +44,10 @@ export default function ActivityDetailModal({
   rooms = [],
 }: ActivityDetailModalProps) {
   // Local edit state
-  const [editDay, setEditDay] = useState(day)
   const [editStartTime, setEditStartTime] = useState('')
   const [editEndTime, setEditEndTime] = useState('')
   const [editRoom, setEditRoom] = useState('')
+  const [editDay, setEditDay] = useState(day)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -66,37 +66,48 @@ export default function ActivityDetailModal({
   if (!activity) return null
 
   const colors = ACTIVITY_COLORS[activity.source] || ACTIVITY_COLORS.timeBlock
-  const isEditable = activity.source === 'timeBlock'
-  const hasLesson = !!activity.lessonId
+  const hasLesson = activity.source === 'timeBlock' && !!activity.lessonId
 
+  // ---- Save handler (all source types) ----
   const handleSave = async () => {
-    if (!activity.blockId) return
     setSaving(true)
     try {
-      if (hasLesson) {
-        // Lesson-level reschedule
-        await roomScheduleService.rescheduleLesson({
-          teacherId: activity.teacherId,
-          sourceBlockId: activity.blockId,
-          lessonId: activity.lessonId!,
-          targetRoom: editRoom,
-          targetDay: editDay,
-          targetStartTime: editStartTime,
-          targetEndTime: editEndTime,
+      if (activity.source === 'timeBlock') {
+        if (hasLesson && activity.blockId) {
+          await roomScheduleService.rescheduleLesson({
+            teacherId: activity.teacherId,
+            sourceBlockId: activity.blockId,
+            lessonId: activity.lessonId!,
+            targetRoom: editRoom,
+            targetDay: editDay,
+            targetStartTime: editStartTime,
+            targetEndTime: editEndTime,
+          })
+        } else if (activity.blockId) {
+          await roomScheduleService.moveActivity({
+            activityId: activity.id,
+            source: 'timeBlock',
+            targetRoom: editRoom,
+            targetStartTime: editStartTime,
+            targetEndTime: editEndTime,
+            teacherId: activity.teacherId,
+            blockId: activity.blockId,
+          })
+        }
+      } else if (activity.source === 'rehearsal') {
+        await rehearsalService.updateRehearsal(activity.id, {
+          startTime: editStartTime,
+          endTime: editEndTime,
+          location: editRoom,
         })
-      } else {
-        // Block-level move (no assigned lessons)
-        await roomScheduleService.moveActivity({
-          activityId: activity.id,
-          source: 'timeBlock',
-          targetRoom: editRoom,
-          targetStartTime: editStartTime,
-          targetEndTime: editEndTime,
-          teacherId: activity.teacherId,
-          blockId: activity.blockId,
+      } else if (activity.source === 'theory') {
+        await theoryService.updateTheoryLesson(activity.id, {
+          startTime: editStartTime,
+          endTime: editEndTime,
+          location: editRoom,
         })
       }
-      toast.success('השיעור עודכן בהצלחה')
+      toast.success('הפעילות עודכנה בהצלחה')
       onReschedule()
     } catch (err: any) {
       if (err?.code === 'CONFLICT' && err?.conflicts?.length > 0) {
@@ -105,39 +116,49 @@ export default function ActivityDetailModal({
           .join(', ')
         toast.error(`התנגשות בחדר: ${conflictNames}`)
       } else {
-        toast.error('שגיאה בעדכון השיעור')
+        toast.error('שגיאה בעדכון הפעילות')
       }
     } finally {
       setSaving(false)
     }
   }
 
+  // ---- Delete handler (all source types) ----
   const handleDelete = async () => {
-    if (!activity.blockId) return
     setDeleting(true)
     try {
-      if (hasLesson) {
-        await roomScheduleService.deleteLessonFromBlock(
-          activity.teacherId,
-          activity.blockId,
-          activity.lessonId!,
-        )
-      } else {
-        // Delete entire time block (no lessons assigned)
-        await teacherScheduleService.deleteTimeBlock(
-          activity.teacherId,
-          activity.blockId,
-        )
+      if (activity.source === 'timeBlock') {
+        if (hasLesson && activity.blockId) {
+          await roomScheduleService.deleteLessonFromBlock(
+            activity.teacherId,
+            activity.blockId,
+            activity.lessonId!,
+          )
+        } else if (activity.blockId) {
+          await teacherScheduleService.deleteTimeBlock(
+            activity.teacherId,
+            activity.blockId,
+          )
+        }
+      } else if (activity.source === 'rehearsal') {
+        await rehearsalService.deleteRehearsal(activity.id)
+      } else if (activity.source === 'theory') {
+        await theoryService.deleteTheoryLesson(activity.id)
       }
-      toast.success('השיעור נמחק בהצלחה')
+      toast.success('הפעילות נמחקה בהצלחה')
       onDelete()
     } catch {
-      toast.error('שגיאה במחיקת השיעור')
+      toast.error('שגיאה במחיקת הפעילות')
     } finally {
       setDeleting(false)
       setConfirmDelete(false)
     }
   }
+
+  // Label for delete button based on source type
+  const deleteLabel = activity.source === 'rehearsal' ? 'מחיקת חזרה'
+    : activity.source === 'theory' ? 'מחיקת שיעור תאוריה'
+    : 'מחיקת שיעור'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -168,23 +189,25 @@ export default function ActivityDetailModal({
           {/* Teacher + Student info cards */}
           <div className="mt-4 space-y-3">
             {/* Teacher */}
-            <div className="flex items-center gap-3 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl px-3 py-2.5 border border-white/80 dark:border-slate-700/50">
-              <User
-                avatarProps={{
-                  radius: 'full',
-                  size: 'sm',
-                  showFallback: true,
-                  name: activity.teacherName,
-                  style: { backgroundColor: getAvatarColorHex(activity.teacherName || ''), color: '#fff' },
-                }}
-                name={activity.teacherName}
-                description="מורה"
-                classNames={{
-                  name: 'text-sm font-bold text-slate-800 dark:text-white',
-                  description: 'text-xs text-slate-400',
-                }}
-              />
-            </div>
+            {activity.teacherName ? (
+              <div className="flex items-center gap-3 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl px-3 py-2.5 border border-white/80 dark:border-slate-700/50">
+                <User
+                  avatarProps={{
+                    radius: 'full',
+                    size: 'sm',
+                    showFallback: true,
+                    name: activity.teacherName,
+                    style: { backgroundColor: getAvatarColorHex(activity.teacherName || ''), color: '#fff' },
+                  }}
+                  name={activity.teacherName}
+                  description={activity.source === 'rehearsal' ? 'מנצח/ת' : activity.source === 'theory' ? 'מורה תאוריה' : 'מורה'}
+                  classNames={{
+                    name: 'text-sm font-bold text-slate-800 dark:text-white',
+                    description: 'text-xs text-slate-400',
+                  }}
+                />
+              </div>
+            ) : null}
 
             {/* Student/Group */}
             <div className="flex items-center gap-3 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl px-3 py-2.5 border border-white/80 dark:border-slate-700/50">
@@ -199,7 +222,9 @@ export default function ActivityDetailModal({
               </div>
               <div>
                 <div className="text-sm font-bold text-slate-800 dark:text-white">{activity.label}</div>
-                <div className="text-xs text-slate-400">תלמיד/קבוצה</div>
+                <div className="text-xs text-slate-400">
+                  {activity.source === 'rehearsal' ? 'תזמורת/הרכב' : activity.source === 'theory' ? 'קטגוריה' : 'תלמיד/קבוצה'}
+                </div>
               </div>
             </div>
           </div>
@@ -221,150 +246,139 @@ export default function ActivityDetailModal({
           </div>
         </div>
 
-        {/* Edit section -- for all timeBlock activities */}
-        {isEditable && (
-          <div className="px-6 pb-5">
-            <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
-              <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">
-                עריכת שיעור
-              </h4>
-              <div className="space-y-3">
-                <div className={hasLesson ? 'grid grid-cols-2 gap-3' : ''}>
-                  {hasLesson && (
-                    <Select
-                      label="יום"
-                      size="sm"
-                      variant="bordered"
-                      selectedKeys={[String(editDay)]}
-                      onSelectionChange={(keys) => {
-                        const val = Array.from(keys)[0]
-                        if (val !== undefined) setEditDay(Number(val))
-                      }}
-                      classNames={{
-                        trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
-                        label: 'text-slate-500 dark:text-slate-400 font-medium',
-                      }}
-                    >
-                      {DAY_NAMES.map((name, idx) => (
-                        <SelectItem key={String(idx)}>{name}</SelectItem>
-                      ))}
-                    </Select>
-                  )}
+        {/* Edit section -- for all activity types */}
+        <div className="px-6 pb-5">
+          <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">
+              עריכה
+            </h4>
+            <div className="space-y-3">
+              <div className={hasLesson ? 'grid grid-cols-2 gap-3' : ''}>
+                {hasLesson && (
                   <Select
-                    label="חדר"
+                    label="יום"
                     size="sm"
                     variant="bordered"
-                    selectedKeys={[editRoom]}
+                    selectedKeys={[String(editDay)]}
                     onSelectionChange={(keys) => {
-                      const val = Array.from(keys)[0] as string
-                      if (val) setEditRoom(val)
+                      const val = Array.from(keys)[0]
+                      if (val !== undefined) setEditDay(Number(val))
                     }}
                     classNames={{
                       trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
                       label: 'text-slate-500 dark:text-slate-400 font-medium',
                     }}
                   >
-                    {rooms.filter(r => r.isActive).map((r) => (
-                      <SelectItem key={r.name}>{r.name}</SelectItem>
+                    {DAY_NAMES.map((name, idx) => (
+                      <SelectItem key={String(idx)}>{name}</SelectItem>
                     ))}
-                    {editRoom && !rooms.some(r => r.name === editRoom && r.isActive) && (
-                      <SelectItem key={editRoom}>{editRoom}</SelectItem>
-                    )}
                   </Select>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <Input
-                    type="time"
-                    label="שעת התחלה"
-                    size="sm"
-                    variant="bordered"
-                    value={editStartTime}
-                    onValueChange={setEditStartTime}
-                    classNames={{
-                      inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
-                      label: 'text-slate-500 dark:text-slate-400 font-medium',
-                    }}
-                  />
-                  <Input
-                    type="time"
-                    label="שעת סיום"
-                    size="sm"
-                    variant="bordered"
-                    value={editEndTime}
-                    onValueChange={setEditEndTime}
-                    classNames={{
-                      inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
-                      label: 'text-slate-500 dark:text-slate-400 font-medium',
-                    }}
-                  />
-                </div>
+                )}
+                <Select
+                  label="חדר"
+                  size="sm"
+                  variant="bordered"
+                  selectedKeys={[editRoom]}
+                  onSelectionChange={(keys) => {
+                    const val = Array.from(keys)[0] as string
+                    if (val) setEditRoom(val)
+                  }}
+                  classNames={{
+                    trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                    label: 'text-slate-500 dark:text-slate-400 font-medium',
+                  }}
+                >
+                  {rooms.filter(r => r.isActive).map((r) => (
+                    <SelectItem key={r.name}>{r.name}</SelectItem>
+                  ))}
+                  {editRoom && !rooms.some(r => r.name === editRoom && r.isActive) && (
+                    <SelectItem key={editRoom}>{editRoom}</SelectItem>
+                  )}
+                </Select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  type="time"
+                  label="שעת התחלה"
+                  size="sm"
+                  variant="bordered"
+                  value={editStartTime}
+                  onValueChange={setEditStartTime}
+                  classNames={{
+                    inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                    label: 'text-slate-500 dark:text-slate-400 font-medium',
+                  }}
+                />
+                <Input
+                  type="time"
+                  label="שעת סיום"
+                  size="sm"
+                  variant="bordered"
+                  value={editEndTime}
+                  onValueChange={setEditEndTime}
+                  classNames={{
+                    inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                    label: 'text-slate-500 dark:text-slate-400 font-medium',
+                  }}
+                />
               </div>
             </div>
+          </div>
 
-            {/* Action buttons */}
-            <div className="flex items-center justify-between pt-4 mt-1">
-              {/* Delete button */}
-              <div>
-                {!confirmDelete ? (
+          {/* Action buttons */}
+          <div className="flex items-center justify-between pt-4 mt-1">
+            {/* Delete button */}
+            <div>
+              {!confirmDelete ? (
+                <HeroButton
+                  color="danger"
+                  variant="bordered"
+                  size="sm"
+                  onPress={() => setConfirmDelete(true)}
+                  className="font-bold hover:!bg-danger hover:!text-white hover:!border-danger transition-all"
+                >
+                  {deleteLabel}
+                </HeroButton>
+              ) : (
+                <div className="flex items-center gap-2">
                   <HeroButton
                     color="danger"
+                    variant="solid"
+                    size="sm"
+                    onPress={handleDelete}
+                    isDisabled={deleting}
+                    isLoading={deleting}
+                    className="font-bold"
+                  >
+                    אישור מחיקה
+                  </HeroButton>
+                  <HeroButton
+                    color="default"
                     variant="bordered"
                     size="sm"
-                    onPress={() => setConfirmDelete(true)}
-                    className="font-bold hover:!bg-danger hover:!text-white hover:!border-danger transition-all"
+                    onPress={() => setConfirmDelete(false)}
+                    className="font-bold"
                   >
-                    מחיקת שיעור
+                    ביטול
                   </HeroButton>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <HeroButton
-                      color="danger"
-                      variant="solid"
-                      size="sm"
-                      onPress={handleDelete}
-                      isDisabled={deleting}
-                      isLoading={deleting}
-                      className="font-bold"
-                    >
-                      אישור מחיקה
-                    </HeroButton>
-                    <HeroButton
-                      color="default"
-                      variant="bordered"
-                      size="sm"
-                      onPress={() => setConfirmDelete(false)}
-                      className="font-bold"
-                    >
-                      ביטול
-                    </HeroButton>
-                  </div>
-                )}
-              </div>
-
-              {/* Save button */}
-              <HeroButton
-                color="primary"
-                variant="solid"
-                size="sm"
-                onPress={handleSave}
-                isDisabled={saving}
-                isLoading={saving}
-                className="font-bold"
-              >
-                שמור שינויים
-              </HeroButton>
+                </div>
+              )}
             </div>
-          </div>
-        )}
 
-        {/* Read-only notice for rehearsal/theory */}
-        {activity.source !== 'timeBlock' && (
-          <div className="px-6 pb-5">
-            <div className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 border border-slate-100 dark:border-slate-700">
-              ניתן לערוך חזרות ותאוריה בעמודים הייעודיים
-            </div>
+            {/* Save button */}
+            <HeroButton
+              color="primary"
+              variant="solid"
+              size="sm"
+              onPress={handleSave}
+              isDisabled={saving}
+              isLoading={saving}
+              className="font-bold"
+            >
+              שמור שינויים
+            </HeroButton>
           </div>
-        )}
+        </div>
       </DialogContent>
     </Dialog>
   )

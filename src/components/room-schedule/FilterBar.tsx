@@ -75,9 +75,9 @@ export default function FilterBar({ filters, onFiltersChange, rooms }: FilterBar
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex items-center gap-2 flex-nowrap min-w-0">
       {/* Teacher name search */}
-      <div className="w-48 flex-none">
+      <div className="w-40 flex-none">
         <SearchInput
           value={filters.teacherName}
           onChange={handleTeacherNameChange}
@@ -106,7 +106,7 @@ export default function FilterBar({ filters, onFiltersChange, rooms }: FilterBar
             type="button"
             onClick={() => toggleActivityType(btn.type)}
             className={cn(
-              'px-3 py-1.5 text-sm rounded-md border transition-colors',
+              'px-2 py-1 text-xs rounded-md border transition-colors whitespace-nowrap',
               isActive
                 ? `${btn.activeBg} ${btn.activeText} border-transparent font-medium shadow-sm`
                 : 'bg-white text-slate-400 border-slate-200 line-through dark:bg-slate-800 dark:text-slate-500 dark:border-slate-700'
@@ -122,10 +122,10 @@ export default function FilterBar({ filters, onFiltersChange, rooms }: FilterBar
         <button
           type="button"
           onClick={clearFilters}
-          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+          className="flex items-center gap-0.5 text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
         >
-          <XIcon size={14} weight="bold" />
-          <span>נקה סינון</span>
+          <XIcon size={12} weight="bold" />
+          <span>נקה</span>
         </button>
       )}
     </div>

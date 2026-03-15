@@ -255,27 +255,25 @@ export default function ActivityDetailModal({
               עריכה
             </h4>
             <div className="space-y-3">
-              <div className={hasLesson ? 'grid grid-cols-2 gap-3' : ''}>
-                {hasLesson && (
-                  <Select
-                    label="יום"
-                    size="sm"
-                    variant="bordered"
-                    selectedKeys={[String(editDay)]}
-                    onSelectionChange={(keys) => {
-                      const val = Array.from(keys)[0]
-                      if (val !== undefined) setEditDay(Number(val))
-                    }}
-                    classNames={{
-                      trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
-                      label: 'text-slate-500 dark:text-slate-400 font-medium',
-                    }}
-                  >
-                    {DAY_NAMES.map((name, idx) => (
-                      <SelectItem key={String(idx)}>{name}</SelectItem>
-                    ))}
-                  </Select>
-                )}
+              <div className="grid grid-cols-2 gap-3">
+                <Select
+                  label="יום"
+                  size="sm"
+                  variant="bordered"
+                  selectedKeys={[String(editDay)]}
+                  onSelectionChange={(keys) => {
+                    const val = Array.from(keys)[0]
+                    if (val !== undefined) setEditDay(Number(val))
+                  }}
+                  classNames={{
+                    trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                    label: 'text-slate-500 dark:text-slate-400 font-medium',
+                  }}
+                >
+                  {DAY_NAMES.map((name, idx) => (
+                    <SelectItem key={String(idx)}>{name}</SelectItem>
+                  ))}
+                </Select>
                 <Select
                   label="חדר"
                   size="sm"

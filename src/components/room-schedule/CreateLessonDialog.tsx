@@ -219,24 +219,9 @@ export default function CreateLessonDialog({
               מורה
             </label>
 
-            {/* Search input */}
-            <Input
-              type="text"
-              placeholder="חיפוש מורה..."
-              size="sm"
-              variant="bordered"
-              value={teacherSearch}
-              onValueChange={setTeacherSearch}
-              startContent={<MagnifyingGlass size={14} className="text-slate-400" />}
-              classNames={{
-                inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 mb-2',
-                label: 'text-slate-500 dark:text-slate-400 font-medium',
-              }}
-            />
-
             {/* Selected teacher indicator */}
-            {selectedTeacher && (
-              <div className="mb-2 flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-3 py-2">
+            {selectedTeacher ? (
+              <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-3 py-2">
                 <User
                   avatarProps={{
                     radius: 'full',
@@ -252,56 +237,71 @@ export default function CreateLessonDialog({
                 />
                 <button
                   type="button"
-                  onClick={() => setSelectedTeacherId('')}
+                  onClick={() => {
+                    setSelectedTeacherId('')
+                    setTeacherSearch('')
+                  }}
                   className="text-primary/60 hover:text-primary text-xs font-medium transition-colors"
                 >
                   שנה
                 </button>
               </div>
-            )}
+            ) : (
+              <>
+                {/* Search input */}
+                <Input
+                  type="text"
+                  placeholder="חיפוש מורה..."
+                  size="sm"
+                  variant="bordered"
+                  value={teacherSearch}
+                  onValueChange={setTeacherSearch}
+                  startContent={<MagnifyingGlass size={14} className="text-slate-400" />}
+                  classNames={{
+                    inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 mb-2',
+                    label: 'text-slate-500 dark:text-slate-400 font-medium',
+                  }}
+                />
 
-            {/* Teacher list */}
-            <div className="max-h-40 overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl">
-              {filteredTeachers.length === 0 ? (
-                <div className="px-3 py-3 text-sm text-slate-400 text-center">
-                  לא נמצאו מורים
-                </div>
-              ) : (
-                filteredTeachers.map((teacher) => {
-                  const isSelected = teacher._id === selectedTeacherId
-                  const name = getTeacherDisplayName(teacher)
-                  return (
-                    <div
-                      key={teacher._id}
-                      onClick={() => {
-                        setSelectedTeacherId(teacher._id)
-                        setError('')
-                      }}
-                      className={`px-3 py-2 cursor-pointer transition-colors ${
-                        isSelected
-                          ? 'bg-primary/5 border-r-2 border-primary font-medium'
-                          : 'hover:bg-slate-50 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <User
-                        avatarProps={{
-                          radius: 'full',
-                          size: 'sm',
-                          showFallback: true,
-                          name,
-                          style: { backgroundColor: getAvatarColorHex(name), color: '#fff', width: 24, height: 24, fontSize: 10 },
-                        }}
-                        name={name}
-                        classNames={{
-                          base: 'justify-start gap-2',
-                          name: `text-sm ${isSelected ? 'font-bold text-primary' : 'text-slate-700 dark:text-slate-300'}`,
-                        }}
-                      />
+                {/* Teacher list */}
+                <div className="max-h-40 overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl">
+                  {filteredTeachers.length === 0 ? (
+                    <div className="px-3 py-3 text-sm text-slate-400 text-center">
+                      לא נמצאו מורים
                     </div>
-                  )
-                })
-              )}
-            </div>
+                  ) : (
+                    filteredTeachers.map((teacher) => {
+                      const name = getTeacherDisplayName(teacher)
+                      return (
+                        <div
+                          key={teacher._id}
+                          onClick={() => {
+                            setSelectedTeacherId(teacher._id)
+                            setError('')
+                          }}
+                          className="px-3 py-2 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                        >
+                          <User
+                            avatarProps={{
+                              radius: 'full',
+                              size: 'sm',
+                              showFallback: true,
+                              name,
+                              style: { backgroundColor: getAvatarColorHex(name), color: '#fff', width: 24, height: 24, fontSize: 10 },
+                            }}
+                            name={name}
+                            classNames={{
+                              base: 'justify-start gap-2',
+                              name: 'text-sm text-slate-700 dark:text-slate-300',
+                            }}
+                          />
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </>
+            )}
 
             {/* Validation error */}
             {error && (

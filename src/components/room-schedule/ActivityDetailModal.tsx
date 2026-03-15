@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button as HeroButton, User, Select, SelectItem, Input, Chip } from '@heroui/react'
 import { Clock, MapPin, CalendarBlank, MusicNote, Users as UsersIcon } from '@phosphor-icons/react'
-import { roomScheduleService } from '@/services/apiService'
+import { roomScheduleService, teacherScheduleService } from '@/services/apiService'
 import { DAY_NAMES } from './utils'
 import type { ActivityData } from './ActivityCell'
 import { ACTIVITY_COLORS } from './ActivityCell'
@@ -66,21 +66,36 @@ export default function ActivityDetailModal({
   if (!activity) return null
 
   const colors = ACTIVITY_COLORS[activity.source] || ACTIVITY_COLORS.timeBlock
-  const isEditable = activity.source === 'timeBlock' && !!activity.lessonId
+  const isEditable = activity.source === 'timeBlock'
+  const hasLesson = !!activity.lessonId
 
   const handleSave = async () => {
-    if (!activity.blockId || !activity.lessonId) return
+    if (!activity.blockId) return
     setSaving(true)
     try {
-      await roomScheduleService.rescheduleLesson({
-        teacherId: activity.teacherId,
-        sourceBlockId: activity.blockId,
-        lessonId: activity.lessonId,
-        targetRoom: editRoom,
-        targetDay: editDay,
-        targetStartTime: editStartTime,
-        targetEndTime: editEndTime,
-      })
+      if (hasLesson) {
+        // Lesson-level reschedule
+        await roomScheduleService.rescheduleLesson({
+          teacherId: activity.teacherId,
+          sourceBlockId: activity.blockId,
+          lessonId: activity.lessonId!,
+          targetRoom: editRoom,
+          targetDay: editDay,
+          targetStartTime: editStartTime,
+          targetEndTime: editEndTime,
+        })
+      } else {
+        // Block-level move (no assigned lessons)
+        await roomScheduleService.moveActivity({
+          activityId: activity.id,
+          source: 'timeBlock',
+          targetRoom: editRoom,
+          targetStartTime: editStartTime,
+          targetEndTime: editEndTime,
+          teacherId: activity.teacherId,
+          blockId: activity.blockId,
+        })
+      }
       toast.success('השיעור עודכן בהצלחה')
       onReschedule()
     } catch (err: any) {
@@ -98,14 +113,22 @@ export default function ActivityDetailModal({
   }
 
   const handleDelete = async () => {
-    if (!activity.blockId || !activity.lessonId) return
+    if (!activity.blockId) return
     setDeleting(true)
     try {
-      await roomScheduleService.deleteLessonFromBlock(
-        activity.teacherId,
-        activity.blockId,
-        activity.lessonId,
-      )
+      if (hasLesson) {
+        await roomScheduleService.deleteLessonFromBlock(
+          activity.teacherId,
+          activity.blockId,
+          activity.lessonId!,
+        )
+      } else {
+        // Delete entire time block (no lessons assigned)
+        await teacherScheduleService.deleteTimeBlock(
+          activity.teacherId,
+          activity.blockId,
+        )
+      }
       toast.success('השיעור נמחק בהצלחה')
       onDelete()
     } catch {
@@ -198,7 +221,7 @@ export default function ActivityDetailModal({
           </div>
         </div>
 
-        {/* Edit section -- only for timeBlock with lessonId */}
+        {/* Edit section -- for all timeBlock activities */}
         {isEditable && (
           <div className="px-6 pb-5">
             <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
@@ -206,25 +229,27 @@ export default function ActivityDetailModal({
                 עריכת שיעור
               </h4>
               <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <Select
-                    label="יום"
-                    size="sm"
-                    variant="bordered"
-                    selectedKeys={[String(editDay)]}
-                    onSelectionChange={(keys) => {
-                      const val = Array.from(keys)[0]
-                      if (val !== undefined) setEditDay(Number(val))
-                    }}
-                    classNames={{
-                      trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
-                      label: 'text-slate-500 dark:text-slate-400 font-medium',
-                    }}
-                  >
-                    {DAY_NAMES.map((name, idx) => (
-                      <SelectItem key={String(idx)}>{name}</SelectItem>
-                    ))}
-                  </Select>
+                <div className={hasLesson ? 'grid grid-cols-2 gap-3' : ''}>
+                  {hasLesson && (
+                    <Select
+                      label="יום"
+                      size="sm"
+                      variant="bordered"
+                      selectedKeys={[String(editDay)]}
+                      onSelectionChange={(keys) => {
+                        const val = Array.from(keys)[0]
+                        if (val !== undefined) setEditDay(Number(val))
+                      }}
+                      classNames={{
+                        trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
+                        label: 'text-slate-500 dark:text-slate-400 font-medium',
+                      }}
+                    >
+                      {DAY_NAMES.map((name, idx) => (
+                        <SelectItem key={String(idx)}>{name}</SelectItem>
+                      ))}
+                    </Select>
+                  )}
                   <Select
                     label="חדר"
                     size="sm"
@@ -286,7 +311,7 @@ export default function ActivityDetailModal({
                     variant="bordered"
                     size="sm"
                     onPress={() => setConfirmDelete(true)}
-                    className="font-bold"
+                    className="font-bold hover:!bg-danger hover:!text-white hover:!border-danger transition-all"
                   >
                     מחיקת שיעור
                   </HeroButton>

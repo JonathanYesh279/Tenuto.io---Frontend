@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { DndContext, DragOverlay, PointerSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core'
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core'
-import { roomScheduleService, tenantService, teacherService } from '@/services/apiService'
+import { roomScheduleService, tenantService, teacherService, teacherScheduleService } from '@/services/apiService'
 import { useAuth } from '@/services/authContext'
 import DaySelector from '@/components/room-schedule/DaySelector'
 import RoomGrid from '@/components/room-schedule/RoomGrid'
@@ -258,6 +258,67 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
   // Refresh grid after lesson creation
   const handleLessonCreated = useCallback(() => {
     loadSchedule()
+  }, [loadSchedule])
+
+  // Assign room to an unassigned activity
+  const handleAssignRoom = useCallback(async (activity: any, room: string) => {
+    try {
+      if (activity.source === 'timeBlock' && activity.blockId) {
+        if (activity.lessonId) {
+          // Move a single lesson — use rescheduleLesson to avoid moving the whole block
+          await roomScheduleService.rescheduleLesson({
+            teacherId: activity.teacherId,
+            sourceBlockId: activity.blockId,
+            lessonId: activity.lessonId,
+            targetRoom: room,
+            targetDay: selectedDay,
+            targetStartTime: activity.startTime,
+            targetEndTime: activity.endTime,
+          })
+        } else {
+          // No individual lesson — move the entire block
+          await roomScheduleService.moveActivity({
+            activityId: activity.id,
+            source: 'timeBlock',
+            targetRoom: room,
+            targetStartTime: activity.startTime,
+            targetEndTime: activity.endTime,
+            teacherId: activity.teacherId,
+            blockId: activity.blockId,
+          })
+        }
+      }
+      toast.success('הפעילות שובצה לחדר בהצלחה')
+      loadSchedule()
+    } catch {
+      toast.error('שגיאה בשיבוץ חדר')
+      throw new Error()
+    }
+  }, [loadSchedule, selectedDay])
+
+  // Delete an unassigned activity
+  const handleDeleteUnassigned = useCallback(async (activity: any) => {
+    try {
+      if (activity.source === 'timeBlock') {
+        if (activity.lessonId && activity.blockId) {
+          await roomScheduleService.deleteLessonFromBlock(
+            activity.teacherId,
+            activity.blockId,
+            activity.lessonId,
+          )
+        } else if (activity.blockId) {
+          await teacherScheduleService.deleteTimeBlock(
+            activity.teacherId,
+            activity.blockId,
+          )
+        }
+      }
+      toast.success('הפעילות נמחקה בהצלחה')
+      loadSchedule()
+    } catch {
+      toast.error('שגיאה במחיקת הפעילות')
+      throw new Error()
+    }
   }, [loadSchedule])
 
   // Activity click handler -- open detail modal
@@ -651,7 +712,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
   }, [selectedDay, filteredRooms, viewMode, weekData, filters, tenantRooms])
 
   return (
-    <div className={isFullscreen ? 'p-2 space-y-2 h-full flex flex-col' : 'flex flex-col gap-2 h-full overflow-hidden relative p-6'}>
+    <div className={isFullscreen ? 'p-2 space-y-2 h-full flex flex-col' : 'flex flex-col gap-2 min-h-full relative p-6'}>
       {/* Compact header: title + day selector + view mode + actions */}
       {isFullscreen ? (
         <div className="flex items-center gap-2 print:hidden shrink-0">
@@ -684,18 +745,21 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
             </div>
           </div>
 
-          {/* Row 2: Filters + Statistics (day mode only) */}
+          {/* Row 2: Filters + Statistics inline summary (day mode only) */}
           {viewMode === 'day' && (
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 relative z-10">
               <FilterBar filters={filters} onFiltersChange={setFilters} rooms={roomNames} />
-              <SummaryBar
-                totalRooms={stats.totalRooms}
-                occupiedSlots={stats.occupiedSlots}
-                freeSlots={stats.freeSlots}
-                conflictCount={stats.conflictCount}
-                loading={loading}
-              />
             </div>
+          )}
+          {/* Row 3: Expandable statistics accordion */}
+          {viewMode === 'day' && (
+            <SummaryBar
+              totalRooms={stats.totalRooms}
+              occupiedSlots={stats.occupiedSlots}
+              freeSlots={stats.freeSlots}
+              conflictCount={stats.conflictCount}
+              loading={loading}
+            />
           )}
         </div>
       )}
@@ -705,7 +769,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
         <>
 
           {/* Room grid with drag-and-drop */}
-          <div className={`print:overflow-visible print:max-h-none ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>
+          <div className={`print:overflow-visible print:max-h-none relative z-10 ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>
             <DndContext
               sensors={sensors}
               onDragStart={handleDragStart}
@@ -726,7 +790,21 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
           </div>
 
           {/* Unassigned activities (no room) */}
-          <UnassignedRow activities={schedule?.unassigned || []} />
+          <div className="mb-6 relative z-40">
+            <UnassignedRow
+              activities={schedule?.unassigned || []}
+              rooms={[
+                ...tenantRooms,
+                // Also include rooms from the current schedule that aren't in tenant settings
+                ...(schedule?.rooms || [])
+                  .filter(r => !tenantRooms.some(tr => tr.name === r.room))
+                  .map(r => ({ name: r.room, isActive: true })),
+              ]}
+              scheduleRooms={schedule?.rooms || []}
+              onAssignRoom={handleAssignRoom}
+              onDelete={handleDeleteUnassigned}
+            />
+          </div>
 
           {/* Create lesson dialog */}
           <CreateLessonDialog
@@ -746,6 +824,8 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
             onDelete={() => { setDetailModalOpen(false); silentReloadSchedule() }}
             day={selectedDay}
             rooms={tenantRooms}
+            scheduleData={schedule}
+            getScheduleForDay={(d) => roomScheduleService.getRoomSchedule(d)}
           />
         </>
       )}

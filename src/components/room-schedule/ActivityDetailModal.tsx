@@ -9,7 +9,7 @@ import {
 import { Button as HeroButton, User, Select, SelectItem, Input, Chip } from '@heroui/react'
 import { Clock, MapPin, CalendarBlank, MusicNote, Users as UsersIcon } from '@phosphor-icons/react'
 import { roomScheduleService, teacherScheduleService, rehearsalService, theoryService } from '@/services/apiService'
-import { DAY_NAMES } from './utils'
+import { DAY_NAMES, doTimesOverlap } from './utils'
 import type { ActivityData } from './ActivityCell'
 import { ACTIVITY_COLORS } from './ActivityCell'
 import { getAvatarColorHex } from '@/utils/avatarColorHash'
@@ -31,6 +31,8 @@ interface ActivityDetailModalProps {
   onDelete: () => void
   day: number
   rooms?: Array<{ name: string; isActive: boolean }>
+  scheduleData?: { rooms: Array<{ room: string; activities: Array<{ id: string; startTime: string; endTime: string; source: string; teacherName?: string; title?: string; label?: string }> }> } | null
+  getScheduleForDay?: (day: number) => Promise<{ rooms: Array<{ room: string; activities: Array<any> }> }>
 }
 
 // ==================== Component ====================
@@ -43,6 +45,8 @@ export default function ActivityDetailModal({
   onDelete,
   day,
   rooms = [],
+  scheduleData = null,
+  getScheduleForDay,
 }: ActivityDetailModalProps) {
   // Local edit state
   const [editStartTime, setEditStartTime] = useState('')
@@ -52,6 +56,8 @@ export default function ActivityDetailModal({
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [previewConflicts, setPreviewConflicts] = useState<Array<{ room: string; startTime: string; endTime: string; title: string; source: string }>>([])
+  const [checkingConflicts, setCheckingConflicts] = useState(false)
 
   // Reset edit state when activity changes
   useEffect(() => {
@@ -63,6 +69,56 @@ export default function ActivityDetailModal({
       setConfirmDelete(false)
     }
   }, [activity, open, day])
+
+  // Conflict preview: check for overlapping activities when day/room/time changes
+  useEffect(() => {
+    if (!activity || !open) return
+
+    const checkConflicts = async () => {
+      setCheckingConflicts(true)
+      try {
+        // Get schedule for the target day
+        let targetSchedule = scheduleData
+        if (editDay !== day && getScheduleForDay) {
+          targetSchedule = await getScheduleForDay(editDay)
+        }
+
+        if (!targetSchedule) {
+          setPreviewConflicts([])
+          return
+        }
+
+        // Find the target room's activities
+        const roomData = targetSchedule.rooms.find(r => r.room === editRoom)
+        if (!roomData) {
+          setPreviewConflicts([])
+          return
+        }
+
+        // Filter out the current activity and check for time overlaps
+        const conflicts = roomData.activities
+          .filter(a => a.id !== activity.id)
+          .filter(a => doTimesOverlap(editStartTime, editEndTime, a.startTime, a.endTime))
+          .map(a => ({
+            room: editRoom,
+            startTime: a.startTime,
+            endTime: a.endTime,
+            title: a.teacherName || a.label || a.title || '\u05E4\u05E2\u05D9\u05DC\u05D5\u05EA',
+            source: a.source || 'unknown',
+          }))
+
+        setPreviewConflicts(conflicts)
+      } catch {
+        setPreviewConflicts([]) // fail silently — server-side check is the safety net
+      } finally {
+        setCheckingConflicts(false)
+      }
+    }
+
+    // Debounce to avoid excessive API calls when user is still selecting
+    const timer = setTimeout(checkConflicts, 300)
+    return () => clearTimeout(timer)
+  }, [editDay, editRoom, editStartTime, editEndTime, activity, open, day, scheduleData, getScheduleForDay])
 
   if (!activity) return null
 
@@ -347,6 +403,18 @@ export default function ActivityDetailModal({
               </div>
             </div>
           </div>
+
+          {/* Conflict preview warning */}
+          {previewConflicts.length > 0 && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800 mt-3">
+              <div className="font-medium mb-1">&#9888; {'\u05D4\u05EA\u05E0\u05D2\u05E9\u05D5\u05EA \u05D1\u05DC\u05D5\u05D7:'}</div>
+              {previewConflicts.map((c, i) => (
+                <div key={i} className="text-xs">
+                  {c.title} &mdash; {c.startTime}-{c.endTime} ({c.room})
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Action buttons */}
           <div className="flex items-center justify-between pt-4 mt-1">

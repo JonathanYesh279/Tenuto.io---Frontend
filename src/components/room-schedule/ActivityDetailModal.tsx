@@ -93,29 +93,52 @@ export default function ActivityDetailModal({
             targetEndTime: editEndTime,
             teacherId: activity.teacherId,
             blockId: activity.blockId,
+            targetDay: editDay,
           })
         }
       } else if (activity.source === 'rehearsal') {
-        await rehearsalService.updateRehearsal(activity.id, {
+        const rehearsalUpdate: Record<string, any> = {
           startTime: editStartTime,
           endTime: editEndTime,
           location: editRoom,
-        })
+        }
+        if (editDay !== day) {
+          rehearsalUpdate.dayOfWeek = editDay
+          // Calculate a date that falls on the target dayOfWeek
+          const today = new Date()
+          const currentDayOfWeek = today.getDay() // JS: 0=Sunday
+          const diff = editDay - currentDayOfWeek
+          const targetDate = new Date(today)
+          targetDate.setDate(today.getDate() + diff)
+          if (diff < 0) targetDate.setDate(targetDate.getDate() + 7)
+          rehearsalUpdate.date = targetDate.toISOString()
+        }
+        await rehearsalService.updateRehearsal(activity.id, rehearsalUpdate)
       } else if (activity.source === 'theory') {
-        await theoryService.updateTheoryLesson(activity.id, {
+        const theoryUpdate: Record<string, any> = {
           startTime: editStartTime,
           endTime: editEndTime,
           location: editRoom,
-        })
+        }
+        if (editDay !== day) {
+          theoryUpdate.dayOfWeek = editDay
+        }
+        await theoryService.updateTheoryLesson(activity.id, theoryUpdate)
       }
       toast.success('הפעילות עודכנה בהצלחה')
       onReschedule()
     } catch (err: any) {
       if (err?.code === 'CONFLICT' && err?.conflicts?.length > 0) {
         const conflictNames = err.conflicts
-          .map((c: any) => `${c.teacherName} (${c.startTime}-${c.endTime})`)
+          .map((c: any) => `${c.teacherName || 'פעילות'} (${c.startTime}-${c.endTime}${c.room ? ', ' + c.room : ''})`)
           .join(', ')
         toast.error(`התנגשות בחדר: ${conflictNames}`)
+      } else if (err?.response?.status === 409 || (err?.conflicts && err.conflicts.length > 0)) {
+        const conflicts = err.conflicts || []
+        const conflictNames = conflicts
+          .map((c: any) => `${c.teacherName || c.title || 'פעילות'} (${c.startTime}-${c.endTime})`)
+          .join(', ')
+        toast.error(`התנגשות בלוח: ${conflictNames || 'נמצאה התנגשות'}`)
       } else {
         toast.error('שגיאה בעדכון הפעילות')
       }

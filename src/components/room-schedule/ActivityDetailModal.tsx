@@ -242,7 +242,7 @@ export default function ActivityDetailModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-md p-0 overflow-visible">
         {/* Header with accent color */}
         <div
           className="px-6 pt-5 pb-4"
@@ -348,6 +348,7 @@ export default function ActivityDetailModal({
                     trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
                     label: 'text-slate-500 dark:text-slate-400 font-medium',
                   }}
+                  popoverProps={{ className: 'z-[100]' }}
                 >
                   {DAY_NAMES.map((name, idx) => (
                     <SelectItem key={String(idx)}>{name}</SelectItem>
@@ -366,6 +367,7 @@ export default function ActivityDetailModal({
                     trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
                     label: 'text-slate-500 dark:text-slate-400 font-medium',
                   }}
+                  popoverProps={{ className: 'z-[100]' }}
                 >
                   {rooms.filter(r => r.isActive).map((r) => (
                     <SelectItem key={r.name}>{r.name}</SelectItem>

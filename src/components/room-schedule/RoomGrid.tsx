@@ -317,40 +317,50 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
                 )
               })}
 
-              {/* Conflict group stacks */}
+              {/* Conflict group: each activity at its OWN correct time position */}
               {Array.from(conflictGroups.entries()).map(([groupId, groupActivities]) => {
-                // Find the widest span that covers all activities in the group
-                const placements = groupActivities.map((a) =>
-                  getActivityGridPlacement(a.startTime, a.endTime)
-                )
-                const minStartCol = Math.min(...placements.map((p) => p.startCol))
-                const maxEndCol = Math.max(...placements.map((p) => p.endCol))
+                return groupActivities.map((activity, stackIdx) => {
+                  const { startCol, endCol, span, startOffsetPercent, widthPercent } = getActivityGridPlacement(
+                    activity.startTime,
+                    activity.endTime
+                  )
 
-                return (
-                  <div
-                    key={groupId}
-                    className="mx-0.5 my-1 flex flex-col gap-0.5 pointer-events-auto"
-                    style={{
-                      gridColumn: `${minStartCol} / ${maxEndCol}`,
-                      gridRow: `${rowNumber}`,
-                      alignSelf: 'stretch',
-                    }}
-                  >
-                    {groupActivities.map((activity) => (
-                      <div
-                        key={activity.id}
-                        style={{ minHeight: `${STACKED_ITEM_HEIGHT}px` }}
-                      >
-                        <ActivityCell
-                          activity={activity}
-                          isDragEnabled={isDragEnabled}
-                          dragData={{ room: room.room, teacherId: activity.teacherId }}
-                          onClick={() => onActivityClick?.({ ...activity, room: room.room })}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )
+                  if (span <= 0) return null
+
+                  const needsSubSlot = startOffsetPercent > 0 || widthPercent < 100
+                  // Stack offset: shift each conflicting activity down so they don't fully overlap
+                  const topOffset = stackIdx * (STACKED_ITEM_HEIGHT + 2)
+
+                  return (
+                    <div
+                      key={activity.id}
+                      className="pointer-events-auto"
+                      style={{
+                        gridColumn: `${startCol} / ${endCol}`,
+                        gridRow: `${rowNumber}`,
+                        alignSelf: 'start',
+                        marginTop: `${topOffset + 4}px`,
+                        marginBottom: '4px',
+                        position: 'relative',
+                        zIndex: stackIdx + 1,
+                        ...(needsSubSlot ? {
+                          marginInlineEnd: `${startOffsetPercent}%`,
+                          width: `${widthPercent}%`,
+                        } : {
+                          marginInlineStart: '2px',
+                          marginInlineEnd: '2px',
+                        }),
+                      }}
+                    >
+                      <ActivityCell
+                        activity={activity}
+                        isDragEnabled={isDragEnabled}
+                        dragData={{ room: room.room, teacherId: activity.teacherId }}
+                        onClick={() => onActivityClick?.({ ...activity, room: room.room })}
+                      />
+                    </div>
+                  )
+                })
               })}
             </div>
           )

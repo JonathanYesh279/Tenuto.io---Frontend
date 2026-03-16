@@ -33,6 +33,16 @@ interface Teacher {
   }
 }
 
+interface Student {
+  _id: string
+  personalInfo: {
+    firstName?: string
+    lastName?: string
+    fullName?: string
+  }
+  teacherAssignments?: Array<{ teacherId: string }>
+}
+
 interface ScheduleActivity {
   id: string
   startTime: string
@@ -55,6 +65,7 @@ interface CreateLessonDialogProps {
   state: CreateDialogState
   onOpenChange: (open: boolean) => void
   teachers: Teacher[]
+  students: Student[]
   onCreated: () => void // callback to refresh grid after creation
   scheduleData: ScheduleResponse | null // full day schedule for conflict checking
 }
@@ -68,31 +79,49 @@ function getTeacherDisplayName(teacher: Teacher): string {
   return combined || teacher.personalInfo?.fullName || 'ללא שם'
 }
 
+function getStudentDisplayName(student: Student): string {
+  const first = student.personalInfo?.firstName || ''
+  const last = student.personalInfo?.lastName || ''
+  const combined = `${first} ${last}`.trim()
+  return combined || student.personalInfo?.fullName || 'ללא שם'
+}
+
 // ==================== Component ====================
 
 export default function CreateLessonDialog({
   state,
   onOpenChange,
   teachers,
+  students,
   onCreated,
   scheduleData,
 }: CreateLessonDialogProps) {
   const [selectedTeacherId, setSelectedTeacherId] = useState('')
+  const [selectedStudentId, setSelectedStudentId] = useState('')
   const [endTime, setEndTime] = useState(state.endTime)
   const [submitting, setSubmitting] = useState(false)
   const [teacherSearch, setTeacherSearch] = useState('')
+  const [studentSearch, setStudentSearch] = useState('')
   const [error, setError] = useState('')
 
   // Reset form state when dialog opens
   useEffect(() => {
     if (state.open) {
       setSelectedTeacherId('')
+      setSelectedStudentId('')
       setTeacherSearch('')
+      setStudentSearch('')
       setEndTime(state.endTime)
       setSubmitting(false)
       setError('')
     }
   }, [state.open, state.endTime])
+
+  // Reset student selection when teacher changes
+  useEffect(() => {
+    setSelectedStudentId('')
+    setStudentSearch('')
+  }, [selectedTeacherId])
 
   // Filter teachers by search text
   const filteredTeachers = teachers.filter((teacher) => {
@@ -100,6 +129,20 @@ export default function CreateLessonDialog({
     const name = getTeacherDisplayName(teacher)
     return name.includes(teacherSearch)
   })
+
+  // Filter students by selected teacher and search text
+  const filteredStudents = useMemo(() => {
+    if (!selectedTeacherId) return []
+    return students.filter((student) => {
+      const isAssignedToTeacher = student.teacherAssignments?.some(
+        (a) => String(a.teacherId) === String(selectedTeacherId)
+      )
+      if (!isAssignedToTeacher) return false
+      if (!studentSearch) return true
+      const name = getStudentDisplayName(student)
+      return name.includes(studentSearch)
+    })
+  }, [students, selectedTeacherId, studentSearch])
 
   // Check for conflicts with existing activities
   const conflictWarning = useMemo(() => {
@@ -154,7 +197,26 @@ export default function CreateLessonDialog({
         location: state.room,
       }
 
-      await teacherScheduleService.createTimeBlock(selectedTeacherId, data)
+      const block = await teacherScheduleService.createTimeBlock(selectedTeacherId, data)
+
+      // If a student was selected, assign them to the newly created time block
+      if (selectedStudentId && block) {
+        const blockId = block._id || block.id || block.timeBlockId
+        if (blockId) {
+          // assignLessonToBlock expects { teacherId, blockId, studentId, ... }
+          await teacherScheduleService.assignLessonToBlock({
+            teacherId: selectedTeacherId,
+            blockId,
+            studentId: selectedStudentId,
+            startTime: state.startTime,
+            endTime,
+          })
+        }
+        // Note: if blockId is missing from the response, the time block is created
+        // but the student assignment is skipped. This can happen if the backend
+        // does not return the new block in the create response.
+      }
+
       toast.success('השיעור נוצר בהצלחה')
       onCreated()
       onOpenChange(false)
@@ -166,10 +228,11 @@ export default function CreateLessonDialog({
   }
 
   const selectedTeacher = teachers.find((t) => t._id === selectedTeacherId)
+  const selectedStudent = students.find((s) => s._id === selectedStudentId)
 
   return (
     <Dialog open={state.open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-md p-0 overflow-visible">
         {/* Header with context info */}
         <div className="px-6 pt-5 pb-4 bg-gradient-to-b from-primary/5 to-transparent">
           <DialogHeader>
@@ -308,6 +371,99 @@ export default function CreateLessonDialog({
               <p className="text-sm text-red-600 mt-1">{error}</p>
             )}
           </div>
+
+          {/* Student selection — shown only after a teacher is selected */}
+          {selectedTeacher && (
+            <div>
+              <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">
+                תלמיד/ה <span className="text-slate-400 font-normal">(אופציונלי)</span>
+              </label>
+
+              {selectedStudent ? (
+                <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-3 py-2">
+                  <User
+                    avatarProps={{
+                      radius: 'full',
+                      size: 'sm',
+                      showFallback: true,
+                      name: getStudentDisplayName(selectedStudent),
+                      style: { backgroundColor: getAvatarColorHex(getStudentDisplayName(selectedStudent)), color: '#fff' },
+                    }}
+                    name={getStudentDisplayName(selectedStudent)}
+                    description="תלמיד/ה"
+                    classNames={{
+                      name: 'text-sm font-bold text-primary',
+                      description: 'text-xs text-slate-400',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedStudentId('')
+                      setStudentSearch('')
+                    }}
+                    className="text-primary/60 hover:text-primary text-xs font-medium transition-colors"
+                  >
+                    שנה
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Search input */}
+                  <Input
+                    type="text"
+                    placeholder="חיפוש תלמיד/ה..."
+                    size="sm"
+                    variant="bordered"
+                    value={studentSearch}
+                    onValueChange={setStudentSearch}
+                    startContent={<MagnifyingGlass size={14} className="text-slate-400" />}
+                    classNames={{
+                      inputWrapper: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 mb-2',
+                      label: 'text-slate-500 dark:text-slate-400 font-medium',
+                    }}
+                  />
+
+                  {/* Student list */}
+                  <div className="max-h-40 overflow-y-auto border border-slate-200 dark:border-slate-700 rounded-xl">
+                    {filteredStudents.length === 0 ? (
+                      <div className="px-3 py-3 text-sm text-slate-400 text-center">
+                        {students.length === 0
+                          ? 'טוען תלמידים...'
+                          : 'אין תלמידים משויכים למורה זה'}
+                      </div>
+                    ) : (
+                      filteredStudents.map((student) => {
+                        const name = getStudentDisplayName(student)
+                        return (
+                          <div
+                            key={student._id}
+                            onClick={() => setSelectedStudentId(student._id)}
+                            className="px-3 py-2 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                          >
+                            <User
+                              avatarProps={{
+                                radius: 'full',
+                                size: 'sm',
+                                showFallback: true,
+                                name,
+                                style: { backgroundColor: getAvatarColorHex(name), color: '#fff', width: 24, height: 24, fontSize: 10 },
+                              }}
+                              name={name}
+                              classNames={{
+                                base: 'justify-start gap-2',
+                                name: 'text-sm text-slate-700 dark:text-slate-300',
+                              }}
+                            />
+                          </div>
+                        )
+                      })
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Conflict warnings */}
           {conflictWarning && (

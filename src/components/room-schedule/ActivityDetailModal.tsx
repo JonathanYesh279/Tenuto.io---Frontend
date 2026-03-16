@@ -224,13 +224,8 @@ export default function ActivityDetailModal({
     setDeleting(true)
     try {
       if (activity.source === 'timeBlock') {
-        if (hasLesson && activity.blockId) {
-          await roomScheduleService.deleteLessonFromBlock(
-            activity.teacherId,
-            activity.blockId,
-            activity.lessonId!,
-          )
-        } else if (activity.blockId) {
+        if (activity.blockId) {
+          // Delete the entire timeBlock (handles lesson cleanup internally)
           await teacherScheduleService.deleteTimeBlock(
             activity.teacherId,
             activity.blockId,

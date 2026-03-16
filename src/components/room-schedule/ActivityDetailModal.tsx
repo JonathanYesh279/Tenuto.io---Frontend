@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button as HeroButton, User, Select, SelectItem, Input, Chip } from '@heroui/react'
+import { Button as HeroButton, User, Input, Chip } from '@heroui/react'
 import { Clock, MapPin, CalendarBlank, MusicNote, Users as UsersIcon } from '@phosphor-icons/react'
 import { roomScheduleService, teacherScheduleService, rehearsalService, theoryService } from '@/services/apiService'
 import { DAY_NAMES, doTimesOverlap } from './utils'
@@ -124,6 +124,22 @@ export default function ActivityDetailModal({
 
   const colors = ACTIVITY_COLORS[activity.source] || ACTIVITY_COLORS.timeBlock
   const hasLesson = activity.source === 'timeBlock' && !!activity.lessonId
+
+  // Build room list from schedule data + tenant rooms + current room
+  const availableRooms = (() => {
+    const roomSet = new Set<string>()
+    // Add rooms from current schedule data
+    if (scheduleData?.rooms) {
+      for (const r of scheduleData.rooms) roomSet.add(r.room)
+    }
+    // Add tenant rooms
+    for (const r of rooms) {
+      if (r.isActive) roomSet.add(r.name)
+    }
+    // Always include the current activity's room
+    if (activity.room) roomSet.add(activity.room)
+    return Array.from(roomSet).sort((a, b) => a.localeCompare(b, 'he'))
+  })()
 
   // ---- Save handler (all source types) ----
   const handleSave = async () => {
@@ -335,47 +351,30 @@ export default function ActivityDetailModal({
             </h4>
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <Select
-                  label="יום"
-                  size="sm"
-                  variant="bordered"
-                  selectedKeys={[String(editDay)]}
-                  onSelectionChange={(keys) => {
-                    const val = Array.from(keys)[0]
-                    if (val !== undefined) setEditDay(Number(val))
-                  }}
-                  classNames={{
-                    trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
-                    label: 'text-slate-500 dark:text-slate-400 font-medium',
-                  }}
-                  popoverProps={{ className: 'z-[100]' }}
-                >
-                  {DAY_NAMES.map((name, idx) => (
-                    <SelectItem key={String(idx)}>{name}</SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  label="חדר"
-                  size="sm"
-                  variant="bordered"
-                  selectedKeys={[editRoom]}
-                  onSelectionChange={(keys) => {
-                    const val = Array.from(keys)[0] as string
-                    if (val) setEditRoom(val)
-                  }}
-                  classNames={{
-                    trigger: 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900',
-                    label: 'text-slate-500 dark:text-slate-400 font-medium',
-                  }}
-                  popoverProps={{ className: 'z-[100]' }}
-                >
-                  {rooms.filter(r => r.isActive).map((r) => (
-                    <SelectItem key={r.name}>{r.name}</SelectItem>
-                  ))}
-                  {editRoom && !rooms.some(r => r.name === editRoom && r.isActive) && (
-                    <SelectItem key={editRoom}>{editRoom}</SelectItem>
-                  )}
-                </Select>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">יום</label>
+                  <select
+                    value={String(editDay)}
+                    onChange={(e) => setEditDay(Number(e.target.value))}
+                    className="w-full h-10 px-3 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  >
+                    {DAY_NAMES.map((name, idx) => (
+                      <option key={idx} value={idx}>{name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">חדר</label>
+                  <select
+                    value={editRoom}
+                    onChange={(e) => setEditRoom(e.target.value)}
+                    className="w-full h-10 px-3 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  >
+                    {availableRooms.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Input

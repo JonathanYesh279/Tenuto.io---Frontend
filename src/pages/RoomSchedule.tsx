@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { DndContext, DragOverlay, PointerSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core'
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core'
-import { roomScheduleService, tenantService, teacherService, teacherScheduleService } from '@/services/apiService'
+import { roomScheduleService, tenantService, teacherService, teacherScheduleService, studentService } from '@/services/apiService'
 import { useAuth } from '@/services/authContext'
 import DaySelector from '@/components/room-schedule/DaySelector'
 import RoomGrid from '@/components/room-schedule/RoomGrid'
@@ -143,6 +143,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
   const { user } = useAuth()
   const [tenantRooms, setTenantRooms] = useState<Array<{ name: string; isActive: boolean }>>([])
   const [teachers, setTeachers] = useState<any[]>([])
+  const [students, setStudents] = useState<any[]>([])
   const [createDialogState, setCreateDialogState] = useState<CreateDialogState>({
     open: false,
     room: '',
@@ -178,6 +179,16 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
         setTeachers(list)
       })
       .catch((err: unknown) => console.error('Error fetching teachers:', err))
+  }, [])
+
+  // Fetch students for create dialog student picker
+  useEffect(() => {
+    studentService.getStudents()
+      .then((result: any) => {
+        const list = Array.isArray(result) ? result : result?.data || result || []
+        setStudents(list)
+      })
+      .catch((err: unknown) => console.error('Error fetching students:', err))
   }, [])
 
   // Fetch tenant rooms for empty room display
@@ -811,6 +822,7 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
             state={createDialogState}
             onOpenChange={(open) => setCreateDialogState((prev) => ({ ...prev, open }))}
             teachers={teachers}
+            students={students}
             onCreated={handleLessonCreated}
             scheduleData={schedule}
           />

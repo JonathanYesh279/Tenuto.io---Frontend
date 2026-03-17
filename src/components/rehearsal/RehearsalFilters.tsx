@@ -59,7 +59,7 @@ export const RehearsalFilters: React.FC<RehearsalFiltersProps> = ({
   ]
 
   return (
-    <div className="flex items-center gap-3 flex-wrap mb-5">
+    <div className="flex items-center gap-3 flex-wrap pb-3 mb-5">
       <div className="w-64 flex-none">
         <SearchInput
           value={searchQuery}

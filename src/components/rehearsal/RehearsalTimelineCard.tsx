@@ -129,49 +129,50 @@ export const RehearsalTimelineCard: React.FC<RehearsalTimelineCardProps> = ({
       transition={snappy}
       onClick={() => onView(rehearsal._id)}
     >
-      {/* Hover-reveal action buttons */}
-      <div className="absolute top-2.5 right-2.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10">
-        <button
-          className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors bg-card border border-border shadow-1"
-          onClick={(e) => { e.stopPropagation(); onEdit(rehearsal) }}
-          title="עריכה"
-          aria-label="עריכת חזרה"
-        >
-          <PencilSimpleIcon size={14} weight="regular" />
-        </button>
-        <button
-          className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors bg-card border border-border shadow-1"
-          onClick={(e) => { e.stopPropagation(); onAttendance(rehearsal._id) }}
-          title="נוכחות"
-          aria-label="סימון נוכחות"
-        >
-          <ClipboardTextIcon size={14} weight="regular" />
-        </button>
-        <button
-          className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors bg-card border border-border shadow-1"
-          onClick={(e) => { e.stopPropagation(); onView(rehearsal._id) }}
-          title="צפה בפרטים"
-          aria-label="צפה בפרטי חזרה"
-        >
-          <ArrowUpRightIcon size={14} weight="regular" />
-        </button>
-      </div>
-
       {/* Card body */}
       <div className="flex-1 p-3.5 flex flex-col gap-2 min-w-0">
-        {/* Title row */}
+        {/* Title row with inline hover actions next to chip */}
         <div className="flex items-start justify-between gap-2">
           <span className="text-sm font-bold text-foreground leading-snug truncate">
             {rehearsal.orchestra?.name ?? 'חזרה'}
           </span>
-          <Chip
-            size="sm"
-            variant="flat"
-            color={typeStyle.chipColor}
-            classNames={{ base: 'h-[22px] flex-shrink-0', content: 'text-[11px] font-bold px-1' }}
-          >
-            {rehearsal.type}
-          </Chip>
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Hover-reveal action buttons — inline next to chip */}
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+              <button
+                className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+                onClick={(e) => { e.stopPropagation(); onEdit(rehearsal) }}
+                title="עריכה"
+                aria-label="עריכת חזרה"
+              >
+                <PencilSimpleIcon size={14} weight="regular" />
+              </button>
+              <button
+                className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+                onClick={(e) => { e.stopPropagation(); onAttendance(rehearsal._id) }}
+                title="נוכחות"
+                aria-label="סימון נוכחות"
+              >
+                <ClipboardTextIcon size={14} weight="regular" />
+              </button>
+              <button
+                className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+                onClick={(e) => { e.stopPropagation(); onView(rehearsal._id) }}
+                title="צפה בפרטים"
+                aria-label="צפה בפרטי חזרה"
+              >
+                <ArrowUpRightIcon size={14} weight="regular" />
+              </button>
+            </div>
+            <Chip
+              size="sm"
+              variant="flat"
+              color={typeStyle.chipColor}
+              classNames={{ base: 'h-[22px]', content: 'text-[11px] font-bold px-1' }}
+            >
+              {rehearsal.type}
+            </Chip>
+          </div>
         </div>
 
         {/* Detail items row */}

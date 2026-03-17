@@ -492,24 +492,23 @@ export default function RehearsalDetails() {
       )}
 
       {/* Edit Form Modal */}
-      {showEditForm && (
-        <RehearsalForm
-          orchestras={orchestras}
-          existingRehearsals={[]}
-          onSubmit={handleEditRehearsal}
-          onCancel={() => setShowEditForm(false)}
-          initialData={{
-            groupId: rehearsal.groupId,
-            type: rehearsal.type,
-            date: rehearsal.date.split('T')[0],
-            startTime: rehearsal.startTime,
-            endTime: rehearsal.endTime,
-            location: rehearsal.location,
-            notes: rehearsal.notes,
-            isActive: rehearsal.isActive
-          }}
-        />
-      )}
+      <RehearsalForm
+        orchestras={orchestras}
+        existingRehearsals={[]}
+        onSubmit={handleEditRehearsal}
+        open={showEditForm}
+        onOpenChange={(open) => { if (!open) setShowEditForm(false) }}
+        initialData={{
+          groupId: rehearsal.groupId,
+          type: rehearsal.type,
+          date: rehearsal.date.split('T')[0],
+          startTime: rehearsal.startTime,
+          endTime: rehearsal.endTime,
+          location: rehearsal.location,
+          notes: rehearsal.notes,
+          isActive: rehearsal.isActive
+        }}
+      />
 
       {/* Delete Confirmation Modal */}
       <ConfirmationModal

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import ConflictDetector from './ConflictDetector'
-import { CalendarIcon, ClockIcon, MapPinIcon, MinusIcon, PlusIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { MinusIcon, PlusIcon, WarningCircleIcon } from '@phosphor-icons/react'
 import { VALID_LOCATIONS } from '../constants/locations'
 import {
   validateRehearsalForm,
@@ -15,6 +15,15 @@ import {
   type Rehearsal
 } from '../utils/rehearsalUtils'
 import { handleServerValidationError } from '../utils/validationUtils'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { FormField } from '@/components/ui/form-field'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 
 interface RehearsalFormProps {
   orchestras: Array<{
@@ -30,7 +39,8 @@ interface RehearsalFormProps {
   }>
   existingRehearsals?: Rehearsal[]
   onSubmit: (data: RehearsalFormData | BulkRehearsalData, isBulk: boolean) => Promise<void>
-  onCancel: () => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   initialData?: Partial<RehearsalFormData>
 }
 
@@ -38,13 +48,14 @@ export default function RehearsalForm({
   orchestras,
   existingRehearsals = [],
   onSubmit,
-  onCancel,
+  open,
+  onOpenChange,
   initialData
 }: RehearsalFormProps) {
   const [mode, setMode] = useState<'single' | 'bulk'>('single')
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  
+
   // Single rehearsal form state
   const [singleForm, setSingleForm] = useState<Partial<RehearsalFormData>>({
     groupId: '',
@@ -133,7 +144,7 @@ export default function RehearsalForm({
 
   const handleAddExcludeDate = () => {
     if (!excludeDateInput) return
-    
+
     setBulkForm(prev => ({
       ...prev,
       excludeDates: [...(prev.excludeDates || []), excludeDateInput]
@@ -203,438 +214,344 @@ export default function RehearsalForm({
     }
   }
 
+  // Location grouping helper (matches OrchestraForm pattern)
+  const locationGroups = [
+    { label: 'אולמות', filter: (loc: string) => loc.includes('אולם') },
+    { label: 'סטודיואים', filter: (loc: string) => loc.includes('סטודיו') },
+    { label: 'חדרי חזרות', filter: (loc: string) => loc.includes('חדר חזרות') },
+    { label: 'חדרי לימוד', filter: (loc: string) => loc.startsWith('חדר') && !loc.includes('חזרות') && !loc.includes('תאוריה') },
+    { label: 'חדרי תיאוריה', filter: (loc: string) => loc.includes('תאוריה') },
+    { label: 'אחר', filter: (loc: string) => !loc.includes('אולם') && !loc.includes('סטודיו') && !loc.includes('חדר') },
+  ]
+
+  const renderLocationSelect = (
+    value: string | undefined,
+    onChange: (val: string) => void,
+    id: string,
+    error?: string
+  ) => (
+    <FormField label="מיקום" htmlFor={id} error={error} required>
+      <Select value={value || undefined} onValueChange={onChange}>
+        <SelectTrigger id={id} className={cn(error && "border-destructive focus:ring-destructive")}>
+          <SelectValue placeholder="בחר מיקום" />
+        </SelectTrigger>
+        <SelectContent>
+          {locationGroups.map(group => {
+            const items = VALID_LOCATIONS.filter(group.filter)
+            if (items.length === 0) return null
+            return (
+              <SelectGroup key={group.label}>
+                <SelectLabel>{group.label}</SelectLabel>
+                {items.map(location => (
+                  <SelectItem key={location} value={location}>{location}</SelectItem>
+                ))}
+              </SelectGroup>
+            )
+          })}
+        </SelectContent>
+      </Select>
+    </FormField>
+  )
+
+  // Shared single-mode form fields (used in both Tabs and edit mode)
+  const renderSingleFormFields = () => (
+    <>
+      {/* Orchestra Selection */}
+      <FormField label="תזמורת" htmlFor="groupId" error={errors.groupId} required>
+        <Select
+          value={singleForm.groupId || undefined}
+          onValueChange={(val) => handleSingleFormChange('groupId', val)}
+          disabled={!!initialData}
+        >
+          <SelectTrigger id="groupId" className={cn(errors.groupId && "border-destructive focus:ring-destructive")}>
+            <SelectValue placeholder="בחר תזמורת" />
+          </SelectTrigger>
+          <SelectContent>
+            {orchestras.map(orchestra => (
+              <SelectItem key={orchestra._id} value={orchestra._id}>
+                {orchestra.name} ({orchestra.type})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FormField>
+
+      {/* Date */}
+      <FormField label="תאריך" htmlFor="date" error={errors.date} required>
+        <Input
+          id="date"
+          type="date"
+          value={singleForm.date || ''}
+          onChange={(e) => handleSingleFormChange('date', e.target.value)}
+          className={cn(errors.date && "border-destructive focus-visible:ring-destructive")}
+        />
+      </FormField>
+
+      {/* Time */}
+      <div className="grid grid-cols-2 gap-4">
+        <FormField label="שעת התחלה" htmlFor="startTime" error={errors.startTime} required>
+          <Input
+            id="startTime"
+            type="time"
+            value={singleForm.startTime || ''}
+            onChange={(e) => handleSingleFormChange('startTime', e.target.value)}
+            className={cn(errors.startTime && "border-destructive focus-visible:ring-destructive")}
+          />
+        </FormField>
+
+        <FormField label="שעת סיום" htmlFor="endTime" error={errors.endTime} required>
+          <Input
+            id="endTime"
+            type="time"
+            value={singleForm.endTime || ''}
+            onChange={(e) => handleSingleFormChange('endTime', e.target.value)}
+            className={cn(errors.endTime && "border-destructive focus-visible:ring-destructive")}
+          />
+        </FormField>
+      </div>
+
+      {/* Location */}
+      {renderLocationSelect(
+        singleForm.location,
+        (val) => handleSingleFormChange('location', val),
+        'singleLocation',
+        errors.location
+      )}
+
+      {/* Notes */}
+      <FormField label="הערות" htmlFor="singleNotes">
+        <Textarea
+          id="singleNotes"
+          value={singleForm.notes || ''}
+          onChange={(e) => handleSingleFormChange('notes', e.target.value)}
+          rows={3}
+          placeholder="הערות נוספות עבור החזרה..."
+        />
+      </FormField>
+    </>
+  )
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onCancel}>
-      <div className="bg-white rounded shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all" onClick={(e) => e.stopPropagation()}>
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <button
-              onClick={onCancel}
-              className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <XIcon className="w-5 h-5" />
-            </button>
-            
-            <div className="flex-1 text-center">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {initialData ? 'ערוך חזרה' : 'חזרה חדשה'}
-              </h3>
-              
-              {!initialData && (
-                <div className="flex justify-center mt-3">
-                  <div className="flex bg-gray-100 rounded p-1">
-                    <button
-                      type="button"
-                      onClick={() => setMode('single')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                        mode === 'single'
-                          ? 'bg-white text-gray-900 shadow-sm'
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                    >
-                      חזרה יחידה
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setMode('bulk')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                        mode === 'bulk'
-                          ? 'bg-white text-gray-900 shadow-sm'
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                    >
-                      חזרות חוזרות
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="w-8" />
-          </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{initialData ? 'ערוך חזרה' : 'חזרה חדשה'}</DialogTitle>
+          {!initialData && (
+            <DialogDescription>צור חזרה יחידה או סדרת חזרות חוזרות</DialogDescription>
+          )}
+        </DialogHeader>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {mode === 'single' ? (
-              // Single Rehearsal Form
-              <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {!initialData ? (
+            <Tabs value={mode} onValueChange={(val) => setMode(val as 'single' | 'bulk')}>
+              <TabsList className="w-full">
+                <TabsTrigger value="single" className="flex-1">חזרה יחידה</TabsTrigger>
+                <TabsTrigger value="bulk" className="flex-1">חזרות חוזרות</TabsTrigger>
+              </TabsList>
+              <TabsContent value="single" className="space-y-4 mt-4">
+                {renderSingleFormFields()}
+              </TabsContent>
+              <TabsContent value="bulk" className="space-y-4 mt-4">
                 {/* Orchestra Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <UsersIcon className="w-4 h-4 inline ml-1" />
-                    תזמורת <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    value={singleForm.groupId || ''}
-                    onChange={(e) => handleSingleFormChange('groupId', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                      errors.groupId ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    disabled={!!initialData}
+                <FormField label="תזמורת" htmlFor="orchestraId" error={errors.orchestraId} required>
+                  <Select
+                    value={bulkForm.orchestraId || undefined}
+                    onValueChange={(val) => handleBulkFormChange('orchestraId', val)}
                   >
-                    <option value="">בחר תזמורת</option>
-                    {orchestras.map(orchestra => (
-                      <option key={orchestra._id} value={orchestra._id}>
-                        {orchestra.name} ({orchestra.type})
-                      </option>
-                    ))}
-                  </select>
-                  {errors.groupId && (
-                    <p className="text-red-600 text-sm mt-1">{errors.groupId}</p>
-                  )}
-                </div>
-
-                {/* Date */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <CalendarIcon className="w-4 h-4 inline ml-1" />
-                    תאריך <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    value={singleForm.date || ''}
-                    onChange={(e) => handleSingleFormChange('date', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                      errors.date ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                  />
-                  {errors.date && (
-                    <p className="text-red-600 text-sm mt-1">{errors.date}</p>
-                  )}
-                </div>
-
-                {/* Time */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <ClockIcon className="w-4 h-4 inline ml-1" />
-                      שעת התחלה <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="time"
-                      value={singleForm.startTime || ''}
-                      onChange={(e) => handleSingleFormChange('startTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                        errors.startTime ? 'border-red-300' : 'border-gray-300'
-                      }`}
-                    />
-                    {errors.startTime && (
-                      <p className="text-red-600 text-sm mt-1">{errors.startTime}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שעת סיום <span className="text-red-500">*</span></label>
-                    <input
-                      type="time"
-                      value={singleForm.endTime || ''}
-                      onChange={(e) => handleSingleFormChange('endTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                        errors.endTime ? 'border-red-300' : 'border-gray-300'
-                      }`}
-                    />
-                    {errors.endTime && (
-                      <p className="text-red-600 text-sm mt-1">{errors.endTime}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <MapPinIcon className="w-4 h-4 inline ml-1" />
-                    מיקום <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    value={singleForm.location || ''}
-                    onChange={(e) => handleSingleFormChange('location', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                      errors.location ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                  >
-                    <option value="">בחר מיקום</option>
-                    {VALID_LOCATIONS.map(location => (
-                      <option key={location} value={location}>{location}</option>
-                    ))}
-                  </select>
-                  {errors.location && (
-                    <p className="text-red-600 text-sm mt-1">{errors.location}</p>
-                  )}
-                </div>
-
-                {/* Notes */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">הערות</label>
-                  <textarea
-                    value={singleForm.notes || ''}
-                    onChange={(e) => handleSingleFormChange('notes', e.target.value)}
-                    rows={3}
-                    placeholder="הערות נוספות עבור החזרה..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
-                  />
-                </div>
-              </div>
-            ) : (
-              // Bulk Rehearsal Form
-              <div className="space-y-4">
-                {/* Orchestra Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <UsersIcon className="w-4 h-4 inline ml-1" />
-                    תזמורת <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    value={bulkForm.orchestraId || ''}
-                    onChange={(e) => handleBulkFormChange('orchestraId', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                      errors.orchestraId ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                  >
-                    <option value="">בחר תזמורת</option>
-                    {orchestras.map(orchestra => (
-                      <option key={orchestra._id} value={orchestra._id}>
-                        {orchestra.name} ({orchestra.type})
-                      </option>
-                    ))}
-                  </select>
-                  {errors.orchestraId && (
-                    <p className="text-red-600 text-sm mt-1">{errors.orchestraId}</p>
-                  )}
-                </div>
+                    <SelectTrigger id="orchestraId" className={cn(errors.orchestraId && "border-destructive focus:ring-destructive")}>
+                      <SelectValue placeholder="בחר תזמורת" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {orchestras.map(orchestra => (
+                        <SelectItem key={orchestra._id} value={orchestra._id}>
+                          {orchestra.name} ({orchestra.type})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormField>
 
                 {/* Date Range */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <CalendarIcon className="w-4 h-4 inline ml-1" />
-                      תאריך התחלה <span className="text-red-500">*</span>
-                    </label>
-                    <input
+                  <FormField label="תאריך התחלה" htmlFor="startDate" error={errors.startDate} required>
+                    <Input
+                      id="startDate"
                       type="date"
                       value={bulkForm.startDate || ''}
                       onChange={(e) => handleBulkFormChange('startDate', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                        errors.startDate ? 'border-red-300' : 'border-gray-300'
-                      }`}
+                      className={cn(errors.startDate && "border-destructive focus-visible:ring-destructive")}
                     />
-                    {errors.startDate && (
-                      <p className="text-red-600 text-sm mt-1">{errors.startDate}</p>
-                    )}
-                  </div>
+                  </FormField>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">תאריך סיום <span className="text-red-500">*</span></label>
-                    <input
+                  <FormField label="תאריך סיום" htmlFor="endDate" error={errors.endDate} required>
+                    <Input
+                      id="endDate"
                       type="date"
                       value={bulkForm.endDate || ''}
                       onChange={(e) => handleBulkFormChange('endDate', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                        errors.endDate ? 'border-red-300' : 'border-gray-300'
-                      }`}
+                      className={cn(errors.endDate && "border-destructive focus-visible:ring-destructive")}
                     />
-                    {errors.endDate && (
-                      <p className="text-red-600 text-sm mt-1">{errors.endDate}</p>
-                    )}
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Day of Week */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">יום בשבוע <span className="text-red-500">*</span></label>
-                  <select
-                    value={bulkForm.dayOfWeek || 0}
-                    onChange={(e) => handleBulkFormChange('dayOfWeek', parseInt(e.target.value))}
-                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                      errors.dayOfWeek ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                <FormField label="יום בשבוע" htmlFor="dayOfWeek" error={errors.dayOfWeek} required>
+                  <Select
+                    value={String(bulkForm.dayOfWeek ?? 0)}
+                    onValueChange={(val) => handleBulkFormChange('dayOfWeek', parseInt(val))}
                   >
-                    {DAYS_OF_WEEK_ARRAY.map(day => (
-                      <option key={day.value} value={day.value}>
-                        {day.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.dayOfWeek && (
-                    <p className="text-red-600 text-sm mt-1">{errors.dayOfWeek}</p>
-                  )}
-                </div>
+                    <SelectTrigger id="dayOfWeek" className={cn(errors.dayOfWeek && "border-destructive focus:ring-destructive")}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DAYS_OF_WEEK_ARRAY.map(day => (
+                        <SelectItem key={day.value} value={String(day.value)}>
+                          {day.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormField>
 
                 {/* Time */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <ClockIcon className="w-4 h-4 inline ml-1" />
-                      שעת התחלה <span className="text-red-500">*</span>
-                    </label>
-                    <input
+                  <FormField label="שעת התחלה" htmlFor="bulkStartTime" error={errors.startTime} required>
+                    <Input
+                      id="bulkStartTime"
                       type="time"
                       value={bulkForm.startTime || ''}
                       onChange={(e) => handleBulkFormChange('startTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                        errors.startTime ? 'border-red-300' : 'border-gray-300'
-                      }`}
+                      className={cn(errors.startTime && "border-destructive focus-visible:ring-destructive")}
                     />
-                    {errors.startTime && (
-                      <p className="text-red-600 text-sm mt-1">{errors.startTime}</p>
-                    )}
-                  </div>
+                  </FormField>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">שעת סיום <span className="text-red-500">*</span></label>
-                    <input
+                  <FormField label="שעת סיום" htmlFor="bulkEndTime" error={errors.endTime} required>
+                    <Input
+                      id="bulkEndTime"
                       type="time"
                       value={bulkForm.endTime || ''}
                       onChange={(e) => handleBulkFormChange('endTime', e.target.value)}
-                      className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                        errors.endTime ? 'border-red-300' : 'border-gray-300'
-                      }`}
+                      className={cn(errors.endTime && "border-destructive focus-visible:ring-destructive")}
                     />
-                    {errors.endTime && (
-                      <p className="text-red-600 text-sm mt-1">{errors.endTime}</p>
-                    )}
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Location */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <MapPinIcon className="w-4 h-4 inline ml-1" />
-                    מיקום <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    value={bulkForm.location || ''}
-                    onChange={(e) => handleBulkFormChange('location', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded focus:ring-2 focus:ring-ring focus:border-transparent text-gray-900 ${
-                      errors.location ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                  >
-                    <option value="">בחר מיקום</option>
-                    {VALID_LOCATIONS.map(location => (
-                      <option key={location} value={location}>{location}</option>
-                    ))}
-                  </select>
-                  {errors.location && (
-                    <p className="text-red-600 text-sm mt-1">{errors.location}</p>
-                  )}
-                </div>
+                {renderLocationSelect(
+                  bulkForm.location,
+                  (val) => handleBulkFormChange('location', val),
+                  'bulkLocation',
+                  errors.location
+                )}
 
                 {/* Exclude Dates */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">תאריכים לדילוג</label>
+                <FormField label="תאריכים לדילוג" htmlFor="excludeDate">
                   <div className="flex gap-2 mb-2">
-                    <input
+                    <Input
+                      id="excludeDate"
                       type="date"
                       value={excludeDateInput}
                       onChange={(e) => setExcludeDateInput(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
+                      className="flex-1"
                       placeholder="בחר תאריך לדילוג"
                     />
-                    <button
+                    <Button
                       type="button"
+                      size="icon"
+                      variant="outline"
                       onClick={handleAddExcludeDate}
                       disabled={!excludeDateInput}
-                      className="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <PlusIcon className="w-4 h-4" />
-                    </button>
+                    </Button>
                   </div>
-                  
+
                   {bulkForm.excludeDates && bulkForm.excludeDates.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {bulkForm.excludeDates.map(date => (
-                        <div key={date} className="flex items-center bg-gray-100 rounded px-2 py-1">
-                          <span className="text-sm text-gray-700">
-                            {new Date(date).toLocaleDateString('he-IL')}
-                          </span>
+                        <Badge key={date} variant="secondary" className="gap-1">
+                          {new Date(date).toLocaleDateString('he-IL')}
                           <button
                             type="button"
                             onClick={() => handleRemoveExcludeDate(date)}
-                            className="mr-1 text-gray-500 hover:text-red-600"
+                            className="hover:text-destructive ms-1"
                           >
                             <MinusIcon className="w-3 h-3" />
                           </button>
-                        </div>
+                        </Badge>
                       ))}
                     </div>
                   )}
-                </div>
+                </FormField>
 
                 {/* Notes */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">הערות</label>
-                  <textarea
+                <FormField label="הערות" htmlFor="bulkNotes">
+                  <Textarea
+                    id="bulkNotes"
                     value={bulkForm.notes || ''}
                     onChange={(e) => handleBulkFormChange('notes', e.target.value)}
                     rows={3}
                     placeholder="הערות נוספות עבור כל החזרות..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-ring focus:border-transparent"
                   />
-                </div>
+                </FormField>
 
                 {/* Preview Dates */}
                 {previewDates.length > 0 && (
-                  <div className="bg-blue-50 rounded p-4">
+                  <div className="bg-primary/5 border border-primary/20 rounded-md p-4">
                     <div className="flex items-center mb-2">
-                      <WarningCircleIcon className="w-4 h-4 text-blue-600 ml-1" />
-                      <span className="text-sm font-medium text-blue-900">
+                      <WarningCircleIcon className="w-4 h-4 text-primary ml-1" />
+                      <span className="text-sm font-medium text-foreground">
                         תיווצרו {previewDates.length} חזרות
                       </span>
                     </div>
-                    <div className="text-xs text-blue-700 max-h-32 overflow-y-auto">
+                    <div className="text-xs text-muted-foreground max-h-32 overflow-y-auto">
                       {previewDates.slice(0, 10).map(date => (
                         <div key={date}>
                           {new Date(date).toLocaleDateString('he-IL')} - {getDayName(new Date(date).getDay())}
                         </div>
                       ))}
                       {previewDates.length > 10 && (
-                        <div className="text-blue-600">...ועוד {previewDates.length - 10}</div>
+                        <div className="text-primary">...ועוד {previewDates.length - 10}</div>
                       )}
                     </div>
                   </div>
                 )}
-              </div>
-            )}
-
-            {/* Conflict Detection */}
-            <ConflictDetector
-              newRehearsal={mode === 'single' ? singleForm as RehearsalFormData : null}
-              bulkData={mode === 'bulk' ? bulkForm as BulkRehearsalData : null}
-              existingRehearsals={existingRehearsals}
-              orchestras={orchestras}
-              onConflictsChanged={handleConflictsChanged}
-            />
-
-            {/* Error Display */}
-            {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded p-4">
-                <p className="text-red-800 text-sm">{errors.submit}</p>
-              </div>
-            )}
-
-            {/* Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-              <button
-                type="button"
-                onClick={onCancel}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-              >
-                ביטול
-              </button>
-              <button
-                type="submit"
-                disabled={loading || hasCriticalConflicts}
-                className={`px-6 py-2 bg-muted text-white rounded hover:bg-muted transition-colors ${
-                  loading || hasCriticalConflicts ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {loading ? 'שומר...' : (initialData ? 'עדכן חזרה' : 
-                  mode === 'single' ? 'צור חזרה' : `צור ${previewDates.length} חזרות`)}
-              </button>
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <div className="space-y-4">
+              {renderSingleFormFields()}
             </div>
-          </form>
-        </div>
-      </div>
-    </div>
+          )}
+
+          {/* Conflict Detection */}
+          <ConflictDetector
+            newRehearsal={mode === 'single' ? singleForm as RehearsalFormData : null}
+            bulkData={mode === 'bulk' ? bulkForm as BulkRehearsalData : null}
+            existingRehearsals={existingRehearsals}
+            orchestras={orchestras}
+            onConflictsChanged={handleConflictsChanged}
+          />
+
+          {/* Error Display */}
+          {errors.submit && (
+            <div className="bg-destructive/10 border border-destructive/30 rounded-md p-4">
+              <p className="text-destructive text-sm">{errors.submit}</p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              ביטול
+            </Button>
+            <Button type="submit" disabled={loading || hasCriticalConflicts}>
+              {loading ? 'שומר...' : (initialData ? 'עדכן חזרה' :
+                mode === 'single' ? 'צור חזרה' : `צור ${previewDates.length} חזרות`)}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }

@@ -375,24 +375,26 @@ export default function Rehearsals() {
       </>
 
       {/* Create Form */}
-      {showCreateForm && (
-        <RehearsalForm
-          orchestras={orchestras}
-          existingRehearsals={rehearsals}
-          onSubmit={handleCreateRehearsal}
-          onCancel={() => setShowCreateForm(false)}
-        />
-      )}
+      <RehearsalForm
+        orchestras={orchestras}
+        existingRehearsals={rehearsals}
+        onSubmit={handleCreateRehearsal}
+        open={showCreateForm}
+        onOpenChange={(open) => { if (!open) setShowCreateForm(false) }}
+      />
 
       {/* Edit Form */}
-      {showEditForm && editingRehearsal && (
+      {editingRehearsal && (
         <RehearsalForm
           orchestras={orchestras}
           existingRehearsals={rehearsals}
           onSubmit={handleEditRehearsal}
-          onCancel={() => {
-            setShowEditForm(false)
-            setEditingRehearsal(null)
+          open={showEditForm}
+          onOpenChange={(open) => {
+            if (!open) {
+              setShowEditForm(false)
+              setEditingRehearsal(null)
+            }
           }}
           initialData={{
             groupId: editingRehearsal.groupId,

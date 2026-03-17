@@ -130,7 +130,7 @@ export const RehearsalTimelineCard: React.FC<RehearsalTimelineCardProps> = ({
       onClick={() => onView(rehearsal._id)}
     >
       {/* Hover-reveal action buttons */}
-      <div className="absolute top-2.5 left-2.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10">
+      <div className="absolute top-2.5 right-2.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10">
         <button
           className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors bg-card border border-border shadow-1"
           onClick={(e) => { e.stopPropagation(); onEdit(rehearsal) }}

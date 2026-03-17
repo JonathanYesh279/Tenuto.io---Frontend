@@ -1,42 +1,26 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  CalendarIcon,
-  PlusIcon,
-  FunnelIcon,
-  DotsThreeVerticalIcon,
-  PencilSimpleIcon,
   TrashIcon,
-  UsersIcon,
-  ClockIcon,
-  MapPinIcon,
-  EyeIcon,
-  CheckCircleIcon,
-  DownloadIcon,
-  SquaresFourIcon,
-  ListIcon
+  DownloadSimpleIcon,
 } from '@phosphor-icons/react'
-import { Card } from '../components/ui/Card'
-import Table from '../components/ui/Table'
-import { SearchInput } from '../components/ui/SearchInput'
-import { TableSkeleton } from '../components/feedback/Skeleton'
-import { EmptyState } from '../components/feedback/EmptyState'
-import { ErrorState } from '../components/feedback/ErrorState'
-import ConfirmationModal from '../components/ui/ConfirmationModal'
+import { Tabs, Tab, Button as HeroButton } from '@heroui/react'
 import Modal from '../components/ui/Modal'
+import ConfirmationModal from '../components/ui/ConfirmationModal'
 import RehearsalCalendar from '../components/RehearsalCalendar'
 import RehearsalForm from '../components/RehearsalForm'
 import AttendanceManager from '../components/AttendanceManager'
+import { RehearsalStatsRow } from '../components/rehearsal/RehearsalStatsRow'
+import { RehearsalFilters } from '../components/rehearsal/RehearsalFilters'
+import { RehearsalTimeline } from '../components/rehearsal/RehearsalTimeline'
+import { ErrorState } from '../components/feedback/ErrorState'
+import { TableSkeleton } from '../components/feedback/Skeleton'
 import { rehearsalService, orchestraService } from '../services/apiService'
 import {
   filterRehearsals,
   sortRehearsals,
   formatRehearsalDateTime,
-  getRehearsalStatus,
   calculateAttendanceStats,
-  getRehearsalColor,
-  getDayName,
-  DAYS_OF_WEEK_ARRAY,
   type Rehearsal,
   type RehearsalFormData,
   type BulkRehearsalData,
@@ -48,25 +32,25 @@ export default function Rehearsals() {
   const [orchestras, setOrchestras] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
+
   // UI State
-  const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar')
+  const [viewMode, setViewMode] = useState<'cards' | 'calendar'>('cards')
   const [calendarView, setCalendarView] = useState<'week' | 'month'>('month')
   const [selectedDate, setSelectedDate] = useState(new Date())
-  
+
   // Form State
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showEditForm, setShowEditForm] = useState(false)
   const [editingRehearsal, setEditingRehearsal] = useState<Rehearsal | null>(null)
-  
+
   // Attendance State
   const [showAttendanceManager, setShowAttendanceManager] = useState(false)
   const [selectedRehearsal, setSelectedRehearsal] = useState<Rehearsal | null>(null)
-  
+
   // Delete Confirmation State
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [rehearsalToDelete, setRehearsalToDelete] = useState<string | null>(null)
-  
+
   // Bulk Delete by Date Range State
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false)
   const [bulkDeleteData, setBulkDeleteData] = useState({
@@ -74,22 +58,22 @@ export default function Rehearsals() {
     startDate: '',
     endDate: ''
   })
-  
+
   // Filter State
-  const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
     searchQuery: '',
     orchestraId: '',
     dayOfWeek: '' as number | '',
     location: '',
-    status: 'all' as 'upcoming' | 'completed' | 'in_progress' | 'all',
+    status: '' as 'upcoming' | 'completed' | 'in_progress' | '',
     startDate: '',
-    endDate: ''
+    endDate: '',
+    type: '',
   })
-  
+
   // Sort State
-  const [sortBy, setSortBy] = useState<'date' | 'time' | 'orchestra' | 'location'>('date')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [sortBy] = useState<'date' | 'time' | 'orchestra' | 'location'>('date')
+  const [sortOrder] = useState<'asc' | 'desc'>('asc')
 
   useEffect(() => {
     loadData()
@@ -102,14 +86,12 @@ export default function Rehearsals() {
       const currentMonth = now.getMonth()
       const currentYear = now.getFullYear()
 
-      // Check if any rehearsals exist in the current month
       const hasCurrentMonthRehearsals = rehearsals.some(r => {
         const d = new Date(r.date)
         return d.getMonth() === currentMonth && d.getFullYear() === currentYear
       })
 
       if (!hasCurrentMonthRehearsals) {
-        // Find the nearest rehearsal date (prefer upcoming, fall back to most recent)
         const sortedDates = rehearsals
           .map(r => new Date(r.date))
           .sort((a, b) => a.getTime() - b.getTime())
@@ -144,9 +126,8 @@ export default function Rehearsals() {
     }
   }
 
-  // Process rehearsals by joining with orchestra data
+  // Process rehearsals by joining with orchestra data, then filter and sort
   const processedRehearsals = useMemo(() => {
-    // First, enrich rehearsals with orchestra data
     const enrichedRehearsals = rehearsals.map(rehearsal => {
       const orchestra = orchestras.find(orch => orch._id === rehearsal.groupId)
       return {
@@ -161,11 +142,17 @@ export default function Rehearsals() {
         } : undefined
       }
     })
-    
-    // Then filter and sort
+
     let filtered = filterRehearsals(enrichedRehearsals, filters)
     return sortRehearsals(filtered, sortBy, sortOrder)
   }, [rehearsals, orchestras, filters, sortBy, sortOrder])
+
+  const orchestraOptions = useMemo(() => {
+    return orchestras.map((o: any) => ({
+      value: o._id,
+      label: o.name,
+    }))
+  }, [orchestras])
 
   const handleCreateRehearsal = async (data: RehearsalFormData | BulkRehearsalData, isBulk: boolean) => {
     try {
@@ -174,7 +161,6 @@ export default function Rehearsals() {
       } else {
         await rehearsalService.createRehearsal(data as RehearsalFormData)
       }
-      
       setShowCreateForm(false)
       await loadData()
     } catch (error: any) {
@@ -232,12 +218,10 @@ export default function Rehearsals() {
         bulkDeleteData.startDate,
         bulkDeleteData.endDate
       )
-      
+
       await loadData()
       setShowBulkDeleteModal(false)
       setBulkDeleteData({ orchestraId: '', startDate: '', endDate: '' })
-      
-      // Show success message
       setError(null)
       console.log(`✅ נמחקו ${result.deletedCount} חזרות בהצלחה`)
     } catch (error: any) {
@@ -251,29 +235,11 @@ export default function Rehearsals() {
     setBulkDeleteData({ orchestraId: '', startDate: '', endDate: '' })
   }
 
-
-  const handleFilterChange = (key: string, value: any) => {
-    setFilters(prev => ({ ...prev, [key]: value }))
-  }
-
-  const clearFilters = () => {
-    setFilters({
-      searchQuery: '',
-      orchestraId: '',
-      dayOfWeek: '',
-      location: '',
-      status: 'all',
-      startDate: '',
-      endDate: ''
-    })
-  }
-
   const handleExportRehearsals = () => {
-    // Export filtered rehearsals to CSV
     const csvData = processedRehearsals.map(rehearsal => {
       const dateTime = formatRehearsalDateTime(rehearsal)
       const stats = calculateAttendanceStats(rehearsal)
-      
+
       return {
         תזמורת: rehearsal.orchestra?.name || '',
         תאריך: dateTime.date,
@@ -299,138 +265,45 @@ export default function Rehearsals() {
     link.click()
   }
 
-  // Get unique locations for filter
-  const locations = [...new Set(rehearsals.map(r => r.location).filter(Boolean))]
-
-  // Table columns for list view
-  const tableColumns = [
-    {
-      key: 'orchestra',
-      label: 'תזמורת',
-      render: (rehearsal: Rehearsal) => (
-        <div>
-          <div className="font-medium text-gray-900">{rehearsal.orchestra?.name}</div>
-          <div className="text-sm text-gray-500">{rehearsal.type}</div>
-        </div>
-      )
-    },
-    {
-      key: 'datetime',
-      label: 'תאריך ושעה',
-      render: (rehearsal: Rehearsal) => {
-        const dateTime = formatRehearsalDateTime(rehearsal)
-        return (
-          <div>
-            <div className="font-medium text-gray-900">{dateTime.date}</div>
-            <div className="text-sm text-gray-500">{dateTime.dayName} • {dateTime.time}</div>
-          </div>
-        )
-      }
-    },
-    {
-      key: 'location',
-      label: 'מיקום',
-      render: (rehearsal: Rehearsal) => (
-        <div className="flex items-center">
-          <MapPinIcon size={16} weight="regular" className="text-gray-400 ml-1" />
-          <span className="text-gray-900">{rehearsal.location}</span>
-        </div>
-      )
-    },
-    {
-      key: 'attendance',
-      label: 'נוכחות',
-      render: (rehearsal: Rehearsal) => {
-        const stats = calculateAttendanceStats(rehearsal)
-        return stats.hasAttendanceData ? (
-          <div className="flex items-center">
-            <UsersIcon size={16} weight="regular" className="text-gray-400 ml-1" />
-            <span className="text-gray-900">
-              {stats.presentCount}/{stats.totalMembers} ({stats.attendanceRate}%)
-            </span>
-          </div>
-        ) : (
-          <span className="text-gray-500 text-sm">לא סומן</span>
-        )
-      }
-    },
-    {
-      key: 'status',
-      label: 'סטטוס',
-      render: (rehearsal: Rehearsal) => {
-        const status = getRehearsalStatus(rehearsal)
-        return (
-          <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${status.colorClass}`}>
-            {status.text}
-          </span>
-        )
-      }
-    }
-  ]
-
   if (loading) {
     return <TableSkeleton rows={6} cols={5} />
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-0">
+      {/* Page Header */}
+      <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">חזרות</h1>
-          <p className="text-gray-600">
-            ניהול חזרות תזמורת ומעקב נוכחות
-            {rehearsals.length > 0 && ` • ${rehearsals.length} חזרות במערכת`}
+          <h1 className="text-2xl font-extrabold text-foreground">חזרות</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            ניהול חזרות תזמורות ומעקב נוכחות • {rehearsals.length} חזרות
           </p>
         </div>
-        
-        <div className="flex items-center gap-3">
-          {/* View Toggle */}
-          <div className="flex bg-gray-100 rounded p-1">
-            <button
-              onClick={() => setViewMode('calendar')}
-              className={`p-2 rounded transition-colors ${
-                viewMode === 'calendar'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <CalendarIcon size={16} weight="regular" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded transition-colors ${
-                viewMode === 'list'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <ListIcon size={16} weight="regular" />
-            </button>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => setShowBulkDeleteModal(true)}
-              className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-              title="מחיקת חזרות בטווח תאריכים"
-            >
-              <TrashIcon size={16} weight="fill" className="ml-1" />
-              מחיקה בטווח תאריכים
-            </button>
-            
-            <button
-              onClick={() => setShowCreateForm(true)}
-              className="flex items-center px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
-            >
-              <PlusIcon size={16} weight="fill" className="ml-1" />
-              חזרה חדשה
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <HeroButton
+            color="default"
+            variant="bordered"
+            size="sm"
+            onPress={() => setShowBulkDeleteModal(true)}
+            startContent={<TrashIcon size={14} weight="fill" />}
+            className="font-bold text-danger border-danger"
+          >
+            מחיקה בטווח
+          </HeroButton>
+          <HeroButton
+            color="default"
+            variant="bordered"
+            size="sm"
+            onPress={handleExportRehearsals}
+            startContent={<DownloadSimpleIcon size={14} weight="regular" />}
+            className="font-bold"
+          >
+            ייצוא
+          </HeroButton>
         </div>
       </div>
 
-      {/* Error Display */}
+      {/* Error state */}
       {error && (
         <ErrorState
           message={error}
@@ -438,259 +311,68 @@ export default function Rehearsals() {
         />
       )}
 
-      {/* Filters */}
-      <Card>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
-            {/* Search */}
-            <SearchInput
-              value={filters.searchQuery}
-              onChange={(value) => handleFilterChange('searchQuery', value)}
-              onClear={() => handleFilterChange('searchQuery', '')}
-              placeholder="חיפוש חזרות..."
-            />
+      {/* Main content */}
+      <>
+        <RehearsalStatsRow rehearsals={processedRehearsals} />
 
-            {/* Toggle Filters */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-            >
-              <FunnelIcon size={16} weight="regular" className="ml-1" />
-              מסננים
-            </button>
+        <Tabs
+          variant="solid"
+          size="sm"
+          selectedKey={viewMode}
+          onSelectionChange={(key) => setViewMode(key as 'cards' | 'calendar')}
+          classNames={{ tabList: 'mb-4' }}
+        >
+          <Tab key="cards" title="כרטיסים" />
+          <Tab key="calendar" title="לוח שנה" />
+        </Tabs>
 
-            {/* Active filters count */}
-            {Object.values(filters).filter(v => v && v !== 'all').length > 1 && (
-              <span className="text-sm text-primary">
-                {Object.values(filters).filter(v => v && v !== 'all').length - 1} מסננים פעילים
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Export */}
-            <button
-              onClick={handleExportRehearsals}
-              className="flex items-center px-3 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-            >
-              <DownloadIcon size={16} weight="regular" className="ml-1" />
-              ייצא
-            </button>
-
-            {/* Calendar View Toggle */}
-            {viewMode === 'calendar' && (
-              <div className="flex bg-gray-100 rounded p-1">
-                <button
-                  onClick={() => setCalendarView('week')}
-                  className={`px-3 py-1 text-sm rounded transition-colors ${
-                    calendarView === 'week'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  שבוע
-                </button>
-                <button
-                  onClick={() => setCalendarView('month')}
-                  className={`px-3 py-1 text-sm rounded transition-colors ${
-                    calendarView === 'month'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  חודש
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Advanced Filters */}
-        {showFilters && (
-          <div className="border-t border-gray-200 pt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">תזמורת</label>
-              <select
-                value={filters.orchestraId}
-                onChange={(e) => handleFilterChange('orchestraId', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
-              >
-                <option value="">כל התזמורות</option>
-                {orchestras.map(orchestra => (
-                  <option key={orchestra._id} value={orchestra._id}>
-                    {orchestra.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">יום בשבוע</label>
-              <select
-                value={filters.dayOfWeek}
-                onChange={(e) => handleFilterChange('dayOfWeek', e.target.value ? parseInt(e.target.value) : '')}
-                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
-              >
-                <option value="">כל הימים</option>
-                {DAYS_OF_WEEK_ARRAY.map(day => (
-                  <option key={day.value} value={day.value}>
-                    {day.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">מיקום</label>
-              <select
-                value={filters.location}
-                onChange={(e) => handleFilterChange('location', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
-              >
-                <option value="">כל המיקומים</option>
-                {locations.map(location => (
-                  <option key={location} value={location}>
-                    {location}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">סטטוס</label>
-              <select
-                value={filters.status}
-                onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
-              >
-                <option value="all">כל החזרות</option>
-                <option value="upcoming">עתידות</option>
-                <option value="in_progress">מתקיימות</option>
-                <option value="completed">הסתיימו</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">מתאריך</label>
-              <input
-                type="date"
-                value={filters.startDate}
-                onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">עד תאריך</label>
-              <input
-                type="date"
-                value={filters.endDate}
-                onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
-              />
-            </div>
-
-            <div className="md:col-span-3 lg:col-span-6 flex justify-end">
-              <button
-                onClick={clearFilters}
-                className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                נקה מסננים
-              </button>
-            </div>
-          </div>
-        )}
-      </Card>
-
-      {/* Content */}
-      {viewMode === 'calendar' ? (
-        <RehearsalCalendar
-          rehearsals={processedRehearsals}
-          viewMode={calendarView}
-          selectedDate={selectedDate}
-          onSelectDate={setSelectedDate}
-          onRehearsalClick={(rehearsal) => {
-            navigate(`/rehearsals/${rehearsal._id}`)
-          }}
-          onEditRehearsal={(rehearsal) => {
-            setEditingRehearsal(rehearsal)
-            setShowEditForm(true)
-          }}
-          onDeleteRehearsal={handleDeleteRehearsal}
-          onViewDetails={(rehearsal) => {
-            navigate(`/rehearsals/${rehearsal._id}`)
-          }}
-          onNavigateToRehearsal={(rehearsalId) => {
-            navigate(`/rehearsals/${rehearsalId}`)
-          }}
+        <RehearsalFilters
+          searchQuery={filters.searchQuery}
+          onSearchChange={(v) => setFilters(prev => ({ ...prev, searchQuery: v }))}
+          onSearchClear={() => setFilters(prev => ({ ...prev, searchQuery: '' }))}
+          typeFilter={filters.type}
+          onTypeChange={(v) => setFilters(prev => ({ ...prev, type: v }))}
+          statusFilter={filters.status}
+          onStatusChange={(v) => setFilters(prev => ({ ...prev, status: v as any }))}
+          orchestraFilter={filters.orchestraId}
+          onOrchestraChange={(v) => setFilters(prev => ({ ...prev, orchestraId: v }))}
+          orchestraOptions={orchestraOptions}
+          onCreateClick={() => setShowCreateForm(true)}
         />
-      ) : (
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">
-              חזרות ({processedRehearsals.length})
-            </h3>
-            
-            <div className="flex items-center gap-2">
-              <select
-                value={`${sortBy}-${sortOrder}`}
-                onChange={(e) => {
-                  const [sort, order] = e.target.value.split('-')
-                  setSortBy(sort as any)
-                  setSortOrder(order as any)
-                }}
-                className="px-3 py-2 text-sm border border-border rounded focus:ring-2 focus:ring-ring"
-              >
-                <option value="date-asc">תאריך (עולה)</option>
-                <option value="date-desc">תאריך (יורד)</option>
-                <option value="orchestra-asc">תזמורת (א-ת)</option>
-                <option value="orchestra-desc">תזמורת (ת-א)</option>
-                <option value="location-asc">מיקום (א-ת)</option>
-                <option value="location-desc">מיקום (ת-א)</option>
-                <option value="time-asc">שעה (מוקדם)</option>
-                <option value="time-desc">שעה (מאוחר)</option>
-              </select>
-            </div>
-          </div>
 
-          {processedRehearsals.length > 0 ? (
-            <Table
-              data={processedRehearsals}
-              columns={tableColumns}
-              onView={(rehearsal) => {
-                navigate(`/rehearsals/${rehearsal._id}`)
-              }}
-              onEdit={(rehearsal) => {
-                setEditingRehearsal(rehearsal)
-                setShowEditForm(true)
-              }}
-              onDelete={(rehearsal) => handleDeleteRehearsal(rehearsal._id)}
-              actions={true}
-              actionLabels={{
-                view: 'נוכחות',
-                edit: 'ערוך',
-                delete: 'מחק'
-              }}
-            />
-          ) : (
-            (() => {
-              const hasActiveFilters = Object.values(filters).some(f => f && f !== 'all')
-              return (
-                <EmptyState
-                  icon={<CalendarIcon size={48} weight="regular" />}
-                  title="אין חזרות"
-                  description={
-                    hasActiveFilters
-                      ? 'לא נמצאו חזרות התואמות למסננים'
-                      : 'התחל על ידי יצירת החזרה הראשונה'
-                  }
-                  action={!hasActiveFilters ? { label: 'צור חזרה חדשה', onClick: () => setShowCreateForm(true) } : undefined}
-                />
-              )
-            })()
-          )}
-        </Card>
-      )}
+        {viewMode === 'cards' ? (
+          <RehearsalTimeline
+            rehearsals={processedRehearsals}
+            onView={(id) => navigate(`/rehearsals/${id}`)}
+            onEdit={(rehearsal) => {
+              setEditingRehearsal(rehearsal)
+              setShowEditForm(true)
+            }}
+            onAttendance={(id) => navigate(`/rehearsals/${id}`)}
+          />
+        ) : (
+          <RehearsalCalendar
+            rehearsals={processedRehearsals}
+            viewMode={calendarView}
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            onRehearsalClick={(rehearsal) => {
+              navigate(`/rehearsals/${rehearsal._id}`)
+            }}
+            onEditRehearsal={(rehearsal) => {
+              setEditingRehearsal(rehearsal)
+              setShowEditForm(true)
+            }}
+            onDeleteRehearsal={handleDeleteRehearsal}
+            onViewDetails={(rehearsal) => {
+              navigate(`/rehearsals/${rehearsal._id}`)
+            }}
+            onNavigateToRehearsal={(rehearsalId) => {
+              navigate(`/rehearsals/${rehearsalId}`)
+            }}
+          />
+        )}
+      </>
 
       {/* Create Form */}
       {showCreateForm && (
@@ -760,11 +442,11 @@ export default function Rehearsals() {
         <div className="p-6">
           <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
             <p className="text-yellow-800">
-              ⚠️ פעולה זו תמחק את כל החזרות בטווח התאריכים שנבחר עבור התזמורת הנבחרת. 
+              ⚠️ פעולה זו תמחק את כל החזרות בטווח התאריכים שנבחר עבור התזמורת הנבחרת.
               פעולה זו אינה ניתנת לביטול!
             </p>
           </div>
-          
+
           <div className="space-y-4">
             {/* Orchestra Selection */}
             <div>
@@ -800,7 +482,7 @@ export default function Rehearsals() {
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   תאריך סיום

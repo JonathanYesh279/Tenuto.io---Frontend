@@ -370,7 +370,13 @@ export default function Rehearsals() {
             onNavigateToRehearsal={(rehearsalId) => {
               navigate(`/rehearsals/${rehearsalId}`)
             }}
-            onRehearsalMoved={loadData}
+            onRehearsalMoved={(rehearsalId, newDate, newDayOfWeek) => {
+              setRehearsals(prev => prev.map(r =>
+                r._id === rehearsalId
+                  ? { ...r, date: newDate, dayOfWeek: newDayOfWeek }
+                  : r
+              ))
+            }}
           />
         )}
       </>

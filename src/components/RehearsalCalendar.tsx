@@ -87,7 +87,7 @@ interface RehearsalCalendarProps {
   onDeleteRehearsal?: (rehearsalId: string) => void
   onViewDetails?: (rehearsal: Rehearsal) => void
   onNavigateToRehearsal?: (rehearsalId: string) => void
-  onRehearsalMoved?: () => void
+  onRehearsalMoved?: (rehearsalId: string, newDate: string, newDayOfWeek: number) => void
   className?: string
 }
 
@@ -167,15 +167,13 @@ export default function RehearsalCalendar({
     if (!over) return
 
     const rehearsal = active.data.current as Rehearsal
-    const targetDateStr = over.id as string // ISO date string
+    const targetDateStr = over.id as string
 
-    // Parse target date
     const targetDate = new Date(targetDateStr)
     const sourceDate = new Date(rehearsal.date)
     sourceDate.setHours(0, 0, 0, 0)
     targetDate.setHours(0, 0, 0, 0)
 
-    // Same date — no-op
     if (sourceDate.getTime() === targetDate.getTime()) return
 
     const dayOfWeek = targetDate.getDay()
@@ -185,15 +183,25 @@ export default function RehearsalCalendar({
       month: 'long',
     })
 
+    // Optimistic update — move rehearsal in parent state immediately
+    onRehearsalMoved?.(rehearsal._id, targetDate.toISOString(), dayOfWeek)
+
     try {
       await rehearsalService.updateRehearsal(rehearsal._id, {
         date: targetDate.toISOString(),
         dayOfWeek,
       })
       toast.success(`החזרה הועברה ל${formattedDate}`)
-      onRehearsalMoved?.()
-    } catch (error) {
-      toast.error('שגיאה בהעברת החזרה')
+    } catch (error: any) {
+      // Revert optimistic update
+      onRehearsalMoved?.(rehearsal._id, rehearsal.date as string, sourceDate.getDay())
+
+      const message = error?.message || ''
+      if (message.includes('conflict') || message.includes('Conflict')) {
+        toast.error('התנגשות בלוח — השתמש בלוח חדרים לתזמון מדויק', { duration: 4000 })
+      } else {
+        toast.error('שגיאה בהעברת החזרה')
+      }
       console.error('Failed to move rehearsal:', error)
     }
   }

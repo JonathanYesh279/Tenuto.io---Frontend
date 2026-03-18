@@ -1,11 +1,13 @@
 /**
  * Theory Tab Component - Optimized Version
- * 
+ *
  * Uses caching, request deduplication, and performance optimizations
  * to eliminate redundant API calls and improve loading performance.
  */
 
 import React, { useState, useMemo, memo } from 'react'
+import { Chip, Button, Tabs, Tab } from '@heroui/react'
+import { motion } from 'framer-motion'
 
 import TeacherNameDisplay from '../../../../../components/TeacherNameDisplay'
 import { ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, InfoIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrashIcon, TrendUpIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
@@ -24,13 +26,22 @@ interface TheoryTabProps {
   isLoading?: boolean
 }
 
+const getLevelChipColor = (level: string): 'success' | 'warning' | 'danger' | 'primary' => {
+  switch (level?.toLowerCase()) {
+    case 'beginner': case 'מתחילים': return 'success'
+    case 'intermediate': case 'בינוני': return 'warning'
+    case 'advanced': case 'מתקדמים': return 'danger'
+    default: return 'primary'
+  }
+}
+
 // Memoized lesson card component to prevent unnecessary re-renders
-const LessonCard = memo(({ 
-  lesson, 
-  isEnrolled = false, 
-  onEnroll, 
-  onUnenroll, 
-  isEnrolling = false, 
+const LessonCard = memo(({
+  lesson,
+  isEnrolled = false,
+  onEnroll,
+  onUnenroll,
+  isEnrolling = false,
   isUnenrolling = false,
   studentGrade,
   canEnroll = true
@@ -44,23 +55,6 @@ const LessonCard = memo(({
   studentGrade?: string
   canEnroll?: boolean
 }) => {
-  // Memoized computed values
-  const levelColor = useMemo(() => {
-    switch (lesson.level?.toLowerCase()) {
-      case 'beginner':
-      case 'מתחילים':
-        return 'bg-green-100 text-green-800'
-      case 'intermediate':
-      case 'בינוני':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'advanced':
-      case 'מתקדמים':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-blue-100 text-blue-800'
-    }
-  }, [lesson.level])
-
   const categoryIcon = useMemo(() => {
     switch (lesson.category?.toLowerCase()) {
       case 'harmony':
@@ -93,40 +87,47 @@ const LessonCard = memo(({
   }, [lesson.maxStudents, lesson.studentIds])
 
   return (
-    <div className="bg-white rounded border border-gray-200 p-6 hover:shadow-md transition-shadow">
+    <motion.div
+      className="bg-card rounded-card border border-border p-6 shadow-1"
+      whileHover={{ y: -2, boxShadow: '0 8px 25px rgba(0,0,0,0.08)' }}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+    >
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             {categoryIcon}
-            <h4 className="text-xl font-semibold text-gray-900">
+            <h4 className="text-xl font-semibold text-foreground">
               {lesson.title || lesson.name || 'שיעור תיאוריה'}
             </h4>
           </div>
-          
+
           {lesson.category && (
-            <span className="text-sm text-gray-600">קטגוריה: {lesson.category}</span>
+            <span className="text-sm text-muted-foreground">קטגוריה: {lesson.category}</span>
           )}
-          
+
           <div className="mt-2 flex items-center gap-2 flex-wrap">
             {lesson.level && (
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${levelColor}`}>
+              <Chip color={getLevelChipColor(lesson.level)} variant="flat" size="sm">
                 {lesson.level}
-              </span>
+              </Chip>
             )}
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           {isEnrolled ? (
             <>
-              <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+              <span className="inline-flex items-center px-3 py-1 bg-success/10 text-success rounded-full text-sm font-medium">
                 <CheckCircleIcon className="w-3 h-3 mr-1" />
                 רשום
               </span>
-              <button
-                onClick={onUnenroll}
-                disabled={isUnenrolling}
-                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+              <Button
+                isIconOnly
+                onPress={onUnenroll}
+                isDisabled={isUnenrolling}
+                color="danger"
+                variant="flat"
+                size="sm"
                 title="בטל הרשמה"
               >
                 {isUnenrolling ? (
@@ -134,30 +135,20 @@ const LessonCard = memo(({
                 ) : (
                   <TrashIcon className="w-4 h-4" />
                 )}
-              </button>
+              </Button>
             </>
           ) : (
-            <button
-              onClick={onEnroll}
-              disabled={!canEnroll || isEnrolling}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-                canEnroll
-                  ? 'bg-green-600 text-white hover:bg-green-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
+            <Button
+              onPress={onEnroll}
+              isDisabled={!canEnroll || isEnrolling}
+              isLoading={isEnrolling}
+              color="primary"
+              variant="solid"
+              size="sm"
+              startContent={!isEnrolling ? <PlusIcon className="w-4 h-4" /> : undefined}
             >
-              {isEnrolling ? (
-                <>
-                  <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
-                  נרשם...
-                </>
-              ) : (
-                <>
-                  <PlusIcon className="w-4 h-4" />
-                  הרשם
-                </>
-              )}
-            </button>
+              {isEnrolling ? 'נרשם...' : 'הרשם'}
+            </Button>
           )}
         </div>
       </div>
@@ -172,7 +163,7 @@ const LessonCard = memo(({
       {/* Schedule */}
       {(lesson.date || lesson.startTime) && (
         <div className="mb-3">
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <ClockIcon className="w-4 h-4" />
             <span className="text-sm">
               {lesson.date && new Date(lesson.date).toLocaleDateString('he-IL')}
@@ -189,7 +180,7 @@ const LessonCard = memo(({
 
       {/* Location */}
       {lesson.location && (
-        <div className="flex items-center gap-2 text-gray-600 mb-3">
+        <div className="flex items-center gap-2 text-muted-foreground mb-3">
           <MapPinIcon className="w-4 h-4" />
           <span className="text-sm">{lesson.location}</span>
         </div>
@@ -198,15 +189,15 @@ const LessonCard = memo(({
       {/* Students count with progress bar */}
       {studentsProgress && (
         <div className="mb-3">
-          <div className="flex items-center gap-2 text-gray-600 mb-2">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <UsersIcon className="w-4 h-4" />
             <span className="text-sm">
               {studentsProgress.current} / {studentsProgress.total} תלמידים
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+          <div className="w-full bg-muted rounded-full h-2">
+            <div
+              className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{ width: `${studentsProgress.percentage}%` }}
             />
           </div>
@@ -217,17 +208,17 @@ const LessonCard = memo(({
       {!isEnrolled && (
         <>
           {lesson.isFull && (
-            <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="flex items-center gap-2 text-yellow-800">
+            <div className="mb-3 p-3 bg-warning/10 border border-warning/20 rounded-card">
+              <div className="flex items-center gap-2 text-warning">
                 <WarningCircleIcon className="w-4 h-4" />
                 <span className="text-sm font-medium">השיעור מלא</span>
               </div>
             </div>
           )}
-          
+
           {!lesson.gradeCompatible && (
-            <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <div className="flex items-center gap-2 text-red-800">
+            <div className="mb-3 p-3 bg-danger/10 border border-danger/20 rounded-card">
+              <div className="flex items-center gap-2 text-danger">
                 <WarningCircleIcon className="w-4 h-4" />
                 <span className="text-sm font-medium">לא מתאים לכיתה</span>
               </div>
@@ -235,8 +226,8 @@ const LessonCard = memo(({
           )}
 
           {!lesson.levelCompatible && (
-            <div className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-              <div className="flex items-center gap-2 text-orange-800">
+            <div className="mb-3 p-3 bg-warning/10 border border-warning/20 rounded-card">
+              <div className="flex items-center gap-2 text-warning">
                 <WarningCircleIcon className="w-4 h-4" />
                 <span className="text-sm font-medium">רמה לא מתאימה</span>
               </div>
@@ -247,35 +238,35 @@ const LessonCard = memo(({
 
       {/* Description */}
       {lesson.description && (
-        <p className="text-sm text-gray-600 mt-3 pt-3 border-t">
+        <p className="text-sm text-muted-foreground mt-3 pt-3 border-t border-border">
           {lesson.description}
         </p>
       )}
 
       {/* Target grades */}
       {lesson.targetGrades && lesson.targetGrades.length > 0 && (
-        <div className="mt-3 pt-3 border-t">
+        <div className="mt-3 pt-3 border-t border-border">
           <div className="flex items-center gap-2">
-            <InfoIcon className="w-4 h-4 text-gray-500" />
-            <span className="text-xs text-gray-500">
+            <InfoIcon className="w-4 h-4 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">
               מיועד לכיתות: {lesson.targetGrades.join(', ')}
             </span>
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   )
 })
 
 LessonCard.displayName = 'LessonCard'
 
 // Memoized empty state component
-const EmptyState = memo(({ 
-  icon, 
-  title, 
-  description, 
-  actionLabel, 
-  onAction 
+const EmptyState = memo(({
+  icon,
+  title,
+  description,
+  actionLabel,
+  onAction
 }: {
   icon: React.ReactNode
   title: string
@@ -284,18 +275,20 @@ const EmptyState = memo(({
   onAction?: () => void
 }) => (
   <div className="text-center py-16">
-    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
       {icon}
     </div>
-    <h3 className="text-lg font-medium text-gray-600 mb-2">{title}</h3>
-    <p className="text-gray-500 mb-6">{description}</p>
+    <h3 className="text-lg font-medium text-muted-foreground mb-2">{title}</h3>
+    <p className="text-muted-foreground mb-6">{description}</p>
     {actionLabel && onAction && (
-      <button
-        onClick={onAction}
-        className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+      <Button
+        onPress={onAction}
+        color="primary"
+        variant="solid"
+        size="sm"
       >
         {actionLabel}
-      </button>
+      </Button>
     )}
   </div>
 ))
@@ -309,7 +302,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
   // Use cached data hooks
   const { data: studentData, isLoading: studentLoading, error: studentError } = useStudent(studentId)
   const { data: allTheoryLessons, isLoading: theoryLessonsLoading } = useTheoryLessons()
-  
+
   // Get student's grade and level with memoization
   const studentGrade = useMemo(() => student?.academicInfo?.class || studentData?.academicInfo?.class || 'ז', [student, studentData])
   const studentLevel = useMemo(() => student?.theoryLevel || studentData?.theoryLevel || 'beginner', [student, studentData])
@@ -317,7 +310,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
   // Get enrolled and available lessons using cached hooks
   const enrolledLessons = useStudentTheoryLessons(studentId)
   const availableLessons = useAvailableTheoryLessons(studentId, studentGrade, studentLevel)
-  
+
   // Use optimistic mutation hook
   const { enroll, unenroll, isEnrolling, isUnenrolling, error: mutationError } = useTheoryLessonEnrollment(studentId)
 
@@ -337,8 +330,8 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
 
   if (isLoading) {
     return (
-      <SmartLoadingState 
-        isLoading={true} 
+      <SmartLoadingState
+        isLoading={true}
         skeleton={<SkeletonComponents.TabContent />}
         minHeight="400px"
       >
@@ -350,16 +343,18 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
   if (hasError) {
     return (
       <div className="p-6 text-center">
-        <div className="text-red-600 text-lg mb-2">⚠️ שגיאה בטעינת הנתונים</div>
-        <div className="text-gray-600 mb-4 text-sm">
+        <div className="text-danger text-lg mb-2">⚠️ שגיאה בטעינת הנתונים</div>
+        <div className="text-muted-foreground mb-4 text-sm">
           {(studentError as Error)?.message || (mutationError as Error)?.message || 'אירעה שגיאה לא צפויה'}
         </div>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-neutral-800 transition-colors text-sm"
+        <Button
+          onPress={() => window.location.reload()}
+          color="primary"
+          variant="solid"
+          size="sm"
         >
           נסה שוב
-        </button>
+        </Button>
       </div>
     )
   }
@@ -368,7 +363,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
     if (enrolledLessons.length === 0) {
       return (
         <EmptyState
-          icon={<BookOpenIcon className="w-8 h-8 text-gray-300" />}
+          icon={<BookOpenIcon className="w-8 h-8 text-muted-foreground" />}
           title="אין שיעורי תיאוריה רשומים"
           description="התלמיד אינו רשום כרגע לשיעורי תיאוריה"
           actionLabel="צפה בשיעורים זמינים"
@@ -379,21 +374,27 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
 
     return (
       <div className="space-y-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <BookOpenIcon className="w-5 h-5 text-purple-600" />
+        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <BookOpenIcon className="w-5 h-5 text-primary" />
           שיעורי תיאוריה רשומים ({enrolledLessons.length})
         </h3>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {enrolledLessons.map((lesson) => (
-            <LessonCard
+          {enrolledLessons.map((lesson, index) => (
+            <motion.div
               key={lesson._id}
-              lesson={lesson}
-              isEnrolled={true}
-              onUnenroll={() => setShowConfirmDialog(lesson._id)}
-              isUnenrolling={isUnenrolling}
-              studentGrade={studentGrade}
-            />
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+            >
+              <LessonCard
+                lesson={lesson}
+                isEnrolled={true}
+                onUnenroll={() => setShowConfirmDialog(lesson._id)}
+                isUnenrolling={isUnenrolling}
+                studentGrade={studentGrade}
+              />
+            </motion.div>
           ))}
         </div>
       </div>
@@ -404,33 +405,39 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <PlusIcon className="w-5 h-5 text-green-600" />
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <PlusIcon className="w-5 h-5 text-success" />
             שיעורי תיאוריה זמינים להרשמה
           </h3>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-muted-foreground">
             כיתה: {studentGrade} • רמה: {studentLevel}
           </div>
         </div>
 
         {availableLessons.length === 0 ? (
           <EmptyState
-            icon={<BookOpenIcon className="w-8 h-8 text-gray-300" />}
+            icon={<BookOpenIcon className="w-8 h-8 text-muted-foreground" />}
             title="אין שיעורים זמינים"
             description="כל השיעורים המתאימים מלאים או שכבר נרשמת אליהם"
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {availableLessons.map((lesson) => (
-              <LessonCard
+            {availableLessons.map((lesson, index) => (
+              <motion.div
                 key={lesson._id}
-                lesson={lesson}
-                isEnrolled={false}
-                onEnroll={() => handleEnrollment(lesson._id)}
-                isEnrolling={isEnrolling}
-                studentGrade={studentGrade}
-                canEnroll={lesson.isCompatible}
-              />
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <LessonCard
+                  lesson={lesson}
+                  isEnrolled={false}
+                  onEnroll={() => handleEnrollment(lesson._id)}
+                  isEnrolling={isEnrolling}
+                  studentGrade={studentGrade}
+                  canEnroll={lesson.isCompatible}
+                />
+              </motion.div>
             ))}
           </div>
         )}
@@ -443,38 +450,35 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
       {/* Header with Navigation */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">שיעורי תיאוריה</h2>
+          <h2 className="text-2xl font-bold text-foreground">שיעורי תיאוריה</h2>
         </div>
 
         {/* View Toggle */}
-        <div className="flex bg-gray-100 rounded-lg p-1">
-          <button
-            onClick={() => setActiveView('current')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeView === 'current'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <CheckCircleIcon className="w-4 h-4" />
-              שיעורים רשומים ({enrolledLessons.length})
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveView('manage')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeView === 'manage'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <PlusIcon className="w-4 h-4" />
-              הרשמה חדשה ({availableLessons.length})
-            </div>
-          </button>
-        </div>
+        <Tabs
+          selectedKey={activeView}
+          onSelectionChange={(key) => setActiveView(key as 'current' | 'manage')}
+          size="sm"
+          variant="solid"
+        >
+          <Tab
+            key="current"
+            title={
+              <div className="flex items-center gap-2">
+                <CheckCircleIcon className="w-4 h-4" />
+                שיעורים רשומים ({enrolledLessons.length})
+              </div>
+            }
+          />
+          <Tab
+            key="manage"
+            title={
+              <div className="flex items-center gap-2">
+                <PlusIcon className="w-4 h-4" />
+                הרשמה חדשה ({availableLessons.length})
+              </div>
+            }
+          />
+        </Tabs>
       </div>
 
       {/* Content */}
@@ -482,36 +486,34 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-card p-6 max-w-md w-full mx-4 shadow-1">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               בטל הרשמה לשיעור תיאוריה
             </h3>
-            <p className="text-gray-600 mb-6">
-              האם אתה בטוח שברצונך לבטל את ההרשמה לשיעור זה? 
+            <p className="text-muted-foreground mb-6">
+              האם אתה בטוח שברצונך לבטל את ההרשמה לשיעור זה?
               פעולה זו לא ניתנת לביטול.
             </p>
             <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowConfirmDialog(null)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              <Button
+                onPress={() => setShowConfirmDialog(null)}
+                variant="flat"
+                size="sm"
               >
                 ביטול
-              </button>
-              <button
-                onClick={() => handleUnenrollment(showConfirmDialog)}
-                disabled={isUnenrolling}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+              </Button>
+              <Button
+                onPress={() => handleUnenrollment(showConfirmDialog)}
+                isDisabled={isUnenrolling}
+                isLoading={isUnenrolling}
+                color="danger"
+                variant="solid"
+                size="sm"
+                startContent={!isUnenrolling ? undefined : undefined}
               >
-                {isUnenrolling ? (
-                  <>
-                    <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
-                    מבטל...
-                  </>
-                ) : (
-                  'בטל הרשמה'
-                )}
-              </button>
+                {isUnenrolling ? 'מבטל...' : 'בטל הרשמה'}
+              </Button>
             </div>
           </div>
         </div>

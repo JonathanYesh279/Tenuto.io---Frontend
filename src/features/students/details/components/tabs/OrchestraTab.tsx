@@ -1,15 +1,18 @@
 /**
  * Orchestra Tab Component - Simplified Implementation
- * 
+ *
  * Displays student's current orchestra enrollments and provides enrollment management
  * Works with actual student data and API structure
  */
 
 import { useState, useEffect } from 'react'
+import { Chip, Button, Tabs, Tab } from '@heroui/react'
+import { motion } from 'framer-motion'
 
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
-import { CheckCircleIcon, ClockIcon, MapPinIcon, MusicNotesIcon, PlusIcon, TrashIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { CheckCircleIcon, MusicNotesIcon, PlusIcon, TrashIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import { ActivityTimelineCard } from '@/components/schedule/ActivityTimelineCard'
 
 interface RehearsalSchedule {
   dayOfWeek: number
@@ -62,24 +65,24 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
     const fetchEnrolledOrchestras = async () => {
       try {
         setIsLoadingOrchestras(true)
-        
+
         // First, get all orchestras to check memberIds
         const allOrchestras = await apiService.orchestras.getOrchestras()
-        
+
         // Find orchestras where this student is listed as a member
-        const orchestrasWhereStudentIsMember = allOrchestras.filter((orchestra: any) => 
+        const orchestrasWhereStudentIsMember = allOrchestras.filter((orchestra: any) =>
           orchestra.memberIds?.includes(studentId)
         )
-        
+
         // Also check student's enrollments.orchestraIds
         const enrolledOrchestraIds = student?.enrollments?.orchestraIds || []
-        
+
         // Combine both sources (student's enrollments and orchestra's memberIds)
         const allEnrolledIds = new Set([
           ...enrolledOrchestraIds,
           ...orchestrasWhereStudentIsMember.map((o: any) => o._id)
         ])
-        
+
         if (allEnrolledIds.size === 0) {
           setEnrolledOrchestras([])
           return
@@ -163,7 +166,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
       try {
         setIsLoadingOrchestras(true)
         const allOrchestras = await apiService.orchestras.getOrchestras()
-        
+
         // Process orchestras with smart summary approach and fetch conductor data
         const processedOrchestras = await Promise.all(allOrchestras.map(async (orchestra: any) => {
           // Check if student is already enrolled (either in enrollments or in orchestra's memberIds)
@@ -214,7 +217,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
 
         // Filter to show only non-enrolled orchestras in the available view
         const available = processedOrchestras.filter((orchestra: any) => !orchestra.isEnrolled)
-        
+
         console.log('All orchestras:', allOrchestras.length, 'Available:', available.length)
         console.log('📊 Orchestra data sample:', allOrchestras[0])
         console.log('📊 Orchestra keys:', allOrchestras[0] ? Object.keys(allOrchestras[0]) : 'No orchestras')
@@ -299,9 +302,9 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
     return (
       <div className="p-6">
         <div className="space-y-6">
-          <div className="h-6 bg-gray-200 rounded animate-pulse w-48"></div>
-          <div className="h-32 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-24 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-6 bg-muted rounded animate-pulse w-48"></div>
+          <div className="h-32 bg-muted rounded animate-pulse"></div>
+          <div className="h-24 bg-muted rounded animate-pulse"></div>
         </div>
       </div>
     )
@@ -312,7 +315,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
       return (
         <div className="space-y-4">
           {[1, 2].map(i => (
-            <div key={i} className="bg-gray-200 rounded-lg h-48 animate-pulse"></div>
+            <div key={i} className="bg-muted rounded-card h-48 animate-pulse"></div>
           ))}
         </div>
       )
@@ -321,41 +324,44 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
     if (enrolledOrchestras.length === 0) {
       return (
         <div className="text-center py-16">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <MusicNotesIcon className="w-8 h-8 text-gray-300" />
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <MusicNotesIcon className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-medium text-gray-600 mb-2">אין הרשמות קיימות</h3>
-          <p className="text-gray-500 mb-6">התלמיד אינו רשום כרגע לתזמורות</p>
-          <button
-            onClick={() => setActiveView('manage')}
-            className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+          <h3 className="text-lg font-medium text-muted-foreground mb-2">אין הרשמות קיימות</h3>
+          <p className="text-muted-foreground mb-6">התלמיד אינו רשום כרגע לתזמורות</p>
+          <Button
+            color="secondary"
+            variant="solid"
+            onPress={() => setActiveView('manage')}
           >
             צפה בתזמורות זמינות
-          </button>
+          </Button>
         </div>
       )
     }
 
     return (
       <div className="space-y-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <MusicNotesIcon className="w-5 h-5 text-purple-600" />
+        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <MusicNotesIcon className="w-5 h-5 text-secondary" />
           תזמורות רשומות ({enrolledOrchestras.length})
         </h3>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {enrolledOrchestras.map((orchestra) => (
-            <div 
+            <motion.div
               key={orchestra._id}
-              className="bg-white rounded border border-gray-200 p-6 hover:shadow-md transition-shadow"
+              className="bg-card rounded-card border border-border p-6 shadow-1"
+              whileHover={{ y: -2 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h4 className="text-xl font-semibold text-gray-900">{orchestra.name}</h4>
+                  <h4 className="text-xl font-semibold text-foreground">{orchestra.name}</h4>
                   <div className="mt-2 space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-700">מנצח:</span>
-                      <span className="text-sm text-gray-900">
+                      <span className="text-sm font-medium text-foreground">מנצח:</span>
+                      <span className="text-sm text-foreground">
                         {(() => {
                           console.log('🎭 Debugging conductor for orchestra:', orchestra.name)
                           console.log('🎭 Orchestra object keys:', Object.keys(orchestra))
@@ -423,67 +429,62 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                     </div>
                   </div>
                   {orchestra.error && (
-                    <p className="text-red-600 text-sm mt-1">שגיאה בטעינת פרטי התזמורת</p>
+                    <p className="text-danger text-sm mt-1">שגיאה בטעינת פרטי התזמורת</p>
                   )}
                 </div>
-                
+
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                    <CheckCircleIcon className="w-3 h-3 mr-1" />
+                  <Chip color="success" variant="flat" size="sm" startContent={<CheckCircleIcon className="w-3 h-3" />}>
                     רשום
-                  </span>
-                  
-                  <button
-                    onClick={() => setShowConfirmDialog(orchestra._id)}
-                    disabled={enrollmentInProgress === orchestra._id}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  </Chip>
+
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    color="danger"
+                    size="sm"
+                    onPress={() => setShowConfirmDialog(orchestra._id)}
+                    isDisabled={enrollmentInProgress === orchestra._id}
                     title="בטל הרשמה"
                   >
                     <TrashIcon className="w-4 h-4" />
-                  </button>
+                  </Button>
                 </div>
               </div>
 
               {orchestra.description && (
-                <p className="text-gray-600 mb-4">{orchestra.description}</p>
+                <p className="text-muted-foreground mb-4">{orchestra.description}</p>
               )}
 
               {/* Rehearsal Summary */}
-              <div className="mb-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
-                <h5 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                  <ClockIcon className="w-5 h-5 text-blue-600" />
-                  חזרות שבועיות
-                </h5>
-                <div className="bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="font-medium text-blue-900">
-                        {orchestra.rehearsalSchedule?.dayName || 'לא מוגדר'}
-                      </span>
-                      <span className="text-blue-600">•</span>
-                      <span className="font-medium text-blue-800">
-                        {orchestra.rehearsalSchedule
-                          ? `${orchestra.rehearsalSchedule.startTime} - ${orchestra.rehearsalSchedule.endTime}`
-                          : 'שעות לא מוגדרות'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 text-blue-700">
-                      <MapPinIcon className="w-4 h-4" />
-                      <span className="text-sm font-medium">
-                        {orchestra.rehearsalSchedule?.location || orchestra.location || 'אולם גן'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {orchestra.rehearsalSchedule && (
+                <ActivityTimelineCard
+                  title={orchestra.name}
+                  subtitle={(() => {
+                    if (!orchestra.conductor) return undefined
+                    if (typeof orchestra.conductor === 'string') return orchestra.conductor
+                    const dn = getDisplayName(orchestra.conductor.personalInfo)
+                    if (dn) return dn
+                    if (orchestra.conductor.personalInfo?.firstName && orchestra.conductor.personalInfo?.lastName) {
+                      return `${orchestra.conductor.personalInfo.firstName} ${orchestra.conductor.personalInfo.lastName}`
+                    }
+                    return orchestra.conductor.displayName || orchestra.conductor.name || undefined
+                  })()}
+                  type="orchestra"
+                  startTime={orchestra.rehearsalSchedule.startTime || '—'}
+                  endTime={orchestra.rehearsalSchedule.endTime || '—'}
+                  location={orchestra.rehearsalSchedule.location || orchestra.location}
+                  className="mt-2 mb-4"
+                />
+              )}
 
               {/* Capacity Info */}
               {orchestra.capacity && (
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted-foreground">
                   קיבולת: {orchestra.currentMembers || 0} / {orchestra.capacity} חברים
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -495,7 +496,7 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
       return (
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="bg-gray-200 rounded-lg h-32 animate-pulse"></div>
+            <div key={i} className="bg-muted rounded-card h-32 animate-pulse"></div>
           ))}
         </div>
       )
@@ -504,22 +505,22 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <PlusIcon className="w-5 h-5 text-green-600" />
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <PlusIcon className="w-5 h-5 text-success" />
             תזמורות זמינות להרשמה
           </h3>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-muted-foreground">
             מציג תזמורות התואמות לכלי: {studentInstrument}
           </div>
         </div>
 
         {availableOrchestras.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MusicNotesIcon className="w-8 h-8 text-gray-300" />
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <MusicNotesIcon className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h4 className="text-lg font-medium text-gray-600 mb-2">אין תזמורות זמינות</h4>
-            <p className="text-gray-500">
+            <h4 className="text-lg font-medium text-muted-foreground mb-2">אין תזמורות זמינות</h4>
+            <p className="text-muted-foreground">
               כל התזמורות התואמות לכלי שלך מלאות או שכבר נרשמת אליהן
             </p>
           </div>
@@ -529,21 +530,23 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
               const hasConflict = checkScheduleConflict(orchestra)
               const isFull = orchestra.capacity && orchestra.currentMembers >= orchestra.capacity
               const canEnroll = !hasConflict && !isFull && orchestra.isCompatible
-              
+
               return (
-                <div 
+                <motion.div
                   key={orchestra._id}
-                  className={`bg-white rounded border p-6 hover:shadow-md transition-shadow ${
-                    !canEnroll ? 'border-gray-200 opacity-75' : 'border-gray-200'
+                  className={`bg-card rounded-card border border-border p-6 shadow-1 ${
+                    !canEnroll ? 'opacity-75' : ''
                   }`}
+                  whileHover={{ y: -2 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h4 className="text-xl font-semibold text-gray-900">{orchestra.name}</h4>
+                      <h4 className="text-xl font-semibold text-foreground">{orchestra.name}</h4>
                       <div className="mt-2 space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-700">מנצח:</span>
-                          <span className="text-sm text-gray-900">
+                          <span className="text-sm font-medium text-foreground">מנצח:</span>
+                          <span className="text-sm text-foreground">
                             {(() => {
                               console.log('🎪 Debugging conductor for available orchestra:', orchestra.name)
                               console.log('🎪 Available orchestra.conductor:', orchestra.conductor)
@@ -608,144 +611,112 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
                           </span>
                         </div>
                       </div>
-                      
+
                       {/* Level and Type */}
                       <div className="mt-2 flex items-center gap-2">
                         {orchestra.level && (
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            orchestra.level === 'beginner' ? 'bg-green-100 text-green-800' :
-                            orchestra.level === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
-                            orchestra.level === 'advanced' ? 'bg-red-100 text-red-800' :
-                            'bg-blue-100 text-blue-800'
-                          }`}>
+                          <Chip
+                            color={
+                              orchestra.level === 'beginner' ? 'success' :
+                              orchestra.level === 'intermediate' ? 'warning' :
+                              orchestra.level === 'advanced' ? 'danger' :
+                              'primary'
+                            }
+                            variant="flat"
+                            size="sm"
+                          >
                             {orchestra.level === 'beginner' ? 'מתחילים' :
                              orchestra.level === 'intermediate' ? 'בינוני' :
                              orchestra.level === 'advanced' ? 'מתקדמים' : 'מעורב'}
-                          </span>
+                          </Chip>
                         )}
-                        
+
                         {orchestra.gradeRequirements && orchestra.gradeRequirements.includes(studentGrade) && (
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                          <Chip color="primary" variant="flat" size="sm">
                             מתאים לכיתה {studentGrade}
-                          </span>
+                          </Chip>
                         )}
                       </div>
                     </div>
-                    
-                    <button
-                      onClick={() => handleEnrollment(orchestra._id)}
-                      disabled={!canEnroll || enrollmentInProgress === orchestra._id}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-                        canEnroll
-                          ? 'bg-green-600 text-white hover:bg-green-700'
-                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      }`}
+
+                    <Button
+                      color={canEnroll ? 'success' : 'default'}
+                      variant="solid"
+                      size="sm"
+                      isDisabled={!canEnroll || enrollmentInProgress === orchestra._id}
+                      isLoading={enrollmentInProgress === orchestra._id}
+                      onPress={() => handleEnrollment(orchestra._id)}
+                      startContent={enrollmentInProgress !== orchestra._id ? <PlusIcon className="w-4 h-4" /> : undefined}
                     >
-                      {enrollmentInProgress === orchestra._id ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          נרשם...
-                        </>
-                      ) : (
-                        <>
-                          <PlusIcon className="w-4 h-4" />
-                          הרשם
-                        </>
-                      )}
-                    </button>
+                      {enrollmentInProgress === orchestra._id ? 'נרשם...' : 'הרשם'}
+                    </Button>
                   </div>
 
                   {orchestra.description && (
-                    <p className="text-gray-600 mb-4">{orchestra.description}</p>
+                    <p className="text-muted-foreground mb-4">{orchestra.description}</p>
                   )}
 
                   {/* Warning Messages */}
                   {hasConflict && (
-                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <div className="flex items-center gap-2 text-red-800">
+                    <div className="mb-4 p-3 bg-danger/5 border border-danger/20 rounded-card">
+                      <div className="flex items-center gap-2 text-danger">
                         <WarningCircleIcon className="w-4 h-4" />
                         <span className="text-sm font-medium">התנגשות בלוח זמנים</span>
                       </div>
-                      <p className="text-red-700 text-sm mt-1">
+                      <p className="text-danger text-sm mt-1">
                         זמני החזרות מתנגשים עם השיעור שלך בימי שלישי 14:30-15:15
                       </p>
                     </div>
                   )}
-                  
+
                   {isFull && (
-                    <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                      <div className="flex items-center gap-2 text-yellow-800">
+                    <div className="mb-4 p-3 bg-warning/5 border border-warning/20 rounded-card">
+                      <div className="flex items-center gap-2 text-warning">
                         <WarningCircleIcon className="w-4 h-4" />
                         <span className="text-sm font-medium">התזמורת מלאה</span>
                       </div>
-                      <p className="text-yellow-700 text-sm mt-1">
+                      <p className="text-warning text-sm mt-1">
                         כל המקומות בתזמורת תפוסים
                       </p>
                     </div>
                   )}
 
                   {/* Rehearsal Summary */}
-                  <div className={`mb-4 rounded-lg p-4 border ${
-                    hasConflict ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'
-                  }`}>
-                    <h5 className={`font-semibold mb-3 flex items-center gap-2 ${
-                      hasConflict ? 'text-red-900' : 'text-blue-900'
-                    }`}>
-                      <ClockIcon className={`w-5 h-5 ${hasConflict ? 'text-red-600' : 'text-blue-600'}`} />
-                      חזרות שבועיות
-                      {hasConflict && (
-                        <span className="text-xs bg-red-200 text-red-800 px-2 py-1 rounded-full">
-                          התנגשות!
-                        </span>
-                      )}
-                    </h5>
-                    <div className={`p-3 rounded-lg border shadow-sm ${
-                      hasConflict ? 'bg-red-100 border-red-200' : 'bg-white border-blue-100'
-                    }`}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className={`font-medium ${
-                            hasConflict ? 'text-red-900' : 'text-blue-900'
-                          }`}>
-                            {orchestra.rehearsalSchedule?.dayName || 'לא מוגדר'}
-                          </span>
-                          <span className={hasConflict ? 'text-red-600' : 'text-blue-600'}>•</span>
-                          <span className={`font-medium ${
-                            hasConflict ? 'text-red-800' : 'text-blue-800'
-                          }`}>
-                            {orchestra.rehearsalSchedule
-                              ? `${orchestra.rehearsalSchedule.startTime} - ${orchestra.rehearsalSchedule.endTime}`
-                              : 'שעות לא מוגדרות'}
-                          </span>
-                        </div>
-                        <div className={`flex items-center gap-1 ${
-                          hasConflict ? 'text-red-700' : 'text-blue-700'
-                        }`}>
-                          <MapPinIcon className="w-4 h-4" />
-                          <span className="text-sm font-medium">
-                            {orchestra.rehearsalSchedule?.location || orchestra.location || 'אולם גן'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {orchestra.rehearsalSchedule && (
+                    <ActivityTimelineCard
+                      title={orchestra.name}
+                      subtitle={(() => {
+                        if (!orchestra.conductor) return undefined
+                        if (typeof orchestra.conductor === 'string') return orchestra.conductor
+                        const dn = getDisplayName(orchestra.conductor.personalInfo)
+                        if (dn) return dn
+                        if (orchestra.conductor.personalInfo?.firstName && orchestra.conductor.personalInfo?.lastName) {
+                          return `${orchestra.conductor.personalInfo.firstName} ${orchestra.conductor.personalInfo.lastName}`
+                        }
+                        return orchestra.conductor.displayName || orchestra.conductor.name || undefined
+                      })()}
+                      type="orchestra"
+                      startTime={orchestra.rehearsalSchedule.startTime || '—'}
+                      endTime={orchestra.rehearsalSchedule.endTime || '—'}
+                      location={orchestra.rehearsalSchedule.location || orchestra.location}
+                      className="mt-2 mb-4"
+                    />
+                  )}
 
                   {/* Required Instruments */}
                   {orchestra.requiredInstruments && orchestra.requiredInstruments.length > 0 && (
                     <div className="mb-4">
-                      <h5 className="font-medium text-gray-700 mb-2">כלים נדרשים</h5>
+                      <h5 className="font-medium text-foreground mb-2">כלים נדרשים</h5>
                       <div className="flex flex-wrap gap-1">
                         {orchestra.requiredInstruments.map((instrument: string, index: number) => (
-                          <span 
+                          <Chip
                             key={index}
-                            className={`px-2 py-1 rounded text-xs font-medium ${
-                              instrument === studentInstrument
-                                ? 'bg-green-100 text-green-800 ring-1 ring-green-300'
-                                : 'bg-gray-100 text-gray-700'
-                            }`}
+                            color={instrument === studentInstrument ? 'success' : 'default'}
+                            variant="flat"
+                            size="sm"
                           >
                             {instrument}
-                          </span>
+                          </Chip>
                         ))}
                       </div>
                     </div>
@@ -753,11 +724,11 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
 
                   {/* Capacity Info */}
                   {orchestra.capacity && (
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-muted-foreground">
                       קיבולת: {orchestra.currentMembers || 0} / {orchestra.capacity} חברים
                     </div>
                   )}
-                </div>
+                </motion.div>
               )
             })}
           </div>
@@ -771,38 +742,35 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
       {/* Header with Navigation */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">תזמורות והרכבים</h2>
+          <h2 className="text-2xl font-bold text-foreground">תזמורות והרכבים</h2>
         </div>
 
         {/* View Toggle */}
-        <div className="flex bg-gray-100 rounded-lg p-1">
-          <button
-            onClick={() => setActiveView('current')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeView === 'current'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <CheckCircleIcon className="w-4 h-4" />
-              הרשמות קיימות
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveView('manage')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeView === 'manage'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <PlusIcon className="w-4 h-4" />
-              הרשמה חדשה
-            </div>
-          </button>
-        </div>
+        <Tabs
+          selectedKey={activeView}
+          onSelectionChange={(key) => setActiveView(key as 'current' | 'manage')}
+          variant="underlined"
+          classNames={{ tabList: 'border-b border-border' }}
+        >
+          <Tab
+            key="current"
+            title={
+              <div className="flex items-center gap-2">
+                <CheckCircleIcon className="w-4 h-4" />
+                הרשמות קיימות
+              </div>
+            }
+          />
+          <Tab
+            key="manage"
+            title={
+              <div className="flex items-center gap-2">
+                <PlusIcon className="w-4 h-4" />
+                הרשמה חדשה
+              </div>
+            }
+          />
+        </Tabs>
       </div>
 
       {/* Content */}
@@ -810,36 +778,31 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-card border border-border shadow-2 p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               בטל הרשמה לתזמורת
             </h3>
-            <p className="text-gray-600 mb-6">
-              האם אתה בטוח שברצונך לבטל את ההרשמה לתזמורת זו? 
+            <p className="text-muted-foreground mb-6">
+              האם אתה בטוח שברצונך לבטל את ההרשמה לתזמורת זו?
               פעולה זו לא ניתנת לביטול.
             </p>
             <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowConfirmDialog(null)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              <Button
+                variant="flat"
+                onPress={() => setShowConfirmDialog(null)}
               >
                 ביטול
-              </button>
-              <button
-                onClick={() => handleUnenrollment(showConfirmDialog)}
-                disabled={enrollmentInProgress === showConfirmDialog}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+              </Button>
+              <Button
+                color="danger"
+                variant="solid"
+                isDisabled={enrollmentInProgress === showConfirmDialog}
+                isLoading={enrollmentInProgress === showConfirmDialog}
+                onPress={() => handleUnenrollment(showConfirmDialog)}
               >
-                {enrollmentInProgress === showConfirmDialog ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    מבטל...
-                  </>
-                ) : (
-                  'בטל הרשמה'
-                )}
-              </button>
+                {enrollmentInProgress === showConfirmDialog ? 'מבטל...' : 'בטל הרשמה'}
+              </Button>
             </div>
           </div>
         </div>

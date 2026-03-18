@@ -1,7 +1,7 @@
 /**
  * Student Details Page - Dashboard + Tabs Hybrid
  *
- * Renders a gradient header, then HeroUI Tabs with:
+ * Renders a gradient header, then animated tabs with:
  *   - Dashboard (default): 3-column grid with profile, charts, enrollment table
  *   - Schedule: weekly calendar grid
  *   - Bagrut: grading system
@@ -9,10 +9,9 @@
  *   - Theory: theory lesson enrollment
  */
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
-import { Tabs, Tab } from '@heroui/react'
-import { DetailPageHeader } from '@/components/domain'
+import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '@/components/ui/animated-tabs'
 import {
   ArrowRight as ArrowRightIcon,
   ArrowsClockwise as ArrowsClockwiseIcon,
@@ -59,13 +58,6 @@ const StudentDetailsPage: React.FC = () => {
 
   // Dashboard data hook (aggregates attendance, orchestras, theory, teachers)
   const dashboardData = useStudentDashboardData(studentId, student)
-
-  // Derive primary instrument from student data
-  const primaryInstrument = useMemo(() => {
-    const instruments = student?.academicInfo?.instrumentProgress || []
-    const primary = instruments.find((i: any) => i.isPrimary)
-    return primary?.instrumentName || instruments[0]?.instrumentName || null
-  }, [student?.academicInfo?.instrumentProgress])
 
   // Fetch student data
   useEffect(() => {
@@ -136,74 +128,40 @@ const StudentDetailsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Gradient header with breadcrumb, avatar, badges, updatedAt */}
-      <DetailPageHeader
-        firstName={student?.personalInfo?.firstName}
-        lastName={student?.personalInfo?.lastName}
-        fullName={student?.personalInfo?.fullName}
-        entityType="תלמיד"
-        breadcrumbLabel="תלמידים"
-        breadcrumbHref="/students"
-        updatedAt={student?.updatedAt}
-        badges={
-          <>
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
-              {student?.isActive ? 'פעיל' : 'לא פעיל'}
-            </span>
-            {primaryInstrument && (
-              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
-                {primaryInstrument}
-              </span>
-            )}
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
-              כיתה {student?.academicInfo?.class || '-'}
-            </span>
-          </>
-        }
-      />
-
-      {/* HeroUI Tabs: dashboard + 4 surviving tabs */}
-      <Tabs
-        selectedKey={activeTab}
-        onSelectionChange={(key) => setActiveTab(key as string)}
-        variant="underlined"
-        classNames={{
-          tabList: 'border-b border-border bg-white rounded-t-card px-4',
-          panel: 'p-0',
-        }}
-      >
-        {TAB_CONFIG.map((tab) => (
-          <Tab
-            key={tab.key}
-            title={
+      {/* Animated tabs: dashboard + 4 surviving tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          {TAB_CONFIG.map((tab) => (
+            <TabsTrigger key={tab.key} value={tab.key} className="font-bold text-sm">
               <span className="flex items-center gap-2">
                 <tab.icon className="w-4 h-4" />
                 {tab.label}
               </span>
-            }
-          >
-            {tab.key === 'dashboard' && (
-              <StudentDashboardView
-                student={student}
-                studentId={studentId}
-                dashboardData={dashboardData}
-                onStudentUpdate={handleStudentUpdate}
-              />
-            )}
-            {tab.key === 'schedule' && (
-              <ScheduleTab student={student} studentId={studentId} isLoading={false} />
-            )}
-            {tab.key === 'bagrut' && (
-              <BagrutTab student={student} studentId={studentId} />
-            )}
-            {tab.key === 'orchestra' && (
-              <OrchestraTab student={student} studentId={studentId} isLoading={false} />
-            )}
-            {tab.key === 'theory' && (
-              <TheoryTabOptimized student={student} studentId={studentId} />
-            )}
-          </Tab>
-        ))}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <TabsContents>
+          <TabsContent value="dashboard">
+            <StudentDashboardView
+              student={student}
+              studentId={studentId}
+              dashboardData={dashboardData}
+              onStudentUpdate={handleStudentUpdate}
+            />
+          </TabsContent>
+          <TabsContent value="schedule">
+            <ScheduleTab student={student} studentId={studentId} isLoading={false} />
+          </TabsContent>
+          <TabsContent value="bagrut">
+            <BagrutTab student={student} studentId={studentId} />
+          </TabsContent>
+          <TabsContent value="orchestra">
+            <OrchestraTab student={student} studentId={studentId} isLoading={false} />
+          </TabsContent>
+          <TabsContent value="theory">
+            <TheoryTabOptimized student={student} studentId={studentId} />
+          </TabsContent>
+        </TabsContents>
       </Tabs>
     </div>
   )

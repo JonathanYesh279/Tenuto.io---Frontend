@@ -1,53 +1,54 @@
 /**
- * Student Details Page - Simplified Version
+ * Student Details Page - Dashboard + Tabs Hybrid
  *
- * Handles route parameters, basic data fetching, and renders student details
+ * Renders a gradient header, then HeroUI Tabs with:
+ *   - Dashboard (default): 3-column grid with profile, charts, enrollment table
+ *   - Schedule: weekly calendar grid
+ *   - Bagrut: grading system
+ *   - Orchestras: enrollment management
+ *   - Theory: theory lesson enrollment
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
-
-import { TabType } from '../types'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, Tab } from '@heroui/react'
 import { DetailPageHeader } from '@/components/domain'
-import { AnimatePresence, motion } from 'framer-motion'
-import PersonalInfoTab from './tabs/PersonalInfoTabSimple'
-import AcademicInfoTab from './tabs/AcademicInfoTabSimple'
+import {
+  ArrowRight as ArrowRightIcon,
+  ArrowsClockwise as ArrowsClockwiseIcon,
+  BookOpen as BookOpenIcon,
+  CalendarBlank as CalendarIcon,
+  GraduationCap as GraduationCapIcon,
+  MusicNotes as MusicNotesIcon,
+  SquaresFour as SquaresFourIcon,
+} from '@phosphor-icons/react'
+
+import { StudentDashboardView } from './dashboard/StudentDashboardView'
+import { useStudentDashboardData } from '../hooks/useStudentDashboardData'
 import ScheduleTab from './tabs/ScheduleTab'
 import OrchestraTab from './tabs/OrchestraTab'
 import TheoryTabOptimized from './tabs/TheoryTabOptimized'
+import BagrutTab from './tabs/BagrutTab'
 import apiService from '../../../../services/apiService'
-import { getDisplayName, getInitials } from '../../../../utils/nameUtils'
-import { ArrowRightIcon, ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, FileTextIcon, GraduationCapIcon, MusicNotesIcon, UserIcon } from '@phosphor-icons/react'
 
-// Placeholder tabs not yet implemented
-const AttendanceTab = ({ student }: { student: any }) => (
-  <div className="p-6 text-center text-gray-500">
-    <div className="text-4xl mb-4">✅</div>
-    <div>נוכחות - בפיתוח</div>
-  </div>
-)
-
-const DocumentsTab = ({ student }: { student: any }) => (
-  <div className="p-6 text-center text-gray-500">
-    <div className="text-4xl mb-4">📄</div>
-    <div>מסמכים - בפיתוח</div>
-  </div>
-)
+const TAB_CONFIG = [
+  { key: 'dashboard', label: 'סקירה כללית', icon: SquaresFourIcon },
+  { key: 'schedule', label: 'לוח זמנים', icon: CalendarIcon },
+  { key: 'bagrut', label: 'בגרות', icon: GraduationCapIcon },
+  { key: 'orchestra', label: 'תזמורות', icon: MusicNotesIcon },
+  { key: 'theory', label: 'תאוריה', icon: BookOpenIcon },
+]
 
 const StudentDetailsPage: React.FC = () => {
-  console.log('🔍 StudentDetailsPage component loading...')
   const { studentId } = useParams<{ studentId: string }>()
-  console.log('📝 Student ID from params:', studentId)
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<TabType>('personal')
-  const [student, setStudent] = useState(null)
+  const [activeTab, setActiveTab] = useState<string>('dashboard')
+  const [student, setStudent] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   // Handler to update student data without page reload
   const handleStudentUpdate = (updatedStudent: any) => {
-    console.log('🔄 Updating student data in parent component:', updatedStudent)
     setStudent(updatedStudent)
   }
 
@@ -56,20 +57,26 @@ const StudentDetailsPage: React.FC = () => {
     return <Navigate to="/students" replace />
   }
 
+  // Dashboard data hook (aggregates attendance, orchestras, theory, teachers)
+  const dashboardData = useStudentDashboardData(studentId, student)
+
+  // Derive primary instrument from student data
+  const primaryInstrument = useMemo(() => {
+    const instruments = student?.academicInfo?.instrumentProgress || []
+    const primary = instruments.find((i: any) => i.isPrimary)
+    return primary?.instrumentName || instruments[0]?.instrumentName || null
+  }, [student?.academicInfo?.instrumentProgress])
+
   // Fetch student data
   useEffect(() => {
     const fetchStudent = async () => {
       try {
         setIsLoading(true)
         setError(null)
-        console.log('🌐 Fetching student data for ID:', studentId)
         const response = await apiService.students.getStudentById(studentId)
-        console.log('✅ Student data received:', response)
-        console.log('📚 Enrollments in response:', response?.enrollments)
-        console.log('👨‍🏫 Teacher assignments in response:', response?.teacherAssignments)
         setStudent(response)
-      } catch (err) {
-        console.error('❌ Error fetching student:', err)
+      } catch (err: any) {
+        console.error('Error fetching student:', err)
         setError(err.message || 'Failed to load student data')
       } finally {
         setIsLoading(false)
@@ -97,7 +104,6 @@ const StudentDetailsPage: React.FC = () => {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
-        <div className="text-6xl mb-4">❌</div>
         <h1 className="text-2xl font-bold text-red-600 mb-2">שגיאה בטעינת הנתונים</h1>
         <p className="text-gray-600 mb-6">{error}</p>
         <button
@@ -115,7 +121,6 @@ const StudentDetailsPage: React.FC = () => {
   if (!student) {
     return (
       <div className="flex flex-col items-center justify-center min-h-96 text-center">
-        <div className="text-6xl mb-4">🔍</div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">תלמיד לא נמצא</h1>
         <p className="text-gray-600 mb-6">לא נמצאו פרטים עבור התלמיד המבוקש</p>
         <button
@@ -145,6 +150,11 @@ const StudentDetailsPage: React.FC = () => {
             <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
               {student?.isActive ? 'פעיל' : 'לא פעיל'}
             </span>
+            {primaryInstrument && (
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+                {primaryInstrument}
+              </span>
+            )}
             <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
               כיתה {student?.academicInfo?.class || '-'}
             </span>
@@ -152,69 +162,49 @@ const StudentDetailsPage: React.FC = () => {
         }
       />
 
-      {/* Tab Navigation and Content — shadcn Tabs with AnimatePresence fade */}
-      <div className="bg-white rounded border border-border w-full overflow-hidden">
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabType)} className="w-full">
-          <TabsList className="sticky top-0 z-10 w-full justify-start rounded-none border-b bg-white h-auto px-6 overflow-x-auto scrollbar-hide">
-            <TabsTrigger value="personal" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <UserIcon className="h-4 w-4" />
-              פרטים אישיים
-            </TabsTrigger>
-            <TabsTrigger value="academic" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <GraduationCapIcon className="h-4 w-4" />
-              מידע אקדמי
-            </TabsTrigger>
-            <TabsTrigger value="schedule" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <CalendarIcon className="h-4 w-4" />
-              לוח זמנים
-            </TabsTrigger>
-            <TabsTrigger value="attendance" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <CheckCircleIcon className="h-4 w-4" />
-              נוכחות
-            </TabsTrigger>
-            <TabsTrigger value="orchestra" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <MusicNotesIcon className="h-4 w-4" />
-              תזמורות
-            </TabsTrigger>
-            <TabsTrigger value="theory" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <BookOpenIcon className="h-4 w-4" />
-              תאוריה
-            </TabsTrigger>
-            <TabsTrigger value="documents" className="gap-2 inline-flex items-center whitespace-nowrap">
-              <FileTextIcon className="h-4 w-4" />
-              מסמכים
-            </TabsTrigger>
-          </TabsList>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {activeTab === 'personal' && (
-                <PersonalInfoTab student={student} studentId={studentId} onStudentUpdate={handleStudentUpdate} />
-              )}
-              {activeTab === 'academic' && (
-                <AcademicInfoTab student={student} studentId={studentId} onStudentUpdate={handleStudentUpdate} />
-              )}
-              {activeTab === 'schedule' && (
-                <ScheduleTab student={student} studentId={studentId} isLoading={false} />
-              )}
-              {activeTab === 'attendance' && <AttendanceTab student={student} />}
-              {activeTab === 'orchestra' && (
-                <OrchestraTab student={student} studentId={studentId} isLoading={false} />
-              )}
-              {activeTab === 'theory' && (
-                <TheoryTabOptimized student={student} studentId={studentId} />
-              )}
-              {activeTab === 'documents' && <DocumentsTab student={student} />}
-            </motion.div>
-          </AnimatePresence>
-        </Tabs>
-      </div>
+      {/* HeroUI Tabs: dashboard + 4 surviving tabs */}
+      <Tabs
+        selectedKey={activeTab}
+        onSelectionChange={(key) => setActiveTab(key as string)}
+        variant="underlined"
+        classNames={{
+          tabList: 'border-b border-border bg-white rounded-t-card px-4',
+          panel: 'p-0',
+        }}
+      >
+        {TAB_CONFIG.map((tab) => (
+          <Tab
+            key={tab.key}
+            title={
+              <span className="flex items-center gap-2">
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+              </span>
+            }
+          >
+            {tab.key === 'dashboard' && (
+              <StudentDashboardView
+                student={student}
+                studentId={studentId}
+                dashboardData={dashboardData}
+                onStudentUpdate={handleStudentUpdate}
+              />
+            )}
+            {tab.key === 'schedule' && (
+              <ScheduleTab student={student} studentId={studentId} isLoading={false} />
+            )}
+            {tab.key === 'bagrut' && (
+              <BagrutTab student={student} studentId={studentId} />
+            )}
+            {tab.key === 'orchestra' && (
+              <OrchestraTab student={student} studentId={studentId} isLoading={false} />
+            )}
+            {tab.key === 'theory' && (
+              <TheoryTabOptimized student={student} studentId={studentId} />
+            )}
+          </Tab>
+        ))}
+      </Tabs>
     </div>
   )
 }

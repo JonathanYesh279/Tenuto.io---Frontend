@@ -2,13 +2,14 @@
  * StudentDashboardView - 3-column RTL grid layout for the Student Details dashboard.
  *
  * Layout: ProfileCard (RIGHT in RTL = first in DOM) | ActivityChart + SummaryCards (CENTER) | AttendanceChart (LEFT)
- * Full-width enrollments table placeholder below (Plan 03).
+ * Full-width EnrollmentsTable below with search, type, and day filters.
  */
 
 import { ProfileCard } from './ProfileCard'
 import { ActivityChart } from './ActivityChart'
 import { SummaryCards } from './SummaryCards'
 import { AttendanceChart } from './AttendanceChart'
+import { EnrollmentsTable } from './EnrollmentsTable'
 import type { StudentDashboardData } from '../../hooks/useStudentDashboardData'
 
 interface StudentDashboardViewProps {
@@ -65,10 +66,10 @@ export function StudentDashboardView({
 
       {/* Full-width enrollments table -- spans all columns */}
       <div>
-        {/* EnrollmentsTable placeholder -- will be built in Plan 03 */}
-        <div className="bg-white rounded-card border border-border p-6 h-48 flex items-center justify-center text-muted-foreground">
-          טבלת רישומים (בקרוב)
-        </div>
+        <EnrollmentsTable
+          enrollments={dashboardData.enrollments}
+          isLoading={dashboardData.isLoading}
+        />
       </div>
     </div>
   )

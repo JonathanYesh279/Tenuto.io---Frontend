@@ -1,13 +1,14 @@
 /**
  * StudentDashboardView - 3-column RTL grid layout for the Student Details dashboard.
  *
- * Layout: ProfileCard (RIGHT in RTL = first in DOM) | Activity placeholder (CENTER) | Attendance placeholder (LEFT)
- * Full-width enrollments table placeholder below.
- *
- * Plan 02 replaces chart placeholders. Plan 03 replaces table placeholder.
+ * Layout: ProfileCard (RIGHT in RTL = first in DOM) | ActivityChart + SummaryCards (CENTER) | AttendanceChart (LEFT)
+ * Full-width enrollments table placeholder below (Plan 03).
  */
 
 import { ProfileCard } from './ProfileCard'
+import { ActivityChart } from './ActivityChart'
+import { SummaryCards } from './SummaryCards'
+import { AttendanceChart } from './AttendanceChart'
 import type { StudentDashboardData } from '../../hooks/useStudentDashboardData'
 
 interface StudentDashboardViewProps {
@@ -39,24 +40,26 @@ export function StudentDashboardView({
 
         {/* Activity -- CENTER */}
         <div className="lg:col-span-5 space-y-4">
-          {/* ActivityChart placeholder -- will be built in Plan 02 */}
-          <div className="bg-white rounded-card border border-border p-6 h-64 flex items-center justify-center text-muted-foreground">
-            פעילות שבועית (בקרוב)
-          </div>
-          {/* SummaryCards placeholder */}
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-white rounded-card border border-border p-4 h-20" />
-            <div className="bg-white rounded-card border border-border p-4 h-20" />
-            <div className="bg-white rounded-card border border-border p-4 h-20" />
-          </div>
+          <ActivityChart
+            weeklyHours={dashboardData.weeklyHours}
+            totalWeeklyHours={dashboardData.totalWeeklyHours}
+            isLoading={dashboardData.attendanceLoading}
+          />
+          <SummaryCards
+            totalWeeklyHours={dashboardData.totalWeeklyHours}
+            orchestraCount={dashboardData.orchestraCount}
+            theoryCount={dashboardData.theoryCount}
+            isLoading={dashboardData.isLoading}
+          />
         </div>
 
         {/* Attendance -- LEFT in RTL (last in DOM) */}
         <div className="lg:col-span-4">
-          {/* AttendanceChart placeholder -- will be built in Plan 02 */}
-          <div className="bg-white rounded-card border border-border p-6 h-80 flex items-center justify-center text-muted-foreground">
-            נוכחות (בקרוב)
-          </div>
+          <AttendanceChart
+            attendanceSummary={dashboardData.attendanceSummary}
+            monthlyAttendance={dashboardData.monthlyAttendance}
+            isLoading={dashboardData.attendanceLoading}
+          />
         </div>
       </div>
 

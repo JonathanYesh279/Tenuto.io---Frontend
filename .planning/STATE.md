@@ -15,12 +15,12 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 ## Current Position
 
-Phase: 29-rewrite-teacher-import-direct-boolean-parsing
-Plan: 01+02 complete (backend ministry parser + frontend display)
-Status: Phase complete — ready for testing
-Last activity: 2026-02-23 — Phase 29 completed (ministry direct parser + teaching subjects)
+Phase: 80-student-details-ui-ux-refactor
+Plan: 03 complete (enrollment table + tab integration)
+Status: Plan 03 complete — EnrollmentsTable + HeroUI Tabs refactor done
+Last activity: 2026-03-18 — Phase 80 Plan 03 completed (enrollment table + tabs hybrid)
 
-Progress: [██████████] 100% (v5.5 — 2/2 plans)
+Progress: Phase 80: Plans 01, 02, 03 complete
 
 ## Performance Metrics
 
@@ -81,6 +81,13 @@ Key decisions for v5.0:
 - [Phase 28-01]: Student preview unchanged to avoid regression
 - [Phase 28-01]: Error details show both teacherName and studentName for entity-appropriate display
 
+Key decisions for Phase 80 (Student Details UI/UX Refactor):
+- [80-01] ChatCircleDotsIcon for WhatsApp (WhatsappLogoIcon unavailable in Phosphor)
+- [80-01] Theory lessons fetched globally then filtered client-side by studentId
+- [80-03] BagrutTab wired without onStudentUpdate (optional prop) to keep interface clean
+- [80-03] Primary instrument badge in header derived from instrumentProgress.isPrimary
+- [80-03] Removed AnimatePresence/motion — HeroUI Tabs handles transitions natively
+
 ### Roadmap Evolution
 
 - Phase 25 added: Ministry Excel-Import Upgrade: Teacher Import
@@ -101,8 +108,8 @@ Key decisions for v5.0:
 
 ## Session Continuity
 
-Last session: 2026-02-23
-Stopped at: Phase 29 complete — Ministry direct parser with boolean instrument detection + teaching subjects
+Last session: 2026-03-18
+Stopped at: Phase 80 Plan 03 complete — EnrollmentsTable + HeroUI Tabs refactored StudentDetailsPageSimple
 Resume file: None
 
 **Phase 24 Complete:** Backend import.service.js fixed (header detection, create functionality), frontend ImportData.tsx redesigned (v4.0 styling, create/update distinction, results breakdown)
@@ -116,3 +123,9 @@ Resume file: None
 **Phase 28 Complete:** Frontend ImportData.tsx enhanced with teacher-specific preview display — teacher rows show instruments, roles, and teaching hours with Hebrew labels; formatTeachingHours/formatTeacherChange/getTeacherRowDetails helpers added; student preview unchanged for backward compatibility
 
 **Phase 29 Complete:** Backend import.service.js rewritten with Ministry direct parser — parseMinistryTeacherSheet reads boolean true/false cell values for instruments and teaching subjects, position-based column disambiguation (before instrument section = hours, after = teaching subjects). previewTeacherImport refactored with two-strategy approach (ministry direct → generic fallback). normalizeTeacherMapped and buildImportTeacherDocument now propagate teachingSubjects. Frontend shows מקצועות הוראה in preview.
+
+**Phase 80 Plan 01 Complete:** useStudentDashboardData hook aggregating attendance/orchestras/theory/teachers, ProfileCard with HeroUI avatar/badges/inline-edit, StudentDashboardView 3-column RTL grid container.
+
+**Phase 80 Plan 02 Complete:** ActivityChart (weekly lesson hours bar chart), SummaryCards (total hours, orchestra count, theory count), AttendanceChart (donut + monthly trend line) wired into StudentDashboardView.
+
+**Phase 80 Plan 03 Complete:** EnrollmentsTable with HeroUI Table (colored type icons, search/type/day filters), StudentDetailsPageSimple refactored from shadcn 7-tab to HeroUI 5-tab dashboard hybrid (dashboard default + schedule/bagrut/orchestra/theory).

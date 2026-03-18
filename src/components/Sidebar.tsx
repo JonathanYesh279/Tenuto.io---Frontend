@@ -7,6 +7,7 @@ import AddTeacherModal from './modals/AddTeacherModal'
 import TheoryLessonForm from './TheoryLessonForm'
 import RehearsalForm from './RehearsalForm'
 import { orchestraService } from '../services/apiService'
+import { Dialog, DialogContent } from './ui/dialog'
 import {
   HouseIcon,
   UsersIcon,
@@ -664,23 +665,22 @@ export default function Sidebar() {
       )}
 
       {/* Rehearsal Form Modal */}
-      {showRehearsalForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            {loadingOrchestras ? (
-              <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-900 mx-auto mb-4"></div>
-                <p className="text-neutral-600">טוען תזמורות...</p>
-              </div>
-            ) : (
-              <RehearsalForm
-                orchestras={orchestras}
-                onSubmit={handleRehearsalFormSubmit}
-                onCancel={() => setShowRehearsalForm(false)}
-              />
-            )}
-          </div>
-        </div>
+      {loadingOrchestras && showRehearsalForm ? (
+        <Dialog open={true} onOpenChange={() => setShowRehearsalForm(false)}>
+          <DialogContent className="max-w-2xl">
+            <div className="p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neutral-900 mx-auto mb-4"></div>
+              <p className="text-muted-foreground">טוען תזמורות...</p>
+            </div>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <RehearsalForm
+          open={showRehearsalForm}
+          onOpenChange={(open) => { if (!open) setShowRehearsalForm(false) }}
+          orchestras={orchestras}
+          onSubmit={handleRehearsalFormSubmit}
+        />
       )}
     </>
   )

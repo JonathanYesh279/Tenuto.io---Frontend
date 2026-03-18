@@ -456,74 +456,6 @@ function ActivityCard({
   )
 }
 
-// ─── Minimal Activity Card (Month view — compact) ─────────────────────
-
-function ActivityCardMinimal({
-  rehearsal,
-  onRehearsalClick,
-  onEditRehearsal,
-  onDeleteRehearsal,
-}: {
-  rehearsal: Rehearsal
-  onRehearsalClick?: (rehearsal: Rehearsal) => void
-  onEditRehearsal?: (rehearsal: Rehearsal) => void
-  onDeleteRehearsal?: (rehearsalId: string) => void
-}) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: rehearsal._id,
-    data: rehearsal,
-  })
-  const colors = getColors(rehearsal)
-  const dateTime = formatRehearsalDateTime(rehearsal)
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      onClick={() => { if (!isDragging) onRehearsalClick?.(rehearsal) }}
-      title={`${rehearsal.orchestra?.name || 'ללא שם'} • ${dateTime.time} • ${rehearsal.location}`}
-      className={`
-        group relative flex items-center gap-1.5 px-2 py-1.5 rounded-md
-        border border-r-2 cursor-pointer select-none
-        ${colors.bg} ${colors.border} ${colors.accent}
-        transition-all duration-200
-        ${isDragging ? 'opacity-30' : 'hover:shadow-sm'}
-      `}
-    >
-      <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${colors.text.replace('text-', 'bg-')}`} />
-      <span className={`text-[11px] font-semibold truncate ${colors.text}`}>
-        {rehearsal.orchestra?.name || 'ללא שם'}
-      </span>
-      <span className={`text-[10px] ${colors.text} opacity-60 flex-shrink-0 mr-auto`}>
-        {dateTime.time}
-      </span>
-
-      {/* Compact hover actions */}
-      <div className="absolute top-0.5 left-0.5 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        {onEditRehearsal && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onEditRehearsal(rehearsal) }}
-            className={`p-0.5 rounded ${colors.iconBg}`}
-            title="ערוך"
-          >
-            <PencilSimpleIcon weight="bold" className={`w-2.5 h-2.5 ${colors.text}`} />
-          </button>
-        )}
-        {onDeleteRehearsal && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onDeleteRehearsal(rehearsal._id) }}
-            className="p-0.5 rounded bg-red-50"
-            title="מחק"
-          >
-            <TrashIcon weight="bold" className="w-2.5 h-2.5 text-red-600" />
-          </button>
-        )}
-      </div>
-    </div>
-  )
-}
-
 // ─── Week View ────────────────────────────────────────────────────────
 
 interface WeekViewProps {
@@ -611,73 +543,328 @@ function MonthView({ monthData, onRehearsalClick, onEditRehearsal, onDeleteRehea
       {/* Weeks grid */}
       <div className="grid grid-cols-7 gap-px rounded-xl overflow-hidden bg-white/20 border border-white/30">
         {monthData.weeks.map((week, weekIndex) =>
-          week.map((day, dayIndex) => (
-            <DroppableDayCell
-              key={`${weekIndex}-${dayIndex}`}
-              dateISO={day.date.toISOString()}
-              className={`
-                relative min-h-[110px] p-2 transition-colors
-                ${!day.isCurrentMonth
-                  ? 'bg-white/10'
-                  : day.isToday
-                    ? 'bg-primary/[0.06]'
-                    : 'bg-white/35 hover:bg-white/50'
-                }
-              `}
+          week.map((day, dayIndex) => {
+            const hasEvents = day.rehearsals.length > 0
+            // For single-event days, the cell IS the event card
+            const singleEvent = day.rehearsals.length === 1 ? day.rehearsals[0] : null
+            const cellColors = singleEvent ? getColors(singleEvent) : null
+            // For multi-event days, use the first event's color as dominant
+            const multiColors = day.rehearsals.length > 1 ? getColors(day.rehearsals[0]) : null
+
+            return (
+              <DroppableDayCell
+                key={`${weekIndex}-${dayIndex}`}
+                dateISO={day.date.toISOString()}
+                className={`
+                  relative min-h-[110px] transition-colors cursor-pointer group
+                  ${!day.isCurrentMonth
+                    ? 'bg-white/10'
+                    : hasEvents
+                      ? '' // Color handled by event fill below
+                      : day.isToday
+                        ? 'bg-primary/[0.06]'
+                        : 'bg-white/35 hover:bg-white/50'
+                  }
+                `}
+              >
+                {/* ── Single event: cell IS the card ── */}
+                {singleEvent && (
+                  <SingleEventCell
+                    rehearsal={singleEvent}
+                    day={day}
+                    colors={cellColors!}
+                    onRehearsalClick={onRehearsalClick}
+                    onEditRehearsal={onEditRehearsal}
+                    onDeleteRehearsal={onDeleteRehearsal}
+                  />
+                )}
+
+                {/* ── Multiple events: stacked fills ── */}
+                {day.rehearsals.length > 1 && (
+                  <MultiEventCell
+                    rehearsals={day.rehearsals}
+                    day={day}
+                    dominantColors={multiColors!}
+                    onRehearsalClick={onRehearsalClick}
+                    onEditRehearsal={onEditRehearsal}
+                    onDeleteRehearsal={onDeleteRehearsal}
+                    onShowAdditional={onShowAdditional}
+                  />
+                )}
+
+                {/* ── Empty cell: just day number ── */}
+                {!hasEvents && (
+                  <>
+                    <div className={`p-2 text-sm font-bold ${
+                      !day.isCurrentMonth ? 'text-foreground/20'
+                        : day.isToday ? 'text-primary'
+                          : 'text-foreground/70'
+                    }`}>
+                      {day.isToday ? (
+                        <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold shadow-sm shadow-primary/20">
+                          {day.date.getDate()}
+                        </span>
+                      ) : (
+                        day.date.getDate()
+                      )}
+                    </div>
+                    {day.isToday && (
+                      <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-l from-primary/60 via-primary to-primary/60" />
+                    )}
+                  </>
+                )}
+              </DroppableDayCell>
+            )
+          })
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Single Event Cell (event fills entire cell) ──────────────────────
+
+function SingleEventCell({
+  rehearsal,
+  day,
+  colors,
+  onRehearsalClick,
+  onEditRehearsal,
+  onDeleteRehearsal,
+}: {
+  rehearsal: Rehearsal
+  day: DayData
+  colors: ReturnType<typeof getColors>
+  onRehearsalClick?: (rehearsal: Rehearsal) => void
+  onEditRehearsal?: (rehearsal: Rehearsal) => void
+  onDeleteRehearsal?: (rehearsalId: string) => void
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: rehearsal._id,
+    data: rehearsal,
+  })
+  const dateTime = formatRehearsalDateTime(rehearsal)
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      onClick={() => { if (!isDragging) onRehearsalClick?.(rehearsal) }}
+      className={`
+        absolute inset-0 ${colors.bg} border-r-[3px] ${colors.accent}
+        select-none cursor-pointer
+        transition-all duration-200
+        ${isDragging ? 'opacity-30' : 'hover:shadow-md'}
+      `}
+    >
+      {/* Day number */}
+      <div className="flex items-start justify-between p-2">
+        <div className={`text-sm font-bold ${
+          day.isToday ? 'text-primary' : colors.text + ' opacity-50'
+        }`}>
+          {day.isToday ? (
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-[10px] font-bold shadow-sm">
+              {day.date.getDate()}
+            </span>
+          ) : (
+            day.date.getDate()
+          )}
+        </div>
+
+        {/* Hover actions */}
+        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          {onEditRehearsal && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onEditRehearsal(rehearsal) }}
+              className={`p-1 rounded-md ${colors.iconBg} hover:shadow-sm transition-all`}
+              title="ערוך"
             >
-              {/* Day number */}
-              <div className={`text-sm font-bold mb-1.5 ${
-                !day.isCurrentMonth ? 'text-foreground/20'
-                  : day.isToday ? 'text-primary'
-                    : 'text-foreground/70'
-              }`}>
-                {day.isToday ? (
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold shadow-sm shadow-primary/20">
-                    {day.date.getDate()}
-                  </span>
-                ) : (
-                  day.date.getDate()
-                )}
-              </div>
+              <PencilSimpleIcon weight="bold" className={`w-3 h-3 ${colors.text}`} />
+            </button>
+          )}
+          {onDeleteRehearsal && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onDeleteRehearsal(rehearsal._id) }}
+              className="p-1 rounded-md bg-red-50 hover:bg-red-100 hover:shadow-sm transition-all"
+              title="מחק"
+            >
+              <TrashIcon weight="bold" className="w-3 h-3 text-red-600" />
+            </button>
+          )}
+        </div>
+      </div>
 
-              {/* Today accent line */}
-              {day.isToday && (
-                <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-l from-primary/60 via-primary to-primary/60" />
-              )}
+      {/* Event content — centered in cell */}
+      <div className="px-2 pb-2 flex flex-col items-center justify-center text-center">
+        <div className="flex items-center gap-1.5 mb-1">
+          <MusicNotesIcon weight="fill" className={`w-3.5 h-3.5 ${colors.text}`} />
+          <span className={`text-[12px] font-bold truncate max-w-[90%] ${colors.text}`}>
+            {rehearsal.orchestra?.name || 'ללא שם'}
+          </span>
+        </div>
+        <div className={`flex items-center gap-1 text-[11px] ${colors.text} opacity-70`}>
+          <ClockIcon weight="bold" className="w-3 h-3" />
+          {dateTime.time}
+        </div>
+        {rehearsal.location && (
+          <div className={`flex items-center gap-1 text-[10px] ${colors.text} opacity-60 mt-0.5`}>
+            <MapPinIcon weight="bold" className="w-2.5 h-2.5" />
+            <span className="truncate max-w-[80%]">{rehearsal.location}</span>
+          </div>
+        )}
+      </div>
 
-              {/* Events */}
-              <div className="space-y-1">
-                {day.rehearsals.slice(0, 2).map((rehearsal, rIdx) => (
-                  <motion.div
-                    key={rehearsal._id}
-                    initial={{ opacity: 0, x: 8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: rIdx * 0.03, type: 'spring', stiffness: 400, damping: 25 }}
-                  >
-                    <ActivityCardMinimal
-                      rehearsal={rehearsal}
-                      onRehearsalClick={onRehearsalClick}
-                      onEditRehearsal={onEditRehearsal}
-                      onDeleteRehearsal={onDeleteRehearsal}
-                    />
-                  </motion.div>
-                ))}
-                {day.rehearsals.length > 2 && (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-full text-[10px] font-semibold text-primary/70 text-center py-0.5 rounded-md bg-primary/[0.06] hover:bg-primary/10 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onShowAdditional?.(day.date, day.rehearsals)
-                    }}
-                  >
-                    +{day.rehearsals.length - 2} נוספות
-                  </motion.button>
-                )}
-              </div>
-            </DroppableDayCell>
-          ))
+      {/* Today accent */}
+      {day.isToday && (
+        <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-l from-primary/60 via-primary to-primary/60" />
+      )}
+    </div>
+  )
+}
+
+// ─── Multi Event Cell (stacked event fills) ───────────────────────────
+
+function MultiEventCell({
+  rehearsals,
+  day,
+  dominantColors,
+  onRehearsalClick,
+  onEditRehearsal,
+  onDeleteRehearsal,
+  onShowAdditional,
+}: {
+  rehearsals: Rehearsal[]
+  day: DayData
+  dominantColors: ReturnType<typeof getColors>
+  onRehearsalClick?: (rehearsal: Rehearsal) => void
+  onEditRehearsal?: (rehearsal: Rehearsal) => void
+  onDeleteRehearsal?: (rehearsalId: string) => void
+  onShowAdditional?: (date: Date, rehearsals: Rehearsal[]) => void
+}) {
+  // Split cell vertically — each event gets an equal stripe
+  const visible = rehearsals.slice(0, 3)
+  const remaining = rehearsals.length - 3
+
+  return (
+    <div className="absolute inset-0 flex flex-col">
+      {/* Day number overlay */}
+      <div className={`absolute top-1.5 right-2 z-10 text-sm font-bold ${
+        day.isToday ? 'text-primary' : 'text-foreground/40'
+      }`}>
+        {day.isToday ? (
+          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-[10px] font-bold shadow-sm">
+            {day.date.getDate()}
+          </span>
+        ) : (
+          day.date.getDate()
+        )}
+      </div>
+
+      {/* Today accent */}
+      {day.isToday && (
+        <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-l from-primary/60 via-primary to-primary/60 z-10" />
+      )}
+
+      {/* Stacked event stripes */}
+      {visible.map((rehearsal, idx) => {
+        const colors = getColors(rehearsal)
+        const dateTime = formatRehearsalDateTime(rehearsal)
+        return (
+          <EventStripe
+            key={rehearsal._id}
+            rehearsal={rehearsal}
+            colors={colors}
+            dateTime={dateTime}
+            isLast={idx === visible.length - 1 && remaining <= 0}
+            onRehearsalClick={onRehearsalClick}
+            onEditRehearsal={onEditRehearsal}
+            onDeleteRehearsal={onDeleteRehearsal}
+          />
+        )
+      })}
+
+      {/* Overflow indicator */}
+      {remaining > 0 && (
+        <button
+          className="flex-shrink-0 h-6 flex items-center justify-center text-[10px] font-semibold text-primary/70 bg-white/50 hover:bg-white/70 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation()
+            onShowAdditional?.(day.date, rehearsals)
+          }}
+        >
+          +{remaining} נוספות
+        </button>
+      )}
+    </div>
+  )
+}
+
+// ─── Event Stripe (one horizontal band in a multi-event cell) ─────────
+
+function EventStripe({
+  rehearsal,
+  colors,
+  dateTime,
+  isLast,
+  onRehearsalClick,
+  onEditRehearsal,
+  onDeleteRehearsal,
+}: {
+  rehearsal: Rehearsal
+  colors: ReturnType<typeof getColors>
+  dateTime: { time: string; date: string }
+  isLast: boolean
+  onRehearsalClick?: (rehearsal: Rehearsal) => void
+  onEditRehearsal?: (rehearsal: Rehearsal) => void
+  onDeleteRehearsal?: (rehearsalId: string) => void
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: rehearsal._id,
+    data: rehearsal,
+  })
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      onClick={() => { if (!isDragging) onRehearsalClick?.(rehearsal) }}
+      className={`
+        flex-1 min-h-0 ${colors.bg} border-r-[3px] ${colors.accent}
+        flex items-center gap-2 px-2 cursor-pointer select-none group/stripe
+        transition-all duration-200
+        ${!isLast ? 'border-b border-white/60' : ''}
+        ${isDragging ? 'opacity-30' : 'hover:brightness-95'}
+      `}
+    >
+      <MusicNotesIcon weight="fill" className={`w-3 h-3 ${colors.text} flex-shrink-0`} />
+      <span className={`text-[11px] font-bold truncate ${colors.text}`}>
+        {rehearsal.orchestra?.name || 'ללא שם'}
+      </span>
+      <span className={`text-[10px] ${colors.text} opacity-60 flex-shrink-0 mr-auto`}>
+        {dateTime.time}
+      </span>
+
+      {/* Hover actions */}
+      <div className="flex gap-0.5 opacity-0 group-hover/stripe:opacity-100 transition-opacity flex-shrink-0">
+        {onEditRehearsal && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onEditRehearsal(rehearsal) }}
+            className={`p-0.5 rounded ${colors.iconBg}`}
+            title="ערוך"
+          >
+            <PencilSimpleIcon weight="bold" className={`w-2.5 h-2.5 ${colors.text}`} />
+          </button>
+        )}
+        {onDeleteRehearsal && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onDeleteRehearsal(rehearsal._id) }}
+            className="p-0.5 rounded bg-red-50"
+            title="מחק"
+          >
+            <TrashIcon weight="bold" className="w-2.5 h-2.5 text-red-600" />
+          </button>
         )}
       </div>
     </div>

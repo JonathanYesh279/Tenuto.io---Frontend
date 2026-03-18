@@ -118,31 +118,31 @@ export default function RehearsalCalendar({
   }, [currentDate, viewMode])
 
   return (
-    <div className={`bg-white rounded border border-gray-200 ${className}`}>
+    <div className={`bg-card rounded-card border border-border shadow-1 ${className}`}>
       {/* CalendarIcon Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center gap-2">
           <button
             onClick={navigatePrevious}
-            className="p-2 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 hover:bg-muted rounded transition-colors"
           >
-            <CaretRightIcon className="w-5 h-5 text-gray-600" />
+            <CaretRightIcon className="w-5 h-5 text-muted-foreground" />
           </button>
           <button
             onClick={navigateNext}
-            className="p-2 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 hover:bg-muted rounded transition-colors"
           >
-            <CaretLeftIcon className="w-5 h-5 text-gray-600" />
+            <CaretLeftIcon className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
-        
+
         <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-900">{headerText}</h3>
+          <h3 className="text-lg font-semibold text-foreground">{headerText}</h3>
         </div>
-        
+
         <button
           onClick={goToToday}
-          className="px-3 py-1 text-sm text-primary border border-primary rounded hover:bg-neutral-800 transition-colors"
+          className="px-3 py-1 text-sm text-primary border border-primary rounded hover:bg-primary/10 transition-colors"
         >
           היום
         </button>
@@ -200,18 +200,18 @@ function WeekView({ weekData, onRehearsalClick, onEditRehearsal, onDeleteRehears
       {/* Day headers */}
       {weekData.days.map((day, index) => (
         <div key={index} className="p-2 text-center">
-          <div className="text-sm font-medium text-gray-900">{getDayName(day.dayOfWeek)}</div>
+          <div className="text-sm font-medium text-foreground">{getDayName(day.dayOfWeek)}</div>
           <div className={`text-lg font-semibold mt-1 ${
-            day.isToday ? 'text-primary' : 'text-gray-700'
+            day.isToday ? 'text-primary' : 'text-foreground'
           }`}>
             {day.date.getDate()}
           </div>
         </div>
       ))}
-      
+
       {/* Day cells */}
       {weekData.days.map((day, index) => (
-        <div key={index} className="min-h-[250px] border border-gray-200 rounded p-3">
+        <div key={index} className="min-h-[250px] border border-border rounded p-3">
           <div className="space-y-2">
             {day.rehearsals.map(rehearsal => (
               <RehearsalCard
@@ -248,7 +248,7 @@ function MonthView({ monthData, currentDate, onRehearsalClick, onEditRehearsal, 
     <div className="grid grid-cols-7 gap-1">
       {/* Day headers */}
       {Object.entries(VALID_DAYS_OF_WEEK).map(([dayNum, dayName]) => (
-        <div key={dayNum} className="p-2 text-center font-medium text-gray-900 text-sm">
+        <div key={dayNum} className="p-2 text-center font-medium text-foreground text-sm">
           {dayName}
         </div>
       ))}
@@ -256,15 +256,15 @@ function MonthView({ monthData, currentDate, onRehearsalClick, onEditRehearsal, 
       {/* CalendarIcon cells */}
       {monthData.weeks.map((week, weekIndex) =>
         week.map((day, dayIndex) => (
-          <div 
-            key={`${weekIndex}-${dayIndex}`} 
-            className={`min-h-[120px] border border-gray-200 rounded p-2 ${
-              !day.isCurrentMonth ? 'bg-gray-50' : ''
-            } ${day.isToday ? 'bg-primary border-primary' : ''}`}
+          <div
+            key={`${weekIndex}-${dayIndex}`}
+            className={`min-h-[120px] border border-border rounded p-2 ${
+              !day.isCurrentMonth ? 'bg-muted/50' : ''
+            } ${day.isToday ? 'bg-primary/5 border-primary' : ''}`}
           >
             <div className={`text-sm font-semibold mb-2 ${
-              !day.isCurrentMonth ? 'text-gray-400' :
-              day.isToday ? 'text-primary' : 'text-gray-900'
+              !day.isCurrentMonth ? 'text-muted-foreground' :
+              day.isToday ? 'text-primary' : 'text-foreground'
             }`}>
               {day.date.getDate()}
             </div>
@@ -283,8 +283,8 @@ function MonthView({ monthData, currentDate, onRehearsalClick, onEditRehearsal, 
                 />
               ))}
               {day.rehearsals.length > 3 && (
-                <div 
-                  className="text-xs text-gray-500 text-center py-1 bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200 transition-colors"
+                <div
+                  className="text-xs text-muted-foreground text-center py-1 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation()
                     onShowAdditional?.(day.date, day.rehearsals)
@@ -481,21 +481,8 @@ function getWeekData(currentDate: Date, rehearsals: Rehearsal[]): WeekData {
         return rehearsalDate.getTime() === date.getTime()
       })
       .sort((a, b) => {
-        // Sort by start time (earliest first)
         const timeA = a.startTime || '00:00'
         const timeB = b.startTime || '00:00'
-
-        // Debug logging
-        if (date.getDate() === 5) {
-          console.log(`Comparing rehearsals on day ${date.getDate()}:`, {
-            aName: a.orchestra?.name,
-            aTime: timeA,
-            bName: b.orchestra?.name,
-            bTime: timeB,
-            comparison: timeA.localeCompare(timeB)
-          })
-        }
-
         return timeA.localeCompare(timeB)
       })
 

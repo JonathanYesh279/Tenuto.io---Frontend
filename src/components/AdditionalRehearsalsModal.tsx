@@ -38,34 +38,34 @@ export default function AdditionalRehearsalsModal({
         zIndex: 9999
       }}
     >
-      <div className="bg-white rounded shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden">
+      <div className="bg-card rounded-card shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">חזרות ליום</h3>
-            <p className="text-sm text-gray-600">{dateString}</p>
+            <h3 className="text-lg font-semibold text-foreground">חזרות ליום</h3>
+            <p className="text-sm text-muted-foreground">{dateString}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 hover:bg-muted rounded transition-colors"
           >
-            <XIcon className="w-5 h-5 text-gray-500" />
+            <XIcon className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
         {/* Rehearsals List */}
         <div className="p-4 overflow-y-auto max-h-[60vh]">
           <div className="space-y-3">
-            {rehearsals.map((rehearsal, index) => (
+            {rehearsals.map((rehearsal) => (
               <div
                 key={rehearsal._id}
-                className="cursor-pointer hover:bg-gray-50 rounded p-2 transition-colors"
+                className="cursor-pointer hover:bg-muted rounded p-2 transition-colors"
                 onClick={() => onRehearsalClick(rehearsal)}
               >
                 <RehearsalCard
                   rehearsal={rehearsal}
                   compact={true}
-                  onRehearsalClick={() => {}} // We handle click on the wrapper
+                  onRehearsalClick={() => {}}
                 />
               </div>
             ))}
@@ -73,8 +73,8 @@ export default function AdditionalRehearsalsModal({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 text-center">
-          <p className="text-xs text-gray-500">
+        <div className="p-4 border-t border-border text-center">
+          <p className="text-xs text-muted-foreground">
             {rehearsals.length} חזרות ביום זה
           </p>
         </div>

@@ -370,6 +370,7 @@ export default function Rehearsals() {
             onNavigateToRehearsal={(rehearsalId) => {
               navigate(`/rehearsals/${rehearsalId}`)
             }}
+            onRehearsalMoved={loadData}
           />
         )}
       </>

@@ -1,41 +1,78 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+  DndContext,
+  DragOverlay,
+  useDraggable,
+  useDroppable,
+  PointerSensor,
+  useSensors,
+  useSensor,
+  type DragStartEvent,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import toast from 'react-hot-toast'
 
 import AdditionalRehearsalsModal from './AdditionalRehearsalsModal'
-import { CaretLeftIcon, CaretRightIcon, ClockIcon, MapPinIcon } from '@phosphor-icons/react'
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  ClockIcon,
+  MapPinIcon,
+  PencilSimpleIcon,
+  TrashIcon,
+  EyeIcon,
+  MusicNotesIcon,
+} from '@phosphor-icons/react'
 import {
   formatRehearsalDateTime,
-  getRehearsalColor,
   getDayName,
   VALID_DAYS_OF_WEEK,
-  type Rehearsal
+  type Rehearsal,
 } from '../utils/rehearsalUtils'
+import { rehearsalService } from '../services/apiService'
 
-// --- Glass style constants (matching GlassStatCard / GlassSelect) ---
+// ─── Activity-style colors (matching Room Schedule ActivityCell) ──────
+
+const REHEARSAL_COLORS: Record<string, {
+  bg: string; border: string; text: string; accent: string; iconBg: string
+}> = {
+  'תזמורת': {
+    bg: 'bg-rose-50',
+    border: 'border-rose-200',
+    text: 'text-rose-800',
+    accent: 'border-r-rose-500',
+    iconBg: 'bg-rose-100',
+  },
+  'הרכב': {
+    bg: 'bg-violet-50',
+    border: 'border-violet-200',
+    text: 'text-violet-800',
+    accent: 'border-r-violet-500',
+    iconBg: 'bg-violet-100',
+  },
+  default: {
+    bg: 'bg-sky-50',
+    border: 'border-sky-200',
+    text: 'text-sky-800',
+    accent: 'border-r-sky-500',
+    iconBg: 'bg-sky-100',
+  },
+}
+
+function getColors(rehearsal: Rehearsal) {
+  const type = rehearsal.orchestra?.type || rehearsal.type
+  return REHEARSAL_COLORS[type as string] || REHEARSAL_COLORS.default
+}
+
+// ─── Glass style (matching GlassStatCard) ─────────────────────────────
+
 const glassContainer: React.CSSProperties = {
   background: 'linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.18) 35%, rgba(186,230,253,0.18) 65%, rgba(255,255,255,0.45) 100%)',
   backdropFilter: 'blur(24px)',
   WebkitBackdropFilter: 'blur(24px)',
   border: '1px solid rgba(255,255,255,0.8)',
   boxShadow: '0 8px 32px rgba(0,170,160,0.10), 0 2px 8px rgba(0,140,210,0.06), inset 0 1px 1px rgba(255,255,255,0.9)',
-}
-
-const glassReflection: React.CSSProperties = {
-  background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 60%, transparent 100%)',
-  height: '45%',
-  pointerEvents: 'none',
-}
-
-// Event color palette — softer, design-system-aligned
-const EVENT_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
-  'תזמורת': { bg: 'bg-indigo-50', border: 'border-r-indigo-500', text: 'text-indigo-700', dot: 'bg-indigo-500' },
-  'הרכב':   { bg: 'bg-pink-50',   border: 'border-r-pink-500',   text: 'text-pink-700',   dot: 'bg-pink-500'   },
-  default:   { bg: 'bg-slate-50',  border: 'border-r-slate-400',  text: 'text-slate-600',  dot: 'bg-slate-400'  },
-}
-
-function getEventStyle(rehearsal: Rehearsal) {
-  const type = rehearsal.orchestra?.type || rehearsal.type
-  return EVENT_COLORS[type as string] || EVENT_COLORS.default
 }
 
 // ─── Main Component ───────────────────────────────────────────────────
@@ -50,6 +87,7 @@ interface RehearsalCalendarProps {
   onDeleteRehearsal?: (rehearsalId: string) => void
   onViewDetails?: (rehearsal: Rehearsal) => void
   onNavigateToRehearsal?: (rehearsalId: string) => void
+  onRehearsalMoved?: () => void
   className?: string
 }
 
@@ -63,12 +101,14 @@ export default function RehearsalCalendar({
   onDeleteRehearsal,
   onViewDetails,
   onNavigateToRehearsal,
-  className = ''
+  onRehearsalMoved,
+  className = '',
 }: RehearsalCalendarProps) {
   const [currentDate, setCurrentDate] = useState(selectedDate)
   const [showAdditionalModal, setShowAdditionalModal] = useState(false)
   const [additionalRehearsals, setAdditionalRehearsals] = useState<Rehearsal[]>([])
   const [modalDate, setModalDate] = useState<Date>(new Date())
+  const [activeRehearsal, setActiveRehearsal] = useState<Rehearsal | null>(null)
 
   useEffect(() => {
     if (selectedDate.getTime() !== currentDate.getTime()) {
@@ -76,24 +116,23 @@ export default function RehearsalCalendar({
     }
   }, [selectedDate])
 
+  // DnD sensors — 8px threshold to prevent accidental drags (matching Room Schedule)
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  )
+
   const navigatePrevious = useCallback(() => {
     const newDate = new Date(currentDate)
-    if (viewMode === 'week') {
-      newDate.setDate(newDate.getDate() - 7)
-    } else {
-      newDate.setMonth(newDate.getMonth() - 1)
-    }
+    if (viewMode === 'week') newDate.setDate(newDate.getDate() - 7)
+    else newDate.setMonth(newDate.getMonth() - 1)
     setCurrentDate(newDate)
     onSelectDate?.(newDate)
   }, [currentDate, viewMode, onSelectDate])
 
   const navigateNext = useCallback(() => {
     const newDate = new Date(currentDate)
-    if (viewMode === 'week') {
-      newDate.setDate(newDate.getDate() + 7)
-    } else {
-      newDate.setMonth(newDate.getMonth() + 1)
-    }
+    if (viewMode === 'week') newDate.setDate(newDate.getDate() + 7)
+    else newDate.setMonth(newDate.getMonth() + 1)
     setCurrentDate(newDate)
     onSelectDate?.(newDate)
   }, [currentDate, viewMode, onSelectDate])
@@ -115,6 +154,50 @@ export default function RehearsalCalendar({
     onNavigateToRehearsal?.(rehearsal._id)
   }
 
+  // ── DnD handlers ──
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const rehearsal = event.active.data.current as Rehearsal
+    setActiveRehearsal(rehearsal)
+  }
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    setActiveRehearsal(null)
+    const { active, over } = event
+    if (!over) return
+
+    const rehearsal = active.data.current as Rehearsal
+    const targetDateStr = over.id as string // ISO date string
+
+    // Parse target date
+    const targetDate = new Date(targetDateStr)
+    const sourceDate = new Date(rehearsal.date)
+    sourceDate.setHours(0, 0, 0, 0)
+    targetDate.setHours(0, 0, 0, 0)
+
+    // Same date — no-op
+    if (sourceDate.getTime() === targetDate.getTime()) return
+
+    const dayOfWeek = targetDate.getDay()
+    const formattedDate = targetDate.toLocaleDateString('he-IL', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    })
+
+    try {
+      await rehearsalService.updateRehearsal(rehearsal._id, {
+        date: targetDate.toISOString(),
+        dayOfWeek,
+      })
+      toast.success(`החזרה הועברה ל${formattedDate}`)
+      onRehearsalMoved?.()
+    } catch (error) {
+      toast.error('שגיאה בהעברת החזרה')
+      console.error('Failed to move rehearsal:', error)
+    }
+  }
+
   const calendarData = useMemo(() => {
     return viewMode === 'week'
       ? getWeekData(currentDate, rehearsals)
@@ -128,106 +211,315 @@ export default function RehearsalCalendar({
       endOfWeek.setDate(endOfWeek.getDate() + 6)
       if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
         return `${startOfWeek.getDate()}-${endOfWeek.getDate()} ${startOfWeek.toLocaleDateString('he-IL', { month: 'long', year: 'numeric' })}`
-      } else {
-        return `${startOfWeek.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' })} - ${endOfWeek.toLocaleDateString('he-IL', { day: 'numeric', month: 'short', year: 'numeric' })}`
       }
+      return `${startOfWeek.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' })} - ${endOfWeek.toLocaleDateString('he-IL', { day: 'numeric', month: 'short', year: 'numeric' })}`
     }
     return currentDate.toLocaleDateString('he-IL', { month: 'long', year: 'numeric' })
   }, [currentDate, viewMode])
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl ${className}`} style={glassContainer}>
-      {/* Glass reflection overlay */}
-      <div className="absolute inset-x-0 top-0 rounded-t-2xl z-[1]" style={glassReflection} />
-      {/* Corner bloom */}
-      <div
-        className="absolute top-0 right-0 w-40 h-40 rounded-full z-[1] pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(167,230,210,0.25) 0%, transparent 70%)' }}
-      />
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div className={`relative overflow-hidden rounded-2xl ${className}`} style={glassContainer}>
+        {/* Glass reflection */}
+        <div
+          className="absolute inset-x-0 top-0 rounded-t-2xl z-[1] pointer-events-none"
+          style={{
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 60%, transparent 100%)',
+            height: '45%',
+          }}
+        />
 
-      {/* ── Header ── */}
-      <div className="relative z-[2] flex items-center justify-between px-6 py-4">
-        <div className="flex items-center gap-1">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={navigatePrevious}
-            className="p-2.5 rounded-xl hover:bg-white/40 transition-colors"
+        {/* ── Header ── */}
+        <div className="relative z-[2] flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-1">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={navigatePrevious}
+              className="p-2.5 rounded-xl hover:bg-white/40 transition-colors"
+            >
+              <CaretRightIcon weight="bold" className="w-5 h-5 text-foreground/70" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={navigateNext}
+              className="p-2.5 rounded-xl hover:bg-white/40 transition-colors"
+            >
+              <CaretLeftIcon weight="bold" className="w-5 h-5 text-foreground/70" />
+            </motion.button>
+          </div>
+
+          <motion.h3
+            key={headerText}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            className="text-xl font-bold text-foreground tracking-tight"
           >
-            <CaretRightIcon weight="bold" className="w-5 h-5 text-foreground/70" />
-          </motion.button>
+            {headerText}
+          </motion.h3>
+
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={navigateNext}
-            className="p-2.5 rounded-xl hover:bg-white/40 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={goToToday}
+            className="px-4 py-1.5 text-sm font-semibold rounded-xl border-2 border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all"
           >
-            <CaretLeftIcon weight="bold" className="w-5 h-5 text-foreground/70" />
+            היום
           </motion.button>
         </div>
 
-        <motion.h3
-          key={headerText}
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-          className="text-xl font-bold text-foreground tracking-tight"
-        >
-          {headerText}
-        </motion.h3>
+        {/* ── Grid ── */}
+        <div className="relative z-[2] px-4 pb-5">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${viewMode}-${headerText}`}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            >
+              {viewMode === 'week' ? (
+                <WeekView
+                  weekData={calendarData as WeekData}
+                  onRehearsalClick={onRehearsalClick}
+                  onEditRehearsal={onEditRehearsal}
+                  onDeleteRehearsal={onDeleteRehearsal}
+                  onViewDetails={onViewDetails}
+                />
+              ) : (
+                <MonthView
+                  monthData={calendarData as MonthData}
+                  onRehearsalClick={onRehearsalClick}
+                  onEditRehearsal={onEditRehearsal}
+                  onDeleteRehearsal={onDeleteRehearsal}
+                  onViewDetails={onViewDetails}
+                  onShowAdditional={handleShowAdditional}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={goToToday}
-          className="px-4 py-1.5 text-sm font-semibold rounded-xl border-2 border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all"
-        >
-          היום
-        </motion.button>
+        {/* Drag overlay — ghost preview while dragging */}
+        <DragOverlay>
+          {activeRehearsal ? (
+            <div className="w-48 opacity-90 pointer-events-none">
+              <ActivityCard rehearsal={activeRehearsal} isDragOverlay />
+            </div>
+          ) : null}
+        </DragOverlay>
+
+        {showAdditionalModal && (
+          <AdditionalRehearsalsModal
+            rehearsals={additionalRehearsals}
+            date={modalDate}
+            onClose={() => setShowAdditionalModal(false)}
+            onRehearsalClick={handleModalRehearsalClick}
+          />
+        )}
+      </div>
+    </DndContext>
+  )
+}
+
+// ─── Droppable Day Cell ───────────────────────────────────────────────
+
+function DroppableDayCell({
+  dateISO,
+  children,
+  className,
+}: {
+  dateISO: string
+  children: React.ReactNode
+  className?: string
+}) {
+  const { isOver, setNodeRef } = useDroppable({ id: dateISO })
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`
+        ${className}
+        transition-all duration-150
+        ${isOver ? 'ring-2 ring-inset ring-emerald-400 bg-emerald-50/50' : ''}
+      `}
+    >
+      {children}
+    </div>
+  )
+}
+
+// ─── Activity Card (matching Room Schedule ActivityCell pattern) ──────
+
+function ActivityCard({
+  rehearsal,
+  isDragOverlay = false,
+  onRehearsalClick,
+  onEditRehearsal,
+  onDeleteRehearsal,
+  onViewDetails,
+}: {
+  rehearsal: Rehearsal
+  isDragOverlay?: boolean
+  onRehearsalClick?: (rehearsal: Rehearsal) => void
+  onEditRehearsal?: (rehearsal: Rehearsal) => void
+  onDeleteRehearsal?: (rehearsalId: string) => void
+  onViewDetails?: (rehearsal: Rehearsal) => void
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: rehearsal._id,
+    data: rehearsal,
+  })
+  const colors = getColors(rehearsal)
+  const dateTime = formatRehearsalDateTime(rehearsal)
+
+  const handleClick = () => {
+    if (!isDragging) onRehearsalClick?.(rehearsal)
+  }
+
+  return (
+    <div
+      ref={isDragOverlay ? undefined : setNodeRef}
+      {...(isDragOverlay ? {} : { ...attributes, ...listeners })}
+      onClick={handleClick}
+      className={`
+        group relative rounded-lg border border-r-[3px]
+        ${colors.bg} ${colors.border} ${colors.accent}
+        cursor-pointer select-none
+        transition-all duration-200
+        ${isDragging ? 'opacity-30 shadow-none' : 'shadow-sm hover:shadow-md'}
+        ${isDragOverlay ? 'shadow-lg ring-2 ring-primary/20' : ''}
+      `}
+    >
+      {/* Card content */}
+      <div className="p-2.5 space-y-1.5">
+        {/* Orchestra name */}
+        <div className="flex items-center gap-1.5">
+          <div className={`w-5 h-5 rounded-md ${colors.iconBg} flex items-center justify-center flex-shrink-0`}>
+            <MusicNotesIcon weight="fill" className={`w-3 h-3 ${colors.text}`} />
+          </div>
+          <span className={`text-[12px] font-bold truncate ${colors.text}`}>
+            {rehearsal.orchestra?.name || 'ללא שם'}
+          </span>
+        </div>
+
+        {/* Time + Location */}
+        <div className="flex items-center gap-3">
+          <span className={`flex items-center gap-1 text-[11px] ${colors.text} opacity-70`}>
+            <ClockIcon weight="bold" className="w-3 h-3" />
+            {dateTime.time}
+          </span>
+          {rehearsal.location && (
+            <span className={`flex items-center gap-1 text-[11px] ${colors.text} opacity-70 truncate`}>
+              <MapPinIcon weight="bold" className="w-3 h-3 flex-shrink-0" />
+              <span className="truncate">{rehearsal.location}</span>
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* ── Grid ── */}
-      <div className="relative z-[2] px-4 pb-5">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`${viewMode}-${headerText}`}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-          >
-            {viewMode === 'week' ? (
-              <WeekView
-                weekData={calendarData as WeekData}
-                onRehearsalClick={onRehearsalClick}
-                onEditRehearsal={onEditRehearsal}
-                onDeleteRehearsal={onDeleteRehearsal}
-                onViewDetails={onViewDetails}
-              />
-            ) : (
-              <MonthView
-                monthData={calendarData as MonthData}
-                currentDate={currentDate}
-                onRehearsalClick={onRehearsalClick}
-                onEditRehearsal={onEditRehearsal}
-                onDeleteRehearsal={onDeleteRehearsal}
-                onViewDetails={onViewDetails}
-                onNavigateToRehearsal={onNavigateToRehearsal}
-                onShowAdditional={handleShowAdditional}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {showAdditionalModal && (
-        <AdditionalRehearsalsModal
-          rehearsals={additionalRehearsals}
-          date={modalDate}
-          onClose={() => setShowAdditionalModal(false)}
-          onRehearsalClick={handleModalRehearsalClick}
-        />
+      {/* Hover action buttons — matching Room Schedule pattern */}
+      {!isDragOverlay && (
+        <div className="absolute top-1 left-1 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          {onViewDetails && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onViewDetails(rehearsal) }}
+              className={`p-1 rounded-md ${colors.iconBg} hover:shadow-sm transition-all`}
+              title="צפה בפרטים"
+            >
+              <EyeIcon weight="bold" className={`w-3 h-3 ${colors.text}`} />
+            </button>
+          )}
+          {onEditRehearsal && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onEditRehearsal(rehearsal) }}
+              className={`p-1 rounded-md ${colors.iconBg} hover:shadow-sm transition-all`}
+              title="ערוך חזרה"
+            >
+              <PencilSimpleIcon weight="bold" className={`w-3 h-3 ${colors.text}`} />
+            </button>
+          )}
+          {onDeleteRehearsal && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onDeleteRehearsal(rehearsal._id) }}
+              className="p-1 rounded-md bg-red-50 hover:bg-red-100 hover:shadow-sm transition-all"
+              title="מחק חזרה"
+            >
+              <TrashIcon weight="bold" className="w-3 h-3 text-red-600" />
+            </button>
+          )}
+        </div>
       )}
+    </div>
+  )
+}
+
+// ─── Minimal Activity Card (Month view — compact) ─────────────────────
+
+function ActivityCardMinimal({
+  rehearsal,
+  onRehearsalClick,
+  onEditRehearsal,
+  onDeleteRehearsal,
+}: {
+  rehearsal: Rehearsal
+  onRehearsalClick?: (rehearsal: Rehearsal) => void
+  onEditRehearsal?: (rehearsal: Rehearsal) => void
+  onDeleteRehearsal?: (rehearsalId: string) => void
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: rehearsal._id,
+    data: rehearsal,
+  })
+  const colors = getColors(rehearsal)
+  const dateTime = formatRehearsalDateTime(rehearsal)
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      onClick={() => { if (!isDragging) onRehearsalClick?.(rehearsal) }}
+      title={`${rehearsal.orchestra?.name || 'ללא שם'} • ${dateTime.time} • ${rehearsal.location}`}
+      className={`
+        group relative flex items-center gap-1.5 px-2 py-1.5 rounded-md
+        border border-r-2 cursor-pointer select-none
+        ${colors.bg} ${colors.border} ${colors.accent}
+        transition-all duration-200
+        ${isDragging ? 'opacity-30' : 'hover:shadow-sm'}
+      `}
+    >
+      <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${colors.text.replace('text-', 'bg-')}`} />
+      <span className={`text-[11px] font-semibold truncate ${colors.text}`}>
+        {rehearsal.orchestra?.name || 'ללא שם'}
+      </span>
+      <span className={`text-[10px] ${colors.text} opacity-60 flex-shrink-0 mr-auto`}>
+        {dateTime.time}
+      </span>
+
+      {/* Compact hover actions */}
+      <div className="absolute top-0.5 left-0.5 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        {onEditRehearsal && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onEditRehearsal(rehearsal) }}
+            className={`p-0.5 rounded ${colors.iconBg}`}
+            title="ערוך"
+          >
+            <PencilSimpleIcon weight="bold" className={`w-2.5 h-2.5 ${colors.text}`} />
+          </button>
+        )}
+        {onDeleteRehearsal && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onDeleteRehearsal(rehearsal._id) }}
+            className="p-0.5 rounded bg-red-50"
+            title="מחק"
+          >
+            <TrashIcon weight="bold" className="w-2.5 h-2.5 text-red-600" />
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -242,7 +534,7 @@ interface WeekViewProps {
   onViewDetails?: (rehearsal: Rehearsal) => void
 }
 
-function WeekView({ weekData, onRehearsalClick }: WeekViewProps) {
+function WeekView({ weekData, onRehearsalClick, onEditRehearsal, onDeleteRehearsal, onViewDetails }: WeekViewProps) {
   return (
     <div className="grid grid-cols-7 gap-2">
       {weekData.days.map((day, index) => (
@@ -252,30 +544,41 @@ function WeekView({ weekData, onRehearsalClick }: WeekViewProps) {
             <div className="text-[11px] font-semibold uppercase tracking-wider text-foreground/50">
               {getDayName(day.dayOfWeek)}
             </div>
-            <div className={`mt-1 text-lg font-bold leading-none ${
-              day.isToday ? 'text-primary' : 'text-foreground'
-            }`}>
+            <div className="mt-1">
               {day.isToday ? (
-                <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white shadow-md shadow-primary/25">
+                <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white text-lg font-bold shadow-md shadow-primary/25">
                   {day.date.getDate()}
                 </span>
               ) : (
-                day.date.getDate()
+                <span className="text-lg font-bold text-foreground">
+                  {day.date.getDate()}
+                </span>
               )}
             </div>
           </div>
 
-          {/* Day content */}
-          <div className="min-h-[220px] rounded-xl bg-white/30 p-2.5 space-y-2 border border-white/40">
+          {/* Droppable day cell */}
+          <DroppableDayCell
+            dateISO={day.date.toISOString()}
+            className="min-h-[220px] rounded-xl bg-white/30 p-2 space-y-2 border border-white/40 flex-1"
+          >
             {day.rehearsals.map((rehearsal, rIdx) => (
-              <EventPill
+              <motion.div
                 key={rehearsal._id}
-                rehearsal={rehearsal}
-                index={rIdx}
-                onClick={() => onRehearsalClick?.(rehearsal)}
-              />
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: rIdx * 0.04, type: 'spring', stiffness: 400, damping: 25 }}
+              >
+                <ActivityCard
+                  rehearsal={rehearsal}
+                  onRehearsalClick={onRehearsalClick}
+                  onEditRehearsal={onEditRehearsal}
+                  onDeleteRehearsal={onDeleteRehearsal}
+                  onViewDetails={onViewDetails}
+                />
+              </motion.div>
             ))}
-          </div>
+          </DroppableDayCell>
         </div>
       ))}
     </div>
@@ -286,16 +589,14 @@ function WeekView({ weekData, onRehearsalClick }: WeekViewProps) {
 
 interface MonthViewProps {
   monthData: MonthData
-  currentDate: Date
   onRehearsalClick?: (rehearsal: Rehearsal) => void
   onEditRehearsal?: (rehearsal: Rehearsal) => void
   onDeleteRehearsal?: (rehearsalId: string) => void
   onViewDetails?: (rehearsal: Rehearsal) => void
-  onNavigateToRehearsal?: (rehearsalId: string) => void
   onShowAdditional?: (date: Date, rehearsals: Rehearsal[]) => void
 }
 
-function MonthView({ monthData, onRehearsalClick, onShowAdditional }: MonthViewProps) {
+function MonthView({ monthData, onRehearsalClick, onEditRehearsal, onDeleteRehearsal, onShowAdditional }: MonthViewProps) {
   return (
     <div>
       {/* Day-of-week headers */}
@@ -307,163 +608,79 @@ function MonthView({ monthData, onRehearsalClick, onShowAdditional }: MonthViewP
         ))}
       </div>
 
-      {/* Weeks */}
+      {/* Weeks grid */}
       <div className="grid grid-cols-7 gap-px rounded-xl overflow-hidden bg-white/20 border border-white/30">
         {monthData.weeks.map((week, weekIndex) =>
-          week.map((day, dayIndex) => {
-            const hasRehearsals = day.rehearsals.length > 0
-            return (
-              <motion.div
-                key={`${weekIndex}-${dayIndex}`}
-                whileHover={hasRehearsals ? { scale: 1.02, zIndex: 10 } : {}}
-                className={`
-                  relative min-h-[110px] p-2 transition-colors
-                  ${!day.isCurrentMonth
-                    ? 'bg-white/10'
-                    : day.isToday
-                      ? 'bg-primary/[0.06]'
-                      : 'bg-white/35 hover:bg-white/50'
-                  }
-                `}
-              >
-                {/* Day number */}
-                <div className={`text-sm font-bold mb-1.5 ${
-                  !day.isCurrentMonth
-                    ? 'text-foreground/20'
-                    : day.isToday
-                      ? 'text-primary'
-                      : 'text-foreground/70'
-                }`}>
-                  {day.isToday ? (
-                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold shadow-sm shadow-primary/20">
-                      {day.date.getDate()}
-                    </span>
-                  ) : (
-                    day.date.getDate()
-                  )}
-                </div>
-
-                {/* Today accent line */}
-                {day.isToday && (
-                  <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-l from-primary/60 via-primary to-primary/60" />
+          week.map((day, dayIndex) => (
+            <DroppableDayCell
+              key={`${weekIndex}-${dayIndex}`}
+              dateISO={day.date.toISOString()}
+              className={`
+                relative min-h-[110px] p-2 transition-colors
+                ${!day.isCurrentMonth
+                  ? 'bg-white/10'
+                  : day.isToday
+                    ? 'bg-primary/[0.06]'
+                    : 'bg-white/35 hover:bg-white/50'
+                }
+              `}
+            >
+              {/* Day number */}
+              <div className={`text-sm font-bold mb-1.5 ${
+                !day.isCurrentMonth ? 'text-foreground/20'
+                  : day.isToday ? 'text-primary'
+                    : 'text-foreground/70'
+              }`}>
+                {day.isToday ? (
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold shadow-sm shadow-primary/20">
+                    {day.date.getDate()}
+                  </span>
+                ) : (
+                  day.date.getDate()
                 )}
+              </div>
 
-                {/* Events */}
-                <div className="space-y-1">
-                  {day.rehearsals.slice(0, 2).map((rehearsal, rIdx) => (
-                    <EventPillMinimal
-                      key={rehearsal._id}
+              {/* Today accent line */}
+              {day.isToday && (
+                <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-l from-primary/60 via-primary to-primary/60" />
+              )}
+
+              {/* Events */}
+              <div className="space-y-1">
+                {day.rehearsals.slice(0, 2).map((rehearsal, rIdx) => (
+                  <motion.div
+                    key={rehearsal._id}
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: rIdx * 0.03, type: 'spring', stiffness: 400, damping: 25 }}
+                  >
+                    <ActivityCardMinimal
                       rehearsal={rehearsal}
-                      index={rIdx}
-                      onClick={() => onRehearsalClick?.(rehearsal)}
+                      onRehearsalClick={onRehearsalClick}
+                      onEditRehearsal={onEditRehearsal}
+                      onDeleteRehearsal={onDeleteRehearsal}
                     />
-                  ))}
-                  {day.rehearsals.length > 2 && (
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-full text-[10px] font-semibold text-primary/70 text-center py-0.5 rounded-md bg-primary/[0.06] hover:bg-primary/10 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onShowAdditional?.(day.date, day.rehearsals)
-                      }}
-                    >
-                      +{day.rehearsals.length - 2} נוספות
-                    </motion.button>
-                  )}
-                </div>
-              </motion.div>
-            )
-          })
+                  </motion.div>
+                ))}
+                {day.rehearsals.length > 2 && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full text-[10px] font-semibold text-primary/70 text-center py-0.5 rounded-md bg-primary/[0.06] hover:bg-primary/10 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onShowAdditional?.(day.date, day.rehearsals)
+                    }}
+                  >
+                    +{day.rehearsals.length - 2} נוספות
+                  </motion.button>
+                )}
+              </div>
+            </DroppableDayCell>
+          ))
         )}
       </div>
     </div>
-  )
-}
-
-// ─── Event Pill (Week view — full detail) ─────────────────────────────
-
-function EventPill({
-  rehearsal,
-  index,
-  onClick,
-}: {
-  rehearsal: Rehearsal
-  index: number
-  onClick: () => void
-}) {
-  const style = getEventStyle(rehearsal)
-  const dateTime = formatRehearsalDateTime(rehearsal)
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04, type: 'spring', stiffness: 400, damping: 25 }}
-      whileHover={{ y: -2, boxShadow: '0 4px 16px rgba(0,0,0,0.10)' }}
-      onClick={onClick}
-      className={`
-        ${style.bg} border-r-[3px] ${style.border}
-        rounded-lg p-2.5 cursor-pointer transition-colors
-        border border-transparent hover:border-white/60
-        shadow-sm
-      `}
-    >
-      <div className={`font-semibold text-sm truncate ${style.text}`}>
-        {rehearsal.orchestra?.name || 'ללא שם'}
-      </div>
-      <div className="flex items-center gap-3 mt-1.5">
-        <span className={`flex items-center gap-1 text-xs ${style.text} opacity-70`}>
-          <ClockIcon className="w-3 h-3" />
-          {dateTime.time}
-        </span>
-        {rehearsal.location && (
-          <span className={`flex items-center gap-1 text-xs ${style.text} opacity-70 truncate`}>
-            <MapPinIcon className="w-3 h-3 flex-shrink-0" />
-            <span className="truncate">{rehearsal.location}</span>
-          </span>
-        )}
-      </div>
-    </motion.div>
-  )
-}
-
-// ─── Event Pill Minimal (Month view — compact) ────────────────────────
-
-function EventPillMinimal({
-  rehearsal,
-  index,
-  onClick,
-}: {
-  rehearsal: Rehearsal
-  index: number
-  onClick: () => void
-}) {
-  const style = getEventStyle(rehearsal)
-  const dateTime = formatRehearsalDateTime(rehearsal)
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 8 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.03, type: 'spring', stiffness: 400, damping: 25 }}
-      whileHover={{ x: -2 }}
-      onClick={onClick}
-      className={`
-        flex items-center gap-1.5 px-2 py-1 rounded-md cursor-pointer
-        ${style.bg} border-r-2 ${style.border}
-        hover:shadow-sm transition-all
-      `}
-      title={`${rehearsal.orchestra?.name || 'ללא שם'} • ${dateTime.time} • ${rehearsal.location}`}
-    >
-      <div className={`w-1.5 h-1.5 rounded-full ${style.dot} flex-shrink-0`} />
-      <span className={`text-[11px] font-semibold truncate ${style.text}`}>
-        {rehearsal.orchestra?.name || 'ללא שם'}
-      </span>
-      <span className={`text-[10px] ${style.text} opacity-60 flex-shrink-0 mr-auto`}>
-        {dateTime.time}
-      </span>
-    </motion.div>
   )
 }
 
@@ -476,19 +693,12 @@ interface DayData {
   isCurrentMonth: boolean
   rehearsals: Rehearsal[]
 }
-
-interface WeekData {
-  days: DayData[]
-}
-
-interface MonthData {
-  weeks: DayData[][]
-}
+interface WeekData { days: DayData[] }
+interface MonthData { weeks: DayData[][] }
 
 function getStartOfWeek(date: Date): Date {
   const start = new Date(date)
-  const day = start.getDay()
-  start.setDate(start.getDate() - day)
+  start.setDate(start.getDate() - start.getDay())
   start.setHours(0, 0, 0, 0)
   return start
 }
@@ -502,22 +712,13 @@ function getWeekData(currentDate: Date, rehearsals: Rehearsal[]): WeekData {
   for (let i = 0; i < 7; i++) {
     const date = new Date(startOfWeek)
     date.setDate(startOfWeek.getDate() + i)
-
     const dayRehearsals = rehearsals
       .filter(r => {
-        const rd = new Date(r.date)
-        rd.setHours(0, 0, 0, 0)
+        const rd = new Date(r.date); rd.setHours(0, 0, 0, 0)
         return rd.getTime() === date.getTime()
       })
       .sort((a, b) => (a.startTime || '00:00').localeCompare(b.startTime || '00:00'))
-
-    days.push({
-      date,
-      dayOfWeek: date.getDay(),
-      isToday: date.getTime() === today.getTime(),
-      isCurrentMonth: true,
-      rehearsals: dayRehearsals,
-    })
+    days.push({ date, dayOfWeek: date.getDay(), isToday: date.getTime() === today.getTime(), isCurrentMonth: true, rehearsals: dayRehearsals })
   }
   return { days }
 }
@@ -525,40 +726,25 @@ function getWeekData(currentDate: Date, rehearsals: Rehearsal[]): WeekData {
 function getMonthData(currentDate: Date, rehearsals: Rehearsal[]): MonthData {
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth()
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
+  const today = new Date(); today.setHours(0, 0, 0, 0)
   const firstDay = new Date(year, month, 1)
   const lastDay = new Date(year, month + 1, 0)
-
-  const startDate = new Date(firstDay)
-  startDate.setDate(firstDay.getDate() - firstDay.getDay())
-
-  const endDate = new Date(lastDay)
-  endDate.setDate(lastDay.getDate() + (6 - lastDay.getDay()))
+  const startDate = new Date(firstDay); startDate.setDate(firstDay.getDate() - firstDay.getDay())
+  const endDate = new Date(lastDay); endDate.setDate(lastDay.getDate() + (6 - lastDay.getDay()))
 
   const weeks: DayData[][] = []
   const current = new Date(startDate)
-
   while (current <= endDate) {
     const week: DayData[] = []
     for (let i = 0; i < 7; i++) {
       const date = new Date(current)
       const dayRehearsals = rehearsals
         .filter(r => {
-          const rd = new Date(r.date)
-          rd.setHours(0, 0, 0, 0)
+          const rd = new Date(r.date); rd.setHours(0, 0, 0, 0)
           return rd.getTime() === date.getTime()
         })
         .sort((a, b) => (a.startTime || '00:00').localeCompare(b.startTime || '00:00'))
-
-      week.push({
-        date,
-        dayOfWeek: date.getDay(),
-        isToday: date.getTime() === today.getTime(),
-        isCurrentMonth: date.getMonth() === month,
-        rehearsals: dayRehearsals,
-      })
+      week.push({ date, dayOfWeek: date.getDay(), isToday: date.getTime() === today.getTime(), isCurrentMonth: date.getMonth() === month, rehearsals: dayRehearsals })
       current.setDate(current.getDate() + 1)
     }
     weeks.push(week)

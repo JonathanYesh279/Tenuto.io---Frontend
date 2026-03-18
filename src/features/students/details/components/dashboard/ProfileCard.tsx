@@ -265,45 +265,55 @@ export function ProfileCard({ student, studentId, teacherMap, onStudentUpdate }:
 
   // Display mode
   return (
-    <div className="bg-white rounded-card border border-border p-6 space-y-5 shadow-1">
-      {/* 1. Avatar + name area */}
-      <div className="flex flex-col items-center text-center">
-        <User
-          avatarProps={{
-            radius: 'full',
-            size: 'lg',
-            showFallback: true,
-            name: displayName,
-            style: { backgroundColor: avatarColor },
-            classNames: { base: 'w-16 h-16 text-xl text-white' },
-          }}
-          name=""
-          description=""
-          classNames={{ base: 'justify-center' }}
-        />
-        <h3 className="text-h3 font-bold text-foreground mt-3">{displayName}</h3>
+    <div className="bg-card rounded-card border border-border overflow-hidden shadow-1">
+      {/* Branded gradient accent bar */}
+      <div
+        className="h-20 w-full"
+        style={{
+          background: 'linear-gradient(135deg, #082753 0%, #43a579 100%)',
+        }}
+      />
 
-        {/* Badges row */}
-        <div className="flex items-center gap-2 mt-2 flex-wrap justify-center">
-          {primaryInstrument && (
-            <Chip color="primary" variant="flat" size="sm">
-              {primaryInstrument}
-            </Chip>
-          )}
-          {studentClass && (
-            <Chip color="default" variant="flat" size="sm">
-              כיתה {studentClass}
-            </Chip>
+      {/* Content area — avatar overlaps the gradient */}
+      <div className="flex flex-col items-center -mt-10 px-6 pb-6 space-y-5">
+        {/* 1. Avatar + name area */}
+        <div className="flex flex-col items-center text-center">
+          <User
+            avatarProps={{
+              radius: 'full',
+              size: 'lg',
+              showFallback: true,
+              name: displayName,
+              style: { backgroundColor: avatarColor },
+              classNames: { base: 'w-20 h-20 text-2xl text-white ring-4 ring-card' },
+            }}
+            name=""
+            description=""
+            classNames={{ base: 'justify-center' }}
+          />
+          <h3 className="text-h3 font-bold text-foreground mt-3">{displayName}</h3>
+
+          {/* Badges row */}
+          <div className="flex items-center gap-2 mt-2 flex-wrap justify-center">
+            {primaryInstrument && (
+              <Chip color="primary" variant="flat" size="sm">
+                {primaryInstrument}
+              </Chip>
+            )}
+            {studentClass && (
+              <Chip color="default" variant="flat" size="sm">
+                כיתה {studentClass}
+              </Chip>
+            )}
+          </div>
+
+          {/* Subtitle: enrollment date */}
+          {enrollmentDate && (
+            <p className="text-small text-muted-foreground mt-2">
+              תחילת לימודים: {formatDate(enrollmentDate)}
+            </p>
           )}
         </div>
-
-        {/* Subtitle: enrollment date */}
-        {enrollmentDate && (
-          <p className="text-small text-muted-foreground mt-2">
-            תחילת לימודים: {formatDate(enrollmentDate)}
-          </p>
-        )}
-      </div>
 
       {/* 2. Contact action buttons */}
       {(phone || studentEmail) && (
@@ -444,16 +454,17 @@ export function ProfileCard({ student, studentId, teacherMap, onStudentUpdate }:
         </div>
       )}
 
-      {/* 7. Edit button */}
-      <Button
-        variant="flat"
-        color="default"
-        fullWidth
-        onPress={() => setIsEditing(true)}
-        startContent={<PencilIcon className="w-4 h-4" />}
-      >
-        עריכה
-      </Button>
+        {/* 7. Edit button */}
+        <Button
+          variant="flat"
+          color="default"
+          fullWidth
+          onPress={() => setIsEditing(true)}
+          startContent={<PencilIcon className="w-4 h-4" />}
+        >
+          עריכה
+        </Button>
+      </div>
     </div>
   )
 }

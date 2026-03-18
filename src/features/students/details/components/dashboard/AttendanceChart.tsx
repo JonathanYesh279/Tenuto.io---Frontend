@@ -15,6 +15,13 @@ import {
   Tooltip,
 } from 'recharts'
 
+const GLASS_CARD_STYLE = {
+  background:
+    'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,230,210,0.15) 50%, rgba(255,255,255,0.9) 100%)',
+  boxShadow: '0 4px 16px rgba(0,140,210,0.06), inset 0 1px 1px rgba(255,255,255,0.9)',
+  border: '1px solid rgba(200,220,240,0.5)',
+} as const
+
 interface AttendanceChartProps {
   attendanceSummary: {
     totalSessions: number
@@ -34,12 +41,12 @@ export function AttendanceChart({
 }: AttendanceChartProps) {
   if (isLoading) {
     return (
-      <div className="bg-white rounded-card border border-border p-6 space-y-6">
-        <div className="h-6 w-20 bg-gray-200 rounded animate-pulse" />
-        <div className="h-48 bg-gray-100 rounded-full mx-auto w-48 animate-pulse" />
+      <div className="rounded-card p-6 space-y-6" style={GLASS_CARD_STYLE}>
+        <div className="h-6 w-20 bg-muted rounded animate-pulse" />
+        <div className="h-48 bg-muted rounded-full mx-auto w-48 animate-pulse" />
         <div className="flex justify-around">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-4 w-16 bg-gray-100 rounded animate-pulse" />
+            <div key={i} className="h-4 w-16 bg-muted rounded animate-pulse" />
           ))}
         </div>
       </div>
@@ -80,7 +87,7 @@ export function AttendanceChart({
   const hasMonthlyData = monthlyAttendance.length > 0
 
   return (
-    <div className="bg-white rounded-card border border-border p-6 space-y-6">
+    <div className="rounded-card p-6 space-y-6" style={GLASS_CARD_STYLE}>
       {/* Donut section */}
       <div>
         <h3 className="text-h3 font-semibold text-foreground mb-4">נוכחות</h3>

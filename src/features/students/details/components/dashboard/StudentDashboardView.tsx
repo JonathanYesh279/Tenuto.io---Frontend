@@ -2,13 +2,13 @@
  * StudentDashboardView - Asymmetric grid layout for the Student Details dashboard.
  *
  * Layout:
- *   Row 1: ProfileCard (1 col) | 2x2 GlassStatCards (2 cols)
- *   Row 2: ActivityChart (3/5) | AttendanceChart (2/5)
+ *   Row 1: ProfileCard (1 col) | 2x2 GlassStatCards (2 cols) | AttendanceChart (1 col)
+ *   Row 2: Full-width StudentAgendaWidget (scrolling activity cards)
  *   Row 3: Full-width EnrollmentsTable
  */
 
 import { ProfileCard } from './ProfileCard'
-import { ActivityChart } from './ActivityChart'
+import { StudentAgendaWidget } from './StudentAgendaWidget'
 import { AttendanceChart } from './AttendanceChart'
 import { EnrollmentsTable } from './EnrollmentsTable'
 import { GlassStatCard } from '@/components/ui/GlassStatCard'
@@ -29,9 +29,9 @@ export function StudentDashboardView({
 }: StudentDashboardViewProps) {
   return (
     <div className="space-y-5">
-      {/* Row 1: Profile card + GlassStatCards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Profile — 1 col */}
+      {/* Row 1: ProfileCard | 2x2 GlassStatCards | AttendanceChart — 3 columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Profile card */}
         <ProfileCard
           student={student}
           studentId={studentId}
@@ -39,53 +39,33 @@ export function StudentDashboardView({
           onStudentUpdate={onStudentUpdate}
         />
 
-        {/* Glass stat cards — 2 cols, inner 2x2 grid */}
-        <div className="lg:col-span-2 grid grid-cols-2 gap-3">
+        {/* 2x2 compact stat cards */}
+        <div className="grid grid-cols-2 gap-0.5">
+          <GlassStatCard size="sm" value={dashboardData.totalWeeklyHours} label="שעות שבועיות" className="!h-[100px] !p-3" />
+          <GlassStatCard size="sm" value={dashboardData.orchestraCount} label="תזמורות" className="!h-[100px] !p-3" />
+          <GlassStatCard size="sm" value={dashboardData.theoryCount} label="שיעורי תאוריה" className="!h-[100px] !p-3" />
           <GlassStatCard
-            value={dashboardData.totalWeeklyHours}
-            label="שעות שבועיות"
-          />
-          <GlassStatCard
-            value={dashboardData.orchestraCount}
-            label="תזמורות"
-          />
-          <GlassStatCard
-            value={dashboardData.theoryCount}
-            label="שיעורי תאוריה"
-          />
-          <GlassStatCard
-            value={
-              dashboardData.attendanceSummary
-                ? `${Math.round(dashboardData.attendanceSummary.attendanceRate)}%`
-                : '—'
-            }
+            size="sm"
+            className="!h-[100px] !p-3"
+            value={dashboardData.attendanceSummary ? `${Math.round(dashboardData.attendanceSummary.attendanceRate)}%` : '—'}
             label="נוכחות"
-            trend={
-              dashboardData.attendanceSummary
-                ? `${dashboardData.attendanceSummary.totalSessions} מפגשים`
-                : undefined
-            }
+            trend={dashboardData.attendanceSummary ? `${dashboardData.attendanceSummary.totalSessions} מפגשים` : undefined}
           />
         </div>
+
+        {/* Attendance chart */}
+        <AttendanceChart
+          attendanceSummary={dashboardData.attendanceSummary}
+          monthlyAttendance={dashboardData.monthlyAttendance}
+          isLoading={dashboardData.attendanceLoading}
+        />
       </div>
 
-      {/* Row 2: Activity chart + Attendance side by side */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-        <div className="lg:col-span-3">
-          <ActivityChart
-            weeklyHours={dashboardData.weeklyHours}
-            totalWeeklyHours={dashboardData.totalWeeklyHours}
-            isLoading={dashboardData.attendanceLoading}
-          />
-        </div>
-        <div className="lg:col-span-2">
-          <AttendanceChart
-            attendanceSummary={dashboardData.attendanceSummary}
-            monthlyAttendance={dashboardData.monthlyAttendance}
-            isLoading={dashboardData.attendanceLoading}
-          />
-        </div>
-      </div>
+      {/* Row 2: Student agenda — full width */}
+      <StudentAgendaWidget
+        enrollments={dashboardData.enrollments}
+        isLoading={dashboardData.isLoading}
+      />
 
       {/* Row 3: Full-width enrollment table */}
       <EnrollmentsTable

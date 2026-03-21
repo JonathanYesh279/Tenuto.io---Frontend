@@ -535,7 +535,6 @@ const StudentDetailsPage: React.FC = () => {
             {activeTab === 'schedule' && (
               <Suspense fallback={<TabLoadingFallback />}>
                 <ScheduleTab
-                  student={student}
                   studentId={studentId}
                   isLoading={false}
                 />

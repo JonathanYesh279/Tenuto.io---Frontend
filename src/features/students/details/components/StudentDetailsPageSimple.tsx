@@ -12,6 +12,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Navigate, useNavigate } from 'react-router-dom'
 import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '@/components/ui/animated-tabs'
+import { Spinner } from '@heroui/react'
 import {
   ArrowRight as ArrowRightIcon,
   ArrowsClockwise as ArrowsClockwiseIcon,
@@ -84,10 +85,7 @@ const StudentDetailsPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <ArrowsClockwiseIcon className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-          <div className="text-lg text-gray-600">טוען פרטי תלמיד...</div>
-        </div>
+        <Spinner color="primary" label="טוען פרטי תלמיד..." />
       </div>
     )
   }
@@ -130,11 +128,11 @@ const StudentDetailsPage: React.FC = () => {
     <div className="space-y-6">
       {/* Animated tabs: dashboard + 4 surviving tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+        <TabsList className="w-auto inline-flex gap-1 mr-auto">
           {TAB_CONFIG.map((tab) => (
-            <TabsTrigger key={tab.key} value={tab.key} className="font-bold text-sm">
-              <span className="flex items-center gap-2">
-                <tab.icon className="w-4 h-4" />
+            <TabsTrigger key={tab.key} value={tab.key} className="flex-none font-bold text-xs px-2.5 py-1">
+              <span className="flex items-center gap-1.5">
+                <tab.icon className="w-3.5 h-3.5" />
                 {tab.label}
               </span>
             </TabsTrigger>
@@ -150,7 +148,7 @@ const StudentDetailsPage: React.FC = () => {
             />
           </TabsContent>
           <TabsContent value="schedule">
-            <ScheduleTab student={student} studentId={studentId} isLoading={false} />
+            <ScheduleTab studentId={studentId} isLoading={false} />
           </TabsContent>
           <TabsContent value="bagrut">
             <BagrutTab student={student} studentId={studentId} />

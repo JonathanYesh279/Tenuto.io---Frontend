@@ -216,8 +216,7 @@ const StudentTabContent: React.FC<EnhancedStudentTabContentProps> = ({
         return (
           <TabErrorBoundary tabName="לוח זמנים">
             <Suspense fallback={<TabLoadingFallback />}>
-              <ScheduleTab 
-                student={student}
+              <ScheduleTab
                 studentId={studentId}
                 isLoading={isCurrentTabLoading}
               />

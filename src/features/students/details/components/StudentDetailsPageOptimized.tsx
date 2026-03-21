@@ -270,7 +270,6 @@ const StudentDetailsPageOptimized: React.FC = () => {
           </TabsContent>
           <TabsContent value="schedule" className="mt-0">
             <ScheduleTab
-              student={student}
               studentId={studentId!}
               isLoading={false}
             />

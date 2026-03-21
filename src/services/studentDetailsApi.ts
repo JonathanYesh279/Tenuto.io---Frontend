@@ -40,8 +40,10 @@ class StudentDetailsApiClient {
       'Content-Type': 'application/json',
     }
 
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`
+    // Always re-read token from storage (token may change after login)
+    const token = this.getStoredToken()
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
     }
 
     return headers

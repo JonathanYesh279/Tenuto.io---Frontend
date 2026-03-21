@@ -8,7 +8,7 @@
 
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { studentDetailsApi } from '../../../../services/studentDetailsApi'
+import apiService from '../../../../services/apiService'
 
 export interface ScheduleLesson {
   id: string
@@ -45,7 +45,7 @@ export function useStudentScheduleData(studentId: string) {
   const query = useQuery({
     queryKey: ['student', studentId, 'weekly-schedule'],
     queryFn: async () => {
-      const response = await studentDetailsApi.getStudentSchedule(studentId)
+      const response = await apiService.getStudentWeeklySchedule(studentId)
       return response as WeeklyScheduleResponse
     },
     enabled: !!studentId,

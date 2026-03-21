@@ -28,6 +28,50 @@ class ApiClient {
     this.token = this.getStoredToken();
     this.pendingRequests = new Map();
     this.authRefreshPromise = null;
+    // Response cache: key → { data, timestamp }
+    this._responseCache = new Map();
+    // Default cache TTL: 2 minutes (covers typical page-to-page navigation)
+    this._defaultCacheTTL = 2 * 60 * 1000;
+  }
+
+  /**
+   * Get cached response if still valid
+   */
+  _getCached(key, ttl) {
+    const entry = this._responseCache.get(key);
+    if (!entry) return null;
+    if (Date.now() - entry.timestamp > (ttl || this._defaultCacheTTL)) {
+      this._responseCache.delete(key);
+      return null;
+    }
+    return entry.data;
+  }
+
+  /**
+   * Store response in cache
+   */
+  _setCache(key, data) {
+    this._responseCache.set(key, { data, timestamp: Date.now() });
+    // Evict old entries if cache grows too large (>200 entries)
+    if (this._responseCache.size > 200) {
+      const oldest = this._responseCache.keys().next().value;
+      this._responseCache.delete(oldest);
+    }
+  }
+
+  /**
+   * Invalidate cache entries matching a prefix (e.g., after mutation)
+   */
+  invalidateCache(prefix) {
+    if (!prefix) {
+      this._responseCache.clear();
+      return;
+    }
+    for (const key of this._responseCache.keys()) {
+      if (key.includes(prefix)) {
+        this._responseCache.delete(key);
+      }
+    }
   }
 
   /**
@@ -195,33 +239,46 @@ class ApiClient {
   }
 
   /**
-   * Make HTTP request with deduplication and retry logic
+   * Make HTTP request with caching, deduplication and retry logic
    */
   async request(method, endpoint, options = {}) {
-    // Don't deduplicate auth validation requests to prevent issues
+    // Don't deduplicate/cache auth requests
     const skipDeduplication = endpoint === '/auth/validate' || endpoint === '/auth/login';
-    
+    const requestKey = this.createRequestKey(method, endpoint, options.body);
+
+    // Return cached response for GET requests (unless skipCache is set)
+    if (method === 'GET' && !skipDeduplication && !options.skipCache) {
+      const cached = this._getCached(requestKey, options.cacheTTL);
+      if (cached) {
+        return structuredClone(cached);
+      }
+    }
+
     if (!skipDeduplication) {
       // Check for pending identical requests to avoid duplicates
-      const requestKey = this.createRequestKey(method, endpoint, options.body);
       if (this.pendingRequests.has(requestKey)) {
-        console.log(`🔄 API Request deduplicated: ${method} ${endpoint}`);
         return this.pendingRequests.get(requestKey);
       }
     }
-    
+
     const requestPromise = this._makeRequest(method, endpoint, options);
-    
+
     if (!skipDeduplication) {
-      const requestKey = this.createRequestKey(method, endpoint, options.body);
       this.pendingRequests.set(requestKey, requestPromise);
-      
+
       // Clean up after request completes
       requestPromise.finally(() => {
         this.pendingRequests.delete(requestKey);
       });
     }
-    
+
+    // Cache successful GET responses
+    if (method === 'GET' && !skipDeduplication && !options.skipCache) {
+      requestPromise.then(data => {
+        this._setCache(requestKey, data);
+      }).catch(() => {});
+    }
+
     return requestPromise;
   }
   
@@ -265,13 +322,20 @@ class ApiClient {
       clearTimeout(timeoutId);
       
       const result = await this.handleResponse(response, endpoint);
-      
+
       // Only log non-validation and non-attendance-lookup responses to reduce noise
       const isAttendanceLookupForLogging = endpoint.includes('/attendance/individual') && method === 'GET';
       if (endpoint !== '/auth/validate' && !isAttendanceLookupForLogging) {
         console.log(`✅ API Response: ${method} ${endpoint}`, { status: response.status });
       }
-      
+
+      // Invalidate related cache on successful mutations
+      if (method !== 'GET') {
+        // Extract the resource prefix (e.g., '/students/123' → '/students')
+        const resourcePrefix = endpoint.split('/').slice(0, 2).join('/');
+        this.invalidateCache(resourcePrefix);
+      }
+
       return result;
     } catch (error) {
       if (error.name === 'AbortError') {
@@ -614,6 +678,16 @@ export const studentService = {
       console.error('Error fetching student:', error);
       throw error;
     }
+  },
+
+  /**
+   * Get student's weekly schedule from live data sources (timeBlocks, rehearsals, theory lessons)
+   * @param {string} studentId - Student ID
+   * @returns {Promise<Object>} { individualLessons, orchestraRehearsals, theoryLessons, meta }
+   */
+  async getStudentWeeklySchedule(studentId) {
+    const response = await apiClient.get(`/student/${studentId}/weekly-schedule`);
+    return response;
   },
 
   /**
@@ -2972,12 +3046,21 @@ export const rehearsalService = {
    * @param {Object} bulkData - Bulk rehearsal template data
    * @returns {Promise<Object>} Bulk creation result
    */
+  async checkConflicts({ dates, startTime, endTime, location, groupId }) {
+    try {
+      return await apiClient.post('/rehearsal/check-conflicts', { dates, startTime, endTime, location, groupId });
+    } catch (error) {
+      console.error('Error checking conflicts:', error);
+      throw error;
+    }
+  },
+
   async createBulkRehearsals(bulkData) {
     try {
       const result = await apiClient.post('/rehearsal/bulk', bulkData);
-      
+
       console.log(`➕ Created bulk rehearsals for orchestra ${bulkData.orchestraId}`);
-      
+
       return result;
     } catch (error) {
       console.error('Error creating bulk rehearsals:', error);
@@ -4375,8 +4458,7 @@ export const studentTeacherUtils = {
           day: assignment.day,
           time: assignment.time,
           duration: assignment.duration,
-          endTime: assignment.scheduleInfo?.endTime || 
-                   studentTeacherUtils.calculateEndTime(assignment.time, assignment.duration),
+          endTime: studentTeacherUtils.calculateEndTime(assignment.time, assignment.duration),
           scheduleInfo: assignment.scheduleInfo,
           notes: assignment.notes,
           // Try to infer instrument from student's primary instrument

@@ -13,8 +13,10 @@ import {
   BuildingsIcon,
   ChalkboardTeacherIcon,
   LockKeyIcon,
+  ShieldCheckIcon,
+  IdentificationCardIcon,
 } from '@phosphor-icons/react'
-import { User } from '@heroui/react'
+import { Chip } from '@heroui/react'
 import TeacherStudentsTab from '../components/profile/TeacherStudentsTab'
 import ConductorOrchestrasTab from '../components/profile/ConductorOrchestrasTab'
 import TeacherScheduleTab from '../components/profile/TeacherScheduleTab'
@@ -22,9 +24,9 @@ import TheoryTeacherLessonsTab from '../components/profile/TheoryTeacherLessonsT
 import TeacherAttendanceTab from '../components/profile/TeacherAttendanceTab'
 import GeneralInfoTab from '../components/profile/GeneralInfoTab'
 import CredentialsTab from '../components/profile/CredentialsTab'
-import apiService, { teacherService } from '../services/apiService'
-import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
-import { getAvatarColorHex } from '../utils/avatarColorHash'
+import ProfileSidebar from '../components/profile/ProfileSidebar'
+import apiService, { teacherService, studentService, orchestraService } from '../services/apiService'
+import { getDisplayName } from '../utils/nameUtils'
 import { GlassStatCard } from '../components/ui/GlassStatCard'
 import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '../components/ui/animated-tabs'
 
@@ -42,6 +44,10 @@ interface ProfileStatistics {
   weeklyHours: number
   totalRehearsals: number
   activeStudents: number
+  // Admin conservatory-wide stats
+  totalTeachers?: number
+  totalStudents?: number
+  totalOrchestras?: number
 }
 
 export default function Profile() {
@@ -78,6 +84,28 @@ export default function Profile() {
     if (user) loadProfileStatistics()
   }, [user])
 
+  const isConductor = () => {
+    return (
+      user?.roles?.includes('conductor') ||
+      user?.roles?.includes('מנצח') ||
+      (user?.conducting?.orchestraIds && user.conducting.orchestraIds.length > 0)
+    )
+  }
+
+  const isTeacher = () => {
+    return user?.roles?.includes('teacher') || user?.roles?.includes('מורה')
+  }
+
+  const isTheoryTeacher = () => {
+    return (
+      user?.roles?.includes('תאוריה') || user?.roles?.includes('מורה תאוריה')
+    )
+  }
+
+  const isAdmin = () => {
+    return user?.roles?.includes('admin') || user?.roles?.includes('מנהל')
+  }
+
   const loadProfileStatistics = async () => {
     try {
       setLoadingStats(true)
@@ -106,6 +134,7 @@ export default function Profile() {
       const orchestraIds = teacherProfile?.conducting?.orchestraIds || []
       const timeBlocks = teacherProfile?.teaching?.timeBlocks || []
 
+      // Base personal stats fetch
       const [studentDataResult, orchestraDataResult] = await Promise.allSettled([
         apiService.teachers.getTeacherStudents(user._id),
         orchestraIds.length > 0
@@ -136,14 +165,39 @@ export default function Profile() {
         : 0
       const weeklyHours = Math.round((totalWeeklyMinutes / 60) * 10) / 10
 
-      setStatistics({
+      const stats: ProfileStatistics = {
         studentsCount: Array.isArray(studentData) ? studentData.length : 0,
         activeStudents: activeStudents.length,
         weeklyHours,
         orchestrasCount: Array.isArray(orchestraData) ? orchestraData.length : 0,
         theoryLessonsCount: 0,
         totalRehearsals: 0,
-      })
+      }
+
+      // Admin conservatory-wide stats
+      if (isAdmin()) {
+        const [teachersResult, allStudentsResult, allOrchestrasResult] =
+          await Promise.allSettled([
+            apiService.teachers.getTeachers(),
+            apiService.students.getStudents(),
+            apiService.orchestras.getOrchestras(),
+          ])
+
+        stats.totalTeachers =
+          teachersResult.status === 'fulfilled'
+            ? (Array.isArray(teachersResult.value) ? teachersResult.value.length : 0)
+            : 0
+        stats.totalStudents =
+          allStudentsResult.status === 'fulfilled'
+            ? (Array.isArray(allStudentsResult.value) ? allStudentsResult.value.length : 0)
+            : 0
+        stats.totalOrchestras =
+          allOrchestrasResult.status === 'fulfilled'
+            ? (Array.isArray(allOrchestrasResult.value) ? allOrchestrasResult.value.length : 0)
+            : 0
+      }
+
+      setStatistics(stats)
     } catch (error) {
       console.error('Error loading profile statistics:', error)
       setStatistics({
@@ -168,28 +222,6 @@ export default function Profile() {
         </div>
       </div>
     )
-  }
-
-  const isConductor = () => {
-    return (
-      user?.roles?.includes('conductor') ||
-      user?.roles?.includes('מנצח') ||
-      (user?.conducting?.orchestraIds && user.conducting.orchestraIds.length > 0)
-    )
-  }
-
-  const isTeacher = () => {
-    return user?.roles?.includes('teacher') || user?.roles?.includes('מורה')
-  }
-
-  const isTheoryTeacher = () => {
-    return (
-      user?.roles?.includes('תאוריה') || user?.roles?.includes('מורה תאוריה')
-    )
-  }
-
-  const isAdmin = () => {
-    return user?.roles?.includes('admin') || user?.roles?.includes('מנהל')
   }
 
   const getTabsByRole = (): Tab[] => {
@@ -256,38 +288,8 @@ export default function Profile() {
 
   const tabs = getTabsByRole()
   const activeTabData = tabs.find((tab) => tab.id === activeTab) || tabs[0]
-  const ActiveComponent = activeTabData.component
 
-  const componentProps: any = {}
-  if (activeTab === 'students' && actionParam) {
-    componentProps.action = actionParam
-  }
-
-  const getRoleDisplayName = () => {
-    const roles = user?.roles || []
-    if (roles.length > 0) {
-      return roles
-        .map((role: string) => {
-          switch (role) {
-            case 'teacher':
-            case 'מורה':
-              return 'מורה'
-            case 'conductor':
-            case 'מנצח':
-              return 'מנצח'
-            case 'תאוריה':
-            case 'מורה תיאוריה':
-              return 'מורה תיאוריה'
-            case 'admin':
-            case 'מנהל':
-              return 'מנהל'
-            default:
-              return role
-          }
-        })
-        .join(' · ')
-    }
-    const role = user?.role || ''
+  const getRoleLabel = (role: string): string => {
     switch (role) {
       case 'teacher':
       case 'מורה':
@@ -302,20 +304,9 @@ export default function Profile() {
       case 'מנהל':
         return 'מנהל'
       default:
-        return role || 'משתמש'
+        return role
     }
   }
-
-  const getUserFullName = () => {
-    return getDisplayName(user?.personalInfo) || user?.name || 'משתמש'
-  }
-
-  const getUserEmail = () => {
-    return user?.personalInfo?.email || user?.email || ''
-  }
-
-  const displayName = getUserFullName()
-  const avatarColor = getAvatarColorHex(displayName)
 
   // Choose stat cards based on role
   const getStatCards = () => {
@@ -325,34 +316,59 @@ export default function Profile() {
       loading: boolean
     }[] = []
 
-    cards.push({
-      label: 'סה״כ תלמידים',
-      value: statistics?.studentsCount ?? 0,
-      loading: loadingStats,
-    })
-    cards.push({
-      label: 'תלמידים פעילים',
-      value: statistics?.activeStudents ?? 0,
-      loading: loadingStats,
-    })
-    cards.push({
-      label: 'שעות שבועיות',
-      value: statistics?.weeklyHours ?? 0,
-      loading: loadingStats,
-    })
-
-    if (isConductor()) {
+    if (isAdmin()) {
+      // Admin sees conservatory-wide totals
       cards.push({
-        label: 'תזמורות',
-        value: statistics?.orchestrasCount ?? 0,
+        label: 'סה״כ מורים',
+        value: statistics?.totalTeachers ?? 0,
+        loading: loadingStats,
+      })
+      cards.push({
+        label: 'סה״כ תלמידים',
+        value: statistics?.totalStudents ?? 0,
+        loading: loadingStats,
+      })
+      cards.push({
+        label: 'סה״כ תזמורות',
+        value: statistics?.totalOrchestras ?? 0,
+        loading: loadingStats,
+      })
+      cards.push({
+        label: 'שעות שבועיות',
+        value: statistics?.weeklyHours ?? 0,
         loading: loadingStats,
       })
     } else {
+      // Non-admin sees personal stats
       cards.push({
-        label: 'שיעורי תיאוריה',
-        value: statistics?.theoryLessonsCount ?? 0,
+        label: 'סה״כ תלמידים',
+        value: statistics?.studentsCount ?? 0,
         loading: loadingStats,
       })
+      cards.push({
+        label: 'תלמידים פעילים',
+        value: statistics?.activeStudents ?? 0,
+        loading: loadingStats,
+      })
+      cards.push({
+        label: 'שעות שבועיות',
+        value: statistics?.weeklyHours ?? 0,
+        loading: loadingStats,
+      })
+
+      if (isConductor()) {
+        cards.push({
+          label: 'תזמורות',
+          value: statistics?.orchestrasCount ?? 0,
+          loading: loadingStats,
+        })
+      } else {
+        cards.push({
+          label: 'שיעורי תיאוריה',
+          value: statistics?.theoryLessonsCount ?? 0,
+          loading: loadingStats,
+        })
+      }
     }
 
     return cards
@@ -361,79 +377,54 @@ export default function Profile() {
   const statCards = getStatCards()
 
   return (
-    <div className="p-6 space-y-6" dir="rtl">
-      {/* Header — gradient with curved bottom edge (matching dashboard ProfileCard) */}
-      <div className="bg-card rounded-card border border-border overflow-hidden shadow-1">
-        <div className="relative">
-          {/* Gradient band */}
-          <div
-            className="h-32 w-full"
-            style={{ background: 'linear-gradient(135deg, #6ec49d 0%, #4db8a4 50%, #3aa89e 100%)' }}
-          />
-          {/* Curved bottom edge */}
-          <div
-            className="absolute bottom-0 left-0 w-full overflow-hidden"
-            style={{ height: '80px' }}
-          >
-            <svg
-              className="absolute bottom-0 left-0 w-full"
-              viewBox="0 0 1440 200"
-              preserveAspectRatio="none"
-              style={{ height: '80px', display: 'block' }}
-            >
-              <path
-                d="M0,200 C480,40 960,40 1440,200 L1440,200 L0,200 Z"
-                fill="white"
+    <div className="space-y-5" dir="rtl">
+      {/* Row 1: 3-column dashboard grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Right column (RTL first): Profile sidebar card */}
+        <ProfileSidebar user={user} />
+
+        {/* Center + Left columns: Stats + role widgets */}
+        <div className="lg:col-span-2 flex flex-col gap-4">
+          {/* Stat cards row */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {statCards.map((card) => (
+              <GlassStatCard
+                key={card.label}
+                value={card.value}
+                label={card.label}
+                loading={card.loading}
+                size="sm"
               />
-            </svg>
+            ))}
           </div>
-        </div>
 
-        {/* Identity block — overlapping avatar */}
-        <div className="flex flex-col items-center -mt-14 px-6 pb-6 relative z-10">
-          <User
-            avatarProps={{
-              radius: 'full',
-              size: 'lg',
-              showFallback: true,
-              name: displayName,
-              style: { backgroundColor: avatarColor },
-              classNames: {
-                base: 'w-20 h-20 text-2xl text-white ring-4 ring-card shadow-2',
-              },
-            }}
-            name=""
-            description=""
-            classNames={{ base: 'justify-center' }}
-          />
-          <h1 className="text-2xl font-bold text-foreground mt-3">{displayName}</h1>
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold">
-              {isAdmin() && <BuildingsIcon className="w-4 h-4" />}
-              {isTeacher() && !isAdmin() && <ChalkboardTeacherIcon className="w-4 h-4" />}
-              {getRoleDisplayName()}
-            </span>
-            {getUserEmail() && (
-              <span className="text-sm text-muted-foreground">{getUserEmail()}</span>
-            )}
+          {/* Role info summary card */}
+          <div className="bg-primary/5 rounded-card border border-primary/20 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <ShieldCheckIcon className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-foreground">מידע תפקיד</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {(user?.roles || []).map((role: string, idx: number) => (
+                <Chip key={idx} color="primary" variant="flat" size="sm">
+                  {getRoleLabel(role)}
+                </Chip>
+              ))}
+              {user?.professionalInfo?.instrument && (
+                <Chip color="secondary" variant="flat" size="sm" startContent={<MusicNoteIcon className="w-3 h-3" />}>
+                  {user.professionalInfo.instrument}
+                </Chip>
+              )}
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <IdentificationCardIcon className="w-3.5 h-3.5" />
+                {user?.teacherId || user?._id || user?.id || ''}
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Statistics — glass stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {statCards.map((card) => (
-          <GlassStatCard
-            key={card.label}
-            value={card.value}
-            label={card.label}
-            loading={card.loading}
-            size="sm"
-          />
-        ))}
-      </div>
-
-      {/* Tabs + Content — unified card */}
+      {/* Row 2: Tabs + Content (full-width) */}
       <div className="bg-card rounded-card border border-border shadow-1 overflow-hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           {/* Tab triggers */}

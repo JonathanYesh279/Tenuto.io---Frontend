@@ -586,6 +586,25 @@ export const authService = {
    * @param {string} newPassword - New password to set
    * @returns {Promise} - New tokens + teacher object
    */
+  /**
+   * Change password (authenticated user changing their own password)
+   * @param {string} currentPassword - Current password for verification
+   * @param {string} newPassword - New password to set
+   * @returns {Promise} - New tokens + teacher object
+   */
+  async changePassword(currentPassword, newPassword) {
+    try {
+      const response = await apiClient.post('/auth/change-password', { currentPassword, newPassword });
+      if (response.accessToken) {
+        apiClient.setToken(response.accessToken);
+      }
+      return response;
+    } catch (error) {
+      console.error('🔐 Change password error:', error);
+      throw error;
+    }
+  },
+
   async forcePasswordChange(newPassword) {
     try {
       const response = await apiClient.post('/auth/force-password-change', { newPassword });
@@ -5940,6 +5959,8 @@ export const roomScheduleService = {
   async moveActivity(moveData) {
     try {
       const response = await apiClient.put('/room-schedule/move', moveData);
+      // Invalidate student schedule cache — moveActivity updates timeBlock data
+      apiClient.invalidateCache('/student');
       return response;
     } catch (error) {
       console.error('Error moving activity:', error);
@@ -5949,6 +5970,8 @@ export const roomScheduleService = {
   async rescheduleLesson(data) {
     try {
       const response = await apiClient.put('/room-schedule/reschedule-lesson', data);
+      // Invalidate student schedule cache — reschedule changes student assignments
+      apiClient.invalidateCache('/student');
       return response;
     } catch (error) {
       console.error('Error rescheduling lesson:', error);

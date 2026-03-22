@@ -1,21 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../services/authContext.jsx'
-import { UserIcon, UsersIcon, MusicNoteIcon, BookOpenIcon, CalendarIcon, ClockIcon, TrendUpIcon, PulseIcon, ArrowRightIcon, CheckSquareIcon } from '@phosphor-icons/react'
+import {
+  UserIcon,
+  UsersIcon,
+  MusicNoteIcon,
+  BookOpenIcon,
+  CalendarIcon,
+  ClockIcon,
+  PulseIcon,
+  CheckSquareIcon,
+  BuildingsIcon,
+  ChalkboardTeacherIcon,
+  LockKeyIcon,
+} from '@phosphor-icons/react'
+import { User } from '@heroui/react'
 import TeacherStudentsTab from '../components/profile/TeacherStudentsTab'
 import ConductorOrchestrasTab from '../components/profile/ConductorOrchestrasTab'
 import TeacherScheduleTab from '../components/profile/TeacherScheduleTab'
 import TheoryTeacherLessonsTab from '../components/profile/TheoryTeacherLessonsTab'
 import TeacherAttendanceTab from '../components/profile/TeacherAttendanceTab'
 import GeneralInfoTab from '../components/profile/GeneralInfoTab'
+import CredentialsTab from '../components/profile/CredentialsTab'
 import apiService, { teacherService } from '../services/apiService'
 import { getDisplayName, getInitials as getNameInitials } from '../utils/nameUtils'
+import { getAvatarColorHex } from '../utils/avatarColorHash'
+import { GlassStatCard } from '../components/ui/GlassStatCard'
+import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '../components/ui/animated-tabs'
 
 interface Tab {
   id: string
   label: string
   icon: React.ComponentType<{ className?: string }>
-  component: React.ComponentType
+  component: React.ComponentType<any>
 }
 
 interface ProfileStatistics {
@@ -38,53 +55,41 @@ export default function Profile() {
 
   // Handle navigation from dashboard or sidebar with specific tab
   useEffect(() => {
-    // Check for state-based navigation first (from navigate with state)
     const state = location.state as { activeTab?: string } | null
     if (state?.activeTab) {
       setActiveTab(state.activeTab)
-      // Clear the state to prevent persistence on refresh
       window.history.replaceState(null, '', window.location.pathname)
       return
     }
 
-    // Check for query parameter-based navigation (from URL)
     const searchParams = new URLSearchParams(location.search)
     const tabParam = searchParams.get('tab')
     const action = searchParams.get('action')
 
-    if (tabParam) {
-      setActiveTab(tabParam)
-    }
+    if (tabParam) setActiveTab(tabParam)
+    if (action) setActionParam(action)
 
-    if (action) {
-      setActionParam(action)
-    }
-
-    // Clear the query parameters
     if (tabParam || action) {
       window.history.replaceState(null, '', window.location.pathname)
     }
   }, [location])
 
   useEffect(() => {
-    if (user) {
-      loadProfileStatistics()
-    }
+    if (user) loadProfileStatistics()
   }, [user])
 
   const loadProfileStatistics = async () => {
     try {
       setLoadingStats(true)
       const userId = user?._id || user?.teacherId || user?.id
-      
+
       if (!userId) {
         console.warn('No user ID available for loading profile statistics')
         return
       }
-      
-      // Load teacher profile first to get all relevant data
+
       const teacherProfile = await teacherService.getMyProfile()
-      
+
       if (!teacherProfile) {
         console.warn('No teacher profile found')
         setStatistics({
@@ -92,54 +97,62 @@ export default function Profile() {
           activeStudents: 0,
           weeklyHours: 0,
           orchestrasCount: 0,
-          theoryLessonsCount: 0
+          theoryLessonsCount: 0,
+          totalRehearsals: 0,
         })
         return
       }
-      
-      // Extract data from teacher profile structure
+
       const orchestraIds = teacherProfile?.conducting?.orchestraIds || []
       const timeBlocks = teacherProfile?.teaching?.timeBlocks || []
 
-      // Fetch actual data with individual error handling
       const [studentDataResult, orchestraDataResult] = await Promise.allSettled([
         apiService.teachers.getTeacherStudents(user._id),
-        orchestraIds.length > 0 ? apiService.orchestras.getBatchOrchestras(orchestraIds) : Promise.resolve([])
+        orchestraIds.length > 0
+          ? apiService.orchestras.getBatchOrchestras(orchestraIds)
+          : Promise.resolve([]),
       ])
 
-      // Handle student data result
-      const studentData = studentDataResult.status === 'fulfilled' ? studentDataResult.value : []
+      const studentData =
+        studentDataResult.status === 'fulfilled' ? studentDataResult.value : []
       if (studentDataResult.status === 'rejected') {
         console.error('Failed to load student data:', studentDataResult.reason)
       }
-      
-      // Handle orchestra data result  
-      const orchestraData = orchestraDataResult.status === 'fulfilled' ? orchestraDataResult.value : []
+
+      const orchestraData =
+        orchestraDataResult.status === 'fulfilled' ? orchestraDataResult.value : []
       if (orchestraDataResult.status === 'rejected') {
         console.error('Failed to load orchestra data:', orchestraDataResult.reason)
       }
-      
-      const activeStudents = Array.isArray(studentData) ? studentData.filter(s => s.academicInfo?.isActive !== false) : []
-      const totalWeeklyMinutes = Array.isArray(timeBlocks) ? timeBlocks.reduce((total, block) => 
-        total + (parseInt(block.totalDuration) || 0), 0) : 0
-      const weeklyHours = Math.round((totalWeeklyMinutes / 60) * 10) / 10 // Convert to hours with 1 decimal
-      
+
+      const activeStudents = Array.isArray(studentData)
+        ? studentData.filter((s) => s.academicInfo?.isActive !== false)
+        : []
+      const totalWeeklyMinutes = Array.isArray(timeBlocks)
+        ? timeBlocks.reduce(
+            (total, block) => total + (parseInt(block.totalDuration) || 0),
+            0
+          )
+        : 0
+      const weeklyHours = Math.round((totalWeeklyMinutes / 60) * 10) / 10
+
       setStatistics({
         studentsCount: Array.isArray(studentData) ? studentData.length : 0,
         activeStudents: activeStudents.length,
-        weeklyHours: weeklyHours,
+        weeklyHours,
         orchestrasCount: Array.isArray(orchestraData) ? orchestraData.length : 0,
-        theoryLessonsCount: 0 // Will implement if theory teacher
+        theoryLessonsCount: 0,
+        totalRehearsals: 0,
       })
     } catch (error) {
       console.error('Error loading profile statistics:', error)
-      // Set fallback statistics
       setStatistics({
         studentsCount: 0,
         activeStudents: 0,
         weeklyHours: 0,
         orchestrasCount: 0,
-        theoryLessonsCount: 0
+        theoryLessonsCount: 0,
+        totalRehearsals: 0,
       })
     } finally {
       setLoadingStats(false)
@@ -151,13 +164,12 @@ export default function Profile() {
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <div className="text-gray-600">טוען פרטי משתמש...</div>
+          <div className="text-muted-foreground">טוען פרטי משתמש...</div>
         </div>
       </div>
     )
   }
 
-  // Helper function to check if user is a conductor
   const isConductor = () => {
     return (
       user?.roles?.includes('conductor') ||
@@ -166,17 +178,18 @@ export default function Profile() {
     )
   }
 
-  // Helper function to check if user is a teacher
   const isTeacher = () => {
+    return user?.roles?.includes('teacher') || user?.roles?.includes('מורה')
+  }
+
+  const isTheoryTeacher = () => {
     return (
-      user?.roles?.includes('teacher') ||
-      user?.roles?.includes('מורה')
+      user?.roles?.includes('תאוריה') || user?.roles?.includes('מורה תאוריה')
     )
   }
 
-  // Helper function to check if user is a theory teacher
-  const isTheoryTeacher = () => {
-    return user?.roles?.includes('תאוריה') || user?.roles?.includes('מורה תאוריה')
+  const isAdmin = () => {
+    return user?.roles?.includes('admin') || user?.roles?.includes('מנהל')
   }
 
   const getTabsByRole = (): Tab[] => {
@@ -185,54 +198,56 @@ export default function Profile() {
         id: 'general',
         label: 'פרטים כלליים',
         icon: UserIcon,
-        component: GeneralInfoTab
-      }
+        component: GeneralInfoTab,
+      },
     ]
 
     const tabs = [...baseTabs]
 
-    // Add teacher tabs if user is a teacher
+    // Credentials tab available to all users
+    tabs.push({
+      id: 'credentials',
+      label: 'סיסמה',
+      icon: LockKeyIcon,
+      component: CredentialsTab,
+    })
+
     if (isTeacher()) {
       tabs.push({
         id: 'students',
         label: 'התלמידים שלי',
         icon: UsersIcon,
-        component: TeacherStudentsTab
+        component: TeacherStudentsTab,
       })
       tabs.push({
         id: 'schedule',
         label: 'לוח זמנים שבועי',
         icon: CalendarIcon,
-        component: TeacherScheduleTab
+        component: TeacherScheduleTab,
       })
-      // Add attendance tab for teachers
-      if (isTeacher()) {
-        tabs.push({
-          id: 'attendance',
-          label: 'נוכחות',
-          icon: CheckSquareIcon,
-          component: TeacherAttendanceTab
-        })
-      }
+      tabs.push({
+        id: 'attendance',
+        label: 'נוכחות',
+        icon: CheckSquareIcon,
+        component: TeacherAttendanceTab,
+      })
     }
 
-    // Add conductor tab if user is a conductor
     if (isConductor()) {
       tabs.push({
         id: 'orchestras',
         label: 'התזמורות שלי',
         icon: MusicNoteIcon,
-        component: ConductorOrchestrasTab
+        component: ConductorOrchestrasTab,
       })
     }
 
-    // Add theory teacher tab if user is a theory teacher
     if (isTheoryTeacher()) {
       tabs.push({
         id: 'lessons',
         label: 'שיעורי התיאוריה שלי',
         icon: BookOpenIcon,
-        component: TheoryTeacherLessonsTab
+        component: TheoryTeacherLessonsTab,
       })
     }
 
@@ -240,194 +255,227 @@ export default function Profile() {
   }
 
   const tabs = getTabsByRole()
-  const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
+  const activeTabData = tabs.find((tab) => tab.id === activeTab) || tabs[0]
   const ActiveComponent = activeTabData.component
 
-  // Component props to pass action parameter
   const componentProps: any = {}
   if (activeTab === 'students' && actionParam) {
     componentProps.action = actionParam
   }
 
   const getRoleDisplayName = () => {
-    const role = user?.role || user?.roles?.[0] || ''
-    // Handle both English and Hebrew role names from backend
+    const roles = user?.roles || []
+    if (roles.length > 0) {
+      return roles
+        .map((role: string) => {
+          switch (role) {
+            case 'teacher':
+            case 'מורה':
+              return 'מורה'
+            case 'conductor':
+            case 'מנצח':
+              return 'מנצח'
+            case 'תאוריה':
+            case 'מורה תיאוריה':
+              return 'מורה תיאוריה'
+            case 'admin':
+            case 'מנהל':
+              return 'מנהל'
+            default:
+              return role
+          }
+        })
+        .join(' · ')
+    }
+    const role = user?.role || ''
     switch (role) {
-      case 'teacher': return 'מורה'
-      case 'מורה': return 'מורה'
-      case 'conductor': return 'מנצח'
-      case 'מנצח': return 'מנצח'
-      case 'תאוריה': return 'תאוריה'
-      case 'מורה תיאוריה': return 'מורה תיאוריה'
-      case 'admin': return 'מנהל'
-      case 'מנהל': return 'מנהל'
-      default: return role || 'משתמש'
+      case 'teacher':
+      case 'מורה':
+        return 'מורה'
+      case 'conductor':
+      case 'מנצח':
+        return 'מנצח'
+      case 'תאוריה':
+      case 'מורה תיאוריה':
+        return 'מורה תיאוריה'
+      case 'admin':
+      case 'מנהל':
+        return 'מנהל'
+      default:
+        return role || 'משתמש'
     }
   }
-  
+
   const getUserFullName = () => {
     return getDisplayName(user?.personalInfo) || user?.name || 'משתמש'
   }
 
-  const getInitials = () => {
-    const initials = getNameInitials(user?.personalInfo)
-    if (initials) return initials
-    const name = getUserFullName()
-    if (!name || name === 'משתמש') return 'מ'
-    const words = name.trim().split(' ')
-    if (words.length >= 2) {
-      return words[0][0] + words[1][0]
-    }
-    return words[0][0] || 'מ'
-  }
-  
   const getUserEmail = () => {
     return user?.personalInfo?.email || user?.email || ''
   }
 
-  const handleBackToDashboard = () => {
-    navigate('/dashboard')
-  }
+  const displayName = getUserFullName()
+  const avatarColor = getAvatarColorHex(displayName)
 
-  return (
-    <div className="p-6" dir="rtl">
-      {/* Header */}
-      <div className="bg-white rounded border border-gray-200 p-6 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center">
-            <span className="text-xl font-bold text-white">
-              {getInitials()}
-            </span>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {getUserFullName()}
-            </h1>
-            <p className="text-gray-600 mt-1">
-              {getRoleDisplayName()} • {getUserEmail()}
-            </p>
-          </div>
-        </div>
-      </div>
+  // Choose stat cards based on role
+  const getStatCards = () => {
+    const cards: {
+      label: string
+      value: number | string
+      loading: boolean
+    }[] = []
 
-      {/* Statistics Overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <StatCard
-          title="סה״כ תלמידים"
-          value={loadingStats ? '...' : statistics?.studentsCount?.toString() || '0'}
-          icon={UsersIcon}
-          color="blue"
-          loading={loadingStats}
-        />
-        <StatCard
-          title="תלמידים פעילים"
-          value={loadingStats ? '...' : statistics?.activeStudents?.toString() || '0'}
-          icon={PulseIcon}
-          color="green"
-          loading={loadingStats}
-        />
-        <StatCard
-          title="שעות שבועיות"
-          value={loadingStats ? '...' : statistics?.weeklyHours?.toString() || '0'}
-          icon={ClockIcon}
-          color="purple"
-          loading={loadingStats}
-        />
-        <StatCard
-          title={isConductor() ? 'תזמורות' : 'שיעורי תיאוריה'}
-          value={loadingStats ? '...' : (statistics?.orchestrasCount || statistics?.theoryLessonsCount)?.toString() || '0'}
-          icon={isConductor() ? MusicNoteIcon : BookOpenIcon}
-          color="indigo"
-          loading={loadingStats}
-        />
-      </div>
+    cards.push({
+      label: 'סה״כ תלמידים',
+      value: statistics?.studentsCount ?? 0,
+      loading: loadingStats,
+    })
+    cards.push({
+      label: 'תלמידים פעילים',
+      value: statistics?.activeStudents ?? 0,
+      loading: loadingStats,
+    })
+    cards.push({
+      label: 'שעות שבועיות',
+      value: statistics?.weeklyHours ?? 0,
+      loading: loadingStats,
+    })
 
-      {/* Navigation Tabs */}
-      <div className="bg-white rounded border border-gray-200 mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="flex gap-0 overflow-x-auto scrollbar-hide">
-            {tabs.map((tab) => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm transition-all whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="">{tab.label}</span>
-                </button>
-              )
-            })}
-          </nav>
-        </div>
-
-        {/* Tab Content */}
-        <div className="p-6">
-          <ActiveComponent {...componentProps} />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Statistics Card Component
-interface StatCardProps {
-  title: string
-  value: string
-  icon: React.ComponentType<{ className?: string }>
-  color: 'blue' | 'green' | 'purple' | 'indigo'
-  loading?: boolean
-}
-
-function StatCard({ title, value, icon: Icon, color, loading }: StatCardProps) {
-  const colorVariants = {
-    blue: {
-      bg: 'bg-blue-50',
-      text: 'text-blue-600',
-      border: 'border-blue-200'
-    },
-    green: {
-      bg: 'bg-green-50',
-      text: 'text-green-600',
-      border: 'border-green-200'
-    },
-    purple: {
-      bg: 'bg-purple-50',
-      text: 'text-purple-600',
-      border: 'border-purple-200'
-    },
-    indigo: {
-      bg: 'bg-indigo-50',
-      text: 'text-indigo-600',
-      border: 'border-indigo-200'
+    if (isConductor()) {
+      cards.push({
+        label: 'תזמורות',
+        value: statistics?.orchestrasCount ?? 0,
+        loading: loadingStats,
+      })
+    } else {
+      cards.push({
+        label: 'שיעורי תיאוריה',
+        value: statistics?.theoryLessonsCount ?? 0,
+        loading: loadingStats,
+      })
     }
+
+    return cards
   }
 
-  const variant = colorVariants[color]
+  const statCards = getStatCards()
 
   return (
-    <div className={`bg-white rounded border ${variant.border} p-3 sm:p-4`}>
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">
-            {title}
-          </p>
-          <div className="text-lg sm:text-2xl font-bold text-gray-900 mt-1">
-            {loading ? (
-              <div className="animate-pulse bg-gray-200 h-6 sm:h-8 w-12 sm:w-16 rounded"></div>
-            ) : (
-              value
+    <div className="p-6 space-y-6" dir="rtl">
+      {/* Header — gradient with curved bottom edge (matching dashboard ProfileCard) */}
+      <div className="bg-card rounded-card border border-border overflow-hidden shadow-1">
+        <div className="relative">
+          {/* Gradient band */}
+          <div
+            className="h-32 w-full"
+            style={{ background: 'linear-gradient(135deg, #6ec49d 0%, #4db8a4 50%, #3aa89e 100%)' }}
+          />
+          {/* Curved bottom edge */}
+          <div
+            className="absolute bottom-0 left-0 w-full overflow-hidden"
+            style={{ height: '80px' }}
+          >
+            <svg
+              className="absolute bottom-0 left-0 w-full"
+              viewBox="0 0 1440 200"
+              preserveAspectRatio="none"
+              style={{ height: '80px', display: 'block' }}
+            >
+              <path
+                d="M0,200 C480,40 960,40 1440,200 L1440,200 L0,200 Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Identity block — overlapping avatar */}
+        <div className="flex flex-col items-center -mt-14 px-6 pb-6 relative z-10">
+          <User
+            avatarProps={{
+              radius: 'full',
+              size: 'lg',
+              showFallback: true,
+              name: displayName,
+              style: { backgroundColor: avatarColor },
+              classNames: {
+                base: 'w-20 h-20 text-2xl text-white ring-4 ring-card shadow-2',
+              },
+            }}
+            name=""
+            description=""
+            classNames={{ base: 'justify-center' }}
+          />
+          <h1 className="text-2xl font-bold text-foreground mt-3">{displayName}</h1>
+          <div className="flex items-center gap-2 mt-1.5">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold">
+              {isAdmin() && <BuildingsIcon className="w-4 h-4" />}
+              {isTeacher() && !isAdmin() && <ChalkboardTeacherIcon className="w-4 h-4" />}
+              {getRoleDisplayName()}
+            </span>
+            {getUserEmail() && (
+              <span className="text-sm text-muted-foreground">{getUserEmail()}</span>
             )}
           </div>
         </div>
-        <div className={`${variant.bg} p-2 sm:p-3 rounded-full flex-shrink-0 ml-2`}>
-          <Icon className={`w-4 h-4 sm:w-6 sm:h-6 ${variant.text}`} />
-        </div>
+      </div>
+
+      {/* Statistics — glass stat cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {statCards.map((card) => (
+          <GlassStatCard
+            key={card.label}
+            value={card.value}
+            label={card.label}
+            loading={card.loading}
+            size="sm"
+          />
+        ))}
+      </div>
+
+      {/* Tabs + Content — unified card */}
+      <div className="bg-card rounded-card border border-border shadow-1 overflow-hidden">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          {/* Tab triggers */}
+          <div className="border-b border-border px-4 pt-2">
+            <TabsList className="bg-transparent h-auto p-0 gap-0 justify-start rounded-none">
+              {tabs.map((tab) => {
+                const Icon = tab.icon
+                return (
+                  <TabsTrigger
+                    key={tab.id}
+                    value={tab.id}
+                    className={`flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-none border-b-2 transition-colors ${
+                      activeTab === tab.id
+                        ? 'border-primary text-primary bg-transparent shadow-none'
+                        : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40 bg-transparent shadow-none'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{tab.label}</span>
+                  </TabsTrigger>
+                )
+              })}
+            </TabsList>
+          </div>
+
+          {/* Tab content */}
+          <div className="p-6">
+            <TabsContents>
+              {tabs.map((tab) => (
+                <TabsContent key={tab.id} value={tab.id}>
+                  {activeTab === tab.id && (
+                    <tab.component
+                      {...(tab.id === 'students' && actionParam
+                        ? { action: actionParam }
+                        : {})}
+                    />
+                  )}
+                </TabsContent>
+              ))}
+            </TabsContents>
+          </div>
+        </Tabs>
       </div>
     </div>
   )

@@ -290,38 +290,38 @@ export const getRehearsalStatus = (rehearsal: Rehearsal): {
   text: string;
   colorClass: string;
 } => {
-  if (!rehearsal.isActive) {
+  if (rehearsal.isActive === false) {
     return {
       status: 'cancelled',
       text: 'בוטלה',
       colorClass: 'bg-gray-100 text-gray-800'
     };
   }
-  
+
   const now = new Date();
-  const rehearsalDate = new Date(rehearsal.date);
-  const rehearsalStart = new Date(`${rehearsal.date}T${rehearsal.startTime}:00`);
-  const rehearsalEnd = new Date(`${rehearsal.date}T${rehearsal.endTime}:00`);
-  
+  const dateStr = rehearsal.date.split('T')[0]; // Normalize "2026-04-22T10:00:00.000Z" → "2026-04-22"
+  const rehearsalStart = new Date(`${dateStr}T${rehearsal.startTime}:00`);
+  const rehearsalEnd = new Date(`${dateStr}T${rehearsal.endTime}:00`);
+
   if (now < rehearsalStart) {
     return {
       status: 'upcoming',
-      text: 'עתידה',
+      text: 'עתידית',
       colorClass: 'bg-blue-100 text-blue-800'
     };
   }
-  
+
   if (now >= rehearsalStart && now <= rehearsalEnd) {
     return {
       status: 'in_progress',
-      text: 'מתקיימת כעת',
+      text: 'מתקיימת',
       colorClass: 'bg-green-100 text-green-800'
     };
   }
-  
+
   return {
     status: 'completed',
-    text: 'הסתיימה',
+    text: 'התקיימה',
     colorClass: 'bg-orange-100 text-orange-800'
   };
 };
@@ -338,8 +338,10 @@ export const checkRehearsalConflict = (rehearsal1: Rehearsal, rehearsal2: Rehear
   severity: 'critical' | 'warning' | 'none';
   message: string;
 } => {
-  // Different dates, no conflict
-  if (rehearsal1.date !== rehearsal2.date) {
+  // Different dates, no conflict — normalize to YYYY-MM-DD for comparison
+  const date1 = rehearsal1.date.split('T')[0];
+  const date2 = rehearsal2.date.split('T')[0];
+  if (date1 !== date2) {
     return {
       hasConflict: false,
       conflictType: 'none',
@@ -558,26 +560,31 @@ export const sortRehearsals = (
  */
 export const generateRehearsalDates = (bulkData: BulkRehearsalData): string[] => {
   const dates: string[] = [];
-  const startDate = new Date(bulkData.startDate);
-  const endDate = new Date(bulkData.endDate);
+  // Parse with noon time to avoid DST midnight shifts
+  const startDate = new Date(bulkData.startDate + 'T12:00:00');
+  const endDate = new Date(bulkData.endDate + 'T12:00:00');
   const targetDayOfWeek = bulkData.dayOfWeek;
   const excludeDates = new Set(bulkData.excludeDates || []);
-  
+
   // Find first occurrence of target day
   const current = new Date(startDate);
   while (current.getDay() !== targetDayOfWeek && current <= endDate) {
     current.setDate(current.getDate() + 1);
   }
-  
+
   // Generate all occurrences
   while (current <= endDate) {
-    const dateString = current.toISOString().split('T')[0];
+    // Use local date parts to avoid UTC/local timezone mismatch
+    const y = current.getFullYear();
+    const m = String(current.getMonth() + 1).padStart(2, '0');
+    const d = String(current.getDate()).padStart(2, '0');
+    const dateString = `${y}-${m}-${d}`;
     if (!excludeDates.has(dateString)) {
       dates.push(dateString);
     }
     current.setDate(current.getDate() + 7); // Next week
   }
-  
+
   return dates;
 };
 

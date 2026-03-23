@@ -43,9 +43,9 @@ const DAY_OPTIONS = [
 ]
 
 const TYPE_CONFIG: Record<string, { color: string; icon: React.ElementType }> = {
-  individual: { color: 'bg-blue-500', icon: UserIcon },
-  orchestra: { color: 'bg-green-500', icon: MusicNotesIcon },
-  theory: { color: 'bg-purple-500', icon: BookOpenIcon },
+  individual: { color: 'bg-primary', icon: UserIcon },
+  orchestra: { color: 'bg-success', icon: MusicNotesIcon },
+  theory: { color: 'bg-secondary', icon: BookOpenIcon },
 }
 
 function TypeIcon({ type }: { type: string }) {
@@ -115,7 +115,7 @@ export function EnrollmentsTable({ enrollments, isLoading }: EnrollmentsTablePro
         <TableHeader>
           <TableColumn>סוג</TableColumn>
           <TableColumn>שם</TableColumn>
-          <TableColumn>כלי</TableColumn>
+          <TableColumn>רישום</TableColumn>
           <TableColumn>יום ושעה</TableColumn>
           <TableColumn>חדר</TableColumn>
           <TableColumn>סטטוס</TableColumn>

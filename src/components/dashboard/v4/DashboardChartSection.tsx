@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '@/components/ui/animated-tabs'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { smooth } from '@/lib/motionTokens'
@@ -209,37 +209,44 @@ export function DashboardChartSection({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {charts.map((chart) => {
-        const isFocused = focusedChart === chart.id
-        return (
-          <motion.div
-            key={chart.id}
-            layout
-            transition={smooth}
-            className={cn(isFocused && 'lg:col-span-3')}
-          >
-            {chart.type === 'glassmorphic' ? (
-              <GlassmorphicCard
-                title={chart.title}
-                focused={isFocused}
-                onToggleFocus={() => toggleFocus(chart.id)}
-              >
-                {chart.content}
-              </GlassmorphicCard>
-            ) : (
-              <FocusableChartCard
-                title={chart.title}
-                focused={isFocused}
-                onToggleFocus={() => toggleFocus(chart.id)}
-              >
-                <div className={cn(isFocused && 'h-80')}>
+      <AnimatePresence mode="popLayout">
+        {charts.map((chart) => {
+          const isFocused = focusedChart === chart.id
+          const isHidden = focusedChart !== null && !isFocused
+
+          if (isHidden) return null
+
+          return (
+            <motion.div
+              key={chart.id}
+              layout
+              initial={false}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={smooth}
+              className={cn(isFocused && 'lg:col-span-3')}
+            >
+              {chart.type === 'glassmorphic' ? (
+                <GlassmorphicCard
+                  title={chart.title}
+                  focused={isFocused}
+                  onToggleFocus={() => toggleFocus(chart.id)}
+                >
                   {chart.content}
-                </div>
-              </FocusableChartCard>
-            )}
-          </motion.div>
-        )
-      })}
+                </GlassmorphicCard>
+              ) : (
+                <FocusableChartCard
+                  title={chart.title}
+                  focused={isFocused}
+                  onToggleFocus={() => toggleFocus(chart.id)}
+                >
+                  {chart.content}
+                </FocusableChartCard>
+              )}
+            </motion.div>
+          )
+        })}
+      </AnimatePresence>
     </div>
   )
 }

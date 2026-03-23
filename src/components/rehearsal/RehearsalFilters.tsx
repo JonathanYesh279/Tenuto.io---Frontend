@@ -32,9 +32,9 @@ const TYPE_OPTIONS = [
 
 const STATUS_OPTIONS = [
   { value: '__all__', label: 'כל הסטטוסים' },
-  { value: 'upcoming', label: 'עתידה' },
-  { value: 'in_progress', label: 'מתקיימת כעת' },
-  { value: 'completed', label: 'הושלמה' },
+  { value: 'upcoming', label: 'עתידית' },
+  { value: 'in_progress', label: 'מתקיימת' },
+  { value: 'completed', label: 'התקיימה' },
   { value: 'cancelled', label: 'בוטלה' },
 ]
 

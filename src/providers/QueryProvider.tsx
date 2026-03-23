@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
       // Background refetch settings
       refetchOnWindowFocus: false, // Don't refetch on window focus for better performance
       refetchOnReconnect: true, // Refetch on network reconnect
-      refetchOnMount: true, // Refetch when component mounts
+      refetchOnMount: false, // Serve cached data instantly; staleTime controls when background refetch happens
       
       // Retry configuration
       retry: (failureCount, error) => {

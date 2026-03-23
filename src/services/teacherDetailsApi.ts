@@ -74,7 +74,7 @@ class TeacherDetailsApiClient {
       // Handle special duplicate teacher errors
       if (data?.code === 'DUPLICATE_TEACHER_DETECTED') {
         error.code = 'DUPLICATE_TEACHER_DETECTED'
-        error.duplicateInfo = data.duplicateInfo
+        error.duplicateInfo = data.details || data.duplicateInfo
       }
 
       throw error
@@ -101,6 +101,7 @@ class TeacherDetailsApiClient {
       401: 'נדרשת התחברות מחדש למערכת',
       403: 'אין הרשאה לצפייה בתוכן זה',
       404: 'המורה המבוקש לא נמצא',
+      409: 'מורה עם פרטים דומים כבר קיים במערכת',
       422: 'נתונים לא תקינים',
       500: 'שגיאת שרת פנימית',
       502: 'השרת אינו זמין כרגע',

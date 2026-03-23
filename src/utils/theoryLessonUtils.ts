@@ -13,6 +13,7 @@ export interface TheoryLesson {
   teacherId: string
   teacherName: string
   date: string
+  dayOfWeek?: number
   startTime: string
   endTime: string
   duration: number
@@ -27,6 +28,16 @@ export interface TheoryLesson {
   }>
   schoolYearId: string
   isActive: boolean
+}
+
+export const DAY_OF_WEEK_NAMES: Record<number, string> = {
+  0: 'ראשון',
+  1: 'שני',
+  2: 'שלישי',
+  3: 'רביעי',
+  4: 'חמישי',
+  5: 'שישי',
+  6: 'שבת',
 }
 
 /**

@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'react'
+import { Button } from '@heroui/react'
 
 import { Teacher } from '../../types'
 import TeacherWeeklyCalendar from '../../../../../components/schedule/TeacherWeeklyCalendar'
@@ -18,7 +19,17 @@ import { getDisplayName } from '../../../../../utils/nameUtils'
 import TimeBlockForm from '../../../../../components/teacher/TimeBlockForm'
 import toast from 'react-hot-toast'
 import { VALID_LOCATIONS } from '../../../../../constants/locations'
-import { CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, PlusIcon, TrashIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import {
+  Calendar as CalendarIcon,
+  Clock as ClockIcon,
+  MapPin as MapPinIcon,
+  Pencil as PencilIcon,
+  Plus as PlusIcon,
+  Trash as TrashIcon,
+  Users as UsersIcon,
+  WarningCircle as WarningCircleIcon,
+} from '@phosphor-icons/react'
+import { GlassStatCard } from '@/components/ui/GlassStatCard'
 
 interface ScheduleTabProps {
   teacher: Teacher
@@ -496,70 +507,72 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
   const totalTimeBlocks = allTeachingDays.length || 0
   const totalStudents = getTotalStudentsInSchedule()
 
+  const glassStyle: React.CSSProperties = {
+    background: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,210,230,0.15) 50%, rgba(255,255,255,0.9) 100%)',
+    boxShadow: '0 4px 16px rgba(0,140,210,0.06), inset 0 1px 1px rgba(255,255,255,0.9)',
+    border: '1px solid rgba(200,220,240,0.5)',
+  }
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 rounded-card" style={glassStyle}>
       {/* Header with Statistics */}
-      <div className="flex justify-end items-start">
+      <div className="space-y-4">
         {isLoadingActivities && (
-          <div className="flex items-center gap-2 text-sm text-blue-600 mr-4">
+          <div className="flex items-center gap-2 text-sm text-blue-600">
             <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
             טוען פעילויות הניצוח...
           </div>
         )}
-        
-        <div className="flex gap-4 text-sm">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-primary">
-              {Math.round(totalWeeklyHours)}
-            </div>
-            <div className="text-gray-600">שעות שבועיות</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {totalTimeBlocks}
-            </div>
-            <div className="text-gray-600">ימי לימוד</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
-              {totalStudents}
-            </div>
-            <div className="text-gray-600">תלמידים</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">
-              {totalActivities}
-            </div>
-            <div className="text-gray-600">הרכבים</div>
-          </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <GlassStatCard
+            size="sm"
+            value={Math.round(totalWeeklyHours)}
+            label="שעות שבועיות"
+            className="!h-[80px]"
+          />
+          <GlassStatCard
+            size="sm"
+            value={totalTimeBlocks}
+            label="ימי לימוד"
+            className="!h-[80px]"
+          />
+          <GlassStatCard
+            size="sm"
+            value={totalStudents}
+            label="תלמידים"
+            className="!h-[80px]"
+          />
+          <GlassStatCard
+            size="sm"
+            value={totalActivities}
+            label="הרכבים"
+            className="!h-[80px]"
+          />
         </div>
       </div>
-      
+
       {/* View Toggle */}
       <div className="flex items-center justify-between bg-muted/30 p-3 rounded">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setShowLegacyView(false)}
-            className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
-              !showLegacyView
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-white text-gray-600 hover:bg-gray-100'
-            }`}
+        <div className="flex items-center gap-3">
+          <Button
+            color="primary"
+            variant={!showLegacyView ? 'solid' : 'bordered'}
+            size="sm"
+            onPress={() => setShowLegacyView(false)}
           >
             לוח זמנים שבועי
-          </button>
-          <button
-            onClick={() => setShowLegacyView(true)}
-            className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
-              showLegacyView
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-white text-gray-600 hover:bg-gray-100'
-            }`}
+          </Button>
+          <Button
+            color="primary"
+            variant={showLegacyView ? 'solid' : 'bordered'}
+            size="sm"
+            onPress={() => setShowLegacyView(true)}
           >
             ניהול ימי לימוד
-          </button>
+          </Button>
         </div>
-        
+
         {totalActivities > 0 && (
           <div className="text-sm text-gray-600">
             מנצח על {totalActivities} הרכבים

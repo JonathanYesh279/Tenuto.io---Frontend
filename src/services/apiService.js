@@ -1785,8 +1785,9 @@ export const teacherService = {
             lastName: '',
           },
           academicInfo: {
-            class: s.currentStage || '',
+            class: s.class || s.studentClass || '',
             primaryInstrument: s.instrumentName || '',
+            instrumentProgress: s.currentStage ? [{ currentStage: s.currentStage }] : [],
           },
           primaryInstrument: s.instrumentName || '',
           phone: s.studentPhone || '',

@@ -59,7 +59,7 @@ export const RehearsalStatsRow: React.FC<RehearsalStatsRowProps> = ({ rehearsals
         <GlassStatCard value={stats.total} label='סה"כ חזרות' size="sm" />
       </ScrollReveal>
       <ScrollReveal delay={0.08}>
-        <GlassStatCard value={stats.completed} label="הושלמו" size="sm" />
+        <GlassStatCard value={stats.completed} label="התקיימו" size="sm" />
       </ScrollReveal>
       <ScrollReveal delay={0.16}>
         <GlassStatCard value={stats.todayCount} label="היום" size="sm" />

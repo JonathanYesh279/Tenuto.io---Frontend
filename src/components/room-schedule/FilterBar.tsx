@@ -29,20 +29,23 @@ const ACTIVITY_TYPE_BUTTONS = [
   {
     type: 'timeBlock',
     label: 'שיעור פרטי',
-    activeBg: 'bg-blue-100',
-    activeText: 'text-blue-800',
+    activeBg: 'bg-sky-100',
+    activeText: 'text-sky-800',
+    activeBorder: 'border-sky-300',
   },
   {
     type: 'rehearsal',
     label: 'חזרה',
-    activeBg: 'bg-purple-100',
-    activeText: 'text-purple-800',
+    activeBg: 'bg-rose-100',
+    activeText: 'text-rose-800',
+    activeBorder: 'border-rose-300',
   },
   {
     type: 'theory',
     label: 'תאוריה',
-    activeBg: 'bg-orange-100',
-    activeText: 'text-orange-800',
+    activeBg: 'bg-amber-100',
+    activeText: 'text-amber-800',
+    activeBorder: 'border-amber-300',
   },
 ] as const
 
@@ -108,8 +111,8 @@ export default function FilterBar({ filters, onFiltersChange, rooms }: FilterBar
             className={cn(
               'px-2 py-1 text-xs rounded-md border transition-colors whitespace-nowrap',
               isActive
-                ? `${btn.activeBg} ${btn.activeText} border-transparent font-medium shadow-sm`
-                : 'bg-white text-slate-400 border-slate-200 line-through dark:bg-slate-800 dark:text-slate-500 dark:border-slate-700'
+                ? `${btn.activeBg} ${btn.activeText} ${btn.activeBorder} font-medium shadow-sm`
+                : 'bg-card text-muted-foreground border-border line-through opacity-50'
             )}
           >
             {btn.label}
@@ -122,7 +125,7 @@ export default function FilterBar({ filters, onFiltersChange, rooms }: FilterBar
         <button
           type="button"
           onClick={clearFilters}
-          className="flex items-center gap-0.5 text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors whitespace-nowrap"
+          className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
         >
           <XIcon size={12} weight="bold" />
           <span>נקה</span>

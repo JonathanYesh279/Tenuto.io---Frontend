@@ -1,15 +1,53 @@
 /**
  * Student Management Tab Component
- * 
+ *
  * Manages students assigned to the teacher
  */
 
 import { useState, useEffect, useRef } from 'react'
+import {
+  Button,
+  Chip,
+  User,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Input,
+  useDisclosure,
+  Select,
+  SelectItem,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@heroui/react'
+import {
+  ArrowUpRight as ArrowUpRightIcon,
+  BookOpen as BookOpenIcon,
+  Calendar as CalendarIcon,
+  CaretDown as CaretDownIcon,
+  Clock as ClockIcon,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  Plus as PlusIcon,
+  Trash as TrashIcon,
+  Users as UsersIcon,
+  UserMinus as UserMinusIcon,
+  MusicNotes as MusicNotesIcon,
+  MapPin as MapPinIcon,
+  X as XIcon,
+} from '@phosphor-icons/react'
 
 import { Teacher } from '../../types'
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
-import { BookOpenIcon, CalendarIcon, CaretDownIcon, ClockIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon, UserIcon, UsersIcon, XIcon } from '@phosphor-icons/react'
+import { getAvatarColorHex } from '../../../../../utils/avatarColorHash'
 
 interface StudentManagementTabProps {
   teacher: Teacher
@@ -29,31 +67,66 @@ interface Student {
   primaryInstrument?: string
 }
 
-const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, teacherId }) => {
+const glassStyle = {
+  background:
+    'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,210,230,0.15) 50%, rgba(255,255,255,0.9) 100%)',
+  boxShadow:
+    '0 4px 16px rgba(0,140,210,0.06), inset 0 1px 1px rgba(255,255,255,0.9)',
+  border: '1px solid rgba(200,220,240,0.5)',
+}
+
+const DAYS_OF_WEEK = [
+  'ראשון',
+  'שני',
+  'שלישי',
+  'רביעי',
+  'חמישי',
+  'שישי',
+  'שבת',
+] as const
+
+const DURATION_OPTIONS = [
+  { value: '30', label: '30 דקות' },
+  { value: '45', label: '45 דקות' },
+  { value: '60', label: '60 דקות' },
+]
+
+const StudentManagementTab: React.FC<StudentManagementTabProps> = ({
+  teacher,
+  teacherId,
+}) => {
   const [students, setStudents] = useState<Student[]>([])
-  const [studentsWithLessons, setStudentsWithLessons] = useState<{ [key: string]: boolean }>({})
+  const [studentsWithLessons, setStudentsWithLessons] = useState<{
+    [key: string]: boolean
+  }>({})
   const [allStudents, setAllStudents] = useState<Student[]>([])
+  const [orchestraMap, setOrchestraMap] = useState<Map<string, { name: string; type: string; location: string; day?: string; time?: string }>>(new Map())
+  const [studentOrchestras, setStudentOrchestras] = useState<Map<string, string[]>>(new Map())
   const [isLoading, setIsLoading] = useState(true)
-  const [isAddingStudent, setIsAddingStudent] = useState(false)
   const [selectedStudentId, setSelectedStudentId] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
-  const [isSchedulingLesson, setIsSchedulingLesson] = useState(false)
-  const [schedulingStudent, setSchedulingStudent] = useState<Student | null>(null)
+  const [schedulingStudent, setSchedulingStudent] = useState<Student | null>(
+    null
+  )
   const [lessonData, setLessonData] = useState({
     day: '',
     startTime: '',
-    duration: 30
+    duration: 30,
   })
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const addStudentModal = useDisclosure()
+  const scheduleLessonModal = useDisclosure()
+
   // Check if student has active lessons with this teacher (using existing student data)
   const checkStudentHasLessons = (student: any): boolean => {
     try {
-      const hasActiveAssignment = student.teacherAssignments?.some((assignment: any) => 
-        assignment.teacherId === teacherId && assignment.isActive === true
+      const hasActiveAssignment = student.teacherAssignments?.some(
+        (assignment: any) =>
+          assignment.teacherId === teacherId && assignment.isActive === true
       )
       return hasActiveAssignment || false
     } catch (error) {
@@ -68,32 +141,76 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
       try {
         setIsLoading(true)
 
-        console.log('📚 StudentManagementTab - Fetching students for teacher:', {
-          teacherId,
-          teacherName: getDisplayName(teacher.personalInfo)
+        console.log(
+          '📚 StudentManagementTab - Fetching students for teacher:',
+          {
+            teacherId,
+            teacherName: getDisplayName(teacher.personalInfo),
+          }
+        )
+
+        // Fetch all students first (needed for add-student dropdown AND class data)
+        const allStudentsData = await apiService.students.getStudents()
+        setAllStudents(allStudentsData)
+
+        // Build lookup map for full student data (has real class, phone, etc.)
+        const studentMap = new Map<string, any>()
+        allStudentsData.forEach((s: any) => studentMap.set(s._id, s))
+
+        const validStudents =
+          await apiService.teachers.getTeacherStudents(teacherId)
+        console.log(
+          '✅ StudentManagementTab - Fetched students:',
+          validStudents.length
+        )
+
+        // Enrich teacher students with full data from allStudents
+        const enrichedStudents = validStudents.map((s: any) => {
+          const full = studentMap.get(s._id)
+          if (full) {
+            return {
+              ...s,
+              personalInfo: full.personalInfo || s.personalInfo,
+              academicInfo: full.academicInfo || s.academicInfo,
+              primaryInstrument: s.primaryInstrument || full.primaryInstrument || full.academicInfo?.instrumentProgress?.[0]?.instrumentName || '',
+            }
+          }
+          return s
         })
+        setStudents(enrichedStudents)
 
-        // Use dedicated endpoint to get teacher's students
-        // apiService normalizes the backend response into standard student shape
-        const validStudents = await apiService.teachers.getTeacherStudents(teacherId)
-        console.log('✅ StudentManagementTab - Fetched students:', validStudents.length)
-        setStudents(validStudents)
-
-        // Check which students have active lessons with this teacher
         const lessonStatusMap: { [key: string]: boolean } = {}
-        validStudents.forEach((student: any) => {
+        enrichedStudents.forEach((student: any) => {
           lessonStatusMap[student._id] =
-            (student.lessons?.length > 0) ||
-            student.teacherAssignments?.some((a: any) =>
-              a.teacherId === teacherId && a.isActive === true
+            student.lessons?.length > 0 ||
+            student.teacherAssignments?.some(
+              (a: any) => a.teacherId === teacherId && a.isActive === true
             ) ||
             false
         })
         setStudentsWithLessons(lessonStatusMap)
 
-        // Fetch all students for the add student dropdown
-        const allStudentsData = await apiService.students.getStudents()
-        setAllStudents(allStudentsData)
+        // Fetch orchestras to show ensemble enrollments
+        try {
+          const orchestras = await apiService.orchestras?.getOrchestras?.() || []
+          const oMap = new Map<string, { name: string; type: string; location: string }>()
+          const sMap = new Map<string, string[]>()
+          orchestras.forEach((o: any) => {
+            oMap.set(o._id, { name: o.name, type: o.type, location: o.location || '' })
+            // Map students to their orchestras via memberIds
+            if (o.memberIds?.length) {
+              o.memberIds.forEach((memberId: string) => {
+                const existing = sMap.get(memberId) || []
+                existing.push(o._id)
+                sMap.set(memberId, existing)
+              })
+            }
+          })
+          setOrchestraMap(oMap)
+          setStudentOrchestras(sMap)
+        } catch {
+          // Orchestras not critical — silently ignore
+        }
       } catch (error) {
         console.error('❌ Error fetching students:', error)
       } finally {
@@ -141,13 +258,13 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
-        setHighlightedIndex(prev => 
+        setHighlightedIndex(prev =>
           prev < filteredStudents.length - 1 ? prev + 1 : 0
         )
         break
       case 'ArrowUp':
         e.preventDefault()
-        setHighlightedIndex(prev => 
+        setHighlightedIndex(prev =>
           prev > 0 ? prev - 1 : filteredStudents.length - 1
         )
         break
@@ -169,13 +286,16 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
     if (!selectedStudentId) return
 
     try {
-      await apiService.teachers.addStudentToTeacher(teacherId, selectedStudentId)
-      
-      // Refresh students list
-      const newStudent = await apiService.students.getStudentById(selectedStudentId)
+      await apiService.teachers.addStudentToTeacher(
+        teacherId,
+        selectedStudentId
+      )
+
+      const newStudent =
+        await apiService.students.getStudentById(selectedStudentId)
       setStudents(prev => [...prev, newStudent])
-      
-      setIsAddingStudent(false)
+
+      addStudentModal.onClose()
       setSelectedStudentId('')
       setSearchTerm('')
     } catch (error) {
@@ -185,15 +305,20 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
   const handleRemoveStudent = async (studentId: string) => {
     const student = students.find(s => s._id === studentId)
-    const studentName = getDisplayName(student?.personalInfo) || 'התלמיד'
-    const teacherName = getDisplayName(teacher.personalInfo) || 'המורה'
-    
-    if (!confirm(`האם אתה בטוח שברצונך להסיר את ${studentName} מרשימת התלמידים של ${teacherName}?\n\nפעולה זו תנתק את הקשר בין התלמיד למורה אך לא תמחק את פרטי התלמיד מהמערכת.`)) return
+    const studentName =
+      getDisplayName(student?.personalInfo) || 'התלמיד'
+    const teacherName =
+      getDisplayName(teacher.personalInfo) || 'המורה'
+
+    if (
+      !confirm(
+        `האם אתה בטוח שברצונך להסיר את ${studentName} מרשימת התלמידים של ${teacherName}?\n\nפעולה זו תנתק את הקשר בין התלמיד למורה אך לא תמחק את פרטי התלמיד מהמערכת.`
+      )
+    )
+      return
 
     try {
       await apiService.teachers.removeStudentFromTeacher(teacherId, studentId)
-      
-      // Remove from local state
       setStudents(prev => prev.filter(student => student._id !== studentId))
     } catch (error) {
       console.error('Error removing student:', error)
@@ -202,12 +327,8 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
   const handleScheduleLesson = (student: Student) => {
     setSchedulingStudent(student)
-    setIsSchedulingLesson(true)
-    setLessonData({
-      day: '',
-      startTime: '',
-      duration: 30
-    })
+    setLessonData({ day: '', startTime: '', duration: 30 })
+    scheduleLessonModal.onOpen()
   }
 
   const handleSaveLesson = async () => {
@@ -217,76 +338,55 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
     }
 
     try {
-      console.log('🔄 Creating lesson for student:', getDisplayName(schedulingStudent.personalInfo))
-      
-      // Calculate end time
-      const calculateEndTime = (startTime: string, duration: number): string => {
-        const [hours, minutes] = startTime.split(':').map(Number)
-        const totalMinutes = hours * 60 + minutes + duration
-        const endHours = Math.floor(totalMinutes / 60)
-        const endMins = totalMinutes % 60
-        return `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`
-      }
+      console.log(
+        '🔄 Creating lesson for student:',
+        getDisplayName(schedulingStudent.personalInfo)
+      )
 
-      // Get current student data
-      const currentStudent = await apiService.students.getStudentById(schedulingStudent._id)
-      console.log('📋 Current student data loaded:', getDisplayName(currentStudent.personalInfo))
+      const currentStudent = await apiService.students.getStudentById(
+        schedulingStudent._id
+      )
+      console.log(
+        '📋 Current student data loaded:',
+        getDisplayName(currentStudent.personalInfo)
+      )
 
-      // Get primary instrument
-      const primaryInstrument = currentStudent.academicInfo?.instrumentProgress?.find(
-        (instrument: any) => instrument.isPrimary
-      )?.instrumentName || 'כלי נגינה'
-
-      // Create the teacher assignment matching the exact backend structure
-      // Backend expects: { teacherId, day, time, duration, location, isActive }
       const newAssignment = {
         teacherId: teacherId,
         day: lessonData.day,
-        time: lessonData.startTime, // HH:MM format
-        duration: lessonData.duration, // minutes
-        location: '', // Empty string for now, can be filled later
-        isActive: true
+        time: lessonData.startTime,
+        duration: lessonData.duration,
+        location: '',
+        isActive: true,
       }
 
-      // Add the new assignment to the existing teacher assignments
-      const updatedAssignments = [...(currentStudent.teacherAssignments || []), newAssignment]
+      const updatedAssignments = [
+        ...(currentStudent.teacherAssignments || []),
+        newAssignment,
+      ]
 
       console.log('📤 Adding new teacher assignment:', newAssignment)
       console.log('📝 All assignments to be saved:', updatedAssignments)
 
-      // Update the student record with teacher assignments
-      // Backend will handle teacher-student relationship sync automatically
-      const updateData = {
-        teacherAssignments: updatedAssignments
-      }
-
+      const updateData = { teacherAssignments: updatedAssignments }
       console.log('📤 Sending update data:', updateData)
 
-      // Update the student record
-      const result = await apiService.students.updateStudent(schedulingStudent._id, updateData)
-
+      await apiService.students.updateStudent(schedulingStudent._id, updateData)
       console.log('✅ Student updated with new lesson assignment')
 
-      // Update the lesson status for this student
       setStudentsWithLessons(prev => ({
         ...prev,
-        [schedulingStudent._id]: true
+        [schedulingStudent._id]: true,
       }))
 
-      // Close modal and reset
-      setIsSchedulingLesson(false)
+      scheduleLessonModal.onClose()
       setSchedulingStudent(null)
       setLessonData({ day: '', startTime: '', duration: 30 })
-
-      // Success is already logged to console
-      // TODO: Add toast notification here later
-
     } catch (error) {
       console.error('❌ Failed to schedule lesson:', error)
-      
-      // Provide more specific error messages based on the error type
+
       let errorMessage = 'שגיאה בקביעת השיעור. אנא נסה שוב.'
-      
+
       if (error.message.includes('Authentication failed')) {
         errorMessage = 'פג תוקף הפנייה. אנא התחבר מחדש.'
       } else if (error.message.includes('validation')) {
@@ -298,25 +398,23 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
       } else if (error.message.includes('שגיאה בשמירת הנתונים')) {
         errorMessage = 'שגיאה בשמירת הנתונים במסד הנתונים. אנא נסה שוב.'
       }
-      
+
       alert(errorMessage)
-      
-      // Log detailed error information for debugging
+
       console.error('Error details:', {
         message: error.message,
         stack: error.stack,
         studentId: schedulingStudent._id,
         teacherId: teacherId,
-        lessonData: lessonData
+        lessonData: lessonData,
       })
     }
   }
 
   // Get available students (not already assigned to this teacher)
-  // Use the students state (from lessons API) instead of teacher.teaching.studentIds
   const assignedStudentIds = students.map(s => s._id)
-  const availableStudents = allStudents.filter(student =>
-    !assignedStudentIds.includes(student._id)
+  const availableStudents = allStudents.filter(
+    student => !assignedStudentIds.includes(student._id)
   )
 
   // Filter students based on search term
@@ -333,7 +431,10 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false)
         setHighlightedIndex(-1)
       }
@@ -345,21 +446,24 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
 
   // Reset search and dropdown when modal closes
   useEffect(() => {
-    if (!isAddingStudent) {
+    if (!addStudentModal.isOpen) {
       setSearchTerm('')
       setSelectedStudentId('')
       setShowDropdown(false)
       setHighlightedIndex(-1)
     }
-  }, [isAddingStudent])
+  }, [addStudentModal.isOpen])
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <div className="h-6 bg-gray-200 rounded animate-pulse w-1/3"></div>
-        <div className="space-y-3">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-16 bg-gray-200 rounded animate-pulse"></div>
+      <div className="space-y-4 p-6">
+        <div className="h-6 bg-gray-200 rounded animate-pulse w-1/3" />
+        <div className="space-y-2">
+          {[1, 2, 3, 4].map(i => (
+            <div
+              key={i}
+              className="h-14 bg-gray-100 rounded-card animate-pulse"
+            />
           ))}
         </div>
       </div>
@@ -369,322 +473,478 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({ teacher, te
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => setIsAddingStudent(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all shadow-sm font-medium"
+      <div className="flex items-center justify-between">
+        <Button
+          color="primary"
+          size="sm"
+          startContent={<PlusIcon className="w-4 h-4" />}
+          onPress={addStudentModal.onOpen}
         >
-          <PlusIcon className="w-4 h-4" />
           הוסף תלמיד
-        </button>
+        </Button>
+        <div className="flex items-center gap-3">
+          {students.length > 0 && (
+            <Chip size="sm" variant="flat" color="primary">
+              {students.length}
+            </Chip>
+          )}
+          <h2 className="text-lg font-semibold text-foreground">
+            ניהול תלמידים
+          </h2>
+        </div>
       </div>
 
       {/* Add Student Modal */}
-      {isAddingStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 teacher-modal-backdrop">
-          <div className="bg-white rounded p-6 w-full max-w-md transform transition-all teacher-modal-container">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">הוסף תלמיד חדש</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-semibold text-gray-800 teacher-modal-label">
-                    חפש ובחר תלמיד
-                  </label>
-                  <div className="text-xs text-gray-500">
-                    ↑↓ לניווט • Enter לבחירה • Esc לסגירה
-                  </div>
-                </div>
-                <div className="relative" ref={dropdownRef}>
-                  {/* MagnifyingGlassIcon Input */}
-                  <div className="relative">
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => handleSearchChange(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      onFocus={() => setShowDropdown(true)}
-                      placeholder="הקלד שם תלמיד או כיתה..."
-                      className="w-full pr-10 py-3 border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-gray-900 bg-white teacher-search-input"
-                      style={{ paddingLeft: searchTerm ? '2.5rem' : '2.5rem' }}
-                    />
-                    {searchTerm ? (
-                      <button
-                        onClick={handleClearSearch}
-                        className="absolute inset-y-0 left-0 pl-3 flex items-center hover:bg-gray-50 rounded-r-lg"
-                      >
-                        <XIcon className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                      </button>
-                    ) : (
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <CaretDownIcon className={`h-4 w-4 text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                      </div>
-                    )}
+      <Modal
+        isOpen={addStudentModal.isOpen}
+        onOpenChange={addStudentModal.onOpenChange}
+        placement="center"
+        size="md"
+      >
+        <ModalContent>
+          {onClose => (
+            <>
+              <ModalHeader className="text-center justify-center">
+                הוסף תלמיד חדש
+              </ModalHeader>
+              <ModalBody>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-foreground">
+                      חפש ובחר תלמיד
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      ↑↓ לניווט &bull; Enter לבחירה &bull; Esc לסגירה
+                    </span>
                   </div>
 
-                  {/* Dropdown */}
-                  {showDropdown && (
-                    <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded shadow-lg max-h-60 overflow-y-auto teacher-search-dropdown teacher-dropdown-enter">
-                      {filteredStudents.length > 0 ? (
-                        <>
-                          {filteredStudents.map((student, index) => (
-                            <button
-                              key={student._id}
-                              onClick={() => handleStudentSelect(student)}
-                              className={`w-full text-right px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 teacher-search-option ${
-                                index === highlightedIndex ? 'bg-muted text-foreground highlighted' : 'text-gray-900'
-                              } ${selectedStudentId === student._id ? 'bg-muted/80 text-foreground font-medium' : ''}`}
-                            >
-                              <div className="flex justify-between items-center">
-                                <span className="font-medium">
-                                  {getDisplayName(student.personalInfo)}
-                                </span>
-                                <span className="text-sm text-gray-500">
-                                  כיתה {student.academicInfo?.class || 'לא צוין'}
-                                </span>
-                              </div>
-                            </button>
-                          ))}
-                        </>
+                  <div className="relative" ref={dropdownRef}>
+                    {/* Search input */}
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-10">
+                        <MagnifyingGlassIcon className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={searchTerm}
+                        onChange={e => handleSearchChange(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        onFocus={() => setShowDropdown(true)}
+                        placeholder="הקלד שם תלמיד או כיתה..."
+                        className="w-full pr-10 pl-10 py-2.5 border border-border rounded-card focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground bg-white text-sm"
+                      />
+                      {searchTerm ? (
+                        <button
+                          onClick={handleClearSearch}
+                          className="absolute inset-y-0 left-0 pl-3 flex items-center"
+                        >
+                          <XIcon className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                        </button>
                       ) : (
-                        <div className="px-4 py-3 text-gray-500 text-center">
-                          {searchTerm ? 'לא נמצאו תלמידים' : 'אין תלמידים זמינים'}
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <CaretDownIcon
+                            className={`h-4 w-4 text-muted-foreground transition-transform ${showDropdown ? 'rotate-180' : ''}`}
+                          />
                         </div>
                       )}
                     </div>
-                  )}
+
+                    {/* Dropdown */}
+                    {showDropdown && (
+                      <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded-card shadow-lg max-h-60 overflow-y-auto">
+                        {filteredStudents.length > 0 ? (
+                          filteredStudents.map((student, index) => {
+                            const name = getDisplayName(student.personalInfo)
+                            return (
+                              <button
+                                key={student._id}
+                                onClick={() => handleStudentSelect(student)}
+                                className={`w-full text-right px-4 py-2.5 border-b border-gray-100 last:border-b-0 transition-colors ${
+                                  index === highlightedIndex
+                                    ? 'bg-primary/10 text-foreground'
+                                    : 'hover:bg-gray-50 text-foreground'
+                                } ${selectedStudentId === student._id ? 'bg-primary/5 font-medium' : ''}`}
+                              >
+                                <div className="flex justify-between items-center">
+                                  <span className="font-medium text-sm">
+                                    {name}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    כיתה {student.academicInfo?.class || 'לא צוין'}
+                                  </span>
+                                </div>
+                              </button>
+                            )
+                          })
+                        ) : (
+                          <div className="px-4 py-3 text-muted-foreground text-center text-sm">
+                            {searchTerm
+                              ? 'לא נמצאו תלמידים'
+                              : 'אין תלמידים זמינים'}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex gap-3 teacher-modal-buttons">
-                <button
-                  onClick={handleAddStudent}
-                  disabled={!selectedStudentId}
-                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed shadow-sm font-medium teacher-modal-button"
-                >
-                  הוסף
-                </button>
-                <button
-                  onClick={() => {
-                    setIsAddingStudent(false)
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  variant="flat"
+                  onPress={() => {
+                    onClose()
                     setSelectedStudentId('')
                   }}
-                  className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-muted/80 focus:ring-2 focus:ring-border focus:ring-offset-2 transition-all font-medium teacher-modal-button"
                 >
                   בטל
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+                </Button>
+                <Button
+                  color="primary"
+                  isDisabled={!selectedStudentId}
+                  onPress={handleAddStudent}
+                >
+                  הוסף
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 
       {/* Schedule Lesson Modal */}
-      {isSchedulingLesson && schedulingStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded p-6 w-full max-w-md transform transition-all">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">
-              קביעת שיעור שבועי
-            </h3>
-            
-            {/* Student Info */}
-            <div className="bg-blue-50 p-4 rounded mb-6">
-              <h4 className="font-medium text-blue-900 mb-2">פרטי התלמיד</h4>
-              <div className="text-sm text-blue-800">
-                <div><strong>שם:</strong> {getDisplayName(schedulingStudent.personalInfo)}</div>
-                <div><strong>כיתה:</strong> {schedulingStudent.academicInfo?.class || 'לא צוין'}</div>
-                <div><strong>כלי נגינה:</strong> {schedulingStudent.primaryInstrument || 'לא צוין'}</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              {/* Day Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  יום השבוע
-                </label>
-                <select
-                  value={lessonData.day}
-                  onChange={(e) => setLessonData(prev => ({ ...prev, day: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
-                  required
-                >
-                  <option value="">בחר יום</option>
-                  <option value="ראשון">ראשון</option>
-                  <option value="שני">שני</option>
-                  <option value="שלישי">שלישי</option>
-                  <option value="רביעי">רביעי</option>
-                  <option value="חמישי">חמישי</option>
-                  <option value="שישי">שישי</option>
-                  <option value="שבת">שבת</option>
-                </select>
-              </div>
+      <Modal
+        isOpen={scheduleLessonModal.isOpen}
+        onOpenChange={scheduleLessonModal.onOpenChange}
+        placement="center"
+        size="md"
+      >
+        <ModalContent>
+          {onClose => (
+            <>
+              <ModalHeader className="text-center justify-center">
+                קביעת שיעור שבועי
+              </ModalHeader>
+              <ModalBody>
+                {schedulingStudent && (
+                  <div className="space-y-4">
+                    {/* Student info strip */}
+                    <div
+                      className="rounded-card p-3 flex items-center gap-3"
+                      style={glassStyle}
+                    >
+                      <User
+                        name={getDisplayName(schedulingStudent.personalInfo)}
+                        description={`כיתה ${schedulingStudent.academicInfo?.class || 'לא צוין'} • ${schedulingStudent.primaryInstrument || 'לא צוין'}`}
+                        avatarProps={{
+                          style: {
+                            backgroundColor: getAvatarColorHex(
+                              getDisplayName(schedulingStudent.personalInfo)
+                            ),
+                          },
+                          classNames: { base: 'text-white' },
+                        }}
+                      />
+                    </div>
 
-              {/* Time and Duration */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    זמן התחלה
-                  </label>
-                  <input
-                    type="time"
-                    value={lessonData.startTime}
-                    onChange={(e) => setLessonData(prev => ({ ...prev, startTime: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    משך (דקות)
-                  </label>
-                  <select
-                    value={lessonData.duration}
-                    onChange={(e) => setLessonData(prev => ({ ...prev, duration: Number(e.target.value) }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent"
-                  >
-                    <option value={30}>30 דקות</option>
-                    <option value={45}>45 דקות</option>
-                    <option value={60}>60 דקות</option>
-                  </select>
-                </div>
-              </div>
-              
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-6 border-t">
-                <button
-                  onClick={handleSaveLesson}
-                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium"
-                >
-                  קבע שיעור
-                </button>
-                <button
-                  onClick={() => {
-                    setIsSchedulingLesson(false)
+                    {/* Day selection */}
+                    <Select
+                      label="יום השבוע"
+                      placeholder="בחר יום"
+                      selectedKeys={lessonData.day ? [lessonData.day] : []}
+                      onSelectionChange={keys => {
+                        const val = Array.from(keys)[0] as string
+                        setLessonData(prev => ({ ...prev, day: val || '' }))
+                      }}
+                      isRequired
+                    >
+                      {DAYS_OF_WEEK.map(day => (
+                        <SelectItem key={day}>{day}</SelectItem>
+                      ))}
+                    </Select>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Start time */}
+                      <Input
+                        type="time"
+                        label="זמן התחלה"
+                        value={lessonData.startTime}
+                        onChange={e =>
+                          setLessonData(prev => ({
+                            ...prev,
+                            startTime: e.target.value,
+                          }))
+                        }
+                        isRequired
+                      />
+
+                      {/* Duration */}
+                      <Select
+                        label="משך (דקות)"
+                        selectedKeys={[String(lessonData.duration)]}
+                        onSelectionChange={keys => {
+                          const val = Array.from(keys)[0] as string
+                          setLessonData(prev => ({
+                            ...prev,
+                            duration: Number(val) || 30,
+                          }))
+                        }}
+                      >
+                        {DURATION_OPTIONS.map(opt => (
+                          <SelectItem key={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </div>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  variant="flat"
+                  onPress={() => {
+                    onClose()
                     setSchedulingStudent(null)
                     setLessonData({ day: '', startTime: '', duration: 30 })
                   }}
-                  className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-muted/80 transition-colors font-medium"
                 >
                   ביטול
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+                </Button>
+                <Button color="success" onPress={handleSaveLesson}>
+                  קבע שיעור
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 
-      {/* Students List */}
+      {/* Students Table / Empty State */}
       {students.length === 0 ? (
-        <div className="text-center py-12 bg-muted/30 rounded">
-          <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">אין תלמידים משויכים</h3>
-          <p className="text-gray-600 mb-4">
-            עדיין לא שויכו תלמידים למורה זה
-          </p>
-          <button
-            onClick={() => setIsAddingStudent(true)}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all shadow-sm font-medium"
+        <div
+          className="rounded-card p-12 flex flex-col items-center gap-4 text-center"
+          style={glassStyle}
+        >
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <UsersIcon className="w-7 h-7 text-primary" />
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-foreground mb-1">
+              אין תלמידים משויכים
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              עדיין לא שויכו תלמידים למורה זה
+            </p>
+          </div>
+          <Button
+            color="primary"
+            size="sm"
+            startContent={<PlusIcon className="w-4 h-4" />}
+            onPress={addStudentModal.onOpen}
           >
             הוסף תלמיד ראשון
-          </button>
+          </Button>
         </div>
       ) : (
-        <div className="grid gap-4">
-          {students.map(student => (
-            <div
-              key={student._id}
-              className="bg-background border border-border rounded p-4 transition-colors hover:bg-muted/20"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <UserIcon className="w-6 h-6 text-blue-600" />
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium text-gray-900">
-                      {getDisplayName(student.personalInfo) || 'ללא שם'}
-                    </h4>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span>כיתה {student.academicInfo?.class || 'לא צוין'}</span>
-                      <span>•</span>
-                      <span>{student.primaryInstrument || 'ללא כלי'}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  {/* Only show Schedule Lesson button if student doesn't have active lessons with this teacher */}
-                  {!studentsWithLessons[student._id] && (
-                    <button
-                      onClick={() => handleScheduleLesson(student)}
-                      className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-all font-medium flex items-center gap-1"
+        <Table
+          aria-label="רשימת תלמידים"
+          isHeaderSticky
+          classNames={{
+            base: 'flex-1 min-h-0',
+            wrapper: 'bg-white/70 shadow-none backdrop-blur-sm rounded-card',
+            th: 'bg-default-100 text-default-600',
+            thead: '[&>tr]:border-b-0',
+            tr: 'transition-colors duration-150 hover:bg-primary/5 cursor-pointer',
+            td: 'py-3',
+          }}
+        >
+          <TableHeader>
+            <TableColumn>תלמיד</TableColumn>
+            <TableColumn>כלי נגינה</TableColumn>
+            <TableColumn>כיתה</TableColumn>
+            <TableColumn>הרכבים</TableColumn>
+            <TableColumn>סטטוס</TableColumn>
+            <TableColumn>פעולות</TableColumn>
+          </TableHeader>
+          <TableBody emptyContent="אין תלמידים להצגה">
+            {students.map(student => {
+              const name = getDisplayName(student.personalInfo) || 'ללא שם'
+              const avatarColor = getAvatarColorHex(name)
+              const hasLesson = studentsWithLessons[student._id]
+              const phone = student.personalInfo?.phone || ''
+              const instrument = student.primaryInstrument || ''
+              const className = student.academicInfo?.class ? `כיתה ${student.academicInfo.class}` : ''
+              const descParts = [instrument, className, phone].filter(Boolean)
+              const description = descParts.join(' · ') || undefined
+
+              return (
+                <TableRow
+                  key={student._id}
+                  onClick={() => window.location.href = `/students/${student._id}`}
+                >
+                  <TableCell>
+                    <User
+                      avatarProps={{
+                        radius: 'full',
+                        size: 'md',
+                        showFallback: true,
+                        name: name,
+                        style: { backgroundColor: avatarColor, color: '#fff' },
+                      }}
+                      description={description}
+                      name={name}
+                    />
+                  </TableCell>
+
+                  <TableCell>
+                    {student.primaryInstrument ? (
+                      <Chip size="sm" variant="flat" color="secondary">
+                        {student.primaryInstrument}
+                      </Chip>
+                    ) : (
+                      <span className="text-default-400">—</span>
+                    )}
+                  </TableCell>
+
+                  <TableCell>
+                    <span className="text-sm text-foreground">
+                      {student.academicInfo?.class
+                        ? `כיתה ${student.academicInfo.class}`
+                        : '—'}
+                    </span>
+                  </TableCell>
+
+                  <TableCell>
+                    {(() => {
+                      const orchIds = studentOrchestras.get(student._id) || []
+                      if (orchIds.length === 0) return <span className="text-default-400">—</span>
+                      return (
+                        <div className="flex flex-wrap gap-1">
+                          {orchIds.map((orchId) => {
+                            const orch = orchestraMap.get(orchId)
+                            if (!orch) return null
+                            return (
+                              <Popover key={orchId} placement="bottom">
+                                <PopoverTrigger>
+                                  <Chip
+                                    size="sm"
+                                    variant="flat"
+                                    color={orch.type === 'תזמורת' ? 'primary' : 'secondary'}
+                                    className="cursor-pointer"
+                                    startContent={<MusicNotesIcon className="w-3 h-3" />}
+                                  >
+                                    {orch.name}
+                                  </Chip>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <div className="p-3 min-w-[180px] space-y-2">
+                                    <p className="text-sm font-bold text-foreground">{orch.name}</p>
+                                    <div className="space-y-1.5 text-xs text-muted-foreground">
+                                      <div className="flex items-center gap-1.5">
+                                        <MusicNotesIcon className="w-3.5 h-3.5 text-primary" />
+                                        <span>{orch.type}</span>
+                                      </div>
+                                      {orch.location && (
+                                        <div className="flex items-center gap-1.5">
+                                          <MapPinIcon className="w-3.5 h-3.5 text-primary" />
+                                          <span>{orch.location}</span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </PopoverContent>
+                              </Popover>
+                            )
+                          })}
+                        </div>
+                      )
+                    })()}
+                  </TableCell>
+
+                  <TableCell>
+                    <Chip
+                      size="sm"
+                      variant="flat"
+                      color={hasLesson ? 'success' : 'warning'}
                     >
-                      <BookOpenIcon className="w-4 h-4" />
-                      קבע שיעור
-                    </button>
-                  )}
-                  
-                  <button
-                    onClick={() => window.location.href = `/students/${student._id}`}
-                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all font-medium"
-                  >
-                    צפה בפרטים
-                  </button>
-                  <button
-                    onClick={() => handleRemoveStudent(student._id)}
-                    className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all font-medium flex items-center gap-1"
-                  >
-                    <TrashIcon className="w-4 h-4" />
-                    הסר
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                      {hasLesson ? 'יש שיעור' : 'אין שיעור'}
+                    </Chip>
+                  </TableCell>
+
+                  <TableCell>
+                    <div className="flex items-center justify-end gap-0.5" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                        onClick={() => window.location.href = `/students/${student._id}`}
+                        title="צפה בפרטי התלמיד"
+                      >
+                        <ArrowUpRightIcon size={15} weight="regular" />
+                      </button>
+                      {!hasLesson && (
+                        <button
+                          className="p-1.5 rounded-md text-slate-400 hover:text-green-500 hover:bg-green-50 transition-colors"
+                          onClick={() => handleScheduleLesson(student)}
+                          title="קבע שיעור"
+                        >
+                          <BookOpenIcon size={15} weight="regular" />
+                        </button>
+                      )}
+                      <button
+                        className="p-1.5 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        onClick={() => handleRemoveStudent(student._id)}
+                        title="הסר תלמיד"
+                      >
+                        <UserMinusIcon size={15} weight="regular" />
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
       )}
 
-      {/* Schedule Overview for Students */}
+      {/* Schedule Overview */}
       {students.length > 0 && (
-        <div className="bg-muted/30 rounded p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <CalendarIcon className="w-5 h-5" />
+        <div className="rounded-card p-5" style={glassStyle}>
+          <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+            <CalendarIcon className="w-5 h-5 text-primary" />
             סקירת לוח זמנים
           </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {teacher.teaching?.timeBlocks?.map((timeBlock, index) => (
-              <div key={timeBlock._id || index} className="bg-background rounded p-4 border border-border">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium text-gray-900">{timeBlock.day}</span>
-                  <span className="text-sm text-gray-600 flex items-center gap-1">
-                    <ClockIcon className="w-4 h-4" />
-                    {Math.round(timeBlock.totalDuration / 60)} שעות
-                  </span>
-                </div>
-                <div className="text-sm text-gray-600">
-                  {timeBlock.startTime} - {timeBlock.endTime}
-                </div>
-                {timeBlock.location && (
-                  <div className="text-sm text-gray-500 mt-1">
-                    📍 {timeBlock.location}
-                  </div>
-                )}
-                <div className="text-xs text-blue-600 mt-2">
-                  {timeBlock.assignedLessons?.length || 0} שיעורים מתוכננים
-                </div>
-              </div>
-            ))}
-          </div>
 
-          {(!teacher.teaching?.timeBlocks || teacher.teaching.timeBlocks.length === 0) && (
-            <div className="text-center text-gray-500 py-4">
+          {teacher.teaching?.timeBlocks &&
+          teacher.teaching.timeBlocks.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {teacher.teaching.timeBlocks.map((timeBlock, index) => (
+                <div
+                  key={timeBlock._id || index}
+                  className="rounded-card p-3 bg-white/60 border border-border/40"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium text-sm text-foreground">
+                      {timeBlock.day}
+                    </span>
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <ClockIcon className="w-3.5 h-3.5" />
+                      {Math.round(timeBlock.totalDuration / 60)} שעות
+                    </span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {timeBlock.startTime} - {timeBlock.endTime}
+                  </div>
+                  {timeBlock.location && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {timeBlock.location}
+                    </div>
+                  )}
+                  <div className="text-xs text-primary mt-1.5">
+                    {timeBlock.assignedLessons?.length || 0} שיעורים מתוכננים
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-sm text-muted-foreground py-4">
               אין בלוקי זמן מוגדרים עדיין
             </div>
           )}

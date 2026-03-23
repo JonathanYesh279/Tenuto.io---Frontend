@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Door as DoorIcon } from '@phosphor-icons/react'
+import { SquaresFour as RoomIcon } from '@phosphor-icons/react'
 import { roomScheduleService } from '../../../services/apiService'
 import { VerticalAutoScroll } from '../../animations/VerticalAutoScroll'
 
@@ -147,7 +147,7 @@ export function VacantRoomsWidget() {
       {roomStatuses.length === 0 ? (
         <p className="text-center text-sm text-slate-400 py-8">אין נתוני חדרים</p>
       ) : (
-        <VerticalAutoScroll speed={15} height={220}>
+        <VerticalAutoScroll speed={15} height={220} itemCount={roomStatuses.length}>
           <div className="space-y-3">
             {roomStatuses.map((room) => (
               <div
@@ -163,7 +163,7 @@ export function VacantRoomsWidget() {
                     ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600'
                     : 'bg-slate-100 dark:bg-slate-700 text-slate-400'
                 }`}>
-                  <DoorIcon size={16} weight={room.isVacant ? 'fill' : 'regular'} />
+                  <RoomIcon size={16} weight={room.isVacant ? 'fill' : 'regular'} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">

@@ -24,8 +24,8 @@ function StatCard({
   if (loading) {
     return (
       <div className="bg-white rounded-card border border-border p-4 text-center animate-pulse">
-        <div className="h-7 w-10 bg-gray-200 rounded mx-auto mb-1" />
-        <div className="h-4 w-20 bg-gray-100 rounded mx-auto" />
+        <div className="h-7 w-10 bg-muted rounded mx-auto mb-1" />
+        <div className="h-4 w-20 bg-muted rounded mx-auto" />
       </div>
     )
   }

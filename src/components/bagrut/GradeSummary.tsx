@@ -1,9 +1,7 @@
 import React from 'react';
-import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/badge';
-
 import { Bagrut, DirectorEvaluation } from '@/types/bagrut.types';
-import { CalculatorIcon, MedalIcon, StarIcon, TrophyIcon, WarningIcon } from '@phosphor-icons/react'
+import { WarningIcon } from '@phosphor-icons/react';
 
 interface ValidationError {
   field: string;
@@ -12,24 +10,10 @@ interface ValidationError {
 }
 
 interface CompletionStatus {
-  presentations: {
-    completed: number;
-    total: number;
-    percentage: number;
-  };
-  programPieces: {
-    completed: number;
-    required: number;
-    percentage: number;
-  };
-  directorEvaluation: {
-    completed: boolean;
-    percentage: number;
-  };
-  overall: {
-    percentage: number;
-    canComplete: boolean;
-  };
+  presentations: { completed: number; total: number; percentage: number };
+  programPieces: { completed: number; required: number; percentage: number };
+  directorEvaluation: { completed: boolean; percentage: number };
+  overall: { percentage: number; canComplete: boolean };
 }
 
 interface GradeSummaryProps {
@@ -38,251 +22,139 @@ interface GradeSummaryProps {
   validationErrors: ValidationError[];
 }
 
+const GRADE_SCALE = [
+  { level: 'מצוין', range: '95-100', min: 95 },
+  { level: 'טוב מאוד', range: '85-94', min: 85 },
+  { level: 'טוב', range: '75-84', min: 75 },
+  { level: 'כמעט טוב', range: '65-74', min: 65 },
+  { level: 'מספק', range: '55-64', min: 55 },
+  { level: 'כמעט מספק', range: '45-54', min: 45 },
+  { level: 'לא מספק', range: '35-44', min: 35 },
+  { level: 'גרוע', range: '0-34', min: 0 },
+];
+
 export const GradeSummary: React.FC<GradeSummaryProps> = ({
   bagrut,
   completionStatus,
   validationErrors,
 }) => {
-  const calculateFinalGrade = (): number => {
-    const magenPresentation = bagrut.presentations?.[3];
-    if (!magenPresentation?.grade) return 0;
-    
-    const performanceWeight = magenPresentation.grade * 0.9; // 90%
-    const directorWeight = (bagrut.directorEvaluation?.points || 0) * 0.1 * 10; // 10% (convert 0-10 to 0-100 scale)
-    
-    return Math.round(performanceWeight + directorWeight);
-  };
-
-  const getGradeLevel = (score: number): { level: string; range: string; description: string } => {
-    const gradeCategories = [
-      { level: 'מצוין', range: '95-100', description: 'רמה יוצאת דופן', min: 95, color: 'bg-green-600' },
-      { level: 'טוב מאוד', range: '85-94', description: 'רמה גבוהה מאוד', min: 85, color: 'bg-green-500' },
-      { level: 'טוב', range: '75-84', description: 'רמה טובה', min: 75, color: 'bg-blue-500' },
-      { level: 'כמעט טוב', range: '65-74', description: 'רמה מעל הממוצע', min: 65, color: 'bg-blue-400' },
-      { level: 'מספק', range: '55-64', description: 'רמה מספקת', min: 55, color: 'bg-yellow-500' },
-      { level: 'כמעט מספק', range: '45-54', description: 'רמה מתחת לממוצע', min: 45, color: 'bg-orange-500' },
-      { level: 'לא מספק', range: '35-44', description: 'רמה נמוכה', min: 35, color: 'bg-red-500' },
-      { level: 'גרוע', range: '0-34', description: 'רמה לא מתאימה', min: 0, color: 'bg-red-600' },
-    ];
-
-    for (const category of gradeCategories) {
-      if (score >= category.min) {
-        return category;
-      }
-    }
-    
-    return gradeCategories[gradeCategories.length - 1];
-  };
-
-  const finalGrade = calculateFinalGrade();
-  const gradeInfo = getGradeLevel(finalGrade);
   const magenPresentation = bagrut.presentations?.[3];
-  const isComplete = !!(magenPresentation?.grade && bagrut.directorEvaluation?.points);
-  const hasErrors = validationErrors.filter(e => e.type === 'error').length > 0;
+  const magenGrade = magenPresentation?.grade;
+  const directorPoints = bagrut.directorEvaluation?.points;
+  const isComplete = !!(magenGrade && directorPoints);
 
-  const getAllGradeCategories = () => [
-    { level: 'מצוין', range: '95-100', description: 'רמה יוצאת דופן', color: 'bg-green-600' },
-    { level: 'טוב מאוד', range: '85-94', description: 'רמה גבוהה מאוד', color: 'bg-green-500' },
-    { level: 'טוב', range: '75-84', description: 'רמה טובה', color: 'bg-blue-500' },
-    { level: 'כמעט טוב', range: '65-74', description: 'רמה מעל הממוצע', color: 'bg-blue-400' },
-    { level: 'מספק', range: '55-64', description: 'רמה מספקת', color: 'bg-yellow-500' },
-    { level: 'כמעט מספק', range: '45-54', description: 'רמה מתחת לממוצע', color: 'bg-orange-500' },
-    { level: 'לא מספק', range: '35-44', description: 'רמה נמוכה', color: 'bg-red-500' },
-    { level: 'גרוע', range: '0-34', description: 'רמה לא מתאימה', color: 'bg-red-600' },
-  ];
+  const finalGrade = isComplete
+    ? Math.round(magenGrade! * 0.9 + directorPoints! * 1.0)
+    : 0;
+
+  const gradeLevel = GRADE_SCALE.find(g => finalGrade >= g.min) || GRADE_SCALE[GRADE_SCALE.length - 1];
 
   return (
-    <div className="space-y-6">
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-            <CalculatorIcon className="w-7 h-7 ml-3 text-blue-600" />
-            סיכום ציונים - בגרות במוסיקה
-          </h3>
-          {isComplete && (
-            <Badge variant="success" className="text-lg px-4 py-2">
-              <TrophyIcon className="w-5 h-5 ml-2" />
-              הושלם
-            </Badge>
-          )}
+    <div className="space-y-4">
+      {/* Compact grade overview — single row */}
+      <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+        {/* Magen Bagrut */}
+        <div className="col-span-1 bg-white rounded-card border border-border p-3 text-center">
+          <div className="text-[11px] text-muted-foreground font-medium mb-1">ציון מגן</div>
+          <div className="text-xl font-extrabold text-foreground tabular-nums">
+            {magenGrade ?? '--'}<span className="text-sm font-medium text-muted-foreground">/100</span>
+          </div>
+          <div className="text-[10px] text-muted-foreground">90% מהסופי</div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Performance Grade */}
-          <div className="text-center">
-            <div className="bg-blue-50 rounded p-4 border-2 border-blue-200">
-              <MedalIcon className="w-8 h-8 mx-auto text-blue-600 mb-2" />
-              <h4 className="font-semibold text-gray-900 mb-1">ציון מגן בגרות</h4>
-              <div className="text-3xl font-bold text-blue-800">
-                {magenPresentation?.grade !== undefined ? magenPresentation.grade : '--'}/100
-              </div>
-              <div className="text-sm text-gray-600 mt-1">
-                90% מהציון הסופי
-              </div>
-              {magenPresentation?.grade !== undefined && (
-                <div className="text-xs text-blue-700 mt-1">
-                  תרומה: {(magenPresentation.grade * 0.9).toFixed(1)} נקודות
-                </div>
-              )}
-            </div>
+        {/* Director */}
+        <div className="col-span-1 bg-white rounded-card border border-border p-3 text-center">
+          <div className="text-[11px] text-muted-foreground font-medium mb-1">הערכת מנהל</div>
+          <div className="text-xl font-extrabold text-foreground tabular-nums">
+            {directorPoints ?? '--'}<span className="text-sm font-medium text-muted-foreground">/10</span>
           </div>
+          <div className="text-[10px] text-muted-foreground">10% מהסופי</div>
+        </div>
 
-          {/* Director Evaluation */}
-          <div className="text-center">
-            <div className="bg-green-50 rounded p-4 border-2 border-green-200">
-              <StarIcon className="w-8 h-8 mx-auto text-green-600 mb-2" />
-              <h4 className="font-semibold text-gray-900 mb-1">הערכת המנהל/ת</h4>
-              <div className="text-3xl font-bold text-green-800">
-                {bagrut.directorEvaluation?.points !== undefined ? bagrut.directorEvaluation.points : '--'}/10
-              </div>
-              <div className="text-sm text-gray-600 mt-1">
-                10% מהציון הסופי
-              </div>
-              {bagrut.directorEvaluation?.points !== undefined && (
-                <div className="text-xs text-green-700 mt-1">
-                  תרומה: {(bagrut.directorEvaluation.points * 0.1 * 10).toFixed(1)} נקודות
-                </div>
-              )}
-            </div>
+        {/* Final */}
+        <div className={`col-span-1 rounded-card border p-3 text-center ${
+          isComplete ? 'bg-primary/5 border-primary/20' : 'bg-white border-border'
+        }`}>
+          <div className="text-[11px] text-muted-foreground font-medium mb-1">ציון סופי</div>
+          <div className={`text-xl font-extrabold tabular-nums ${isComplete ? 'text-primary' : 'text-foreground'}`}>
+            {isComplete ? finalGrade : '--'}<span className="text-sm font-medium text-muted-foreground">/100</span>
           </div>
+          {isComplete && <div className="text-[10px] text-primary font-medium">{gradeLevel.level}</div>}
+        </div>
 
-          {/* Final Grade */}
-          <div className="text-center">
-            <div className={`rounded p-4 border-2 ${
-              isComplete ? `${gradeInfo.color} text-white` : 'bg-gray-50 border-gray-200'
+        {/* Completion stats */}
+        <div className="col-span-1 bg-white rounded-card border border-border p-3 text-center">
+          <div className="text-[11px] text-muted-foreground font-medium mb-1">השמעות</div>
+          <div className="text-xl font-extrabold text-foreground tabular-nums">
+            {completionStatus?.presentations?.completed ?? 0}<span className="text-sm font-medium text-muted-foreground">/4</span>
+          </div>
+        </div>
+
+        <div className="col-span-1 bg-white rounded-card border border-border p-3 text-center">
+          <div className="text-[11px] text-muted-foreground font-medium mb-1">יצירות</div>
+          <div className="text-xl font-extrabold text-foreground tabular-nums">
+            {completionStatus?.programPieces?.completed ?? 0}<span className="text-sm font-medium text-muted-foreground">/{completionStatus?.programPieces?.required ?? 3}</span>
+          </div>
+        </div>
+
+        <div className="col-span-1 bg-white rounded-card border border-border p-3 text-center">
+          <div className="text-[11px] text-muted-foreground font-medium mb-1">השלמה</div>
+          <div className="text-xl font-extrabold text-foreground tabular-nums">
+            {Math.round(completionStatus?.overall?.percentage ?? 0)}<span className="text-sm font-medium text-muted-foreground">%</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Formula — compact inline */}
+      <div className="bg-muted/50 rounded-card px-4 py-2.5 flex items-center justify-center gap-3 text-sm text-muted-foreground flex-wrap">
+        <span className="font-medium">נוסחה:</span>
+        <span className="bg-white rounded px-2 py-0.5 border border-border text-foreground font-medium">
+          מגן × 90%
+        </span>
+        <span>+</span>
+        <span className="bg-white rounded px-2 py-0.5 border border-border text-foreground font-medium">
+          הערכת מנהל × 10%
+        </span>
+        <span>=</span>
+        <span className={`rounded px-2 py-0.5 font-bold ${
+          isComplete ? 'bg-primary text-white' : 'bg-white border border-border text-muted-foreground'
+        }`}>
+          {isComplete ? finalGrade : '--'}
+        </span>
+      </div>
+
+      {/* Validation errors — compact */}
+      {validationErrors.length > 0 && (
+        <div className="space-y-1.5">
+          {validationErrors.map((error, index) => (
+            <div key={index} className={`flex items-center gap-2 px-3 py-2 rounded-card text-sm ${
+              error.type === 'error'
+                ? 'bg-destructive/5 text-destructive border border-destructive/10'
+                : 'bg-warning/5 text-warning-foreground border border-warning/10'
             }`}>
-              <TrophyIcon className="w-8 h-8 mx-auto mb-2" />
-              <h4 className="font-semibold mb-1">ציון סופי</h4>
-              <div className="text-3xl font-bold">
-                {isComplete ? finalGrade.toFixed(1) : '--'}/100
-              </div>
-              {isComplete && (
-                <div className="text-sm mt-1 font-medium">
-                  {gradeInfo.level}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Calculation Formula */}
-        <div className="mt-8 p-4 bg-gray-50 rounded">
-          <h4 className="font-semibold text-gray-900 mb-3 text-center">נוסחת החישוב</h4>
-          <div className="text-center">
-            <div className="inline-flex items-center gap-4 text-lg">
-              <div className="bg-blue-100 px-3 py-1 rounded">
-                <span className="font-semibold">ציון מגן בגרות</span> × 90%
-              </div>
-              <span className="text-xl">+</span>
-              <div className="bg-green-100 px-3 py-1 rounded">
-                <span className="font-semibold">הערכת המנהל/ת</span> × 10%
-              </div>
-              <span className="text-xl">=</span>
-              <div className={`px-3 py-1 rounded font-bold ${
-                isComplete ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
-              }`}>
-                ציון סופי
-              </div>
-            </div>
-          </div>
-
-          {isComplete && (
-            <div className="text-center mt-4 text-sm text-gray-700">
-              <div className="font-mono">
-                {magenPresentation!.grade} × 0.9 + {bagrut.directorEvaluation!.points} × 1.0 = {finalGrade.toFixed(1)}
-              </div>
-              <div className="mt-1">
-                ({(magenPresentation!.grade! * 0.9).toFixed(1)} + {(bagrut.directorEvaluation!.points! * 1.0).toFixed(1)} = {finalGrade.toFixed(1)})
-              </div>
-            </div>
-          )}
-          
-          {/* Validation Errors */}
-          {validationErrors.length > 0 && (
-            <div className="mt-4 space-y-2">
-              {validationErrors.map((error, index) => (
-                <div key={index} className={`flex items-center p-3 rounded ${
-                  error.type === 'error' 
-                    ? 'bg-red-50 border border-red-200 text-red-800' 
-                    : 'bg-yellow-50 border border-yellow-200 text-yellow-800'
-                }`}>
-                  <WarningIcon className="w-4 h-4 ml-2 flex-shrink-0" />
-                  <span className="text-sm">{error.message}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          
-          {/* Completion Status */}
-          {completionStatus && (
-            <div className="mt-4 p-4 bg-gray-50 rounded">
-              <h4 className="font-semibold text-gray-900 mb-3">סטטוס השלמה</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="text-center">
-                  <div className="font-semibold">השמעות</div>
-                  <div className={`text-lg ${completionStatus.presentations.completed === 4 ? 'text-green-600' : 'text-gray-600'}`}>
-                    {completionStatus.presentations.completed}/4
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="font-semibold">תכנית</div>
-                  <div className={`text-lg ${completionStatus.programPieces.percentage === 100 ? 'text-green-600' : 'text-gray-600'}`}>
-                    {completionStatus.programPieces.completed}/{completionStatus.programPieces.required}
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="font-semibold">הערכת מנהל</div>
-                  <div className={`text-lg ${completionStatus.directorEvaluation.completed ? 'text-green-600' : 'text-gray-600'}`}>
-                    {completionStatus.directorEvaluation.completed ? '✓' : '✗'}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {isComplete && (
-          <div className="mt-6 text-center">
-            <div className="inline-block p-6 rounded border-2 border-blue-200 bg-blue-50">
-              <h4 className="text-xl font-bold text-blue-900 mb-2">
-                תוצאה סופית
-              </h4>
-              <div className="text-4xl font-bold text-blue-800 mb-2">
-                {finalGrade.toFixed(1)}
-              </div>
-              <div className={`text-lg font-semibold mb-1`}>
-                {gradeInfo.level} ({gradeInfo.range})
-              </div>
-              <div className="text-sm text-blue-700">
-                {gradeInfo.description}
-              </div>
-            </div>
-          </div>
-        )}
-      </Card>
-
-      {/* Grade Categories Reference */}
-      <Card className="p-6">
-        <h4 className="text-lg font-bold text-gray-900 mb-4 text-center">
-          סולם הציונים - משרד החינוך
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {getAllGradeCategories().map((category, index) => (
-            <div
-              key={index}
-              className={`p-3 rounded border-2 ${
-                isComplete && finalGrade >= (category.range.split('-')[0] as any)
-                  ? `${category.color} text-white border-transparent`
-                  : 'bg-white border-gray-200 text-gray-700'
-              }`}
-            >
-              <div className="font-semibold text-sm">{category.level}</div>
-              <div className="text-xs mt-1">{category.range}</div>
-              <div className="text-xs mt-1 opacity-90">{category.description}</div>
+              <WarningIcon className="w-3.5 h-3.5 flex-shrink-0" />
+              {error.message}
             </div>
           ))}
         </div>
-      </Card>
+      )}
+
+      {/* Grade scale — compact inline chips */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-xs text-muted-foreground font-medium">סולם:</span>
+        {GRADE_SCALE.map((g, i) => (
+          <span
+            key={i}
+            className={`text-[10px] px-2 py-0.5 rounded-full border ${
+              isComplete && finalGrade >= g.min && (i === 0 || finalGrade < GRADE_SCALE[i - 1].min)
+                ? 'bg-primary text-white border-primary'
+                : 'bg-white text-muted-foreground border-border'
+            }`}
+          >
+            {g.level} {g.range}
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

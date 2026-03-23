@@ -24,6 +24,7 @@
     "health:cascade": "curl -f http://localhost:3001/api/health/cascade-deletion"
   },
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-rc.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/utilities": "^3.2.2",
     "@floating-ui/react": "^0.25.4",

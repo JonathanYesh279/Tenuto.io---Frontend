@@ -105,6 +105,18 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
     return addDays(weekStart, dayIndex)
   }
 
+  // Calculate end time from start time and duration
+  const calculateEndTime = (startTime: string, duration: number): string => {
+    if (!startTime || !duration) return startTime || '00:00'
+
+    const [hours, minutes] = startTime.split(':').map(Number)
+    const totalMinutes = hours * 60 + minutes + duration
+    const endHours = Math.floor(totalMinutes / 60)
+    const endMins = totalMinutes % 60
+
+    return `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`
+  }
+
   // Process and combine all activities for the week (excluding time blocks)
   const weeklyActivities = useMemo(() => {
     const activities: Array<{
@@ -135,7 +147,8 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
       // Handle different data structures - check multiple possible field names
       const startTime = lesson.startTime || lesson.time || lesson.scheduleInfo?.startTime
       const duration = lesson.duration || lesson.scheduleInfo?.duration || 45
-      const endTime = lesson.endTime || lesson.scheduleInfo?.endTime || calculateEndTime(startTime, duration)
+      // Always calculate endTime from startTime + duration — stored endTime can be stale
+      const endTime = calculateEndTime(startTime, duration)
       
       // Validate required fields
       if (!startTime) {
@@ -289,18 +302,6 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
     const startMinutes = startHour * 60 + startMin
     const endMinutes = endHour * 60 + endMin
     return endMinutes - startMinutes
-  }
-
-  // Calculate end time from start time and duration
-  const calculateEndTime = (startTime: string, duration: number): string => {
-    if (!startTime || !duration) return startTime || '00:00'
-    
-    const [hours, minutes] = startTime.split(':').map(Number)
-    const totalMinutes = hours * 60 + minutes + duration
-    const endHours = Math.floor(totalMinutes / 60)
-    const endMins = totalMinutes % 60
-    
-    return `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`
   }
 
   return (

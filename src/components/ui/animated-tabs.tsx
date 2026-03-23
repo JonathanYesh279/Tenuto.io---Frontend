@@ -138,7 +138,14 @@ function TabsContents({
         transition={transition}
       >
         {childrenArray.map((child, index) => (
-          <div key={index} className="w-full shrink-0 px-1" style={{ direction: "rtl" }}>
+          <div
+            key={index}
+            className="w-full shrink-0 px-1"
+            style={{
+              direction: "rtl",
+              ...(index !== activeIndex ? { height: 0, overflow: "hidden" } : {}),
+            }}
+          >
             {child}
           </div>
         ))}

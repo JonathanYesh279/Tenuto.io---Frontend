@@ -12,6 +12,7 @@ export default defineConfig({
   define: {
     'process.env': process.env,
   },
+  cacheDir: '.vite',
   optimizeDeps: {
     include: [
       'react',

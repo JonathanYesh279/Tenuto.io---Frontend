@@ -5,11 +5,32 @@
  */
 
 import { useState } from 'react'
+import { Button, Chip, Input, Switch, Select, SelectItem } from '@heroui/react'
+import toast from 'react-hot-toast'
 
 import { Teacher } from '../../types'
 import { teacherDetailsApi } from '../../../../../services/teacherDetailsApi'
-import { getDisplayName, formatAddress } from '../../../../../utils/nameUtils'
-import { CalendarIcon, CertificateIcon, CheckCircleIcon, EnvelopeIcon, FloppyDiskIcon, GraduationCapIcon, IdentificationCardIcon, MapPinIcon, MedalIcon, MusicNoteIcon, PencilIcon, PhoneIcon, UserIcon, UsersThreeIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { formatAddress } from '../../../../../utils/nameUtils'
+import {
+  Calendar as CalendarIcon,
+  Certificate as CertificateIcon,
+  CheckCircle as CheckCircleIcon,
+  Clock as ClockIcon,
+  Envelope as EnvelopeIcon,
+  FloppyDisk as FloppyDiskIcon,
+  GraduationCap as GraduationCapIcon,
+  IdentificationCard as IdentificationCardIcon,
+  MapPin as MapPinIcon,
+  Medal as MedalIcon,
+  MusicNote as MusicNoteIcon,
+  Pencil as PencilIcon,
+  Phone as PhoneIcon,
+  Star as StarIcon,
+  User as UserIcon,
+  UsersThree as UsersThreeIcon,
+  WarningCircle as WarningCircleIcon,
+  X as XIcon,
+} from '@phosphor-icons/react'
 
 interface PersonalInfoTabProps {
   teacher: Teacher
@@ -24,11 +45,59 @@ interface FieldErrors {
   address?: string
 }
 
+// ─── Shared glass card style ────────────────────────────────────────────────
+const glassCard: React.CSSProperties = {
+  background:
+    'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,210,230,0.15) 50%, rgba(255,255,255,0.9) 100%)',
+  boxShadow:
+    '0 4px 16px rgba(0,140,210,0.06), inset 0 1px 1px rgba(255,255,255,0.9)',
+  border: '1px solid rgba(200,220,240,0.5)',
+}
+
+// ─── Field tile — each field in its own soft container ───────────────────────
+const FieldTile = ({
+  icon,
+  label,
+  children,
+  color = 'slate',
+}: {
+  icon: React.ReactNode
+  label: string
+  children: React.ReactNode
+  color?: 'blue' | 'indigo' | 'emerald' | 'amber' | 'slate' | 'violet' | 'rose'
+}) => {
+  const bgMap = {
+    blue: 'bg-blue-50/60 border-blue-100/50',
+    indigo: 'bg-indigo-50/60 border-indigo-100/50',
+    emerald: 'bg-emerald-50/60 border-emerald-100/50',
+    amber: 'bg-amber-50/60 border-amber-100/50',
+    slate: 'bg-slate-50/60 border-slate-100/50',
+    violet: 'bg-violet-50/60 border-violet-100/50',
+    rose: 'bg-rose-50/60 border-rose-100/50',
+  }
+  return (
+    <div className={`rounded-xl border p-2.5 ${bgMap[color]}`}>
+      <span className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-wider mb-1">
+        {icon}
+        {label}
+      </span>
+      <div className="text-sm font-medium text-foreground leading-snug">{children}</div>
+    </div>
+  )
+}
+
+// ─── Section header ─────────────────────────────────────────────────────────
+const SectionHeader = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex items-center gap-2 mb-3">
+    <span className="text-sm font-bold text-foreground whitespace-nowrap">{children}</span>
+    <div className="flex-1 h-px bg-border/60" />
+  </div>
+)
+
+// ─── Main component ──────────────────────────────────────────────────────────
 const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [saveError, setSaveError] = useState<string | null>(null)
-  const [saveSuccess, setSaveSuccess] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [editedData, setEditedData] = useState({
     firstName: teacher.personalInfo?.firstName || '',
@@ -36,14 +105,22 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
     phone: teacher.personalInfo?.phone || '',
     email: teacher.personalInfo?.email || '',
     address: formatAddress(teacher.personalInfo?.address),
+    idNumber: teacher.personalInfo?.idNumber || '',
+    birthYear: teacher.personalInfo?.birthYear ?? '',
+  })
+  const [editedProfData, setEditedProfData] = useState({
+    instrument: teacher.professionalInfo?.instrument || '',
+    classification: teacher.professionalInfo?.classification || '',
+    degree: teacher.professionalInfo?.degree || '',
+    teachingExperienceYears: teacher.professionalInfo?.teachingExperienceYears ?? '',
+    hasTeachingCertificate: teacher.professionalInfo?.hasTeachingCertificate ?? false,
+    isUnionMember: teacher.professionalInfo?.isUnionMember ?? false,
   })
 
-  // Validation functions
+  // ── Validation ─────────────────────────────────────────────────────────────
   const validatePhone = (phone: string): string | undefined => {
-    if (!phone) return undefined // PhoneIcon is optional
-    // Remove any dashes, spaces, or other formatting
+    if (!phone) return undefined
     const cleanPhone = phone.replace(/[\s\-]/g, '')
-    // Must be 10 digits starting with 05
     if (!/^05\d{8}$/.test(cleanPhone)) {
       return 'מספר הטלפון בפורמט שגוי. יש להזין מספר בפורמט 05XXXXXXXX'
     }
@@ -51,7 +128,7 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
   }
 
   const validateEmail = (email: string): string | undefined => {
-    if (!email) return undefined // Email is optional
+    if (!email) return undefined
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return 'כתובת הדוא"ל אינה תקינה'
@@ -88,53 +165,56 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
       email: validateEmail(editedData.email),
       address: validateAddress(editedData.address),
     }
-
     setFieldErrors(errors)
-
-    // Return true if no errors
-    return !Object.values(errors).some(error => error !== undefined)
+    return !Object.values(errors).some((error) => error !== undefined)
   }
 
-  // Clean phone number before sending to API
-  const cleanPhoneNumber = (phone: string): string => {
-    return phone.replace(/[\s\-]/g, '')
-  }
+  const cleanPhoneNumber = (phone: string): string => phone.replace(/[\s\-]/g, '')
 
+  // ── Save / Cancel ──────────────────────────────────────────────────────────
   const handleSave = async () => {
-    // Validate all fields before saving
-    if (!validateAllFields()) {
-      return // Don't save if validation fails
-    }
+    if (!validateAllFields()) return
 
     try {
       setIsSaving(true)
-      setSaveError(null)
-      setSaveSuccess(false)
 
-      // Prepare data with cleaned phone number
-      const dataToSave = {
-        ...editedData,
-        phone: cleanPhoneNumber(editedData.phone),
+      // Only send fields that have values — avoid sending null for unchanged empty fields
+      const dataToSave: Record<string, any> = {
+        firstName: editedData.firstName,
+        lastName: editedData.lastName,
       }
+      if (editedData.phone) dataToSave.phone = cleanPhoneNumber(editedData.phone)
+      if (editedData.email) dataToSave.email = editedData.email
+      if (editedData.address) dataToSave.address = editedData.address
+      if (editedData.idNumber) dataToSave.idNumber = editedData.idNumber
+      if (editedData.birthYear !== '') dataToSave.birthYear = Number(editedData.birthYear)
 
-      // Call API to update teacher personal info
       await teacherDetailsApi.updateTeacherPersonalInfo(teacherId, dataToSave)
 
-      // Update local teacher data
-      teacher.personalInfo.firstName = editedData.firstName
-      teacher.personalInfo.lastName = editedData.lastName
-      teacher.personalInfo.phone = editedData.phone
-      teacher.personalInfo.email = editedData.email
-      teacher.personalInfo.address = editedData.address
+      // Also save professional info (API already wraps in { professionalInfo })
+      const profToSave = {
+        instrument: editedProfData.instrument || null,
+        classification: editedProfData.classification || null,
+        degree: editedProfData.degree || null,
+        teachingExperienceYears: editedProfData.teachingExperienceYears === '' ? null : Number(editedProfData.teachingExperienceYears),
+        hasTeachingCertificate: editedProfData.hasTeachingCertificate,
+        isUnionMember: editedProfData.isUnionMember,
+      }
+      await teacherDetailsApi.updateTeacherProfessionalInfo(teacherId, profToSave)
 
-      setSaveSuccess(true)
+      // Update local state
+      Object.assign(teacher.personalInfo, dataToSave)
+      Object.assign(teacher.professionalInfo, profToSave)
+
+      toast.success('פרטי המורה עודכנו בהצלחה')
       setIsEditing(false)
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setSaveSuccess(false), 3000)
     } catch (error: any) {
       console.error('Error saving teacher personal info:', error)
-      setSaveError(error.message || 'שגיאה בשמירת הנתונים')
+      if (error.code === 'DUPLICATE_TEACHER_DETECTED') {
+        toast.error('מורה עם פרטים דומים כבר קיים במערכת. בדוק אימייל וטלפון.')
+      } else {
+        toast.error(error.message || 'שגיאה בשמירת הנתונים')
+      }
     } finally {
       setIsSaving(false)
     }
@@ -147,451 +227,354 @@ const PersonalInfoTab: React.FC<PersonalInfoTabProps> = ({ teacher, teacherId })
       phone: teacher.personalInfo?.phone || '',
       email: teacher.personalInfo?.email || '',
       address: formatAddress(teacher.personalInfo?.address),
+      idNumber: teacher.personalInfo?.idNumber || '',
+      birthYear: teacher.personalInfo?.birthYear ?? '',
     })
-    setSaveError(null)
+    setEditedProfData({
+      instrument: teacher.professionalInfo?.instrument || '',
+      classification: teacher.professionalInfo?.classification || '',
+      degree: teacher.professionalInfo?.degree || '',
+      teachingExperienceYears: teacher.professionalInfo?.teachingExperienceYears ?? '',
+      hasTeachingCertificate: teacher.professionalInfo?.hasTeachingCertificate ?? false,
+      isUnionMember: teacher.professionalInfo?.isUnionMember ?? false,
+    })
     setFieldErrors({})
     setIsEditing(false)
   }
 
+  // ── Derived data ───────────────────────────────────────────────────────────
+  const instruments: string[] =
+    teacher.professionalInfo?.instruments?.length
+      ? teacher.professionalInfo.instruments
+      : teacher.professionalInfo?.instrument
+        ? [teacher.professionalInfo.instrument]
+        : []
+
+  const teachingSubjects: string[] = teacher.professionalInfo?.teachingSubjects ?? []
+  const roles: string[] = teacher.roles ?? []
+  const weeklyHours = Math.round(
+    (teacher.teaching?.timeBlocks?.reduce(
+      (total, block) => total + (block.totalDuration || 0),
+      0,
+    ) || 0) / 60,
+  )
+
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="p-6 space-y-6">
-      {/* Success Message */}
-      {saveSuccess && (
-        <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded text-green-800">
-          <CheckCircleIcon className="w-5 h-5" />
-          <span>הנתונים נשמרו בהצלחה!</span>
-        </div>
-      )}
+    <div className="p-4 space-y-4" dir="rtl">
 
-      {/* Error Message */}
-      {saveError && (
-        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded text-red-800">
-          <WarningCircleIcon className="w-5 h-5" />
-          <span>{saveError}</span>
-        </div>
-      )}
-
-      {/* Header with PencilIcon Button */}
-      <div className="flex justify-end">
+      {/* Top row: action buttons + alerts */}
+      <div className="flex items-center gap-3 flex-wrap">
         {!isEditing ? (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
+          <Button
+            color="primary"
+            variant="solid"
+            size="sm"
+            startContent={<PencilIcon className="w-4 h-4" />}
+            onPress={() => setIsEditing(true)}
           >
-            <PencilIcon className="w-4 h-4" />
             ערוך
-          </button>
+          </Button>
         ) : (
           <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            <Button
+              color="primary"
+              variant="solid"
+              size="sm"
+              isLoading={isSaving}
+              startContent={!isSaving ? <FloppyDiskIcon className="w-4 h-4" /> : undefined}
+              onPress={handleSave}
             >
-              {isSaving ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  שומר...
-                </>
-              ) : (
-                <>
-                  <FloppyDiskIcon className="w-4 h-4" />
-                  שמור
-                </>
-              )}
-            </button>
-            <button
-              onClick={handleCancel}
-              disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              שמור
+            </Button>
+            <Button
+              color="default"
+              variant="flat"
+              size="sm"
+              isDisabled={isSaving}
+              startContent={<XIcon className="w-4 h-4" />}
+              onPress={handleCancel}
             >
-              <XIcon className="w-4 h-4" />
               בטל
-            </button>
+            </Button>
           </div>
         )}
+
       </div>
 
-      {/* Personal Information Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Basic Information */}
-        <div className="space-y-4">
-          <h3 className="text-md font-medium text-gray-700 border-b pb-2">פרטים בסיסיים</h3>
-          
-          {/* First Name */}
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <UserIcon className="w-4 h-4" />
-              שם פרטי
-            </label>
-            {isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={editedData.firstName}
-                  onChange={(e) => {
-                    setEditedData({ ...editedData, firstName: e.target.value })
-                    if (fieldErrors.firstName) {
-                      setFieldErrors({ ...fieldErrors, firstName: validateFirstName(e.target.value) })
-                    }
-                  }}
-                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
-                    fieldErrors.firstName
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary'
-                  }`}
-                  placeholder="הכנס שם פרטי"
-                />
-                {fieldErrors.firstName && (
-                  <p className="text-sm text-red-600 flex items-center gap-1">
-                    <WarningCircleIcon className="w-3 h-3" />
-                    {fieldErrors.firstName}
-                  </p>
-                )}
-              </>
-            ) : (
-              <p className="text-gray-900">{teacher.personalInfo?.firstName || 'לא צוין'}</p>
-            )}
-          </div>
+      {/* Main two-column grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          {/* Last Name */}
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <UserIcon className="w-4 h-4" />
-              שם משפחה
-            </label>
-            {isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={editedData.lastName}
-                  onChange={(e) => {
-                    setEditedData({ ...editedData, lastName: e.target.value })
-                    if (fieldErrors.lastName) {
-                      setFieldErrors({ ...fieldErrors, lastName: validateLastName(e.target.value) })
-                    }
-                  }}
-                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
-                    fieldErrors.lastName
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary'
-                  }`}
-                  placeholder="הכנס שם משפחה"
-                />
-                {fieldErrors.lastName && (
-                  <p className="text-sm text-red-600 flex items-center gap-1">
-                    <WarningCircleIcon className="w-3 h-3" />
-                    {fieldErrors.lastName}
-                  </p>
-                )}
-              </>
-            ) : (
-              <p className="text-gray-900">{teacher.personalInfo?.lastName || 'לא צוין'}</p>
-            )}
-          </div>
+        {/* ── Left card: Basic Info ── */}
+        <div className="rounded-card p-4" style={glassCard}>
+          <SectionHeader>פרטים בסיסיים</SectionHeader>
 
-          {/* PhoneIcon */}
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <PhoneIcon className="w-4 h-4" />
-              טלפון
-            </label>
-            {isEditing ? (
-              <>
-                <input
-                  type="tel"
-                  value={editedData.phone}
-                  onChange={(e) => {
-                    setEditedData({ ...editedData, phone: e.target.value })
-                    if (fieldErrors.phone) {
-                      setFieldErrors({ ...fieldErrors, phone: validatePhone(e.target.value) })
-                    }
-                  }}
-                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
-                    fieldErrors.phone
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary'
-                  }`}
-                  placeholder="05XXXXXXXX"
-                />
-                {fieldErrors.phone && (
-                  <p className="text-sm text-red-600 flex items-center gap-1">
-                    <WarningCircleIcon className="w-3 h-3" />
-                    {fieldErrors.phone}
-                  </p>
-                )}
-              </>
-            ) : (
-              <p className="text-gray-900">{teacher.personalInfo?.phone || 'לא צוין'}</p>
-            )}
-          </div>
-
-          {/* Email */}
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <EnvelopeIcon className="w-4 h-4" />
-              דוא"ל
-            </label>
-            {isEditing ? (
-              <>
-                <input
-                  type="email"
-                  value={editedData.email}
-                  onChange={(e) => {
-                    setEditedData({ ...editedData, email: e.target.value })
-                    if (fieldErrors.email) {
-                      setFieldErrors({ ...fieldErrors, email: validateEmail(e.target.value) })
-                    }
-                  }}
-                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
-                    fieldErrors.email
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary'
-                  }`}
-                  placeholder="example@email.com"
-                />
-                {fieldErrors.email && (
-                  <p className="text-sm text-red-600 flex items-center gap-1">
-                    <WarningCircleIcon className="w-3 h-3" />
-                    {fieldErrors.email}
-                  </p>
-                )}
-              </>
-            ) : (
-              <p className="text-gray-900">{teacher.personalInfo?.email || 'לא צוין'}</p>
-            )}
-          </div>
-
-          {/* Address */}
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <MapPinIcon className="w-4 h-4" />
-              כתובת
-            </label>
-            {isEditing ? (
-              <>
-                <textarea
-                  value={editedData.address}
-                  onChange={(e) => {
-                    setEditedData({ ...editedData, address: e.target.value })
-                    if (fieldErrors.address) {
-                      setFieldErrors({ ...fieldErrors, address: validateAddress(e.target.value) })
-                    }
-                  }}
-                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 ${
-                    fieldErrors.address
-                      ? 'border-red-500 focus:ring-red-500'
-                      : 'border-gray-300 focus:ring-primary'
-                  }`}
+          {isEditing ? (
+            /* Edit mode — two columns of inputs */
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+              <Input
+                label="שם פרטי"
+                placeholder="הכנס שם פרטי"
+                value={editedData.firstName}
+                isInvalid={!!fieldErrors.firstName}
+                errorMessage={fieldErrors.firstName}
+                startContent={<UserIcon className="w-4 h-4 text-muted-foreground" />}
+                onValueChange={(v) => {
+                  setEditedData({ ...editedData, firstName: v })
+                  if (fieldErrors.firstName)
+                    setFieldErrors({ ...fieldErrors, firstName: validateFirstName(v) })
+                }}
+                size="sm"
+                variant="bordered"
+              />
+              <Input
+                label="שם משפחה"
+                placeholder="הכנס שם משפחה"
+                value={editedData.lastName}
+                isInvalid={!!fieldErrors.lastName}
+                errorMessage={fieldErrors.lastName}
+                startContent={<UserIcon className="w-4 h-4 text-muted-foreground" />}
+                onValueChange={(v) => {
+                  setEditedData({ ...editedData, lastName: v })
+                  if (fieldErrors.lastName)
+                    setFieldErrors({ ...fieldErrors, lastName: validateLastName(v) })
+                }}
+                size="sm"
+                variant="bordered"
+              />
+              <Input
+                label="טלפון"
+                placeholder="05XXXXXXXX"
+                type="tel"
+                value={editedData.phone}
+                isInvalid={!!fieldErrors.phone}
+                errorMessage={fieldErrors.phone}
+                startContent={<PhoneIcon className="w-4 h-4 text-muted-foreground" />}
+                onValueChange={(v) => {
+                  setEditedData({ ...editedData, phone: v })
+                  if (fieldErrors.phone)
+                    setFieldErrors({ ...fieldErrors, phone: validatePhone(v) })
+                }}
+                size="sm"
+                variant="bordered"
+              />
+              <Input
+                label='דוא"ל'
+                placeholder="example@email.com"
+                type="email"
+                value={editedData.email}
+                isInvalid={!!fieldErrors.email}
+                errorMessage={fieldErrors.email}
+                startContent={<EnvelopeIcon className="w-4 h-4 text-muted-foreground" />}
+                onValueChange={(v) => {
+                  setEditedData({ ...editedData, email: v })
+                  if (fieldErrors.email)
+                    setFieldErrors({ ...fieldErrors, email: validateEmail(v) })
+                }}
+                size="sm"
+                variant="bordered"
+              />
+              <Input
+                label="ת.ז."
+                placeholder="9 ספרות"
+                value={editedData.idNumber}
+                startContent={<IdentificationCardIcon className="w-4 h-4 text-muted-foreground" />}
+                onValueChange={(v) => setEditedData({ ...editedData, idNumber: v })}
+                size="sm"
+                variant="bordered"
+                maxLength={9}
+              />
+              <Select
+                label="שנת לידה"
+                placeholder="בחר שנה"
+                selectedKeys={editedData.birthYear ? [String(editedData.birthYear)] : []}
+                onSelectionChange={(keys) => {
+                  const val = Array.from(keys)[0] as string
+                  setEditedData({ ...editedData, birthYear: val ? Number(val) : '' })
+                }}
+                size="sm"
+                variant="bordered"
+                startContent={<CalendarIcon className="w-4 h-4 text-muted-foreground" />}
+              >
+                {Array.from({ length: 2010 - 1940 + 1 }, (_, i) => 2010 - i).map((year) => (
+                  <SelectItem key={String(year)} textValue={String(year)}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </Select>
+              <div className="col-span-2">
+                <Input
+                  label="כתובת"
                   placeholder="הכנס כתובת מגורים"
-                  rows={2}
+                  value={editedData.address}
+                  isInvalid={!!fieldErrors.address}
+                  errorMessage={fieldErrors.address}
+                  startContent={<MapPinIcon className="w-4 h-4 text-muted-foreground" />}
+                  onValueChange={(v) => {
+                    setEditedData({ ...editedData, address: v })
+                    if (fieldErrors.address)
+                      setFieldErrors({ ...fieldErrors, address: validateAddress(v) })
+                  }}
+                  size="sm"
+                  variant="bordered"
                 />
-                {fieldErrors.address && (
-                  <p className="text-sm text-red-600 flex items-center gap-1">
-                    <WarningCircleIcon className="w-3 h-3" />
-                    {fieldErrors.address}
-                  </p>
-                )}
-              </>
-            ) : (
-              <p className="text-gray-900">{formatAddress(teacher.personalInfo?.address) || 'לא צוין'}</p>
-            )}
-          </div>
-
-          {/* ID Number */}
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <IdentificationCardIcon className="w-4 h-4" />
-              ת.ז.
-            </label>
-            <p className="text-gray-900">{teacher.personalInfo?.idNumber || 'לא צוין'}</p>
-          </div>
-
-          {/* Birth Year */}
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <CalendarIcon className="w-4 h-4" />
-              שנת לידה
-            </label>
-            <p className="text-gray-900">{teacher.personalInfo?.birthYear || 'לא צוין'}</p>
-          </div>
-        </div>
-
-        {/* Professional Information */}
-        <div className="space-y-4">
-          <h3 className="text-md font-medium text-gray-700 border-b pb-2">מידע מקצועי</h3>
-          
-          {/* Instruments */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <MusicNoteIcon className="w-4 h-4" />
-              כלי נגינה
-            </label>
-            {teacher.professionalInfo?.instruments && teacher.professionalInfo.instruments.length > 0 ? (
-              <div className="flex flex-wrap gap-1.5">
-                {teacher.professionalInfo.instruments.map((inst, idx) => (
-                  <span key={idx} className="px-2.5 py-0.5 bg-indigo-100 text-indigo-800 rounded-full text-sm">
-                    {inst}
-                  </span>
-                ))}
               </div>
-            ) : (
-              <p className="text-gray-900">{teacher.professionalInfo?.instrument || 'לא צוין'}</p>
-            )}
-          </div>
-
-          {/* Teaching Subjects */}
-          {teacher.professionalInfo?.teachingSubjects && teacher.professionalInfo.teachingSubjects.length > 0 && (
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                <GraduationCapIcon className="w-4 h-4" />
-                מקצועות הוראה
-              </label>
-              <div className="flex flex-wrap gap-1.5">
-                {teacher.professionalInfo.teachingSubjects.map((subj, idx) => (
-                  <span key={idx} className="px-2.5 py-0.5 bg-purple-100 text-purple-800 rounded-full text-sm">
-                    {subj}
-                  </span>
-                ))}
+            </div>
+          ) : (
+            /* View mode — field tiles in grid */
+            <div className="grid grid-cols-2 gap-2">
+              <FieldTile icon={<UserIcon className="w-3 h-3" />} label="שם פרטי" color="blue">
+                {teacher.personalInfo?.firstName || <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <FieldTile icon={<UserIcon className="w-3 h-3" />} label="שם משפחה" color="blue">
+                {teacher.personalInfo?.lastName || <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <FieldTile icon={<PhoneIcon className="w-3 h-3" />} label="טלפון" color="emerald">
+                {teacher.personalInfo?.phone ? (
+                  <a href={`tel:${teacher.personalInfo.phone}`} className="text-primary hover:underline">{teacher.personalInfo.phone}</a>
+                ) : <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <FieldTile icon={<EnvelopeIcon className="w-3 h-3" />} label='דוא"ל' color="emerald">
+                {teacher.personalInfo?.email ? (
+                  <a href={`mailto:${teacher.personalInfo.email}`} className="text-primary hover:underline truncate block">{teacher.personalInfo.email}</a>
+                ) : <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <FieldTile icon={<IdentificationCardIcon className="w-3 h-3" />} label="ת.ז." color="slate">
+                {teacher.personalInfo?.idNumber || <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <FieldTile icon={<CalendarIcon className="w-3 h-3" />} label="שנת לידה" color="slate">
+                {teacher.personalInfo?.birthYear ?? <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <div className="col-span-2">
+                <FieldTile icon={<MapPinIcon className="w-3 h-3" />} label="כתובת" color="indigo">
+                  {formatAddress(teacher.personalInfo?.address) || <span className="text-muted-foreground/60">לא צוין</span>}
+                </FieldTile>
               </div>
             </div>
           )}
+        </div>
 
-          {/* Roles */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">תפקידים</label>
-            <div className="flex flex-wrap gap-2">
-              {teacher.roles?.map((role, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                >
-                  {role}
+        {/* ── Right card: Professional Info ── */}
+        <div className="rounded-card p-4" style={glassCard}>
+          <SectionHeader>מידע מקצועי</SectionHeader>
+
+          {isEditing ? (
+            <div className="grid grid-cols-2 gap-2">
+              <Input label="כלי נגינה" placeholder="כלי נגינה" value={editedProfData.instrument}
+                onValueChange={(v) => setEditedProfData({ ...editedProfData, instrument: v })}
+                startContent={<MusicNoteIcon className="w-4 h-4 text-muted-foreground" />}
+                size="sm" variant="bordered" />
+              <Input label="סיווג" placeholder="סיווג" value={editedProfData.classification}
+                onValueChange={(v) => setEditedProfData({ ...editedProfData, classification: v })}
+                startContent={<MedalIcon className="w-4 h-4 text-muted-foreground" />}
+                size="sm" variant="bordered" />
+              <Input label="תואר" placeholder="תואר" value={editedProfData.degree}
+                onValueChange={(v) => setEditedProfData({ ...editedProfData, degree: v })}
+                startContent={<MedalIcon className="w-4 h-4 text-muted-foreground" />}
+                size="sm" variant="bordered" />
+              <Input label="ותק בהוראה (שנים)" placeholder="מספר שנים" type="number"
+                value={String(editedProfData.teachingExperienceYears)}
+                onValueChange={(v) => setEditedProfData({ ...editedProfData, teachingExperienceYears: v === '' ? '' : Number(v) })}
+                startContent={<CalendarIcon className="w-4 h-4 text-muted-foreground" />}
+                size="sm" variant="bordered" />
+              <div className="flex items-center justify-between rounded-xl border border-border/50 bg-slate-50/60 p-2.5">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <CertificateIcon className="w-3.5 h-3.5" /> תעודת הוראה
                 </span>
-              )) || <span className="text-gray-500">אין תפקידים</span>}
+                <Switch size="sm" isSelected={editedProfData.hasTeachingCertificate as boolean}
+                  onValueChange={(v) => setEditedProfData({ ...editedProfData, hasTeachingCertificate: v })} />
+              </div>
+              <div className="flex items-center justify-between rounded-xl border border-border/50 bg-slate-50/60 p-2.5">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <UsersThreeIcon className="w-3.5 h-3.5" /> חבר ארגון עובדים
+                </span>
+                <Switch size="sm" isSelected={editedProfData.isUnionMember as boolean}
+                  onValueChange={(v) => setEditedProfData({ ...editedProfData, isUnionMember: v })} />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              {/* Instruments tile */}
+              <FieldTile icon={<MusicNoteIcon className="w-3 h-3" />} label="כלי נגינה" color="indigo">
+                {instruments.length > 0 ? (
+                  <div className="flex flex-wrap gap-1">
+                    {instruments.map((inst, idx) => (
+                      <Chip key={idx} color="primary" variant="flat" size="sm">{inst}</Chip>
+                    ))}
+                  </div>
+                ) : <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
 
-          {/* Classification */}
-          {teacher.professionalInfo?.classification && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-600">סיווג</label>
-              <p className="text-gray-900">{teacher.professionalInfo.classification}</p>
-            </div>
-          )}
+              {/* Roles tile */}
+              <FieldTile icon={<StarIcon className="w-3 h-3" />} label="תפקידים" color="amber">
+                {roles.length > 0 ? (
+                  <div className="flex flex-wrap gap-1">
+                    {roles.map((role, idx) => (
+                      <Chip key={idx} color="warning" variant="flat" size="sm">{role}</Chip>
+                    ))}
+                  </div>
+                ) : <span className="text-muted-foreground/60">אין תפקידים</span>}
+              </FieldTile>
 
-          {/* Degree */}
-          {teacher.professionalInfo?.degree && (
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                <MedalIcon className="w-4 h-4" />
-                תואר
-              </label>
-              <p className="text-gray-900">{teacher.professionalInfo.degree}</p>
-            </div>
-          )}
+              {/* Teaching subjects */}
+              {teachingSubjects.length > 0 && (
+                <div className="col-span-2">
+                  <FieldTile icon={<GraduationCapIcon className="w-3 h-3" />} label="מקצועות הוראה" color="violet">
+                    <div className="flex flex-wrap gap-1">
+                      {teachingSubjects.map((subj, idx) => (
+                        <Chip key={idx} color="secondary" variant="flat" size="sm">{subj}</Chip>
+                      ))}
+                    </div>
+                  </FieldTile>
+                </div>
+              )}
 
-          {/* Teaching Experience */}
-          {teacher.professionalInfo?.teachingExperienceYears != null && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-600">ותק בהוראה</label>
-              <p className="text-gray-900">{teacher.professionalInfo.teachingExperienceYears} שנים</p>
-            </div>
-          )}
+              {/* Classification + Degree */}
+              <FieldTile icon={<MedalIcon className="w-3 h-3" />} label="סיווג" color="slate">
+                {teacher.professionalInfo?.classification || <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <FieldTile icon={<MedalIcon className="w-3 h-3" />} label="תואר" color="slate">
+                {teacher.professionalInfo?.degree || <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
 
-          {/* Teaching Certificate */}
-          {teacher.professionalInfo?.hasTeachingCertificate != null && (
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                <CertificateIcon className="w-4 h-4" />
-                תעודת הוראה
-              </label>
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
-                teacher.professionalInfo.hasTeachingCertificate
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-100 text-gray-600'
-              }`}>
-                {teacher.professionalInfo.hasTeachingCertificate ? 'כן' : 'לא'}
-              </span>
-            </div>
-          )}
+              {/* Experience + Status */}
+              <FieldTile icon={<CalendarIcon className="w-3 h-3" />} label="ותק בהוראה" color="blue">
+                {teacher.professionalInfo?.teachingExperienceYears != null
+                  ? `${teacher.professionalInfo.teachingExperienceYears} שנים`
+                  : <span className="text-muted-foreground/60">לא צוין</span>}
+              </FieldTile>
+              <FieldTile icon={<CheckCircleIcon className="w-3 h-3" />} label="סטטוס" color="emerald">
+                <Chip color={teacher.isActive ? 'success' : 'danger'} variant="flat" size="sm">
+                  {teacher.isActive ? 'פעיל' : 'לא פעיל'}
+                </Chip>
+              </FieldTile>
 
-          {/* Union Member */}
-          {teacher.professionalInfo?.isUnionMember != null && (
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                <UsersThreeIcon className="w-4 h-4" />
-                חבר ארגון עובדים
-              </label>
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
-                teacher.professionalInfo.isUnionMember
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-100 text-gray-600'
-              }`}>
-                {teacher.professionalInfo.isUnionMember ? 'כן' : 'לא'}
-              </span>
-            </div>
-          )}
+              {/* Certificate + Union */}
+              <FieldTile icon={<CertificateIcon className="w-3 h-3" />} label="תעודת הוראה" color="rose">
+                <Chip color={teacher.professionalInfo?.hasTeachingCertificate ? 'success' : 'default'} variant="flat" size="sm">
+                  {teacher.professionalInfo?.hasTeachingCertificate ? 'כן' : 'לא'}
+                </Chip>
+              </FieldTile>
+              <FieldTile icon={<UsersThreeIcon className="w-3 h-3" />} label="חבר ארגון עובדים" color="rose">
+                <Chip color={teacher.professionalInfo?.isUnionMember ? 'success' : 'default'} variant="flat" size="sm">
+                  {teacher.professionalInfo?.isUnionMember ? 'כן' : 'לא'}
+                </Chip>
+              </FieldTile>
 
-          {/* Active Status */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">סטטוס</label>
-            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              teacher.isActive
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
-            }`}>
-              {teacher.isActive ? 'פעיל' : 'לא פעיל'}
-            </div>
-          </div>
-
-          {/* Creation Date */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
-              <CalendarIcon className="w-4 h-4" />
-              תאריך הצטרפות
-            </label>
-            <p className="text-gray-900">
-              {teacher.createdAt ? new Date(teacher.createdAt).toLocaleDateString('he-IL') : 'לא ידוע'}
-            </p>
-          </div>
-
-          {/* Last Login */}
-          {teacher.credentials?.lastLogin && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-600">כניסה אחרונה</label>
-              <p className="text-gray-900">
-                {new Date(teacher.credentials.lastLogin).toLocaleDateString('he-IL')}
-              </p>
+              {/* Dates */}
+              <FieldTile icon={<CalendarIcon className="w-3 h-3" />} label="תאריך הצטרפות" color="slate">
+                {teacher.createdAt ? new Date(teacher.createdAt).toLocaleDateString('he-IL') : <span className="text-muted-foreground/60">לא ידוע</span>}
+              </FieldTile>
+              {teacher.credentials?.lastLogin && (
+                <FieldTile icon={<ClockIcon className="w-3 h-3" />} label="כניסה אחרונה" color="slate">
+                  {new Date(teacher.credentials.lastLogin).toLocaleDateString('he-IL')}
+                </FieldTile>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* Student Count Summary */}
-      <div className="bg-muted/30 rounded p-4">
-        <h3 className="text-md font-medium text-gray-700 mb-3">סיכום תלמידים</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-primary">
-              {teacher.studentCount || 0}
-            </div>
-            <div className="text-sm text-gray-600">סך התלמידים</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {teacher.teaching?.timeBlocks?.length || 0}
-            </div>
-            <div className="text-sm text-gray-600">בלוקי זמן</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
-              {Math.round((teacher.teaching?.timeBlocks?.reduce((total, block) => total + (block.totalDuration || 0), 0) || 0) / 60)}
-            </div>
-            <div className="text-sm text-gray-600">שעות שבועיות</div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

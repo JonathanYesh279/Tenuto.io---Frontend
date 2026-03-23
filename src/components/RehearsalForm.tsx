@@ -507,7 +507,7 @@ export default function RehearsalForm({
                     <div className="text-xs text-muted-foreground max-h-32 overflow-y-auto">
                       {previewDates.slice(0, 10).map(date => (
                         <div key={date}>
-                          {new Date(date).toLocaleDateString('he-IL')} - {getDayName(new Date(date).getDay())}
+                          {new Date(date + 'T12:00:00').toLocaleDateString('he-IL')} - {getDayName(new Date(date + 'T12:00:00').getDay())}
                         </div>
                       ))}
                       {previewDates.length > 10 && (

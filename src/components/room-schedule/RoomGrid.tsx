@@ -138,7 +138,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
   // Loading skeleton
   if (loading) {
     return (
-      <div className={`overflow-x-auto rounded-xl border border-white/60 dark:border-white/20 backdrop-blur-xl ${
+      <div className={`overflow-x-auto rounded-lg border border-border bg-card shadow-1 ${
         isFullscreen ? 'h-full overflow-y-auto' : ''
       }`}>
         <div
@@ -148,21 +148,21 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
           }}
         >
           {/* Skeleton header */}
-          <div className="bg-slate-50 dark:bg-slate-800 border-b border-l h-10" />
+          <div className="bg-muted border-b border-l border-border h-10" />
           {TIME_SLOTS.map((_, i) => (
-            <div key={i} className="bg-slate-50 dark:bg-slate-800 border-b border-l h-10 animate-pulse" />
+            <div key={i} className="bg-muted border-b border-l border-border h-10 animate-pulse" />
           ))}
 
           {/* Skeleton rows */}
           {Array.from({ length: 5 }).map((_, rowIdx) => (
             <div key={rowIdx} className="contents">
-              <div className="bg-slate-50 dark:bg-slate-800 border-b border-l h-20 px-3 py-2">
-                <div className="h-4 w-16 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" />
+              <div className="bg-muted border-b border-l border-border h-20 px-3 py-2">
+                <div className="h-4 w-16 bg-border rounded animate-pulse" />
               </div>
               {TIME_SLOTS.map((_, colIdx) => (
-                <div key={colIdx} className="border-b border-l h-20">
+                <div key={colIdx} className="border-b border-l border-border h-20">
                   {colIdx % 4 === 1 && rowIdx % 2 === 0 && (
-                    <div className="h-12 mx-1 mt-1 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" />
+                    <div className="h-12 mx-1 mt-1 bg-border rounded animate-pulse" />
                   )}
                 </div>
               ))}
@@ -176,8 +176,8 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
   // Empty state
   if (rooms.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 rounded-xl border border-white/60 dark:border-white/20 backdrop-blur-xl" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(240,245,255,0.5) 50%, rgba(255,255,255,0.6) 100%)' }}>
-        <p className="text-slate-500 dark:text-slate-400 text-sm">אין פעילויות להצגה ביום זה</p>
+      <div className="flex items-center justify-center h-64 rounded-lg border border-border bg-card shadow-1">
+        <p className="text-muted-foreground text-sm">אין פעילויות להצגה ביום זה</p>
       </div>
     )
   }
@@ -190,14 +190,9 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
   return (
     <div
       className={cn(
-        'overflow-x-auto overflow-y-auto rounded-xl border backdrop-blur-xl',
-        'border-white/60 dark:border-white/20',
+        'overflow-x-auto overflow-y-auto rounded-lg border border-border bg-card shadow-1',
         isFullscreen ? 'h-full' : 'max-h-[calc(100vh-200px)]'
       )}
-      style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(240,245,255,0.5) 50%, rgba(255,255,255,0.6) 100%)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.08), inset 0 1px 1px rgba(255,255,255,0.9)',
-      }}
     >
       <div
         className="grid relative"
@@ -209,7 +204,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
         {/* ====== Header Row ====== */}
         {/* Corner cell: sticky both top and right (RTL) */}
         <div
-          className="border-b border-l border-slate-200/50 dark:border-slate-700/50 sticky top-0 right-0 z-30 bg-white dark:bg-slate-900"
+          className="border-b border-l border-border sticky top-0 right-0 z-30 bg-card"
           style={{ gridColumn: '1', gridRow: '1' }}
         />
 
@@ -217,7 +212,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
         {TIME_SLOTS.map((slot, i) => (
           <div
             key={slot}
-            className="border-b border-l border-slate-200/50 dark:border-slate-700/50 text-xs text-center font-semibold text-slate-500 dark:text-slate-400 py-2.5 px-1 sticky top-0 z-20 backdrop-blur-md bg-white/80 dark:bg-slate-900/80"
+            className="border-b border-l border-border text-xs text-center font-semibold text-muted-foreground py-2.5 px-1 sticky top-0 z-20 bg-card"
             style={{ gridColumn: `${i + 2}`, gridRow: '1' }}
           >
             {slot}
@@ -245,7 +240,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
             <div key={room.room} className="contents">
               {/* Room name cell -- sticky on right (RTL), opaque bg, high z-index */}
               <div
-                className="font-semibold text-sm text-slate-700 dark:text-slate-300 px-3 py-2 border-b border-l border-slate-200/50 dark:border-slate-700/50 flex items-center sticky right-0 z-20 bg-white dark:bg-slate-900 shadow-[−2px_0_4px_rgba(0,0,0,0.05)]"
+                className="font-semibold text-sm text-foreground px-3 py-2 border-b border-l border-border flex items-center sticky right-0 z-20 bg-card"
                 style={{ gridColumn: '1', gridRow: `${rowNumber}` }}
               >
                 <span className="truncate">{room.room}</span>
@@ -257,7 +252,7 @@ export default function RoomGrid({ rooms, loading, onEmptyCellClick, isDragEnabl
                 return (
                   <div
                     key={slotIdx}
-                    className="border-b border-l border-slate-200/30 dark:border-slate-700/30"
+                    className="border-b border-l border-border/50"
                     style={{
                       gridColumn: `${slotIdx + 2}`,
                       gridRow: `${rowNumber}`,

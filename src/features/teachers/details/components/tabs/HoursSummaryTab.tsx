@@ -6,11 +6,39 @@
  */
 
 import { useState, useEffect } from 'react'
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Chip,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@heroui/react'
 
 import { Teacher } from '../../types'
 import { hoursSummaryService } from '../../../../../services/apiService'
 import { useAuth } from '../../../../../services/authContext.jsx'
-import { ArrowsClockwiseIcon, BookOpenIcon, BriefcaseIcon, CarIcon, ClockIcon, HourglassIcon, MusicNotesIcon, PathIcon, StackIcon, UsersIcon, WarningCircleIcon } from '@phosphor-icons/react'
+import {
+  ArrowsClockwise as ArrowsClockwiseIcon,
+  BookOpen as BookOpenIcon,
+  Briefcase as BriefcaseIcon,
+  Car as CarIcon,
+  Clock as ClockIcon,
+  Hourglass as HourglassIcon,
+  MusicNotes as MusicNotesIcon,
+  Path as PathIcon,
+  Stack as StackIcon,
+  Users as UsersIcon,
+  WarningCircle as WarningCircleIcon,
+} from '@phosphor-icons/react'
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 interface HoursSummaryTabProps {
   teacher: Teacher
@@ -58,6 +86,173 @@ interface HoursSummaryData {
   calculatedAt: string
 }
 
+// ---------------------------------------------------------------------------
+// Shared glass morphism style
+// ---------------------------------------------------------------------------
+
+const glassStyle: React.CSSProperties = {
+  background:
+    'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,210,230,0.15) 50%, rgba(255,255,255,0.9) 100%)',
+  boxShadow:
+    '0 4px 16px rgba(0,140,210,0.06), inset 0 1px 1px rgba(255,255,255,0.9)',
+  border: '1px solid rgba(200,220,240,0.5)',
+}
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+/** Skeleton placeholder used while loading */
+function LoadingSkeleton() {
+  return (
+    <div className="p-4 space-y-4">
+      {/* Header skeleton */}
+      <div className="flex items-center justify-between animate-pulse">
+        <div className="h-5 w-48 bg-muted rounded-card" />
+        <div className="h-8 w-24 bg-muted rounded-card" />
+      </div>
+      {/* Total card skeleton */}
+      <div className="h-20 bg-muted rounded-card animate-pulse" />
+      {/* Category grid skeleton */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-[70px] bg-muted rounded-card animate-pulse" />
+        ))}
+      </div>
+      {/* Accordion skeletons */}
+      {[...Array(2)].map((_, i) => (
+        <div key={i} className="h-12 bg-muted rounded-card animate-pulse" />
+      ))}
+    </div>
+  )
+}
+
+/** Empty state when no data has been calculated yet */
+function EmptyState({
+  isAdmin,
+  isRecalculating,
+  onRecalculate,
+}: {
+  isAdmin: boolean
+  isRecalculating: boolean
+  onRecalculate: () => void
+}) {
+  return (
+    <div className="p-4">
+      <div
+        className="flex flex-col items-center justify-center py-10 text-center rounded-card"
+        style={glassStyle}
+      >
+        <ClockIcon className="w-12 h-12 text-muted-foreground/40 mb-3" />
+        <h3 className="text-sm font-semibold text-foreground mb-1">טרם חושבו שעות</h3>
+        <p className="text-xs text-muted-foreground mb-4">
+          נתוני השעות השבועיות עבור מורה זה טרם חושבו
+        </p>
+        {isAdmin && (
+          <Button
+            color="primary"
+            variant="solid"
+            size="sm"
+            isLoading={isRecalculating}
+            onPress={onRecalculate}
+            startContent={
+              !isRecalculating ? (
+                <ArrowsClockwiseIcon className="w-4 h-4" />
+              ) : undefined
+            }
+          >
+            {isRecalculating ? 'מחשב...' : 'חשב שעות'}
+          </Button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/** Error state */
+function ErrorState({
+  error,
+  onRetry,
+}: {
+  error: string
+  onRetry: () => void
+}) {
+  return (
+    <div className="p-4">
+      <div
+        className="flex flex-col items-center justify-center py-10 text-center rounded-card"
+        style={glassStyle}
+      >
+        <WarningCircleIcon className="w-12 h-12 text-danger/60 mb-3" />
+        <h3 className="text-sm font-semibold text-foreground mb-1">שגיאה בטעינת נתונים</h3>
+        <p className="text-xs text-muted-foreground mb-4">{error}</p>
+        <Button
+          color="primary"
+          variant="solid"
+          size="sm"
+          onPress={onRetry}
+          startContent={<ArrowsClockwiseIcon className="w-4 h-4" />}
+        >
+          נסה שוב
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+/** Single category glass card — compact ~70px height */
+function CategoryCard({
+  label,
+  value,
+  icon: Icon,
+  iconColor,
+}: {
+  label: string
+  value: number
+  icon: React.ElementType
+  iconColor: string
+}) {
+  return (
+    <div
+      className="rounded-card px-3 py-2 flex items-center gap-2.5 min-h-[70px]"
+      style={glassStyle}
+    >
+      <Icon className={`w-4 h-4 flex-shrink-0 ${iconColor}`} />
+      <div className="flex-1 min-w-0">
+        <div className="text-[11px] text-muted-foreground leading-tight truncate">{label}</div>
+        <div className="text-base font-bold text-foreground leading-snug mt-0.5">{value}</div>
+      </div>
+    </div>
+  )
+}
+
+/** Accordion title row with icon + name + count chip */
+function AccordionTitle({
+  icon: Icon,
+  iconColor,
+  title,
+  count,
+}: {
+  icon: React.ElementType
+  iconColor: string
+  title: string
+  count: number
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <Icon className={`w-4 h-4 flex-shrink-0 ${iconColor}`} />
+      <span className="text-sm font-semibold text-foreground">{title}</span>
+      <Chip size="sm" variant="flat" color="default" className="mr-1">
+        {count}
+      </Chip>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
 const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId }) => {
   const { user } = useAuth()
   const [data, setData] = useState<HoursSummaryData | null>(null)
@@ -81,7 +276,11 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       const result = await hoursSummaryService.getTeacherSummary(teacherId)
       setData(result)
     } catch (err: any) {
-      if (err.status === 404 || err.message?.includes('404') || err.message === 'Resource not found.') {
+      if (
+        err.status === 404 ||
+        err.message?.includes('404') ||
+        err.message === 'Resource not found.'
+      ) {
         setData(null)
       } else {
         setError(err.message || 'שגיאה בטעינת נתוני שעות')
@@ -112,252 +311,320 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
     return `${hours}:${mins.toString().padStart(2, '0')} שע'`
   }
 
-  if (isLoading) {
-    return (
-      <div className="p-6 space-y-4">
-        <div className="animate-pulse space-y-4">
-          <div className="h-24 bg-muted rounded"></div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-20 bg-muted rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // ------------------------------------------------------------------
+  // Guard states
+  // ------------------------------------------------------------------
 
-  if (error) {
-    return (
-      <div className="p-6">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <WarningCircleIcon className="w-12 h-12 text-red-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">שגיאה בטעינת נתונים</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={fetchHoursSummary}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors"
-          >
-            <ArrowsClockwiseIcon className="w-4 h-4" />
-            נסה שוב
-          </button>
-        </div>
-      </div>
-    )
-  }
+  if (isLoading) return <LoadingSkeleton />
 
-  // Empty state — no data calculated yet
+  if (error) return <ErrorState error={error} onRetry={fetchHoursSummary} />
+
   if (!data) {
     return (
-      <div className="p-6">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <ClockIcon className="w-12 h-12 text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">טרם חושבו שעות</h3>
-          <p className="text-gray-600 mb-4">
-            נתוני השעות השבועיות עבור מורה זה טרם חושבו
-          </p>
-          {isAdmin && (
-            <button
-              onClick={handleRecalculate}
-              disabled={isRecalculating}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors disabled:opacity-50"
-            >
-              <ArrowsClockwiseIcon className={`w-4 h-4 ${isRecalculating ? 'animate-spin' : ''}`} />
-              {isRecalculating ? 'מחשב...' : 'חשב שעות'}
-            </button>
-          )}
-        </div>
-      </div>
+      <EmptyState
+        isAdmin={!!isAdmin}
+        isRecalculating={isRecalculating}
+        onRecalculate={handleRecalculate}
+      />
     )
   }
+
+  // ------------------------------------------------------------------
+  // Data ready
+  // ------------------------------------------------------------------
 
   const { totals, breakdown, calculatedAt } = data
 
   const categoryCards = [
-    { label: 'שיעורים פרטניים', value: totals.individualLessons, icon: UsersIcon, color: 'blue' },
-    { label: 'ניצוח תזמורות', value: totals.orchestraConducting, icon: MusicNotesIcon, color: 'purple' },
-    { label: 'הוראת תיאוריה', value: totals.theoryTeaching, icon: BookOpenIcon, color: 'green' },
-    { label: 'ניהול', value: totals.management, icon: BriefcaseIcon, color: 'amber' },
-    { label: 'ליווי', value: totals.accompaniment, icon: StackIcon, color: 'pink' },
-    { label: 'תיאום הרכבים', value: totals.ensembleCoordination, icon: StackIcon, color: 'indigo' },
-    { label: 'ריכוז', value: totals.coordination, icon: PathIcon, color: 'blue' },
-    { label: 'ביטול זמן', value: totals.breakTime, icon: HourglassIcon, color: 'gray' },
-    { label: 'נסיעות', value: totals.travelTime, icon: CarIcon, color: 'gray' },
-  ]
+    { label: 'שיעורים פרטניים', value: totals.individualLessons, icon: UsersIcon, iconColor: 'text-blue-500' },
+    { label: 'ניצוח תזמורות', value: totals.orchestraConducting, icon: MusicNotesIcon, iconColor: 'text-violet-500' },
+    { label: 'הוראת תיאוריה', value: totals.theoryTeaching, icon: BookOpenIcon, iconColor: 'text-emerald-500' },
+    { label: 'ניהול', value: totals.management, icon: BriefcaseIcon, iconColor: 'text-amber-500' },
+    { label: 'ליווי', value: totals.accompaniment, icon: StackIcon, iconColor: 'text-pink-500' },
+    { label: 'תיאום הרכבים', value: totals.ensembleCoordination, icon: StackIcon, iconColor: 'text-indigo-500' },
+    { label: 'ריכוז', value: totals.coordination, icon: PathIcon, iconColor: 'text-sky-500' },
+    { label: 'ביטול זמן', value: totals.breakTime, icon: HourglassIcon, iconColor: 'text-muted-foreground' },
+    { label: 'נסיעות', value: totals.travelTime, icon: CarIcon, iconColor: 'text-muted-foreground' },
+  ].filter((cat) => cat.value > 0)
 
-  const colorMap: Record<string, string> = {
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    purple: 'bg-purple-50 border-purple-200 text-purple-700',
-    green: 'bg-green-50 border-green-200 text-green-700',
-    amber: 'bg-amber-50 border-amber-200 text-amber-700',
-    pink: 'bg-pink-50 border-pink-200 text-pink-700',
-    indigo: 'bg-indigo-50 border-indigo-200 text-indigo-700',
-    gray: 'bg-gray-50 border-gray-200 text-gray-700',
+  const tableClassNames = {
+    th: 'text-right bg-transparent text-muted-foreground text-xs font-semibold',
+    td: 'text-right text-sm',
   }
 
-  const iconColorMap: Record<string, string> = {
-    blue: 'text-blue-500',
-    purple: 'text-purple-500',
-    green: 'text-green-500',
-    amber: 'text-amber-500',
-    pink: 'text-pink-500',
-    indigo: 'text-indigo-500',
-    gray: 'text-gray-500',
+  // Build accordion items only for non-empty sections
+  const accordionItems: {
+    key: string
+    title: React.ReactNode
+    content: React.ReactNode
+  }[] = []
+
+  if (breakdown.students?.length > 0) {
+    accordionItems.push({
+      key: 'students',
+      title: (
+        <AccordionTitle
+          icon={UsersIcon}
+          iconColor="text-blue-500"
+          title="פירוט תלמידים"
+          count={breakdown.students.length}
+        />
+      ),
+      content: (
+        <Table
+          aria-label="פירוט שעות לפי תלמיד"
+          isStriped
+          removeWrapper
+          classNames={tableClassNames}
+        >
+          <TableHeader>
+            <TableColumn>תלמיד</TableColumn>
+            <TableColumn>כלי</TableColumn>
+            <TableColumn>דקות שבועיות</TableColumn>
+            <TableColumn>ש&quot;ש</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {breakdown.students.map((student, idx) => (
+              <TableRow key={idx}>
+                <TableCell className="font-medium text-foreground">
+                  {student.studentName}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {student.instrument}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {student.weeklyMinutes}
+                </TableCell>
+                <TableCell>
+                  <Chip size="sm" variant="flat" color="primary">
+                    {formatMinutesToHours(student.weeklyMinutes)}
+                  </Chip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ),
+    })
+  }
+
+  if (breakdown.orchestras?.length > 0) {
+    accordionItems.push({
+      key: 'orchestras',
+      title: (
+        <AccordionTitle
+          icon={MusicNotesIcon}
+          iconColor="text-violet-500"
+          title="פירוט תזמורות"
+          count={breakdown.orchestras.length}
+        />
+      ),
+      content: (
+        <Table
+          aria-label="פירוט שעות לפי תזמורת"
+          isStriped
+          removeWrapper
+          classNames={tableClassNames}
+        >
+          <TableHeader>
+            <TableColumn>תזמורת</TableColumn>
+            <TableColumn>סוג</TableColumn>
+            <TableColumn>דקות שבועיות</TableColumn>
+            <TableColumn>ש&quot;ש</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {breakdown.orchestras.map((orch, idx) => (
+              <TableRow key={idx}>
+                <TableCell className="font-medium text-foreground">
+                  {orch.name}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {orch.type}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {orch.weeklyMinutes}
+                </TableCell>
+                <TableCell>
+                  <Chip size="sm" variant="flat" color="secondary">
+                    {formatMinutesToHours(orch.weeklyMinutes)}
+                  </Chip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ),
+    })
+  }
+
+  if (breakdown.theory?.length > 0) {
+    accordionItems.push({
+      key: 'theory',
+      title: (
+        <AccordionTitle
+          icon={BookOpenIcon}
+          iconColor="text-emerald-500"
+          title="פירוט תיאוריה"
+          count={breakdown.theory.length}
+        />
+      ),
+      content: (
+        <Table
+          aria-label="פירוט שעות תיאוריה"
+          isStriped
+          removeWrapper
+          classNames={tableClassNames}
+        >
+          <TableHeader>
+            <TableColumn>קטגוריה</TableColumn>
+            <TableColumn>יום</TableColumn>
+            <TableColumn>דקות שבועיות</TableColumn>
+            <TableColumn>ש&quot;ש</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {breakdown.theory.map((item, idx) => (
+              <TableRow key={idx}>
+                <TableCell className="font-medium text-foreground">
+                  {item.category}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {item.dayOfWeek}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {item.weeklyMinutes}
+                </TableCell>
+                <TableCell>
+                  <Chip size="sm" variant="flat" color="success">
+                    {formatMinutesToHours(item.weeklyMinutes)}
+                  </Chip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ),
+    })
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header row */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-gray-900">סיכום שעות שבועיות (ש"ש)</h2>
-        <div className="flex items-center gap-3">
+    <div className="p-4 space-y-4">
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Header row                                                          */}
+      {/* ------------------------------------------------------------------ */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <h2 className="text-sm font-bold text-foreground">
+          סיכום שעות שבועיות (ש&quot;ש)
+        </h2>
+        <div className="flex items-center gap-2 flex-wrap">
           {calculatedAt && (
-            <span className="text-xs text-gray-500">
-              עדכון אחרון: {new Date(calculatedAt).toLocaleDateString('he-IL')} {new Date(calculatedAt).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
+            <span className="text-xs text-muted-foreground">
+              עדכון:{' '}
+              {new Date(calculatedAt).toLocaleDateString('he-IL')}{' '}
+              {new Date(calculatedAt).toLocaleTimeString('he-IL', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
             </span>
           )}
           {isAdmin && (
-            <button
-              onClick={handleRecalculate}
-              disabled={isRecalculating}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-muted text-foreground border border-border rounded hover:bg-muted/80 transition-colors disabled:opacity-50"
+            <Button
+              size="sm"
+              variant="flat"
+              color="default"
+              isLoading={isRecalculating}
+              onPress={handleRecalculate}
+              startContent={
+                !isRecalculating ? (
+                  <ArrowsClockwiseIcon className="w-3.5 h-3.5" />
+                ) : undefined
+              }
+              className="border border-border"
             >
-              <ArrowsClockwiseIcon className={`w-3.5 h-3.5 ${isRecalculating ? 'animate-spin' : ''}`} />
               {isRecalculating ? 'מחשב...' : 'חשב מחדש'}
-            </button>
+            </Button>
           )}
         </div>
       </div>
 
-      {/* Total hours — big card */}
-      <div className="bg-primary rounded p-6 text-primary-foreground">
-        <div className="flex items-center gap-3 mb-2">
-          <ClockIcon className="w-6 h-6 opacity-80" />
-          <span className="opacity-80 font-medium">סה"כ ש"ש</span>
+      {/* ------------------------------------------------------------------ */}
+      {/* Total hours — compact glass stat card (~80px max)                   */}
+      {/* ------------------------------------------------------------------ */}
+      <div
+        className="rounded-card px-4 py-3 flex items-center gap-4"
+        style={glassStyle}
+      >
+        {/* Icon circle */}
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+          style={{
+            background: 'linear-gradient(135deg, rgba(0,140,210,0.12) 0%, rgba(0,140,210,0.06) 100%)',
+            border: '1px solid rgba(0,140,210,0.18)',
+          }}
+        >
+          <ClockIcon className="w-5 h-5 text-primary" />
         </div>
-        <div className="text-4xl font-bold">{totals.totalWeeklyHours}</div>
-        <div className="opacity-70 mt-1">שעות שבועיות</div>
+
+        {/* Label + number */}
+        <div className="flex-1 min-w-0">
+          <div className="text-xs text-muted-foreground leading-none mb-1">
+            סה&quot;כ ש&quot;ש
+          </div>
+          <div className="text-2xl font-bold text-foreground leading-none">
+            {totals.totalWeeklyHours}
+          </div>
+        </div>
+
+        {/* Secondary label on the far side */}
+        <div className="text-xs text-muted-foreground text-left">
+          שעות<br />שבועיות
+        </div>
       </div>
 
-      {/* Category breakdown — grid of small cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {categoryCards.filter(cat => cat.value > 0).map((cat) => {
-          const Icon = cat.icon
-          return (
-            <div
+      {/* ------------------------------------------------------------------ */}
+      {/* Category breakdown grid                                             */}
+      {/* ------------------------------------------------------------------ */}
+      {categoryCards.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          {categoryCards.map((cat) => (
+            <CategoryCard
               key={cat.label}
-              className={`rounded border p-4 ${colorMap[cat.color]}`}
+              label={cat.label}
+              value={cat.value}
+              icon={cat.icon}
+              iconColor={cat.iconColor}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Breakdown accordion sections                                        */}
+      {/* ------------------------------------------------------------------ */}
+      {accordionItems.length > 0 && (
+        <Accordion
+          selectionMode="multiple"
+          defaultExpandedKeys={accordionItems.map((item) => item.key)}
+          className="px-0"
+          itemClasses={{
+            base: 'rounded-card mb-2 overflow-hidden',
+            heading: 'px-4 py-0',
+            trigger: 'py-3 data-[hover=true]:bg-muted/30 rounded-card',
+            content: 'px-0 pt-0 pb-2',
+            title: 'text-sm',
+          }}
+          style={glassStyle}
+        >
+          {accordionItems.map((item) => (
+            <AccordionItem
+              key={item.key}
+              aria-label={item.key}
+              title={item.title}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <Icon className={`w-4 h-4 ${iconColorMap[cat.color]}`} />
-                <span className="text-sm font-medium">{cat.label}</span>
-              </div>
-              <div className="text-2xl font-bold">{cat.value}</div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Student breakdown table */}
-      {breakdown.students?.length > 0 && (
-        <div>
-          <h3 className="text-md font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <UsersIcon className="w-4 h-4 text-blue-500" />
-            פירוט תלמידים ({breakdown.students.length})
-          </h3>
-          <div className="bg-background border border-border rounded overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">תלמיד</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">כלי</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">דקות שבועיות</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">ש"ש</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {breakdown.students.map((student, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-gray-900">{student.studentName}</td>
-                    <td className="px-4 py-3 text-gray-600">{student.instrument}</td>
-                    <td className="px-4 py-3 text-gray-600">{student.weeklyMinutes}</td>
-                    <td className="px-4 py-3 text-gray-900 font-medium">
-                      {formatMinutesToHours(student.weeklyMinutes)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Orchestra breakdown */}
-      {breakdown.orchestras?.length > 0 && (
-        <div>
-          <h3 className="text-md font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <MusicNotesIcon className="w-4 h-4 text-purple-500" />
-            פירוט תזמורות ({breakdown.orchestras.length})
-          </h3>
-          <div className="bg-background border border-border rounded overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">תזמורת</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">סוג</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">דקות שבועיות</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">ש"ש</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {breakdown.orchestras.map((orch, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-gray-900">{orch.name}</td>
-                    <td className="px-4 py-3 text-gray-600">{orch.type}</td>
-                    <td className="px-4 py-3 text-gray-600">{orch.weeklyMinutes}</td>
-                    <td className="px-4 py-3 text-gray-900 font-medium">
-                      {formatMinutesToHours(orch.weeklyMinutes)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Theory breakdown */}
-      {breakdown.theory?.length > 0 && (
-        <div>
-          <h3 className="text-md font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <BookOpenIcon className="w-4 h-4 text-green-500" />
-            פירוט תיאוריה ({breakdown.theory.length})
-          </h3>
-          <div className="bg-background border border-border rounded overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">קטגוריה</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">יום</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">דקות שבועיות</th>
-                  <th className="text-right px-4 py-3 font-medium text-gray-700">ש"ש</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {breakdown.theory.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-gray-900">{item.category}</td>
-                    <td className="px-4 py-3 text-gray-600">{item.dayOfWeek}</td>
-                    <td className="px-4 py-3 text-gray-600">{item.weeklyMinutes}</td>
-                    <td className="px-4 py-3 text-gray-900 font-medium">
-                      {formatMinutesToHours(item.weeklyMinutes)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              {item.content}
+            </AccordionItem>
+          ))}
+        </Accordion>
       )}
     </div>
   )

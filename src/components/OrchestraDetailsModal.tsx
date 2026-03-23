@@ -501,24 +501,31 @@ export default function OrchestraDetailsModal({
                   {orchestra.rehearsals
                     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                     .map(rehearsal => {
-                      const isUpcoming = new Date(rehearsal.date) >= new Date()
-                      const attendanceRate = rehearsal.attendance 
-                        ? Math.round((rehearsal.attendance.present.length / 
+                      const isCancelled = rehearsal.isActive === false
+                      const isUpcoming = !isCancelled && new Date(rehearsal.date) >= new Date()
+                      const isCompleted = !isCancelled && !isUpcoming
+                      const attendanceRate = rehearsal.attendance
+                        ? Math.round((rehearsal.attendance.present.length /
                             Math.max(rehearsal.attendance.present.length + rehearsal.attendance.absent.length, 1)) * 100)
                         : 0
 
+                      const statusLabel = isCancelled ? 'בוטלה' : isUpcoming ? 'עתידית' : 'התקיימה'
+                      const statusClass = isCancelled
+                        ? 'bg-gray-100 text-gray-700'
+                        : isUpcoming
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-green-100 text-green-700'
+
                       return (
-                        <Card key={rehearsal._id} className={!rehearsal.isActive ? 'opacity-60' : ''}>
+                        <Card key={rehearsal._id} className={isCancelled ? 'opacity-60' : ''}>
                           <div className="flex items-start justify-between">
                             <div className="space-y-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-medium text-gray-900">
                                   {new Date(rehearsal.date).toLocaleDateString('he-IL')}
                                 </span>
-                                <span className={`px-2 py-1 text-xs rounded-full ${
-                                  isUpcoming ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'
-                                }`}>
-                                  {isUpcoming ? 'עתידה' : 'הסתיימה'}
+                                <span className={`px-2 py-1 text-xs rounded-full ${statusClass}`}>
+                                  {statusLabel}
                                 </span>
                               </div>
 

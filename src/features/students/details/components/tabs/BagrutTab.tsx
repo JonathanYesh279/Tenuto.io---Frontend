@@ -5,17 +5,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-
-import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '@/components/ui/animated-tabs';
-import { GlassStatCard } from '@/components/ui/GlassStatCard';
+import { Tabs, Tab, Button as HeroButton } from '@heroui/react';
 
 import { BagrutHeader } from '@/components/bagrut/BagrutHeader';
 import ProgramBuilder from '@/components/bagrut/ProgramBuilder';
@@ -24,7 +18,8 @@ import { DirectorEvaluation } from '@/components/bagrut/DirectorEvaluation';
 import { GradeSummary } from '@/components/bagrut/GradeSummary';
 
 import { Bagrut, Presentation, DetailedGrading, DirectorEvaluation as DirectorEvaluationType } from '@/types/bagrut.types';
-import { ArrowRightIcon, CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, FileTextIcon, LockIcon, LockOpenIcon, MedalIcon, MusicNotesIcon, ShieldIcon, StarIcon, UserIcon, WarningIcon } from '@phosphor-icons/react'
+import { useAuth } from '@/services/authContext';
+import { CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, FileTextIcon, LockIcon, LockOpenIcon, MusicNotesIcon, ShieldIcon, StarIcon, WarningIcon } from '@phosphor-icons/react'
 
 interface BagrutTabProps {
   student: any;
@@ -64,8 +59,11 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
   studentId,
   onStudentUpdate
 }) => {
+  const { user } = useAuth();
   const [bagrutData, setBagrutData] = useState<Bagrut | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [completionStatus, setCompletionStatus] = useState<CompletionStatus | null>(null);
   const [bagrutSection, setBagrutSection] = useState('summary');
@@ -119,8 +117,8 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
         _id: `bagrut_${studentId}`,
         studentId,
         teacherId: student.teacherId || '',
-        conservatoryName: "מרכז המוסיקה רעננה",
-        directorName: "לימור אקטע",
+        conservatoryName: user?.tenantName || '',
+        directorName: user?.directorName || '',
         recitalField: undefined,
         recitalUnits: undefined,
         program: [],
@@ -331,6 +329,23 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
 
     const updated = { ...bagrutData, ...updates, updatedAt: new Date() };
     setBagrutData(updated);
+    setIsDirty(true);
+  };
+
+  const saveBagrutData = async () => {
+    if (!bagrutData) return;
+    setIsSaving(true);
+    try {
+      // TODO: Replace with actual API call when bagrut backend is ready
+      // await bagrutService.updateBagrut(studentId, bagrutData);
+      console.log('Saving bagrut data:', bagrutData);
+      setIsDirty(false);
+      onStudentUpdate?.({ ...student, bagrut: bagrutData });
+    } catch (error) {
+      console.error('Failed to save bagrut data:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const updatePresentation = (index: number, presentationData: Partial<Presentation>) => {
@@ -376,81 +391,65 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
 
   return (
     <div className="space-y-6">
-      <Tabs value={bagrutSection} onValueChange={setBagrutSection}>
-        <TabsList>
-          <TabsTrigger value="summary" className="font-bold text-sm">
+      <Tabs
+        variant="solid"
+        size="sm"
+        selectedKey={bagrutSection}
+        onSelectionChange={(key) => setBagrutSection(key as string)}
+        classNames={{ tabList: 'w-auto' }}
+      >
+        <Tab
+          key="summary"
+          title={
             <span className="flex items-center gap-1.5">
               <ChartBarIcon className="w-4 h-4" />
               סיכום
             </span>
-          </TabsTrigger>
-          <TabsTrigger value="program" className="font-bold text-sm">
+          }
+        />
+        <Tab
+          key="program"
+          title={
             <span className="flex items-center gap-1.5">
               <MusicNotesIcon className="w-4 h-4" />
               תכנית
             </span>
-          </TabsTrigger>
-          <TabsTrigger value="evaluations" className="font-bold text-sm">
+          }
+        />
+        <Tab
+          key="evaluations"
+          title={
             <span className="flex items-center gap-1.5">
               <StarIcon className="w-4 h-4" />
               הערכות
             </span>
-          </TabsTrigger>
-        </TabsList>
+          }
+        />
+      </Tabs>
 
-        <TabsContents>
-          {/* Summary tab */}
-          <TabsContent value="summary">
-            <div className="space-y-5 pt-4">
-              {/* GlassStatCards in 3-column grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <GlassStatCard
-                  value={`${Math.round(completionStatus?.overall?.percentage ?? 0)}%`}
-                  label="השלמה כללית"
-                />
-                <GlassStatCard
-                  value={`${completionStatus?.presentations?.completed ?? 0}/${completionStatus?.presentations?.total ?? 4}`}
-                  label="השמעות הושלמו"
-                />
-                <GlassStatCard
-                  value={`${completionStatus?.programPieces?.completed ?? 0}/${completionStatus?.programPieces?.required ?? 3}`}
-                  label="יצירות בתכנית"
-                />
-              </div>
-
-              {/* Grade Summary */}
+      {/* Summary tab */}
+      {bagrutSection === 'summary' && (
+            <div className="pt-4">
               <GradeSummary
                 bagrut={bagrutData}
                 completionStatus={completionStatus}
                 validationErrors={validationErrors}
               />
-
-              {/* Validation warnings */}
-              {validationErrors.length > 0 && (
-                <div className="space-y-2">
-                  {validationErrors.map((error, index) => (
-                    <Alert key={index} variant={error.type === 'error' ? 'destructive' : 'default'}>
-                      <WarningIcon className="h-4 w-4" />
-                      <AlertDescription>
-                        {error.message}
-                      </AlertDescription>
-                    </Alert>
-                  ))}
-                </div>
-              )}
             </div>
-          </TabsContent>
+          )}
 
           {/* Program tab */}
-          <TabsContent value="program">
+          {bagrutSection === 'program' && (
             <div className="space-y-5 pt-4">
               {/* ProgramBuilder (main) + Recital settings (sidebar) */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2">
-                  <Card className="p-6">
-                    <div className="flex items-center mb-4">
-                      <FileTextIcon className="w-6 h-6 ml-3 text-primary" />
-                      <h3 className="text-xl font-bold text-foreground">תכנית הרסיטל</h3>
+                  <div className="bg-white rounded-card border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-6">
+                    <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
+                      <div className="p-2 bg-muted/50 rounded-lg">
+                        <FileTextIcon className="w-5 h-5 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">תכנית הרסיטל</h3>
                     </div>
                     <ProgramBuilder
                       program={bagrutData.program || []}
@@ -458,24 +457,24 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
                       requiredPieces={bagrutData.recitalUnits === 5 ? 5 : 3}
                       readonly={false}
                     />
-                  </Card>
+                  </div>
                 </div>
 
                 <div>
-                  <div className="bg-card rounded-card border border-border p-5 shadow-1 space-y-4">
-                    <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <CalendarIcon className="w-5 h-5 text-warning" />
-                      הגדרת רסיטל
-                    </h3>
+                  <div className="bg-white rounded-card border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-5">
                     <BagrutHeader
                       conservatoryName={bagrutData.conservatoryName}
                       directorName={bagrutData.directorName}
                       recitalField={bagrutData.recitalField}
                       recitalUnits={bagrutData.recitalUnits}
-                      studentName={student.name}
-                      studentId={studentId}
+                      studentName={`${student.personalInfo?.firstName || ''} ${student.personalInfo?.lastName || ''}`.trim() || student.name || ''}
+                      studentIdNumber={(bagrutData as any).studentIdNumber || ''}
                       onRecitalFieldChange={(field) => updateBagrutData({ recitalField: field })}
                       onRecitalUnitsChange={(units) => updateBagrutData({ recitalUnits: units })}
+                      onStudentIdNumberChange={(idNumber) => updateBagrutData({ studentIdNumber: idNumber } as any)}
+                      onSave={saveBagrutData}
+                      isSaving={isSaving}
+                      isDirty={isDirty}
                     />
                   </div>
                 </div>
@@ -484,16 +483,18 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
               {/* Presentations (1–3) in 2-column grid */}
               {bagrutData.presentations && (
                 <div>
-                  <h3 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
-                    <MusicNotesIcon className="w-5 h-5 text-primary" />
-                    השמעות
-                  </h3>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 bg-muted/50 rounded-lg">
+                      <MusicNotesIcon className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">השמעות</h3>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {bagrutData.presentations.slice(0, 3).map((presentation, index) => {
                       const isAccessible = canAccessPresentation(index);
 
                       return (
-                        <Card key={index} className={`p-6 relative ${!isAccessible ? 'opacity-50' : ''}`}>
+                        <div key={index} className={`bg-white rounded-card border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-6 relative ${!isAccessible ? 'opacity-50' : ''}`}>
                           {!isAccessible && (
                             <div className="absolute inset-0 bg-muted/50 flex items-center justify-center z-10 rounded-card">
                               <div className="bg-white p-4 rounded-card shadow-1 flex items-center">
@@ -503,10 +504,10 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
                             </div>
                           )}
 
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center">
-                              <MusicNotesIcon className="w-6 h-6 ml-3 text-primary" />
-                              <h4 className="text-lg font-bold">השמעה {index + 1}</h4>
+                          <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                            <div className="flex items-center gap-2">
+                              <MusicNotesIcon className="w-5 h-5 text-primary" />
+                              <h4 className="text-base font-semibold text-gray-900">השמעה {index + 1}</h4>
                             </div>
 
                             <div className="flex items-center gap-2">
@@ -576,17 +577,17 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
                               </div>
                             </div>
                           )}
-                        </Card>
+                        </div>
                       );
                     })}
                   </div>
                 </div>
               )}
             </div>
-          </TabsContent>
+          )}
 
           {/* Evaluations tab */}
-          <TabsContent value="evaluations">
+          {bagrutSection === 'evaluations' && (
             <div className="space-y-5 pt-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div>
@@ -595,7 +596,7 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
                     const isAccessible = canAccessPresentation(3);
 
                     return (
-                      <Card className={`p-6 relative ${!isAccessible ? 'opacity-50' : ''}`}>
+                      <div className={`bg-white rounded-card border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-6 relative ${!isAccessible ? 'opacity-50' : ''}`}>
                         {!isAccessible && (
                           <div className="absolute inset-0 bg-muted/50 flex items-center justify-center z-10 rounded-card">
                             <div className="bg-white p-4 rounded-card shadow-1 flex items-center">
@@ -605,10 +606,12 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
                           </div>
                         )}
 
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center">
-                            <StarIcon className="w-6 h-6 ml-3 text-warning" />
-                            <h4 className="text-lg font-bold">מגן בגרות</h4>
+                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-muted/50 rounded-lg">
+                              <StarIcon className="w-5 h-5 text-primary" />
+                            </div>
+                            <h4 className="text-lg font-semibold text-gray-900">מגן בגרות</h4>
                           </div>
 
                           <div className="flex items-center gap-2">
@@ -639,29 +642,22 @@ const BagrutTab: React.FC<BagrutTabProps> = ({
                             readonly={false}
                           />
                         )}
-                      </Card>
+                      </div>
                     );
                   })()}
                 </div>
 
-                <div>
-                  <Card className="p-6">
-                    <div className="flex items-center mb-4">
-                      <ShieldIcon className="w-6 h-6 ml-3 text-primary" />
-                      <h3 className="text-xl font-bold text-foreground">הערכת מנהל</h3>
-                    </div>
-                    <DirectorEvaluation
-                      evaluation={bagrutData.directorEvaluation || { points: undefined, comments: '' }}
-                      onUpdate={updateDirectorEvaluation}
-                      readonly={false}
-                    />
-                  </Card>
+                <div className="bg-white rounded-card border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 p-6">
+                  <DirectorEvaluation
+                    evaluation={bagrutData.directorEvaluation || { points: undefined, comments: '' }}
+                    directorName={bagrutData.directorName}
+                    onUpdate={updateDirectorEvaluation}
+                    readonly={false}
+                  />
                 </div>
               </div>
             </div>
-          </TabsContent>
-        </TabsContents>
-      </Tabs>
+          )}
     </div>
   );
 };

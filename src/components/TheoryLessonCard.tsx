@@ -1,12 +1,13 @@
 
-import { CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, TrashIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
+import { CalendarBlankIcon, CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, TrashIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
 import {
+  DAY_OF_WEEK_NAMES,
   formatLessonDate,
   formatLessonTime,
   type TheoryLesson
 } from '../utils/theoryLessonUtils'
 import TeacherNameDisplay from './TeacherNameDisplay'
-import { Button as HeroButton } from '@heroui/react'
+import { Button as HeroButton, Chip } from '@heroui/react'
 import { Card, CardHeader, CardContent, CardFooter } from './ui/Card'
 
 interface TheoryLessonCardProps {
@@ -100,8 +101,20 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
           )}
         </CardContent>
 
-        {/* Footer: Date + Time */}
+        {/* Footer: Day + Date + Time */}
         <CardFooter className="flex-col items-stretch gap-2 pt-3 border-t border-border shrink-0 mt-auto">
+          {lesson.dayOfWeek != null && DAY_OF_WEEK_NAMES[lesson.dayOfWeek] && (
+            <div className="mb-1">
+              <Chip
+                size="sm"
+                variant="flat"
+                color="secondary"
+                startContent={<CalendarBlankIcon className="w-3.5 h-3.5" />}
+              >
+                יום {DAY_OF_WEEK_NAMES[lesson.dayOfWeek]}
+              </Chip>
+            </div>
+          )}
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <CalendarIcon className="w-4 h-4 shrink-0" />

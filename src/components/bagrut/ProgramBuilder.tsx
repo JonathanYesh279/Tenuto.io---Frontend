@@ -1,7 +1,6 @@
 import { useState } from 'react'
-
-import { Card } from '../ui/Card'
-import { ArrowSquareOutIcon, ClockIcon, FloppyDiskIcon, MusicNotesIcon, PencilIcon, PlayCircleIcon, PlusIcon, TrashIcon, UserIcon, XIcon } from '@phosphor-icons/react'
+import { Button as HeroButton } from '@heroui/react'
+import { ClockIcon, FloppyDiskIcon, MusicNotesIcon, PencilSimpleIcon, PlayCircleIcon, PlusIcon, TrashIcon, UserIcon, XIcon } from '@phosphor-icons/react'
 
 interface Piece {
   pieceTitle: string
@@ -23,454 +22,223 @@ export default function ProgramBuilder({ program, onChange, requiredPieces, read
   const [editData, setEditData] = useState<Piece | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [newPiece, setNewPiece] = useState<Piece>({
-    pieceTitle: '',
-    composer: '',
-    duration: '',
-    movement: '',
-    youtubeLink: null
+    pieceTitle: '', composer: '', duration: '', movement: '', youtubeLink: null,
   })
 
-  const startEdit = (index: number) => {
-    setEditingIndex(index)
-    setEditData({ ...program[index] })
-  }
-
-  const cancelEdit = () => {
-    setEditingIndex(null)
-    setEditData(null)
-  }
-
+  const startEdit = (index: number) => { setEditingIndex(index); setEditData({ ...program[index] }) }
+  const cancelEdit = () => { setEditingIndex(null); setEditData(null) }
   const saveEdit = () => {
     if (editingIndex !== null && editData) {
-      const updatedProgram = [...program]
-      updatedProgram[editingIndex] = editData
-      onChange(updatedProgram)
-      setEditingIndex(null)
-      setEditData(null)
+      const u = [...program]; u[editingIndex] = editData; onChange(u)
+      setEditingIndex(null); setEditData(null)
     }
   }
-
   const deletePiece = (index: number) => {
-    if (window.confirm('האם אתה בטוח שברצונך למחוק יצירה זו?')) {
-      const updatedProgram = program.filter((_, i) => i !== index)
-      onChange(updatedProgram)
-    }
+    if (window.confirm('האם למחוק יצירה זו?')) onChange(program.filter((_, i) => i !== index))
   }
-
   const addPiece = () => {
     if (newPiece.pieceTitle && newPiece.composer && newPiece.duration) {
-      const updatedProgram = [...program, newPiece]
-      onChange(updatedProgram)
-      setNewPiece({
-        pieceTitle: '',
-        composer: '',
-        duration: '',
-        movement: '',
-        youtubeLink: null
-      })
+      onChange([...program, newPiece])
+      setNewPiece({ pieceTitle: '', composer: '', duration: '', movement: '', youtubeLink: null })
       setShowAddForm(false)
     }
   }
-
   const cancelAdd = () => {
-    setNewPiece({
-      pieceTitle: '',
-      composer: '',
-      duration: '',
-      movement: '',
-      youtubeLink: null
-    })
+    setNewPiece({ pieceTitle: '', composer: '', duration: '', movement: '', youtubeLink: null })
     setShowAddForm(false)
   }
 
-  const parseDuration = (duration: string) => {
-    // Parse duration string like "5:30" and return total seconds
-    const parts = duration.split(':')
-    if (parts.length === 2) {
-      return parseInt(parts[0]) * 60 + parseInt(parts[1])
-    }
-    return 0
-  }
+  const parseDuration = (d: string) => { const p = d.split(':'); return p.length === 2 ? parseInt(p[0]) * 60 + parseInt(p[1]) : 0 }
+  const formatDuration = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
+  const getTotalDuration = () => formatDuration(program.reduce((t, p) => t + parseDuration(p.duration), 0))
+  const validateYouTubeUrl = (url: string) => !url || /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/).+/.test(url)
 
-  const formatDuration = (totalSeconds: number) => {
-    const minutes = Math.floor(totalSeconds / 60)
-    const seconds = totalSeconds % 60
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
-  }
+  const inputClass = "w-full px-3 py-2 border border-border rounded-card bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
 
-  const getTotalDuration = () => {
-    const totalSeconds = program.reduce((total, piece) => {
-      return total + parseDuration(piece.duration)
-    }, 0)
-    return formatDuration(totalSeconds)
-  }
-
-  const validateYouTubeUrl = (url: string) => {
-    if (!url) return true
-    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/).+/
-    return youtubeRegex.test(url)
-  }
-
-  const renderPieceCard = (piece: Piece, index: number) => {
-    const isEditing = editingIndex === index
-
-    return (
-      <Card key={index} padding="md" className="relative">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            {isEditing ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      שם היצירה *
-                    </label>
-                    <input
-                      type="text"
-                      value={editData?.pieceTitle || ''}
-                      onChange={(e) => setEditData(prev => prev ? { ...prev, pieceTitle: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="שם היצירה"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      מלחין *
-                    </label>
-                    <input
-                      type="text"
-                      value={editData?.composer || ''}
-                      onChange={(e) => setEditData(prev => prev ? { ...prev, composer: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="שם המלחין"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      משך זמן *
-                    </label>
-                    <input
-                      type="text"
-                      value={editData?.duration || ''}
-                      onChange={(e) => setEditData(prev => prev ? { ...prev, duration: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="5:30"
-                      pattern="[0-9]+:[0-9]{2}"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      פרק (אופציונלי)
-                    </label>
-                    <input
-                      type="text"
-                      value={editData?.movement || ''}
-                      onChange={(e) => setEditData(prev => prev ? { ...prev, movement: e.target.value } : null)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="פרק ראשון"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    קישור YouTube (אופציונלי)
-                  </label>
-                  <input
-                    type="url"
-                    value={editData?.youtubeLink || ''}
-                    onChange={(e) => setEditData(prev => prev ? { ...prev, youtubeLink: e.target.value || null } : null)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
-                      editData?.youtubeLink && !validateYouTubeUrl(editData.youtubeLink)
-                        ? 'border-red-300 focus:ring-red-500'
-                        : 'border-gray-300'
-                    }`}
-                    placeholder="https://www.youtube.com/watch?v=..."
-                  />
-                  {editData?.youtubeLink && !validateYouTubeUrl(editData.youtubeLink) && (
-                    <p className="text-red-500 text-xs mt-1">קישור YouTube לא תקין</p>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  {piece.pieceTitle}
-                </h3>
-                
-                <div className="flex items-center text-gray-600 mb-2">
-                  <UserIcon className="w-4 h-4 mr-1" />
-                  <span className="text-sm">{piece.composer}</span>
-                  {piece.movement && (
-                    <>
-                      <span className="mx-2">•</span>
-                      <span className="text-sm">{piece.movement}</span>
-                    </>
-                  )}
-                </div>
-                
-                <div className="flex items-center text-gray-500 text-sm mb-3">
-                  <ClockIcon className="w-4 h-4 mr-1" />
-                  {piece.duration}
-                </div>
-                
-                {piece.youtubeLink && (
-                  <a
-                    href={piece.youtubeLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-red-600 hover:text-red-800 text-sm"
-                  >
-                    <PlayCircleIcon className="w-4 h-4 mr-1" />
-                    צפה ב-YouTube
-                    <ArrowSquareOutIcon className="w-3 h-3 mr-1" />
-                  </a>
-                )}
-              </div>
-            )}
-          </div>
-
-          {!readonly && (
-            <div className="flex items-center gap-2 mr-4">
-              {isEditing ? (
-                <>
-                  <button
-                    onClick={saveEdit}
-                    disabled={!editData?.pieceTitle || !editData?.composer || !editData?.duration}
-                    className="p-2 text-green-600 hover:text-green-800 disabled:text-gray-400"
-                  >
-                    <FloppyDiskIcon className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={cancelEdit}
-                    className="p-2 text-gray-600 hover:text-gray-800"
-                  >
-                    <XIcon className="w-4 h-4" />
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => startEdit(index)}
-                    className="p-2 text-primary hover:text-foreground"
-                  >
-                    <PencilIcon className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => deletePiece(index)}
-                    className="p-2 text-red-600 hover:text-red-800"
-                  >
-                    <TrashIcon className="w-4 h-4" />
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+  const renderPieceForm = (data: Piece, setData: (fn: (p: Piece) => Piece) => void) => (
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">שם היצירה *</label>
+          <input type="text" value={data.pieceTitle} onChange={e => setData(p => ({ ...p, pieceTitle: e.target.value }))} className={inputClass} placeholder="שם היצירה" />
         </div>
-      </Card>
-    )
-  }
+        <div>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">מלחין *</label>
+          <input type="text" value={data.composer} onChange={e => setData(p => ({ ...p, composer: e.target.value }))} className={inputClass} placeholder="שם המלחין" />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">משך זמן * (דק:שנ)</label>
+          <input type="text" value={data.duration} onChange={e => setData(p => ({ ...p, duration: e.target.value }))} className={inputClass} placeholder="5:30" />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">פרק (אופציונלי)</label>
+          <input type="text" value={data.movement || ''} onChange={e => setData(p => ({ ...p, movement: e.target.value }))} className={inputClass} placeholder="פרק ראשון" />
+        </div>
+      </div>
+      <div>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">קישור YouTube (אופציונלי)</label>
+        <input
+          type="url"
+          value={data.youtubeLink || ''}
+          onChange={e => setData(p => ({ ...p, youtubeLink: e.target.value || null }))}
+          className={`${inputClass} ${data.youtubeLink && !validateYouTubeUrl(data.youtubeLink) ? 'border-destructive focus:ring-destructive/30' : ''}`}
+          placeholder="https://www.youtube.com/watch?v=..."
+        />
+      </div>
+    </div>
+  )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
+      {/* Header row */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <MusicNotesIcon className="w-6 h-6 mr-3 text-primary" />
-          תוכנית הבגרות
-        </h2>
-        
-        <div className="flex items-center gap-4">
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">סה"כ זמן:</span> {getTotalDuration()}
-          </div>
-          
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">יצירות:</span> {program.length}
-          </div>
-          
-          {!readonly && (
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
-            >
-              <PlusIcon className="w-4 h-4 mr-2" />
-              הוסף יצירה
-            </button>
-          )}
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <span>סה"כ זמן: <strong className="text-foreground">{getTotalDuration()}</strong></span>
+          <span>יצירות: <strong className="text-foreground">{program.length}</strong></span>
+        </div>
+        {!readonly && (
+          <HeroButton
+            color="primary"
+            variant="solid"
+            size="sm"
+            onPress={() => setShowAddForm(true)}
+            startContent={<PlusIcon size={14} weight="bold" />}
+            className="font-bold"
+          >
+            הוסף יצירה
+          </HeroButton>
+        )}
+      </div>
+
+      {/* Requirements info — compact */}
+      <div className="bg-primary/5 border border-primary/10 rounded-card px-4 py-3">
+        <h4 className="text-xs font-bold text-foreground mb-1.5">דרישות התוכנית</h4>
+        <ul className="text-xs text-muted-foreground space-y-0.5">
+          <li>• לפחות {requiredPieces} יצירות שונות</li>
+          <li>• משך זמן מינימלי: 15 דקות</li>
+          <li>• לכל יצירה חייב להיות קישור להשמעה (מומלץ YouTube)</li>
+          <li>• יש לציין פרק ספציפי אם היצירה מורכבת מכמה פרקים</li>
+        </ul>
+        <div className="mt-2 flex items-center gap-4 text-xs">
+          <span className={program.length >= requiredPieces ? 'text-green-700' : 'text-destructive'}>
+            יצירות: {program.length}/{requiredPieces} (מינימום) {program.length >= requiredPieces ? '✓' : '⚠'}
+          </span>
+          <span className={parseDuration(getTotalDuration()) >= 900 ? 'text-green-700' : 'text-destructive'}>
+            זמן כולל: {getTotalDuration()} (מינימום 15:00) {parseDuration(getTotalDuration()) >= 900 ? '✓' : '⚠'}
+          </span>
         </div>
       </div>
 
-      {/* Program Requirements Info */}
-      <Card padding="md" className="bg-blue-50 border-blue-200">
-        <div className="flex items-start">
-          <MusicNotesIcon className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
-          <div>
-            <h3 className="text-sm font-semibold text-blue-900 mb-2">דרישות התוכנית</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• לפחות 3 יצירות שונות</li>
-              <li>• משך זמן מינימלי: 15 דקות</li>
-              <li>• לכל יצירה חייב להיות קישור להשמעה (מומלץ YouTube)</li>
-              <li>• יש לציין פרק ספציפי אם היצירה מורכבת מכמה פרקים</li>
-            </ul>
-            
-            <div className="mt-3 flex items-center gap-6">
-              <div className={`flex items-center text-sm ${
-                program.length >= 3 ? 'text-green-700' : 'text-red-700'
-              }`}>
-                <span className="font-medium">יצירות:</span>
-                <span className="mr-1">{program.length}/3 (מינימום)</span>
-                {program.length >= 3 ? ' ✓' : ' ⚠️'}
-              </div>
-              
-              <div className={`flex items-center text-sm ${
-                parseDuration(getTotalDuration()) >= 900 ? 'text-green-700' : 'text-red-700'
-              }`}>
-                <span className="font-medium">זמן כולל:</span>
-                <span className="mr-1">{getTotalDuration()} (מינימום 15:00)</span>
-                {parseDuration(getTotalDuration()) >= 900 ? ' ✓' : ' ⚠️'}
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Add New Piece Form */}
+      {/* Add form */}
       {showAddForm && !readonly && (
-        <Card padding="md" className="border-2 border-border">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">הוספת יצירה חדשה</h3>
-            <button
-              onClick={cancelAdd}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <XIcon className="w-5 h-5" />
+        <div className="bg-white rounded-card border border-border p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-foreground">הוספת יצירה חדשה</h4>
+            <button onClick={cancelAdd} className="text-muted-foreground hover:text-foreground p-1">
+              <XIcon size={16} />
             </button>
           </div>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  שם היצירה *
-                </label>
-                <input
-                  type="text"
-                  value={newPiece.pieceTitle}
-                  onChange={(e) => setNewPiece(prev => ({ ...prev, pieceTitle: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="שם היצירה"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  מלחין *
-                </label>
-                <input
-                  type="text"
-                  value={newPiece.composer}
-                  onChange={(e) => setNewPiece(prev => ({ ...prev, composer: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="שם המלחין"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  משך זמן * (דק:שנ)
-                </label>
-                <input
-                  type="text"
-                  value={newPiece.duration}
-                  onChange={(e) => setNewPiece(prev => ({ ...prev, duration: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="5:30"
-                  pattern="[0-9]+:[0-9]{2}"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  פרק (אופציונלי)
-                </label>
-                <input
-                  type="text"
-                  value={newPiece.movement || ''}
-                  onChange={(e) => setNewPiece(prev => ({ ...prev, movement: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="פרק ראשון"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                קישור YouTube (אופציונלי)
-              </label>
-              <input
-                type="url"
-                value={newPiece.youtubeLink || ''}
-                onChange={(e) => setNewPiece(prev => ({ ...prev, youtubeLink: e.target.value || null }))}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
-                  newPiece.youtubeLink && !validateYouTubeUrl(newPiece.youtubeLink)
-                    ? 'border-red-300 focus:ring-red-500'
-                    : 'border-gray-300'
-                }`}
-                placeholder="https://www.youtube.com/watch?v=..."
-              />
-              {newPiece.youtubeLink && !validateYouTubeUrl(newPiece.youtubeLink) && (
-                <p className="text-red-500 text-xs mt-1">קישור YouTube לא תקין</p>
-              )}
-            </div>
-
-            <div className="flex justify-end gap-3 pt-4">
-              <button
-                onClick={cancelAdd}
-                className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                ביטול
-              </button>
-              <button
-                onClick={addPiece}
-                disabled={!newPiece.pieceTitle || !newPiece.composer || !newPiece.duration}
-                className="px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                הוסף יצירה
-              </button>
-            </div>
+          {renderPieceForm(newPiece, (fn) => setNewPiece(prev => fn(prev)))}
+          <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-border">
+            <HeroButton variant="flat" size="sm" onPress={cancelAdd} className="font-bold">ביטול</HeroButton>
+            <HeroButton
+              color="primary"
+              variant="solid"
+              size="sm"
+              onPress={addPiece}
+              isDisabled={!newPiece.pieceTitle || !newPiece.composer || !newPiece.duration}
+              className="font-bold"
+            >
+              הוסף יצירה
+            </HeroButton>
           </div>
-        </Card>
+        </div>
       )}
 
-      {/* Program List */}
+      {/* Piece list */}
       {program.length > 0 ? (
-        <div className="space-y-4">
-          {program.map((piece, index) => renderPieceCard(piece, index))}
+        <div className="space-y-2">
+          {program.map((piece, index) => {
+            const isEditing = editingIndex === index
+            return (
+              <div key={index} className="bg-white rounded-card border border-border p-4 hover:shadow-sm transition-shadow">
+                {isEditing ? (
+                  <>
+                    {renderPieceForm(editData!, (fn) => setEditData(prev => prev ? fn(prev) : prev))}
+                    <div className="flex justify-end gap-2 pt-3 mt-3 border-t border-border">
+                      <HeroButton variant="flat" size="sm" onPress={cancelEdit} className="font-bold">ביטול</HeroButton>
+                      <HeroButton
+                        color="primary"
+                        variant="solid"
+                        size="sm"
+                        onPress={saveEdit}
+                        isDisabled={!editData?.pieceTitle || !editData?.composer || !editData?.duration}
+                        className="font-bold"
+                      >
+                        שמור
+                      </HeroButton>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex items-start justify-between">
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-bold text-foreground truncate">{piece.pieceTitle}</div>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1 flex-wrap">
+                        <span className="inline-flex items-center gap-1">
+                          <UserIcon size={12} />
+                          {piece.composer}
+                        </span>
+                        {piece.movement && (
+                          <span>{piece.movement}</span>
+                        )}
+                        <span className="inline-flex items-center gap-1">
+                          <ClockIcon size={12} />
+                          {piece.duration}
+                        </span>
+                        {piece.youtubeLink && (
+                          <a href={piece.youtubeLink} target="_blank" rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-red-600 hover:text-red-800">
+                            <PlayCircleIcon size={12} />
+                            YouTube
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    {!readonly && (
+                      <div className="flex items-center gap-1 flex-shrink-0 mr-3">
+                        <button onClick={() => startEdit(index)} className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors">
+                          <PencilSimpleIcon size={14} />
+                        </button>
+                        <button onClick={() => deletePiece(index)} className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors">
+                          <TrashIcon size={14} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       ) : (
-        <Card padding="md">
-          <div className="text-center py-8">
-            <MusicNotesIcon className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">אין יצירות בתוכנית</h3>
-            <p className="text-gray-600 mb-4">הוסף יצירות לתוכנית הבגרות שלך</p>
-            {!readonly && (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="inline-flex items-center px-4 py-2 bg-primary text-white rounded hover:bg-neutral-800 transition-colors"
-              >
-                <PlusIcon className="w-4 h-4 mr-2" />
-                הוסף יצירה ראשונה
-              </button>
-            )}
-          </div>
-        </Card>
+        <div className="text-center py-8 bg-muted/30 rounded-card border border-dashed border-border">
+          <MusicNotesIcon size={32} className="mx-auto mb-2 text-muted-foreground/50" />
+          <p className="text-sm text-muted-foreground mb-3">אין יצירות בתוכנית</p>
+          {!readonly && (
+            <HeroButton
+              color="primary"
+              variant="solid"
+              size="sm"
+              onPress={() => setShowAddForm(true)}
+              startContent={<PlusIcon size={14} weight="bold" />}
+              className="font-bold"
+            >
+              הוסף יצירה ראשונה
+            </HeroButton>
+          )}
+        </div>
       )}
     </div>
   )

@@ -79,9 +79,9 @@ const STATUS_CHIP_MAP: Record<
 }
 
 const STATUS_LABEL_MAP: Record<string, string> = {
-  upcoming:    'עתידה',
-  in_progress: 'מתקיימת כעת',
-  completed:   'הושלמה',
+  upcoming:    'עתידית',
+  in_progress: 'מתקיימת',
+  completed:   'התקיימה',
   cancelled:   'בוטלה',
 }
 

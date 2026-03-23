@@ -44,7 +44,10 @@ export interface EnrollmentEntry {
   name: string
   instrument: string
   dayTime: string
+  time: string
   room: string
+  location: string
+  teacher: string
   status: string
 }
 
@@ -117,9 +120,9 @@ export function useStudentDashboardData(
           if (!cancelled) {
             setAttendanceSummary({
               totalSessions: summary?.totalSessions || 0,
-              attendedCount: summary?.attendedCount || 0,
-              lateCount: summary?.lateCount || 0,
-              absentCount: summary?.absentCount || 0,
+              attendedCount: summary?.attended ?? summary?.attendedCount ?? 0,
+              lateCount: summary?.late ?? summary?.lateCount ?? 0,
+              absentCount: summary?.absent ?? summary?.absentCount ?? 0,
               attendanceRate: summary?.attendanceRate || 0,
             })
           }
@@ -168,13 +171,15 @@ export function useStudentDashboardData(
         }
       }
 
+      // No separate rehearsal fetch needed — orchestra.scheduleSlots has the time data
+
       // Fetch theory lessons for this student
       const fetchTheory = async () => {
         try {
-          const result = await apiService.theoryLessons.getTheoryLessons()
+          const result = await apiService.theoryLessons.getTheoryLessons({ studentId, limit: 200 })
           if (!cancelled) {
             const lessons = Array.isArray(result) ? result : (result?.data || [])
-            // Filter to lessons that include this student
+            // Filter to lessons that include this student (in case backend doesn't filter)
             const studentLessons = lessons.filter((lesson: any) =>
               lesson.studentIds?.includes(studentId)
             )
@@ -277,15 +282,20 @@ export function useStudentDashboardData(
       const teacherName = teacher
         ? `${teacher.firstName} ${teacher.lastName}`.trim()
         : 'מורה'
+      const teacherInstrument = teacher?.instrument || ''
+      const assignTime = assignment.time || assignment.startTime || assignment.scheduleInfo?.startTime || ''
+      const assignDay = assignment.dayOfWeek != null ? (DAY_NAMES[assignment.dayOfWeek] || '') : (assignment.day || assignment.scheduleInfo?.day || '')
+      const assignRoom = assignment.location || assignment.scheduleInfo?.location || ''
       result.push({
         id: assignment._id || assignment.teacherId || `ind-${result.length}`,
         type: 'individual',
         name: teacherName,
-        instrument: assignment.instrumentName || '',
-        dayTime: assignment.dayOfWeek != null
-          ? `${DAY_NAMES[assignment.dayOfWeek] || ''}`
-          : '',
-        room: assignment.room || '',
+        instrument: assignment.instrumentName || teacherInstrument,
+        dayTime: [assignDay, assignTime].filter(Boolean).join(' • '),
+        time: assignTime,
+        room: assignRoom,
+        location: assignRoom,
+        teacher: teacherName,
         status: assignment.isActive ? 'פעיל' : 'לא פעיל',
       })
     }
@@ -296,30 +306,52 @@ export function useStudentDashboardData(
       const orchId = typeof enrollment === 'string' ? enrollment : enrollment?.orchestraId
       if (!orchId) continue
       const orch = orchestras.find((o: any) => o._id === orchId)
+      const conductorName = orch?.conductor?.personalInfo
+        ? `${orch.conductor.personalInfo.firstName || ''} ${orch.conductor.personalInfo.lastName || ''}`.trim()
+        : orch?.conductorName || ''
+      // Use scheduleSlots[0] from orchestra document for time data
+      const slot = orch?.scheduleSlots?.[0] || null
+      const sched = orch?.rehearsalSchedule || orch?.schedule || null
+      const orchDay = slot?.dayOfWeek ?? slot?.day ?? sched?.dayOfWeek ?? sched?.dayName
+      const orchTime = slot?.startTime || sched?.startTime || ''
+      const orchEndTime = slot?.endTime || sched?.endTime || ''
+      const orchDayName = typeof orchDay === 'number' ? (DAY_NAMES[orchDay] || '') : (orchDay || '')
+      const orchTimeDisplay = orchTime && orchEndTime ? `${orchTime}-${orchEndTime}` : orchTime
+      const orchLocation = orch?.location || slot?.location || sched?.location || ''
       result.push({
         id: orchId,
         type: 'orchestra',
         name: orch?.name || 'תזמורת',
         instrument: orch?.type || '',
-        dayTime: orch?.rehearsalDay != null
-          ? `${DAY_NAMES[orch.rehearsalDay] || ''} ${orch.rehearsalTime || ''}`
-          : '',
-        room: orch?.room || '',
+        dayTime: [orchDayName, orchTimeDisplay].filter(Boolean).join(' • '),
+        time: orchTimeDisplay,
+        room: orchLocation,
+        location: orchLocation,
+        teacher: conductorName || 'מנצח',
         status: typeof enrollment === 'object' && enrollment?.isActive === false ? 'לא פעיל' : 'פעיל',
       })
     }
 
     // Theory lessons
     for (const lesson of theoryLessons) {
+      const theoryTeacher = lesson.teacherId && teacherMap[lesson.teacherId]
+        ? `${teacherMap[lesson.teacherId].firstName} ${teacherMap[lesson.teacherId].lastName}`.trim()
+        : lesson.teacherName || ''
+      const theoryDayName = lesson.dayOfWeek != null ? (DAY_NAMES[lesson.dayOfWeek] || '') : ''
+      const theoryTimeDisplay = lesson.startTime && lesson.endTime
+        ? `${lesson.startTime}-${lesson.endTime}`
+        : (lesson.startTime || '')
+      const theoryLocation = lesson.location || lesson.room || ''
       result.push({
         id: lesson._id || `theory-${result.length}`,
         type: 'theory',
         name: lesson.title || lesson.category || 'שיעור תאוריה',
-        instrument: '',
-        dayTime: lesson.date
-          ? `${new Date(lesson.date).toLocaleDateString('he-IL')} ${lesson.startTime || ''}`
-          : (lesson.startTime || ''),
-        room: lesson.location || '',
+        instrument: 'תאוריה',
+        dayTime: [theoryDayName, theoryTimeDisplay].filter(Boolean).join(' • '),
+        time: theoryTimeDisplay,
+        room: theoryLocation,
+        location: theoryLocation,
+        teacher: theoryTeacher,
         status: lesson.isActive !== false ? 'פעיל' : 'לא פעיל',
       })
     }

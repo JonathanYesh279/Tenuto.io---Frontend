@@ -1,5 +1,7 @@
 import { useDroppable, useDndContext } from '@dnd-kit/core'
 import { cn } from '@/lib/utils'
+import { Plus } from '@phosphor-icons/react'
+import { motion } from 'framer-motion'
 import { doTimesOverlap, timeToMinutes, minutesToTime } from './utils'
 
 interface DroppableCellProps {
@@ -44,17 +46,30 @@ export default function DroppableCell({ room, timeSlot, isEmpty, roomActivities,
     return false
   })()
 
+  const isClickable = isEmpty && !!onClick && !isOver
+
   return (
     <div
       ref={setNodeRef}
       onClick={isEmpty ? onClick : undefined}
       className={cn(
-        'h-full w-full transition-colors',
+        'h-full w-full transition-colors group',
         isOver && !wouldConflict && 'bg-green-50 ring-2 ring-green-400 ring-inset rounded',
         isOver && wouldConflict && 'bg-red-50 ring-2 ring-red-400 ring-inset rounded cursor-not-allowed',
-        isEmpty && onClick && !isOver && 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800'
+        isClickable && 'cursor-pointer hover:bg-muted'
       )}
     >
+      {isClickable && (
+        <div className="h-full w-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+          <motion.div
+            whileHover={{ scale: 1.2, y: -2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          >
+            <Plus size={16} weight="bold" className="text-primary" />
+          </motion.div>
+        </div>
+      )}
       {children}
     </div>
   )

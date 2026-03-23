@@ -43,31 +43,31 @@ interface ActivityCellProps {
 
 const ACTIVITY_COLORS = {
   timeBlock: {
-    bg: 'bg-blue-50/80',
-    border: 'border-blue-200',
-    text: 'text-blue-900',
+    bg: 'bg-sky-100',
+    border: 'border-sky-300',
+    text: 'text-sky-800',
     label: 'שיעור פרטי',
-    accent: 'border-r-[4px] border-r-blue-500',
-    accentHex: '#3b82f6',
-    iconBg: '#dbeafe',
+    accent: 'border-r-[3px] border-r-sky-500',
+    accentHex: '#0284c7',
+    iconBg: '#bae6fd',
   },
   rehearsal: {
-    bg: 'bg-purple-50/80',
-    border: 'border-purple-200',
-    text: 'text-purple-900',
+    bg: 'bg-rose-100',
+    border: 'border-rose-300',
+    text: 'text-rose-800',
     label: 'חזרה',
-    accent: 'border-r-[4px] border-r-purple-500',
-    accentHex: '#8b5cf6',
-    iconBg: '#f3e8ff',
+    accent: 'border-r-[3px] border-r-rose-500',
+    accentHex: '#e11d48',
+    iconBg: '#fecdd3',
   },
   theory: {
-    bg: 'bg-amber-50/80',
-    border: 'border-amber-200',
-    text: 'text-amber-900',
+    bg: 'bg-amber-100',
+    border: 'border-amber-300',
+    text: 'text-amber-800',
     label: 'תאוריה',
-    accent: 'border-r-[4px] border-r-amber-500',
-    accentHex: '#f59e0b',
-    iconBg: '#fef3c7',
+    accent: 'border-r-[3px] border-r-amber-500',
+    accentHex: '#d97706',
+    iconBg: '#fde68a',
   },
 } as const
 
@@ -100,7 +100,7 @@ export default function ActivityCell({ activity, isDragEnabled, dragData, onClic
         }
       }}
       className={cn(
-        'rounded-lg px-2 py-1.5 text-xs overflow-hidden h-full border backdrop-blur-sm transition-shadow hover:shadow-md',
+        'rounded-lg px-2 py-1.5 text-xs overflow-hidden h-full border shadow-1 transition-shadow hover:shadow-2',
         isDragEnabled ? 'cursor-grab active:cursor-grabbing' : 'cursor-default',
         isDragging && 'opacity-30',
         colors.bg,
@@ -109,7 +109,7 @@ export default function ActivityCell({ activity, isDragEnabled, dragData, onClic
       )}
     >
       {/* Time range */}
-      <div className="text-[10px] text-slate-400 dark:text-slate-500 mb-0.5">
+      <div className="text-[10px] text-muted-foreground mb-0.5">
         {activity.startTime} - {activity.endTime}
       </div>
       {/* Activity type label */}
@@ -129,11 +129,11 @@ export default function ActivityCell({ activity, isDragEnabled, dragData, onClic
         name={activity.teacherName}
         classNames={{
           base: 'justify-start gap-1.5',
-          name: 'text-[10px] font-medium text-slate-700 dark:text-slate-300 truncate leading-tight',
+          name: 'text-[10px] font-medium text-foreground truncate leading-tight',
         }}
       />
       {/* Student / group label */}
-      <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5 pr-[26px]">
+      <div className="text-[10px] text-muted-foreground truncate mt-0.5 pr-[26px]">
         {activity.label}
       </div>
     </div>

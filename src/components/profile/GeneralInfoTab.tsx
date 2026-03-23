@@ -3,7 +3,7 @@
 // Status message colors (emerald/red) are semantic feedback, not card styling
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
-import { Button, Chip } from '@heroui/react'
+import { Button } from '@heroui/react'
 
 import { teacherService } from '../../services/apiService.js'
 import type { TeacherProfile, TeacherProfileUpdateData } from '../../types/teacher.types'
@@ -18,9 +18,6 @@ import {
   PhoneIcon,
   WarningCircleIcon,
   XIcon,
-  IdentificationCardIcon,
-  ShieldCheckIcon,
-  MusicNoteIcon,
 } from '@phosphor-icons/react'
 
 export default function GeneralInfoTab() {
@@ -168,7 +165,7 @@ export default function GeneralInfoTab() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-xl space-y-6">
       {/* Status Messages */}
       {saveStatus.type && (
         <div
@@ -315,127 +312,6 @@ export default function GeneralInfoTab() {
         </div>
       </div>
 
-      {/* Role Information Card */}
-      <div className="bg-primary/5 rounded-card border border-primary/20 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <ShieldCheckIcon className="w-5 h-5 text-primary" />
-          <h4 className="text-lg font-semibold text-foreground">מידע תפקיד</h4>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <span className="text-sm font-medium text-muted-foreground">
-              תפקיד
-            </span>
-            <div className="flex items-center gap-2 flex-wrap">
-              {(() => {
-                const roles = displayData?.roles || []
-                if (roles.length > 0) {
-                  return roles.map((role: string, idx: number) => {
-                    const roleLabel = (() => {
-                      switch (role) {
-                        case 'teacher':
-                        case 'מורה':
-                          return 'מורה'
-                        case 'conductor':
-                        case 'מנצח':
-                          return 'מנצח'
-                        case 'theory_teacher':
-                        case 'מורה תיאוריה':
-                          return 'מורה תיאוריה'
-                        case 'admin':
-                        case 'מנהל':
-                          return 'מנהל'
-                        default:
-                          return role
-                      }
-                    })()
-                    return (
-                      <Chip
-                        key={idx}
-                        color="primary"
-                        variant="flat"
-                        size="sm"
-                      >
-                        {roleLabel}
-                      </Chip>
-                    )
-                  })
-                }
-                const role = displayData?.role || ''
-                const roleLabel = (() => {
-                  switch (role) {
-                    case 'teacher':
-                    case 'מורה':
-                      return 'מורה'
-                    case 'conductor':
-                    case 'מנצח':
-                      return 'מנצח'
-                    case 'theory_teacher':
-                    case 'מורה תיאוריה':
-                      return 'מורה תיאוריה'
-                    case 'admin':
-                    case 'מנהל':
-                      return 'מנהל'
-                    default:
-                      return role || 'לא צוין'
-                  }
-                })()
-                return (
-                  <Chip color="primary" variant="flat" size="sm">
-                    {roleLabel}
-                  </Chip>
-                )
-              })()}
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <span className="text-sm font-medium text-muted-foreground">
-              מזהה משתמש
-            </span>
-            <div className="flex items-center gap-2">
-              <IdentificationCardIcon className="w-4 h-4 text-muted-foreground" />
-              <span className="text-foreground font-mono text-sm">
-                {displayData?.teacherId ||
-                  displayData?._id ||
-                  displayData?.id ||
-                  'לא צוין'}
-              </span>
-            </div>
-          </div>
-
-          {displayData?.isActive !== undefined && (
-            <div className="space-y-1">
-              <span className="text-sm font-medium text-muted-foreground">
-                סטטוס
-              </span>
-              <div>
-                <Chip
-                  color={displayData.isActive ? 'success' : 'default'}
-                  variant="flat"
-                  size="sm"
-                >
-                  {displayData.isActive ? 'פעיל' : 'לא פעיל'}
-                </Chip>
-              </div>
-            </div>
-          )}
-
-          {displayData?.professionalInfo?.instrument && (
-            <div className="space-y-1">
-              <span className="text-sm font-medium text-muted-foreground">
-                כלי נגינה
-              </span>
-              <div className="flex items-center gap-2">
-                <MusicNoteIcon className="w-4 h-4 text-muted-foreground" />
-                <span className="text-foreground">
-                  {displayData.professionalInfo.instrument}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   )
 }

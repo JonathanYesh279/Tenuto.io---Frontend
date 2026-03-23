@@ -74,99 +74,133 @@ export function StudentAgendaWidget({ enrollments, isLoading }: StudentAgendaWid
 
   return (
     <div
-      className="rounded-card p-5 border border-border shadow-1 overflow-hidden"
+      className="rounded-card p-4 border border-border shadow-1 overflow-hidden h-full flex flex-col"
       style={GLASS_CARD_STYLE}
     >
-      <h3 className="font-bold text-sm text-foreground mb-4">סדר יום</h3>
+      <h3 className="font-bold text-sm text-foreground mb-2">סדר יום</h3>
 
       {enrollments.length === 0 ? (
-        <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
+        <div className="flex items-center justify-center flex-1 text-sm text-muted-foreground">
           אין פעילויות
         </div>
       ) : (
-        <VerticalAutoScroll speed={15} height={220}>
-          <div className="space-y-3">
-            {enrollments.map((activity, index) => {
-              const variant =
-                TYPE_VARIANTS[activity.type] ?? TYPE_VARIANTS.individual
-              const Icon = variant.icon
+        <VerticalAutoScroll speed={15} itemCount={enrollments.length} className="flex-1">
+          <div className="space-y-2">
+          {enrollments.map((activity, index) => {
+            const variant =
+              TYPE_VARIANTS[activity.type] ?? TYPE_VARIANTS.individual
+            const Icon = variant.icon
 
-              return (
-                <Popover key={activity.id} placement="right">
-                  <PopoverTrigger>
-                    <motion.div
-                      className={`p-3 rounded-card border cursor-pointer transition-shadow hover:shadow-md ${variant.bg} ${variant.border}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05, duration: 0.3 }}
-                      whileHover={{ y: -1 }}
-                    >
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className={`text-[10px] font-bold ${variant.time}`}>
-                          {activity.dayTime || '—'}
+            return (
+              <Popover key={activity.id} placement="right">
+                <PopoverTrigger>
+                  <motion.div
+                    className={`p-3 rounded-card border cursor-pointer transition-shadow hover:shadow-md ${variant.bg} ${variant.border}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.3 }}
+                    whileHover={{ y: -1 }}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <Chip
+                        size="sm"
+                        variant="flat"
+                        color={variant.chipColor}
+                        classNames={{
+                          base: 'h-[18px]',
+                          content: 'text-[9px] font-bold px-1',
+                        }}
+                      >
+                        {variant.label}
+                      </Chip>
+                      {(activity.room || activity.location) && (
+                        <span className={`text-[10px] ${variant.detail} flex items-center gap-0.5`}>
+                          <MapPinIcon size={10} />
+                          {activity.room || activity.location}
                         </span>
-                        <Chip
-                          size="sm"
-                          variant="flat"
-                          color={variant.chipColor}
-                          classNames={{
-                            base: 'h-[18px]',
-                            content: 'text-[9px] font-bold px-1',
-                          }}
-                        >
+                      )}
+                    </div>
+                    <h4 className={`text-xs font-bold ${variant.title}`}>
+                      {activity.name}
+                    </h4>
+                    {activity.dayTime && (
+                      <span className={`text-[10px] font-bold ${variant.time} flex items-center gap-0.5 mt-0.5`}>
+                        <ClockIcon size={10} />
+                        {activity.dayTime}
+                      </span>
+                    )}
+                  </motion.div>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="p-4 space-y-3 min-w-[250px]">
+                    {/* Header with icon and name */}
+                    <div className="flex items-center gap-2.5">
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center ${variant.bg} ${variant.border} border`}>
+                        <Icon className="w-4.5 h-4.5" style={{ color: 'currentColor' }} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-foreground">{activity.name}</h4>
+                        <Chip size="sm" variant="flat" color={variant.chipColor}
+                          classNames={{ base: 'h-[16px] mt-0.5', content: 'text-[9px] font-bold px-1' }}>
                           {variant.label}
                         </Chip>
                       </div>
-                      <h4 className={`text-sm font-bold mb-0.5 ${variant.title}`}>
-                        {activity.name}
-                      </h4>
-                      {activity.room && (
-                        <p className={`text-[11px] ${variant.detail}`}>
-                          {activity.room}
-                        </p>
-                      )}
-                    </motion.div>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <div className="p-3 space-y-2 min-w-[200px]">
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-5 h-5 text-primary" />
-                        <h4 className="font-bold text-sm text-foreground">
-                          {activity.name}
-                        </h4>
-                      </div>
-                      {activity.instrument && (
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <MusicNotesIcon className="w-3.5 h-3.5" />
-                          <span>{activity.instrument}</span>
-                        </div>
-                      )}
-                      {activity.dayTime && (
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <ClockIcon className="w-3.5 h-3.5" />
-                          <span>{activity.dayTime}</span>
-                        </div>
-                      )}
-                      {activity.room && (
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <MapPinIcon className="w-3.5 h-3.5" />
-                          <span>{activity.room}</span>
-                        </div>
-                      )}
-                      <div className="pt-1">
-                        <Chip
-                          size="sm"
-                          variant="flat"
-                          color={activity.status === 'פעיל' ? 'success' : 'default'}
-                        >
-                          {activity.status}
-                        </Chip>
-                      </div>
                     </div>
-                  </PopoverContent>
-                </Popover>
-              )
-            })}
+
+                    <div className="border-t border-border" />
+
+                    {/* Details grid */}
+                    <div className="space-y-2">
+                      {activity.teacher && (
+                        <div className="flex items-center gap-2.5">
+                          <UserIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <div>
+                            <p className="text-[10px] text-muted-foreground">
+                              {activity.type === 'orchestra' ? 'מנצח' : activity.type === 'theory' ? 'מורה תאוריה' : 'מורה'}
+                            </p>
+                            <p className="text-xs font-medium text-foreground">{activity.teacher}</p>
+                          </div>
+                        </div>
+                      )}
+                      {activity.instrument && (
+                        <div className="flex items-center gap-2.5">
+                          <MusicNotesIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <div>
+                            <p className="text-[10px] text-muted-foreground">כלי</p>
+                            <p className="text-xs font-medium text-foreground">{activity.instrument}</p>
+                          </div>
+                        </div>
+                      )}
+                      {(activity.dayTime || activity.time) && (
+                        <div className="flex items-center gap-2.5">
+                          <ClockIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <div>
+                            <p className="text-[10px] text-muted-foreground">יום ושעה</p>
+                            <p className="text-xs font-medium text-foreground">
+                              {activity.dayTime}{activity.time && activity.dayTime ? ` • ${activity.time}` : activity.time}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      {(activity.room || activity.location) && (
+                        <div className="flex items-center gap-2.5">
+                          <MapPinIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <div>
+                            <p className="text-[10px] text-muted-foreground">מיקום</p>
+                            <p className="text-xs font-medium text-foreground">
+                              {activity.room && activity.location
+                                ? `${activity.room} • ${activity.location}`
+                                : activity.room || activity.location}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )
+          })}
           </div>
         </VerticalAutoScroll>
       )}

@@ -97,7 +97,7 @@ export default function CredentialsTab() {
     placeholder: string
   ) => (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-foreground mb-1.5">
+      <label htmlFor={id} className="block text-xs font-medium text-foreground mb-1">
         {label}
       </label>
       <div className="relative">
@@ -111,7 +111,7 @@ export default function CredentialsTab() {
           disabled={isLoading}
           dir="ltr"
           style={{ textAlign: 'left' }}
-          className="block w-full px-3 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          className="block w-full px-2.5 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs"
         />
         <button
           type="button"
@@ -130,36 +130,31 @@ export default function CredentialsTab() {
   )
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="bg-card rounded-card border border-border p-6 shadow-1">
+    <div className="max-w-md">
+      <div className="bg-card rounded-card border border-border p-4 shadow-1">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-            <LockKeyIcon className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">שינוי סיסמה</h2>
-            <p className="text-sm text-muted-foreground">עדכן את הסיסמה שלך</p>
-          </div>
+        <div className="flex items-center gap-2 mb-4">
+          <LockKeyIcon className="w-4 h-4 text-primary" />
+          <h2 className="text-sm font-semibold text-foreground">שינוי סיסמה</h2>
         </div>
 
         {/* Success banner */}
         {success && (
-          <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2">
-            <CheckCircleIcon className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-            <p className="text-emerald-700 text-sm">{success}</p>
+          <div className="mb-3 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2">
+            <CheckCircleIcon className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <p className="text-emerald-700 text-xs">{success}</p>
           </div>
         )}
 
         {/* Error banner */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-            <WarningCircleIcon className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-red-700 text-sm">{error}</p>
+          <div className="mb-3 p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+            <WarningCircleIcon className="w-4 h-4 text-red-600 flex-shrink-0" />
+            <p className="text-red-700 text-xs">{error}</p>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           {renderPasswordField(
             'currentPassword',
             'סיסמה נוכחית',

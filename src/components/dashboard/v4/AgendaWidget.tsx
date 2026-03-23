@@ -90,7 +90,7 @@ export function AgendaWidget({ events, loading }: AgendaWidgetProps) {
           אין פעילויות היום
         </div>
       ) : (
-      <VerticalAutoScroll speed={20} height={200}>
+      <VerticalAutoScroll speed={20} height={200} itemCount={displayEvents.length}>
         <div className="space-y-4">
           {displayEvents.map((event, index) => {
             const variant = COLOR_VARIANTS[index % COLOR_VARIANTS.length]

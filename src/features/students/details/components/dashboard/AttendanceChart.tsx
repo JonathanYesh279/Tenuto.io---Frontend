@@ -56,9 +56,15 @@ export function AttendanceChart({
   const hasAttendanceData =
     attendanceSummary != null && attendanceSummary.totalSessions > 0
 
+  // attendedCount from backend includes late (ministry definition), so subtract
+  // lateCount to avoid double-counting in the chart since late is shown separately
+  const presentOnly = hasAttendanceData
+    ? attendanceSummary!.attendedCount - attendanceSummary!.lateCount
+    : 0
+
   const donutData = hasAttendanceData
     ? [
-        { status: 'נוכח', count: attendanceSummary!.attendedCount },
+        { status: 'נוכח', count: presentOnly },
         { status: 'חיסור', count: attendanceSummary!.absentCount },
         { status: 'איחור', count: attendanceSummary!.lateCount },
       ]
@@ -68,7 +74,7 @@ export function AttendanceChart({
     ? [
         {
           label: 'נוכח',
-          count: attendanceSummary!.attendedCount,
+          count: presentOnly,
           color: 'bg-emerald-500',
         },
         {

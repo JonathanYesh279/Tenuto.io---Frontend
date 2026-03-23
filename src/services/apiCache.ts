@@ -389,6 +389,8 @@ export function useTheoryLessonEnrollment(studentId: string) {
     unenroll: unenrollMutation.mutate,
     isEnrolling: enrollMutation.isPending,
     isUnenrolling: unenrollMutation.isPending,
+    enrollingLessonId: enrollMutation.isPending ? (enrollMutation.variables as any)?.lessonId : null,
+    unenrollingLessonId: unenrollMutation.isPending ? (unenrollMutation.variables as any)?.lessonId : null,
     error: enrollMutation.error || unenrollMutation.error,
   }
 }

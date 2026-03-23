@@ -499,42 +499,6 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
     return applyFilters(schedule, filters, tenantRooms)
   }, [schedule, filters, tenantRooms])
 
-  // Compute summary statistics from filtered rooms
-  const stats = useMemo(() => {
-    if (!schedule) return { totalRooms: 0, occupiedSlots: 0, freeSlots: 0, conflictCount: 0 }
-
-    const totalRooms = filteredRooms.length
-    const totalSlots = totalRooms * TOTAL_SLOTS
-
-    // Count unique occupied slots per room (an activity spanning 2 slots = 2 occupied)
-    let occupiedSlotCount = 0
-    let conflictCount = 0
-    const gridStartMinutes = GRID_START_HOUR * 60
-
-    for (const room of filteredRooms) {
-      const occupied = new Set<number>()
-      for (const activity of room.activities) {
-        const startMinutes = timeToMinutes(activity.startTime)
-        const endMinutes = timeToMinutes(activity.endTime)
-        for (let t = startMinutes; t < endMinutes; t += SLOT_DURATION) {
-          const slotIndex = Math.floor((t - gridStartMinutes) / SLOT_DURATION)
-          if (slotIndex >= 0 && slotIndex < TOTAL_SLOTS) {
-            occupied.add(slotIndex)
-          }
-        }
-        if (activity.hasConflict) conflictCount++
-      }
-      occupiedSlotCount += occupied.size
-    }
-
-    return {
-      totalRooms,
-      occupiedSlots: occupiedSlotCount,
-      freeSlots: totalSlots - occupiedSlotCount,
-      conflictCount,
-    }
-  }, [schedule, filteredRooms])
-
   // Print handler -- relies on print:hidden classes on toolbar/filters and Layout.tsx no-print on sidebar/header
   const handlePrint = useCallback(() => {
     window.print()
@@ -762,13 +726,10 @@ export default function RoomSchedule({ isFullscreen = false }: RoomScheduleProps
               <FilterBar filters={filters} onFiltersChange={setFilters} rooms={roomNames} />
             </div>
           )}
-          {/* Row 3: Expandable statistics accordion */}
+          {/* Row 3: Expandable room insights */}
           {viewMode === 'day' && (
             <SummaryBar
-              totalRooms={stats.totalRooms}
-              occupiedSlots={stats.occupiedSlots}
-              freeSlots={stats.freeSlots}
-              conflictCount={stats.conflictCount}
+              rooms={filteredRooms}
               loading={loading}
             />
           )}

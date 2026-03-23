@@ -110,7 +110,8 @@ export default function Settings() {
   const [saving, setSaving] = useState(false)
   const [teachers, setTeachers] = useState<TeacherOption[]>([])
   const [rooms, setRooms] = useState<Room[]>([])
-  const [newRoomName, setNewRoomName] = useState('')
+  const [newRoomNumber, setNewRoomNumber] = useState('')
+  const [newCustomName, setNewCustomName] = useState('')
   const [addingRoom, setAddingRoom] = useState(false)
   const [editingRoom, setEditingRoom] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
@@ -244,15 +245,15 @@ export default function Settings() {
     }))
   }
 
-  const handleAddRoom = async () => {
-    const trimmed = newRoomName.trim()
+  const handleAddRoom = async (name: string, clearFn: () => void) => {
+    const trimmed = name.trim()
     if (!trimmed) return
     try {
       setAddingRoom(true)
       const response = await tenantService.addRoom(formData._id, { name: trimmed })
       const newRoom = response?.data || response
       setRooms(prev => [...prev, newRoom])
-      setNewRoomName('')
+      clearFn()
       toast.success('החדר נוסף בהצלחה')
     } catch (error: any) {
       const msg = error?.response?.data?.error || error?.message || 'שגיאה בהוספת חדר'
@@ -260,6 +261,16 @@ export default function Settings() {
     } finally {
       setAddingRoom(false)
     }
+  }
+
+  const handleAddNumberedRoom = () => {
+    const num = newRoomNumber.trim()
+    if (!num) return
+    handleAddRoom(`חדר ${num}`, () => setNewRoomNumber(''))
+  }
+
+  const handleAddCustomRoom = () => {
+    handleAddRoom(newCustomName, () => setNewCustomName(''))
   }
 
   const handleUpdateRoom = async (roomId: string) => {
@@ -393,7 +404,24 @@ export default function Settings() {
     }
   }
 
-  const activeRoomCount = rooms.filter(r => r.isActive !== false).length
+  const sortRooms = (list: Room[]) => {
+    const isNumericOnly = (name: string) => /^\d+$/.test(name.trim())
+    return [...list].sort((a, b) => {
+      const aNum = isNumericOnly(a.name)
+      const bNum = isNumericOnly(b.name)
+      // Letters first, pure numbers last
+      if (aNum && !bNum) return 1
+      if (!aNum && bNum) return -1
+      // Both pure numbers — sort numerically
+      if (aNum && bNum) return parseInt(a.name) - parseInt(b.name)
+      // Both have letters — Hebrew alphabetical with numeric support
+      return a.name.localeCompare(b.name, 'he', { numeric: true })
+    })
+  }
+
+  const activeRooms = sortRooms(rooms.filter(r => r.isActive !== false))
+  const inactiveRooms = sortRooms(rooms.filter(r => r.isActive === false))
+  const activeRoomCount = activeRooms.length
 
   if (loading) {
     return (
@@ -454,41 +482,72 @@ export default function Settings() {
         </div>
 
         {/* Add Room + Import */}
-        <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <Input
-            type="text"
-            value={newRoomName}
-            onChange={e => setNewRoomName(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') handleAddRoom() }}
-            className="text-right text-sm flex-1 max-w-xs"
-            placeholder="שם חדר"
-            disabled={addingRoom}
-          />
-          <button
-            onClick={handleAddRoom}
-            disabled={addingRoom || !newRoomName.trim()}
-            className="flex items-center gap-1 px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-          >
-            <PlusIcon size={14} weight="bold" />
-            הוסף חדר
-          </button>
-          <div className="flex items-center gap-2">
-            <input
-              ref={roomFileInputRef}
-              type="file"
-              accept=".xlsx,.xls"
-              onChange={handleImportRooms}
-              className="hidden"
-            />
-            <button
-              onClick={() => roomFileInputRef.current?.click()}
-              disabled={importingRooms}
-              className="flex items-center gap-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-            >
-              <UploadSimpleIcon size={14} weight="bold" />
-              {importingRooms ? 'מייבא...' : 'ייבוא מ-Excel'}
-            </button>
-            <span className="text-xs text-gray-400 hidden sm:inline">קובץ Excel עם שמות חדרים בעמודה A</span>
+        <div className="flex flex-col gap-2 mb-4">
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Numbered room input */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm text-gray-600 font-medium whitespace-nowrap">חדר</span>
+              <Input
+                type="number"
+                min="1"
+                value={newRoomNumber}
+                onChange={e => setNewRoomNumber(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleAddNumberedRoom() }}
+                className="text-center text-sm w-20"
+                placeholder="מס׳"
+                disabled={addingRoom}
+              />
+              <button
+                onClick={handleAddNumberedRoom}
+                disabled={addingRoom || !newRoomNumber.trim()}
+                className="flex items-center gap-1 px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+              >
+                <PlusIcon size={14} weight="bold" />
+              </button>
+            </div>
+
+            <span className="text-gray-300">|</span>
+
+            {/* Custom name input */}
+            <div className="flex items-center gap-1.5">
+              <Input
+                type="text"
+                value={newCustomName}
+                onChange={e => setNewCustomName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleAddCustomRoom() }}
+                className="text-right text-sm w-40"
+                placeholder="שם מותאם אישית"
+                disabled={addingRoom}
+              />
+              <button
+                onClick={handleAddCustomRoom}
+                disabled={addingRoom || !newCustomName.trim()}
+                className="flex items-center gap-1 px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+              >
+                <PlusIcon size={14} weight="bold" />
+              </button>
+            </div>
+
+            <span className="text-gray-300">|</span>
+
+            {/* Import */}
+            <div className="flex items-center gap-2">
+              <input
+                ref={roomFileInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleImportRooms}
+                className="hidden"
+              />
+              <button
+                onClick={() => roomFileInputRef.current?.click()}
+                disabled={importingRooms}
+                className="flex items-center gap-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+              >
+                <UploadSimpleIcon size={14} weight="bold" />
+                {importingRooms ? 'מייבא...' : 'ייבוא מ-Excel'}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -499,7 +558,7 @@ export default function Settings() {
           <Accordion
             selectionMode="multiple"
             variant="splitted"
-            defaultExpandedKeys={['active']}
+            defaultExpandedKeys={[]}
           >
             {/* Active Rooms */}
             <AccordionItem
@@ -509,83 +568,74 @@ export default function Settings() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-gray-700">חדרים פעילים</span>
                   <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                    {rooms.filter(r => r.isActive !== false).length}
+                    {activeRooms.length}
                   </span>
                 </div>
               }
               classNames={{ trigger: 'py-2', content: 'pb-3' }}
             >
-              <div className="space-y-1.5">
-                {rooms.filter(r => r.isActive !== false).map(room => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {activeRooms.map(room => (
                   <div
                     key={room._id}
-                    className="flex items-center justify-between py-2 px-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors"
+                    className="group relative py-2 px-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors"
                   >
-                    <div className="flex items-center gap-3 flex-1">
-                      {editingRoom === room._id ? (
-                        <div className="flex items-center gap-2 flex-1">
-                          <Input
-                            type="text"
-                            value={editName}
-                            onChange={e => setEditName(e.target.value)}
-                            onKeyDown={e => {
-                              if (e.key === 'Enter') handleUpdateRoom(room._id)
-                              if (e.key === 'Escape') cancelEditing()
-                            }}
-                            className="text-right text-sm flex-1 max-w-xs"
-                            autoFocus
-                          />
-                          <button
-                            onClick={() => handleUpdateRoom(room._id)}
-                            disabled={!editName.trim()}
-                            className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
-                            title="שמור"
-                          >
-                            <CheckIcon size={16} weight="bold" />
-                          </button>
-                          <button
-                            onClick={cancelEditing}
-                            className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-md transition-colors"
-                            title="ביטול"
-                          >
-                            <XIcon size={16} weight="bold" />
-                          </button>
-                        </div>
-                      ) : (
-                        <span className="text-sm text-gray-800 font-medium">{room.name}</span>
-                      )}
-                    </div>
-                    {editingRoom !== room._id && (
-                      <div className="flex items-center gap-1">
+                    {editingRoom === room._id ? (
+                      <div className="flex items-center gap-1.5">
+                        <Input
+                          type="text"
+                          value={editName}
+                          onChange={e => setEditName(e.target.value)}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter') handleUpdateRoom(room._id)
+                            if (e.key === 'Escape') cancelEditing()
+                          }}
+                          className="text-right text-sm flex-1 min-w-0"
+                          autoFocus
+                        />
                         <button
-                          onClick={() => startEditing(room)}
-                          className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
-                          title="ערוך"
+                          onClick={() => handleUpdateRoom(room._id)}
+                          disabled={!editName.trim()}
+                          className="p-1 text-green-600 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50 shrink-0"
+                          title="שמור"
                         >
-                          <PencilSimpleIcon size={16} weight="regular" />
+                          <CheckIcon size={14} weight="bold" />
                         </button>
                         <button
-                          onClick={() => handleDeactivateRoom(room._id)}
-                          className="p-1.5 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-md transition-colors"
-                          title="השבת"
+                          onClick={cancelEditing}
+                          className="p-1 text-gray-400 hover:bg-gray-100 rounded-md transition-colors shrink-0"
+                          title="ביטול"
                         >
-                          <ProhibitIcon size={16} weight="regular" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteRoom(room._id)}
-                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
-                          title="מחק"
-                        >
-                          <TrashIcon size={16} weight="regular" />
+                          <XIcon size={14} weight="bold" />
                         </button>
                       </div>
+                    ) : (
+                      <>
+                        <span className="text-sm text-gray-800 font-medium block" title={room.name}>{room.name}</span>
+                        <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-50 rounded-md px-0.5">
+                          <button
+                            onClick={() => startEditing(room)}
+                            className="p-1 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
+                            title="ערוך"
+                          >
+                            <PencilSimpleIcon size={14} weight="regular" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteRoom(room._id)}
+                            className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                            title="מחק"
+                          >
+                            <TrashIcon size={14} weight="regular" />
+                          </button>
+                        </div>
+                      </>
                     )}
                   </div>
                 ))}
-                {rooms.filter(r => r.isActive !== false).length === 0 && (
-                  <div className="text-xs text-gray-400 text-center py-2">אין חדרים פעילים</div>
-                )}
               </div>
+              {activeRooms.length === 0 && (
+                <div className="text-xs text-gray-400 text-center py-2">אין חדרים פעילים</div>
+              )}
             </AccordionItem>
 
             {/* Inactive Rooms */}
@@ -596,41 +646,41 @@ export default function Settings() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-gray-500">חדרים לא פעילים</span>
                   <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded-full">
-                    {rooms.filter(r => r.isActive === false).length}
+                    {inactiveRooms.length}
                   </span>
                 </div>
               }
               classNames={{ trigger: 'py-2', content: 'pb-3' }}
             >
-              <div className="space-y-1.5">
-                {rooms.filter(r => r.isActive === false).map(room => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {inactiveRooms.map(room => (
                   <div
                     key={room._id}
-                    className="flex items-center justify-between py-2 px-3 rounded-lg border border-gray-100 bg-gray-50/50 transition-colors"
+                    className="group relative py-2 px-3 rounded-lg border border-gray-100 bg-gray-50/50 transition-colors"
                   >
-                    <span className="text-sm text-gray-500">{room.name}</span>
-                    <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-500 block" title={room.name}>{room.name}</span>
+                    <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-100 rounded-md px-0.5">
                       <button
                         onClick={() => startEditing(room)}
-                        className="p-1.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
+                        className="p-1 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors"
                         title="ערוך"
                       >
-                        <PencilSimpleIcon size={16} weight="regular" />
+                        <PencilSimpleIcon size={14} weight="regular" />
                       </button>
                       <button
                         onClick={() => handleDeleteRoom(room._id)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                        className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                         title="מחק לצמיתות"
                       >
-                        <TrashIcon size={16} weight="regular" />
+                        <TrashIcon size={14} weight="regular" />
                       </button>
                     </div>
                   </div>
                 ))}
-                {rooms.filter(r => r.isActive === false).length === 0 && (
-                  <div className="text-xs text-gray-400 text-center py-2">אין חדרים מושבתים</div>
-                )}
               </div>
+              {inactiveRooms.length === 0 && (
+                <div className="text-xs text-gray-400 text-center py-2">אין חדרים מושבתים</div>
+              )}
             </AccordionItem>
           </Accordion>
         )}

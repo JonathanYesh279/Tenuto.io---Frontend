@@ -7,10 +7,11 @@
 
 import React, { useState, useMemo, memo } from 'react'
 import { Chip, Button, Tabs, Tab } from '@heroui/react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import TeacherNameDisplay from '../../../../../components/TeacherNameDisplay'
-import { ArrowsClockwiseIcon, BookOpenIcon, CalendarIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, InfoIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrashIcon, TrendUpIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { ArrowsClockwiseIcon, BookOpenIcon, CalendarBlankIcon, CalendarIcon, CheckCircleIcon, ClockIcon, GraduationCapIcon, InfoIcon, MapPinIcon, MedalIcon, MusicNotesIcon, PlusIcon, TrashIcon, TrendUpIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { DAY_OF_WEEK_NAMES } from '../../../../../utils/theoryLessonUtils'
 import {
   useStudent,
   useStudentTheoryLessons,
@@ -34,6 +35,25 @@ const getLevelChipColor = (level: string): 'success' | 'warning' | 'danger' | 'p
     default: return 'primary'
   }
 }
+
+const categoryChipStyle: Record<string, string> = {
+  'תלמידים חדשים ב-ד': 'bg-blue-100 text-blue-700 border-blue-200',
+  'תלמידים חדשים צעירים': 'bg-sky-100 text-sky-700 border-sky-200',
+  'תלמידים חדשים בוגרים (ה - ט)': 'bg-indigo-100 text-indigo-700 border-indigo-200',
+  'מתחילים': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'מתחילים ב': 'bg-green-100 text-green-700 border-green-200',
+  'מתחילים ד': 'bg-teal-100 text-teal-700 border-teal-200',
+  'מתקדמים א': 'bg-amber-100 text-amber-700 border-amber-200',
+  'מתקדמים ב': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  'מתקדמים ג': 'bg-orange-100 text-orange-700 border-orange-200',
+  'הכנה לרסיטל קלאסי יא': 'bg-rose-100 text-rose-700 border-rose-200',
+  "הכנה לרסיטל רוק\\פופ\\ג'אז יא": 'bg-red-100 text-red-700 border-red-200',
+  "הכנה לרסיטל רוק\\פופ\\ג'אז יב": 'bg-pink-100 text-pink-700 border-pink-200',
+  'מגמה': 'bg-violet-100 text-violet-700 border-violet-200',
+  'תאוריה כלי': 'bg-cyan-100 text-cyan-700 border-cyan-200',
+}
+
+const defaultCategoryStyle = 'bg-neutral-100 text-neutral-700 border-neutral-200'
 
 // Memoized lesson card component to prevent unnecessary re-renders
 const LessonCard = memo(({
@@ -87,174 +107,159 @@ const LessonCard = memo(({
   }, [lesson.maxStudents, lesson.studentIds])
 
   return (
-    <motion.div
-      className="bg-card rounded-card border border-border p-6 shadow-1"
-      whileHover={{ y: -2, boxShadow: '0 8px 25px rgba(0,0,0,0.08)' }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-    >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            {categoryIcon}
-            <h4 className="text-xl font-semibold text-foreground">
-              {lesson.title || lesson.name || 'שיעור תיאוריה'}
-            </h4>
-          </div>
+    <div className="relative h-full pt-3">
+      {/* Floating category chip */}
+      {lesson.category && (
+        <span className={`absolute top-0 right-4 z-10 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md border ${categoryChipStyle[lesson.category] || defaultCategoryStyle}`}>
+          {lesson.category}
+        </span>
+      )}
 
-          {lesson.category && (
-            <span className="text-sm text-muted-foreground">קטגוריה: {lesson.category}</span>
-          )}
-
-          <div className="mt-2 flex items-center gap-2 flex-wrap">
+      <motion.div
+        className="bg-card rounded-card border border-border h-full flex flex-col shadow-sm hover:shadow-md hover:border-primary transition-all"
+        whileHover={{ y: -2 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+      >
+        {/* Header: action buttons */}
+        <div className="flex items-center justify-between px-4 pt-4 pb-2">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {lesson.dayOfWeek != null && DAY_OF_WEEK_NAMES[lesson.dayOfWeek] && (
+              <Chip
+                size="sm"
+                variant="flat"
+                color="secondary"
+                startContent={<CalendarBlankIcon className="w-3 h-3" />}
+              >
+                יום {DAY_OF_WEEK_NAMES[lesson.dayOfWeek]}
+              </Chip>
+            )}
             {lesson.level && (
               <Chip color={getLevelChipColor(lesson.level)} variant="flat" size="sm">
                 {lesson.level}
               </Chip>
             )}
           </div>
-        </div>
 
-        <div className="flex items-center gap-2">
-          {isEnrolled ? (
-            <>
-              <span className="inline-flex items-center px-3 py-1 bg-success/10 text-success rounded-full text-sm font-medium">
-                <CheckCircleIcon className="w-3 h-3 mr-1" />
-                רשום
-              </span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {isEnrolled ? (
+              <>
+                <Chip color="success" variant="flat" size="sm" startContent={<CheckCircleIcon className="w-3 h-3" />}>
+                  רשום
+                </Chip>
+                <Button
+                  isIconOnly
+                  onPress={onUnenroll}
+                  isDisabled={isUnenrolling}
+                  color="danger"
+                  variant="light"
+                  size="sm"
+                  title="בטל הרשמה"
+                >
+                  {isUnenrolling ? (
+                    <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <TrashIcon className="w-4 h-4" />
+                  )}
+                </Button>
+              </>
+            ) : (
               <Button
-                isIconOnly
-                onPress={onUnenroll}
-                isDisabled={isUnenrolling}
-                color="danger"
-                variant="flat"
+                onPress={onEnroll}
+                isDisabled={!canEnroll || isEnrolling}
+                isLoading={isEnrolling}
+                color="primary"
+                variant="solid"
                 size="sm"
-                title="בטל הרשמה"
+                startContent={!isEnrolling ? <PlusIcon className="w-4 h-4" /> : undefined}
               >
-                {isUnenrolling ? (
-                  <ArrowsClockwiseIcon className="w-4 h-4 animate-spin" />
-                ) : (
-                  <TrashIcon className="w-4 h-4" />
-                )}
+                {isEnrolling ? 'נרשם...' : 'הרשם'}
               </Button>
-            </>
-          ) : (
-            <Button
-              onPress={onEnroll}
-              isDisabled={!canEnroll || isEnrolling}
-              isLoading={isEnrolling}
-              color="primary"
-              variant="solid"
-              size="sm"
-              startContent={!isEnrolling ? <PlusIcon className="w-4 h-4" /> : undefined}
-            >
-              {isEnrolling ? 'נרשם...' : 'הרשם'}
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {/* Teacher info */}
-      <TeacherNameDisplay
-        lesson={lesson}
-        className="mb-3"
-        showIcon={true}
-      />
-
-      {/* Schedule */}
-      {(lesson.date || lesson.startTime) && (
-        <div className="mb-3">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <ClockIcon className="w-4 h-4" />
-            <span className="text-sm">
-              {lesson.date && new Date(lesson.date).toLocaleDateString('he-IL')}
-              {lesson.startTime && lesson.endTime && (
-                <>
-                  {lesson.date ? ' • ' : ''}
-                  {formatTime(lesson.startTime)} - {formatTime(lesson.endTime)}
-                </>
-              )}
-            </span>
+            )}
           </div>
         </div>
-      )}
 
-      {/* Location */}
-      {lesson.location && (
-        <div className="flex items-center gap-2 text-muted-foreground mb-3">
-          <MapPinIcon className="w-4 h-4" />
-          <span className="text-sm">{lesson.location}</span>
-        </div>
-      )}
-
-      {/* Students count with progress bar */}
-      {studentsProgress && (
-        <div className="mb-3">
-          <div className="flex items-center gap-2 text-muted-foreground mb-2">
-            <UsersIcon className="w-4 h-4" />
-            <span className="text-sm">
-              {studentsProgress.current} / {studentsProgress.total} תלמידים
-            </span>
-          </div>
-          <div className="w-full bg-muted rounded-full h-2">
-            <div
-              className="bg-primary h-2 rounded-full transition-all duration-300"
-              style={{ width: `${studentsProgress.percentage}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Warning messages for non-enrolled lessons */}
-      {!isEnrolled && (
-        <>
-          {lesson.isFull && (
-            <div className="mb-3 p-3 bg-warning/10 border border-warning/20 rounded-card">
-              <div className="flex items-center gap-2 text-warning">
-                <WarningCircleIcon className="w-4 h-4" />
-                <span className="text-sm font-medium">השיעור מלא</span>
-              </div>
+        {/* Body: Teacher + Location */}
+        <div className="px-4 pb-2 space-y-1.5 flex-1">
+          <TeacherNameDisplay
+            lesson={lesson}
+            className="text-sm text-muted-foreground"
+            showIcon={true}
+          />
+          {lesson.location && (
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <MapPinIcon className="w-4 h-4 shrink-0" />
+              <span>{lesson.location}</span>
             </div>
           )}
-
-          {!lesson.gradeCompatible && (
-            <div className="mb-3 p-3 bg-danger/10 border border-danger/20 rounded-card">
-              <div className="flex items-center gap-2 text-danger">
-                <WarningCircleIcon className="w-4 h-4" />
-                <span className="text-sm font-medium">לא מתאים לכיתה</span>
-              </div>
-            </div>
+          {lesson.description && (
+            <p className="text-xs text-muted-foreground line-clamp-2">{lesson.description}</p>
           )}
+        </div>
 
-          {!lesson.levelCompatible && (
-            <div className="mb-3 p-3 bg-warning/10 border border-warning/20 rounded-card">
-              <div className="flex items-center gap-2 text-warning">
-                <WarningCircleIcon className="w-4 h-4" />
-                <span className="text-sm font-medium">רמה לא מתאימה</span>
-              </div>
+        {/* Warnings (compact) */}
+        {!isEnrolled && (lesson.isFull || !lesson.gradeCompatible || !lesson.levelCompatible) && (
+          <div className="px-4 pb-2 flex flex-wrap gap-1.5">
+            {lesson.isFull && (
+              <Chip size="sm" variant="flat" color="warning" startContent={<WarningCircleIcon className="w-3 h-3" />}>
+                השיעור מלא
+              </Chip>
+            )}
+            {!lesson.gradeCompatible && (
+              <Chip size="sm" variant="flat" color="danger" startContent={<WarningCircleIcon className="w-3 h-3" />}>
+                לא מתאים לכיתה
+              </Chip>
+            )}
+            {!lesson.levelCompatible && (
+              <Chip size="sm" variant="flat" color="warning" startContent={<WarningCircleIcon className="w-3 h-3" />}>
+                רמה לא מתאימה
+              </Chip>
+            )}
+          </div>
+        )}
+
+        {/* Students progress (compact) */}
+        {studentsProgress && (
+          <div className="px-4 pb-2">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+              <UsersIcon className="w-3.5 h-3.5" />
+              <span>{studentsProgress.current} / {studentsProgress.total} תלמידים</span>
             </div>
-          )}
-        </>
-      )}
+            <div className="w-full bg-muted rounded-full h-1.5">
+              <div
+                className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                style={{ width: `${studentsProgress.percentage}%` }}
+              />
+            </div>
+          </div>
+        )}
 
-      {/* Description */}
-      {lesson.description && (
-        <p className="text-sm text-muted-foreground mt-3 pt-3 border-t border-border">
-          {lesson.description}
-        </p>
-      )}
-
-      {/* Target grades */}
-      {lesson.targetGrades && lesson.targetGrades.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-border">
-          <div className="flex items-center gap-2">
-            <InfoIcon className="w-4 h-4 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">
-              מיועד לכיתות: {lesson.targetGrades.join(', ')}
-            </span>
+        {/* Footer: Date + Time */}
+        <div className="px-4 py-2.5 border-t border-border mt-auto">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            {(lesson.date || lesson.startTime) && (
+              <span className="flex items-center gap-1.5">
+                <ClockIcon className="w-4 h-4 shrink-0" />
+                <span>
+                  {lesson.date && new Date(lesson.date).toLocaleDateString('he-IL')}
+                  {lesson.startTime && lesson.endTime && (
+                    <>
+                      {lesson.date ? ' • ' : ''}
+                      {formatTime(lesson.startTime)} - {formatTime(lesson.endTime)}
+                    </>
+                  )}
+                </span>
+              </span>
+            )}
+            {lesson.targetGrades && lesson.targetGrades.length > 0 && (
+              <span className="flex items-center gap-1 text-xs">
+                <InfoIcon className="w-3.5 h-3.5" />
+                כיתות: {lesson.targetGrades.join(', ')}
+              </span>
+            )}
           </div>
         </div>
-      )}
-    </motion.div>
+      </motion.div>
+    </div>
   )
 })
 
@@ -312,7 +317,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
   const availableLessons = useAvailableTheoryLessons(studentId, studentGrade, studentLevel)
 
   // Use optimistic mutation hook
-  const { enroll, unenroll, isEnrolling, isUnenrolling, error: mutationError } = useTheoryLessonEnrollment(studentId)
+  const { enroll, unenroll, isEnrolling, isUnenrolling, enrollingLessonId, unenrollingLessonId, error: mutationError } = useTheoryLessonEnrollment(studentId)
 
   // Memoized handlers
   const handleEnrollment = useMemo(() => (lessonId: string) => {
@@ -379,7 +384,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
           שיעורי תיאוריה רשומים ({enrolledLessons.length})
         </h3>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {enrolledLessons.map((lesson, index) => (
             <motion.div
               key={lesson._id}
@@ -391,7 +396,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
                 lesson={lesson}
                 isEnrolled={true}
                 onUnenroll={() => setShowConfirmDialog(lesson._id)}
-                isUnenrolling={isUnenrolling}
+                isUnenrolling={unenrollingLessonId === lesson._id}
                 studentGrade={studentGrade}
               />
             </motion.div>
@@ -404,15 +409,10 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
   const renderManagementView = () => {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <PlusIcon className="w-5 h-5 text-success" />
-            שיעורי תיאוריה זמינים להרשמה
-          </h3>
-          <div className="text-sm text-muted-foreground">
-            כיתה: {studentGrade} • רמה: {studentLevel}
-          </div>
-        </div>
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+          <PlusIcon className="w-5 h-5 text-success" />
+          שיעורי תיאוריה זמינים להרשמה
+        </h3>
 
         {availableLessons.length === 0 ? (
           <EmptyState
@@ -421,7 +421,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
             description="כל השיעורים המתאימים מלאים או שכבר נרשמת אליהם"
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {availableLessons.map((lesson, index) => (
               <motion.div
                 key={lesson._id}
@@ -433,7 +433,7 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
                   lesson={lesson}
                   isEnrolled={false}
                   onEnroll={() => handleEnrollment(lesson._id)}
-                  isEnrolling={isEnrolling}
+                  isEnrolling={enrollingLessonId === lesson._id}
                   studentGrade={studentGrade}
                   canEnroll={lesson.isCompatible}
                 />
@@ -482,7 +482,17 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
       </div>
 
       {/* Content */}
-      {activeView === 'current' ? renderCurrentEnrollments() : renderManagementView()}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeView}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+        >
+          {activeView === 'current' ? renderCurrentEnrollments() : renderManagementView()}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
@@ -505,14 +515,13 @@ const TheoryTabOptimized: React.FC<TheoryTabProps> = ({ student, studentId }) =>
               </Button>
               <Button
                 onPress={() => handleUnenrollment(showConfirmDialog)}
-                isDisabled={isUnenrolling}
-                isLoading={isUnenrolling}
+                isDisabled={unenrollingLessonId === showConfirmDialog}
+                isLoading={unenrollingLessonId === showConfirmDialog}
                 color="danger"
                 variant="solid"
                 size="sm"
-                startContent={!isUnenrolling ? undefined : undefined}
               >
-                {isUnenrolling ? 'מבטל...' : 'בטל הרשמה'}
+                {unenrollingLessonId === showConfirmDialog ? 'מבטל...' : 'בטל הרשמה'}
               </Button>
             </div>
           </div>

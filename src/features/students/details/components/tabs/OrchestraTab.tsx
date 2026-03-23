@@ -7,12 +7,51 @@
 
 import { useState, useEffect } from 'react'
 import { Chip, Button, Tabs, Tab } from '@heroui/react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
-import { CheckCircleIcon, MusicNotesIcon, PlusIcon, TrashIcon, WarningCircleIcon } from '@phosphor-icons/react'
-import { ActivityTimelineCard } from '@/components/schedule/ActivityTimelineCard'
+import {
+  ArrowsClockwise as ArrowsClockwiseIcon,
+  CalendarBlank as CalendarBlankIcon,
+  CheckCircle as CheckCircleIcon,
+  Clock as ClockIcon,
+  MapPin as MapPinIcon,
+  MusicNotes as MusicNotesIcon,
+  Plus as PlusIcon,
+  Trash as TrashIcon,
+  User as UserIcon,
+  Users as UsersIcon,
+  WarningCircle as WarningCircleIcon,
+} from '@phosphor-icons/react'
+
+const DAY_NAMES: Record<number, string> = {
+  0: 'ראשון',
+  1: 'שני',
+  2: 'שלישי',
+  3: 'רביעי',
+  4: 'חמישי',
+  5: 'שישי',
+}
+
+function getConductorName(orchestra: any): string {
+  if (!orchestra.conductor) return 'לא מוגד'
+  if (typeof orchestra.conductor === 'string') return orchestra.conductor
+  const dn = getDisplayName(orchestra.conductor.personalInfo)
+  if (dn) return dn
+  return orchestra.conductor.displayName || orchestra.conductor.name || 'לא מוגד'
+}
+
+function getOrchestraScheduleInfo(orchestra: any) {
+  const slot = orchestra.scheduleSlots?.[0]
+  const sched = orchestra.rehearsalSchedule
+  const dayNum = slot?.dayOfWeek ?? sched?.dayOfWeek
+  const dayName = dayNum != null ? DAY_NAMES[dayNum] : (sched?.dayName || '')
+  const startTime = slot?.startTime || sched?.startTime || ''
+  const endTime = slot?.endTime || sched?.endTime || ''
+  const location = orchestra.location || slot?.location || sched?.location || ''
+  return { dayName, startTime, endTime, location }
+}
 
 interface RehearsalSchedule {
   dayOfWeek: number
@@ -347,145 +386,101 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
           תזמורות רשומות ({enrolledOrchestras.length})
         </h3>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {enrolledOrchestras.map((orchestra) => (
-            <motion.div
-              key={orchestra._id}
-              className="bg-card rounded-card border border-border p-6 shadow-1"
-              whileHover={{ y: -2 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h4 className="text-xl font-semibold text-foreground">{orchestra.name}</h4>
-                  <div className="mt-2 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-foreground">מנצח:</span>
-                      <span className="text-sm text-foreground">
-                        {(() => {
-                          console.log('🎭 Debugging conductor for orchestra:', orchestra.name)
-                          console.log('🎭 Orchestra object keys:', Object.keys(orchestra))
-                          console.log('🎭 Orchestra.conductor:', orchestra.conductor)
-                          console.log('🎭 Orchestra.conductorId:', orchestra.conductorId)
-                          console.log('🎭 Orchestra.teacherId:', orchestra.teacherId)
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          {enrolledOrchestras.map((orchestra) => {
+            const sched = getOrchestraScheduleInfo(orchestra)
+            const conductorName = getConductorName(orchestra)
+            return (
+              <div key={orchestra._id} className="relative h-full pt-3">
+                {/* Floating type chip */}
+                <span className="absolute top-0 right-4 z-10 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md border bg-amber-100 text-amber-700 border-amber-200">
+                  {orchestra.type || 'תזמורת'}
+                </span>
 
-                          // Try different ways to get conductor name
-                          if (orchestra.conductor) {
-                            console.log('🎭 Conductor object:', orchestra.conductor)
-                            console.log('🎭 Conductor type:', typeof orchestra.conductor)
-                            console.log('🎭 Conductor keys:', typeof orchestra.conductor === 'object' ? Object.keys(orchestra.conductor) : 'N/A')
-                            console.log('🎭 Conductor.personalInfo:', orchestra.conductor.personalInfo)
-                            console.log('🎭 Conductor.personalInfo keys:', orchestra.conductor.personalInfo ? Object.keys(orchestra.conductor.personalInfo) : 'No personalInfo')
-
-                            if (typeof orchestra.conductor === 'string') {
-                              console.log('🎭 Using string conductor name:', orchestra.conductor)
-                              return orchestra.conductor
-                            }
-
-                            // Check for name using getDisplayName first
-                            const displayNameResult = getDisplayName(orchestra.conductor.personalInfo)
-                            if (displayNameResult) {
-                              console.log('🎭 Using getDisplayName:', displayNameResult)
-                              return displayNameResult
-                            }
-                            if (orchestra.conductor.fullName) {
-                              console.log('🎭 Using fullName:', orchestra.conductor.fullName)
-                              return orchestra.conductor.fullName
-                            }
-
-                            // Check for firstName + lastName
-                            if (orchestra.conductor.personalInfo?.firstName && orchestra.conductor.personalInfo?.lastName) {
-                              const name = `${orchestra.conductor.personalInfo.firstName} ${orchestra.conductor.personalInfo.lastName}`
-                              console.log('🎭 Using personalInfo firstName + lastName:', name)
-                              return name
-                            }
-
-                            // Check for name field
-                            if (orchestra.conductor.personalInfo?.name) {
-                              console.log('🎭 Using personalInfo.name:', orchestra.conductor.personalInfo.name)
-                              return orchestra.conductor.personalInfo.name
-                            }
-                            if (orchestra.conductor.name) {
-                              console.log('🎭 Using name:', orchestra.conductor.name)
-                              return orchestra.conductor.name
-                            }
-
-                            // Check Hebrew name fields
-                            if (orchestra.conductor.personalInfo?.hebrewName) {
-                              console.log('🎭 Using personalInfo.hebrewName:', orchestra.conductor.personalInfo.hebrewName)
-                              return orchestra.conductor.personalInfo.hebrewName
-                            }
-
-                            // Check for displayName
-                            if (orchestra.conductor.displayName) {
-                              console.log('🎭 Using displayName:', orchestra.conductor.displayName)
-                              return orchestra.conductor.displayName
-                            }
-                          }
-                          console.log('🎭 No conductor data found, returning default')
-                          return 'לא מוגד'
-                        })()}
-                      </span>
+                <motion.div
+                  className="bg-card rounded-card border border-border h-full flex flex-col shadow-sm hover:shadow-md hover:border-primary transition-all"
+                  whileHover={{ y: -2 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                >
+                  {/* Header: day chip + action buttons */}
+                  <div className="flex items-center justify-between px-4 pt-4 pb-2">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {sched.dayName && (
+                        <Chip size="sm" variant="flat" color="secondary" startContent={<CalendarBlankIcon className="w-3 h-3" />}>
+                          יום {sched.dayName}
+                        </Chip>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <Chip color="success" variant="flat" size="sm" startContent={<CheckCircleIcon className="w-3 h-3" />}>
+                        רשום
+                      </Chip>
+                      <Button
+                        isIconOnly
+                        variant="light"
+                        color="danger"
+                        size="sm"
+                        onPress={() => setShowConfirmDialog(orchestra._id)}
+                        isDisabled={enrollmentInProgress === orchestra._id}
+                        title="בטל הרשמה"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
-                  {orchestra.error && (
-                    <p className="text-danger text-sm mt-1">שגיאה בטעינת פרטי התזמורת</p>
+
+                  {/* Body: conductor + location */}
+                  <div className="px-4 pb-2 space-y-1.5 flex-1">
+                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                      <UserIcon className="w-4 h-4 shrink-0" />
+                      <span>מנצח: {conductorName}</span>
+                    </div>
+                    {sched.location && (
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <MapPinIcon className="w-4 h-4 shrink-0" />
+                        <span>{sched.location}</span>
+                      </div>
+                    )}
+                    {orchestra.description && (
+                      <p className="text-xs text-muted-foreground line-clamp-2">{orchestra.description}</p>
+                    )}
+                  </div>
+
+                  {/* Capacity */}
+                  {orchestra.capacity && (
+                    <div className="px-4 pb-2">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                        <UsersIcon className="w-3.5 h-3.5" />
+                        <span>{orchestra.memberIds?.length || 0} / {orchestra.capacity} חברים</span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-1.5">
+                        <div
+                          className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${Math.min(100, ((orchestra.memberIds?.length || 0) / orchestra.capacity) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
                   )}
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <Chip color="success" variant="flat" size="sm" startContent={<CheckCircleIcon className="w-3 h-3" />}>
-                    רשום
-                  </Chip>
-
-                  <Button
-                    isIconOnly
-                    variant="light"
-                    color="danger"
-                    size="sm"
-                    onPress={() => setShowConfirmDialog(orchestra._id)}
-                    isDisabled={enrollmentInProgress === orchestra._id}
-                    title="בטל הרשמה"
-                  >
-                    <TrashIcon className="w-4 h-4" />
-                  </Button>
-                </div>
+                  {/* Footer: time */}
+                  <div className="px-4 py-2.5 border-t border-border mt-auto">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      {(sched.startTime || sched.endTime) && (
+                        <span className="flex items-center gap-1.5">
+                          <ClockIcon className="w-4 h-4 shrink-0" />
+                          <span>
+                            {sched.startTime && sched.endTime
+                              ? `${sched.startTime} - ${sched.endTime}`
+                              : sched.startTime}
+                          </span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
               </div>
-
-              {orchestra.description && (
-                <p className="text-muted-foreground mb-4">{orchestra.description}</p>
-              )}
-
-              {/* Rehearsal Summary */}
-              {orchestra.rehearsalSchedule && (
-                <ActivityTimelineCard
-                  title={orchestra.name}
-                  subtitle={(() => {
-                    if (!orchestra.conductor) return undefined
-                    if (typeof orchestra.conductor === 'string') return orchestra.conductor
-                    const dn = getDisplayName(orchestra.conductor.personalInfo)
-                    if (dn) return dn
-                    if (orchestra.conductor.personalInfo?.firstName && orchestra.conductor.personalInfo?.lastName) {
-                      return `${orchestra.conductor.personalInfo.firstName} ${orchestra.conductor.personalInfo.lastName}`
-                    }
-                    return orchestra.conductor.displayName || orchestra.conductor.name || undefined
-                  })()}
-                  type="orchestra"
-                  startTime={orchestra.rehearsalSchedule.startTime || '—'}
-                  endTime={orchestra.rehearsalSchedule.endTime || '—'}
-                  location={orchestra.rehearsalSchedule.location || orchestra.location}
-                  className="mt-2 mb-4"
-                />
-              )}
-
-              {/* Capacity Info */}
-              {orchestra.capacity && (
-                <div className="text-sm text-muted-foreground">
-                  קיבולת: {orchestra.currentMembers || 0} / {orchestra.capacity} חברים
-                </div>
-              )}
-            </motion.div>
-          ))}
+            )
+          })}
         </div>
       </div>
     )
@@ -525,210 +520,116 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {availableOrchestras.map((orchestra) => {
               const hasConflict = checkScheduleConflict(orchestra)
               const isFull = orchestra.capacity && orchestra.currentMembers >= orchestra.capacity
               const canEnroll = !hasConflict && !isFull && orchestra.isCompatible
+              const sched = getOrchestraScheduleInfo(orchestra)
+              const conductorName = getConductorName(orchestra)
 
               return (
-                <motion.div
-                  key={orchestra._id}
-                  className={`bg-card rounded-card border border-border p-6 shadow-1 ${
-                    !canEnroll ? 'opacity-75' : ''
-                  }`}
-                  whileHover={{ y: -2 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h4 className="text-xl font-semibold text-foreground">{orchestra.name}</h4>
-                      <div className="mt-2 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-foreground">מנצח:</span>
-                          <span className="text-sm text-foreground">
-                            {(() => {
-                              console.log('🎪 Debugging conductor for available orchestra:', orchestra.name)
-                              console.log('🎪 Available orchestra.conductor:', orchestra.conductor)
-                              console.log('🎪 Available orchestra.conductorId:', orchestra.conductorId)
+                <div key={orchestra._id} className="relative h-full pt-3">
+                  {/* Floating type chip */}
+                  <span className="absolute top-0 right-4 z-10 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md border bg-amber-100 text-amber-700 border-amber-200">
+                    {orchestra.type || 'תזמורת'}
+                  </span>
 
-                              // Try different ways to get conductor name
-                              if (orchestra.conductor) {
-                                console.log('🎪 Available conductor object:', orchestra.conductor)
-                                console.log('🎪 Available conductor type:', typeof orchestra.conductor)
-                                console.log('🎪 Available conductor keys:', Object.keys(orchestra.conductor))
-                                console.log('🎪 Available conductor.personalInfo:', orchestra.conductor.personalInfo)
-                                console.log('🎪 Available conductor.personalInfo keys:', orchestra.conductor.personalInfo ? Object.keys(orchestra.conductor.personalInfo) : 'No personalInfo')
+                  <motion.div
+                    className={`bg-card rounded-card border border-border h-full flex flex-col shadow-sm hover:shadow-md hover:border-primary transition-all ${!canEnroll ? 'opacity-75' : ''}`}
+                    whileHover={{ y: -2 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  >
+                    {/* Header: day chip + enroll button */}
+                    <div className="flex items-center justify-between px-4 pt-4 pb-2">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {sched.dayName && (
+                          <Chip size="sm" variant="flat" color="secondary" startContent={<CalendarBlankIcon className="w-3 h-3" />}>
+                            יום {sched.dayName}
+                          </Chip>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Button
+                          onPress={() => handleEnrollment(orchestra._id)}
+                          isDisabled={!canEnroll || enrollmentInProgress === orchestra._id}
+                          isLoading={enrollmentInProgress === orchestra._id}
+                          color="primary"
+                          variant="solid"
+                          size="sm"
+                          startContent={enrollmentInProgress !== orchestra._id ? <PlusIcon className="w-4 h-4" /> : undefined}
+                        >
+                          {enrollmentInProgress === orchestra._id ? 'נרשם...' : 'הרשם'}
+                        </Button>
+                      </div>
+                    </div>
 
-                                if (typeof orchestra.conductor === 'string') {
-                                  console.log('🎪 Using string conductor name:', orchestra.conductor)
-                                  return orchestra.conductor
-                                }
+                    {/* Body: conductor + location */}
+                    <div className="px-4 pb-2 space-y-1.5 flex-1">
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <UserIcon className="w-4 h-4 shrink-0" />
+                        <span>מנצח: {conductorName}</span>
+                      </div>
+                      {sched.location && (
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                          <MapPinIcon className="w-4 h-4 shrink-0" />
+                          <span>{sched.location}</span>
+                        </div>
+                      )}
+                      {orchestra.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-2">{orchestra.description}</p>
+                      )}
+                    </div>
 
-                                // Check for name using getDisplayName first
-                                const availableDisplayName = getDisplayName(orchestra.conductor.personalInfo)
-                                if (availableDisplayName) {
-                                  console.log('🎪 Using getDisplayName:', availableDisplayName)
-                                  return availableDisplayName
-                                }
-                                if (orchestra.conductor.fullName) {
-                                  console.log('🎪 Using fullName:', orchestra.conductor.fullName)
-                                  return orchestra.conductor.fullName
-                                }
+                    {/* Warnings */}
+                    {(hasConflict || isFull) && (
+                      <div className="px-4 pb-2 flex flex-wrap gap-1.5">
+                        {hasConflict && (
+                          <Chip size="sm" variant="flat" color="danger" startContent={<WarningCircleIcon className="w-3 h-3" />}>
+                            התנגשות בלו"ז
+                          </Chip>
+                        )}
+                        {isFull && (
+                          <Chip size="sm" variant="flat" color="warning" startContent={<WarningCircleIcon className="w-3 h-3" />}>
+                            התזמורת מלאה
+                          </Chip>
+                        )}
+                      </div>
+                    )}
 
-                                // Check for firstName + lastName
-                                if (orchestra.conductor.personalInfo?.firstName && orchestra.conductor.personalInfo?.lastName) {
-                                  const name = `${orchestra.conductor.personalInfo.firstName} ${orchestra.conductor.personalInfo.lastName}`
-                                  console.log('🎪 Using personalInfo firstName + lastName:', name)
-                                  return name
-                                }
-
-                                // Check for name field
-                                if (orchestra.conductor.personalInfo?.name) {
-                                  console.log('🎪 Using personalInfo.name:', orchestra.conductor.personalInfo.name)
-                                  return orchestra.conductor.personalInfo.name
-                                }
-                                if (orchestra.conductor.name) {
-                                  console.log('🎪 Using name:', orchestra.conductor.name)
-                                  return orchestra.conductor.name
-                                }
-
-                                // Check Hebrew name fields
-                                if (orchestra.conductor.personalInfo?.hebrewName) {
-                                  console.log('🎪 Using personalInfo.hebrewName:', orchestra.conductor.personalInfo.hebrewName)
-                                  return orchestra.conductor.personalInfo.hebrewName
-                                }
-
-                                // Check for displayName
-                                if (orchestra.conductor.displayName) {
-                                  console.log('🎪 Using displayName:', orchestra.conductor.displayName)
-                                  return orchestra.conductor.displayName
-                                }
-                              }
-                              console.log('🎪 No conductor data found for available orchestra, returning default')
-                              return 'לא מוגד'
-                            })()}
-                          </span>
+                    {/* Capacity */}
+                    {orchestra.capacity && (
+                      <div className="px-4 pb-2">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                          <UsersIcon className="w-3.5 h-3.5" />
+                          <span>{orchestra.memberIds?.length || 0} / {orchestra.capacity} חברים</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-1.5">
+                          <div
+                            className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                            style={{ width: `${Math.min(100, ((orchestra.memberIds?.length || 0) / orchestra.capacity) * 100)}%` }}
+                          />
                         </div>
                       </div>
+                    )}
 
-                      {/* Level and Type */}
-                      <div className="mt-2 flex items-center gap-2">
-                        {orchestra.level && (
-                          <Chip
-                            color={
-                              orchestra.level === 'beginner' ? 'success' :
-                              orchestra.level === 'intermediate' ? 'warning' :
-                              orchestra.level === 'advanced' ? 'danger' :
-                              'primary'
-                            }
-                            variant="flat"
-                            size="sm"
-                          >
-                            {orchestra.level === 'beginner' ? 'מתחילים' :
-                             orchestra.level === 'intermediate' ? 'בינוני' :
-                             orchestra.level === 'advanced' ? 'מתקדמים' : 'מעורב'}
-                          </Chip>
-                        )}
-
-                        {orchestra.gradeRequirements && orchestra.gradeRequirements.includes(studentGrade) && (
-                          <Chip color="primary" variant="flat" size="sm">
-                            מתאים לכיתה {studentGrade}
-                          </Chip>
+                    {/* Footer: time */}
+                    <div className="px-4 py-2.5 border-t border-border mt-auto">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        {(sched.startTime || sched.endTime) && (
+                          <span className="flex items-center gap-1.5">
+                            <ClockIcon className="w-4 h-4 shrink-0" />
+                            <span>
+                              {sched.startTime && sched.endTime
+                                ? `${sched.startTime} - ${sched.endTime}`
+                                : sched.startTime}
+                            </span>
+                          </span>
                         )}
                       </div>
                     </div>
-
-                    <Button
-                      color={canEnroll ? 'success' : 'default'}
-                      variant="solid"
-                      size="sm"
-                      isDisabled={!canEnroll || enrollmentInProgress === orchestra._id}
-                      isLoading={enrollmentInProgress === orchestra._id}
-                      onPress={() => handleEnrollment(orchestra._id)}
-                      startContent={enrollmentInProgress !== orchestra._id ? <PlusIcon className="w-4 h-4" /> : undefined}
-                    >
-                      {enrollmentInProgress === orchestra._id ? 'נרשם...' : 'הרשם'}
-                    </Button>
-                  </div>
-
-                  {orchestra.description && (
-                    <p className="text-muted-foreground mb-4">{orchestra.description}</p>
-                  )}
-
-                  {/* Warning Messages */}
-                  {hasConflict && (
-                    <div className="mb-4 p-3 bg-danger/5 border border-danger/20 rounded-card">
-                      <div className="flex items-center gap-2 text-danger">
-                        <WarningCircleIcon className="w-4 h-4" />
-                        <span className="text-sm font-medium">התנגשות בלוח זמנים</span>
-                      </div>
-                      <p className="text-danger text-sm mt-1">
-                        זמני החזרות מתנגשים עם השיעור שלך בימי שלישי 14:30-15:15
-                      </p>
-                    </div>
-                  )}
-
-                  {isFull && (
-                    <div className="mb-4 p-3 bg-warning/5 border border-warning/20 rounded-card">
-                      <div className="flex items-center gap-2 text-warning">
-                        <WarningCircleIcon className="w-4 h-4" />
-                        <span className="text-sm font-medium">התזמורת מלאה</span>
-                      </div>
-                      <p className="text-warning text-sm mt-1">
-                        כל המקומות בתזמורת תפוסים
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Rehearsal Summary */}
-                  {orchestra.rehearsalSchedule && (
-                    <ActivityTimelineCard
-                      title={orchestra.name}
-                      subtitle={(() => {
-                        if (!orchestra.conductor) return undefined
-                        if (typeof orchestra.conductor === 'string') return orchestra.conductor
-                        const dn = getDisplayName(orchestra.conductor.personalInfo)
-                        if (dn) return dn
-                        if (orchestra.conductor.personalInfo?.firstName && orchestra.conductor.personalInfo?.lastName) {
-                          return `${orchestra.conductor.personalInfo.firstName} ${orchestra.conductor.personalInfo.lastName}`
-                        }
-                        return orchestra.conductor.displayName || orchestra.conductor.name || undefined
-                      })()}
-                      type="orchestra"
-                      startTime={orchestra.rehearsalSchedule.startTime || '—'}
-                      endTime={orchestra.rehearsalSchedule.endTime || '—'}
-                      location={orchestra.rehearsalSchedule.location || orchestra.location}
-                      className="mt-2 mb-4"
-                    />
-                  )}
-
-                  {/* Required Instruments */}
-                  {orchestra.requiredInstruments && orchestra.requiredInstruments.length > 0 && (
-                    <div className="mb-4">
-                      <h5 className="font-medium text-foreground mb-2">כלים נדרשים</h5>
-                      <div className="flex flex-wrap gap-1">
-                        {orchestra.requiredInstruments.map((instrument: string, index: number) => (
-                          <Chip
-                            key={index}
-                            color={instrument === studentInstrument ? 'success' : 'default'}
-                            variant="flat"
-                            size="sm"
-                          >
-                            {instrument}
-                          </Chip>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Capacity Info */}
-                  {orchestra.capacity && (
-                    <div className="text-sm text-muted-foreground">
-                      קיבולת: {orchestra.currentMembers || 0} / {orchestra.capacity} חברים
-                    </div>
-                  )}
-                </motion.div>
+                  </motion.div>
+                </div>
               )
             })}
           </div>
@@ -749,8 +650,8 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
         <Tabs
           selectedKey={activeView}
           onSelectionChange={(key) => setActiveView(key as 'current' | 'manage')}
-          variant="underlined"
-          classNames={{ tabList: 'border-b border-border' }}
+          size="sm"
+          variant="solid"
         >
           <Tab
             key="current"
@@ -774,7 +675,17 @@ const OrchestraTab: React.FC<OrchestraTabProps> = ({ student, studentId, isLoadi
       </div>
 
       {/* Content */}
-      {activeView === 'current' ? renderCurrentEnrollments() : renderManagementView()}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeView}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+        >
+          {activeView === 'current' ? renderCurrentEnrollments() : renderManagementView()}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && (

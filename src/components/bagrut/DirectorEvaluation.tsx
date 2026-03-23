@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,7 @@ interface DirectorEvaluationProps {
 
 export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
   directorEvaluation = {},
-  directorName = "לימור אקטע",
+  directorName = '',
   onUpdate,
   readonly = false,
 }) => {
@@ -27,7 +26,6 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
     comments: directorEvaluation.comments || '',
   });
 
-  const [signature, setSignature] = useState('');
   const [evaluationDate, setEvaluationDate] = useState('');
 
   useEffect(() => {
@@ -54,32 +52,32 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
 
   const getPointColor = (points: number): string => {
     if (points >= 8) return 'text-green-700';
-    if (points >= 6) return 'text-blue-700';
+    if (points >= 6) return 'text-primary';
     if (points >= 5) return 'text-yellow-700';
     return 'text-red-700';
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-gray-900 flex items-center">
-          <UserCircleCheckIcon className="w-6 h-6 ml-3 text-blue-600" />
-          הערכת המנהל/ת
-        </h3>
-        <div className="text-sm text-gray-600">
-          <span className="font-medium">משקל:</span> 10% מהציון הסופי
+    <div>
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-muted/50 rounded-lg">
+            <UserCircleCheckIcon className="w-5 h-5 text-primary" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">הערכת המנהל/ת</h3>
         </div>
+        <span className="text-sm text-muted-foreground">משקל: 10% מהציון הסופי</span>
       </div>
 
-      <div className="mb-6 p-4 bg-blue-50 rounded">
+      <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-card">
         <div className="flex items-start">
-          <StarIcon className="w-5 h-5 text-blue-600 ml-3 mt-0.5" />
+          <StarIcon className="w-5 h-5 text-primary ml-3 mt-0.5" />
           <div>
-            <h4 className="font-semibold text-blue-900 mb-2">על הערכת המנהל/ת</h4>
-            <p className="text-sm text-blue-800 mb-2">
+            <h4 className="font-semibold text-foreground mb-2">על הערכת המנהל/ת</h4>
+            <p className="text-sm text-muted-foreground mb-2">
               הערכת המנהל/ת מהווה 10% מהציון הסופי בבגרות המוסיקה ומבוססת על:
             </p>
-            <ul className="text-sm text-blue-800 space-y-1">
+            <ul className="text-sm text-muted-foreground space-y-1">
               <li>• מעורבות והשתתפות בחיי בית הספר המוסיקלי</li>
               <li>• התקדמות והתפתחות לאורך השנים</li>
               <li>• יחס והתנהגות כלפי הלמידה והחברים</li>
@@ -106,19 +104,19 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
                 value={formData.points || ''}
                 onChange={(e) => updateField('points', parseFloat(e.target.value) || undefined)}
                 disabled={readonly}
-                className="text-center text-2xl font-bold h-16 border-2 focus:border-blue-500"
+                className="text-center text-2xl font-bold h-16 border"
                 placeholder="0.0"
               />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
                 /10
               </div>
             </div>
-            
+
             {formData.points !== undefined && (
               <div className={`text-center mt-2 font-semibold ${getPointColor(formData.points)}`}>
                 {getPointDescription(formData.points)}
                 {formData.percentage !== undefined && (
-                  <span className="block text-sm text-gray-600 mt-1">
+                  <span className="block text-sm text-muted-foreground mt-1">
                     ({formData.percentage.toFixed(1)}%)
                   </span>
                 )}
@@ -141,22 +139,13 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
           </div>
 
           <div>
-            <Label htmlFor="director-signature" className="text-right block mb-2 font-semibold">
+            <Label className="text-right block mb-2 font-semibold">
               <SignatureIcon className="w-4 h-4 inline ml-2" />
               חתימת המנהל/ת
             </Label>
-            <div className="text-sm text-gray-600 mb-2 text-right">
+            <div className="text-sm font-medium text-foreground text-right">
               {directorName}
             </div>
-            <Input
-              id="director-signature"
-              value={signature}
-              onChange={(e) => setSignature(e.target.value)}
-              placeholder="חתימה דיגיטלית"
-              disabled={readonly}
-              className="text-right"
-              dir="rtl"
-            />
           </div>
         </div>
 
@@ -176,43 +165,43 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded">
-        <h4 className="font-semibold text-yellow-800 mb-2">חישוב במסגרת הציון הסופי:</h4>
-        <div className="text-sm text-yellow-700">
+      <div className="mt-6 p-4 bg-warning/5 border border-warning/20 rounded-card">
+        <h4 className="font-semibold text-foreground mb-2">חישוב במסגרת הציון הסופי:</h4>
+        <div className="text-sm text-muted-foreground">
           <p>• ציון מגן הבגרות: 90% מהציון הסופי</p>
           <p>• הערכת המנהל/ת: 10% מהציון הסופי</p>
           {formData.points !== undefined && (
-            <p className="mt-2 font-semibold">
+            <p className="mt-2 font-semibold text-foreground">
               תרומה לציון הסופי: {(formData.points / 10 * 10).toFixed(1)} נקודות
             </p>
           )}
         </div>
       </div>
 
-      <div className="mt-6 p-4 border-2 border-gray-300 rounded">
-        <h4 className="font-bold text-gray-900 mb-3">סולם הערכה</h4>
+      <div className="mt-6 p-4 border border-border rounded-card">
+        <h4 className="font-semibold text-foreground mb-3">סולם הערכה</h4>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-          <div className="flex justify-between p-2 bg-green-100 rounded">
+          <div className="flex justify-between p-2 bg-green-100 rounded-card">
             <span className="font-medium">מצוין</span>
             <span>9.0-10.0</span>
           </div>
-          <div className="flex justify-between p-2 bg-blue-100 rounded">
+          <div className="flex justify-between p-2 bg-primary/10 rounded-card">
             <span className="font-medium">טוב מאוד</span>
             <span>8.0-8.9</span>
           </div>
-          <div className="flex justify-between p-2 bg-blue-50 rounded">
+          <div className="flex justify-between p-2 bg-primary/5 rounded-card">
             <span className="font-medium">טוב</span>
             <span>7.0-7.9</span>
           </div>
-          <div className="flex justify-between p-2 bg-yellow-100 rounded">
+          <div className="flex justify-between p-2 bg-yellow-100 rounded-card">
             <span className="font-medium">מספק</span>
             <span>6.0-6.9</span>
           </div>
-          <div className="flex justify-between p-2 bg-orange-100 rounded">
+          <div className="flex justify-between p-2 bg-orange-100 rounded-card">
             <span className="font-medium">כמעט מספק</span>
             <span>5.0-5.9</span>
           </div>
-          <div className="flex justify-between p-2 bg-red-100 rounded">
+          <div className="flex justify-between p-2 bg-red-100 rounded-card">
             <span className="font-medium">לא מספק</span>
             <span>0.0-4.9</span>
           </div>
@@ -221,15 +210,15 @@ export const DirectorEvaluation: React.FC<DirectorEvaluationProps> = ({
 
       {!readonly && formData.points !== undefined && (
         <div className="mt-6 text-center">
-          <div className="text-lg font-bold text-gray-900">
+          <div className="text-lg font-bold text-foreground">
             הערכת המנהל/ת: {formData.points}/10
           </div>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-muted-foreground">
             משמעות: {getPointDescription(formData.points)} • תרומה לציון הסופי: {(formData.points / 10 * 10).toFixed(1)} נקודות
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 

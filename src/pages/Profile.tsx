@@ -7,16 +7,10 @@ import {
   MusicNoteIcon,
   BookOpenIcon,
   CalendarIcon,
-  ClockIcon,
-  PulseIcon,
   CheckSquareIcon,
-  BuildingsIcon,
-  ChalkboardTeacherIcon,
   LockKeyIcon,
-  ShieldCheckIcon,
-  IdentificationCardIcon,
 } from '@phosphor-icons/react'
-import { Chip } from '@heroui/react'
+import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '../components/ui/animated-tabs'
 import TeacherStudentsTab from '../components/profile/TeacherStudentsTab'
 import ConductorOrchestrasTab from '../components/profile/ConductorOrchestrasTab'
 import TeacherScheduleTab from '../components/profile/TeacherScheduleTab'
@@ -28,9 +22,7 @@ import ProfileSidebar from '../components/profile/ProfileSidebar'
 import apiService, { teacherService, studentService, orchestraService } from '../services/apiService'
 import { getDisplayName } from '../utils/nameUtils'
 import { GlassStatCard } from '../components/ui/GlassStatCard'
-import { Tabs, TabsList, TabsTrigger, TabsContents, TabsContent } from '../components/ui/animated-tabs'
-
-interface Tab {
+interface ProfileTab {
   id: string
   label: string
   icon: React.ComponentType<{ className?: string }>
@@ -224,8 +216,8 @@ export default function Profile() {
     )
   }
 
-  const getTabsByRole = (): Tab[] => {
-    const baseTabs: Tab[] = [
+  const getTabsByRole = (): ProfileTab[] => {
+    const baseTabs: ProfileTab[] = [
       {
         id: 'general',
         label: 'פרטים כלליים',
@@ -288,25 +280,6 @@ export default function Profile() {
 
   const tabs = getTabsByRole()
   const activeTabData = tabs.find((tab) => tab.id === activeTab) || tabs[0]
-
-  const getRoleLabel = (role: string): string => {
-    switch (role) {
-      case 'teacher':
-      case 'מורה':
-        return 'מורה'
-      case 'conductor':
-      case 'מנצח':
-        return 'מנצח'
-      case 'תאוריה':
-      case 'מורה תיאוריה':
-        return 'מורה תיאוריה'
-      case 'admin':
-      case 'מנהל':
-        return 'מנהל'
-      default:
-        return role
-    }
-  }
 
   // Choose stat cards based on role
   const getStatCards = () => {
@@ -398,76 +371,38 @@ export default function Profile() {
             ))}
           </div>
 
-          {/* Role info summary card */}
-          <div className="bg-primary/5 rounded-card border border-primary/20 p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <ShieldCheckIcon className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-foreground">מידע תפקיד</span>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {(user?.roles || []).map((role: string, idx: number) => (
-                <Chip key={idx} color="primary" variant="flat" size="sm">
-                  {getRoleLabel(role)}
-                </Chip>
-              ))}
-              {user?.professionalInfo?.instrument && (
-                <Chip color="secondary" variant="flat" size="sm" startContent={<MusicNoteIcon className="w-3 h-3" />}>
-                  {user.professionalInfo.instrument}
-                </Chip>
-              )}
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <IdentificationCardIcon className="w-3.5 h-3.5" />
-                {user?.teacherId || user?._id || user?.id || ''}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Row 2: Tabs + Content (full-width) */}
-      <div className="bg-card rounded-card border border-border shadow-1 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          {/* Tab triggers */}
-          <div className="border-b border-border px-4 pt-2">
-            <TabsList className="bg-transparent h-auto p-0 gap-0 justify-start rounded-none">
-              {tabs.map((tab) => {
-                const Icon = tab.icon
-                return (
-                  <TabsTrigger
-                    key={tab.id}
-                    value={tab.id}
-                    className={`flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-none border-b-2 transition-colors ${
-                      activeTab === tab.id
-                        ? 'border-primary text-primary bg-transparent shadow-none'
-                        : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/40 bg-transparent shadow-none'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{tab.label}</span>
-                  </TabsTrigger>
-                )
-              })}
-            </TabsList>
-          </div>
-
-          {/* Tab content */}
-          <div className="p-6">
-            <TabsContents>
-              {tabs.map((tab) => (
-                <TabsContent key={tab.id} value={tab.id}>
-                  {activeTab === tab.id && (
-                    <tab.component
-                      {...(tab.id === 'students' && actionParam
-                        ? { action: actionParam }
-                        : {})}
-                    />
-                  )}
-                </TabsContent>
-              ))}
-            </TabsContents>
-          </div>
-        </Tabs>
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="w-auto inline-flex gap-1 mr-auto">
+          {tabs.map((tab) => {
+            const Icon = tab.icon
+            return (
+              <TabsTrigger key={tab.id} value={tab.id} className="flex-none font-bold text-xs px-2.5 py-1">
+                <span className="flex items-center gap-1.5">
+                  <Icon className="w-3.5 h-3.5" />
+                  {tab.label}
+                </span>
+              </TabsTrigger>
+            )
+          })}
+        </TabsList>
+        <TabsContents>
+          {tabs.map((tab) => (
+            <TabsContent key={tab.id} value={tab.id}>
+              {activeTab === tab.id && (
+                <tab.component
+                  {...(tab.id === 'students' && actionParam
+                    ? { action: actionParam }
+                    : {})}
+                />
+              )}
+            </TabsContent>
+          ))}
+        </TabsContents>
+      </Tabs>
     </div>
   )
 }

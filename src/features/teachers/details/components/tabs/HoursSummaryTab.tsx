@@ -20,18 +20,14 @@ import {
 } from '@heroui/react'
 
 import { Teacher } from '../../types'
+import { GlassStatCard } from '@/components/ui/GlassStatCard'
 import { hoursSummaryService } from '../../../../../services/apiService'
 import { useAuth } from '../../../../../services/authContext.jsx'
 import {
   ArrowsClockwise as ArrowsClockwiseIcon,
   BookOpen as BookOpenIcon,
-  Briefcase as BriefcaseIcon,
-  Car as CarIcon,
   Clock as ClockIcon,
-  Hourglass as HourglassIcon,
   MusicNotes as MusicNotesIcon,
-  Path as PathIcon,
-  Stack as StackIcon,
   Users as UsersIcon,
   WarningCircle as WarningCircleIcon,
 } from '@phosphor-icons/react'
@@ -200,31 +196,6 @@ function ErrorState({
   )
 }
 
-/** Single category glass card — compact ~70px height */
-function CategoryCard({
-  label,
-  value,
-  icon: Icon,
-  iconColor,
-}: {
-  label: string
-  value: number
-  icon: React.ElementType
-  iconColor: string
-}) {
-  return (
-    <div
-      className="rounded-card px-3 py-2 flex items-center gap-2.5 min-h-[70px]"
-      style={glassStyle}
-    >
-      <Icon className={`w-4 h-4 flex-shrink-0 ${iconColor}`} />
-      <div className="flex-1 min-w-0">
-        <div className="text-[11px] text-muted-foreground leading-tight truncate">{label}</div>
-        <div className="text-base font-bold text-foreground leading-snug mt-0.5">{value}</div>
-      </div>
-    </div>
-  )
-}
 
 /** Accordion title row with icon + name + count chip */
 function AccordionTitle({
@@ -303,12 +274,10 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
     }
   }
 
-  const formatMinutesToHours = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    if (hours === 0) return `${mins} דק'`
-    if (mins === 0) return `${hours} שע'`
-    return `${hours}:${mins.toString().padStart(2, '0')} שע'`
+  /** Convert weekly minutes to ש"ש (weekly hours as decimal) */
+  const minutesToWeeklyHours = (minutes: number) => {
+    const hours = minutes / 60
+    return hours % 1 === 0 ? hours.toString() : hours.toFixed(2)
   }
 
   // ------------------------------------------------------------------
@@ -336,20 +305,20 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
   const { totals, breakdown, calculatedAt } = data
 
   const categoryCards = [
-    { label: 'שיעורים פרטניים', value: totals.individualLessons, icon: UsersIcon, iconColor: 'text-blue-500' },
-    { label: 'ניצוח תזמורות', value: totals.orchestraConducting, icon: MusicNotesIcon, iconColor: 'text-violet-500' },
-    { label: 'הוראת תיאוריה', value: totals.theoryTeaching, icon: BookOpenIcon, iconColor: 'text-emerald-500' },
-    { label: 'ניהול', value: totals.management, icon: BriefcaseIcon, iconColor: 'text-amber-500' },
-    { label: 'ליווי', value: totals.accompaniment, icon: StackIcon, iconColor: 'text-pink-500' },
-    { label: 'תיאום הרכבים', value: totals.ensembleCoordination, icon: StackIcon, iconColor: 'text-indigo-500' },
-    { label: 'ריכוז', value: totals.coordination, icon: PathIcon, iconColor: 'text-sky-500' },
-    { label: 'ביטול זמן', value: totals.breakTime, icon: HourglassIcon, iconColor: 'text-muted-foreground' },
-    { label: 'נסיעות', value: totals.travelTime, icon: CarIcon, iconColor: 'text-muted-foreground' },
+    { label: 'שיעורים פרטניים', value: totals.individualLessons },
+    { label: 'ניצוח תזמורות', value: totals.orchestraConducting },
+    { label: 'הוראת תיאוריה', value: totals.theoryTeaching },
+    { label: 'ניהול', value: totals.management },
+    { label: 'ליווי', value: totals.accompaniment },
+    { label: 'תיאום הרכבים', value: totals.ensembleCoordination },
+    { label: 'ריכוז', value: totals.coordination },
+    { label: 'ביטול זמן', value: totals.breakTime },
+    { label: 'נסיעות', value: totals.travelTime },
   ].filter((cat) => cat.value > 0)
 
   const tableClassNames = {
-    th: 'text-right bg-transparent text-muted-foreground text-xs font-semibold',
-    td: 'text-right text-sm',
+    th: 'text-right bg-transparent text-muted-foreground text-[11px] font-semibold',
+    td: 'text-right text-xs',
   }
 
   // Build accordion items only for non-empty sections
@@ -373,6 +342,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       content: (
         <Table
           aria-label="פירוט שעות לפי תלמיד"
+          isCompact
           isStriped
           removeWrapper
           classNames={tableClassNames}
@@ -397,7 +367,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
                 </TableCell>
                 <TableCell>
                   <Chip size="sm" variant="flat" color="primary">
-                    {formatMinutesToHours(student.weeklyMinutes)}
+                    {minutesToWeeklyHours(student.weeklyMinutes)}
                   </Chip>
                 </TableCell>
               </TableRow>
@@ -422,6 +392,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       content: (
         <Table
           aria-label="פירוט שעות לפי תזמורת"
+          isCompact
           isStriped
           removeWrapper
           classNames={tableClassNames}
@@ -446,7 +417,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
                 </TableCell>
                 <TableCell>
                   <Chip size="sm" variant="flat" color="secondary">
-                    {formatMinutesToHours(orch.weeklyMinutes)}
+                    {minutesToWeeklyHours(orch.weeklyMinutes)}
                   </Chip>
                 </TableCell>
               </TableRow>
@@ -471,6 +442,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       content: (
         <Table
           aria-label="פירוט שעות תיאוריה"
+          isCompact
           isStriped
           removeWrapper
           classNames={tableClassNames}
@@ -495,7 +467,7 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
                 </TableCell>
                 <TableCell>
                   <Chip size="sm" variant="flat" color="success">
-                    {formatMinutesToHours(item.weeklyMinutes)}
+                    {minutesToWeeklyHours(item.weeklyMinutes)}
                   </Chip>
                 </TableCell>
               </TableRow>
@@ -548,55 +520,23 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       </div>
 
       {/* ------------------------------------------------------------------ */}
-      {/* Total hours — compact glass stat card (~80px max)                   */}
+      {/* Summary stat cards — liquid glass with hover glow                   */}
       {/* ------------------------------------------------------------------ */}
-      <div
-        className="rounded-card px-4 py-3 flex items-center gap-4"
-        style={glassStyle}
-      >
-        {/* Icon circle */}
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-          style={{
-            background: 'linear-gradient(135deg, rgba(0,140,210,0.12) 0%, rgba(0,140,210,0.06) 100%)',
-            border: '1px solid rgba(0,140,210,0.18)',
-          }}
-        >
-          <ClockIcon className="w-5 h-5 text-primary" />
-        </div>
-
-        {/* Label + number */}
-        <div className="flex-1 min-w-0">
-          <div className="text-xs text-muted-foreground leading-none mb-1">
-            סה&quot;כ ש&quot;ש
-          </div>
-          <div className="text-2xl font-bold text-foreground leading-none">
-            {totals.totalWeeklyHours}
-          </div>
-        </div>
-
-        {/* Secondary label on the far side */}
-        <div className="text-xs text-muted-foreground text-left">
-          שעות<br />שבועיות
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+        <GlassStatCard
+          size="sm"
+          value={totals.totalWeeklyHours}
+          label='סה"כ ש"ש'
+        />
+        {categoryCards.map((cat) => (
+          <GlassStatCard
+            key={cat.label}
+            size="sm"
+            value={cat.value}
+            label={cat.label}
+          />
+        ))}
       </div>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* Category breakdown grid                                             */}
-      {/* ------------------------------------------------------------------ */}
-      {categoryCards.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-          {categoryCards.map((cat) => (
-            <CategoryCard
-              key={cat.label}
-              label={cat.label}
-              value={cat.value}
-              icon={cat.icon}
-              iconColor={cat.iconColor}
-            />
-          ))}
-        </div>
-      )}
 
       {/* ------------------------------------------------------------------ */}
       {/* Breakdown accordion sections                                        */}
@@ -604,14 +544,13 @@ const HoursSummaryTab: React.FC<HoursSummaryTabProps> = ({ teacher, teacherId })
       {accordionItems.length > 0 && (
         <Accordion
           selectionMode="multiple"
-          defaultExpandedKeys={accordionItems.map((item) => item.key)}
-          className="px-0"
+          className="px-0 max-w-2xl"
           itemClasses={{
             base: 'rounded-card mb-2 overflow-hidden',
-            heading: 'px-4 py-0',
-            trigger: 'py-3 data-[hover=true]:bg-muted/30 rounded-card',
-            content: 'px-0 pt-0 pb-2',
-            title: 'text-sm',
+            heading: 'px-3 py-0',
+            trigger: 'py-2.5 data-[hover=true]:bg-muted/30 rounded-card',
+            content: 'px-0 pt-0 pb-1',
+            title: 'text-xs',
           }}
           style={glassStyle}
         >

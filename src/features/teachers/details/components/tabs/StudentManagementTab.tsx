@@ -4,8 +4,10 @@
  * Manages students assigned to the teacher
  */
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
   Chip,
   User,
@@ -32,16 +34,13 @@ import {
   ArrowUpRight as ArrowUpRightIcon,
   BookOpen as BookOpenIcon,
   Calendar as CalendarIcon,
-  CaretDown as CaretDownIcon,
   Clock as ClockIcon,
-  MagnifyingGlass as MagnifyingGlassIcon,
   Plus as PlusIcon,
   Trash as TrashIcon,
   Users as UsersIcon,
   UserMinus as UserMinusIcon,
   MusicNotes as MusicNotesIcon,
   MapPin as MapPinIcon,
-  X as XIcon,
 } from '@phosphor-icons/react'
 
 import { Teacher } from '../../types'
@@ -104,9 +103,6 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({
   const [studentOrchestras, setStudentOrchestras] = useState<Map<string, string[]>>(new Map())
   const [isLoading, setIsLoading] = useState(true)
   const [selectedStudentId, setSelectedStudentId] = useState('')
-  const [searchTerm, setSearchTerm] = useState('')
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const [schedulingStudent, setSchedulingStudent] = useState<Student | null>(
     null
   )
@@ -115,8 +111,6 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({
     startTime: '',
     duration: 30,
   })
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   const addStudentModal = useDisclosure()
   const scheduleLessonModal = useDisclosure()
@@ -221,67 +215,6 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({
     fetchStudents()
   }, [teacherId])
 
-  // Handle student selection
-  const handleStudentSelect = (student: Student) => {
-    setSelectedStudentId(student._id)
-    setSearchTerm(getDisplayName(student.personalInfo))
-    setShowDropdown(false)
-    setHighlightedIndex(-1)
-  }
-
-  // Handle search input
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value)
-    setSelectedStudentId('')
-    setShowDropdown(true)
-    setHighlightedIndex(-1)
-  }
-
-  // Clear search
-  const handleClearSearch = () => {
-    setSearchTerm('')
-    setSelectedStudentId('')
-    setShowDropdown(false)
-    setHighlightedIndex(-1)
-    inputRef.current?.focus()
-  }
-
-  // Keyboard navigation
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!showDropdown) {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') {
-        setShowDropdown(true)
-        return
-      }
-    }
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault()
-        setHighlightedIndex(prev =>
-          prev < filteredStudents.length - 1 ? prev + 1 : 0
-        )
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        setHighlightedIndex(prev =>
-          prev > 0 ? prev - 1 : filteredStudents.length - 1
-        )
-        break
-      case 'Enter':
-        e.preventDefault()
-        if (highlightedIndex >= 0 && filteredStudents[highlightedIndex]) {
-          handleStudentSelect(filteredStudents[highlightedIndex])
-        }
-        break
-      case 'Escape':
-        setShowDropdown(false)
-        setHighlightedIndex(-1)
-        inputRef.current?.blur()
-        break
-    }
-  }
-
   const handleAddStudent = async () => {
     if (!selectedStudentId) return
 
@@ -297,7 +230,6 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({
 
       addStudentModal.onClose()
       setSelectedStudentId('')
-      setSearchTerm('')
     } catch (error) {
       console.error('Error adding student:', error)
     }
@@ -417,40 +349,10 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({
     student => !assignedStudentIds.includes(student._id)
   )
 
-  // Filter students based on search term
-  const filteredStudents = availableStudents.filter(student => {
-    const displayName = getDisplayName(student.personalInfo)
-    const className = student.academicInfo?.class || ''
-    const searchQuery = searchTerm.toLowerCase()
-    return (
-      displayName.toLowerCase().includes(searchQuery) ||
-      className.toLowerCase().includes(searchQuery)
-    )
-  })
-
-  // Click outside handler
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowDropdown(false)
-        setHighlightedIndex(-1)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-  // Reset search and dropdown when modal closes
+  // Reset selection when modal closes
   useEffect(() => {
     if (!addStudentModal.isOpen) {
-      setSearchTerm('')
       setSelectedStudentId('')
-      setShowDropdown(false)
-      setHighlightedIndex(-1)
     }
   }, [addStudentModal.isOpen])
 
@@ -508,86 +410,35 @@ const StudentManagementTab: React.FC<StudentManagementTabProps> = ({
                 הוסף תלמיד חדש
               </ModalHeader>
               <ModalBody>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-foreground">
-                      חפש ובחר תלמיד
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      ↑↓ לניווט &bull; Enter לבחירה &bull; Esc לסגירה
-                    </span>
-                  </div>
-
-                  <div className="relative" ref={dropdownRef}>
-                    {/* Search input */}
-                    <div className="relative">
-                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-10">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-muted-foreground" />
+                <Autocomplete
+                  label="חפש ובחר תלמיד"
+                  placeholder="הקלד שם תלמיד או כיתה..."
+                  variant="bordered"
+                  selectedKey={selectedStudentId}
+                  onSelectionChange={key => setSelectedStudentId(key as string ?? '')}
+                  listboxProps={{
+                    emptyContent: 'אין תלמידים זמינים',
+                  }}
+                  classNames={{
+                    listboxWrapper: 'max-h-60',
+                  }}
+                >
+                  {availableStudents.map(student => (
+                    <AutocompleteItem
+                      key={student._id}
+                      textValue={getDisplayName(student.personalInfo)}
+                    >
+                      <div className="flex justify-between items-center w-full">
+                        <span className="font-medium text-sm">
+                          {getDisplayName(student.personalInfo)}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          כיתה {student.academicInfo?.class || 'לא צוין'}
+                        </span>
                       </div>
-                      <input
-                        ref={inputRef}
-                        type="text"
-                        value={searchTerm}
-                        onChange={e => handleSearchChange(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        onFocus={() => setShowDropdown(true)}
-                        placeholder="הקלד שם תלמיד או כיתה..."
-                        className="w-full pr-10 pl-10 py-2.5 border border-border rounded-card focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground bg-white text-sm"
-                      />
-                      {searchTerm ? (
-                        <button
-                          onClick={handleClearSearch}
-                          className="absolute inset-y-0 left-0 pl-3 flex items-center"
-                        >
-                          <XIcon className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                        </button>
-                      ) : (
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <CaretDownIcon
-                            className={`h-4 w-4 text-muted-foreground transition-transform ${showDropdown ? 'rotate-180' : ''}`}
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Dropdown */}
-                    {showDropdown && (
-                      <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded-card shadow-lg max-h-60 overflow-y-auto">
-                        {filteredStudents.length > 0 ? (
-                          filteredStudents.map((student, index) => {
-                            const name = getDisplayName(student.personalInfo)
-                            return (
-                              <button
-                                key={student._id}
-                                onClick={() => handleStudentSelect(student)}
-                                className={`w-full text-right px-4 py-2.5 border-b border-gray-100 last:border-b-0 transition-colors ${
-                                  index === highlightedIndex
-                                    ? 'bg-primary/10 text-foreground'
-                                    : 'hover:bg-gray-50 text-foreground'
-                                } ${selectedStudentId === student._id ? 'bg-primary/5 font-medium' : ''}`}
-                              >
-                                <div className="flex justify-between items-center">
-                                  <span className="font-medium text-sm">
-                                    {name}
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    כיתה {student.academicInfo?.class || 'לא צוין'}
-                                  </span>
-                                </div>
-                              </button>
-                            )
-                          })
-                        ) : (
-                          <div className="px-4 py-3 text-muted-foreground text-center text-sm">
-                            {searchTerm
-                              ? 'לא נמצאו תלמידים'
-                              : 'אין תלמידים זמינים'}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
               </ModalBody>
               <ModalFooter>
                 <Button

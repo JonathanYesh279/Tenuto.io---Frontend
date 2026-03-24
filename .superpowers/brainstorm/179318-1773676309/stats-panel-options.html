@@ -1,0 +1,154 @@
+<h2>Room Schedule Stats Panel — Which layout feels right?</h2>
+<p class="subtitle">Replacing the 4 basic stat cards with actionable room insights for the admin</p>
+
+<div class="cards">
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 16px; background: #FAFAFA; direction: rtl; font-family: system-ui, sans-serif;">
+      <!-- Mockup of Option A: Compact 3-Column Dashboard -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 11px;">
+
+        <!-- Col 1: Room Utilization Ranking -->
+        <div style="background: white; border-radius: 10px; padding: 12px; border: 1px solid #e2e8f0;">
+          <div style="font-weight: 800; font-size: 12px; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
+            🏆 חדרים עמוסים
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #334155;">אולם ערן</span>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <div style="width: 60px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden;">
+                  <div style="width: 92%; height: 100%; background: #ef4444; border-radius: 3px;"></div>
+                </div>
+                <span style="color: #ef4444; font-weight: 700; font-size: 10px;">92%</span>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #334155;">חדר 1</span>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <div style="width: 60px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden;">
+                  <div style="width: 78%; height: 100%; background: #f59e0b; border-radius: 3px;"></div>
+                </div>
+                <span style="color: #f59e0b; font-weight: 700; font-size: 10px;">78%</span>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #334155;">חדר 3</span>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <div style="width: 60px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden;">
+                  <div style="width: 65%; height: 100%; background: #22c55e; border-radius: 3px;"></div>
+                </div>
+                <span style="color: #22c55e; font-weight: 700; font-size: 10px;">65%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 2: Available Now / Next Free -->
+        <div style="background: white; border-radius: 10px; padding: 12px; border: 1px solid #e2e8f0;">
+          <div style="font-weight: 800; font-size: 12px; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
+            🟢 חדרים פנויים עכשיו
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #334155;">חדר 5</span>
+              <span style="color: #16a34a; font-size: 10px; font-weight: 600; background: #f0fdf4; padding: 1px 6px; border-radius: 4px;">פנוי עד 12:00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #334155;">חדר 8</span>
+              <span style="color: #16a34a; font-size: 10px; font-weight: 600; background: #f0fdf4; padding: 1px 6px; border-radius: 4px;">פנוי כל היום</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #334155;">חדר 2</span>
+              <span style="color: #16a34a; font-size: 10px; font-weight: 600; background: #f0fdf4; padding: 1px 6px; border-radius: 4px;">פנוי עד 10:30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 3: Quick Stats -->
+        <div style="background: white; border-radius: 10px; padding: 12px; border: 1px solid #e2e8f0;">
+          <div style="font-weight: 800; font-size: 12px; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
+            📊 סיכום יום
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #64748b;">סה"כ חדרים</span>
+              <span style="font-weight: 800; color: #1e293b;">28</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #64748b;">שיעורים היום</span>
+              <span style="font-weight: 800; color: #1e293b;">301</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #64748b;">התנגשויות</span>
+              <span style="font-weight: 800; color: #ef4444;">3</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #64748b;">תפוסה ממוצעת</span>
+              <span style="font-weight: 800; color: #1e293b;">68%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A: Three-Column Dashboard</h3>
+      <p>Room rankings (busiest) + Available rooms with time windows + Day summary stats. Compact, all info visible at a glance.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 16px; background: #FAFAFA; direction: rtl; font-family: system-ui, sans-serif;">
+      <!-- Mockup of Option B: Two-Row Layout -->
+      <div style="font-size: 11px;">
+
+        <!-- Row 1: Key numbers as pills -->
+        <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 18px; font-weight: 800; color: #1e293b;">28</span>
+            <span style="color: #64748b; font-size: 10px;">חדרים</span>
+          </div>
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 18px; font-weight: 800; color: #1e293b;">301</span>
+            <span style="color: #64748b; font-size: 10px;">שיעורים</span>
+          </div>
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 18px; font-weight: 800; color: #ef4444;">3</span>
+            <span style="color: #64748b; font-size: 10px;">התנגשויות</span>
+          </div>
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 18px; font-weight: 800; color: #16a34a;">68%</span>
+            <span style="color: #64748b; font-size: 10px;">תפוסה</span>
+          </div>
+        </div>
+
+        <!-- Row 2: Two mini-lists side by side -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: white; border-radius: 10px; padding: 10px; border: 1px solid #e2e8f0;">
+            <div style="font-weight: 700; font-size: 11px; color: #dc2626; margin-bottom: 6px;">🔥 חדרים עמוסים ביותר</div>
+            <div style="color: #334155; font-size: 10px; line-height: 1.8;">
+              1. אולם ערן — <b>92%</b><br>
+              2. חדר 1 — <b>78%</b><br>
+              3. חדר 3 — <b>65%</b>
+            </div>
+          </div>
+          <div style="background: white; border-radius: 10px; padding: 10px; border: 1px solid #e2e8f0;">
+            <div style="font-weight: 700; font-size: 11px; color: #16a34a; margin-bottom: 6px;">🟢 פנויים עכשיו</div>
+            <div style="color: #334155; font-size: 10px; line-height: 1.8;">
+              חדר 5 — פנוי עד 12:00<br>
+              חדר 8 — פנוי כל היום<br>
+              חדר 2 — פנוי עד 10:30
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B: Pills + Two Lists</h3>
+      <p>Key numbers as horizontal pills on top, then busiest rooms vs available rooms side by side below. More vertical space but clearer hierarchy.</p>
+    </div>
+  </div>
+</div>

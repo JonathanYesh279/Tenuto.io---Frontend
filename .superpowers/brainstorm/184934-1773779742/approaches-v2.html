@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rehearsals Page — Redesign Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+  /* ===== DESIGN TOKENS (from index.css) ===== */
+  :root {
+    --background: hsl(0 0% 98%);
+    --foreground: hsl(220 15% 11%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(220 15% 11%);
+    --primary: hsl(239 84% 67%);
+    --primary-foreground: hsl(0 0% 100%);
+    --muted: hsl(220 14% 96%);
+    --muted-foreground: hsl(215 16% 47%);
+    --border: hsl(220 13% 91%);
+    --ring: hsl(239 84% 67%);
+    --radius: 0.75rem;
+    --radius-card: 0.75rem;
+
+    /* Entity colors */
+    --color-rehearsals-bg: hsl(340 40% 95%);
+    --color-rehearsals-fg: hsl(340 50% 38%);
+    --color-orchestras-bg: hsl(45 40% 95%);
+    --color-orchestras-fg: hsl(38 75% 35%);
+    --color-students-bg: hsl(252 40% 96%);
+    --color-students-fg: hsl(252 55% 40%);
+    --color-teachers-bg: hsl(200 35% 95%);
+    --color-teachers-fg: hsl(200 65% 35%);
+
+    /* Shadow scale */
+    --shadow-1: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    --shadow-2: 0 2px 8px -2px rgba(0,0,0,0.12);
+    --shadow-3: 0 8px 24px -4px rgba(0,0,0,0.16);
+
+    /* Status */
+    --success: hsl(160 84% 39%);
+    --warning: hsl(38 92% 50%);
+    --info: hsl(199 89% 48%);
+    --destructive: hsl(0 72% 50%);
+
+    /* Spacing tokens */
+    --spacing-page: 1.5rem;
+    --spacing-section: 2rem;
+    --spacing-card: 1.5rem;
+    --spacing-element: 0.75rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Assistant', 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    padding: var(--spacing-page);
+    direction: rtl;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== DETAIL PAGE HEADER (no avatar icon — just text like list pages) ===== */
+  .page-header {
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding: 20px var(--spacing-page) 16px;
+    margin: calc(-1 * var(--spacing-page));
+    margin-bottom: var(--spacing-section);
+  }
+
+  .header-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted-foreground);
+    margin-bottom: 12px;
+    cursor: pointer;
+    width: fit-content;
+  }
+
+  .header-breadcrumb:hover { color: var(--primary); }
+  .header-breadcrumb i { font-size: 14px; }
+
+  .header-identity {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .header-text h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+
+  .header-text .subtitle {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+
+  /* HeroUI Button (primary solid) */
+  .btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    padding: 0 16px;
+    height: 36px;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s, opacity 0.15s;
+    box-shadow: var(--shadow-1);
+    flex-shrink: 0;
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:active { transform: scale(0.95); }
+  .btn-primary i { font-size: 14px; font-weight: bold; }
+
+  /* HeroUI Button (default bordered) */
+  .btn-bordered {
+    background: var(--card);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    padding: 0 16px;
+    height: 36px;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s, background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .btn-bordered:hover { background: var(--muted); }
+  .btn-bordered:active { transform: scale(0.95); }
+  .btn-bordered i { font-size: 14px; }
+
+  /* ===== GLASS STAT CARDS with border-glow mouse-tracking ===== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: var(--spacing-section);
+  }
+
+  @media (min-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .glass-stat {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.375rem;
+    padding: 12px 16px;
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.8);
+    background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.3) 35%, rgba(186,230,253,0.3) 65%, rgba(255,255,255,0.45) 100%);
+    box-shadow:
+      0 8px 32px rgba(0,170,160,0.12),
+      0 2px 8px rgba(0,140,210,0.08),
+      inset 0 1px 1px rgba(255,255,255,0.9),
+      inset 0 -1px 2px rgba(0,170,160,0.06);
+    cursor: default;
+    /* border-glow vars */
+    --glow-x: 50%;
+    --glow-y: 50%;
+    --glow-opacity: 0;
+    /* ScrollReveal animation */
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+    animation: revealIn 0.4s ease-out forwards;
+  }
+
+  .glass-stat:nth-child(1) { animation-delay: 0s; }
+  .glass-stat:nth-child(2) { animation-delay: 0.08s; }
+  .glass-stat:nth-child(3) { animation-delay: 0.16s; }
+  .glass-stat:nth-child(4) { animation-delay: 0.24s; }
+
+  @keyframes revealIn {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* border-glow ::after (mouse-tracking radial indigo glow from index.css) */
+  .glass-stat::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    border-radius: inherit;
+    background: radial-gradient(
+      200px circle at var(--glow-x) var(--glow-y),
+      rgba(99, 102, 241, var(--glow-opacity)) 0%,
+      rgba(99, 102, 241, calc(var(--glow-opacity) * 0.4)) 40%,
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Glossy reflection — top band */
+  .glass-stat .gloss {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .glass-stat .gloss::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    height: 45%;
+    border-radius: 0.375rem 0.375rem 0 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.15) 60%, transparent 100%);
+  }
+
+  /* Corner light bloom */
+  .glass-stat .gloss::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: -20%;
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(167,230,210,0.25) 50%, transparent 70%);
+  }
+
+  /* Edge highlight */
+  .glass-stat .edge-highlight {
+    position: absolute;
+    inset: 0;
+    height: 1px;
+    border-radius: 0.375rem 0.375rem 0 0;
+    background: linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.95) 50%, transparent 90%);
+    pointer-events: none;
+  }
+
+  .glass-stat .stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+    position: relative;
+  }
+
+  .glass-stat .stat-header .spark-svg {
+    color: rgba(255,255,255,0.5);
+  }
+
+  .glass-stat .stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: hsl(220 15% 11%);
+    line-height: 1;
+    margin-bottom: 2px;
+    position: relative;
+  }
+
+  .glass-stat .stat-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: hsl(168 60% 28% / 0.8);
+    position: relative;
+  }
+
+  /* ===== TOOLBAR — two rows: tabs on top, filters below ===== */
+  .toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* HeroUI Tabs (variant="solid") */
+  .heroui-tabs {
+    display: inline-flex;
+    background: var(--muted);
+    padding: 4px;
+    border-radius: var(--radius);
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .heroui-tab {
+    padding: 6px 18px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    border-radius: calc(var(--radius) - 4px);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .heroui-tab.active {
+    background: var(--card);
+    color: var(--foreground);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  .heroui-tab i { font-size: 14px; }
+
+  /* SearchInput (matches SearchInput.tsx) */
+  .search-input-wrap {
+    position: relative;
+    width: 256px;
+    flex-shrink: 0;
+  }
+
+  .search-input-wrap input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px 0 12px;
+    padding-right: 36px;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    color: var(--foreground);
+    background: var(--card);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-input-wrap input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px hsl(239 84% 67% / 0.1);
+  }
+
+  .search-input-wrap input::placeholder { color: var(--muted-foreground); }
+
+  .search-input-wrap .search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--muted-foreground);
+  }
+
+  /* GlassSelect-style dropdowns (matches GlassSelect.tsx) */
+  .glass-select {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .glass-select-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    height: 36px;
+    padding: 0 12px;
+    min-width: 130px;
+    border-radius: 0.375rem;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--foreground);
+    background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.7);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-1);
+    /* border-glow vars for hover */
+    --glow-x: 50%;
+    --glow-y: 50%;
+    --glow-opacity: 0;
+  }
+
+  .glass-select-trigger:hover {
+    background: rgba(255,255,255,0.95);
+    box-shadow: var(--shadow-2);
+    transform: scale(1.03);
+  }
+
+  .glass-select-trigger:active {
+    transform: scale(0.95);
+  }
+
+  .glass-select-trigger .caret {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    opacity: 0.5;
+    transition: transform 0.2s;
+  }
+
+  .glass-select.open .caret {
+    transform: rotate(180deg);
+  }
+
+  /* Glass dropdown menu */
+  .glass-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 100%;
+    max-height: 288px;
+    overflow-y: auto;
+    background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.85));
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 1rem;
+    padding: 6px;
+    box-shadow: var(--shadow-3);
+    z-index: 50;
+    display: none;
+    /* animate-in */
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+    animation: dropdownIn 0.18s ease-out forwards;
+  }
+
+  .glass-select.open .glass-dropdown {
+    display: block;
+  }
+
+  @keyframes dropdownIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .glass-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--foreground);
+    cursor: pointer;
+    transition: background 0.1s;
+    white-space: nowrap;
+  }
+
+  .glass-dropdown-item:hover {
+    background: rgba(99, 102, 241, 0.06);
+  }
+
+  .glass-dropdown-item.selected {
+    font-weight: 700;
+    color: var(--primary);
+    background: hsl(239 84% 67% / 0.08);
+    box-shadow: inset -3px 0 0 var(--primary);
+  }
+
+  /* Toolbar spacer to push add button to the left */
+  .toolbar-spacer {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ===== DAY GROUPS ===== */
+  .day-group {
+    margin-bottom: var(--spacing-section);
+  }
+
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    margin-bottom: var(--spacing-element);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--background);
+    z-index: 10;
+  }
+
+  .day-date {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* HeroUI Chip (variant="flat", color="primary") */
+  .chip-today {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    background: hsl(239 84% 67% / 0.15);
+    color: var(--primary);
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+
+  .day-count {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+  }
+
+  /* ===== HEROUI CARD — rehearsal card ===== */
+  .rehearsal-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-1);
+    margin-bottom: var(--spacing-element);
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+  }
+
+  .rehearsal-card:hover {
+    box-shadow: var(--shadow-2);
+    transform: translateY(-2px);
+  }
+
+  .rehearsal-card:active {
+    transform: scale(0.99);
+  }
+
+  /* Entity accent border (3px right) */
+  .rehearsal-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .rehearsal-card.type-orchestra::after { background: var(--color-rehearsals-fg); }
+  .rehearsal-card.type-ensemble::after { background: var(--color-orchestras-fg); }
+  .rehearsal-card.type-special::after { background: var(--primary); }
+
+  /* Time column */
+  .card-time {
+    min-width: 88px;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+    background: var(--muted);
+  }
+
+  .time-start {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--foreground);
+    line-height: 1;
+  }
+
+  .time-end {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    margin-top: 3px;
+  }
+
+  .time-duration {
+    font-size: 0.6875rem;
+    color: var(--muted-foreground);
+    margin-top: 6px;
+    background: hsl(220 14% 96%);
+    border: 1px solid var(--border);
+    padding: 1px 8px;
+    border-radius: 9999px;
+  }
+
+  /* Card body */
+  .card-body {
+    flex: 1;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--foreground);
+    line-height: 1.4;
+  }
+
+  /* HeroUI Chip (variant="flat") for type */
+  .chip-type {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .chip-type.orchestra {
+    background: var(--color-rehearsals-bg);
+    color: var(--color-rehearsals-fg);
+  }
+
+  .chip-type.ensemble {
+    background: var(--color-orchestras-bg);
+    color: var(--color-orchestras-fg);
+  }
+
+  .chip-type.special {
+    background: hsl(239 84% 67% / 0.1);
+    color: var(--primary);
+  }
+
+  /* Detail items row */
+  .card-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+    flex-wrap: wrap;
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .detail-item i {
+    font-size: 14px;
+    color: var(--muted-foreground);
+    opacity: 0.7;
+  }
+
+  /* HeroUI User-style conductor display */
+  .conductor-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .conductor-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .detail-sep {
+    width: 3px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Bottom row */
+  .card-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2px;
+  }
+
+  /* HeroUI Chip (variant="dot") for status */
+  .chip-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+  }
+
+  .chip-status .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .chip-status.upcoming {
+    background: hsl(239 84% 67% / 0.08);
+    color: var(--primary);
+    border-color: hsl(239 84% 67% / 0.2);
+  }
+  .chip-status.upcoming .dot { background: var(--primary); }
+
+  .chip-status.in-progress {
+    background: hsl(160 84% 39% / 0.08);
+    color: var(--success);
+    border-color: hsl(160 84% 39% / 0.2);
+  }
+  .chip-status.in-progress .dot {
+    background: var(--success);
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .chip-status.completed {
+    background: var(--muted);
+    color: var(--muted-foreground);
+    border-color: var(--border);
+  }
+  .chip-status.completed .dot { background: var(--muted-foreground); }
+
+  /* HeroUI Progress bar */
+  .attendance-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+  }
+
+  .progress-track {
+    width: 100px;
+    height: 6px;
+    background: var(--muted);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-indicator {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .progress-indicator.success { background: var(--success); }
+  .progress-indicator.warning { background: var(--warning); }
+  .progress-indicator.danger { background: var(--destructive); }
+
+  .attendance-pct {
+    font-weight: 700;
+    color: var(--foreground);
+    font-size: 0.8125rem;
+  }
+
+  .attendance-label { color: var(--muted-foreground); }
+
+  .not-marked {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  /* Hover-reveal action buttons */
+  .card-hover-actions {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .rehearsal-card:hover .card-hover-actions { opacity: 1; }
+
+  .icon-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 0.375rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--muted-foreground);
+    transition: all 0.15s;
+    box-shadow: var(--shadow-1);
+    padding: 0;
+  }
+
+  .icon-btn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: hsl(239 84% 67% / 0.05);
+  }
+
+  /* ===== APPROACH LABEL ===== */
+  .approach-label {
+    text-align: center;
+    margin-bottom: var(--spacing-section);
+    padding: 24px 0;
+  }
+
+  .approach-label .tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+
+  .approach-label h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--foreground);
+  }
+
+  .approach-label p {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    margin-top: 8px;
+    max-width: 640px;
+    margin-inline: auto;
+    line-height: 1.6;
+  }
+
+  .features-list {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .feature-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 12px;
+    border-radius: 9999px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+  }
+
+  /* Mockup container */
+  .mockup-container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* Avatar palette */
+  .avatar-indigo { background: #6366f1; }
+  .avatar-emerald { background: #10b981; }
+  .avatar-amber { background: #f59e0b; }
+  .avatar-rose { background: #f43f5e; }
+  .avatar-violet { background: #8b5cf6; }
+</style>
+</head>
+<body>
+
+<div class="mockup-container">
+
+  <!-- Approach label -->
+  <div class="approach-label">
+    <div class="tag">Rehearsals Page Redesign</div>
+    <h2>Timeline Cards + Design System</h2>
+    <p>
+      Fully aligned with app design patterns: GlassStatCard with border-glow hover,
+      GlassSelect filters, Phosphor Icons, HeroUI Chip/Progress/Tabs,
+      entity tokens, and your spacing/shadow/radius scale.
+    </p>
+    <div class="features-list">
+      <span class="feature-chip">border-glow hover</span>
+      <span class="feature-chip">GlassSelect filters</span>
+      <span class="feature-chip">HeroUI Chip dot</span>
+      <span class="feature-chip">HeroUI Progress</span>
+      <span class="feature-chip">HeroUI Tabs solid</span>
+      <span class="feature-chip">Phosphor Icons</span>
+      <span class="feature-chip">ScrollReveal</span>
+    </div>
+  </div>
+
+  <!-- ===== PAGE HEADER (no avatar icon — clean like Teachers list page) ===== -->
+  <div class="page-header">
+    <div class="header-breadcrumb">
+      <i class="ph-bold ph-caret-right"></i>
+      <span>ראשי</span>
+    </div>
+    <div class="header-identity">
+      <div class="header-text">
+        <h1>חזרות</h1>
+        <p class="subtitle">ניהול חזרות תזמורות ומעקב נוכחות &bull; 32 חזרות</p>
+      </div>
+      <button class="btn-bordered">
+        <i class="ph ph-download-simple"></i>
+        ייצוא
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== GLASS STAT CARDS with border-glow mouse-tracking ===== -->
+  <div class="stats-grid">
+    <div class="glass-stat" onmousemove="glowMove(event)" onmouseleave="glowLeave(event)">
+      <div class="gloss"></div>
+      <div class="edge-highlight"></div>
+      <div class="stat-header">
+        <span></span>
+        <svg class="spark-svg" width="28" height="14" viewBox="0 0 40 22" fill="none">
+          <path d="M2 18L8 14L13 16L18 8L23 10L28 4L34 6L38 2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-value">32</div>
+      <div class="stat-label">סה"כ חזרות</div>
+    </div>
+    <div class="glass-stat" onmousemove="glowMove(event)" onmouseleave="glowLeave(event)">
+      <div class="gloss"></div>
+      <div class="edge-highlight"></div>
+      <div class="stat-header">
+        <span></span>
+        <svg class="spark-svg" width="28" height="14" viewBox="0 0 40 22" fill="none">
+          <path d="M2 16L8 12L13 18L18 6L23 12L28 8L34 4L38 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-value">12</div>
+      <div class="stat-label">הושלמו</div>
+    </div>
+    <div class="glass-stat" onmousemove="glowMove(event)" onmouseleave="glowLeave(event)">
+      <div class="gloss"></div>
+      <div class="edge-highlight"></div>
+      <div class="stat-header">
+        <span></span>
+        <svg class="spark-svg" width="28" height="14" viewBox="0 0 40 22" fill="none">
+          <path d="M2 14L8 10L13 12L18 4L23 8L28 6L34 10L38 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-value">3</div>
+      <div class="stat-label">היום</div>
+    </div>
+    <div class="glass-stat" onmousemove="glowMove(event)" onmouseleave="glowLeave(event)">
+      <div class="gloss"></div>
+      <div class="edge-highlight"></div>
+      <div class="stat-header">
+        <span></span>
+        <svg class="spark-svg" width="28" height="14" viewBox="0 0 40 22" fill="none">
+          <path d="M2 10L8 12L13 8L18 14L23 6L28 10L34 8L38 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="stat-value">78%</div>
+      <div class="stat-label">נוכחות ממוצעת</div>
+    </div>
+  </div>
+
+  <!-- ===== TOOLBAR ===== -->
+  <div class="toolbar">
+    <!-- Row 1: Tabs only -->
+    <div class="heroui-tabs">
+      <button class="heroui-tab active">
+        <i class="ph-bold ph-cards"></i>
+        כרטיסים
+      </button>
+      <button class="heroui-tab">
+        <i class="ph ph-calendar-blank"></i>
+        לוח שנה
+      </button>
+    </div>
+
+    <!-- Row 2: Search + filters + add button -->
+    <div class="toolbar-row">
+      <!-- SearchInput -->
+      <div class="search-input-wrap">
+        <i class="ph ph-magnifying-glass search-icon"></i>
+        <input type="text" placeholder="חיפוש חזרות...">
+      </div>
+
+      <!-- GlassSelect: סוג -->
+      <div class="glass-select" onclick="toggleSelect(this)">
+        <div class="glass-select-trigger">
+          <span>כל הסוגים</span>
+          <i class="ph ph-caret-down caret"></i>
+        </div>
+        <div class="glass-dropdown">
+          <div class="glass-dropdown-item selected">כל הסוגים</div>
+          <div class="glass-dropdown-item">תזמורת</div>
+          <div class="glass-dropdown-item">הרכב</div>
+          <div class="glass-dropdown-item">אירוע מיוחד</div>
+        </div>
+      </div>
+
+      <!-- GlassSelect: סטטוס -->
+      <div class="glass-select" onclick="toggleSelect(this)">
+        <div class="glass-select-trigger">
+          <span>כל הסטטוסים</span>
+          <i class="ph ph-caret-down caret"></i>
+        </div>
+        <div class="glass-dropdown">
+          <div class="glass-dropdown-item selected">כל הסטטוסים</div>
+          <div class="glass-dropdown-item">עתידה</div>
+          <div class="glass-dropdown-item">מתקיימת כעת</div>
+          <div class="glass-dropdown-item">הושלמה</div>
+          <div class="glass-dropdown-item">בוטלה</div>
+        </div>
+      </div>
+
+      <!-- GlassSelect: תזמורת -->
+      <div class="glass-select" onclick="toggleSelect(this)">
+        <div class="glass-select-trigger">
+          <span>כל התזמורות</span>
+          <i class="ph ph-caret-down caret"></i>
+        </div>
+        <div class="glass-dropdown">
+          <div class="glass-dropdown-item selected">כל התזמורות</div>
+          <div class="glass-dropdown-item">סימפונית נוער ראשונה</div>
+          <div class="glass-dropdown-item">תזמורת מיתרים צעירה</div>
+          <div class="glass-dropdown-item">תזמורת כלי נשיפה ייצוגית</div>
+          <div class="glass-dropdown-item">הרכב גיטרות קלאסיות</div>
+          <div class="glass-dropdown-item">הרכב פרקשן</div>
+        </div>
+      </div>
+
+      <!-- Spacer -->
+      <div class="toolbar-spacer"></div>
+
+      <!-- Add button -->
+      <button class="btn-primary">
+        <i class="ph-bold ph-plus"></i>
+        חזרה חדשה
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== DAY: TODAY ===== -->
+  <div class="day-group">
+    <div class="day-header">
+      <div class="day-date">
+        שלישי, 17 במרץ 2026
+        <span class="chip-today">היום</span>
+      </div>
+      <span class="day-count">3 חזרות</span>
+    </div>
+
+    <!-- Card 1: Orchestra - upcoming -->
+    <div class="rehearsal-card type-orchestra">
+      <div class="card-hover-actions">
+        <button class="icon-btn" title="עריכה"><i class="ph ph-pencil-simple"></i></button>
+        <button class="icon-btn" title="נוכחות"><i class="ph ph-clipboard-text"></i></button>
+        <button class="icon-btn" title="צפה"><i class="ph ph-arrow-up-right"></i></button>
+      </div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <span class="card-title">סימפונית נוער ראשונה</span>
+          <span class="chip-type orchestra">תזמורת</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item">
+            <i class="ph ph-map-pin"></i>
+            <span>אולם ערן</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="conductor-display">
+            <span class="conductor-avatar avatar-rose">דל</span>
+            <span>דני לרנר</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="detail-item">
+            <i class="ph ph-users"></i>
+            <span>32 חברים</span>
+          </div>
+        </div>
+        <div class="card-bottom-row">
+          <span class="chip-status upcoming">
+
+            עתידה
+          </span>
+          <div class="attendance-info">
+            <span class="attendance-pct">78%</span>
+            <span class="attendance-label">נוכחות (25/32)</span>
+            <div class="progress-track">
+              <div class="progress-indicator success" style="width: 78%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-time">
+        <span class="time-start">18:00</span>
+        <span class="time-end">20:00</span>
+        <span class="time-duration">2 שעות</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Ensemble - in progress -->
+    <div class="rehearsal-card type-ensemble">
+      <div class="card-hover-actions">
+        <button class="icon-btn" title="עריכה"><i class="ph ph-pencil-simple"></i></button>
+        <button class="icon-btn" title="נוכחות"><i class="ph ph-clipboard-text"></i></button>
+        <button class="icon-btn" title="צפה"><i class="ph ph-arrow-up-right"></i></button>
+      </div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <span class="card-title">הרכב גיטרות קלאסיות</span>
+          <span class="chip-type ensemble">הרכב</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item">
+            <i class="ph ph-map-pin"></i>
+            <span>חדר 3</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="detail-item">
+            <i class="ph ph-users"></i>
+            <span>12 חברים</span>
+          </div>
+        </div>
+        <div class="card-bottom-row">
+          <span class="chip-status in-progress">
+
+            מתקיימת כעת
+          </span>
+          <div class="attendance-info">
+            <span class="attendance-pct">58%</span>
+            <span class="attendance-label">נוכחות (7/12)</span>
+            <div class="progress-track">
+              <div class="progress-indicator warning" style="width: 58%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-time">
+        <span class="time-start">15:00</span>
+        <span class="time-end">16:30</span>
+        <span class="time-duration">1.5 שעות</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Orchestra - completed -->
+    <div class="rehearsal-card type-orchestra">
+      <div class="card-hover-actions">
+        <button class="icon-btn" title="עריכה"><i class="ph ph-pencil-simple"></i></button>
+        <button class="icon-btn" title="נוכחות"><i class="ph ph-clipboard-text"></i></button>
+        <button class="icon-btn" title="צפה"><i class="ph ph-arrow-up-right"></i></button>
+      </div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <span class="card-title">תזמורת מיתרים צעירה</span>
+          <span class="chip-type orchestra">תזמורת</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item">
+            <i class="ph ph-map-pin"></i>
+            <span>אולם ראשי</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="conductor-display">
+            <span class="conductor-avatar avatar-indigo">יכ</span>
+            <span>יוסי כהן</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="detail-item">
+            <i class="ph ph-users"></i>
+            <span>24 חברים</span>
+          </div>
+        </div>
+        <div class="card-bottom-row">
+          <span class="chip-status completed">
+
+            הושלמה
+          </span>
+          <div class="attendance-info">
+            <span class="attendance-pct">92%</span>
+            <span class="attendance-label">נוכחות (22/24)</span>
+            <div class="progress-track">
+              <div class="progress-indicator success" style="width: 92%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-time">
+        <span class="time-start">10:00</span>
+        <span class="time-end">12:00</span>
+        <span class="time-duration">2 שעות</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DAY: THURSDAY ===== -->
+  <div class="day-group">
+    <div class="day-header">
+      <div class="day-date">חמישי, 19 במרץ 2026</div>
+      <span class="day-count">1 חזרה</span>
+    </div>
+
+    <div class="rehearsal-card type-orchestra">
+      <div class="card-hover-actions">
+        <button class="icon-btn" title="עריכה"><i class="ph ph-pencil-simple"></i></button>
+        <button class="icon-btn" title="נוכחות"><i class="ph ph-clipboard-text"></i></button>
+        <button class="icon-btn" title="צפה"><i class="ph ph-arrow-up-right"></i></button>
+      </div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <span class="card-title">תזמורת כלי נשיפה ייצוגית</span>
+          <span class="chip-type orchestra">תזמורת</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item">
+            <i class="ph ph-map-pin"></i>
+            <span>אולם ערן</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="conductor-display">
+            <span class="conductor-avatar avatar-rose">יכ</span>
+            <span>יוסי כהן</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="detail-item">
+            <i class="ph ph-users"></i>
+            <span>45 חברים</span>
+          </div>
+        </div>
+        <div class="card-bottom-row">
+          <span class="chip-status upcoming">
+
+            עתידה
+          </span>
+          <span class="not-marked">טרם סומנה</span>
+        </div>
+      </div>
+      <div class="card-time">
+        <span class="time-start">17:30</span>
+        <span class="time-end">20:00</span>
+        <span class="time-duration">2.5 שעות</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DAY: SUNDAY ===== -->
+  <div class="day-group">
+    <div class="day-header">
+      <div class="day-date">ראשון, 22 במרץ 2026</div>
+      <span class="day-count">2 חזרות</span>
+    </div>
+
+    <div class="rehearsal-card type-special">
+      <div class="card-hover-actions">
+        <button class="icon-btn" title="עריכה"><i class="ph ph-pencil-simple"></i></button>
+        <button class="icon-btn" title="נוכחות"><i class="ph ph-clipboard-text"></i></button>
+        <button class="icon-btn" title="צפה"><i class="ph ph-arrow-up-right"></i></button>
+      </div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <span class="card-title">חזרה כללית לקונצרט אביב</span>
+          <span class="chip-type special">אירוע מיוחד</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item">
+            <i class="ph ph-map-pin"></i>
+            <span>אולם ראשי</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="conductor-display">
+            <span class="conductor-avatar avatar-indigo">דל</span>
+            <span>דני לרנר</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="detail-item">
+            <i class="ph ph-users"></i>
+            <span>60 חברים</span>
+          </div>
+        </div>
+        <div class="card-bottom-row">
+          <span class="chip-status upcoming">
+
+            עתידה
+          </span>
+          <span class="not-marked">טרם סומנה</span>
+        </div>
+      </div>
+      <div class="card-time">
+        <span class="time-start">16:00</span>
+        <span class="time-end">19:00</span>
+        <span class="time-duration">3 שעות</span>
+      </div>
+    </div>
+
+    <div class="rehearsal-card type-ensemble">
+      <div class="card-hover-actions">
+        <button class="icon-btn" title="עריכה"><i class="ph ph-pencil-simple"></i></button>
+        <button class="icon-btn" title="נוכחות"><i class="ph ph-clipboard-text"></i></button>
+        <button class="icon-btn" title="צפה"><i class="ph ph-arrow-up-right"></i></button>
+      </div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <span class="card-title">הרכב פרקשן</span>
+          <span class="chip-type ensemble">הרכב</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item">
+            <i class="ph ph-map-pin"></i>
+            <span>חדר 5</span>
+          </div>
+          <span class="detail-sep"></span>
+          <div class="detail-item">
+            <i class="ph ph-users"></i>
+            <span>8 חברים</span>
+          </div>
+        </div>
+        <div class="card-bottom-row">
+          <span class="chip-status upcoming">
+
+            עתידה
+          </span>
+          <span class="not-marked">טרם סומנה</span>
+        </div>
+      </div>
+      <div class="card-time">
+        <span class="time-start">14:00</span>
+        <span class="time-end">15:30</span>
+        <span class="time-duration">1.5 שעות</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // border-glow mouse-tracking (from GlassStatCard.tsx)
+  function glowMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    e.currentTarget.style.setProperty('--glow-x', x + '%');
+    e.currentTarget.style.setProperty('--glow-y', y + '%');
+    e.currentTarget.style.setProperty('--glow-opacity', '0.8');
+  }
+
+  function glowLeave(e) {
+    e.currentTarget.style.setProperty('--glow-opacity', '0');
+  }
+
+  // GlassSelect toggle
+  function toggleSelect(el) {
+    // Close all others
+    document.querySelectorAll('.glass-select.open').forEach(s => {
+      if (s !== el) s.classList.remove('open');
+    });
+    el.classList.toggle('open');
+  }
+
+  // Select item click
+  document.querySelectorAll('.glass-dropdown-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const dropdown = item.closest('.glass-select');
+      const trigger = dropdown.querySelector('.glass-select-trigger span');
+
+      // Update selected state
+      dropdown.querySelectorAll('.glass-dropdown-item').forEach(i => i.classList.remove('selected'));
+      item.classList.add('selected');
+      trigger.textContent = item.textContent;
+
+      // Close
+      dropdown.classList.remove('open');
+    });
+  });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.glass-select')) {
+      document.querySelectorAll('.glass-select.open').forEach(s => s.classList.remove('open'));
+    }
+  });
+</script>
+
+</body>
+</html>

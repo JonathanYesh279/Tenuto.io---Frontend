@@ -55,6 +55,7 @@ interface TimeBlock {
 interface TeachingDaysTabProps {
   teacher: any
   teacherId: string
+  onTeacherRefresh?: () => void
 }
 
 interface FormState {
@@ -314,7 +315,7 @@ function TimeBlockCard({ block, onEdit, onDelete, isDeleting }: TimeBlockCardPro
 // Main component
 // ---------------------------------------------------------------------------
 
-export default function TeachingDaysTab({ teacher, teacherId }: TeachingDaysTabProps) {
+export default function TeachingDaysTab({ teacher, teacherId, onTeacherRefresh }: TeachingDaysTabProps) {
   // Derive initial blocks from prop, sort by day then start-time
   const [blocks, setBlocks] = useState<TimeBlock[]>(() =>
     sortBlocks(teacher?.teaching?.timeBlocks ?? [])
@@ -424,6 +425,7 @@ export default function TeachingDaysTab({ teacher, teacherId }: TeachingDaysTabP
         toast.success('יום הלימוד נוסף בהצלחה')
       }
       handleFormClose()
+      onTeacherRefresh?.()
     } catch (err: any) {
       const message = err?.message ?? 'שגיאה בשמירת יום הלימוד'
       toast.error(message)
@@ -450,6 +452,7 @@ export default function TeachingDaysTab({ teacher, teacherId }: TeachingDaysTabP
       toast.success('יום הלימוד נמחק')
       onDeleteClose()
       setDeleteTarget(null)
+      onTeacherRefresh?.()
     } catch (err: any) {
       const message = err?.message ?? 'שגיאה במחיקת יום הלימוד'
       toast.error(message)

@@ -178,7 +178,7 @@ const TeacherDetailsPage: React.FC = () => {
             <StudentManagementTab teacher={teacher} teacherId={teacherId} />
           </TabsContent>
           <TabsContent value="teaching-days">
-            <TeachingDaysTab teacher={teacher} teacherId={teacherId} />
+            <TeachingDaysTab teacher={teacher} teacherId={teacherId} onTeacherRefresh={fetchTeacher} />
           </TabsContent>
           <TabsContent value="schedule">
             <ScheduleTab teacher={teacher} teacherId={teacherId} />

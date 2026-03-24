@@ -1,0 +1,202 @@
+<h2>Room Insights Panel — Redesigned</h2>
+<p class="subtitle">Matching the glass morphism + soft palette of your room schedule grid</p>
+
+<div class="cards">
+  <!-- Option A: Glass Flowing Layout -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 20px; background: #FAFAFA; direction: rtl; font-family: 'Assistant', system-ui, sans-serif;">
+
+      <div style="
+        border-radius: 12px;
+        padding: 16px;
+        backdrop-filter: blur(40px);
+        background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(240,245,255,0.5) 50%, rgba(255,255,255,0.6) 100%);
+        border: 1px solid rgba(255,255,255,0.8);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 1px rgba(255,255,255,0.9);
+      ">
+        <!-- Top row: flowing stat chips -->
+        <div style="display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: baseline; gap: 4px;">
+            <span style="font-size: 22px; font-weight: 800; color: #1e293b;">28</span>
+            <span style="font-size: 11px; font-weight: 700; color: #0f766e; opacity: 0.7;">חדרים</span>
+          </div>
+          <div style="width: 1px; background: rgba(0,0,0,0.08); align-self: stretch;"></div>
+          <div style="display: flex; align-items: baseline; gap: 4px;">
+            <span style="font-size: 22px; font-weight: 800; color: #1e293b;">301</span>
+            <span style="font-size: 11px; font-weight: 700; color: #0f766e; opacity: 0.7;">שיעורים</span>
+          </div>
+          <div style="width: 1px; background: rgba(0,0,0,0.08); align-self: stretch;"></div>
+          <div style="display: flex; align-items: baseline; gap: 4px;">
+            <span style="font-size: 22px; font-weight: 800; color: #ef4444;">3</span>
+            <span style="font-size: 11px; font-weight: 700; color: #ef4444; opacity: 0.7;">התנגשויות</span>
+          </div>
+          <div style="width: 1px; background: rgba(0,0,0,0.08); align-self: stretch;"></div>
+          <div style="display: flex; align-items: baseline; gap: 4px;">
+            <span style="font-size: 22px; font-weight: 800; color: #0f766e;">68%</span>
+            <span style="font-size: 11px; font-weight: 700; color: #0f766e; opacity: 0.7;">תפוסה</span>
+          </div>
+        </div>
+
+        <!-- Bottom row: two soft sections -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <!-- Busiest rooms -->
+          <div style="
+            border-radius: 10px; padding: 10px 12px;
+            background: rgba(239, 68, 68, 0.04);
+            border: 1px solid rgba(239, 68, 68, 0.12);
+          ">
+            <div style="font-size: 10px; font-weight: 800; color: #dc2626; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">חדרים עמוסים</div>
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 100%; height: 4px; background: rgba(0,0,0,0.04); border-radius: 2px; overflow: hidden; flex: 1;">
+                  <div style="width: 92%; height: 100%; background: linear-gradient(90deg, #f87171, #ef4444); border-radius: 2px;"></div>
+                </div>
+                <span style="font-size: 10px; font-weight: 800; color: #ef4444; min-width: 28px; text-align: left;">92%</span>
+                <span style="font-size: 11px; font-weight: 600; color: #334155; white-space: nowrap;">אולם ערן</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 100%; height: 4px; background: rgba(0,0,0,0.04); border-radius: 2px; overflow: hidden; flex: 1;">
+                  <div style="width: 78%; height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 2px;"></div>
+                </div>
+                <span style="font-size: 10px; font-weight: 800; color: #d97706; min-width: 28px; text-align: left;">78%</span>
+                <span style="font-size: 11px; font-weight: 600; color: #334155; white-space: nowrap;">חדר 1</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 100%; height: 4px; background: rgba(0,0,0,0.04); border-radius: 2px; overflow: hidden; flex: 1;">
+                  <div style="width: 65%; height: 100%; background: linear-gradient(90deg, #a3e635, #84cc16); border-radius: 2px;"></div>
+                </div>
+                <span style="font-size: 10px; font-weight: 800; color: #65a30d; min-width: 28px; text-align: left;">65%</span>
+                <span style="font-size: 11px; font-weight: 600; color: #334155; white-space: nowrap;">חדר 3</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Available rooms -->
+          <div style="
+            border-radius: 10px; padding: 10px 12px;
+            background: rgba(22, 163, 74, 0.04);
+            border: 1px solid rgba(22, 163, 74, 0.12);
+          ">
+            <div style="font-size: 10px; font-weight: 800; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">פנויים עכשיו</div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155;">חדר 5</span>
+                <span style="font-size: 10px; font-weight: 600; color: #16a34a; background: rgba(22,163,74,0.08); padding: 2px 8px; border-radius: 99px;">פנוי עד 12:00</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155;">חדר 8</span>
+                <span style="font-size: 10px; font-weight: 600; color: #16a34a; background: rgba(22,163,74,0.08); padding: 2px 8px; border-radius: 99px;">פנוי כל היום</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155;">חדר 2</span>
+                <span style="font-size: 10px; font-weight: 600; color: #16a34a; background: rgba(22,163,74,0.08); padding: 2px 8px; border-radius: 99px;">פנוי עד 10:30</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A: Glass Panel — Integrated</h3>
+      <p>Matches the room grid's glass morphism. Stats flow horizontally with thin dividers, two tinted sections below. Feels like part of the grid, not a separate dashboard.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Minimal Inline -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 20px; background: #FAFAFA; direction: rtl; font-family: 'Assistant', system-ui, sans-serif;">
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+
+        <!-- Single flowing row with everything -->
+        <div style="
+          border-radius: 10px;
+          padding: 12px 16px;
+          backdrop-filter: blur(40px);
+          background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(167,230,210,0.2) 50%, rgba(255,255,255,0.45) 100%);
+          border: 1px solid rgba(255,255,255,0.8);
+          box-shadow: 0 4px 16px rgba(0,170,160,0.08), inset 0 1px 1px rgba(255,255,255,0.9);
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          flex-wrap: wrap;
+        ">
+          <!-- Stats inline -->
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="display: flex; align-items: baseline; gap: 3px;">
+              <span style="font-size: 18px; font-weight: 800; color: #1e293b;">28</span>
+              <span style="font-size: 10px; font-weight: 700; color: #0f766e80;">חדרים</span>
+            </div>
+            <span style="color: #e2e8f0;">•</span>
+            <div style="display: flex; align-items: baseline; gap: 3px;">
+              <span style="font-size: 18px; font-weight: 800; color: #1e293b;">301</span>
+              <span style="font-size: 10px; font-weight: 700; color: #0f766e80;">שיעורים</span>
+            </div>
+            <span style="color: #e2e8f0;">•</span>
+            <div style="display: flex; align-items: baseline; gap: 3px;">
+              <span style="font-size: 18px; font-weight: 800; color: #ef4444;">3</span>
+              <span style="font-size: 10px; font-weight: 700; color: #ef444480;">התנגשויות</span>
+            </div>
+          </div>
+
+          <!-- Thin vertical separator -->
+          <div style="width: 1px; height: 28px; background: rgba(0,0,0,0.08);"></div>
+
+          <!-- Busiest room highlight -->
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; font-weight: 700; color: #94a3b8;">העמוס ביותר:</span>
+            <span style="font-size: 11px; font-weight: 700; color: #334155;">אולם ערן</span>
+            <span style="font-size: 10px; font-weight: 800; color: #ef4444; background: rgba(239,68,68,0.08); padding: 1px 6px; border-radius: 99px;">92%</span>
+          </div>
+
+          <div style="width: 1px; height: 28px; background: rgba(0,0,0,0.08);"></div>
+
+          <!-- Available count -->
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <div style="width: 6px; height: 6px; border-radius: 99px; background: #22c55e;"></div>
+            <span style="font-size: 11px; font-weight: 700; color: #334155;">5 חדרים פנויים</span>
+          </div>
+        </div>
+
+        <!-- Expandable detail: two mini lists -->
+        <div style="
+          display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+          padding: 0 4px;
+        ">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 40px; height: 3px; background: linear-gradient(90deg, #ef4444, #fbbf24); border-radius: 2px;"></div>
+              <span style="font-size: 10px; color: #64748b; font-weight: 600;">אולם ערן 92%</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 32px; height: 3px; background: linear-gradient(90deg, #fbbf24, #a3e635); border-radius: 2px;"></div>
+              <span style="font-size: 10px; color: #64748b; font-weight: 600;">חדר 1 — 78%</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 26px; height: 3px; background: #84cc16; border-radius: 2px;"></div>
+              <span style="font-size: 10px; color: #64748b; font-weight: 600;">חדר 3 — 65%</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <div style="width: 5px; height: 5px; border-radius: 99px; background: #22c55e;"></div>
+              <span style="font-size: 10px; color: #64748b; font-weight: 600;">חדר 5 — פנוי עד 12:00</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <div style="width: 5px; height: 5px; border-radius: 99px; background: #22c55e;"></div>
+              <span style="font-size: 10px; color: #64748b; font-weight: 600;">חדר 8 — פנוי כל היום</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <div style="width: 5px; height: 5px; border-radius: 99px; background: #22c55e;"></div>
+              <span style="font-size: 10px; color: #64748b; font-weight: 600;">חדר 2 — פנוי עד 10:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B: Teal Glass Bar + Expandable Details</h3>
+      <p>Single teal-tinted glass bar with key numbers + busiest room + available count inline. The detail lists expand below on click — same accordion pattern you already have. Ultra-compact when collapsed.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,265 @@
+<h2>Rehearsals Page — Two Redesign Approaches</h2>
+<p class="subtitle">Click the approach that appeals to you more, or tell me in the terminal</p>
+
+<div class="cards">
+  <!-- APPROACH A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="flex: 1; min-width: 420px;">
+    <div class="card-image" style="padding: 0; overflow: hidden;">
+      <div style="background: #FAFAFA; padding: 20px; font-family: system-ui, sans-serif; direction: rtl;">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button style="background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer;">+ חזרה חדשה</button>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display: flex; background: #f1f5f9; border-radius: 8px; overflow: hidden;">
+              <button style="padding: 6px 14px; border: none; background: #6366f1; color: white; font-size: 12px; cursor: pointer;">חודש</button>
+              <button style="padding: 6px 14px; border: none; background: transparent; color: #64748b; font-size: 12px; cursor: pointer;">שבוע</button>
+              <button style="padding: 6px 14px; border: none; background: transparent; color: #64748b; font-size: 12px; cursor: pointer;">יום</button>
+              <button style="padding: 6px 14px; border: none; background: transparent; color: #64748b; font-size: 12px; cursor: pointer;">רשימה</button>
+            </div>
+          </div>
+        </div>
+        <!-- Month nav -->
+        <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="color: #94a3b8; cursor: pointer;">‹</span>
+          <span style="font-weight: 600; color: #1e293b; font-size: 16px;">מרץ 2026</span>
+          <span style="color: #94a3b8; cursor: pointer;">›</span>
+          <button style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 3px 10px; font-size: 11px; color: #64748b; cursor: pointer;">היום</button>
+        </div>
+        <!-- Calendar grid -->
+        <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+          <!-- Day headers -->
+          <div style="display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid #e2e8f0;">
+            <div style="padding: 8px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 500;">שבת</div>
+            <div style="padding: 8px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 500;">שישי</div>
+            <div style="padding: 8px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 500;">חמישי</div>
+            <div style="padding: 8px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 500;">רביעי</div>
+            <div style="padding: 8px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 500;">שלישי</div>
+            <div style="padding: 8px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 500;">שני</div>
+            <div style="padding: 8px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 500;">ראשון</div>
+          </div>
+          <!-- Week row -->
+          <div style="display: grid; grid-template-columns: repeat(7, 1fr);">
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">7</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">6</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;">
+              <span style="font-size: 12px; color: #94a3b8;">5</span>
+            </div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;">
+              <span style="font-size: 12px; color: #94a3b8;">4</span>
+            </div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;">
+              <span style="font-size: 12px; color: #94a3b8;">3</span>
+            </div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;">
+              <span style="font-size: 12px; color: #94a3b8;">2</span>
+            </div>
+            <div style="min-height: 80px; padding: 6px;">
+              <span style="font-size: 12px; color: #94a3b8;">1</span>
+            </div>
+          </div>
+          <!-- Week row with events -->
+          <div style="display: grid; grid-template-columns: repeat(7, 1fr); border-top: 1px solid #f1f5f9;">
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">14</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">13</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;">
+              <span style="font-size: 12px; color: #94a3b8;">12</span>
+              <div style="margin-top: 4px; background: #6366f1; color: white; padding: 3px 6px; border-radius: 4px; font-size: 10px; border-right: 3px solid #4f46e5;">
+                <div style="font-weight: 600;">כלי נשיפה ייצוגית</div>
+                <div style="opacity: 0.8;">17:30 - 20:00</div>
+              </div>
+            </div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;">
+              <span style="font-size: 12px; color: #94a3b8;">11</span>
+              <div style="margin-top: 4px; background: #ec4899; color: white; padding: 3px 6px; border-radius: 4px; font-size: 10px; border-right: 3px solid #db2777;">
+                <div style="font-weight: 600;">כלי קשת עתודה</div>
+                <div style="opacity: 0.8;">16:15 - 18:00</div>
+              </div>
+            </div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">10</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">9</span></div>
+            <div style="min-height: 80px; padding: 6px;">
+              <span style="font-size: 12px; color: #94a3b8;">8</span>
+            </div>
+          </div>
+          <!-- Week row with today -->
+          <div style="display: grid; grid-template-columns: repeat(7, 1fr); border-top: 1px solid #f1f5f9;">
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">21</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">20</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">19</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">18</span></div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #6366f1; color: white; border-radius: 50%; font-size: 12px; font-weight: 600;">17</span>
+              <div style="margin-top: 4px; background: #f0fdf4; color: #166534; padding: 3px 6px; border-radius: 4px; font-size: 10px; border-right: 3px solid #22c55e;">
+                <div style="font-weight: 600;">סימפונית נוער</div>
+                <div>18:00 - 20:00</div>
+              </div>
+            </div>
+            <div style="min-height: 80px; padding: 6px; border-left: 1px solid #f1f5f9;"><span style="font-size: 12px; color: #94a3b8;">16</span></div>
+            <div style="min-height: 80px; padding: 6px;"><span style="font-size: 12px; color: #94a3b8;">15</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A: FullCalendar Library</h3>
+      <p><strong>Library:</strong> <code>@fullcalendar/react</code> — the industry standard</p>
+      <ul style="font-size: 13px; color: #64748b; margin: 8px 0; padding-right: 20px; text-align: right; direction: rtl;">
+        <li>Built-in month / week / day / list views with smooth transitions</li>
+        <li>Native RTL support + Hebrew locale out of the box</li>
+        <li>Drag-and-drop rescheduling (drag event to new date/time)</li>
+        <li>Event resize (drag bottom edge to change duration)</li>
+        <li>Color-coded by orchestra type with left border accent</li>
+        <li>Today highlight, multi-day events, overflow "+N more"</li>
+        <li>Fully customizable event rendering with your own components</li>
+        <li>~40KB gzipped — well maintained, used by Google, Microsoft</li>
+      </ul>
+      <div style="margin-top: 8px; padding: 8px; background: #f0fdf4; border-radius: 6px; font-size: 12px; color: #166534;">
+        ✦ Recommended — replaces ~1400 lines of custom calendar code with a battle-tested library
+      </div>
+    </div>
+  </div>
+
+  <!-- APPROACH B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="flex: 1; min-width: 420px;">
+    <div class="card-image" style="padding: 0; overflow: hidden;">
+      <div style="background: #FAFAFA; padding: 20px; font-family: system-ui, sans-serif; direction: rtl;">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <button style="background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer;">+ חזרה חדשה</button>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display: flex; background: #f1f5f9; border-radius: 8px; overflow: hidden;">
+              <button style="padding: 6px 14px; border: none; background: transparent; color: #64748b; font-size: 12px; cursor: pointer;">לוח שנה</button>
+              <button style="padding: 6px 14px; border: none; background: #6366f1; color: white; font-size: 12px; cursor: pointer;">כרטיסים</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Cards -->
+        <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+
+          <!-- Day group header -->
+          <div style="padding: 10px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 11px; color: #94a3b8;">2 חזרות</span>
+            <div>
+              <span style="font-weight: 600; color: #1e293b; font-size: 14px;">שלישי, 17 במרץ</span>
+              <span style="background: #6366f1; color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-right: 8px;">היום</span>
+            </div>
+          </div>
+
+          <!-- Card 1 -->
+          <div style="padding: 12px 16px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+            <div style="width: 4px; background: #6366f1; border-radius: 2px; min-height: 60px; flex-shrink: 0;"></div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="display: flex; gap: 6px;">
+                  <span style="background: #f0fdf4; color: #166534; font-size: 10px; padding: 2px 8px; border-radius: 10px;">עתידה</span>
+                </div>
+                <div style="font-weight: 600; color: #1e293b; font-size: 14px;">סימפונית נוער ראענה</div>
+              </div>
+              <div style="display: flex; gap: 16px; margin-top: 6px; justify-content: flex-end;">
+                <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #94a3b8;">📍</span> אולם ערן
+                </span>
+                <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #94a3b8;">🕐</span> 18:00 - 20:00
+                </span>
+              </div>
+              <div style="display: flex; gap: 12px; margin-top: 8px; justify-content: flex-end;">
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <div style="width: 80px; height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;">
+                    <div style="width: 75%; height: 100%; background: #22c55e; border-radius: 2px;"></div>
+                  </div>
+                  <span style="font-size: 11px; color: #64748b;">75% נוכחות</span>
+                </div>
+                <span style="font-size: 11px; color: #94a3b8;">32 חברים</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div style="padding: 12px 16px; border-bottom: 1px solid #f1f5f9; display: flex; gap: 12px; align-items: flex-start; cursor: pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+            <div style="width: 4px; background: #ec4899; border-radius: 2px; min-height: 60px; flex-shrink: 0;"></div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="display: flex; gap: 6px;">
+                  <span style="background: #fef3c7; color: #92400e; font-size: 10px; padding: 2px 8px; border-radius: 10px;">מתקיימת כעת</span>
+                </div>
+                <div style="font-weight: 600; color: #1e293b; font-size: 14px;">הרכב כלי קשת עתודה</div>
+              </div>
+              <div style="display: flex; gap: 16px; margin-top: 6px; justify-content: flex-end;">
+                <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #94a3b8;">📍</span> חדר 3
+                </span>
+                <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #94a3b8;">🕐</span> 16:15 - 18:00
+                </span>
+              </div>
+              <div style="display: flex; gap: 12px; margin-top: 8px; justify-content: flex-end;">
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <div style="width: 80px; height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;">
+                    <div style="width: 0%; height: 100%; background: #22c55e; border-radius: 2px;"></div>
+                  </div>
+                  <span style="font-size: 11px; color: #64748b;">טרם סומנה</span>
+                </div>
+                <span style="font-size: 11px; color: #94a3b8;">18 חברים</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Day group 2 -->
+          <div style="padding: 10px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 11px; color: #94a3b8;">1 חזרה</span>
+            <span style="font-weight: 600; color: #1e293b; font-size: 14px;">חמישי, 19 במרץ</span>
+          </div>
+
+          <!-- Card 3 -->
+          <div style="padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+            <div style="width: 4px; background: #6366f1; border-radius: 2px; min-height: 60px; flex-shrink: 0;"></div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="display: flex; gap: 6px;">
+                  <span style="background: #f0fdf4; color: #166534; font-size: 10px; padding: 2px 8px; border-radius: 10px;">עתידה</span>
+                </div>
+                <div style="font-weight: 600; color: #1e293b; font-size: 14px;">תזמורת כלי נשיפה ייצוגית</div>
+              </div>
+              <div style="display: flex; gap: 16px; margin-top: 6px; justify-content: flex-end;">
+                <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #94a3b8;">📍</span> אולם ערן
+                </span>
+                <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                  <span style="color: #94a3b8;">🕐</span> 17:30 - 20:00
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B: Timeline Cards View</h3>
+      <p><strong>Approach:</strong> Day-grouped card list as the primary view</p>
+      <ul style="font-size: 13px; color: #64748b; margin: 8px 0; padding-right: 20px; text-align: right; direction: rtl;">
+        <li>Rehearsals grouped by day with sticky date headers</li>
+        <li>Rich cards — orchestra name, time, location, attendance bar, status badge</li>
+        <li>Color-coded left border by orchestra type (indigo/pink)</li>
+        <li>Inline attendance progress bar with percentage</li>
+        <li>Calendar toggle still available for spatial overview</li>
+        <li>Much more info at a glance vs. tiny calendar cells</li>
+        <li>Works great on mobile — no cramped grid cells</li>
+        <li>Built with HeroUI Card + custom layout (no heavy lib needed)</li>
+      </ul>
+      <div style="margin-top: 8px; padding: 8px; background: #eff6ff; border-radius: 6px; font-size: 12px; color: #1e40af;">
+        ✦ Best for daily workflow — see everything happening with full detail
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 24px; padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+  <h3 style="margin: 0 0 8px 0; font-size: 14px;">My Recommendation</h3>
+  <p style="font-size: 13px; color: #475569; margin: 0; direction: rtl; text-align: right;">
+    <strong>Use both together.</strong> FullCalendar as the calendar view (replacing ~1400 lines of custom code), and Timeline Cards as the list view (replacing the plain table). Toggle between them just like today. The calendar gives spatial overview ("when is everything?"), the cards give operational detail ("what's next and what do I need to do?").
+  </p>
+</div>

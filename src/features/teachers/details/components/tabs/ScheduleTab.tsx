@@ -9,27 +9,12 @@
  */
 
 import { useState, useEffect, useMemo } from 'react'
-import { Button } from '@heroui/react'
-
 import { Teacher } from '../../types'
 import TeacherWeeklyCalendar from '../../../../../components/schedule/TeacherWeeklyCalendar'
 import { orchestraEnrollmentApi } from '../../../../../services/orchestraEnrollmentApi'
 import apiService from '../../../../../services/apiService'
 import { getDisplayName } from '../../../../../utils/nameUtils'
-import TimeBlockForm from '../../../../../components/teacher/TimeBlockForm'
 import toast from 'react-hot-toast'
-import { VALID_LOCATIONS } from '../../../../../constants/locations'
-import {
-  Calendar as CalendarIcon,
-  Clock as ClockIcon,
-  MapPin as MapPinIcon,
-  Pencil as PencilIcon,
-  Plus as PlusIcon,
-  Trash as TrashIcon,
-  Users as UsersIcon,
-  WarningCircle as WarningCircleIcon,
-} from '@phosphor-icons/react'
-import { GlassStatCard } from '@/components/ui/GlassStatCard'
 
 interface ScheduleTabProps {
   teacher: Teacher
@@ -37,16 +22,11 @@ interface ScheduleTabProps {
 }
 
 const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
-  const [selectedTimeBlock, setSelectedTimeBlock] = useState(null)
-  const [isAddingTimeBlock, setIsAddingTimeBlock] = useState(false)
   const [orchestraActivities, setOrchestraActivities] = useState<any[]>([])
   const [ensembleActivities, setEnsembleActivities] = useState<any[]>([])
   const [teacherLessons, setTeacherLessons] = useState<any[]>([])
   const [isLoadingActivities, setIsLoadingActivities] = useState(false)
-  const [showLegacyView, setShowLegacyView] = useState(false)
-  const [isUpdating, setIsUpdating] = useState(false)
   const [teacherData, setTeacherData] = useState(teacher)
-  const [deleteConfirmation, setDeleteConfirmation] = useState<{timeBlock: any} | null>(null)
 
   // Sync teacherData with teacher prop when it changes
   useEffect(() => {
@@ -296,26 +276,6 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
     })
   }, [teacherData.teaching?.timeBlocks])
 
-  // Group teaching days by day
-  const timeBlocksByDay = daysOfWeek.reduce((acc, day) => {
-    acc[day] = allTeachingDays.filter(block => block.day === day) || []
-    return acc
-  }, {})
-
-  const getTotalWeeklyHours = () => {
-    return allTeachingDays.reduce((total, block) => total + (block.totalDuration || 0), 0) / 60 || 0
-  }
-
-  const getTotalStudentsInSchedule = () => {
-    const studentIds = new Set()
-    // Count from timeBlocks (new system)
-    teacherData.teaching?.timeBlocks?.forEach(block => {
-      (block.assignedLessons || []).forEach(lesson => {
-        if (lesson.studentId && lesson.isActive !== false) studentIds.add(lesson.studentId)
-      })
-    })
-    return studentIds.size
-  }
 
   // Handle lesson updates
   const handleLessonUpdate = async (updatedLesson: any) => {
@@ -502,86 +462,11 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
     }
   }
 
-  const totalActivities = orchestraActivities.length + ensembleActivities.length
-  const totalWeeklyHours = getTotalWeeklyHours()
-  const totalTimeBlocks = allTeachingDays.length || 0
-  const totalStudents = getTotalStudentsInSchedule()
-
-  const glassStyle: React.CSSProperties = {
-    background: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,210,230,0.15) 50%, rgba(255,255,255,0.9) 100%)',
-    boxShadow: '0 4px 16px rgba(0,140,210,0.06), inset 0 1px 1px rgba(255,255,255,0.9)',
-    border: '1px solid rgba(200,220,240,0.5)',
-  }
 
   return (
-    <div className="p-6 space-y-6 rounded-card" style={glassStyle}>
-      {/* Header with Statistics */}
-      <div className="space-y-4">
-        {isLoadingActivities && (
-          <div className="flex items-center gap-2 text-sm text-blue-600">
-            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-            טוען פעילויות הניצוח...
-          </div>
-        )}
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <GlassStatCard
-            size="sm"
-            value={Math.round(totalWeeklyHours)}
-            label="שעות שבועיות"
-            className="!h-[80px]"
-          />
-          <GlassStatCard
-            size="sm"
-            value={totalTimeBlocks}
-            label="ימי לימוד"
-            className="!h-[80px]"
-          />
-          <GlassStatCard
-            size="sm"
-            value={totalStudents}
-            label="תלמידים"
-            className="!h-[80px]"
-          />
-          <GlassStatCard
-            size="sm"
-            value={totalActivities}
-            label="הרכבים"
-            className="!h-[80px]"
-          />
-        </div>
-      </div>
-
-      {/* View Toggle */}
-      <div className="flex items-center justify-between bg-muted/30 p-3 rounded">
-        <div className="flex items-center gap-3">
-          <Button
-            color="primary"
-            variant={!showLegacyView ? 'solid' : 'bordered'}
-            size="sm"
-            onPress={() => setShowLegacyView(false)}
-          >
-            לוח זמנים שבועי
-          </Button>
-          <Button
-            color="primary"
-            variant={showLegacyView ? 'solid' : 'bordered'}
-            size="sm"
-            onPress={() => setShowLegacyView(true)}
-          >
-            ניהול ימי לימוד
-          </Button>
-        </div>
-
-        {totalActivities > 0 && (
-          <div className="text-sm text-gray-600">
-            מנצח על {totalActivities} הרכבים
-          </div>
-        )}
-      </div>
-
-      {/* Main CalendarIcon View */}
-      {!showLegacyView ? (
+    <div className="p-4 space-y-4 w-full max-w-full overflow-hidden">
+      {/* Weekly Calendar */}
+      <div className="bg-white rounded-card shadow-1 border border-border p-4 w-full max-w-full overflow-hidden">
         <TeacherWeeklyCalendar
           teacher={teacherData}
           timeBlocks={allTeachingDays}
@@ -592,379 +477,30 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ teacher, teacherId }) => {
           onLessonUpdate={handleLessonUpdate}
           onLessonDelete={handleLessonDelete}
         />
-      ) : (
-        /* Teaching Days Management View */
-        <div className="space-y-6">
-          {/* Teaching Days Cards */}
-          {allTeachingDays.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {allTeachingDays.map((timeBlock, index) => (
-                <div
-                  key={timeBlock._id || index}
-                  className="bg-white border border-gray-200 rounded p-6 transition-all duration-200"
-                >
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full" />
-                      <h3 className="text-lg font-bold text-gray-900">{timeBlock.day}</h3>
-                    </div>
-                    {timeBlock.isActive && (
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
-                        פעיל
-                      </span>
-                    )}
-                  </div>
+      </div>
 
-                  {/* Time Information */}
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <ClockIcon className="w-4 h-4 text-blue-500" />
-                      <span className="font-medium">
-                        {timeBlock.startTime} - {timeBlock.endTime}
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <span className="text-sm">משך:</span>
-                      <span className="font-medium text-blue-600">
-                        {Math.floor(timeBlock.totalDuration / 60)} שעות
-                        {timeBlock.totalDuration % 60 !== 0 && ` ו-${timeBlock.totalDuration % 60} דקות`}
-                      </span>
-                    </div>
-
-                    {timeBlock.location && (
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <MapPinIcon className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm">{timeBlock.location}</span>
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <UsersIcon className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm">
-                        {timeBlock.assignedLessons?.length || 0} שיעורים מתוכננים
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Notes */}
-                  {timeBlock.notes && (
-                    <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600">{timeBlock.notes}</p>
-                    </div>
-                  )}
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-2 pt-4 border-t border-gray-100">
-                    <button
-                      onClick={() => setSelectedTimeBlock(timeBlock)}
-                      className="flex-1 px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors font-medium"
-                    >
-                      <PencilIcon className="w-4 h-4 inline-block ml-1" />
-                      ערוך
-                    </button>
-                    <button
-                      onClick={() => setDeleteConfirmation({timeBlock})}
-                      disabled={isUpdating}
-                      className="flex-1 px-3 py-2 text-sm bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors font-medium disabled:opacity-50"
-                    >
-                      <TrashIcon className="w-4 h-4 inline-block ml-1" />
-                      {isUpdating ? 'מוחק...' : 'מחק'}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            /* Empty State */
-            <div className="bg-background rounded border-2 border-dashed border-gray-200 p-12 text-center">
-              <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-xl font-medium text-gray-900 mb-2">אין ימי לימוד מוגדרים</h3>
-              <p className="text-gray-600 mb-6">
-                טרם הוגדרו ימי לימוד עבור מורה זה. הגדר ימי לימוד כדי לאפשר תזמון שיעורים.
-              </p>
-              <button
-                onClick={() => setIsAddingTimeBlock(true)}
-                className="px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors font-medium"
-              >
-                הוסף יום לימוד ראשון
-              </button>
-            </div>
-          )}
-
-          {/* Add New Teaching Day Button */}
-          {allTeachingDays.length > 0 && (
-            <div className="flex justify-center">
-              <button
-                onClick={() => setIsAddingTimeBlock(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors font-medium"
-              >
-                <PlusIcon className="w-5 h-5" />
-                הוסף יום לימוד חדש
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* PencilIcon Teaching Day Modal */}
-      {selectedTimeBlock && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-background rounded p-6 w-full max-w-lg">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-900">
-                ערוך יום לימוד - {selectedTimeBlock.day}
-              </h3>
-              <button
-                onClick={() => setSelectedTimeBlock(null)}
-                className="text-gray-400 hover:text-gray-600 p-1"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            
-            <form className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    זמן התחלה
-                  </label>
-                  <input
-                    type="time"
-                    defaultValue={selectedTimeBlock.startTime}
-                    className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    זמן סיום
-                  </label>
-                  <input
-                    type="time"
-                    defaultValue={selectedTimeBlock.endTime}
-                    className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  מיקום
-                </label>
-                <select
-                  defaultValue={selectedTimeBlock.location || ''}
-                  className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
-                >
-                  <option value="">בחר מיקום...</option>
-                  {VALID_LOCATIONS.map((location) => (
-                    <option key={location} value={location}>
-                      {location}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  הערות
-                </label>
-                <textarea
-                  defaultValue={selectedTimeBlock.notes}
-                  placeholder="הערות נוספות על יום הלימוד..."
-                  rows={3}
-                  className="w-full px-3 py-2 border border-border rounded focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="isActive"
-                  defaultChecked={selectedTimeBlock.isActive}
-                  className="w-4 h-4 text-foreground border-gray-300 rounded focus:ring-primary"
-                />
-                <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
-                  יום לימוד פעיל (זמין לקביעת שיעורים)
-                </label>
-              </div>
-              
-              <div className="flex gap-3 pt-6 border-t">
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-neutral-800 transition-colors font-medium disabled:opacity-50"
-                  disabled={isUpdating}
-                  onClick={async (e) => {
-                    e.preventDefault()
-                    
-                    const form = e.target.closest('form')
-                    const formData = new FormData(form)
-                    const timeInputs = form.querySelectorAll('input[type="time"]')
-                    const startTime = (timeInputs[0] as HTMLInputElement).value
-                    const endTime = (timeInputs[1] as HTMLInputElement).value
-                    const location = (form.querySelector('select') as HTMLSelectElement).value
-                    const notes = (form.querySelector('textarea') as HTMLTextAreaElement).value
-                    const isActive = (form.querySelector('input[type="checkbox"]') as HTMLInputElement).checked
-                    
-                    // Calculate duration in minutes
-                    const calculateDuration = (start: string, end: string): number => {
-                      const [startHour, startMin] = start.split(':').map(Number)
-                      const [endHour, endMin] = end.split(':').map(Number)
-                      const startMinutes = startHour * 60 + startMin
-                      const endMinutes = endHour * 60 + endMin
-                      return endMinutes - startMinutes
-                    }
-                    
-                    const duration = calculateDuration(startTime, endTime)
-                    
-                    try {
-                      setIsUpdating(true)
-
-                      await apiService.teacherSchedule.updateTimeBlock(teacherId, selectedTimeBlock._id, {
-                        startTime,
-                        endTime,
-                        totalDuration: duration,
-                        location,
-                        notes,
-                        isActive
-                      })
-                      
-                      await refreshTeacherData()
-                      setSelectedTimeBlock(null)
-                      console.log('✅ Successfully updated teaching day')
-                    } catch (error) {
-                      console.error('❌ Failed to update teaching day:', error)
-                      console.error('Error details:', error.response?.data || error.message)
-                      toast.error('שגיאה בעדכון יום הלימוד. אנא נסה שוב.', {
-                        duration: 4000,
-                        position: 'top-center',
-                        style: {
-                          background: '#FEE2E2',
-                          color: '#991B1B',
-                          border: '1px solid #FCA5A5',
-                          padding: '16px',
-                          fontSize: '14px',
-                          fontFamily: 'Reisinger-Yonatan, sans-serif'
-                        }
-                      })
-                    } finally {
-                      setIsUpdating(false)
-                    }
-                  }}
-                >
-                  {isUpdating ? 'שומר...' : 'שמור שינויים'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedTimeBlock(null)}
-                  className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium"
-                >
-                  ביטול
-                </button>
-              </div>
-            </form>
+      {/* Legend */}
+      <div className="bg-muted/40 rounded-card border border-border p-3">
+        <h3 className="font-semibold text-foreground mb-2 text-sm">מקרא</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: 'hsl(var(--primary))' }} />
+            <span className="text-muted-foreground">אישי</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: 'hsl(var(--color-rehearsals-fg, 330 80% 45%))' }} />
+            <span className="text-muted-foreground">קבוצתי</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: 'hsl(var(--color-orchestras-fg, 35 80% 50%))' }} />
+            <span className="text-muted-foreground">תזמורת</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: 'hsl(var(--color-theory-fg, 160 60% 35%))' }} />
+            <span className="text-muted-foreground">תאוריה</span>
           </div>
         </div>
-      )}
-      
-      {/* CalendarIcon Legend */}
-      {!showLegacyView && (
-        <div className="bg-muted/30 p-4 rounded">
-          <h3 className="font-semibold text-gray-900 mb-3">מקרא</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-blue-100 border border-blue-300 rounded" />
-              <span className="text-gray-700">שיעורים פרטיים</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-purple-100 border border-purple-300 rounded" />
-              <span className="text-gray-700">תזמורות</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-green-100 border border-green-300 rounded" />
-              <span className="text-gray-700">אנסמבלים</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded" />
-              <span className="text-gray-700">זמן פנוי</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Dialog */}
-      {deleteConfirmation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-background rounded max-w-md w-full mx-4 p-6">
-            <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
-              <WarningCircleIcon className="w-6 h-6 text-red-600" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
-              מחיקת יום לימוד
-            </h3>
-            <p className="text-gray-600 text-center mb-6">
-              האם אתה בטוח שברצונך למחוק את יום הלימוד ביום {deleteConfirmation.timeBlock.day}?
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDeleteConfirmation(null)}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-muted transition-colors font-medium"
-              >
-                ביטול
-              </button>
-              <button
-                onClick={async () => {
-                  const timeBlock = deleteConfirmation.timeBlock
-                  setDeleteConfirmation(null)
-
-                  try {
-                    setIsUpdating(true)
-                    await apiService.teacherSchedule.deleteTimeBlock(teacherId, timeBlock._id)
-                    await refreshTeacherData()
-                    console.log('✅ Successfully deleted teaching day:', timeBlock.day)
-                  } catch (error) {
-                    console.error('❌ Failed to delete teaching day:', error)
-                    console.error('Error details:', error.response?.data || error.message)
-                    toast.error('שגיאה במחיקת יום הלימוד. אנא נסה שוב.', {
-                      duration: 4000,
-                      position: 'top-center',
-                      style: {
-                        background: '#FEE2E2',
-                        color: '#991B1B',
-                        border: '1px solid #FCA5A5',
-                        padding: '16px',
-                        fontSize: '14px',
-                        fontFamily: 'Reisinger-Yonatan, sans-serif'
-                      }
-                    })
-                  } finally {
-                    setIsUpdating(false)
-                  }
-                }}
-                disabled={isUpdating}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors font-medium disabled:opacity-50"
-              >
-                {isUpdating ? 'מוחק...' : 'מחק'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Time Block Modal */}
-      {isAddingTimeBlock && (
-        <TimeBlockForm
-          teacherId={teacherId}
-          timeBlock={null}
-          onSave={async () => {
-            await refreshTeacherData()
-            setIsAddingTimeBlock(false)
-          }}
-          onCancel={() => setIsAddingTimeBlock(false)}
-        />
-      )}
+      </div>
     </div>
   )
 }

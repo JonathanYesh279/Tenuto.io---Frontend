@@ -261,21 +261,21 @@ class TeacherDetailsApiClient {
 
   // Time block management
   async addTimeBlock(teacherId: string, timeBlockData: any) {
-    return this.request(`/teacher/${teacherId}/timeblock`, {
+    return this.request(`/teacher/${teacherId}/time-block`, {
       method: 'POST',
       body: JSON.stringify(timeBlockData),
     })
   }
 
   async updateTimeBlock(teacherId: string, timeBlockId: string, timeBlockData: any) {
-    return this.request(`/teacher/${teacherId}/timeblock/${timeBlockId}`, {
+    return this.request(`/teacher/${teacherId}/time-block/${timeBlockId}`, {
       method: 'PUT',
       body: JSON.stringify(timeBlockData),
     })
   }
 
   async removeTimeBlock(teacherId: string, timeBlockId: string) {
-    return this.request(`/teacher/${teacherId}/timeblock/${timeBlockId}`, {
+    return this.request(`/teacher/${teacherId}/time-block/${timeBlockId}`, {
       method: 'DELETE',
     })
   }

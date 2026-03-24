@@ -9,10 +9,12 @@
  */
 
 import React, { useState, useMemo } from 'react'
+import { Popover, PopoverTrigger, PopoverContent, Chip, Button } from '@heroui/react'
 
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, addDays, subDays, isToday, isSameDay } from 'date-fns'
 import { he } from 'date-fns/locale'
 import { BookOpenIcon, CalendarIcon, CaretLeftIcon, CaretRightIcon, ClockIcon, MapPinIcon, MusicNotesIcon, PencilIcon, TrashIcon, UserIcon, UsersIcon, WarningCircleIcon, XIcon } from '@phosphor-icons/react'
+import { ActivityTimelineCard } from './ActivityTimelineCard'
 
 interface TimeBlock {
   _id: string
@@ -304,383 +306,161 @@ const TeacherWeeklyCalendar: React.FC<TeacherWeeklyCalendarProps> = ({
     return endMinutes - startMinutes
   }
 
+  // Map activity type to ActivityTimelineCard type
+  const getCardType = (type: string): 'individual' | 'group' | 'orchestra' | 'theory' => {
+    switch (type) {
+      case 'lesson': return 'individual'
+      case 'orchestra': return 'orchestra'
+      case 'ensemble': return 'group'
+      default: return 'individual'
+    }
+  }
+
+  // Only show Sunday–Friday (indices 0-5)
+  const displayDays = weekDays.slice(0, 6)
+
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
+    <div className={className}>
       {/* Header with Navigation */}
       {showNavigation && (
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={goToPreviousWeek}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <CaretRightIcon className="w-5 h-5" />
-              </button>
-              
-              <div className="text-center">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  לוח זמנים - {format(weekStart, 'dd/MM', { locale: he })} - {format(weekEnd, 'dd/MM/yyyy', { locale: he })}
-                </h2>
-                <p className="text-sm text-gray-600">
-                  {weeklyActivities.length} פעילויות השבוע
-                </p>
-              </div>
-              
-              <button
-                onClick={goToNextWeek}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <CaretLeftIcon className="w-5 h-5" />
-              </button>
-            </div>
-            
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
             <button
-              onClick={goToCurrentWeek}
-              className="px-3 py-1 text-sm bg-primary text-white rounded-lg hover:bg-primary transition-colors"
+              onClick={goToPreviousWeek}
+              className="p-1.5 hover:bg-muted rounded-card transition-colors"
             >
-              השבוע הנוכחי
+              <CaretRightIcon className="w-4 h-4 text-muted-foreground" />
+            </button>
+
+            <div className="text-center">
+              <h3 className="text-base font-semibold text-foreground">
+                לוח זמנים שבועי
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                {format(weekStart, 'dd/MM', { locale: he })} - {format(weekEnd, 'dd/MM/yyyy', { locale: he })}
+                {' • '}
+                {weeklyActivities.length === 0
+                  ? 'אין פעילויות השבוע'
+                  : weeklyActivities.length === 1
+                  ? 'פעילות אחת השבוע'
+                  : `${weeklyActivities.length} פעילויות השבוע`}
+              </p>
+            </div>
+
+            <button
+              onClick={goToNextWeek}
+              className="p-1.5 hover:bg-muted rounded-card transition-colors"
+            >
+              <CaretLeftIcon className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
+
+          <Button
+            size="sm"
+            color="primary"
+            variant="flat"
+            onPress={goToCurrentWeek}
+          >
+            השבוע הנוכחי
+          </Button>
         </div>
       )}
 
-      {/* CalendarIcon Grid - Days Only */}
-      <div className="p-4">
-        {/* Desktop View */}
-        <div className="hidden lg:block">
-          <div className="grid grid-cols-7 gap-3">
-            {/* Day Columns */}
-            {weekDays.map((day, index) => {
-              const dayKey = format(day, 'yyyy-MM-dd')
-              const dayActivities = activitiesByDay[dayKey] || []
-              const isCurrentDay = isToday(day)
-              
-              return (
-                <div 
-                  key={dayKey}
-                  className={`border rounded-lg ${
-                    isCurrentDay 
-                      ? 'border-border bg-muted/50/30' 
-                      : 'border-gray-200 bg-white'
-                  }`}
-                >
-                  {/* Day Header */}
-                  <div className={`p-3 text-center border-b ${
-                    isCurrentDay
-                      ? 'bg-muted text-primary border-border'
-                      : dayActivities.length > 0
-                      ? 'bg-blue-50 text-blue-700 border-blue-100'
-                      : 'bg-gray-50 text-gray-600 border-gray-200'
-                  }`}>
-                    <div className="font-semibold">{ENGLISH_TO_HEBREW_DAYS[index]}</div>
-                    <div className="text-sm mt-1">
-                      {format(day, 'dd/MM')}
-                    </div>
-                    {dayActivities.length > 0 && (
-                      <div className="text-xs mt-1 opacity-75">
-                        {dayActivities.length} פעילויות
-                      </div>
-                    )}
-                  </div>
+      {/* Days Grid — matches SimpleWeeklyGrid pattern */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        {displayDays.map((day, index) => {
+          const dayKey = format(day, 'yyyy-MM-dd')
+          const dayActivities = activitiesByDay[dayKey] || []
+          const isCurrentDay = isToday(day)
 
-                  {/* Activities for the Day */}
-                  <div className="p-2 space-y-2 min-h-[400px]">
-                    {dayActivities.length === 0 ? (
-                      <div className="text-center text-sm text-gray-400 mt-8">
-                        אין פעילויות
-                      </div>
-                    ) : (
-                      dayActivities.map(activity => (
-                        <div 
-                          key={activity.id}
-                          className={`p-3 rounded-lg border-l-4 ${activity.color} shadow-sm hover:shadow-md transition-shadow ${
-                            activity.type === 'lesson' ? 'cursor-pointer' : 'cursor-default'
-                          }`}
-                          onClick={() => activity.type === 'lesson' && handleLessonClick(activity)}
-                        >
-                          {/* Activity Header */}
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              {getPulseIcon(activity.type)}
-                              <span className="font-semibold text-sm">
-                                {activity.title}
-                              </span>
-                            </div>
-                            {activity.type === 'lesson' && (
-                              <PencilIcon className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
-                            )}
-                          </div>
-
-                          {/* Time */}
-                          <div className="flex items-center gap-1 text-xs mb-1">
-                            <ClockIcon className="w-3 h-3" />
-                            <span className="font-medium">
-                              {activity.startTime} - {activity.endTime}
-                            </span>
-                          </div>
-
-                          {/* Student/Subtitle */}
-                          {activity.subtitle && (
-                            <div className="text-xs opacity-90 mb-1">
-                              {activity.type === 'lesson' && activity.studentName && (
-                                <div className="font-medium">תלמיד: {activity.studentName}</div>
-                              )}
-                              {activity.type !== 'lesson' && (
-                                <div>{activity.subtitle}</div>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Instrument for lessons */}
-                          {activity.type === 'lesson' && activity.instrumentName && (
-                            <div className="text-xs opacity-75 mb-1">
-                              כלי: {activity.instrumentName}
-                            </div>
-                          )}
-
-                          {/* Location */}
-                          {activity.location && (
-                            <div className="flex items-center gap-1 text-xs opacity-75">
-                              <MapPinIcon className="w-3 h-3" />
-                              <span>{activity.location}</span>
-                            </div>
-                          )}
-
-                          {/* Participants for orchestras/ensembles */}
-                          {activity.participants && (
-                            <div className="flex items-center gap-1 text-xs opacity-75 mt-1">
-                              <UsersIcon className="w-3 h-3" />
-                              <span>{activity.participants.join(', ')}</span>
-                            </div>
-                          )}
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Mobile/Tablet View with enhanced touch interactions */}
-        <div className="lg:hidden">
-          <div className="space-y-4 pb-safe">
-            {weekDays.map((day, dayIndex) => {
-              const dayKey = format(day, 'yyyy-MM-dd')
-              const dayActivities = activitiesByDay[dayKey] || []
-              const isCurrentDay = isToday(day)
-              
-              return (
-                <div key={dayKey} className={`border rounded-lg overflow-hidden ${
-                  isCurrentDay ? 'border-border' : 'border-gray-200'
+          return (
+            <div key={dayKey} className="day-column">
+              {/* Day Header */}
+              <div className={`rounded-t-card px-3 py-2 border-b border-border ${
+                isCurrentDay ? 'bg-primary/10' : 'bg-muted/50'
+              }`}>
+                <h4 className={`font-medium text-center text-sm ${
+                  isCurrentDay ? 'text-primary' : 'text-foreground'
                 }`}>
-                  <div className={`p-3 font-semibold ${
-                    isCurrentDay
-                      ? 'bg-muted text-primary'
-                      : dayActivities.length > 0
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'bg-gray-50 text-gray-700'
-                  }`}>
-                    <div className="flex justify-between items-center">
-                      <span>{ENGLISH_TO_HEBREW_DAYS[dayIndex]} - {format(day, 'dd/MM')}</span>
-                      {dayActivities.length > 0 && (
-                        <span className="text-sm opacity-75">{dayActivities.length} פעילויות</span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="p-3">
-                    {dayActivities.length === 0 ? (
-                      <div className="text-center text-sm text-gray-400 py-4">
-                        אין פעילויות
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        {dayActivities.map(activity => (
-                          <div 
-                            key={activity.id} 
-                            className={`p-3 rounded-lg border-l-4 ${activity.color} ${
-                              activity.type === 'lesson' 
-                                ? 'cursor-pointer active:bg-opacity-80 touch-manipulation select-none' 
-                                : 'cursor-default'
-                            } transition-all duration-200`}
-                            onClick={() => activity.type === 'lesson' && handleLessonClick(activity)}
-                            onTouchStart={(e) => {
-                              if (activity.type === 'lesson') {
-                                e.currentTarget.style.transform = 'scale(0.98)'
-                              }
-                            }}
-                            onTouchEnd={(e) => {
-                              if (activity.type === 'lesson') {
-                                e.currentTarget.style.transform = 'scale(1)'
-                              }
-                            }}
-                          >
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                {getPulseIcon(activity.type)}
-                                <h4 className="font-semibold text-sm">{activity.title}</h4>
-                              </div>
-                              {activity.type === 'lesson' && (
-                                <PencilIcon className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
-                              )}
+                  {ENGLISH_TO_HEBREW_DAYS[index]}
+                </h4>
+                <p className="text-xs text-muted-foreground text-center">
+                  {dayActivities.length === 0 ? 'ריק' : String(dayActivities.length)}
+                </p>
+              </div>
+
+              {/* Day Content */}
+              <div className="rounded-b-card border border-t-0 border-border min-h-24 bg-card">
+                {dayActivities.length === 0 ? (
+                  <div className="p-3" />
+                ) : (
+                  <div className="p-2 space-y-2">
+                    {dayActivities.map(activity => (
+                      <Popover key={activity.id} placement="bottom" showArrow>
+                        <PopoverTrigger>
+                          <div>
+                            <ActivityTimelineCard
+                              title={activity.instrumentName || activity.title}
+                              subtitle={activity.studentName || activity.subtitle}
+                              type={getCardType(activity.type)}
+                              startTime={activity.startTime}
+                              endTime={activity.endTime}
+                              location={activity.location}
+                              onClick={activity.type === 'lesson' ? () => handleLessonClick(activity) : undefined}
+                            />
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <div className="p-4 min-w-[220px] max-w-[280px] space-y-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className="text-sm font-bold text-foreground leading-snug">
+                                {activity.instrumentName || activity.title}
+                              </h4>
+                              <Chip
+                                size="sm"
+                                variant="flat"
+                                color={activity.type === 'lesson' ? 'primary' : activity.type === 'orchestra' ? 'warning' : 'success'}
+                                classNames={{ content: 'text-[10px] font-bold px-1' }}
+                              >
+                                {activity.title}
+                              </Chip>
                             </div>
-                            
-                            <div className="space-y-1 text-xs">
-                              <div className="flex items-center gap-1">
-                                <ClockIcon className="w-3 h-3" />
-                                <span className="font-medium">{activity.startTime} - {activity.endTime}</span>
+                            <div className="space-y-2 text-sm">
+                              {activity.studentName && (
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <UserIcon size={14} className="flex-shrink-0 text-primary" />
+                                  <span>{activity.studentName}</span>
+                                </div>
+                              )}
+                              <div className="flex items-center gap-2 text-muted-foreground">
+                                <ClockIcon size={14} className="flex-shrink-0 text-primary" />
+                                <span>{activity.startTime}–{activity.endTime}</span>
                               </div>
-                              
-                              {activity.type === 'lesson' && activity.studentName && (
-                                <div className="font-medium">תלמיד: {activity.studentName}</div>
-                              )}
-                              
-                              {activity.instrumentName && (
-                                <div className="opacity-75">כלי: {activity.instrumentName}</div>
-                              )}
-                              
                               {activity.location && (
-                                <div className="flex items-center gap-1">
-                                  <MapPinIcon className="w-3 h-3" />
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                  <MapPinIcon size={14} className="flex-shrink-0 text-primary" />
                                   <span>{activity.location}</span>
                                 </div>
                               )}
-                              
-                              {activity.participants && (
-                                <div className="flex items-center gap-1">
-                                  <UsersIcon className="w-3 h-3" />
-                                  <span>{activity.participants.join(', ')}</span>
-                                </div>
+                              {activity.type === 'lesson' && onLessonUpdate && (
+                                <button
+                                  onClick={() => handleLessonClick(activity)}
+                                  className="w-full mt-2 text-xs text-primary hover:underline font-medium"
+                                >
+                                  ערוך שיעור
+                                </button>
                               )}
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        </PopoverContent>
+                      </Popover>
+                    ))}
                   </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Week Summary */}
-        {weeklyActivities.length > 0 && (
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-3">סיכום השבוע</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-blue-600">
-                  {weeklyActivities.filter(a => a.type === 'lesson').length}
-                </div>
-                <div className="text-sm text-gray-600">שיעורים</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-purple-600">
-                  {weeklyActivities.filter(a => a.type === 'orchestra').length}
-                </div>
-                <div className="text-sm text-gray-600">תזמורות</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600">
-                  {weeklyActivities.filter(a => a.type === 'ensemble').length}
-                </div>
-                <div className="text-sm text-gray-600">אנסמבלים</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-gray-600">
-                  {weekDays.filter(day => {
-                    const dayKey = format(day, 'yyyy-MM-dd')
-                    return (activitiesByDay[dayKey] || []).length > 0
-                  }).length}
-                </div>
-                <div className="text-sm text-gray-600">ימים פעילים</div>
+                )}
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Teaching Time Blocks Preview - יום לימוד */}
-        {timeBlocks.length > 0 && (
-          <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded border border-blue-200 shadow-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <CalendarIcon className="w-5 h-5 text-blue-600" />
-              <h3 className="text-lg font-bold text-gray-900">ימי לימוד - זמינות למערכת</h3>
-              <span className="text-sm text-gray-600 bg-white px-2 py-1 rounded-full">
-                {timeBlocks.length} בלוקי זמן
-              </span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {timeBlocks.map(block => (
-                <div key={block._id} className="bg-white p-4 rounded-lg border border-blue-200 shadow-sm hover:shadow-md transition-all duration-200">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="font-bold text-gray-900 text-lg">{block.day}</span>
-                        {block.isActive && (
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
-                            פעיל
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-gray-700 mb-2">
-                        <ClockIcon className="w-4 h-4 text-blue-500" />
-                        <span className="font-medium">
-                          {block.startTime} - {block.endTime}
-                        </span>
-                      </div>
-                      
-                      {block.location && (
-                        <div className="flex items-center gap-2 text-gray-600 mb-2">
-                          <MapPinIcon className="w-4 h-4 text-gray-400" />
-                          <span className="text-sm">{block.location}</span>
-                        </div>
-                      )}
-                      
-                      {block.notes && (
-                        <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded-md mt-2">
-                          {block.notes}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="text-center ml-3">
-                      <div className="text-2xl font-bold text-blue-600">
-                        {Math.floor(block.totalDuration / 60)}
-                      </div>
-                      <div className="text-xs text-gray-600 font-medium">שעות</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {block.totalDuration % 60 !== 0 && `+${block.totalDuration % 60}ד'`}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-3 pt-3 border-t border-gray-100">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-500">
-                        {block.assignedLessons?.length || 0} שיעורים מתוכננים
-                      </span>
-                      <span className="text-blue-600 font-medium">
-                        זמין למערכת
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-4 p-3 bg-blue-100 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <strong>הסבר:</strong> ימי הלימוד מציגים את הזמנים בהם המורה זמין ללמד. 
-                רק שיעורים בפועל עם תלמידים ופעילויות הניצוח מוצגים בלוח הזמנים למעלה.
-              </p>
-            </div>
-          </div>
-        )}
+          )
+        })}
       </div>
 
       {/* Lesson Editing Modal */}

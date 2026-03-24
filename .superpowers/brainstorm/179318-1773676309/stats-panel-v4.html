@@ -1,0 +1,110 @@
+<h2>Room Insights — Compact</h2>
+<p class="subtitle">Narrower panel, same liquid glass</p>
+
+<div style="padding: 24px; background: #FAFAFA; direction: rtl; font-family: 'Assistant', system-ui, sans-serif; border-radius: 12px; display: flex; justify-content: center;">
+
+  <div style="
+    max-width: 520px;
+    width: 100%;
+    border-radius: 14px;
+    padding: 14px 16px;
+    backdrop-filter: blur(60px);
+    -webkit-backdrop-filter: blur(60px);
+    background: linear-gradient(
+      145deg,
+      rgba(255,255,255,0.6) 0%,
+      rgba(67,165,121,0.08) 30%,
+      rgba(8,39,83,0.05) 60%,
+      rgba(255,255,255,0.5) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.7);
+    box-shadow:
+      0 6px 28px rgba(8,39,83,0.07),
+      0 2px 6px rgba(67,165,121,0.05),
+      inset 0 1px 2px rgba(255,255,255,0.95),
+      inset 0 -1px 2px rgba(67,165,121,0.04);
+    position: relative;
+    overflow: hidden;
+  ">
+    <!-- Glass reflections -->
+    <div style="position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.08) 60%,transparent 100%);border-radius:14px 14px 0 0;pointer-events:none;"></div>
+    <div style="position:absolute;top:-25%;right:-8%;width:50%;height:50%;background:radial-gradient(circle,rgba(67,165,121,0.1) 0%,transparent 60%);border-radius:50%;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-15%;left:-8%;width:35%;height:35%;background:radial-gradient(circle,rgba(8,39,83,0.05) 0%,transparent 55%);border-radius:50%;pointer-events:none;"></div>
+
+    <div style="position:relative;z-index:1;">
+      <!-- Stats row -->
+      <div style="display:flex;gap:14px;margin-bottom:12px;align-items:baseline;flex-wrap:wrap;">
+        <div style="display:flex;align-items:baseline;gap:4px;">
+          <span style="font-size:20px;font-weight:800;color:#082753;">28</span>
+          <span style="font-size:10px;font-weight:700;color:#43a579;">חדרים</span>
+        </div>
+        <div style="width:1px;height:18px;background:linear-gradient(180deg,transparent,rgba(67,165,121,0.2),transparent);align-self:center;"></div>
+        <div style="display:flex;align-items:baseline;gap:4px;">
+          <span style="font-size:20px;font-weight:800;color:#082753;">301</span>
+          <span style="font-size:10px;font-weight:700;color:#43a579;">שיעורים</span>
+        </div>
+        <div style="width:1px;height:18px;background:linear-gradient(180deg,transparent,rgba(67,165,121,0.2),transparent);align-self:center;"></div>
+        <div style="display:flex;align-items:baseline;gap:4px;">
+          <span style="font-size:20px;font-weight:800;color:#ef4444;">3</span>
+          <span style="font-size:10px;font-weight:700;color:#ef4444;opacity:0.75;">התנגשויות</span>
+        </div>
+        <div style="width:1px;height:18px;background:linear-gradient(180deg,transparent,rgba(67,165,121,0.2),transparent);align-self:center;"></div>
+        <div style="display:flex;align-items:baseline;gap:4px;">
+          <span style="font-size:20px;font-weight:800;color:#43a579;">68%</span>
+          <span style="font-size:10px;font-weight:700;color:#43a579;opacity:0.7;">תפוסה</span>
+        </div>
+      </div>
+
+      <!-- Two mini sections -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <!-- Busiest -->
+        <div style="border-radius:10px;padding:10px 12px;background:rgba(8,39,83,0.03);border:1px solid rgba(8,39,83,0.07);box-shadow:inset 0 1px 1px rgba(255,255,255,0.5);">
+          <div style="font-size:9px;font-weight:800;color:#082753;letter-spacing:0.5px;margin-bottom:7px;opacity:0.6;">חדרים עמוסים</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:10px;font-weight:700;color:#082753;min-width:48px;white-space:nowrap;">אולם ערן</span>
+              <div style="flex:1;height:4px;background:rgba(8,39,83,0.05);border-radius:2px;overflow:hidden;">
+                <div style="width:92%;height:100%;background:linear-gradient(90deg,#43a579,#ef4444);border-radius:2px;"></div>
+              </div>
+              <span style="font-size:9px;font-weight:800;color:#ef4444;min-width:24px;text-align:left;">92%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:10px;font-weight:700;color:#082753;min-width:48px;white-space:nowrap;">חדר 1</span>
+              <div style="flex:1;height:4px;background:rgba(8,39,83,0.05);border-radius:2px;overflow:hidden;">
+                <div style="width:78%;height:100%;background:linear-gradient(90deg,#43a579,#f59e0b);border-radius:2px;"></div>
+              </div>
+              <span style="font-size:9px;font-weight:800;color:#d97706;min-width:24px;text-align:left;">78%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:10px;font-weight:700;color:#082753;min-width:48px;white-space:nowrap;">חדר 3</span>
+              <div style="flex:1;height:4px;background:rgba(8,39,83,0.05);border-radius:2px;overflow:hidden;">
+                <div style="width:65%;height:100%;background:#43a579;border-radius:2px;"></div>
+              </div>
+              <span style="font-size:9px;font-weight:800;color:#43a579;min-width:24px;text-align:left;">65%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available -->
+        <div style="border-radius:10px;padding:10px 12px;background:rgba(67,165,121,0.03);border:1px solid rgba(67,165,121,0.08);box-shadow:inset 0 1px 1px rgba(255,255,255,0.5);">
+          <div style="font-size:9px;font-weight:800;color:#43a579;letter-spacing:0.5px;margin-bottom:7px;opacity:0.7;">פנויים עכשיו</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:10px;font-weight:700;color:#082753;">חדר 5</span>
+              <span style="font-size:9px;font-weight:700;color:#43a579;background:rgba(67,165,121,0.07);padding:1px 7px;border-radius:99px;border:1px solid rgba(67,165,121,0.1);">עד 12:00</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:10px;font-weight:700;color:#082753;">חדר 8</span>
+              <span style="font-size:9px;font-weight:700;color:#43a579;background:rgba(67,165,121,0.07);padding:1px 7px;border-radius:99px;border:1px solid rgba(67,165,121,0.1);">כל היום</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:10px;font-weight:700;color:#082753;">חדר 2</span>
+              <span style="font-size:9px;font-weight:700;color:#43a579;background:rgba(67,165,121,0.07);padding:1px 7px;border-radius:99px;border:1px solid rgba(67,165,121,0.1);">עד 10:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

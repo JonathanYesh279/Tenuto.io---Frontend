@@ -858,7 +858,19 @@ export default function TheoryLessonDetails() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
                           className="rounded-xl bg-blue-50/50 border border-blue-100/50 p-2.5 cursor-pointer hover:bg-blue-50/80 transition-colors select-none group"
-                          onClick={() => handleViewStudentProfile(student._id)}
+                          onPointerDown={(e) => {
+                            (e.currentTarget as any)._tapStart = { x: e.clientX, y: e.clientY, t: Date.now() }
+                          }}
+                          onPointerUp={(e) => {
+                            const start = (e.currentTarget as any)._tapStart
+                            if (!start) return
+                            const dx = Math.abs(e.clientX - start.x)
+                            const dy = Math.abs(e.clientY - start.y)
+                            const dt = Date.now() - start.t
+                            if (dx < 5 && dy < 5 && dt < 300) {
+                              handleViewStudentProfile(student._id)
+                            }
+                          }}
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div className="flex-1 min-w-0">

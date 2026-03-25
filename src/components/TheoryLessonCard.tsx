@@ -46,6 +46,23 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
   const formattedTime = formatLessonTime(lesson)
   const chipStyle = categoryStyle[lesson.category] || defaultCategoryStyle
 
+  // Compute attendance-based card tint
+  const attendance = (lesson as any).attendance
+  const totalStudents = lesson.studentIds?.length || 0
+  const presentCount = (attendance?.present?.length || 0) + (attendance?.late?.length || 0)
+  const absentCount = attendance?.absent?.length || 0
+  const hasAttendance = attendance && totalStudents > 0 && (presentCount + absentCount) > 0
+  const attendanceRate = hasAttendance ? (presentCount / totalStudents) * 100 : null
+
+  // Subtle tint: red for high absence (<60%), amber for intermediate (60-80%), none for good (>80%)
+  const cardTintStyle = attendanceRate !== null
+    ? attendanceRate < 60
+      ? { background: 'linear-gradient(135deg, rgba(254,242,242,0.7) 0%, rgba(254,226,226,0.3) 100%)' }
+      : attendanceRate < 80
+      ? { background: 'linear-gradient(135deg, rgba(255,251,235,0.7) 0%, rgba(254,243,199,0.3) 100%)' }
+      : undefined
+    : undefined
+
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't navigate if clicking action buttons
     if ((e.target as HTMLElement).closest('button')) return
@@ -63,6 +80,7 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
           selected ? 'ring-2 ring-primary border-primary' : ''
         }`}
         onClick={handleCardClick}
+        style={cardTintStyle}
       >
         {/* Header: Actions */}
         <CardHeader className="flex-row items-center justify-end gap-2 pb-3 shrink-0">

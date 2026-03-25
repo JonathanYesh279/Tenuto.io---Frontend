@@ -857,7 +857,13 @@ export default function TheoryLessonDetails() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
-                          className="rounded-xl bg-blue-50/50 border border-blue-100/50 p-2.5 cursor-pointer hover:bg-blue-50/80 transition-colors select-none group"
+                          className={`rounded-xl p-2.5 cursor-pointer transition-colors select-none group ${
+                            isAbsent
+                              ? 'bg-red-50/60 border border-red-100/60 hover:bg-red-50/90'
+                              : isLate
+                              ? 'bg-amber-50/50 border border-amber-100/50 hover:bg-amber-50/80'
+                              : 'bg-blue-50/50 border border-blue-100/50 hover:bg-blue-50/80'
+                          }`}
                           onPointerDown={(e) => {
                             (e.currentTarget as any)._tapStart = { x: e.clientX, y: e.clientY, t: Date.now() }
                           }}

@@ -680,8 +680,8 @@ export default function TheoryLessonDetails() {
               />
               <GlassStatCard
                 size="sm"
-                value={stats.presentCount}
-                label="נוכחים"
+                value={stats.presentCount + stats.lateCount}
+                label={stats.lateCount > 0 ? `נוכחים (${stats.lateCount} מאחרים)` : 'נוכחים'}
                 className="!h-[90px] !p-2.5"
                 valueClassName="text-green-700"
               />

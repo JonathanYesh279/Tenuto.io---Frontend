@@ -18,8 +18,6 @@ import {
   XIcon,
   FileTextIcon,
   CheckCircleIcon,
-  MusicNoteIcon,
-  GraduationCapIcon,
   ChartBarIcon,
   XCircleIcon,
 } from '@phosphor-icons/react'
@@ -867,18 +865,15 @@ export default function TheoryLessonDetails() {
                               <span className="text-foreground/80 font-medium text-xs block truncate">
                                 {getDisplayName(student.personalInfo)}
                               </span>
-                              <div className="flex items-center gap-1.5 mt-1">
+                              <div className="flex items-center gap-1.5 mt-1 text-[10px] text-blue-600/70">
                                 {student.academicInfo?.class && (
-                                  <div className="flex items-center gap-0.5 text-blue-600/70">
-                                    <GraduationCapIcon size={11} />
-                                    <span className="text-[10px]">כיתה {student.academicInfo.class}</span>
-                                  </div>
+                                  <span>כיתה {student.academicInfo.class}</span>
+                                )}
+                                {student.academicInfo?.class && primaryInstrument && (
+                                  <span>·</span>
                                 )}
                                 {primaryInstrument && (
-                                  <div className="flex items-center gap-0.5 text-blue-600/70">
-                                    <MusicNoteIcon size={11} />
-                                    <span className="text-[10px]">{primaryInstrument.instrumentName}</span>
-                                  </div>
+                                  <span>{primaryInstrument.instrumentName}</span>
                                 )}
                               </div>
                             </div>
@@ -1022,25 +1017,25 @@ export default function TheoryLessonDetails() {
                               </div>
                               <div className="flex items-center gap-0.5">
                                 <button
-                                  className={`p-1.5 rounded transition-colors ${isPresent ? 'bg-blue-100 text-blue-600' : 'text-muted-foreground hover:text-blue-600 hover:bg-blue-50'}`}
+                                  className={`p-1.5 rounded-full transition-all duration-200 ${isPresent ? 'bg-blue-100 text-blue-600 scale-110' : 'text-muted-foreground hover:text-blue-600 hover:bg-blue-50 hover:scale-110'}`}
                                   onClick={() => toggleAttendance(student._id, 'present')}
                                   title="נוכח"
                                 >
-                                  <CheckCircleIcon className="w-4 h-4" weight={isPresent ? 'fill' : 'regular'} />
+                                  <CheckIcon className="w-4 h-4" weight={isPresent ? 'bold' : 'regular'} />
                                 </button>
                                 <button
-                                  className={`p-1.5 rounded transition-colors ${isLate ? 'bg-green-100 text-green-600' : 'text-muted-foreground hover:text-green-600 hover:bg-green-50'}`}
+                                  className={`p-1.5 rounded-full transition-all duration-200 ${isLate ? 'bg-green-100 text-green-600 scale-110' : 'text-muted-foreground hover:text-green-600 hover:bg-green-50 hover:scale-110'}`}
                                   onClick={() => toggleAttendance(student._id, 'late')}
                                   title="מאחר"
                                 >
                                   <ClockIcon className="w-4 h-4" weight={isLate ? 'fill' : 'regular'} />
                                 </button>
                                 <button
-                                  className={`p-1.5 rounded transition-colors ${isAbsent ? 'bg-red-100 text-red-600' : 'text-muted-foreground hover:text-red-600 hover:bg-red-50'}`}
+                                  className={`p-1.5 rounded-full transition-all duration-200 ${isAbsent ? 'bg-red-100 text-red-600 scale-110' : 'text-muted-foreground hover:text-red-600 hover:bg-red-50 hover:scale-110'}`}
                                   onClick={() => toggleAttendance(student._id, 'absent')}
                                   title="נעדר"
                                 >
-                                  <XCircleIcon className="w-4 h-4" weight={isAbsent ? 'fill' : 'regular'} />
+                                  <XIcon className="w-4 h-4" weight={isAbsent ? 'bold' : 'regular'} />
                                 </button>
                               </div>
                             </Card>
@@ -1069,11 +1064,12 @@ export default function TheoryLessonDetails() {
                       <div className="flex items-center gap-3 text-xs">
                         <span className="flex items-center gap-1">
                           <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                          <span className="text-muted-foreground">נוכחים: {tempAttendance.present.length}</span>
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                          <span className="text-muted-foreground">מאחרים: {(tempAttendance.late || []).length}</span>
+                          <span className="text-muted-foreground">
+                            נוכחים: {tempAttendance.present.length + (tempAttendance.late || []).length}
+                            {(tempAttendance.late || []).length > 0 && (
+                              <span className="text-amber-600"> ({(tempAttendance.late || []).length} מאחרים)</span>
+                            )}
+                          </span>
                         </span>
                         <span className="flex items-center gap-1">
                           <span className="w-2.5 h-2.5 rounded-full bg-red-500" />

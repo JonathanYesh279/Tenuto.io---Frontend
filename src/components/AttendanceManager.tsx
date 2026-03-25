@@ -331,14 +331,13 @@ export default function AttendanceManager({
           )}
 
           {/* Statistics */}
-          <div className="grid grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded">
+          <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.present}</div>
+              <div className="text-2xl font-bold text-green-600">{stats.present + stats.late}</div>
               <div className="text-sm text-gray-600">נוכחים</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-amber-600">{stats.late}</div>
-              <div className="text-sm text-gray-600">איחור</div>
+              {stats.late > 0 && (
+                <div className="text-xs text-amber-600 mt-0.5">({stats.late} מאחרים)</div>
+              )}
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600">{stats.absent}</div>

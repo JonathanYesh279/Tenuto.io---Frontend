@@ -9,7 +9,7 @@ import { useState, useMemo } from 'react'
 import { StudentDetails } from '../../types'
 import { useStudentAttendance } from '../../hooks'
 import { Line, Doughnut } from 'react-chartjs-2'
-import { CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, FunnelIcon, LightningIcon, TargetIcon, TrendUpIcon, TrophyIcon, UsersIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
+import { CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, DownloadSimpleIcon, LightningIcon, TargetIcon, TrendUpIcon, TrophyIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -70,10 +70,10 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       })
       
       if (dayRecords.length > 0) {
-        const presentCount = dayRecords.filter(r => r.status === 'present').length
-        const absentCount = dayRecords.filter(r => r.status === 'absent').length
-        const excusedCount = dayRecords.filter(r => r.status === 'excused').length
-        const lateCount = dayRecords.filter(r => r.status === 'late').length
+        const presentCount = dayRecords.filter(r => r.status === 'הגיע/ה').length
+        const absentCount = dayRecords.filter(r => r.status === 'לא הגיע/ה').length
+        const excusedCount = dayRecords.filter(r => r.status === 'נעדר בצידוק').length
+        const lateCount = dayRecords.filter(r => r.status === 'איחור').length
         
         let status = 'neutral'
         if (presentCount === dayRecords.length) status = 'excellent'
@@ -179,7 +179,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
     
     // Calculate current streak from most recent
     for (const record of sortedRecords) {
-      if (record.status === 'present') {
+      if (record.status === 'הגיע/ה' || record.status === 'איחור') {
         currentStreak++
       } else {
         break
@@ -188,7 +188,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
     
     // Calculate longest streak
     for (const record of sortedRecords) {
-      if (record.status === 'present') {
+      if (record.status === 'הגיע/ה' || record.status === 'איחור') {
         tempStreak++
         longestStreak = Math.max(longestStreak, tempStreak)
       } else {
@@ -199,68 +199,72 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
     return { current: currentStreak, longest: longestStreak }
   }, [attendanceRecords])
 
-  // Absence reasons breakdown
+  // Absence reasons breakdown — computed from actual attendance record notes
   const absenceReasons = useMemo(() => {
-    if (!attendanceRecords) return {}
-    
-    const reasons: Record<string, number> = {
-      'מחלה': Math.floor(Math.random() * 5) + 1,
-      'אירוע משפחתי': Math.floor(Math.random() * 3) + 1,
-      'בעיות רפואיות': Math.floor(Math.random() * 2) + 1,
-      'חופשה/נסיעה': Math.floor(Math.random() * 2),
-      'אחר': Math.floor(Math.random() * 3)
-    }
-    
+    if (!attendanceRecords || attendanceRecords.length === 0) return {}
+
+    const reasons: Record<string, number> = {}
+    attendanceRecords
+      .filter((r: any) => r.status === 'לא הגיע/ה')
+      .forEach((r: any) => {
+        const reason = r.notes?.trim() || 'לא צוינה סיבה'
+        reasons[reason] = (reasons[reason] || 0) + 1
+      })
+
     return reasons
   }, [attendanceRecords])
 
-  // Attendance trends data for chart
+  // Attendance trends data for chart — computed from real monthly attendance rates
   const trendsData = useMemo(() => {
-    if (!attendanceRecords) return { labels: [], datasets: [] }
-    
-    const last12Months = []
-    const currentDate = new Date()
-    
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1)
-      last12Months.push({
-        month: date.toLocaleDateString('he-IL', { month: 'short' }),
-        attendance: Math.floor(Math.random() * 30) + 70 // Mock data
-      })
-    }
-    
+    if (!attendanceRecords || attendanceRecords.length === 0) return { labels: [], datasets: [] }
+
+    const monthlyData: Record<string, { total: number; present: number }> = {}
+    attendanceRecords.forEach((r: any) => {
+      const d = new Date(r.date)
+      const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+      if (!monthlyData[monthKey]) monthlyData[monthKey] = { total: 0, present: 0 }
+      monthlyData[monthKey].total++
+      if (r.status === 'הגיע/ה' || r.status === 'איחור') {
+        monthlyData[monthKey].present++
+      }
+    })
+
+    const sortedMonths = Object.entries(monthlyData).sort(([a], [b]) => a.localeCompare(b)).slice(-12)
+
     return {
-      labels: last12Months.map(m => m.month),
-      datasets: [
-        {
-          label: 'אחוז נוכחות',
-          data: last12Months.map(m => m.attendance),
-          borderColor: 'rgb(59, 130, 246)',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.4,
-          fill: true
-        }
-      ]
+      labels: sortedMonths.map(([key]) => {
+        const [y, m] = key.split('-')
+        return new Date(parseInt(y), parseInt(m) - 1).toLocaleDateString('he-IL', { month: 'short', year: '2-digit' })
+      }),
+      datasets: [{
+        label: 'אחוז נוכחות',
+        data: sortedMonths.map(([, data]) =>
+          data.total > 0 ? Math.round((data.present / data.total) * 100) : 0
+        ),
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
     }
   }, [attendanceRecords])
 
   // Absence reasons chart data
   const absenceChartData = useMemo(() => {
-    const reasons = Object.entries(absenceReasons)
+    const reasons = Object.entries(absenceReasons).filter(([, count]) => count > 0)
     if (reasons.length === 0) return null
-    
+
+    const chartColors = [
+      '#ef4444', '#f97316', '#eab308', '#84cc16', '#6b7280',
+      '#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f43f5e'
+    ]
+
     return {
       labels: reasons.map(([reason]) => reason),
       datasets: [
         {
           data: reasons.map(([, count]) => count),
-          backgroundColor: [
-            '#ef4444', // red
-            '#f97316', // orange
-            '#eab308', // yellow
-            '#84cc16', // lime
-            '#6b7280'  // gray
-          ],
+          backgroundColor: reasons.map((_, i) => chartColors[i % chartColors.length]),
           borderWidth: 0
         }
       ]
@@ -288,29 +292,26 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
       
       {/* Enhanced Statistics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-        <StatCard 
+        <StatCard
           title="שיעורים סה״כ"
-          value={attendanceStats?.totalLessons?.toString() || '0'}
+          value={attendanceStats?.totalLessons?.toString() || attendanceStats?.overall?.totalLessons?.toString() || '0'}
           icon={CalendarIcon}
           color="text-blue-600"
           bgColor="bg-blue-100"
-          change="+12 החודש"
         />
-        <StatCard 
+        <StatCard
           title="נוכחות"
-          value={attendanceStats?.attendedLessons?.toString() || '0'}
+          value={attendanceStats?.attendedLessons?.toString() || attendanceStats?.overall?.totalAttended?.toString() || '0'}
           icon={CheckCircleIcon}
           color="text-success-600"
           bgColor="bg-success-100"
-          change="+5 החודש"
         />
-        <StatCard 
+        <StatCard
           title="אחוז נוכחות"
-          value={`${Math.round(attendanceStats?.attendanceRate || 0)}%`}
+          value={`${Math.round(attendanceStats?.attendanceRate || attendanceStats?.overall?.attendanceRate || 0)}%`}
           icon={TrendUpIcon}
           color="text-purple-600"
           bgColor="bg-purple-100"
-          change="+2.5%"
         />
         <StatCard 
           title="30 ימים אחרונים"
@@ -329,7 +330,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
         />
         <StatCard 
           title="איחורים"
-          value={attendanceRecords?.filter(r => r.status === 'late').length.toString() || '0'}
+          value={attendanceRecords?.filter(r => r.status === 'איחור').length.toString() || '0'}
           icon={WarningIcon}
           color="text-red-600"
           bgColor="bg-red-100"
@@ -453,26 +454,21 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
               </div>
               <span className="text-xl font-bold text-blue-600">90%</span>
             </div>
-            
+
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border border-yellow-200">
+              <div className="flex items-center gap-3">
+                <LightningIcon className="w-5 h-5 text-yellow-600" />
+                <span className="font-medium text-yellow-900">רצף נוכחות נוכחי</span>
+              </div>
+              <span className="text-xl font-bold text-yellow-600">{calculateStreaks.current}</span>
+            </div>
+
             <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
               <div className="flex items-center gap-3">
                 <TrophyIcon className="w-5 h-5 text-green-600" />
-                <span className="font-medium text-green-900">דירוג בכיתה</span>
+                <span className="font-medium text-green-900">רצף נוכחות שיא</span>
               </div>
-              <span className="text-xl font-bold text-green-600">#3</span>
-            </div>
-            
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
-              <div className="flex items-center gap-3">
-                <UsersIcon className="w-5 h-5 text-purple-600" />
-                <span className="font-medium text-purple-900">ממוצע כיתה</span>
-              </div>
-              <span className="text-xl font-bold text-purple-600">87%</span>
-            </div>
-            
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <div className="text-sm text-gray-600 mb-2">הערכת מורה</div>
-              <div className="text-gray-900 font-medium">"תלמיד מצוין ועקבי בהגעה לשיעורים"</div>
+              <span className="text-xl font-bold text-green-600">{calculateStreaks.longest}</span>
             </div>
           </div>
         </div>
@@ -497,7 +493,7 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             >
-              {[2023, 2024, 2025].map(year => (
+              {Array.from({ length: new Date().getFullYear() - 2022 }, (_, i) => 2023 + i).map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
@@ -620,13 +616,13 @@ const AttendanceTab: React.FC<AttendanceTabProps> = ({ student, studentId }) => 
           </div>
           <div className="max-h-96 overflow-y-auto">
             {attendanceRecords.slice(0, 20).map((record, index) => {
-              const statusInfo = {
-                present: { label: 'נוכח', color: 'text-success-700', bgColor: 'bg-success-100', icon: CheckCircleIcon },
-                absent: { label: 'נעדר', color: 'text-red-700', bgColor: 'bg-red-100', icon: XCircleIcon },
-                excused: { label: 'נעדר בצידוק', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: ClockIcon },
-                late: { label: 'איחור', color: 'text-orange-700', bgColor: 'bg-orange-100', icon: ClockIcon }
+              const statusInfo: Record<string, { label: string; color: string; bgColor: string; icon: React.ComponentType<any> }> = {
+                'הגיע/ה': { label: 'נוכח', color: 'text-success-700', bgColor: 'bg-success-100', icon: CheckCircleIcon },
+                'לא הגיע/ה': { label: 'נעדר', color: 'text-red-700', bgColor: 'bg-red-100', icon: XCircleIcon },
+                'נעדר בצידוק': { label: 'נעדר בצידוק', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: ClockIcon },
+                'איחור': { label: 'איחור', color: 'text-orange-700', bgColor: 'bg-orange-100', icon: ClockIcon }
               }
-              const status = statusInfo[record.status] || statusInfo.present
+              const status = statusInfo[record.status] || statusInfo['הגיע/ה']
               const StatusIcon = status.icon
               
               return (

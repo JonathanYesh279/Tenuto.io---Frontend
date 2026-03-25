@@ -54,14 +54,14 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
   const hasAttendance = attendance && totalStudents > 0 && (presentCount + absentCount) > 0
   const attendanceRate = hasAttendance ? (presentCount / totalStudents) * 100 : null
 
-  // Subtle tint: red for high absence (<60%), amber for intermediate (60-80%), none for good (>80%)
+  // Tint: red for high absence (<60%), amber for intermediate (60-80%), warm white for good (>80%)
   const cardTintStyle = attendanceRate !== null
     ? attendanceRate < 60
-      ? { background: 'linear-gradient(135deg, rgba(254,242,242,0.7) 0%, rgba(254,226,226,0.3) 100%)' }
+      ? { background: 'linear-gradient(135deg, rgba(254,202,202,0.5) 0%, rgba(252,165,165,0.25) 50%, rgba(254,226,226,0.4) 100%)' }
       : attendanceRate < 80
-      ? { background: 'linear-gradient(135deg, rgba(255,251,235,0.7) 0%, rgba(254,243,199,0.3) 100%)' }
-      : undefined
-    : undefined
+      ? { background: 'linear-gradient(135deg, rgba(253,230,138,0.35) 0%, rgba(254,243,199,0.3) 50%, rgba(253,224,71,0.15) 100%)' }
+      : { background: 'linear-gradient(135deg, rgba(250,250,249,1) 0%, rgba(245,245,244,0.8) 100%)' }
+    : { background: 'linear-gradient(135deg, rgba(250,250,249,1) 0%, rgba(245,245,244,0.8) 100%)' }
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't navigate if clicking action buttons

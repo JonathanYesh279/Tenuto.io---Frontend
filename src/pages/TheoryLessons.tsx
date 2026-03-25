@@ -782,9 +782,25 @@ export default function TheoryLessons() {
             {/* Future Lessons Section */}
             {groupedLessonsByDay.future.length > 0 && (
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-1 bg-blue-600 rounded-full"></div>
-                  <h2 className="text-xl font-bold text-gray-900">שיעורים עתידיים</h2>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-1 bg-blue-600 rounded-full"></div>
+                    <h2 className="text-xl font-bold text-gray-900">שיעורים עתידיים</h2>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded" style={{ background: 'rgba(254,202,202,0.6)' }} />
+                      נוכחות נמוכה
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded" style={{ background: 'rgba(253,230,138,0.5)' }} />
+                      נוכחות בינונית
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded border border-gray-200 bg-white" />
+                      נוכחות תקינה
+                    </span>
+                  </div>
                 </div>
                 {groupedLessonsByDay.future.map(([date, dayLessons]) => {
                   const dayInfo = formatDayHeader(date)

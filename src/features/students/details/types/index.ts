@@ -153,7 +153,7 @@ export interface AttendanceRecord {
   date: Date;
   lessonType: 'individual' | 'group' | 'theory' | 'orchestra';
   teacherId?: string;
-  status: 'present' | 'absent' | 'excused' | 'late';
+  status: 'present' | 'absent' | 'excused' | 'late' | 'הגיע/ה' | 'לא הגיע/ה' | 'נעדר בצידוק' | 'איחור';
   notes?: string;
 }
 
@@ -162,6 +162,11 @@ export interface AttendanceStatistics {
   totalLessons: number;
   attendedLessons: number;
   attendanceRate: number;
+  overall?: {
+    totalLessons: number;
+    totalAttended: number;
+    attendanceRate: number;
+  };
   lastThirtyDays: {
     totalLessons: number;
     attendedLessons: number;

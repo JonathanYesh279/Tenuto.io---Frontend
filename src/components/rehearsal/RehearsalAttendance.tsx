@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { useAuth } from '../../services/authContext.jsx'
 
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
+import { STATUS_MAP } from '../../utils/rehearsalUtils'
 import { ArrowsClockwiseIcon, CalendarIcon, ChartBarIcon, CheckCircleIcon, ClockIcon, FloppyDiskIcon, MagnifyingGlassIcon, MapPinIcon, MusicNotesIcon, UserCircleCheckIcon, UsersIcon, WarningCircleIcon, XCircleIcon } from '@phosphor-icons/react'
 
 interface AttendanceMember {
@@ -163,23 +165,21 @@ export default function RehearsalAttendance({ rehearsalId, orchestraId }: Rehear
     try {
       setSaving(true)
 
-      const attendanceData = {
-        rehearsalId: rehearsal.id,
-        attendanceList: members.filter(member => member.status !== 'not_marked').map(member => ({
+      const records = members
+        .filter(member => member.status !== 'not_marked')
+        .map(member => ({
           studentId: member.id,
-          status: member.status,
-          arrivalTime: member.arrivalTime,
+          status: STATUS_MAP[member.status as keyof typeof STATUS_MAP] || member.status,
           notes: member.notes || ''
         }))
-      }
 
-      await apiService.rehearsals.updateAttendance(rehearsal.id, attendanceData)
+      await apiService.rehearsals.updateAttendance(rehearsal.id, records)
 
       // Show success message
-      alert('נוכחות נשמרה בהצלחה')
+      toast.success('נוכחות נשמרה בהצלחה')
     } catch (error) {
       console.error('Error saving attendance:', error)
-      alert('שגיאה בשמירת הנוכחות')
+      toast.error('שגיאה בשמירת הנוכחות')
     } finally {
       setSaving(false)
     }

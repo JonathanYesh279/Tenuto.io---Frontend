@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import {
   CaretLeftIcon,
   PencilSimpleIcon,
@@ -1007,59 +1007,74 @@ export default function TheoryLessonDetails() {
                       </div>
                     </div>
 
-                    {/* Student attendance grid */}
+                    {/* Student attendance grid — unmarked first, marked slide to end */}
                     {enrolledStudents.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-5">
-                        {enrolledStudents.map(student => {
-                          const isPresent = tempAttendance.present.includes(student._id)
-                          const isAbsent = tempAttendance.absent.includes(student._id)
-                          const isLate = (tempAttendance.late || []).includes(student._id)
+                      <LayoutGroup>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-5">
+                          {[...enrolledStudents]
+                            .sort((a, b) => {
+                              const aMarked = tempAttendance.present.includes(a._id) || tempAttendance.absent.includes(a._id) || (tempAttendance.late || []).includes(a._id)
+                              const bMarked = tempAttendance.present.includes(b._id) || tempAttendance.absent.includes(b._id) || (tempAttendance.late || []).includes(b._id)
+                              if (aMarked === bMarked) return 0
+                              return aMarked ? 1 : -1
+                            })
+                            .map(student => {
+                              const isPresent = tempAttendance.present.includes(student._id)
+                              const isAbsent = tempAttendance.absent.includes(student._id)
+                              const isLate = (tempAttendance.late || []).includes(student._id)
 
-                          return (
-                            <Card
-                              key={student._id}
-                              className="rounded-card border-none shadow-1 transition-shadow duration-200 hover:shadow-md flex items-center justify-between p-3"
-                              style={{
-                                background: isPresent
-                                  ? 'linear-gradient(135deg, rgba(219,234,254,0.8), rgba(191,219,254,0.4))'
-                                  : isLate
-                                  ? 'linear-gradient(135deg, rgba(220,252,231,0.8), rgba(187,247,208,0.4))'
-                                  : isAbsent
-                                  ? 'linear-gradient(135deg, rgba(254,226,226,0.8), rgba(254,202,202,0.4))'
-                                  : 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,210,230,0.15) 50%, rgba(255,255,255,0.9) 100%)',
-                              }}
-                            >
-                              <div className="flex-1 min-w-0 mr-2">
-                                <div className="font-medium text-sm text-foreground truncate">{getDisplayName(student.personalInfo)}</div>
-                                <div className="text-[11px] text-muted-foreground">כיתה {student.academicInfo?.class}</div>
-                              </div>
-                              <div className="flex items-center gap-0.5">
-                                <button
-                                  className={`p-1.5 rounded-full transition-all duration-200 ${isPresent ? 'bg-blue-100 text-blue-600 scale-110' : 'text-muted-foreground hover:text-blue-600 hover:bg-blue-50 hover:scale-110'}`}
-                                  onClick={() => toggleAttendance(student._id, 'present')}
-                                  title="נוכח"
+                              return (
+                                <motion.div
+                                  key={student._id}
+                                  layout
+                                  layoutId={`attendance-${student._id}`}
+                                  transition={{ type: 'spring', stiffness: 350, damping: 30, mass: 0.8 }}
                                 >
-                                  <CheckIcon className="w-4 h-4" weight={isPresent ? 'bold' : 'regular'} />
-                                </button>
-                                <button
-                                  className={`p-1.5 rounded-full transition-all duration-200 ${isLate ? 'bg-green-100 text-green-600 scale-110' : 'text-muted-foreground hover:text-green-600 hover:bg-green-50 hover:scale-110'}`}
-                                  onClick={() => toggleAttendance(student._id, 'late')}
-                                  title="מאחר"
-                                >
-                                  <ClockIcon className="w-4 h-4" weight={isLate ? 'fill' : 'regular'} />
-                                </button>
-                                <button
-                                  className={`p-1.5 rounded-full transition-all duration-200 ${isAbsent ? 'bg-red-100 text-red-600 scale-110' : 'text-muted-foreground hover:text-red-600 hover:bg-red-50 hover:scale-110'}`}
-                                  onClick={() => toggleAttendance(student._id, 'absent')}
-                                  title="נעדר"
-                                >
-                                  <XIcon className="w-4 h-4" weight={isAbsent ? 'bold' : 'regular'} />
-                                </button>
-                              </div>
-                            </Card>
-                          )
-                        })}
-                      </div>
+                                  <Card
+                                    className="rounded-card border-none shadow-1 transition-shadow duration-200 hover:shadow-md flex items-center justify-between p-3"
+                                    style={{
+                                      background: isPresent
+                                        ? 'linear-gradient(135deg, rgba(219,234,254,0.8), rgba(191,219,254,0.4))'
+                                        : isLate
+                                        ? 'linear-gradient(135deg, rgba(220,252,231,0.8), rgba(187,247,208,0.4))'
+                                        : isAbsent
+                                        ? 'linear-gradient(135deg, rgba(254,226,226,0.8), rgba(254,202,202,0.4))'
+                                        : 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(167,210,230,0.15) 50%, rgba(255,255,255,0.9) 100%)',
+                                    }}
+                                  >
+                                    <div className="flex-1 min-w-0 mr-2">
+                                      <div className="font-medium text-sm text-foreground truncate">{getDisplayName(student.personalInfo)}</div>
+                                      <div className="text-[11px] text-muted-foreground">כיתה {student.academicInfo?.class}</div>
+                                    </div>
+                                    <div className="flex items-center gap-0.5">
+                                      <button
+                                        className={`p-1.5 rounded-full transition-all duration-200 ${isPresent ? 'bg-blue-100 text-blue-600 scale-110' : 'text-muted-foreground hover:text-blue-600 hover:bg-blue-50 hover:scale-110'}`}
+                                        onClick={() => toggleAttendance(student._id, 'present')}
+                                        title="נוכח"
+                                      >
+                                        <CheckIcon className="w-4 h-4" weight={isPresent ? 'bold' : 'regular'} />
+                                      </button>
+                                      <button
+                                        className={`p-1.5 rounded-full transition-all duration-200 ${isLate ? 'bg-green-100 text-green-600 scale-110' : 'text-muted-foreground hover:text-green-600 hover:bg-green-50 hover:scale-110'}`}
+                                        onClick={() => toggleAttendance(student._id, 'late')}
+                                        title="מאחר"
+                                      >
+                                        <ClockIcon className="w-4 h-4" weight={isLate ? 'fill' : 'regular'} />
+                                      </button>
+                                      <button
+                                        className={`p-1.5 rounded-full transition-all duration-200 ${isAbsent ? 'bg-red-100 text-red-600 scale-110' : 'text-muted-foreground hover:text-red-600 hover:bg-red-50 hover:scale-110'}`}
+                                        onClick={() => toggleAttendance(student._id, 'absent')}
+                                        title="נעדר"
+                                      >
+                                        <XIcon className="w-4 h-4" weight={isAbsent ? 'bold' : 'regular'} />
+                                      </button>
+                                    </div>
+                                  </Card>
+                                </motion.div>
+                              )
+                            })}
+                        </div>
+                      </LayoutGroup>
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <UsersIcon className="w-8 h-8 mx-auto mb-2 opacity-30" />

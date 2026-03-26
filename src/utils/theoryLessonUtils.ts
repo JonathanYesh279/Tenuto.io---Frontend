@@ -28,6 +28,7 @@ export interface TheoryLesson {
   }>
   schoolYearId: string
   isActive: boolean
+  courseId?: string | null
 }
 
 export const DAY_OF_WEEK_NAMES: Record<number, string> = {

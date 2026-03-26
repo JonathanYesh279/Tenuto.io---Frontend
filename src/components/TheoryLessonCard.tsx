@@ -1,5 +1,5 @@
 
-import { CalendarBlankIcon, CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, TrashIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
+import { BookOpenIcon, CalendarBlankIcon, CalendarIcon, ClockIcon, MapPinIcon, PencilIcon, TrashIcon, UserCircleCheckIcon } from '@phosphor-icons/react'
 import {
   DAY_OF_WEEK_NAMES,
   formatLessonDate,
@@ -105,6 +105,16 @@ export default function TheoryLessonCard({ lesson, onView, onEdit, onDelete, onV
 
         {/* Body: Teacher + Location */}
         <CardContent className="space-y-2 flex-1">
+          {lesson.courseId && (
+            <Chip
+              color="secondary"
+              variant="flat"
+              size="sm"
+              startContent={<BookOpenIcon size={12} />}
+            >
+              בקורס
+            </Chip>
+          )}
           <TeacherNameDisplay
             lesson={lesson}
             className="text-sm text-muted-foreground"

@@ -5,6 +5,20 @@ import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
 import { BellIcon, BookOpenIcon, CalendarIcon, CheckSquareIcon, ClockIcon, CopyIcon, DownloadSimpleIcon, EnvelopeIcon, EyeIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MapPinIcon, MedalIcon, PencilIcon, PlusIcon, TrashIcon, TrendUpIcon, UploadSimpleIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
 
+interface CourseAnalytics {
+  courseId: string
+  totalSessions: number
+  studentStats: Array<{
+    studentId: string
+    studentName?: string
+    present: number
+    absent: number
+    late: number
+    total: number
+    attendanceRate: number
+  }>
+}
+
 interface TheoryGroup {
   id: string
   name: string
@@ -85,6 +99,8 @@ export default function TheoryGroupManager() {
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [showEnrollModal, setShowEnrollModal] = useState(false)
   const [editingGroup, setEditingGroup] = useState<TheoryGroup | null>(null)
+  const [courseAnalytics, setCourseAnalytics] = useState<CourseAnalytics | null>(null)
+  const [analyticsLoading, setAnalyticsLoading] = useState(false)
 
   useEffect(() => {
     loadTheoryGroups()
@@ -94,77 +110,88 @@ export default function TheoryGroupManager() {
   const loadTheoryGroups = async () => {
     try {
       setLoading(true)
-      const allLessons = await apiService.theory.getTheoryLessons()
+      setError(null)
 
-      // Convert lessons to groups (group by category + level + teacher)
-      const groupsMap = new Map<string, TheoryGroup>()
+      // Fetch courses from real API
+      const courses = await apiService.theory.getCourses()
 
-      allLessons.forEach(lesson => {
-        const groupKey = `${lesson.teacherId}-${lesson.category}-${lesson.level || 'intermediate'}`
+      // Build teacher map for name enrichment
+      let teacherMap: Record<string, { firstName: string; lastName: string }> = {}
+      try {
+        const teachers = await apiService.teachers.getTeachers()
+        teachers.forEach((t: any) => {
+          teacherMap[t._id] = {
+            firstName: t.personalInfo?.firstName || t.firstName || '',
+            lastName: t.personalInfo?.lastName || t.lastName || ''
+          }
+        })
+      } catch (teacherError) {
+        console.warn('Could not load teachers for name enrichment:', teacherError)
+      }
 
-        if (!groupsMap.has(groupKey)) {
-          groupsMap.set(groupKey, {
-            id: groupKey,
-            name: `${lesson.category} - ${mapLevelLabel(lesson.level || 'intermediate')}`,
-            description: lesson.description,
-            level: mapLevelFromString(lesson.level || 'intermediate'),
-            category: lesson.category || 'מגמה',
-            teacherId: lesson.teacherId,
-            teacherName: lesson.teacherName || 'מורה',
-            capacity: lesson.maxStudents || 15,
-            schedule: {
-              dayOfWeek: lesson.dayOfWeek || 'sunday',
-              startTime: lesson.startTime || '09:00',
-              endTime: lesson.endTime || '10:30'
-            },
-            location: lesson.location || 'חדר תיאוריה',
-            enrolledStudents: [],
-            waitingList: [],
-            isActive: lesson.isActive,
-            createdAt: lesson.createdAt || new Date().toISOString(),
-            curriculum: generateMockCurriculum(lesson.category),
-            requirements: generateMockRequirements(lesson.category)
-          })
-        }
+      // Build student map for enrolled student details
+      let studentMap: Record<string, GroupStudent> = {}
+      try {
+        const students = await apiService.students.getStudents()
+        students.forEach((s: any) => {
+          studentMap[s._id] = {
+            id: s._id,
+            firstName: s.personalInfo?.firstName || '',
+            lastName: s.personalInfo?.lastName || '',
+            fullName: getDisplayName(s.personalInfo || s),
+            email: s.personalInfo?.email,
+            phone: s.personalInfo?.phone,
+            grade: s.academicInfo?.gradeLevel,
+            instrument: s.primaryInstrument,
+            enrollmentDate: new Date().toISOString(),
+            status: 'active'
+          }
+        })
+      } catch (studentError) {
+        console.warn('Could not load students for enrollment details:', studentError)
+      }
 
-        // Add students to group
-        const group = groupsMap.get(groupKey)!
-        if (lesson.studentIds && lesson.studentIds.length > 0) {
-          // In real app, fetch student details
-          lesson.studentIds.forEach((studentId, index) => {
-            group.enrolledStudents.push({
-              id: studentId,
-              firstName: `תלמיד${index + 1}`,
-              lastName: 'דוגמה',
-              email: `student${index + 1}@example.com`,
-              grade: `${Math.floor(Math.random() * 6) + 7}`,
-              instrument: ['פסנתר', 'כינור', 'גיטרה', 'חליל'][Math.floor(Math.random() * 4)],
-              level: group.level,
-              enrollmentDate: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
-              attendance: {
-                total: Math.floor(Math.random() * 20) + 10,
-                present: 0,
-                absent: 0,
-                rate: 0
-              },
-              grades: generateMockGrades(),
-              status: 'active',
-              notes: index === 0 ? 'תלמיד מצטיין' : undefined
-            })
-          })
+      // Map API courses to TheoryGroup interface
+      const groupsArray: TheoryGroup[] = courses.map((course: any) => {
+        const teacher = teacherMap[course.teacherId]
+        const teacherName = teacher
+          ? `${teacher.firstName} ${teacher.lastName}`.trim()
+          : (course.teacherName || '')
 
-          // Calculate attendance
-          group.enrolledStudents.forEach(student => {
-            if (student.attendance) {
-              student.attendance.present = Math.floor(student.attendance.total * (0.8 + Math.random() * 0.15))
-              student.attendance.absent = student.attendance.total - student.attendance.present
-              student.attendance.rate = Math.round((student.attendance.present / student.attendance.total) * 100)
-            }
-          })
+        const enrolledStudents: GroupStudent[] = (course.studentIds || []).map((studentId: string) => {
+          return studentMap[studentId] || {
+            id: studentId,
+            firstName: '',
+            lastName: '',
+            enrollmentDate: new Date().toISOString(),
+            status: 'active' as const
+          }
+        })
+
+        return {
+          id: course._id,
+          name: course.category,
+          description: undefined,
+          level: 'intermediate' as const,
+          category: course.category,
+          teacherId: course.teacherId,
+          teacherName,
+          capacity: 15,
+          schedule: {
+            dayOfWeek: course.dayOfWeek || '',
+            startTime: course.startTime || '',
+            endTime: course.endTime || ''
+          },
+          location: course.location || '',
+          enrolledStudents,
+          waitingList: [],
+          isActive: course.isActive !== false,
+          createdAt: course.createdAt || new Date().toISOString(),
+          curriculum: [],
+          requirements: []
         }
       })
 
-      const groupsArray = Array.from(groupsMap.values())
       setGroups(groupsArray)
 
       if (groupsArray.length > 0 && !selectedGroup) {
@@ -215,76 +242,11 @@ export default function TheoryGroupManager() {
     }
   }
 
-  const generateMockCurriculum = (category: string): CurriculumItem[] => {
-    const curriculums = {
-      'מגמה': [
-        { title: 'יסודות הרמוניה', description: 'לימוד אקורדים בסיסיים' },
-        { title: 'קצב ומטר', description: 'זיהוי וביצוע קצבים' },
-        { title: 'סולמות מז\'ור', description: 'כל סולמות המז\'ור' },
-        { title: 'סולמות מינור', description: 'סוגי סולמות מינור' }
-      ],
-      'הרמוניה': [
-        { title: 'אקורדי שלישיות', description: 'בניית אקורדים בסיסיים' },
-        { title: 'הולכת קולות', description: 'חוקי הולכת קולות' },
-        { title: 'מודולציה', description: 'מעבר בין טונליות' }
-      ],
-      'קומפוזיציה': [
-        { title: 'מלודיה', description: 'כתיבת מלודיות' },
-        { title: 'מבנה מוזיקלי', description: 'צורות מוזיקליות' },
-        { title: 'כלים ותזמור', description: 'הכרת כלי נגינה' }
-      ]
-    }
-
-    const items = curriculums[category] || curriculums['מגמה']
-    return items.map((item, index) => ({
-      id: `curriculum-${index}`,
-      title: item.title,
-      description: item.description,
-      order: index + 1,
-      isCompleted: Math.random() > 0.6,
-      completedDate: Math.random() > 0.5 ? new Date().toISOString() : undefined
-    }))
-  }
-
-  const generateMockRequirements = (category: string): string[] => {
-    const requirements = {
-      'מגמה': [
-        'ידע בקריאת תווים',
-        'בסיס בכלי מקלדת',
-        'המלצה מהמורה הפרטי'
-      ],
-      'הרמוניה': [
-        'השלמת קורס מגמה בסיסי',
-        'ידע בסולמות ובאקורדים',
-        'יכולת קריאה בשני המפתחות'
-      ],
-      'קומפוזיציה': [
-        'רקע בהרמוניה',
-        'יכולת נגינה ברמה בינונית',
-        'יצירתיות ועניין ביצירה'
-      ]
-    }
-
-    return requirements[category] || requirements['מגמה']
-  }
-
-  const generateMockGrades = (): StudentGrade[] => {
-    const subjects = ['מבחן', 'עבודה', 'השתתפות', 'פרויקט']
-    return subjects.map((subject, index) => ({
-      id: `grade-${index}`,
-      subject,
-      grade: Math.floor(Math.random() * 30) + 70,
-      maxGrade: 100,
-      date: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
-      notes: Math.random() > 0.7 ? 'עבודה מצוינת' : undefined
-    }))
-  }
-
   const handleEnrollStudent = async (studentId: string, groupId: string) => {
     try {
-      // In real app, call API
-      // await apiService.theory.enrollStudentInGroup(studentId, groupId)
+      await apiService.theory.addStudentToCourse(groupId, studentId)
 
+      // Optimistically update local state, then refetch for accuracy
       setGroups(prev => prev.map(group => {
         if (group.id === groupId) {
           const student = availableStudents.find(s => s.id === studentId)
@@ -321,8 +283,7 @@ export default function TheoryGroupManager() {
 
   const handleUnenrollStudent = async (studentId: string, groupId: string) => {
     try {
-      // In real app, call API
-      // await apiService.theory.unenrollStudentFromGroup(studentId, groupId)
+      await apiService.theory.removeStudentFromCourse(groupId, studentId)
 
       setGroups(prev => prev.map(group => {
         if (group.id === groupId) {
@@ -342,6 +303,19 @@ export default function TheoryGroupManager() {
     } catch (error) {
       console.error('Error unenrolling student:', error)
       alert('שגיאה בביטול רישום התלמיד')
+    }
+  }
+
+  const loadCourseAnalytics = async (courseId: string) => {
+    try {
+      setAnalyticsLoading(true)
+      const data = await apiService.theory.getCourseAnalytics(courseId)
+      setCourseAnalytics(data)
+    } catch (error) {
+      console.error('Error loading course analytics:', error)
+      setCourseAnalytics(null)
+    } finally {
+      setAnalyticsLoading(false)
     }
   }
 
@@ -606,7 +580,12 @@ export default function TheoryGroupManager() {
                       return (
                         <button
                           key={tab.id}
-                          onClick={() => setActiveTab(tab.id as any)}
+                          onClick={() => {
+                            setActiveTab(tab.id as any)
+                            if (tab.id === 'analytics' && selectedGroup) {
+                              loadCourseAnalytics(selectedGroup.id)
+                            }
+                          }}
                           className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
                             activeTab === tab.id
                               ? 'border-indigo-500 text-indigo-600'
@@ -800,10 +779,68 @@ export default function TheoryGroupManager() {
                   )}
 
                   {activeTab === 'analytics' && (
-                    <div className="text-center py-12">
-                      <TrendUpIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">ניתוח נתונים מתקדם</h3>
-                      <p className="text-gray-600">תכונה זו תהיה זמינה בקרוב</p>
+                    <div className="space-y-6">
+                      {analyticsLoading ? (
+                        <div className="text-center py-12">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-3"></div>
+                          <p className="text-gray-600">טוען נתוני נוכחות...</p>
+                        </div>
+                      ) : !courseAnalytics ? (
+                        <div className="text-center py-12">
+                          <TrendUpIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">ניתוח נתוני נוכחות</h3>
+                          <p className="text-gray-600">אין נתוני נוכחות לקורס זה עדיין</p>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-lg font-bold text-gray-900">נוכחות לפי תלמיד</h3>
+                            <span className="text-sm text-gray-500">{courseAnalytics.totalSessions} מפגשים</span>
+                          </div>
+                          {courseAnalytics.studentStats.length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                              <UsersIcon className="w-10 h-10 mx-auto mb-2 text-gray-300" />
+                              <p>אין תלמידים עם נתוני נוכחות</p>
+                            </div>
+                          ) : (
+                            <div className="space-y-3">
+                              {courseAnalytics.studentStats.map(stat => {
+                                const enrolledStudent = selectedGroup?.enrolledStudents.find(s => s.id === stat.studentId)
+                                const displayName = enrolledStudent
+                                  ? getDisplayName(enrolledStudent)
+                                  : (stat.studentName || stat.studentId)
+                                const rate = stat.attendanceRate ?? (stat.total > 0 ? Math.round((stat.present / stat.total) * 100) : 0)
+                                return (
+                                  <div key={stat.studentId} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                                        <UsersIcon className="w-4 h-4 text-indigo-600" />
+                                      </div>
+                                      <div>
+                                        <div className="font-medium text-gray-900">{displayName}</div>
+                                        <div className="text-sm text-gray-500">
+                                          הגיע/ה {stat.present} • נעדר/ה {stat.absent} • איחר/ה {stat.late}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-24 bg-gray-200 rounded-full h-2">
+                                        <div
+                                          className={`h-2 rounded-full ${rate >= 90 ? 'bg-green-500' : rate >= 75 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                          style={{ width: `${rate}%` }}
+                                        ></div>
+                                      </div>
+                                      <span className={`font-bold text-sm w-12 text-left ${rate >= 90 ? 'text-green-600' : rate >= 75 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                        {rate}%
+                                      </span>
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   )}
                 </div>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../services/authContext.jsx'
+import { useSchoolYear } from '../../services/schoolYearContext'
 
 import apiService from '../../services/apiService'
 import { getDisplayName } from '../../utils/nameUtils'
-import { BellIcon, BookOpenIcon, CalendarIcon, CheckSquareIcon, ClockIcon, CopyIcon, DownloadSimpleIcon, EnvelopeIcon, EyeIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MapPinIcon, MedalIcon, PencilIcon, PlusIcon, TrashIcon, TrendUpIcon, UploadSimpleIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
+import { BellIcon, BookOpenIcon, CalendarIcon, CheckSquareIcon, ClockIcon, CopyIcon, DownloadSimpleIcon, EnvelopeIcon, EyeIcon, FunnelIcon, GearIcon, MagnifyingGlassIcon, MapPinIcon, MedalIcon, PencilIcon, PlusIcon, StackIcon, TrashIcon, TrendUpIcon, UploadSimpleIcon, UserMinusIcon, UserPlusIcon, UsersIcon, WarningIcon } from '@phosphor-icons/react'
+import { Button as HeroButton } from '@heroui/react'
 
 interface CourseAnalytics {
   courseId: string
@@ -84,6 +86,7 @@ interface StudentGrade {
 
 export default function TheoryGroupManager() {
   const { user } = useAuth()
+  const { currentSchoolYear } = useSchoolYear()
   const [groups, setGroups] = useState<TheoryGroup[]>([])
   const [selectedGroup, setSelectedGroup] = useState<TheoryGroup | null>(null)
   const [availableStudents, setAvailableStudents] = useState<GroupStudent[]>([])
@@ -98,6 +101,8 @@ export default function TheoryGroupManager() {
   const [activeTab, setActiveTab] = useState<'students' | 'waiting' | 'curriculum' | 'analytics'>('students')
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [showEnrollModal, setShowEnrollModal] = useState(false)
+  const [autoGroupPreview, setAutoGroupPreview] = useState<any>(null)
+  const [isAutoGrouping, setIsAutoGrouping] = useState(false)
   const [editingGroup, setEditingGroup] = useState<TheoryGroup | null>(null)
   const [courseAnalytics, setCourseAnalytics] = useState<CourseAnalytics | null>(null)
   const [analyticsLoading, setAnalyticsLoading] = useState(false)
@@ -319,6 +324,42 @@ export default function TheoryGroupManager() {
     }
   }
 
+  // Dry run — preview what would be grouped
+  const handleAutoGroupPreview = async () => {
+    if (!currentSchoolYear?._id) return
+    try {
+      setIsAutoGrouping(true)
+      const response = await apiService.theory.autoGroupLessons({
+        schoolYearId: currentSchoolYear._id,
+        dryRun: true,
+      })
+      setAutoGroupPreview(response.data || response)
+    } catch (err) {
+      console.error('Auto-group preview failed:', err)
+    } finally {
+      setIsAutoGrouping(false)
+    }
+  }
+
+  // Execute — create courses from preview
+  const handleAutoGroupExecute = async () => {
+    if (!currentSchoolYear?._id) return
+    try {
+      setIsAutoGrouping(true)
+      await apiService.theory.autoGroupLessons({
+        schoolYearId: currentSchoolYear._id,
+        dryRun: false,
+      })
+      setAutoGroupPreview(null)
+      // Refresh the course list
+      await loadTheoryGroups()
+    } catch (err) {
+      console.error('Auto-group execution failed:', err)
+    } finally {
+      setIsAutoGrouping(false)
+    }
+  }
+
   const sendGroupAnnouncement = (groupId: string) => {
     // Mock functionality
     alert('הודעה נשלחה לכל תלמידי הקבוצה')
@@ -399,14 +440,50 @@ export default function TheoryGroupManager() {
             </h1>
             <p className="text-gray-600 mt-2">ניהול מתקדם של רישום תלמידים וקבוצות לימוד</p>
           </div>
-          <button
-            onClick={() => setShowCreateGroup(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            <PlusIcon className="w-4 h-4" />
-            <span className="">קבוצה חדשה</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <HeroButton
+              color="primary"
+              variant="flat"
+              size="sm"
+              onPress={handleAutoGroupPreview}
+              isLoading={isAutoGrouping}
+              startContent={<StackIcon size={16} />}
+            >
+              קיבוץ אוטומטי
+            </HeroButton>
+            <button
+              onClick={() => setShowCreateGroup(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              <PlusIcon className="w-4 h-4" />
+              <span className="">קבוצה חדשה</span>
+            </button>
+          </div>
         </div>
+
+        {autoGroupPreview && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6 space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900">תצוגה מקדימה - קיבוץ אוטומטי</h3>
+            <p className="text-sm text-gray-600">
+              נמצאו {autoGroupPreview.groupsFound} קבוצות שיעורים לקיבוץ
+            </p>
+            {autoGroupPreview.groups?.map((group: any, i: number) => (
+              <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-800">
+                  {group.category} — {group.lessonCount} שיעורים, {group.uniqueStudents} תלמידים
+                </span>
+              </div>
+            ))}
+            <div className="flex gap-2 justify-end">
+              <HeroButton variant="flat" size="sm" onPress={() => setAutoGroupPreview(null)}>
+                ביטול
+              </HeroButton>
+              <HeroButton color="primary" size="sm" onPress={handleAutoGroupExecute} isLoading={isAutoGrouping}>
+                בצע קיבוץ
+              </HeroButton>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Groups List */}

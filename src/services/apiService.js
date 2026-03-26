@@ -2148,53 +2148,166 @@ export const theoryService = {
   },
 
   /**
+   * Get all theory courses with optional filters
+   * @param {Object} filters - Filter options (category, teacherId, schoolYearId, isActive)
+   * @returns {Promise<Array>} Array of theory courses
+   */
+  async getCourses(filters = {}) {
+    try {
+      const params = {};
+      if (filters.category) params.category = filters.category;
+      if (filters.teacherId) params.teacherId = filters.teacherId;
+      if (filters.schoolYearId) params.schoolYearId = filters.schoolYearId;
+      if (filters.isActive !== undefined) params.isActive = filters.isActive;
+
+      const response = await apiClient.get('/theory/courses', params);
+      return response?.data || [];
+    } catch (error) {
+      console.error('Error getting theory courses:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get a single theory course by ID
+   * @param {string} courseId - Theory course ID
+   * @returns {Promise<Object>} Theory course data
+   */
+  async getCourseById(courseId) {
+    try {
+      const response = await apiClient.get(`/theory/courses/${courseId}`);
+      return response?.data || null;
+    } catch (error) {
+      console.error('Error getting theory course by ID:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Create a new theory course
+   * @param {Object} courseData - Theory course data
+   * @returns {Promise<Object>} Created theory course
+   */
+  async createCourse(courseData) {
+    try {
+      const response = await apiClient.post('/theory/courses', courseData);
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error creating theory course:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update an existing theory course
+   * @param {string} courseId - Theory course ID
+   * @param {Object} updateData - Fields to update
+   * @returns {Promise<Object>} Updated theory course
+   */
+  async updateCourse(courseId, updateData) {
+    try {
+      const response = await apiClient.put(`/theory/courses/${courseId}`, updateData);
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error updating theory course:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Delete a theory course (unlinks lessons, does not delete them)
+   * @param {string} courseId - Theory course ID
+   * @returns {Promise<Object>} Deletion result
+   */
+  async deleteCourse(courseId) {
+    try {
+      const response = await apiClient.delete(`/theory/courses/${courseId}`);
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error deleting theory course:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Add a student to a theory course roster
+   * @param {string} courseId - Theory course ID
+   * @param {string} studentId - Student ID to add
+   * @returns {Promise<Object>} Updated theory course
+   */
+  async addStudentToCourse(courseId, studentId) {
+    try {
+      const response = await apiClient.post(`/theory/courses/${courseId}/student/${studentId}`, {});
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error adding student to theory course:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Remove a student from a theory course roster
+   * @param {string} courseId - Theory course ID
+   * @param {string} studentId - Student ID to remove
+   * @returns {Promise<Object>} Updated theory course
+   */
+  async removeStudentFromCourse(courseId, studentId) {
+    try {
+      const response = await apiClient.delete(`/theory/courses/${courseId}/student/${studentId}`);
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error removing student from theory course:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get attendance analytics for a theory course
+   * @param {string} courseId - Theory course ID
+   * @returns {Promise<Object>} Analytics data including per-student stats
+   */
+  async getCourseAnalytics(courseId) {
+    try {
+      const response = await apiClient.get(`/theory/courses/${courseId}/analytics`);
+      return response?.data || null;
+    } catch (error) {
+      console.error('Error getting theory course analytics:', error);
+      throw error;
+    }
+  },
+
+  /**
    * Get theory groups for group management
+   * Uses real course API — falls back to empty array if no courses exist yet.
    * @param {Object} filters - Filter options
    * @returns {Promise<Array>} Array of theory groups
    */
   async getTheoryGroups(filters = {}) {
     try {
-      const lessons = await this.getTheoryLessons(filters);
-
-      // Group lessons by category + level + teacher
-      const groupsMap = new Map();
-
-      lessons.forEach(lesson => {
-        const groupKey = `${lesson.teacherId}-${lesson.category}-${lesson.level || 'intermediate'}`;
-
-        if (!groupsMap.has(groupKey)) {
-          groupsMap.set(groupKey, {
-            id: groupKey,
-            name: `${lesson.category} - ${mapLevelLabel(lesson.level || 'intermediate')}`,
-            category: lesson.category || 'מגמה',
-            level: lesson.level || 'intermediate',
-            teacherId: lesson.teacherId,
-            teacherName: lesson.teacherName || 'מורה',
-            capacity: lesson.maxStudents || 15,
-            schedule: {
-              dayOfWeek: lesson.dayOfWeek || 'sunday',
-              startTime: lesson.startTime || '09:00',
-              endTime: lesson.endTime || '10:30'
-            },
-            location: lesson.location || 'חדר תיאוריה',
-            isActive: lesson.isActive,
-            studentIds: [],
-            enrolledStudents: 0
-          });
-        }
-
-        const group = groupsMap.get(groupKey);
-        if (lesson.studentIds) {
-          lesson.studentIds.forEach(studentId => {
-            if (!group.studentIds.includes(studentId)) {
-              group.studentIds.push(studentId);
-            }
-          });
-        }
-        group.enrolledStudents = group.studentIds.length;
-      });
-
-      return Array.from(groupsMap.values());
+      // Use real course API if available, fall back to client-side grouping
+      const courses = await this.getCourses(filters);
+      if (courses && courses.length > 0) {
+        return courses.map(course => ({
+          id: course._id,
+          name: `${course.category}`,
+          category: course.category,
+          level: 'intermediate',
+          teacherId: course.teacherId,
+          teacherName: course.teacherName || '',
+          capacity: 15,
+          schedule: {
+            dayOfWeek: course.dayOfWeek,
+            startTime: course.startTime,
+            endTime: course.endTime
+          },
+          location: course.location,
+          isActive: course.isActive,
+          studentIds: course.studentIds || [],
+          enrolledStudents: (course.studentIds || []).length
+        }));
+      }
+      // Fallback: no courses exist yet, return empty
+      return [];
     } catch (error) {
       console.error('Error getting theory groups:', error);
       throw error;

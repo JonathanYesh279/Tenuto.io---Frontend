@@ -50,6 +50,7 @@ interface TheoryLesson {
   syllabus: string
   homework: string
   schoolYearId: string
+  courseId?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -83,6 +84,20 @@ interface Teacher {
     email?: string
     phone?: string
   }
+}
+
+interface Course {
+  _id: string
+  category: string
+  teacherId: string
+  dayOfWeek: number
+  startTime: string
+  endTime: string
+  location: string
+  studentIds: string[]
+  lessonIds: string[]
+  schoolYearId: string
+  isActive: boolean
 }
 
 const DAYS_OF_WEEK = {
@@ -127,6 +142,7 @@ export default function TheoryLessonDetails() {
   const navigate = useNavigate()
 
   const [theoryLesson, setTheoryLesson] = useState<TheoryLesson | null>(null)
+  const [course, setCourse] = useState<Course | null>(null)
   const [allStudents, setAllStudents] = useState<Student[]>([])
   const [teachers, setTeachers] = useState<Teacher[]>([])
   const [loading, setLoading] = useState(true)
@@ -193,6 +209,17 @@ export default function TheoryLessonDetails() {
       loadTheoryLessonDetails()
     }
   }, [theoryId])
+
+  // Fetch parent course when lesson has courseId
+  useEffect(() => {
+    if (theoryLesson?.courseId) {
+      theoryService.getCourseById(theoryLesson.courseId)
+        .then((data: Course) => setCourse(data))
+        .catch(() => setCourse(null)) // Non-fatal
+    } else {
+      setCourse(null)
+    }
+  }, [theoryLesson?.courseId])
 
   const loadTheoryLessonDetails = async () => {
     if (!theoryId) return
@@ -438,8 +465,10 @@ export default function TheoryLessonDetails() {
   }
 
   // --- Derived data ---
+  const effectiveStudentIds = course?.studentIds ?? theoryLesson?.studentIds ?? []
+
   const availableStudents = allStudents.filter(student =>
-    !theoryLesson.studentIds.includes(student._id) &&
+    !effectiveStudentIds.includes(student._id) &&
     student.isActive &&
     (!searchQuery ||
       getDisplayName(student.personalInfo).toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -447,7 +476,7 @@ export default function TheoryLessonDetails() {
   )
 
   const enrolledStudents = allStudents.filter(student =>
-    theoryLesson.studentIds.includes(student._id)
+    effectiveStudentIds.includes(student._id)
   )
 
   const teacher = teachers.find(t => t._id === theoryLesson.teacherId)
@@ -544,6 +573,16 @@ export default function TheoryLessonDetails() {
                   >
                     {theoryLesson.location}
                   </Chip>
+                  {course && (
+                    <Chip
+                      color="primary"
+                      variant="flat"
+                      size="sm"
+                      startContent={<BookOpenIcon size={14} />}
+                    >
+                      קורס: {course.category}
+                    </Chip>
+                  )}
                   {theoryLesson.updatedAt && (
                     <span className="text-xs text-muted-foreground">
                       עודכן: {new Date(theoryLesson.updatedAt).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -770,6 +809,11 @@ export default function TheoryLessonDetails() {
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-bold text-foreground">תלמידים</h3>
                 <Chip size="sm" variant="flat" color="default">{enrolledStudents.length}</Chip>
+                {course && (
+                  <span className="text-xs text-muted-foreground">
+                    רשימה מקורס הורה
+                  </span>
+                )}
               </div>
               <HeroButton
                 color="primary"

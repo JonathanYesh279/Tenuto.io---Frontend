@@ -2277,6 +2277,43 @@ export const theoryService = {
   },
 
   /**
+   * Auto-group ungrouped theory lessons into courses by schedule fingerprint
+   * @param {Object} params - { schoolYearId, minLessonCount, dryRun }
+   * @returns {Promise<Object>} Grouping results (created courses or dry-run preview)
+   */
+  async autoGroupLessons({ schoolYearId, minLessonCount, dryRun } = {}) {
+    try {
+      const response = await apiClient.post('/theory/courses/auto-group', {
+        schoolYearId,
+        minLessonCount,
+        dryRun
+      });
+      return response?.data?.data || response?.data || response;
+    } catch (error) {
+      console.error('Error auto-grouping theory lessons:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Link existing lessons to a course
+   * @param {string} courseId - Course ID
+   * @param {string[]} lessonIds - Array of lesson IDs to link
+   * @returns {Promise<Object>} Updated course data
+   */
+  async linkLessonsToCourse(courseId, lessonIds) {
+    try {
+      const response = await apiClient.post(`/theory/courses/${courseId}/link-lessons`, {
+        lessonIds
+      });
+      return response?.data?.data || response?.data || response;
+    } catch (error) {
+      console.error('Error linking lessons to theory course:', error);
+      throw error;
+    }
+  },
+
+  /**
    * Get theory groups for group management
    * Uses real course API — falls back to empty array if no courses exist yet.
    * @param {Object} filters - Filter options
